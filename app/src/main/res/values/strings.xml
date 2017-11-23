@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">研能空氣品質</string>
+    <string name="text_message_air_good">空氣良好\n請繼續保持\n空氣質量令人滿意 空氣污染很少\n並無存在風險</string>
+    <string name="text_message_air_mid">空氣品質稍有污染</string>
+    <string name="text_message_air_bad">空氣品質極糟</string>
+    <string name="text_label_tvoc">TVOC</string>
+    <string name="text_label_pm25">PM2.5</string>
+    <string name="text_label_co2">CO2</string>
+    <string name="text_label_temperature">溫度</string>
+    <string name="text_label_humidity">濕度</string>
+    <string name="text_default_value">65536</string>
+    <string name="text_label_auto_detect">自動偵測\n總揮發性有機物</string>
+    <string name="text_label_ststus_good">良好</string>
+    <string name="text_label_ststus_mid">輕度污染</string>
+    <string name="text_label_ststus_bad">重度污染</string>
 </resources>

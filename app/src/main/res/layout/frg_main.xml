@@ -1,50 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <microjet.com.airqi2.CustomAPI.ColorArcProgressBar
-        android:id="@+id/tvocBar"
-        android:layout_width="500dp"
-        android:layout_height="500dp"
+    <RelativeLayout
+        android:id="@+id/tvocPanel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="50dp"
-        app:back_color="@android:color/transparent"
-        app:back_width="18dp"
-        app:front_color1="@color/progressBarStartColor"
-        app:front_color2="@color/progressBarMidColor"
-        app:front_color3="@color/progressBarEndColor"
-        app:front_width="13dp"
-        app:is_need_content="false"
-        app:is_need_title="false"
-        app:is_need_unit="false"
-        app:max_value="100"
-        app:string_title="電壓"
-        app:string_unit=""
-        app:total_engle="270" />
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="20dp">
+
+        <microjet.com.airqi2.CustomAPI.ColorArcProgressBar
+            android:id="@+id/tvocBar"
+            android:layout_width="500dp"
+            android:layout_height="500dp"
+            android:layout_centerInParent="true"
+            app:back_color="@android:color/transparent"
+            app:back_width="18dp"
+            app:front_color1="@color/progressBarStartColor"
+            app:front_color2="@color/progressBarMidColor"
+            app:front_color3="@color/progressBarEndColor"
+            app:front_width="13dp"
+            app:is_need_content="false"
+            app:is_need_title="false"
+            app:is_need_unit="false"
+            app:max_value="100"
+            app:string_title="電壓"
+            app:string_unit=""
+            app:total_engle="270" />
+
+        <LinearLayout
+            android:layout_width="175dp"
+            android:layout_height="175dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerInParent="true"
+            android:background="@drawable/circle_layout"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="@string/text_label_auto_detect"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tvocValue2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/text_default_value"
+                android:textAlignment="center"
+                android:textSize="36sp" />
+
+            <TextView
+                android:id="@+id/tvocStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/text_label_ststus_good"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+        </LinearLayout>
+    </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="250dp"
+        android:layout_width="275dp"
         android:layout_height="100dp"
-        android:layout_below="@+id/tvocBar"
+        android:layout_below="@+id/tvocPanel"
         android:layout_centerHorizontal="true"
         android:background="@drawable/message_block_background"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@mipmap/ic_launcher_round" />
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_msgbox" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="TextView" />
+            android:text="@string/text_message_air_good"
+            android:textSize="18sp" />
 
     </LinearLayout>
 
@@ -58,92 +109,112 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TVOC"
+                android:layout_gravity="center"
+                android:text="@string/text_label_tvoc"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/tvocValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="60000ppb"
+                android:text="@string/text_default_value"
                 android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView9"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="pm2.5"
+                android:layout_gravity="center"
+                android:text="@string/text_label_pm25"
                 android:textAlignment="center"
-                android:textSize="24sp" />
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/pmValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="133"
+                android:text="@string/text_default_value"
                 android:textAlignment="center" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="CO2"
-                android:textSize="24sp" />
+                android:layout_gravity="center"
+                android:text="@string/text_label_co2"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/carbonValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="@string/text_default_value"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView5"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="溫度"
-                android:textSize="24sp" />
+                android:layout_gravity="center"
+                android:text="@string/text_label_temperature"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/tempValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="@string/text_default_value"
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/textView7"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="濕度"
-                android:textSize="24sp" />
+                android:layout_gravity="center"
+                android:text="@string/text_label_humidity"
+                android:textAlignment="center"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/wetValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:text="@string/text_default_value"
+                android:textAlignment="center" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
