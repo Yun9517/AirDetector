@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="titleBarColor">#69bbb0</color><!-- 標題列&海苔條色彩 -->
+
+    <color name="progressBarStartColor">#00ff00</color><!-- 進度條起始色彩 -->
+    <color name="progressBarMidColor">#ffff00</color><!-- 進度條中間色彩 -->
+    <color name="progressBarEndColor">#ff0000</color><!-- 進度條末端色彩 -->
+
+    <!-- UI預設色彩 -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
