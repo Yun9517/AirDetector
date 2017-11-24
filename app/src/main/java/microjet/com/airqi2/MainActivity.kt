@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
 import microjet.com.airqi2.Fragment.TVOCFragment
@@ -24,8 +25,9 @@ class MainActivity : AppCompatActivity() {
     private val mFragmentList = ArrayList<Fragment>()
 
     // ViewPager
-    private var mPageVp: ViewPager? = null
+    private var mPageVp: VerticalViewPager? = null
 
+   // var viewPager = VerticalViewPager()
     // ViewPager目前頁面
     private var currentIndex: Int = 0
 
@@ -86,8 +88,7 @@ class MainActivity : AppCompatActivity() {
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
 
-        val mFragmentAdapter = FragmentAdapter(
-                this.supportFragmentManager, mFragmentList)
+        val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
         mPageVp!!.currentItem = 0
 

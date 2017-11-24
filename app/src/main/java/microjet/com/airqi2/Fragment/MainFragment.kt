@@ -27,18 +27,23 @@ class MainFragment : Fragment() {
         mContext = this.context.applicationContext
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater!!.inflate(R.layout.frg_main, container, false)
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?{
+        return inflater!!.inflate(R.layout.frg_main, container, false)
+    }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
+
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
+
     }
 
     override fun onResume() {
         super.onResume()
-
-        bar1!!.setCurrentValues(10f)
+       bar1!!.setCurrentValues(10f)
+       // bar1!!.setCurrentValues(10f)
     }
 
     override fun onStop() {

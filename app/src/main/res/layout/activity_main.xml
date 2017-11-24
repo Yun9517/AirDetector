@@ -5,27 +5,23 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    <me.kaelaela.verticalviewpager.VerticalViewPager
+        android:id="@+id/id_page_vp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
-
-        <!--android.support.v4.view.ViewPager
-            android:id="@+id/id_page_vp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </android.support.v4.view.ViewPager-->
-
-        <microjet.com.airqi2.CustomAPI.YViewPager
-            android:id="@+id/id_page_vp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </microjet.com.airqi2.CustomAPI.YViewPager>
-
-    </LinearLayout>
+        android:layout_height="match_parent" />
+ <!--   <android.support.v4.view.ViewPager
+        android:id="@+id/id_page_vp"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </android.support.v4.view.ViewPager>
+-->
+</LinearLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"
@@ -33,6 +29,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/drawer_menu"
+        />
 
 </android.support.v4.widget.DrawerLayout>
