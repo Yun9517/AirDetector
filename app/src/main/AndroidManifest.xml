@@ -11,14 +11,13 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleInstance"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
 
         <activity
             android:name=".CustomDialogActivity"
@@ -27,6 +26,8 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
+
+
     </application>
 
 </manifest>
