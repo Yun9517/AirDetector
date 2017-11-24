@@ -13,4 +13,7 @@
     <string name="text_label_ststus_good">Excellent</string>
     <string name="text_label_ststus_mid">Poor</string>
     <string name="text_label_ststus_bad">Unhealthy</string>
+    <string name="text_battery_value">Battery Volume: </string>
+    <string name="text_battery_title">Device Battery</string>
+    <string name="button_label_ok">OK</string>
 </resources>
