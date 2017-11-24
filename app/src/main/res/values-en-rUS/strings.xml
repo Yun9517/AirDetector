@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">ADDWII</string>
+    <string name="text_message_air_good">Excellent\nThe air quality is good\nNo Danger</string>
+    <string name="text_message_air_mid">Poor</string>
+    <string name="text_message_air_bad">Unhealthy</string>
+    <string name="text_label_tvoc">TVOC</string>
+    <string name="text_label_pm25">PM2.5</string>
+    <string name="text_label_co2">CO2</string>
+    <string name="text_label_temperature">°C</string>
+    <string name="text_label_humidity">Humidity</string>
+    <string name="text_default_value">65536</string>
+    <string name="text_label_auto_detect">TVOC\nAuto Detection</string>
+    <string name="text_label_ststus_good">Excellent</string>
+    <string name="text_label_ststus_mid">Poor</string>
+    <string name="text_label_ststus_bad">Unhealthy</string>
+</resources>
