@@ -16,4 +16,6 @@
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>
+    <string name="text_drawer_open">OPEN</string>
+    <string name="text_drawer_close">CLOSE</string>
 </resources>

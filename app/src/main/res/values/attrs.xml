@@ -16,7 +16,13 @@
         <attr name="total_engle" format="integer"/>
         <attr name="current_value" format="float"/>
         <attr name="max_value" format="float"/>
-
     </declare-styleable>
 
+    <declare-styleable name="YViewPager">
+        <attr name="orientation">
+            <enum name="vertical" value="0"/>
+            <enum name="horizontal" value="1"/>
+        </attr>
+        <attr name="circulatory" format="boolean"/>
+    </declare-styleable>
 </resources>

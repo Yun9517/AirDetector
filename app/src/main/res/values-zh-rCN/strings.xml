@@ -16,6 +16,8 @@
     <string name="text_battery_value">电池电量：</string>
     <string name="text_battery_title">装置电量</string>
     <string name="button_label_ok">确认</string>
+    <string name="text_drawer_open">OPEN</string>
+    <string name="text_drawer_close">CLOSE</string>
 </resources>
 
 
