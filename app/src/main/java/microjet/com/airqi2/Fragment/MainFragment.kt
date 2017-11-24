@@ -20,6 +20,7 @@ class MainFragment : Fragment() {
 
     private var bar1 : ColorArcProgressBar? = null
 
+    @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
 

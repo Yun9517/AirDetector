@@ -13,4 +13,7 @@
     <string name="text_label_ststus_good">良好</string>
     <string name="text_label_ststus_mid">輕度污染</string>
     <string name="text_label_ststus_bad">重度污染</string>
+    <string name="text_battery_value">電池電量：</string>
+    <string name="text_battery_title">裝置電量</string>
+    <string name="button_label_ok">確認</string>
 </resources>

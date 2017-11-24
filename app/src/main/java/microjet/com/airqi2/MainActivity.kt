@@ -1,13 +1,17 @@
 package microjet.com.airqi2
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,18 +25,43 @@ class MainActivity : AppCompatActivity() {
     // ViewPager目前頁面
     private var currentIndex: Int = 0
 
+    private var batValue: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         uiFindViewById()
         viewPagerInit()
+
+        batValue = 30
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+
+        var menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
+
+        menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when(item!!.itemId) {
+            R.id.batStatus -> {
+                dialogShow(getString(R.string.text_battery_title),
+                        getString(R.string.text_battery_value) + batValue + "%")
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
     }
 
+    @Suppress("DEPRECATION")
     private fun viewPagerInit() {
         // 加入 Fragment 成員
         val mMainFg = MainFragment()
@@ -66,6 +95,15 @@ class MainActivity : AppCompatActivity() {
                 currentIndex = position
             }
         })
+    }
 
+    private fun dialogShow(title : String, content : String) {
+        val i : Intent? = Intent(this, CustomDialogActivity::class.java)
+        val bundle : Bundle? = Bundle()
+        bundle!!.putString("dialogTitle", title)
+        bundle.putString("dialogContent", content)
+
+        i!!.putExtras(bundle)
+        startActivity(i)
     }
 }

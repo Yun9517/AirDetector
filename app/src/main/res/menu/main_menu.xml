@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/batStatus"
+        android:icon="@drawable/battery_icon_1grid"
+        android:title="電量"
+        app:showAsAction="always" />
+</menu>
