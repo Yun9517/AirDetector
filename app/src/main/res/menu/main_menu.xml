@@ -7,4 +7,9 @@
         android:icon="@drawable/battery_icon_1grid"
         android:title="電量"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/calendarView"
+        android:icon="@drawable/calendarview"
+        android:title="月曆"
+        app:showAsAction="always" />
 </menu>

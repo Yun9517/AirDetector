@@ -19,6 +19,8 @@
     <string name="text_drawer_open">OPEN</string>
     <string name="text_drawer_close">CLOSE</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_setting">設定</string>
     <string name="text_navi_about">關於APP</string>
