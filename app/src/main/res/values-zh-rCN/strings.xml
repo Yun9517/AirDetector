@@ -18,6 +18,12 @@
     <string name="button_label_ok">确认</string>
     <string name="text_drawer_open">OPEN</string>
     <string name="text_drawer_close">CLOSE</string>
+    <string name="text_navi_setting">设定</string>
+    <string name="text_navi_about">关于APP</string>
+    <string name="text_navi_air_map">空气地图</string>
+    <string name="text_navi_add_device">新增装置</string>
+    <string name="text_drawer_device_name">Device</string>
+    <string name="text_navi_knowledge">知识库</string>
 </resources>
 
 

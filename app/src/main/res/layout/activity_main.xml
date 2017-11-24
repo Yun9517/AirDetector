@@ -11,19 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <!--android.support.v4.view.ViewPager
+        <android.support.v4.view.ViewPager
             android:id="@+id/id_page_vp"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
-        </android.support.v4.view.ViewPager-->
-
-        <microjet.com.airqi2.CustomAPI.YViewPager
-            android:id="@+id/id_page_vp"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" >
-        </microjet.com.airqi2.CustomAPI.YViewPager>
+        </android.support.v4.view.ViewPager>
 
     </LinearLayout>
 
