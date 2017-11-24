@@ -12,12 +12,13 @@ import android.view.Menu
 import android.view.MenuItem
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
+import microjet.com.airqi2.Fragment.TVOCFragment
 import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
 
-    private val mContext = this@MainActivity
+    //private val mContext = this@MainActivity
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
 
-        var menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
+        val menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
 
         menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
@@ -80,8 +81,10 @@ class MainActivity : AppCompatActivity() {
     private fun viewPagerInit() {
         // 加入 Fragment 成員
         val mMainFg = MainFragment()
+        val mTvocFg = TVOCFragment()
 
         mFragmentList.add(mMainFg)
+        mFragmentList.add(mTvocFg)
 
         val mFragmentAdapter = FragmentAdapter(
                 this.supportFragmentManager, mFragmentList)
