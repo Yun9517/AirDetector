@@ -3,6 +3,8 @@ package microjet.com.airqi2
 import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.R.id.left
+import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
@@ -55,6 +57,9 @@ class MainActivity : AppCompatActivity() {
     private val mHour: Int = 0
     private val mMinute: Int = 0
 
+    //Richard 171124
+    private var nvDrawer : NavigationView? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -81,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
+        setupDrawerContent(nvDrawer)
     }
 
 
@@ -116,7 +122,7 @@ class MainActivity : AppCompatActivity() {
            // }
 
 
-
+            //點選ActionBAR會返回
             android.R.id.home -> {
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
@@ -128,6 +134,7 @@ class MainActivity : AppCompatActivity() {
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
+        nvDrawer = this.findViewById(R.id.navigation);
     }
 
     @Suppress("DEPRECATION")
@@ -197,6 +204,43 @@ class MainActivity : AppCompatActivity() {
         val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
         //val pickerData = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, dateSetListener, mYear, mMonth, mDay)
 
+    }
+
+
+    private fun setupDrawerContent(navigationView: NavigationView?) {
+        navigationView?.setNavigationItemSelectedListener { menuItem ->
+            selectDrawerItem(menuItem)
+            true
+        }
+    }
+
+    private fun selectDrawerItem(menuItem: MenuItem) {
+        // Create a new fragment and specify the fragment to show based on nav item clicked
+        //var fragment: Fragment? = null
+        //val fragmentClass: Class<*>
+        when (menuItem.itemId) {
+            R.id.nav_add_device -> dialogShow("新增裝置" ,"新增裝置")
+            //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+            //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
+            //else -> fragmentClass = FirstFragment::class.java
+        }
+
+//        try {
+//            fragment = fragmentClass.newInstance() as Fragment
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//
+//        // Insert the fragment by replacing any existing fragment
+//        val fragmentManager = supportFragmentManager
+//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
+
+        // Highlight the selected item has been done by NavigationView
+        //menuItem.isChecked = true
+        // Set action bar title
+        title = menuItem.title
+        // Close the navigation drawer
+        mDrawerLayout?.closeDrawer(left)
     }
 
 }
