@@ -4,6 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
+import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
@@ -17,6 +19,7 @@ class MainActivity : AppCompatActivity() {
 
     private val mContext = this@MainActivity
 
+    // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
 
     // ViewPager
@@ -25,6 +28,11 @@ class MainActivity : AppCompatActivity() {
     // ViewPager目前頁面
     private var currentIndex: Int = 0
 
+    // Drawer & NavigationBar
+    private var mDrawerLayout : DrawerLayout? = null
+    private var mDrawerToggle : ActionBarDrawerToggle? = null
+
+    // 電池電量數值
     private var batValue: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +41,9 @@ class MainActivity : AppCompatActivity() {
 
         uiFindViewById()
         viewPagerInit()
+        initActionBar()
 
+        // 電池電量假資料
         batValue = 30
     }
 
@@ -53,12 +63,17 @@ class MainActivity : AppCompatActivity() {
                 dialogShow(getString(R.string.text_battery_title),
                         getString(R.string.text_battery_value) + batValue + "%")
             }
+
+            android.R.id.home -> {
+                mDrawerToggle!!.onOptionsItemSelected(item)
+            }
         }
         return super.onOptionsItemSelected(item)
     }
 
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
+        mDrawerLayout = this.findViewById(R.id.drawer_layout)
     }
 
     @Suppress("DEPRECATION")
@@ -95,6 +110,19 @@ class MainActivity : AppCompatActivity() {
                 currentIndex = position
             }
         })
+    }
+
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+        // 將 actionBar 和 DrawerLayout 取得關聯
+        mDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.text_drawer_open, R.string.text_drawer_close)
+        // 同步 actionBarDrawerToggle
+        mDrawerToggle!!.syncState()
+        // 設定 DrawerLayout 監聽事件
+        mDrawerLayout!!.addDrawerListener(mDrawerToggle!!)
     }
 
     private fun dialogShow(title : String, content : String) {
