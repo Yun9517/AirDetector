@@ -30,8 +30,10 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.1.0'
 }
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }

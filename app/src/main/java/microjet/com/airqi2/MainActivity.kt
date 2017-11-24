@@ -11,18 +11,12 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-
-import android.view.View
-import android.widget.Button
 import android.widget.DatePicker
-import kotlinx.android.synthetic.main.activity_main.*
+import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
-import java.text.SimpleDateFormat
-
-import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.Fragment.TVOCFragment
-
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -36,7 +30,7 @@ class MainActivity : AppCompatActivity() {
     // ViewPager
     private var mPageVp: VerticalViewPager? = null
 
-   // var viewPager = VerticalViewPager()
+    // var viewPager = VerticalViewPager()
     // ViewPager目前頁面
     private var currentIndex: Int = 0
 

@@ -31,9 +31,6 @@ class MainFragment : Fragment() {
         return inflater!!.inflate(R.layout.frg_main, container, false)
     }
 
-
-
-
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
