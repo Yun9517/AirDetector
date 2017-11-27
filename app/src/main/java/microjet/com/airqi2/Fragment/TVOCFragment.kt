@@ -2,6 +2,7 @@ package microjet.com.airqi2.Fragment
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.DatePicker
 import android.widget.Toast
+import android.widget.TextView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -34,12 +36,18 @@ class TVOCFragment : Fragment() {
 
     private var mChart : BarChart? = null
 
+    private var mButtonDate: Button?=null
+    private var mButtonTimeStart: Button?=null
+    private var mButtonTimeEnd: Button?=null
+    private var mTextViewTimeRange: TextView?=null
+    private var mTextViewValue: TextView?=null
+
     private var DATA_COUNT : Int = 5
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
-    var button_date: Button? = null
+    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -55,11 +63,11 @@ class TVOCFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
-
-
         //20171124 Andy
-        button_date = this.view!!.findViewById(R.id.btnPickDate)
-
+        mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
+        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+        mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
+        mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
         // create an OnDateSetListener
         dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
@@ -67,9 +75,8 @@ class TVOCFragment : Fragment() {
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateInView()
         }
-
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
-        button_date!!.setOnClickListener {
+        mButtonDate!!.setOnClickListener {
             DatePickerDialog(activity, R.style.MyDatePickerDialogTheme,
                     dateSetListener,
                     // set DatePickerDialog to point to today's date when it loads up
@@ -78,7 +85,6 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -120,7 +126,8 @@ class TVOCFragment : Fragment() {
     private fun updateDateInView() {
         val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
-        Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
+        mButtonDate!!.setText(sdf.format(cal.getTime()).toString())
+      //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
     }
 
 }
