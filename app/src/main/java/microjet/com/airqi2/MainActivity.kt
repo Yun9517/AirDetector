@@ -198,10 +198,18 @@ class MainActivity : AppCompatActivity() {
         startActivity(i)
     }
 
+    // 20171127 Peter 新增：AboutActivity
     private fun aboutShow() {
         val i : Intent? = Intent(this, AboutActivity::class.java)
         startActivity(i)
     }
+
+    // 20171127 Raymond 新增：知識庫activity
+    private fun knowledgeShow() {
+        val i : Intent? = Intent(this, KnowledgeActivity::class.java)
+        startActivity(i)
+    }
+
 
 /*
     //20171124 Andy叫出月曆的方法
@@ -230,6 +238,7 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_about -> aboutShow()
             //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+            R.id.nav_knowledge -> knowledgeShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }
