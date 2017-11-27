@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
+import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
@@ -42,18 +43,12 @@ class MainActivity : AppCompatActivity() {
     private var batValue: Int = 0
 
 
-
+/*
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
+*/
 
-
-    // date and time
-    private val mYear: Int = 0
-    private val mMonth: Int = 0
-    private val mDay: Int = 0
-    private val mHour: Int = 0
-    private val mMinute: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         batValue = 30
 
 
-
+/*
         //20171124 Andy月曆實現
         // create an OnDateSetListener
         dateSetListener = object : DatePickerDialog.OnDateSetListener {
@@ -79,6 +74,7 @@ class MainActivity : AppCompatActivity() {
                 updateDateInView()
             }
         }
+        */
 
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
     }
@@ -102,7 +98,7 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.text_battery_value) + batValue + "%")
             }
 
-
+/*
             R.id.calendarView -> {
                 DatePickerDialog(this@MainActivity, R.style.MyDatePickerDialogTheme,
                         dateSetListener,
@@ -111,6 +107,7 @@ class MainActivity : AppCompatActivity() {
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH)).show()
             }
+            */
               //  R.id.Andy_calendarView ->{
                  //   CalendarShow("月曆","月曆選擇")
            // }
@@ -191,13 +188,15 @@ class MainActivity : AppCompatActivity() {
     }
 
 
+/*
     //20171124 Andy叫出月曆的方法
     private fun updateDateInView() {
-        val myFormat = "MM/dd/yyyy" // mention the format you need
+        val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
-        //val pickerData = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, dateSetListener, mYear, mMonth, mDay)
+        Toast.makeText(this,sdf.format(cal.getTime()),Toast.LENGTH_LONG).show()
 
     }
+    */
 
 }
 
