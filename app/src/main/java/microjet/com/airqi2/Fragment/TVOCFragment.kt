@@ -10,10 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.Toast
-import android.widget.TextView
+import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -21,6 +18,10 @@ import com.github.mikephil.charting.data.BarEntry
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
+import microjet.com.airqi2.MainActivity
+import android.widget.ArrayAdapter
+
+
 
 
 /**
@@ -35,20 +36,21 @@ class TVOCFragment : Fragment() {
     private var mContext : Context? = null
 
     private var mChart : BarChart? = null
-
+    private var DATA_COUNT : Int = 5
+    private var spinner :Spinner?=null
+   /*
     private var mButtonDate: Button?=null
     private var mButtonTimeStart: Button?=null
     private var mButtonTimeEnd: Button?=null
     private var mTextViewTimeRange: TextView?=null
     private var mTextViewValue: TextView?=null
 
-    private var DATA_COUNT : Int = 5
-
     //20171124 Andy月曆的方法聆聽者
     private var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     private var cal = Calendar.getInstance()
     private var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
     private var timeEndSetListener :TimePickerDialog.OnTimeSetListener?=null
+    */
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -63,13 +65,20 @@ class TVOCFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
+        spinner= this.view!!.findViewById(R.id.frg_tvoc_spinner)
+        val lunchList = ArrayAdapter.createFromResource(mContext, R.array.ChooseCycle, android.R.layout.simple_spinner_dropdown_item)
+        spinner!!.adapter=lunchList
+       // spinner!!.onItemSelectedListener=objcet:AdapterView.onItemSelectedListener{
+
+      //  }
         //20171124 Andy
-        mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
-        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
-        mButtonTimeEnd= this.view!!.findViewById(R.id.btnPickTimeEnd)
-        mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
-        mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
+     //   mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
+     //   mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+     //   mButtonTimeEnd= this.view!!.findViewById(R.id.btnPickTimeEnd)
+     //   mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
+     //   mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
         // create an OnDateSetListener
+        /*
         dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
@@ -109,10 +118,10 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.AM_PM),
                     cal.get(Calendar.MINUTE),
                     true).show()
-        }
+        }   */
 
     }
-
+/*
     private fun updateDateInView() {
         val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
@@ -131,6 +140,7 @@ class TVOCFragment : Fragment() {
         //Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
         mButtonTimeEnd!!.setText(sdf.format(cal.getTime()).toString())
     }
+    */
     override fun onResume() {
         super.onResume()
         mChart!!.data = getBarData()

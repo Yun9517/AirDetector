@@ -28,4 +28,11 @@
     <string name="text_navi_knowledge">知識庫</string>
     <string name="text_navi_air_map">空氣地圖</string>
     <string name="text_navi_add_device">新增裝置</string>
+
+    <string-array name="ChooseCycle">
+        <item>時</item>
+        <item>日</item>
+        <item>周</item>
+        <item>月</item>
+    </string-array>
 </resources>
