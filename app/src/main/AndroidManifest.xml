@@ -26,6 +26,13 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
         <activity android:name=".KnowledgeActivity"></activity>
+        <activity
+            android:name=".AboutActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

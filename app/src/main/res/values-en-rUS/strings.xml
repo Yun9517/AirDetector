@@ -27,4 +27,24 @@
     <string name="text_navi_add_device">Add Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
+
+    <!-- ********* String for About Page and Drawer ************************************ -->
+    <string name="Web_site">Web Site</string>
+    <string name="Contact_us">Contact Us</string>
+    <string name="Contact_mail">Service Mail</string>
+    <string name="show_app_version">Version.%s</string>
+    <string name="Blue_Tooth">Blue Tooth</string>
+    <string name="Broadcast">Broadcast Notification</string>
+    <string name="Auto_measure">Auto Detect</string>
+    <string name="About_App">About APP</string>
+    <string name="Already_Pair">Paired: </string>
+    <string name="Already_Connected">Connected: </string>
+    <string name="No_Device_Connect">No Device Paired</string>
+    <string name="UART_Connecting">UART:Connecting</string>
+    <string name="UART_Disconnecting">UART:Disconnecting</string>
+
+    <!-- Add website for about page-->
+    <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/</string>
+    <string name="ContactUs">http://www.curiejet.com/zh-tw/</string>
+    <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 </resources>
