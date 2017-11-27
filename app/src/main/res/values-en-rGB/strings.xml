@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ADDWII</string>
+    <string name="app_name_air_map">空氣地圖</string>
+    <string name="app_name_knowledge">知識庫</string>
+    <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">Excellent\nThe air quality is good\nNo Danger</string>
     <string name="text_message_air_mid">Poor</string>
     <string name="text_message_air_bad">Unhealthy</string>

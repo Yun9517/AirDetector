@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">研能空氣品質</string>
+    <string name="app_name_air_map">空氣地圖</string>
+    <string name="app_name_knowledge">知識庫</string>
+    <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">空氣良好\n請繼續保持\n空氣質量令人滿意 空氣污染很少\n並無存在風險</string>
     <string name="text_message_air_mid">空氣品質稍有污染</string>
     <string name="text_message_air_bad">空氣品質極糟</string>
@@ -19,8 +22,6 @@
     <string name="text_drawer_open">OPEN</string>
     <string name="text_drawer_close">CLOSE</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_setting">設定</string>
     <string name="text_navi_about">關於APP</string>

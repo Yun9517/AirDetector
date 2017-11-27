@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">研能空气质量</string>
+    <string name="app_name_air_map">空气地图</string>
+    <string name="app_name_knowledge">知识库</string>
+    <string name="app_name_about">关于APP</string>
     <string name="text_message_air_good">空气良好\n请继续保持\n空气质量令人满意 空气污染很少\n并无存在风险</string>
     <string name="text_message_air_mid">空气质量稍有污染</string>
     <string name="text_message_air_bad">空气质量极糟</string>
