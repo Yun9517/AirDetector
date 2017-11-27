@@ -118,7 +118,7 @@ class TVOCFragment : Fragment() {
     }
 
     private fun updateDateInView() {
-        val myFormat = "MM/dd/yyyy" // mention the format you need
+        val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
     }
