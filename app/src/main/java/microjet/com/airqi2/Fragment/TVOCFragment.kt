@@ -45,10 +45,10 @@ class TVOCFragment : Fragment() {
     private var DATA_COUNT : Int = 5
 
     //20171124 Andy月曆的方法聆聽者
-    var dateSetListener : DatePickerDialog.OnDateSetListener? = null
-    var cal = Calendar.getInstance()
-    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
-
+    private var dateSetListener : DatePickerDialog.OnDateSetListener? = null
+    private var cal = Calendar.getInstance()
+    private var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
+    private var timeEndSetListener :TimePickerDialog.OnTimeSetListener?=null
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -66,14 +66,25 @@ class TVOCFragment : Fragment() {
         //20171124 Andy
         mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
         mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+        mButtonTimeEnd= this.view!!.findViewById(R.id.btnPickTimeEnd)
         mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
         mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
         // create an OnDateSetListener
-        dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        dateSetListener = DatePickerDialog.OnDateSetListener { _, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
             updateDateInView()
+        }
+        timeStartSetListener =TimePickerDialog.OnTimeSetListener{_,HOUR,minute->
+            cal.set(Calendar.HOUR_OF_DAY,HOUR)
+            cal.set(Calendar.MINUTE,minute)
+            updateStartTimeInView()
+        }
+        timeEndSetListener =TimePickerDialog.OnTimeSetListener{_,HOUR,minute->
+            cal.set(Calendar.HOUR_OF_DAY,HOUR)
+            cal.set(Calendar.MINUTE,minute)
+            updateEndTimeInView()
         }
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         mButtonDate!!.setOnClickListener {
@@ -83,12 +94,45 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.YEAR),
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
+        //    updateDateInView()
         }
+        mButtonTimeStart!!.setOnClickListener{
+            TimePickerDialog(activity,R.style.MyTimePickerDialogTheme,
+                    timeStartSetListener,
+                    cal.get(Calendar.AM_PM),
+                    cal.get(Calendar.MINUTE),
+                    true).show()
+        }
+        mButtonTimeEnd!!.setOnClickListener{
+            TimePickerDialog(activity,R.style.MyTimePickerDialogTheme,
+                    timeEndSetListener,
+                    cal.get(Calendar.AM_PM),
+                    cal.get(Calendar.MINUTE),
+                    true).show()
+        }
+
     }
 
+    private fun updateDateInView() {
+        val myFormat = "yyyy/MM/dd" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        mButtonDate!!.setText(sdf.format(cal.getTime()).toString())
+        //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
+    }
+    private fun updateStartTimeInView() {
+        val myFormat = "HH:mm" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        //Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
+        mButtonTimeStart!!.setText(sdf.format(cal.getTime()).toString())
+    }
+    private fun updateEndTimeInView() {
+        val myFormat = "HH:mm" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        //Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
+        mButtonTimeEnd!!.setText(sdf.format(cal.getTime()).toString())
+    }
     override fun onResume() {
         super.onResume()
-
         mChart!!.data = getBarData()
     }
 
@@ -97,15 +141,13 @@ class TVOCFragment : Fragment() {
     }
 
     private fun getBarData(): BarData {
-        val dataSetA = BarDataSet(getChartData(), "LabelA")
-
+        val dataSetA = BarDataSet(setChartData(), "LabelA")
         val dataSets = ArrayList<BarDataSet>()
         dataSets.add(dataSetA) // add the datasets
-
-        return BarData(getLabels(), dataSets)
+        return BarData(setLabels(), dataSets)
     }
 
-    private fun getChartData(): List<BarEntry> {
+    private fun setChartData(): List<BarEntry> {
         val DATA_COUNT = 5
 
         val chartData = ArrayList<BarEntry>()
@@ -115,7 +157,7 @@ class TVOCFragment : Fragment() {
         return chartData
     }
 
-    private fun getLabels(): List<String> {
+    private fun setLabels(): List<String> {
         val chartLabels = ArrayList<String>()
         for (i in 0 until DATA_COUNT) {
             chartLabels.add("X" + i)
@@ -123,11 +165,5 @@ class TVOCFragment : Fragment() {
         return chartLabels
     }
 
-    private fun updateDateInView() {
-        val myFormat = "yyyy/MM/dd" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.US)
-        mButtonDate!!.setText(sdf.format(cal.getTime()).toString())
-      //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
-    }
 
 }

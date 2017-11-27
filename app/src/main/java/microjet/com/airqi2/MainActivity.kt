@@ -193,7 +193,6 @@ class MainActivity : AppCompatActivity() {
         val bundle : Bundle? = Bundle()
         bundle!!.putString("dialogTitle", title)
         bundle.putString("dialogContent", content)
-
         i!!.putExtras(bundle)
         startActivity(i)
     }
