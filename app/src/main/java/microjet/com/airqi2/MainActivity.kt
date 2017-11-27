@@ -193,7 +193,14 @@ class MainActivity : AppCompatActivity() {
         val bundle : Bundle? = Bundle()
         bundle!!.putString("dialogTitle", title)
         bundle.putString("dialogContent", content)
+
         i!!.putExtras(bundle)
+        startActivity(i)
+    }
+
+    // 20171127 Raymond 新增：知識庫activity
+    private fun knowledgeShow() {
+        val i : Intent? = Intent(this, KnowledgeActivity::class.java)
         startActivity(i)
     }
 
@@ -222,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         //val fragmentClass: Class<*>
         when (menuItem.itemId) {
             R.id.nav_add_device -> dialogShow("新增裝置" ,"新增裝置")
-            //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+            R.id.nav_knowledge -> knowledgeShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }

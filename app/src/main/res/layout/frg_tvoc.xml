@@ -8,17 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:theme="@style/Base.TextAppearance.AppCompat.Title">
+        android:orientation="horizontal">
 
-        <Spinner
-            android:id="@+id/frg_tvoc_spinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/titleBarColor"
-            android:textAlignment="center" />
-        <!--
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="wrap_content"
@@ -35,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
-            android:layout_marginRight="2dp"
             android:layout_weight="1"
             android:background="@drawable/bottom_layout_background"
             android:text="起始時間"
@@ -51,7 +41,6 @@
             android:text="結束時間"
             android:textColor="@color/whiteColor"
             android:textSize="18sp" />
-            -->
     </LinearLayout>
 
     <TextView
