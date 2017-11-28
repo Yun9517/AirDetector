@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -68,7 +70,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
-        mChart!!.setScaleYEnabled(false)
+
+        configChartView()
 
         mChart!!.setOnChartValueSelectedListener(this)
 
@@ -228,6 +231,27 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             chartLabels.add("X" + i)
         }
         return chartLabels
+    }
+
+    // 20171128 Added by Raymond
+    private fun configChartView() {
+        val xAxis: XAxis = mChart!!.xAxis
+        val leftAxis: YAxis = mChart!!.axisLeft
+        val rightAxis: YAxis = mChart!!.axisRight
+
+        mChart!!.isScaleXEnabled = false
+        mChart!!.isScaleYEnabled = false
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        leftAxis.setDrawLabels(true) // no axis labels
+        leftAxis.setDrawAxisLine(false) // no axis line
+        leftAxis.setDrawGridLines(false) // no grid lines
+        
+        leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
+        leftAxis.setAxisMinValue(0f) // start at zero
+
+        rightAxis.isEnabled = false
     }
 
     //20171124 Andy日期月曆
