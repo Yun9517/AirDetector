@@ -262,7 +262,10 @@ class MainActivity : AppCompatActivity() {
         // Highlight the selected item has been done by NavigationView
         //menuItem.isChecked = true
         // Set action bar title
-        title = menuItem.title
+        // ******************************************************//
+        //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
+        //title = menuItem.title
+        // ******************************************************//
         // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
