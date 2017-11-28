@@ -13,6 +13,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
@@ -47,7 +49,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mTextViewTimeRange: TextView?=null
     private var mTextViewValue: TextView?=null
     private var mSpinner : Spinner?=null
-    private var DATA_COUNT : Int = 100
+    private var DATA_COUNT : Int = 60
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -68,7 +70,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
-        mChart!!.setScaleYEnabled(false)
+
+        configChartView()
 
         mChart!!.setOnChartValueSelectedListener(this)
 
@@ -85,20 +88,27 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mChart!!.clear()
                 when(position){
-                    0->{ DATA_COUNT=20
+                    0->{
                         mChart!!.data = getBarData()
+                        mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                        mChart!!.animateX(20)
+                    //  mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
                     1->{
-                        DATA_COUNT=30
                         mChart!!.data = getBarData()
+                        mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
                     2->{
-                        DATA_COUNT=40
+
                         mChart!!.data = getBarData()
+                        mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
                     3->{
-                        DATA_COUNT=50
                         mChart!!.data = getBarData()
+                        mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
                     else -> {
 
@@ -186,7 +196,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
      //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        mTextViewValue!!.text= h!!.value.toString()
+        mTextViewValue!!.text= h!!.value.toString()+"ppb"
+       // mTextViewTimeRange!!.text=h.toString()
+        val listString:List<String> = getLabels()
+        mTextViewTimeRange!!.text= listString[h.xIndex]
     }
 
     override fun onResume() {
@@ -228,6 +241,27 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             chartLabels.add("X" + i)
         }
         return chartLabels
+    }
+
+    // 20171128 Added by Raymond
+    private fun configChartView() {
+        val xAxis: XAxis = mChart!!.xAxis
+        val leftAxis: YAxis = mChart!!.axisLeft
+        val rightAxis: YAxis = mChart!!.axisRight
+
+        mChart!!.isScaleXEnabled = false
+        mChart!!.isScaleYEnabled = false
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+
+        leftAxis.setDrawLabels(true) // no axis labels
+        leftAxis.setDrawAxisLine(false) // no axis line
+        leftAxis.setDrawGridLines(false) // no grid lines
+
+        leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
+        leftAxis.setAxisMinValue(0f) // start at zero
+
+        rightAxis.isEnabled = false
     }
 
     //20171124 Andy日期月曆
