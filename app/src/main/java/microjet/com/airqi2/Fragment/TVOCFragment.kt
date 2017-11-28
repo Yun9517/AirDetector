@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+//import com.github.mikephil.charting.utils.Highlight
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
@@ -106,7 +107,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
         }
         //20171124 Andy
-<<<<<<< HEAD
+
 
         //mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
 
@@ -175,14 +176,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }, mCalendar!!.get(Calendar.HOUR), mCalendar!!.get(Calendar.MINUTE), true)
         dialog.show()
         */
-=======
-        */
+
     }
 
     override fun onNothingSelected() {
        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
->>>>>>> ce2de6c56129ed28ce2a2dae19d268bd50fff9bd
+
 
     override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
      //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
