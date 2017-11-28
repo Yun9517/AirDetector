@@ -2,12 +2,10 @@ package microjet.com.airqi2.Fragment
 
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
-import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.util.Log
+import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,7 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -192,7 +191,10 @@ class TVOCFragment : Fragment() {
     }
 
     private fun getBarData(): BarData {
-        val dataSetA = BarDataSet(getChartData(), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData(), "LabelA")
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
+                ContextCompat.getColor(context, R.color.progressBarMidColor),
+                ContextCompat.getColor(context, R.color.progressBarEndColor)))
 
         val dataSets = ArrayList<BarDataSet>()
         dataSets.add(dataSetA) // add the datasets

@@ -18,6 +18,8 @@ android {
         }
     }
     buildToolsVersion '27.0.0'
+    productFlavors {
+    }
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
