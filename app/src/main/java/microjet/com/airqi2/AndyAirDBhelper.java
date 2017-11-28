@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class AndyＡirDBhelper extends SQLiteOpenHelper {
+public class AndyAirDBhelper extends SQLiteOpenHelper {
 	//final static String database = "AirDataBase";
 	//final static String database2 = "AirDataBase2";
 	//final static String database3 = "AirDataBase3";
@@ -20,7 +20,7 @@ public class AndyＡirDBhelper extends SQLiteOpenHelper {
 	//final static String database12 = "AirDataBase12";
 	//final static String database13 = "AirDataBase13";
     //final static String database14 = "AirDataBase14";
-    final static String database15 = "AirDataBase15";
+    final static String database15 = "AndyAirDataBase15";
 	//final static int version = 1;
 	//final static int version2 = 3;
 	//final static int version3 = 3;
@@ -41,21 +41,21 @@ public class AndyＡirDBhelper extends SQLiteOpenHelper {
     public static SQLiteDatabase dbrw;
 
 	// 內建的建構子，用來建立資料庫
-	public AndyＡirDBhelper(Context context, String name, CursorFactory factory,
+	public AndyAirDBhelper(Context context, String name, CursorFactory factory,
                            int version) {
 		super(context, name, factory, version);
 		// TODO Auto-generated constructor stub
 	}
 
 	// 自建的建構子，只需傳入一個Context物件即可
-	public AndyＡirDBhelper(Context context) {
+	public AndyAirDBhelper(Context context) {
 		super(context, database15, null, version15);
 	}
 	//建立資料表
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-        db.execSQL(String.format("CREATE TABLE airtable(_id integer primary key autoincrement,temper text no null,hum  text no null,tvoc  text no null,CO2  text no null)"));
+        db.execSQL(String.format("CREATE TABLE Andyairtable(_id integer primary key autoincrement,temper text no null,hum  text no null,tvoc  text no null,CO2  text no null)"));
 	}
 
 	//資料庫更新，刪除資料表，再次呼叫onCreate()重建資料表
