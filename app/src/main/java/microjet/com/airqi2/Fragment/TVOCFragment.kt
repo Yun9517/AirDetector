@@ -46,14 +46,9 @@ class TVOCFragment : Fragment() {
     private var mTextViewTimeRange: TextView?=null
     //20171127  師傅
     private var mTextViewValue: TextView?=null
-<<<<<<< HEAD
 
-
-    private var DATA_COUNT : Int = 5
-=======
     private var mSpinner : Spinner?=null
     private var DATA_COUNT : Int = 100
->>>>>>> 6d5dd82bada6dffc97def7fdbb53a6a7b7761e28
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -119,7 +114,7 @@ class TVOCFragment : Fragment() {
 
         //20171124 Andy
 
-        mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
+        //mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
 
 
         //20171127 師傅
@@ -183,7 +178,7 @@ class TVOCFragment : Fragment() {
 
 =======
         */
->>>>>>> 6d5dd82bada6dffc97def7fdbb53a6a7b7761e28
+
     }
 
     override fun onResume() {
