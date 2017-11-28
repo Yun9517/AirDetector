@@ -118,13 +118,12 @@ class TVOCFragment : Fragment() {
 
 
         //20171127 師傅
-
         mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
         mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
 
-
+/*
         // create an OnDateSetListener
-    /*    dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+        dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -139,7 +138,6 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
-<<<<<<< HEAD
 
         //20171127 Andy開始小時月曆
         //mButtonTimeStart = this.view!!.findViewById(R.id.btnPickDate)
@@ -175,8 +173,6 @@ class TVOCFragment : Fragment() {
 
         }, mCalendar!!.get(Calendar.HOUR), mCalendar!!.get(Calendar.MINUTE), true)
         dialog.show()
-
-=======
         */
 
     }
