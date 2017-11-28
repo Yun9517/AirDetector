@@ -3,6 +3,7 @@ package microjet.com.airqi2.Fragment
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.app.TimePickerDialog.OnTimeSetListener
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,10 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.Toast
-import android.widget.TextView
+import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -36,18 +34,32 @@ class TVOCFragment : Fragment() {
 
     private var mChart : BarChart? = null
 
+    //20141124   Andy日期月曆
     private var mButtonDate: Button?=null
+    //20171127   Andy開始小時月曆
     private var mButtonTimeStart: Button?=null
+    //2071127    Andy結束小時月曆
     private var mButtonTimeEnd: Button?=null
+
+
+    //20171127  師傅
     private var mTextViewTimeRange: TextView?=null
+    //20171127  師傅
     private var mTextViewValue: TextView?=null
+
 
     private var DATA_COUNT : Int = 5
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
-    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
+
+
+    //20171127 Andy開始時間月曆的方法聆聽者
+    var StartTimeSetListener : DatePickerDialog.OnDateSetListener? = null
+    var calST = Calendar.getInstance()
+
+    private var mCalendar: Calendar? = null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -65,9 +77,13 @@ class TVOCFragment : Fragment() {
         mChart = this.view!!.findViewById(R.id.chart_line)
         //20171124 Andy
         mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
-        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+
+
+        //20171127 師傅
         mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
         mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
+
+
         // create an OnDateSetListener
         dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
@@ -84,6 +100,42 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+        //20171127 Andy開始小時月曆
+        //mButtonTimeStart = this.view!!.findViewById(R.id.btnPickDate)
+        //mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+
+
+        //20171127 Andy
+        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+
+
+        //20171127  師傅
+        mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
+        //20171127  師傅
+        mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
+
+
+        //20171127   Andy開始時間月曆
+        // create an OnDateSetListener
+        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
+        mButtonTimeStart!!.setOnClickListener {
+            showTimePickerDialog()
+        }
+    }
+
+    fun showTimePickerDialog() {
+        mCalendar = Calendar.getInstance()
+        val dialog = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener() { timePicker: TimePicker, i: Int, i1: Int ->
+                mCalendar!!.set(Calendar.HOUR, i)
+                mCalendar!!.set(Calendar.MINUTE, i1)
+
+                val format: SimpleDateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm")
+                Toast.makeText(mContext, "" + format.format(mCalendar!!.getTime()), Toast.LENGTH_SHORT).show()
+
+        }, mCalendar!!.get(Calendar.HOUR), mCalendar!!.get(Calendar.MINUTE), true)
+        dialog.show()
+
     }
 
     override fun onResume() {
@@ -123,11 +175,22 @@ class TVOCFragment : Fragment() {
         return chartLabels
     }
 
+    //20171124 Andy日期月曆
     private fun updateDateInView() {
         val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.US)
         mButtonDate!!.setText(sdf.format(cal.getTime()).toString())
       //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
     }
+
+    //20171127 Andy開始時間日期月曆
+    private fun updateStartTimeInView() {
+        val myFormat = "yyyy/MM/dd" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.US)
+        mButtonDate!!.setText(sdf.format(cal.getTime()).toString())
+        //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
+    }
+
+
 
 }
