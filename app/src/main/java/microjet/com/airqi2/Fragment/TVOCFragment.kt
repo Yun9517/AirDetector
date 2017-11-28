@@ -2,10 +2,12 @@ package microjet.com.airqi2.Fragment
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,10 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
@@ -28,37 +34,24 @@ import java.util.*
  * Use the [TVOCFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TVOCFragment : Fragment() {
+class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
+
     private var mContext : Context? = null
 
     private var mChart : BarChart? = null
 
-    //20141124   Andy日期月曆
     private var mButtonDate: Button?=null
-    //20171127   Andy開始小時月曆
     private var mButtonTimeStart: Button?=null
-    //2071127    Andy結束小時月曆
     private var mButtonTimeEnd: Button?=null
-
-
-    //20171127  師傅
     private var mTextViewTimeRange: TextView?=null
-    //20171127  師傅
     private var mTextViewValue: TextView?=null
-
     private var mSpinner : Spinner?=null
     private var DATA_COUNT : Int = 100
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
-
-
-    //20171127 Andy開始時間月曆的方法聆聽者
-    var StartTimeSetListener : DatePickerDialog.OnDateSetListener? = null
-    var calST = Calendar.getInstance()
-
-    private var mCalendar: Calendar? = null
+    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -74,6 +67,10 @@ class TVOCFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
+        mChart!!.setScaleYEnabled(false)
+
+        mChart!!.setOnChartValueSelectedListener(this)
+
         mSpinner=this.view!!.findViewById(R.id.spinner)
       //  ArrayAdapter<String>(this,R.layout.spinner_layout,conversionsadd);
         val aAdapter = ArrayAdapter.createFromResource(this.mContext, R.array.SpinnerArray, R.layout.spinner_layout)
@@ -108,20 +105,11 @@ class TVOCFragment : Fragment() {
                 }
             }
         }
-
-
-
         //20171124 Andy
-
-        //mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
-
-
-        //20171127 師傅
-
+    //    mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
+    //    mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
         mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
         mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
-
-
         // create an OnDateSetListener
     /*    dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
@@ -138,46 +126,16 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
-<<<<<<< HEAD
-
-        //20171127 Andy開始小時月曆
-        //mButtonTimeStart = this.view!!.findViewById(R.id.btnPickDate)
-        //mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
-
-
-        //20171127 Andy
-        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
-
-
-        //20171127  師傅
-        mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
-        //20171127  師傅
-        mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
-
-
-        //20171127   Andy開始時間月曆
-        // create an OnDateSetListener
-        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
-        mButtonTimeStart!!.setOnClickListener {
-            showTimePickerDialog()
-        }
+        */
     }
 
-    fun showTimePickerDialog() {
-        mCalendar = Calendar.getInstance()
-        val dialog = TimePickerDialog(activity, TimePickerDialog.OnTimeSetListener() { timePicker: TimePicker, i: Int, i1: Int ->
-                mCalendar!!.set(Calendar.HOUR, i)
-                mCalendar!!.set(Calendar.MINUTE, i1)
+    override fun onNothingSelected() {
+       // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
-                val format: SimpleDateFormat = SimpleDateFormat("yyyy年MM月dd日HH:mm")
-                Toast.makeText(mContext, "" + format.format(mCalendar!!.getTime()), Toast.LENGTH_SHORT).show()
-
-        }, mCalendar!!.get(Calendar.HOUR), mCalendar!!.get(Calendar.MINUTE), true)
-        dialog.show()
-
-=======
-        */
-
+    override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
+     //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mTextViewValue!!.text= h!!.value.toString()
     }
 
     override fun onResume() {
@@ -196,7 +154,7 @@ class TVOCFragment : Fragment() {
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
 
-        val dataSets = ArrayList<BarDataSet>()
+        val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
 
         return BarData(getLabels(), dataSets)
