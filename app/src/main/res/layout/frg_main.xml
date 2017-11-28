@@ -8,7 +8,7 @@
 
     <RelativeLayout
         android:id="@+id/tvocPanel"
-        android:layout_width="wrap_content"
+        android:layout_width="500dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp">
@@ -33,10 +33,11 @@
             app:total_engle="270" />
 
         <LinearLayout
-            android:layout_width="175dp"
-            android:layout_height="175dp"
+            android:layout_width="180dp"
+            android:layout_height="180dp"
             android:layout_centerHorizontal="true"
             android:layout_centerInParent="true"
+            android:background="@drawable/circle_panel"
             android:orientation="vertical">
 
 
@@ -45,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="@string/text_label_auto_detect"
@@ -53,9 +55,12 @@
 
             <TextView
                 android:id="@+id/tvocValue2"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/test_result_background_green"
                 android:gravity="center"
                 android:text="@string/text_default_value"
                 android:textAlignment="center"
@@ -63,9 +68,11 @@
 
             <TextView
                 android:id="@+id/tvocStatus"
-                android:layout_width="match_parent"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/test_result_background_green"
                 android:gravity="center"
                 android:text="@string/text_label_ststus_good"
                 android:textAlignment="center"
