@@ -198,9 +198,14 @@ class MainActivity : AppCompatActivity() {
         startActivity(i)
     }
 
-    // 20171127 Peter 新增：AboutActivity
+    // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
         val i : Intent? = Intent(this, AboutActivity::class.java)
+        startActivity(i)
+    }
+
+    private fun airmapShow(){
+        val i : Intent? = Intent(this, AirMapActivity::class.java)
         startActivity(i)
     }
 
@@ -236,6 +241,7 @@ class MainActivity : AppCompatActivity() {
         when (menuItem.itemId) {
             R.id.nav_add_device -> dialogShow("新增裝置" ,"新增裝置")
             R.id.nav_about -> aboutShow()
+            R.id.nav_air_map -> airmapShow()
             //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
