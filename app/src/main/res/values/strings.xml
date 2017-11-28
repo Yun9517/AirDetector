@@ -12,7 +12,7 @@
     <string name="text_label_temperature">溫度</string>
     <string name="text_label_humidity">濕度</string>
     <string name="text_default_value">65536</string>
-    <string name="text_label_auto_detect">TVOC\n總揮發性有機物</string>
+    <string name="text_label_auto_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_ststus_good">良好</string>
     <string name="text_label_ststus_mid">輕度污染</string>
     <string name="text_label_ststus_bad">重度污染</string>
@@ -33,7 +33,7 @@
     <string name="Web_site">網站</string>
     <string name="Contact_us">聯絡我們</string>
     <string name="Contact_mail">客服信箱</string>
-    <string name="show_app_version">APP 版本\nV.%s</string>
+    <string name="show_app_version">APP 版本   V.%s</string>
     <string name="Blue_Tooth">藍芽連線</string>
     <string name="Broadcast">推播通知</string>
     <string name="Auto_measure">自動測試</string>
@@ -45,8 +45,8 @@
     <string name="UART_Disconnecting">斷開裝置中</string>
 
     <!-- Add website for about page-->
-    <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/</string>
-    <string name="ContactUs">http://www.curiejet.com/zh-tw/</string>
+    <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>
+    <string name="ContactUs">http://www.curiejet.com/zh-tw/contacts</string>
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 
 
