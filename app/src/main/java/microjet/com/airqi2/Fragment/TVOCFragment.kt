@@ -208,7 +208,7 @@ class TVOCFragment : Fragment() {
         val chartData = ArrayList<BarEntry>()
 
         for (i in 1 until DATA_COUNT) {
-            chartData.add(BarEntry((i * 2).toFloat(), i))
+            chartData.add(BarEntry((i * 20).toFloat(), i))
         }
         return chartData
     }
