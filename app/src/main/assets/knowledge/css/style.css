@@ -97,3 +97,6 @@
 .ac-container input:checked ~ article.ac-vlarge{
 	height: 290px;
 }
+.ac-container input:checked ~ article.ac-auto{
+	height: auto;
+}
