@@ -10,6 +10,15 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:foreground="@drawable/message_block_background"
+            android:popupBackground="@drawable/bottom_layout_background"></Spinner>
+<!--
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="wrap_content"
@@ -41,6 +50,7 @@
             android:text="結束時間"
             android:textColor="@color/whiteColor"
             android:textSize="18sp" />
+            -->
     </LinearLayout>
 
     <TextView

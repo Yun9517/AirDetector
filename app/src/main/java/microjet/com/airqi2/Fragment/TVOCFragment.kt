@@ -10,10 +10,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.DatePicker
-import android.widget.Toast
-import android.widget.TextView
+import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -41,8 +38,8 @@ class TVOCFragment : Fragment() {
     private var mButtonTimeEnd: Button?=null
     private var mTextViewTimeRange: TextView?=null
     private var mTextViewValue: TextView?=null
-
-    private var DATA_COUNT : Int = 5
+    private var mSpinner : Spinner?=null
+    private var DATA_COUNT : Int = 100
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -63,13 +60,50 @@ class TVOCFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         mChart = this.view!!.findViewById(R.id.chart_line)
+        mSpinner=this.view!!.findViewById(R.id.spinner)
+      //  ArrayAdapter<String>(this,R.layout.spinner_layout,conversionsadd);
+        val aAdapter = ArrayAdapter.createFromResource(this.mContext, R.array.SpinnerArray, R.layout.spinner_layout)
+        mSpinner!!.adapter=aAdapter
+        mSpinner!!.onItemSelectedListener = object: AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+               // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                mChart!!.clear()
+                when(position){
+                    0->{ DATA_COUNT=20
+                        mChart!!.data = getBarData()
+                    }
+                    1->{
+                        DATA_COUNT=30
+                        mChart!!.data = getBarData()
+                    }
+                    2->{
+                        DATA_COUNT=40
+                        mChart!!.data = getBarData()
+                    }
+                    3->{
+                        DATA_COUNT=50
+                        mChart!!.data = getBarData()
+                    }
+                    else -> {
+
+                    }
+                }
+            }
+        }
+
+
+
         //20171124 Andy
-        mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
-        mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
+    //    mButtonDate = this.view!!.findViewById(R.id.btnPickDate)
+    //    mButtonTimeStart = this.view!!.findViewById(R.id.btnPickTimeStart)
         mTextViewTimeRange = this.view!!.findViewById(R.id.textVSelectDetectionTime)
         mTextViewValue= this.view!!.findViewById(R.id.textVSelectDetectionValue)
         // create an OnDateSetListener
-        dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+    /*    dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
             cal.set(Calendar.YEAR, year)
             cal.set(Calendar.MONTH, monthOfYear)
             cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
@@ -84,6 +118,7 @@ class TVOCFragment : Fragment() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
+        */
     }
 
     override fun onResume() {
@@ -106,10 +141,11 @@ class TVOCFragment : Fragment() {
     }
 
     private fun getChartData(): List<BarEntry> {
-        val DATA_COUNT = 5
-
+       // val DATA_COUNT = 5
+       // DATA_COUNT
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until DATA_COUNT) {
+
+        for (i in 1 until DATA_COUNT) {
             chartData.add(BarEntry((i * 2).toFloat(), i))
         }
         return chartData
@@ -117,7 +153,7 @@ class TVOCFragment : Fragment() {
 
     private fun getLabels(): List<String> {
         val chartLabels = ArrayList<String>()
-        for (i in 0 until DATA_COUNT) {
+        for (i in 1 until DATA_COUNT) {
             chartLabels.add("X" + i)
         }
         return chartLabels
