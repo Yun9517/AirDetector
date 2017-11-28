@@ -17,7 +17,8 @@
             android:layout_weight="1"
             android:background="@drawable/bottom_layout_background"
             android:foreground="@drawable/message_block_background"
-            android:popupBackground="@drawable/bottom_layout_background"></Spinner>
+            android:popupBackground="@drawable/message_block_background">
+        </Spinner>
 <!--
         <Button
             android:id="@+id/btnPickDate"

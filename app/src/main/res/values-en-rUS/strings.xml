@@ -47,4 +47,13 @@
     <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>
     <string name="ContactUs">http://www.curiejet.com/zh-tw/contacts</string>
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
+
+    <!-- Add Unit for use-->
+    <string name="TVOCUnit">ppb</string>
+    <string-array name="SpinnerArray" >
+        <item>Hour</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
 </resources>
