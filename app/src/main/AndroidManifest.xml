@@ -18,11 +18,10 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
         <activity
             android:name=".CustomDialogActivity"
             android:excludeFromRecents="true"
@@ -31,16 +30,30 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
 
-        <activity android:name=".BlueTooth.DeviceListActivity"
+        <activity
+            android:name=".BlueTooth.DeviceListActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
+        <activity android:name=".KnowledgeActivity"/>
+
         <service android:name=".BlueTooth.UartService"></service>
-
-
-
+        <activity
+            android:name=".AboutActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AirMapActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

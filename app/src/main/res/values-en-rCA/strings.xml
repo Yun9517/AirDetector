@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">ADDWII</string>
+    <string name="app_name_air_map">空氣地圖</string>
+    <string name="app_name_knowledge">知識庫</string>
+    <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">Excellent\nThe air quality is good\nNo Danger</string>
     <string name="text_message_air_mid">Poor</string>
     <string name="text_message_air_bad">Unhealthy</string>
@@ -9,8 +12,8 @@
     <string name="text_label_temperature">°C</string>
     <string name="text_label_humidity">Humidity</string>
     <string name="text_default_value">65536</string>
-    <string name="text_label_auto_detect">TVOC\nAuto Detection</string>
-    <string name="text_label_ststus_good">Excellent</string>
+    <string name="text_label_auto_detect">TVOC</string>
+    <string name="text_label_ststus_good">Good</string>
     <string name="text_label_ststus_mid">Poor</string>
     <string name="text_label_ststus_bad">Unhealthy</string>
     <string name="text_battery_value">Battery Volume: </string>
@@ -24,4 +27,33 @@
     <string name="text_navi_add_device">Add Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
+
+    <!-- ********* String for About Page and Drawer ************************************ -->
+    <string name="Web_site">Web Site</string>
+    <string name="Contact_us">Contact Us</string>
+    <string name="Contact_mail">Service Mail</string>
+    <string name="show_app_version">Version   %s</string>
+    <string name="Blue_Tooth">Blue Tooth</string>
+    <string name="Broadcast">Broadcast Notification</string>
+    <string name="Auto_measure">Auto Detect</string>
+    <string name="About_App">About APP</string>
+    <string name="Already_Pair">Paired: </string>
+    <string name="Already_Connected">Connected: </string>
+    <string name="No_Device_Connect">No Device Paired</string>
+    <string name="UART_Connecting">UART:Connecting</string>
+    <string name="UART_Disconnecting">UART:Disconnecting</string>
+
+
+    <!-- Add website for about page-->
+    <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>
+    <string name="ContactUs">http://www.curiejet.com/zh-tw/contacts</string>
+    <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
+    <!-- Add Unit for use-->
+    <string name="TVOCUnit">ppb</string>
+    <string-array name="SpinnerArray" >
+    <item>Hour</item>
+    <item>Day</item>
+    <item>Week</item>
+    <item>Month</item>
+    </string-array>
 </resources>

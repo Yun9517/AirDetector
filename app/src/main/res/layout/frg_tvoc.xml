@@ -10,6 +10,16 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:foreground="@drawable/message_block_background"
+            android:popupBackground="@drawable/message_block_background">
+        </Spinner>
+<!--
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="wrap_content"
@@ -22,16 +32,43 @@
             android:textSize="18sp" />
 
         <Button
-            android:id="@+id/btnPickTime"
+            android:id="@+id/btnPickTimeStart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="2dp"
             android:layout_weight="1"
             android:background="@drawable/bottom_layout_background"
-            android:text="時間"
+            android:text="起始時間"
             android:textColor="@color/whiteColor"
             android:textSize="18sp" />
+        <Button
+            android:id="@+id/btnPickTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:text="結束時間"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp" />
+            -->
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/textVSelectDetectionTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|fill_vertical"
+        android:text="12:05"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textVSelectDetectionValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|fill_vertical"
+        android:text="783ppb"
+        android:textAlignment="center" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart_line"

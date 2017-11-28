@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">研能空气质量</string>
+    <string name="app_name_air_map">空气地图</string>
+    <string name="app_name_knowledge">知识库</string>
+    <string name="app_name_about">关于APP</string>
     <string name="text_message_air_good">空气良好\n请继续保持\n空气质量令人满意 空气污染很少\n并无存在风险</string>
     <string name="text_message_air_mid">空气质量稍有污染</string>
     <string name="text_message_air_bad">空气质量极糟</string>
@@ -9,7 +12,7 @@
     <string name="text_label_temperature">温度</string>
     <string name="text_label_humidity">湿度</string>
     <string name="text_default_value">65536</string>
-    <string name="text_label_auto_detect">自动侦测\n总挥发性有机物</string>
+    <string name="text_label_auto_detect">自动侦测\n总挥发性有机化合物</string>
     <string name="text_label_ststus_good">良好</string>
     <string name="text_label_ststus_mid">轻度污染</string>
     <string name="text_label_ststus_bad">重度污染</string>
@@ -24,6 +27,35 @@
     <string name="text_navi_add_device">新增装置</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">知识库</string>
+
+    <!-- ********* String for About Page and Drawer ************************************ -->
+    <string name="Web_site">网站</string>
+    <string name="Contact_us">联络我们</string>
+    <string name="Contact_mail">客服信箱</string>
+    <string name="show_app_version">APP 版本   V.%s</string>
+    <string name="Blue_Tooth">蓝芽连线</string>
+    <string name="Broadcast">推播通知</string>
+    <string name="Auto_measure">自动测试</string>
+    <string name="About_App">关于APP</string>
+    <string name="Already_Pair">已自动配对: </string>
+    <string name="Already_Connected">已手动连线: </string>
+    <string name="No_Device_Connect">蓝芽未连线</string>
+    <string name="UART_Connecting">连线中</string>
+    <string name="UART_Disconnecting">断开装置中</string>
+
+    <!-- Add website for about page-->
+    <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>
+    <string name="ContactUs">http://www.curiejet.com/zh-tw/contacts</string>
+    <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
+
+    <!-- Add Unit for use-->
+    <string name="TVOCUnit">ppb</string>
+    <string-array name="SpinnerArray" >
+        <item>时</item>
+        <item>日</item>
+        <item>周</item>
+        <item>月</item>
+    </string-array>
 </resources>
 
 

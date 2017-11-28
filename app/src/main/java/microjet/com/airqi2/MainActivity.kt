@@ -2,25 +2,30 @@ package microjet.com.airqi2
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.support.v4.app.ActivityCompat.startActivityForResult
+import android.support.v4.view.GravityCompat
+import android.util.Log
+import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.Context
+import android.content.ContentValues
 import android.content.Intent
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
+import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
-import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
@@ -51,18 +56,14 @@ class MainActivity : AppCompatActivity() {
     private var batValue: Int = 0
 
 
-
+/*
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
+*/
 
 
-    // date and time
-    private val mYear: Int = 0
-    private val mMonth: Int = 0
-    private val mDay: Int = 0
-    private val mHour: Int = 0
-    private val mMinute: Int = 0
+
 
     //Richard 171124
     private var nvDrawer : NavigationView? = null
@@ -71,6 +72,31 @@ class MainActivity : AppCompatActivity() {
     private val REQUEST_SELECT_DEVICE = 1
     private var mBluetoothManager : BluetoothManager? = null
     private var mBluetoothAdapter : BluetoothAdapter? = null
+
+    //20171128   Andy SQLlite
+    internal lateinit var dbrw: SQLiteDatabase
+    internal lateinit var dbhelper: AndyAirDBhelper
+    internal var tablename = "Andyairtable"
+
+
+    internal var colstT = arrayOf("編號","溫度", "濕度", "揮發", "二氧")// };
+    internal var columT = arrayOf("_id", "temper", "hum", "tvoc", "co2")//,"CO2"};
+    internal var co10T = ""
+    internal var co11T = ""
+    internal var co12T = ""
+    internal var co13T = ""
+    internal var co14T = ""
+    internal var coTTDBTEST = ""
+    internal var SaveToDB = arrayOf("20", "20", "20", "20")
+    internal var idTTDB: Long = 4
+    internal var c: Cursor? = null
+    internal var cv: ContentValues? = null
+    internal var IDID = ""
+    internal var Count: Long = 0
+    internal var idTTDBStr = ""
+
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,7 +110,64 @@ class MainActivity : AppCompatActivity() {
         batValue = 30
 
 
+//20171128 Andy SQL
+        //*********************************************************************************************
+// ------------------------------------------------------------------------------------------------------------------------------------------------
 
+        dbhelper = AndyAirDBhelper(this)
+        dbrw = dbhelper.writableDatabase
+        Toast.makeText(this,AndyAirDBhelper.database15 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
+        AddedSQLlite(60000)
+        SearchSQLlite()
+
+        //20171128 Andy SQL
+        //*********************************************************************************************
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+        //查詢CO2資料
+        //查詢CO2資料
+        //查詢CO2資料
+    /*
+        c = dbrw.query(tablename, columT, null, null, null, null, null)
+
+        //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+        //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
+
+
+        // 排版
+        //co10T += colstT[0] + "\n";
+        //co11T += colstT[1] + "\n";
+        //co12T += colstT[2] + "\n";
+        // co13T += colstT[3] + "\n";
+        co14T += colstT[4] + "\n"
+
+
+
+
+        if (c!!.getCount() > 0) {
+            //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+            c!!.moveToFirst()
+
+            for (i in 0 until c!!.getCount()) {
+                Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+                co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+                // sqlite比較不嚴僅，都用getString()取值即可
+                co14T += c!!.getString(4) + "\n"
+                Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+                c!!.moveToNext()
+            }
+
+            Count = c!!.getCount().toLong()
+            //c.close();
+            val CountString = Count.toString()
+            Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
+        }
+*/
+//*********************************************************************************************
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+//安迪要打新增內容!!!!!!!!!!!!!!!!!!!!!!!!
+/*
         //20171124 Andy月曆實現
         // create an OnDateSetListener
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
@@ -97,6 +180,7 @@ class MainActivity : AppCompatActivity() {
                 updateDateInView()
             }
         }
+        */
 
 
         setupDrawerContent(nvDrawer)
@@ -108,7 +192,79 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+//20171128 Andy SQL
+    private fun AddedSQLlite(intData: Int)
+    {
+        //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        cv = ContentValues()
+        //idTTDB = c!!.getCount().toLong()
+        //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
+        if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && idTTDB >= 0) {//****************************************************************************
+            Toast.makeText(this@MainActivity, "資料滿4筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
+            //cv.put(columT[0],c.getPosition());
+            cv!!.put(columT[1], SaveToDB[0])
+            cv!!.put(columT[2], SaveToDB[1])
+            cv!!.put(columT[3], SaveToDB[2])
+            cv!!.put(columT[4], SaveToDB[3])
+            //新增一筆四個測項資料到資料庫中
+            idTTDB = dbrw.insert(tablename, null, cv)
+            Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
+        }
+        //新增一筆四個測項資料到資料庫中
+//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+//****************************************************************************************************************************************************
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+private fun SearchSQLlite() {
+    //****************************************************************************************************************************************************
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //查詢CO2資料
+    //查詢CO2資料
+    //查詢CO2資料
+    c = dbrw.query(tablename, columT, null, null, null, null, null)
+
+    //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+    //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
+
+
+    // 排版
+    //co10T += colstT[0] + "\n";
+    //co11T += colstT[1] + "\n";
+    //co12T += colstT[2] + "\n";
+    // co13T += colstT[3] + "\n";
+    co14T += colstT[4] + "\n"
+
+
+    if (c!!.getCount() > 0) {
+        //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+        c!!.moveToFirst()
+
+        for (i in 0 until c!!.getCount()) {
+            Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+            co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+            // sqlite比較不嚴僅，都用getString()取值即可
+            co14T += c!!.getString(4) + "\n"
+            Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+            c!!.moveToNext()
+        }
+
+        Count = c!!.getCount().toLong()
+        //c.close();
+        val CountString = Count.toString()
+        Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
+    } else {
+        Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
+    }
+}
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -127,7 +283,7 @@ class MainActivity : AppCompatActivity() {
                         getString(R.string.text_battery_value) + batValue + "%")
             }
 
-
+/*
             R.id.calendarView -> {
                 DatePickerDialog(this@MainActivity, R.style.MyDatePickerDialogTheme,
                         dateSetListener,
@@ -136,6 +292,7 @@ class MainActivity : AppCompatActivity() {
                         cal.get(Calendar.MONTH),
                         cal.get(Calendar.DAY_OF_MONTH)).show()
             }
+            */
               //  R.id.Andy_calendarView ->{
                  //   CalendarShow("月曆","月曆選擇")
            // }
@@ -216,14 +373,33 @@ class MainActivity : AppCompatActivity() {
         startActivity(i)
     }
 
+    // 20171127 Peter 新增：AboutActivity, AirMapActivity
+    private fun aboutShow() {
+        val i : Intent? = Intent(this, AboutActivity::class.java)
+        startActivity(i)
+    }
 
+    private fun airmapShow(){
+        val i : Intent? = Intent(this, AirMapActivity::class.java)
+        startActivity(i)
+    }
+
+    // 20171127 Raymond 新增：知識庫activity
+    private fun knowledgeShow() {
+        val i : Intent? = Intent(this, KnowledgeActivity::class.java)
+        startActivity(i)
+    }
+
+
+/*
     //20171124 Andy叫出月曆的方法
     private fun updateDateInView() {
-        val myFormat = "MM/dd/yyyy" // mention the format you need
+        val myFormat = "yyyy/MM/dd" // mention the format you need
         val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
-        //val pickerData = DatePickerDialog(this, R.style.MyDatePickerDialogTheme, dateSetListener, mYear, mMonth, mDay)
+        Toast.makeText(this,sdf.format(cal.getTime()),Toast.LENGTH_LONG).show()
 
     }
+    */
 
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
@@ -239,7 +415,11 @@ class MainActivity : AppCompatActivity() {
         //val fragmentClass: Class<*>
         when (menuItem.itemId) {
             R.id.nav_add_device -> blueToothShow("新增裝置" ,"新增裝置")
+            R.id.nav_about -> aboutShow()
+            R.id.nav_air_map -> airmapShow()
+            //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+            R.id.nav_knowledge -> knowledgeShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }
@@ -258,6 +438,11 @@ class MainActivity : AppCompatActivity() {
         //menuItem.isChecked = true
         // Set action bar title
         //title = menuItem.title
+        // Close the navigation drawer
+        // ******************************************************//
+        //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
+        //title = menuItem.title
+        // ******************************************************//
         // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
@@ -287,7 +472,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 }
 
 
