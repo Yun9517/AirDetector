@@ -8,6 +8,9 @@ import com.github.mikephil.charting.data.BarEntry
  */
 
 class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, label) {
+    override fun getEntryIndex(e: BarEntry?): Int {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
 
     override fun getColor(index: Int): Int {
         return if (getEntryForXIndex(index).`val` < 220)
