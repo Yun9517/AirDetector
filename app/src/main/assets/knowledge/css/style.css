@@ -1,6 +1,6 @@
 .ac-container{
-	width: 350px;
-	margin: 10px auto 30px auto;
+	width: auto;
+	margin: 0px auto 10px auto;
 	text-align: left;
 }
 .ac-container label{
