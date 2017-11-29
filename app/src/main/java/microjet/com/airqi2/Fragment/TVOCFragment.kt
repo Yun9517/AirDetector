@@ -54,7 +54,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
-    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
+    var timeStartSetListener :TimePickerDialog.OnTimeSetListener? = null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -88,24 +88,24 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mChart!!.clear()
                 when(position){
-                    0->{
+                    0-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                         mChart!!.animateX(20)
                     //  mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    1->{
+                    1-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    2->{
+                    2-> {
 
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    3->{
+                    3-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。

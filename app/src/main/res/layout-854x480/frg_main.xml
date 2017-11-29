@@ -139,7 +139,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -175,7 +175,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_pm25"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -213,7 +213,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_co2"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -232,8 +232,8 @@
                 android:id="@+id/imgDivider2"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
@@ -250,7 +250,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_temperature"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -269,8 +269,8 @@
                 android:id="@+id/imgDivider3"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
@@ -285,9 +285,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:ellipsize="start"
+                    android:maxLength="4"
                     android:text="@string/text_label_humidity"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView

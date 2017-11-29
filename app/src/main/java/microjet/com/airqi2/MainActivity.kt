@@ -21,6 +21,7 @@ import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
@@ -105,6 +106,10 @@ class MainActivity : AppCompatActivity() {
         uiFindViewById()
         viewPagerInit()
         initActionBar()
+
+        val dm = DisplayMetrics()
+        this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
+        Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
 
         // 電池電量假資料
         batValue = 30

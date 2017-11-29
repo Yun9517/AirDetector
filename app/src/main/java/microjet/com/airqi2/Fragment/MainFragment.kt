@@ -4,10 +4,13 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.util.DisplayMetrics
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import microjet.com.airqi2.CustomAPI.ColorArcProgressBar
+import microjet.com.airqi2.MainActivity
 import microjet.com.airqi2.R
 
 /**
