@@ -54,7 +54,7 @@
                     android:gravity="center"
                     android:text="@string/text_label_auto_detect"
                     android:textAlignment="center"
-                    android:textSize="14sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tvocValue2"
@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="@string/text_message_air_good"
-            android:textSize="14sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
