@@ -52,6 +52,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var DATA_COUNT : Int = 60
     private var mRadioGroup :RadioGroup?=null
 
+    private var mHour: RadioButton? = null
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -73,6 +74,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mRadioGroup=this.view?.findViewById(R.id.frg_radioGroup)
         mChart = this.view!!.findViewById(R.id.chart_line)
+
+        mHour = this.view!!.findViewById(R.id.radioButton_Hour)
+
         mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
             mChart?.clear()
             when (i){
@@ -100,6 +104,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
          //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
         })
+
+        mHour!!.isChecked = true
 
         configChartView()
 

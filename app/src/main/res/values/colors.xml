@@ -6,6 +6,9 @@
     <color name="progressBarMidColor">#ffff00</color><!-- 進度條中間色彩 -->
     <color name="progressBarEndColor">#ff0000</color><!-- 進度條末端色彩 -->
 
+    <color name="radioButtonInSelected">#78BAB4</color><!-- Radio Button In Selected -->
+    <color name="radioButtonNormal">#8AE2D9</color><!-- Radio Button Normal -->
+
     <color name="settingPageBackground">#ddebe6</color><!-- 設定頁背景色彩 -->
 
     <color name="whiteColor">#ffffff</color>.

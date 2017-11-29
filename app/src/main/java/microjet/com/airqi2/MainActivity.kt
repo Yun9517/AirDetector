@@ -466,8 +466,6 @@ private fun SearchSQLlite() {
         //menuItem.isChecked = true
         // Set action bar title
 
-        title = menuItem.title
-
         //title = menuItem.title
         // Close the navigation drawer
         // ******************************************************//
