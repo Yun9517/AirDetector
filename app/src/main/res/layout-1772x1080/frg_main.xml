@@ -285,6 +285,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:ellipsize="start"
+                    android:maxLength="4"
                     android:text="@string/text_label_humidity"
                     android:textAlignment="center"
                     android:textSize="20sp"

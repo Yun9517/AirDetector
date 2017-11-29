@@ -36,9 +36,16 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
-        <activity android:name=".KnowledgeActivity"/>
 
-        <service android:name=".BlueTooth.UartService"></service>
+        <activity android:name=".KnowledgeActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <service android:name=".BlueTooth.UartService" />
+
         <activity
             android:name=".AboutActivity"
             android:excludeFromRecents="true"
