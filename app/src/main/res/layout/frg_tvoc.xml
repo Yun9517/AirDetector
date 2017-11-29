@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <Spinner
+    <!--<Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +18,46 @@
             android:foreground="@drawable/message_block_background"
             android:popupBackground="@drawable/message_block_background">
         </Spinner>
-<!--
+        -->
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton_Hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/frg_tvocRadioButtonHour" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/frg_tvocRadioButtonDay" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/frg_tvocRadioButtonWeek" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/frg_tvocRadioButtonMonth" />
+
+
+
+        </RadioGroup>
+
+        <!--
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="wrap_content"

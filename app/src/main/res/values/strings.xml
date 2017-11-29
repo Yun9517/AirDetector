@@ -56,6 +56,10 @@
 
     <!-- Add Unit for use-->
     <string name="TVOCUnit">ppb</string>
+    <string name="frg_tvocRadioButtonHour">時</string>
+    <string name="frg_tvocRadioButtonDay">日</string>
+    <string name="frg_tvocRadioButtonWeek">週</string>
+    <string name="frg_tvocRadioButtonMonth">月</string>
     <string-array name="SpinnerArray" >
         <item>時</item>
         <item>日</item>

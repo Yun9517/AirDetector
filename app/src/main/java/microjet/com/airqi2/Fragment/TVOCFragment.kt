@@ -74,8 +74,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         configChartView()
 
         mChart!!.setOnChartValueSelectedListener(this)
-
-        mSpinner=this.view!!.findViewById(R.id.spinner)
+        /*   mSpinner=this.view!!.findViewById(R.id.spinner)
       //  ArrayAdapter<String>(this,R.layout.spinner_layout,conversionsadd);
         val aAdapter = ArrayAdapter.createFromResource(this.mContext, R.array.SpinnerArray, R.layout.spinner_layout)
         mSpinner!!.adapter=aAdapter
@@ -116,6 +115,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 }
             }
         }
+        */
         //20171124 Andy
 
 
