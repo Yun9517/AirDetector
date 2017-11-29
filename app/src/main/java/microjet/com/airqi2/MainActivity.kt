@@ -2,6 +2,7 @@ package microjet.com.airqi2
 
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.IntentService
 import android.support.v4.app.ActivityCompat.startActivityForResult
 import android.support.v4.view.GravityCompat
 import android.util.Log
@@ -9,18 +10,19 @@ import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.ContentValues
-import android.content.Intent
+import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.appcompat.R.id.list_item
+import android.support.v7.appcompat.R.id.message
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
@@ -66,12 +68,12 @@ class MainActivity : AppCompatActivity() {
 
 
     //Richard 171124
-    private var nvDrawer : NavigationView? = null
+    private var nvDrawerNavigation : NavigationView? = null
     private var mDevice: BluetoothDevice? = null
     private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
-    private var mBluetoothManager : BluetoothManager? = null
-    private var mBluetoothAdapter : BluetoothAdapter? = null
+    //private var mBluetoothManager : BluetoothManager? = null
+    //private var mBluetoothAdapter : BluetoothAdapter? = null
 
     //20171128   Andy SQLlite
     internal lateinit var dbrw: SQLiteDatabase
@@ -96,8 +98,6 @@ class MainActivity : AppCompatActivity() {
     internal var idTTDBStr = ""
 
 
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -119,6 +119,8 @@ class MainActivity : AppCompatActivity() {
         Toast.makeText(this,AndyAirDBhelper.database15 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
         AddedSQLlite(60000)
         SearchSQLlite()
+
+
 
         //20171128 Andy SQL
         //*********************************************************************************************
@@ -183,13 +185,44 @@ class MainActivity : AppCompatActivity() {
         */
 
 
-        setupDrawerContent(nvDrawer)
 
-        //初始化Service及BlueToothAdapter 171128
-        mBluetoothLeService = UartService()
-        mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        mBluetoothAdapter = mBluetoothManager!!.adapter
+        setupDrawerContent(nvDrawerNavigation)
+    }
 
+
+    private val mMessageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            // on background handler thread, and verified CONNECTIVITY_INTERNAL
+            // permission above.
+            when (intent.action) {
+                "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED" -> {
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                }
+                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED" -> {
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                }
+            }
+        }
+    }
+
+
+
+
+    override fun onResume() {
+        super.onResume()
+        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
+
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
     }
 
 //20171128 Andy SQL
@@ -310,7 +343,7 @@ private fun SearchSQLlite() {
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
-        nvDrawer = this.findViewById(R.id.navigation);
+        nvDrawerNavigation = this.findViewById(R.id.navigation);
     }
 
     @Suppress("DEPRECATION")
@@ -409,12 +442,14 @@ private fun SearchSQLlite() {
         }
     }
 
+
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         //var fragment: Fragment? = null
         //val fragmentClass: Class<*>
         when (menuItem.itemId) {
-            R.id.nav_add_device -> blueToothShow("新增裝置" ,"新增裝置")
+            R.id.nav_add_device -> blueToothShow()
+            R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_air_map -> airmapShow()
             //R.id.nav_about -> AboutActivity
@@ -448,10 +483,15 @@ private fun SearchSQLlite() {
     }
 
     //menuItem點下去後StartActivityResult等待回傳
-    private fun blueToothShow(title : String, content : String) {
+    private fun blueToothShow() {
         val i : Intent? = Intent(this,
                 DeviceListActivity::class.java)
         startActivityForResult(i,REQUEST_SELECT_DEVICE)
+    }
+
+    private fun blueToothdisconnect() {
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        stopService(serviceIntent)
     }
 
     //視回傳的code執行相對應的動作
@@ -460,11 +500,13 @@ private fun SearchSQLlite() {
         when (requestCode) {
             REQUEST_SELECT_DEVICE ->
             //When the DeviceListActivity return, with the selected device address
+            //得到Address後將Address後傳遞至Service後啟動 171129
             if (resultCode == Activity.RESULT_OK && data != null) {
                 val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
                 mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
-                mBluetoothLeService!!.mBluetoothAdapter = this.mBluetoothAdapter
-                mBluetoothLeService!!.connect(deviceAddress)
+                val serviceIntent :Intent? = Intent(this, UartService::class.java)
+                serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
+                startService(serviceIntent)
                 Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
             }
             else -> {
@@ -472,6 +514,18 @@ private fun SearchSQLlite() {
             }
         }
     }
+
+
+    private fun makeGattUpdateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction("com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED")
+        intentFilter.addAction("com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED")
+        //intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED)
+        //intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE)
+        //intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART)
+        return intentFilter
+    }
+
 }
 
 

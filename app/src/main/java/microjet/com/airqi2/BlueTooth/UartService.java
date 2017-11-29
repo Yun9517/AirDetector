@@ -43,6 +43,8 @@ import android.util.Log;
 import java.util.List;
 import java.util.UUID;
 
+import microjet.com.airqi2.R;
+
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
@@ -56,6 +58,7 @@ public class UartService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     private int mConnectionState = STATE_DISCONNECTED;
+
 
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
@@ -103,14 +106,14 @@ public class UartService extends Service {
                         mBluetoothGatt.discoverServices());
 
 
+
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = ACTION_GATT_DISCONNECTED;
                 mConnectionState = STATE_DISCONNECTED;
               //  broadcastUpdate(ACTION_GATT_DISCONNECTED);
                 Log.i(TAG, "Disconnected from GATT server.");
                 broadcastUpdate(intentAction);
-                disconnect();
-                close();
+
 
             }
         }
@@ -143,7 +146,7 @@ public class UartService extends Service {
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
-        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
     private void broadcastUpdate(final String action,
@@ -249,6 +252,11 @@ public class UartService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(" ", "onStartCommand");
 
+        mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+        connect(mBluetoothDeviceAddress);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -264,7 +272,6 @@ public class UartService extends Service {
             return;
         }
         mBluetoothGatt.disconnect();
-       // mBluetoothGatt.close();
     }
 
     /**
@@ -373,4 +380,8 @@ public class UartService extends Service {
         return mConnectionState;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -4,7 +4,12 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_add_device"
+            android:visible="true"
             android:title="@string/text_navi_add_device" />
+        <item
+            android:id="@+id/nav_disconnect_device"
+            android:visible="false"
+            android:title="裝置斷線" />
     </group>
 
     <group
