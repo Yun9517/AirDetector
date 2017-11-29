@@ -80,18 +80,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.data = getBarData()
                     mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     mChart?.animateX(20)
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())//移動視圖by x index
                 }
                 R.id.radioButton_Day->{
                     mChart?.data = getBarData()
                     mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
                 }
                 R.id.radioButton_Week->{
                     mChart?.data = getBarData()
                     mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
                 }
                 R.id.radioButton_Month->{
                     mChart?.data = getBarData()
                     mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
                 }
             }
          //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
@@ -232,6 +236,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         super.onResume()
 
         mChart!!.data = getBarData()
+        mChart?.setVisibleXRangeMaximum(5.0f)
     }
 
     override fun onStop() {
@@ -286,7 +291,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
-
         rightAxis.isEnabled = false
     }
 
