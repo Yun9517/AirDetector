@@ -50,6 +50,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mTextViewValue: TextView?=null
     private var mSpinner : Spinner?=null
     private var DATA_COUNT : Int = 60
+    private var mRadioGroup :RadioGroup?=null
+
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -69,7 +71,31 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        mRadioGroup=this.view?.findViewById(R.id.frg_radioGroup)
         mChart = this.view!!.findViewById(R.id.chart_line)
+        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
+            mChart?.clear()
+            when (i){
+                R.id.radioButton_Hour->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.animateX(20)
+                }
+                R.id.radioButton_Day->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                }
+                R.id.radioButton_Week->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                }
+                R.id.radioButton_Month->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                }
+            }
+         //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
+        })
 
         configChartView()
 
