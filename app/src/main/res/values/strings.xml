@@ -60,6 +60,25 @@
     <string name="frg_tvocRadioButtonDay">日</string>
     <string name="frg_tvocRadioButtonWeek">週</string>
     <string name="frg_tvocRadioButtonMonth">月</string>
+
+    <string name="text_setting_test_cycle">測試週期選擇</string>
+    <string name="text_setting_allow_notification">允許通知</string>
+    <string name="text_setting_notify_message">訊息</string>
+    <string name="text_setting_notify_viberation">震動</string>
+    <string name="text_setting_notify_sound">提示音</string>
+    <string name="text_setting_on">開啟</string>
+    <string name="text_setting_off">關閉</string>
+    <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
+    <string name="text_setting_notify_comment_2">濃度高於660 ppb通知/首次通知/每10分鐘一次</string>
+    <string name="text_setting_history">歷史資料</string>
+    <string name="text_setting_history_clean">清除</string>
+    <string name="text_setting_history_export">匯出</string>
+    <string name="text_setting_allow_in_background">允許APP在背景執行</string>
+    <string name="text_setting_pollution_total_notification">污染物累積吸入總量通知</string>
+    <string name="text_setting_pollution_comment_1"><![CDATA[小時平均濃度<220 ppb/每日一次]]></string>
+    <string name="text_setting_pollution_comment_2">小時平均濃度220~660 ppb/8小時一次</string>
+    <string name="text_setting_pollution_comment_3"><![CDATA[小時平均濃度>660 ppb/每小時一次]]></string>
+
     <string-array name="SpinnerArray" >
         <item>時</item>
         <item>日</item>
