@@ -684,5 +684,54 @@ class CallingTranslate {
 
         return ReturnValue
     }
-
+    fun ParserGetAutoSendData(bytes: ByteArray): ArrayList<String> {
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var stringHex = ""
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+                    value = value shl 8
+                    value = value + (bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1-> {//Temperature
+                            value = -45 + 175 * value / 65535
+                            value -= 6
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                            stringHex = ""
+                        }
+                        3 -> {//Humidity
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        5 -> {//TVOC
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        7-> {//CO2
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        8->{//battery life
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return ReturnValue
+    }
 }
