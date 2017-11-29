@@ -1,25 +1,32 @@
 package microjet.com.airqi2
 
+import android.app.Activity
 import android.app.DatePickerDialog
+import android.support.v4.app.ActivityCompat.startActivityForResult
+import android.support.v4.view.GravityCompat
+import android.util.Log
+import microjet.com.airqi2.BlueTooth.DeviceListActivity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.content.Context
 import android.content.ContentValues
 import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
-import android.support.design.R.id.left
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
 import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
+import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.Fragment.MainFragment
 import microjet.com.airqi2.Fragment.TVOCFragment
@@ -60,6 +67,11 @@ class MainActivity : AppCompatActivity() {
 
     //Richard 171124
     private var nvDrawer : NavigationView? = null
+    private var mDevice: BluetoothDevice? = null
+    private var mBluetoothLeService: UartService? = null
+    private val REQUEST_SELECT_DEVICE = 1
+    private var mBluetoothManager : BluetoothManager? = null
+    private var mBluetoothAdapter : BluetoothAdapter? = null
 
     //20171128   Andy SQLlite
     internal lateinit var dbrw: SQLiteDatabase
@@ -158,6 +170,7 @@ class MainActivity : AppCompatActivity() {
 /*
         //20171124 Andy月曆實現
         // create an OnDateSetListener
+        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         dateSetListener = object : DatePickerDialog.OnDateSetListener {
             override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
                                    dayOfMonth: Int) {
@@ -169,8 +182,14 @@ class MainActivity : AppCompatActivity() {
         }
         */
 
-        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
+
         setupDrawerContent(nvDrawer)
+
+        //初始化Service及BlueToothAdapter 171128
+        mBluetoothLeService = UartService()
+        mBluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+        mBluetoothAdapter = mBluetoothManager!!.adapter
+
     }
 
 //20171128 Andy SQL
@@ -388,6 +407,11 @@ private fun SearchSQLlite() {
         startActivity(i)
     }
 
+    private fun settingShow() {
+        val i : Intent? = Intent(this, SettingActivity::class.java)
+        startActivity(i)
+    }
+
 
 /*
     //20171124 Andy叫出月曆的方法
@@ -412,12 +436,13 @@ private fun SearchSQLlite() {
         //var fragment: Fragment? = null
         //val fragmentClass: Class<*>
         when (menuItem.itemId) {
-            R.id.nav_add_device -> dialogShow("新增裝置" ,"新增裝置")
+            R.id.nav_add_device -> blueToothShow("新增裝置" ,"新增裝置")
             R.id.nav_about -> aboutShow()
             R.id.nav_air_map -> airmapShow()
             //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
+            R.id.nav_setting -> settingShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }
@@ -435,11 +460,45 @@ private fun SearchSQLlite() {
         // Highlight the selected item has been done by NavigationView
         //menuItem.isChecked = true
         // Set action bar title
+
         title = menuItem.title
+
+        //title = menuItem.title
+        // Close the navigation drawer
+        // ******************************************************//
+        //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
+        //title = menuItem.title
+        // ******************************************************//
+
         // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
 
+    //menuItem點下去後StartActivityResult等待回傳
+    private fun blueToothShow(title : String, content : String) {
+        val i : Intent? = Intent(this,
+                DeviceListActivity::class.java)
+        startActivityForResult(i,REQUEST_SELECT_DEVICE)
+    }
+
+    //視回傳的code執行相對應的動作
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            REQUEST_SELECT_DEVICE ->
+            //When the DeviceListActivity return, with the selected device address
+            if (resultCode == Activity.RESULT_OK && data != null) {
+                val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
+                mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
+                mBluetoothLeService!!.mBluetoothAdapter = this.mBluetoothAdapter
+                mBluetoothLeService!!.connect(deviceAddress)
+                Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
+            }
+            else -> {
+                print("test")
+            }
+        }
+    }
 }
 
 
