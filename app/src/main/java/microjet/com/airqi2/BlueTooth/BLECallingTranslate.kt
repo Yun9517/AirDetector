@@ -1,6 +1,8 @@
 package microjet.com.airqi2.BlueTooth
 
 import android.util.Log
+import java.util.ArrayList
+import kotlin.experimental.and
 
 /**
  * Created by B00055 on 2017/11/29.
@@ -366,4 +368,321 @@ class CallingTranslate {
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.WriteCmd, Command_List.PumpOnLens, Command_List.PumpOn, b[2], b[3], checkSum)
     }
+
+
+    fun Parser(bytes: ByteArray): ArrayList<String> {
+        // String[] ReturnValue=new String[];
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var value = 0
+        var temp=0x00;
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                for (j in 0 until CountTemp - 1) {
+                    i = i + 1//Point to DataValue
+                    value = value shl 8
+                    value = value + (bytes[i] and 0xFF.toByte())
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                ReturnValue.add(Integer.toString(value))
+            } else {//non_Stop
+
+            }
+            i++
+        }
+
+        return ReturnValue
+    }
+
+    fun ParserAll(bytes: ByteArray): ArrayList<String> {
+        // String[] ReturnValue=new String[];
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var value = 0
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                for (j in 0 until CountTemp - 1) {
+                    i = i + 1//Point to DataValue
+                    value = value shl 8
+                    value = value + (bytes[i] and 0xFF.toByte())
+                    if (j == 1) {//Temperature
+                        value = -45 + 175 * value / 65535
+                        value -= 6
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    } else if (j >= 3 && j % 2 == 1) {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    //    i=i+1;//Point to DataValue
+                    //    value=value<<8;
+                    //    value=value+(bytes[i]&0xFF);
+
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            } else {//non_Stop
+
+            }
+            i++
+        }
+
+        return ReturnValue
+    }
+
+    fun ParserGetHistorySampleItem(bytes: ByteArray): ArrayList<String> {
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var stringHex = ""
+        var value = 0
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+                    value = value shl 8
+                    value = value + (bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Item Index
+                        -> {
+                            //  ReturnValue.add(stringHex);
+                            //   stringHex="";
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        3//Temp
+                        -> {
+                            value = -45 + 175 * value / 65535
+                            value -= 6
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                            stringHex = ""
+                        }
+                        5//
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        7//
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        9//
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }//   ReturnValue.add(stringHex);
+                    //   stringHex="";
+                    //   ReturnValue.add(stringHex);
+                    //   stringHex="";
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+        return ReturnValue
+    }
+
+    fun ParserGetHistorySampleItems(bytes: ByteArray): ArrayList<String> {
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        val stringHex = ""
+        var value = 0
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    value = value shl 8
+                    value = value + (bytes[i] and 0xFF.toByte())
+                    //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+                    when (j) {
+                        1//Max Items
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        2//sample time Year
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        3//sample time month
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        4//sample time date
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        5//sample time hour
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        6//sample time minute
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        7//sample time second
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        8//sample status
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        9//correct time
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+        return ReturnValue
+    }
+
+    fun ParserGetSampleRate(bytes: ByteArray): ArrayList<String> {
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var stringHex = ""
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp =(bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
+                    when (j) {
+                        0//sample rate
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        2//sensor on time
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        4//time to get sample
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        6//pump on time
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        8//pumping time
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        9//get data in cycle 間隔多久取資料
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        10//期間內取幾次資料
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+        return ReturnValue
+    }
+
+    fun ParserGetInfo(bytes: ByteArray): ArrayList<String> {
+        // String[] ReturnValue=new String[];
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var stringHex = ""
+        var i = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    stringHex += Integer.toString((bytes[i] and  0xff.toByte()) + 0x100, 16).substring(1)
+                    when (j) {
+                        5//MAC Address
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        6//Device
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        7//VOC sensor
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        10//FW Version
+                        -> {
+                            ReturnValue.add(stringHex)
+                            stringHex = ""
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+
+        return ReturnValue
+    }
+
 }
