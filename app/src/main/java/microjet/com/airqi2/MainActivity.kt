@@ -390,6 +390,11 @@ private fun SearchSQLlite() {
         startActivity(i)
     }
 
+    private fun settingShow() {
+        val i : Intent? = Intent(this, SettingActivity::class.java)
+        startActivity(i)
+    }
+
 
 /*
     //20171124 Andy叫出月曆的方法
@@ -420,6 +425,7 @@ private fun SearchSQLlite() {
             //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
+            R.id.nav_setting -> settingShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }
