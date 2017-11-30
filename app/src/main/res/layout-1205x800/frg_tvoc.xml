@@ -32,10 +32,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="32sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
+                android:checked="true"
                 android:text="@string/frg_tvocRadioButtonHour" />
 
             <RadioButton
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="32sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -56,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="32sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="32sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -117,36 +118,36 @@
         android:id="@+id/textVSelectDetectionTime"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="20dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="12:05"
-        android:textSize="28sp"
         android:textStyle="bold"
+        android:textSize="36sp"
         android:textAlignment="center" />
 
     <TextView
         android:id="@+id/textVSelectDetectionValue"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
+        android:layout_marginTop="10dp"
         android:text="783ppb"
-        android:textSize="28sp"
         android:textStyle="bold"
+        android:textSize="36sp"
         android:textAlignment="center" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/chart_subtitle"
         android:gravity="end"
         android:text="@string/text_label_tvoc"
-        android:background="@drawable/chart_subtitle"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        android:textSize="22sp"
-        android:textStyle="bold"
-        android:layout_gravity="end"
-        android:textAlignment="gravity" />
+        android:textSize="20sp"
+        android:textAlignment="gravity"
+        android:textStyle="bold" />
 
     <microjet.com.airqi2.CustomAPI.FixBarChart
         android:id="@+id/chart_line"

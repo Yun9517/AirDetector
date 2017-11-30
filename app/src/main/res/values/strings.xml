@@ -82,6 +82,8 @@
     <string name="text_setting_pollution_comment_1"><![CDATA[小時平均濃度<220 ppb/每日一次]]></string>
     <string name="text_setting_pollution_comment_2">小時平均濃度220~660 ppb/8小時一次</string>
     <string name="text_setting_pollution_comment_3"><![CDATA[小時平均濃度>660 ppb/每小時一次]]></string>
+    <string name="text_tvoc_meter_220ppb">220</string>
+    <string name="text_tvoc_meter_660ppb">660</string>
 
     <string-array name="SpinnerArray" >
         <item>時</item>
