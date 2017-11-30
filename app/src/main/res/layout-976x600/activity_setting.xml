@@ -266,7 +266,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/text_setting_pollution_total_notification"
-            android:textSize="20sp" />
+            android:textSize="24sp" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/swTotalNotify"
