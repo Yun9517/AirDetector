@@ -29,7 +29,7 @@
     <string name="text_navi_knowledge">Knowledge</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->
-    <string name="Web_site">Web Site</string>
+    <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">Contact Us</string>
     <string name="Contact_mail">Service Mail</string>
     <string name="show_app_version">Version   %s</string>

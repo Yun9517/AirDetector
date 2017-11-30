@@ -9,6 +9,12 @@
     <color name="radioButtonInSelected">#78BAB4</color><!-- Radio Button In Selected -->
     <color name="radioButtonNormal">#8AE2D9</color><!-- Radio Button Normal -->
 
+    <!-- Color for About Page -->
+    <color name="AboutPageBackground">#EDF7F4</color>
+    <color name="AboutTitle">#005041</color>
+    <color name="AboutTextColor">#497739</color>
+    <color name="AboutHyperLink">#FF9100</color>
+
     <color name="settingPageBackground">#ddebe6</color><!-- 設定頁背景色彩 -->
 
     <color name="whiteColor">#ffffff</color>.

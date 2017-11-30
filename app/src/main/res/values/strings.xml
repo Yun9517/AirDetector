@@ -35,7 +35,7 @@
     <string name="cancel">取消</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->
-    <string name="Web_site">網站</string>
+    <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">聯絡我們</string>
     <string name="Contact_mail">客服信箱</string>
     <string name="show_app_version">APP 版本   V.%s</string>

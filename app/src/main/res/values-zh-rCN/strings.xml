@@ -29,7 +29,7 @@
     <string name="text_navi_knowledge">知识库</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->
-    <string name="Web_site">网站</string>
+    <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">联络我们</string>
     <string name="Contact_mail">客服信箱</string>
     <string name="show_app_version">APP 版本   V.%s</string>
