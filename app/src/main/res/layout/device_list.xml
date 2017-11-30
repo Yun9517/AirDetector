@@ -29,7 +29,7 @@
                 android:layout_centerInParent="true"
                 android:text="@string/select_device"
                 android:textColor="#fff"
-                android:textSize="15sp"
+                android:textSize="22sp"
                 tools:ignore="RelativeOverlap,RtlHardcoded" />
 
 
@@ -60,7 +60,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@color/titleBarColor"
-                android:text="@android:string/cancel" />
+                android:text="@android:string/cancel"
+                android:textColor="@color/whiteColor"
+                android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

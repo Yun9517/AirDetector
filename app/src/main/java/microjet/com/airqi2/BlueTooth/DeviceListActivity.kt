@@ -303,7 +303,11 @@ class DeviceListActivity : Activity() {
             val rssi = mLeDevicesRssi[i]
             val deviceName = device.name
             if (deviceName != null && deviceName.isNotEmpty()) {
-                viewHolder.deviceName!!.text = deviceName
+                if(deviceName.contains("ADDWII_ASM_1124L")) {
+                    viewHolder.deviceName!!.text = deviceName.substring(0, 16)
+                } else {
+                    viewHolder.deviceName!!.text = deviceName
+                }
             } else {
                 viewHolder.deviceName!!.text = "Null"
             }
