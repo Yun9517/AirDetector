@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <Spinner
+    <!--<Spinner
             android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -19,7 +18,60 @@
             android:foreground="@drawable/message_block_background"
             android:popupBackground="@drawable/message_block_background">
         </Spinner>
-<!--
+        -->
+        <RadioGroup
+            android:id="@+id/frg_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton_Hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:checked="true"
+                android:text="@string/frg_tvocRadioButtonHour" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonDay" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonWeek" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonMonth" />
+
+
+
+        </RadioGroup>
+
+        <!--
         <Button
             android:id="@+id/btnPickDate"
             android:layout_width="wrap_content"
@@ -60,6 +112,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|fill_vertical"
         android:text="12:05"
+        android:textStyle="bold"
         android:textAlignment="center" />
 
     <TextView
@@ -68,7 +121,20 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical|fill_vertical"
         android:text="783ppb"
+        android:textStyle="bold"
         android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="@string/text_label_tvoc"
+        android:background="@drawable/chart_subtitle"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:textStyle="bold"
+        android:layout_gravity="right"
+        android:textAlignment="gravity" />
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart_line"

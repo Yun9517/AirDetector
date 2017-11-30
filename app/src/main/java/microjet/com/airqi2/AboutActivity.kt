@@ -15,6 +15,6 @@ class AboutActivity : AppCompatActivity() {
         setContentView(R.layout.activity_about)
         val textView : TextView?= findViewById(R.id.aboutAppVersion)
         val string : String? = getString(R.string.show_app_version, BuildConfig.VERSION_NAME)
-        textView!!.text=string
+        textView!!.text = string
     }
 }

@@ -20,7 +20,8 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 	//final static String database12 = "AirDataBase12";
 	//final static String database13 = "AirDataBase13";
     //final static String database14 = "AirDataBase14";
-    final static String database15 = "AndyAirDataBase15";
+    final static String database16 = "AndyAirDataBase16";
+
 	//final static int version = 1;
 	//final static int version2 = 3;
 	//final static int version3 = 3;
@@ -35,8 +36,8 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 	//final static int version12 = 3;
 	//final static int version13 = 3;
     //final static int version14 = 3;
-    final static int version15 = 4;
-
+    //final static int version15 = 4;
+	final static int version16 = 4;
 
     public static SQLiteDatabase dbrw;
 
@@ -49,7 +50,7 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 
 	// 自建的建構子，只需傳入一個Context物件即可
 	public AndyAirDBhelper(Context context) {
-		super(context, database15, null, version15);
+		super(context, database16, null, version16);
 	}
 	//建立資料表
 	@Override

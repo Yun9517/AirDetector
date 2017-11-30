@@ -24,6 +24,7 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.appcompat.R.id.list_item
 import android.support.v7.appcompat.R.id.message
+import android.util.DisplayMetrics
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.DatePicker
@@ -90,7 +91,7 @@ class MainActivity : AppCompatActivity() {
     internal var co13T = ""
     internal var co14T = ""
     internal var coTTDBTEST = ""
-    internal var SaveToDB = arrayOf("20", "20", "20", "20")
+    internal var SaveToDB = arrayOf("10", "20", "30", "40")
     internal var idTTDB: Long = 4
     internal var c: Cursor? = null
     internal var cv: ContentValues? = null
@@ -111,6 +112,10 @@ class MainActivity : AppCompatActivity() {
         viewPagerInit()
         initActionBar()
 
+        val dm = DisplayMetrics()
+        this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
+        Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
+
         // 電池電量假資料
         batValue = 30
 
@@ -121,7 +126,7 @@ class MainActivity : AppCompatActivity() {
 
         dbhelper = AndyAirDBhelper(this)
         dbrw = dbhelper.writableDatabase
-        Toast.makeText(this,AndyAirDBhelper.database15 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
+        Toast.makeText(this,AndyAirDBhelper.database16 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
         AddedSQLlite(60000)
         SearchSQLlite()
 
@@ -173,7 +178,7 @@ class MainActivity : AppCompatActivity() {
 */
 //*********************************************************************************************
 // ------------------------------------------------------------------------------------------------------------------------------------------------
-//安迪要打新增內容!!!!!!!!!!!!!!!!!!!!!!!!
+
 /*
         //20171124 Andy月曆實現
         // create an OnDateSetListener
@@ -276,10 +281,10 @@ private fun SearchSQLlite() {
 
 
     // 排版
-    //co10T += colstT[0] + "\n";
-    //co11T += colstT[1] + "\n";
-    //co12T += colstT[2] + "\n";
-    // co13T += colstT[3] + "\n";
+    co10T += colstT[0] + "\n";
+    co11T += colstT[1] + "\n";
+    co12T += colstT[2] + "\n";
+     co13T += colstT[3] + "\n";
     co14T += colstT[4] + "\n"
 
 
@@ -288,18 +293,35 @@ private fun SearchSQLlite() {
         c!!.moveToFirst()
 
         for (i in 0 until c!!.getCount()) {
-            Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-            co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+            //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+            //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+            //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
+            //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
+            //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
+            //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
             // sqlite比較不嚴僅，都用getString()取值即可
-            co14T += c!!.getString(4) + "\n"
-            Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+            co10T += c!!.getString(0) + "\n"
+            //co11T += c!!.getString(1) + "\n"
+            //co12T += c!!.getString(2) + "\n"
+            //co13T += c!!.getString(3) + "\n"
+            //co14T += c!!.getString(4) + "\n"
+            //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+
+            Count = c!!.getCount().toLong()
+            //c.close();
+            val CountString = Count.toString()
+            Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
+
+            Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0)  +"\n"
+                    +"資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) +"C \n"
+                    +"資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) +"% \n"
+                    +"資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) +"ppm \n"
+                    +"資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) +"ppb", Toast.LENGTH_LONG).show()
+
             c!!.moveToNext()
         }
 
-        Count = c!!.getCount().toLong()
-        //c.close();
-        val CountString = Count.toString()
-        Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
+
     } else {
         Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
     }
@@ -429,6 +451,11 @@ private fun SearchSQLlite() {
         startActivity(i)
     }
 
+    private fun settingShow() {
+        val i : Intent? = Intent(this, SettingActivity::class.java)
+        startActivity(i)
+    }
+
 
 /*
     //20171124 Andy叫出月曆的方法
@@ -461,6 +488,7 @@ private fun SearchSQLlite() {
             //R.id.nav_about -> AboutActivity
             //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
+            R.id.nav_setting -> settingShow()
             //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
             //else -> fragmentClass = FirstFragment::class.java
         }
@@ -478,12 +506,14 @@ private fun SearchSQLlite() {
         // Highlight the selected item has been done by NavigationView
         //menuItem.isChecked = true
         // Set action bar title
+
         //title = menuItem.title
         // Close the navigation drawer
         // ******************************************************//
         //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
         //title = menuItem.title
         // ******************************************************//
+
         // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }

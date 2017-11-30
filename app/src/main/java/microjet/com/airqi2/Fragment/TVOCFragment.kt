@@ -50,11 +50,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mTextViewValue: TextView?=null
     private var mSpinner : Spinner?=null
     private var DATA_COUNT : Int = 60
+    private var mRadioGroup :RadioGroup?=null
+
+    private var mHour: RadioButton? = null
 
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
-    var timeStartSetListener :TimePickerDialog.OnTimeSetListener?=null
+    var timeStartSetListener :TimePickerDialog.OnTimeSetListener? = null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -69,13 +72,45 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
+        mRadioGroup=this.view?.findViewById(R.id.frg_radioGroup)
         mChart = this.view!!.findViewById(R.id.chart_line)
+
+        mHour = this.view!!.findViewById(R.id.radioButton_Hour)
+
+        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
+            mChart?.clear()
+            when (i){
+                R.id.radioButton_Hour->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.animateX(20)
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())//移動視圖by x index
+                }
+                R.id.radioButton_Day->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
+                }
+                R.id.radioButton_Week->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
+                }
+                R.id.radioButton_Month->{
+                    mChart?.data = getBarData()
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
+                }
+            }
+         //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
+        })
+
+        mHour!!.isChecked = true
 
         configChartView()
 
         mChart!!.setOnChartValueSelectedListener(this)
-
-        mSpinner=this.view!!.findViewById(R.id.spinner)
+        /*   mSpinner=this.view!!.findViewById(R.id.spinner)
       //  ArrayAdapter<String>(this,R.layout.spinner_layout,conversionsadd);
         val aAdapter = ArrayAdapter.createFromResource(this.mContext, R.array.SpinnerArray, R.layout.spinner_layout)
         mSpinner!!.adapter=aAdapter
@@ -88,24 +123,24 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mChart!!.clear()
                 when(position){
-                    0->{
+                    0-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                         mChart!!.animateX(20)
                     //  mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    1->{
+                    1-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    2->{
+                    2-> {
 
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
                     }
-                    3->{
+                    3-> {
                         mChart!!.data = getBarData()
                         mChart!!.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
                     //    mChart!!.setVisibleXRangeMinimum(3.0f);//设置最少数量，不常用。
@@ -116,6 +151,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 }
             }
         }
+        */
         //20171124 Andy
 
 
@@ -206,6 +242,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         super.onResume()
 
         mChart!!.data = getBarData()
+        mChart?.setVisibleXRangeMaximum(5.0f)
     }
 
     override fun onStop() {
@@ -260,7 +297,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
-
         rightAxis.isEnabled = false
     }
 

@@ -12,7 +12,9 @@
         <item name="android:colorAccent">@color/titleBarColor</item>
     </style>
 
-
+    <style name="SwitchCompatTheme" >
+        <item name="colorControlActivated">@color/whiteColor</item>
+    </style>
 
 
 
