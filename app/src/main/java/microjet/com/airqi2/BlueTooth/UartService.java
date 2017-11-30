@@ -1,25 +1,3 @@
-
-/*
- * Copyright (c) 2015, Nordic Semiconductor
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the
- * documentation and/or other materials provided with the distribution.
- *
- * 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this
- * software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
- * LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
- * HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- * LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
- * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package microjet.com.airqi2.BlueTooth;
 
 import android.app.Service;
@@ -63,11 +41,16 @@ public class UartService extends Service {
     private static final int STATE_DISCONNECTED = 0;
     private static final int STATE_CONNECTING = 1;
     private static final int STATE_CONNECTED = 2;
+    private static final int STATE_DISCONNECTING = 3;
 
-    public final static String ACTION_GATT_CONNECTED =
-            "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTED =
             "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED";
+    public final static String ACTION_GATT_CONNECTING =
+            "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTING";
+    public final static String ACTION_GATT_CONNECTED =
+            "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED";
+    public final static String ACTION_GATT_DISCONNECTING =
+            "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTING";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
             "com.nordicsemi.nrfUART.ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
@@ -86,6 +69,9 @@ public class UartService extends Service {
     public static final UUID RX_CHAR_UUID = UUID.fromString("6e400002-b5a3-f393-e0a9-e50e24dcca9e");
     public static final UUID TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e");
 
+    String intentAction;
+
+
 
 
 //    public UartService() { //建構式
@@ -95,26 +81,37 @@ public class UartService extends Service {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            String intentAction;
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED;
-                mConnectionState = STATE_CONNECTED;
-                broadcastUpdate(intentAction);
-                Log.i(TAG, "Connected to GATT server.");
-                // Attempts to discover services after successful connection.
-                Log.i(TAG, "Attempting to start service discovery:" +
-                        mBluetoothGatt.discoverServices());
-
-
-
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED;
-                mConnectionState = STATE_DISCONNECTED;
-              //  broadcastUpdate(ACTION_GATT_DISCONNECTED);
-                Log.i(TAG, "Disconnected from GATT server.");
-                broadcastUpdate(intentAction);
-
-
+            switch (newState) {
+                case BluetoothProfile.STATE_DISCONNECTED: {
+                    intentAction = ACTION_GATT_DISCONNECTED;
+                    //mConnectionState = STATE_DISCONNECTED;
+                    Log.i(TAG, "Disconnected from GATT server.");
+                    broadcastUpdate(intentAction);
+                    break;
+                }
+                case BluetoothProfile.STATE_CONNECTING: {
+                    intentAction = ACTION_GATT_CONNECTING;
+                    //mConnectionState = STATE_CONNECTING;
+                    Log.i(TAG, "Disconnected from GATT server.");
+                    broadcastUpdate(intentAction);
+                    break;
+                }
+                case BluetoothProfile.STATE_CONNECTED: {
+                    intentAction = ACTION_GATT_CONNECTED;
+                    //mConnectionState = STATE_CONNECTED;
+                    broadcastUpdate(intentAction);
+                    Log.i(TAG, "Connected to GATT server.");
+                    Log.i(TAG, "Attempting to start service discovery:" +
+                            mBluetoothGatt.discoverServices());
+                    break;
+                }
+                case BluetoothProfile.STATE_DISCONNECTING: {
+                    intentAction = ACTION_GATT_DISCONNECTING;
+                    //mConnectionState = STATE_DISCONNECTING;
+                    Log.i(TAG, "Disconnected from GATT server.");
+                    broadcastUpdate(intentAction);
+                    break;
+                }
             }
         }
 
@@ -122,26 +119,26 @@ public class UartService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
             	Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt );
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
         }
 
-        @Override
-        public void onCharacteristicRead(BluetoothGatt gatt,
-                                         BluetoothGattCharacteristic characteristic,
-                                         int status) {
-            if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-            }
-        }
-
-        @Override
-        public void onCharacteristicChanged(BluetoothGatt gatt,
-                                            BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-        }
+//        @Override
+//        public void onCharacteristicRead(BluetoothGatt gatt,
+//                                         BluetoothGattCharacteristic characteristic,
+//                                         int status) {
+//            if (status == BluetoothGatt.GATT_SUCCESS) {
+//                //broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+//            }
+//        }
+//
+//        @Override
+//        public void onCharacteristicChanged(BluetoothGatt gatt,
+//                                            BluetoothGattCharacteristic characteristic) {
+//            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+//        }
     };
 
     private void broadcastUpdate(final String action) {
@@ -149,26 +146,30 @@ public class UartService extends Service {
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-    private void broadcastUpdate(final String action,
-                                 final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
+//    private void broadcastUpdate(final String action,
+//                                 final BluetoothGattCharacteristic characteristic) {
+//        final Intent intent = new Intent(action);
+//
+//        // This is handling for the notification on TX Character of NUS service
+//        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
+//
+//           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+//            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+//        } else {
+//
+//        }
+//        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//    }
 
-        // This is handling for the notification on TX Character of NUS service
-        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-        	
-           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        } else {
-        	
-        }
-        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
 
+    //BindService專用
     public class LocalBinder extends Binder {
-       UartService getService() {
+       public UartService getServerInstance() {
             return UartService.this;
        }
     }
+
+    IBinder mBinder = new LocalBinder();
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -184,7 +185,6 @@ public class UartService extends Service {
         return super.onUnbind(intent);
     }
 
-    private final IBinder mBinder = new LocalBinder();
 
     /**
      * Initializes a reference to the local Bluetooth adapter.
@@ -208,6 +208,12 @@ public class UartService extends Service {
         }
         return true;
     }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
 
     /**
      * Connects to the GATT server hosted on the Bluetooth LE device.
@@ -251,7 +257,7 @@ public class UartService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(" ", "onStartCommand");
-
+        //StartService後執行連線
         mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
         mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
@@ -383,5 +389,11 @@ public class UartService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        intentAction = ACTION_GATT_DISCONNECTED;
+        //mConnectionState = STATE_DISCONNECTED;
+        Log.i(TAG, "Disconnected from GATT server.");
+        broadcastUpdate(intentAction);
+        disconnect();
+        close();
     }
 }

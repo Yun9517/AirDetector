@@ -14,6 +14,7 @@ import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
+import android.os.IBinder
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
@@ -96,6 +97,10 @@ class MainActivity : AppCompatActivity() {
     internal var IDID = ""
     internal var Count: Long = 0
     internal var idTTDBStr = ""
+
+
+    //UArtService實體
+    private var mService : UartService? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -184,8 +189,6 @@ class MainActivity : AppCompatActivity() {
         }
         */
 
-
-
         setupDrawerContent(nvDrawerNavigation)
     }
 
@@ -195,23 +198,25 @@ class MainActivity : AppCompatActivity() {
             // on background handler thread, and verified CONNECTIVITY_INTERNAL
             // permission above.
             when (intent.action) {
+                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED",
+                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTING"
+                -> {
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                }
                 "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED" -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                }
-                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED" -> {
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
                 }
             }
         }
     }
 
-
-
-
     override fun onResume() {
         super.onResume()
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
+        startService(serviceIntent)
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
 
     }
@@ -223,6 +228,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
+        unbindService(mServiceConnection)
     }
 
 //20171128 Andy SQL
@@ -486,7 +492,8 @@ private fun SearchSQLlite() {
     private fun blueToothShow() {
         val i : Intent? = Intent(this,
                 DeviceListActivity::class.java)
-        startActivityForResult(i,REQUEST_SELECT_DEVICE)
+        startActivity(i)
+        //startActivityForResult(i,REQUEST_SELECT_DEVICE)
     }
 
     private fun blueToothdisconnect() {
@@ -502,12 +509,13 @@ private fun SearchSQLlite() {
             //When the DeviceListActivity return, with the selected device address
             //得到Address後將Address後傳遞至Service後啟動 171129
             if (resultCode == Activity.RESULT_OK && data != null) {
-                val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
-                mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
-                val serviceIntent :Intent? = Intent(this, UartService::class.java)
-                serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
-                startService(serviceIntent)
-                Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
+                //val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
+                //mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
+                //val serviceIntent :Intent? = Intent(this, UartService::class.java)
+                //serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
+                //startService(serviceIntent)
+                //Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
+                print("MainActivity")
             }
             else -> {
                 print("test")
@@ -515,15 +523,27 @@ private fun SearchSQLlite() {
         }
     }
 
-
     private fun makeGattUpdateIntentFilter(): IntentFilter {
-        val intentFilter = IntentFilter()
-        intentFilter.addAction("com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED")
-        intentFilter.addAction("com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED")
-        //intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED)
-        //intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE)
-        //intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART)
-        return intentFilter
+        var intentF = IntentFilter()
+        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED")
+        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED")
+        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_SERVICES_DISCOVERED")
+        intentF.addAction("com.nordicsemi.nrfUART.ACTION_DATA_AVAILABLE")
+        intentF.addAction("com.nordicsemi.nrfUART.EXTRA_DATA")
+        intentF.addAction("com.nordicsemi.nrfUART.DEVICE_DOES_NOT_SUPPORT_UART")
+        return intentF
+    }
+
+
+
+    private val mServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, rawBinder: IBinder) {
+            mService = (rawBinder as UartService.LocalBinder).serverInstance
+        }
+
+        override fun onServiceDisconnected(classname: ComponentName) {
+
+        }
     }
 
 }

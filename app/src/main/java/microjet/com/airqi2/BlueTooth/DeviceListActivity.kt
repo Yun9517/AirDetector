@@ -62,10 +62,13 @@ class DeviceListActivity : Activity() {
     private var mHandler: Handler? = null
     private var mScanning: Boolean = false
     private var mBluetoothLeService : UartService? = null
+    private var mBluetoothManager : BluetoothManager? = null
     private var mDeviceAddress: String? = null
     private val TAG = "DeviceListActivity"
     private val REQUEST_SELECT_DEVICE = -1
 
+    //UArtService實體
+    private var mService : UartService? = null
 
     private val mLeScanCallback = BluetoothAdapter.LeScanCallback { device, rssi, scanRecord ->
         runOnUiThread {
@@ -83,10 +86,26 @@ class DeviceListActivity : Activity() {
         val b = Bundle()
         b.putString(BluetoothDevice.EXTRA_DEVICE, deviceList!![position].address)
 
-        val result = Intent()
-        result.putExtras(b)
-        setResult(Activity.RESULT_OK, result)
+        //val result = Intent()
+        //result.putExtras(b)
+        //setResult(Activity.RESULT_OK, result)
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, device.address)
+        //mDeviceAddress = device.address
+        startService(serviceIntent)
+        //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
         finish()
+    }
+
+    private val mServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, rawBinder: IBinder) {
+            //mService = (rawBinder as UartService.LocalBinder).serverInstance
+            //mService!!.connect(mDeviceAddress)
+        }
+
+        override fun onServiceDisconnected(classname: ComponentName) {
+
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -182,22 +201,19 @@ class DeviceListActivity : Activity() {
 
     public override fun onStart() {
         super.onStart()
-
-        val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
-        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        //val filter = IntentFilter(BluetoothDevice.ACTION_FOUND)
+        //filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)
+        //filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
     }
 
     public override fun onStop() {
         super.onStop()
         mBluetoothAdapter!!.stopLeScan(mLeScanCallback)
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         mBluetoothAdapter!!.stopLeScan(mLeScanCallback)
-
     }
 
 
