@@ -33,6 +33,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
+    compile 'pub.devrel:easypermissions:1.0.0'
 }
 
 repositories {

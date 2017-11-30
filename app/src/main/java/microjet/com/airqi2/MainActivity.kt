@@ -1,16 +1,12 @@
 package microjet.com.airqi2
 
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.IntentService
-import android.support.v4.app.ActivityCompat.startActivityForResult
-import android.support.v4.view.GravityCompat
-import android.util.Log
-import microjet.com.airqi2.BlueTooth.DeviceListActivity
+import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.*
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
@@ -18,29 +14,32 @@ import android.os.IBinder
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.appcompat.R.id.list_item
-import android.support.v7.appcompat.R.id.message
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.DatePicker
 import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
+import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
+import microjet.com.airqi2.CustomAPI.Utils
+import microjet.com.airqi2.Definition.RequestPermission
 import microjet.com.airqi2.Fragment.MainFragment
 import microjet.com.airqi2.Fragment.TVOCFragment
-import java.text.SimpleDateFormat
+import pub.devrel.easypermissions.AfterPermissionGranted
+import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-    //private val mContext = this@MainActivity
+    private val mContext = this@MainActivity
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -219,11 +218,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        requestPermissionsForBluetooth()
+
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
         startService(serviceIntent)
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
-
     }
 
     override fun onPause() {
@@ -234,6 +234,79 @@ class MainActivity : AppCompatActivity() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         unbindService(mServiceConnection)
+    }
+
+    // 20171130 add by Raymond 增加權限 Request
+    // 允許權限後的方法實作
+    override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
+        if (requestCode == RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION) {
+            checkBluetooth()
+        }
+    }
+
+    // 拒絕權限後的方法實作
+    override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
+        val mBuilder = AlertDialog.Builder(this)
+
+        mBuilder.setTitle(R.string.text_message_need_permission)
+                .setMessage(R.string.text_message_need_permission)
+                .setCancelable(false)
+                .setPositiveButton(resources.getString(R.string.text_message_yes)
+                ) { dialog, which -> finish() }
+
+        val mADialog = mBuilder.create()
+        mADialog.show()
+    }
+
+    // 請求權限結果方法實作
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        EasyPermissions.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults,
+                this)
+    }
+
+    // 要求藍芽權限的方法實作
+    @AfterPermissionGranted(RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION)
+    private fun requestPermissionsForBluetooth() {
+        if (!EasyPermissions.hasPermissions(this, RequestPermission.PERMISSION_ACCESS_FINE_LOCATION)) {
+            EasyPermissions.requestPermissions(this,
+                    getString(R.string.text_need_bluetooth_perm),
+                    RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION,
+                    RequestPermission.PERMISSION_ACCESS_FINE_LOCATION)
+        } else {
+            checkBluetooth()
+        }
+    }
+
+
+    private fun checkBluetooth() {
+        // 若手機不支援BLE則離開APP
+        if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+            Utils.toastMakeTextAndShow(mContext, resources.getString(R.string.ble_not_supported),
+                    Toast.LENGTH_SHORT)
+            finish()
+        }
+
+        // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
+        val bluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothAdapter = bluetoothManager.adapter
+
+        // Checks if Bluetooth is supported on the device.
+        if (mBluetoothAdapter == null) {
+            Utils.toastMakeTextAndShow(mContext, resources.getString(R.string.ble_not_supported),
+                    Toast.LENGTH_SHORT)
+            finish()
+        } else {
+            if(!mBluetoothAdapter.isEnabled) {
+                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                enableBtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                mContext.startActivity(enableBtIntent)
+            }
+        }
     }
 
 //20171128 Andy SQL

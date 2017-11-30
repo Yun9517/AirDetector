@@ -10,8 +10,8 @@
     android:gravity="center_vertical|center_horizontal">
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="match_parent"
+        android:layout_width="350dp"
+        android:layout_height="500dp"
         android:background="@android:color/white"
         android:orientation="vertical">
 
@@ -22,39 +22,44 @@
             android:background="@color/titleBarColor"
             android:focusable="true">
 
-        <TextView
-            android:id="@+id/title_devices"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/select_device"
-            android:textColor="#fff"
-            android:textSize="15sp"
-            tools:ignore="RelativeOverlap,RtlHardcoded" />
+            <TextView
+                android:id="@+id/title_devices"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/select_device"
+                android:textColor="#fff"
+                android:textSize="15sp"
+                tools:ignore="RelativeOverlap,RtlHardcoded" />
 
 
-    </RelativeLayout>
-        <LinearLayout android:layout_width="fill_parent"
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:orientation="vertical" >
+            android:orientation="vertical">
+
             <ListView
                 android:id="@+id/new_devices"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_weight="2"
-                android:stackFromBottom="true"
+                android:stackFromBottom="false"
                 tools:ignore="InefficientWeight" />
 
             <TextView
                 android:id="@+id/empty"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/scanning" />
+                android:text="@string/scanning"
+                android:textAlignment="center" />
 
             <Button
                 android:id="@+id/btn_cancel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:background="@color/titleBarColor"
                 android:text="@android:string/cancel" />
         </LinearLayout>
     </LinearLayout>
