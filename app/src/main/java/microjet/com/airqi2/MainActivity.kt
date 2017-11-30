@@ -82,15 +82,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     internal var tablename = "Andyairtable"
 
 
-    internal var colstT = arrayOf("編號","溫度", "濕度", "揮發", "二氧")// };
-    internal var columT = arrayOf("_id", "temper", "hum", "tvoc", "co2")//,"CO2"};
+    internal var colstT = arrayOf("編號","時間","溫度", "濕度", "揮發", "二氧")// };
+    internal var columT = arrayOf("_id", "collection_time","temper", "hum", "tvoc", "co2")//,"CO2"};
     internal var co10T = ""
     internal var co11T = ""
     internal var co12T = ""
     internal var co13T = ""
     internal var co14T = ""
+    internal var co15T = ""
+
     internal var coTTDBTEST = ""
-    internal var SaveToDB = arrayOf("10", "20", "30", "40")
+    internal var SaveToDB = arrayOf("2017/11/30","10", "20", "30", "40")
     internal var idTTDB: Long = 4
     internal var c: Cursor? = null
     internal var cv: ContentValues? = null
@@ -128,7 +130,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         dbhelper = AndyAirDBhelper(this)
         dbrw = dbhelper.writableDatabase
-        Toast.makeText(this,AndyAirDBhelper.database16 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
+        Toast.makeText(this,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
         AddedSQLlite(60000)
         SearchSQLlite()
 
@@ -140,44 +142,44 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //查詢CO2資料
         //查詢CO2資料
         //查詢CO2資料
-    /*
-        c = dbrw.query(tablename, columT, null, null, null, null, null)
+        /*
+            c = dbrw.query(tablename, columT, null, null, null, null, null)
 
-        //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
-        //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
-
-
-        // 排版
-        //co10T += colstT[0] + "\n";
-        //co11T += colstT[1] + "\n";
-        //co12T += colstT[2] + "\n";
-        // co13T += colstT[3] + "\n";
-        co14T += colstT[4] + "\n"
+            //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+            //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
 
 
+            // 排版
+            //co10T += colstT[0] + "\n";
+            //co11T += colstT[1] + "\n";
+            //co12T += colstT[2] + "\n";
+            // co13T += colstT[3] + "\n";
+            co14T += colstT[4] + "\n"
 
 
-        if (c!!.getCount() > 0) {
-            //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-            c!!.moveToFirst()
 
-            for (i in 0 until c!!.getCount()) {
-                Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-                co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
-                // sqlite比較不嚴僅，都用getString()取值即可
-                co14T += c!!.getString(4) + "\n"
-                Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
-                c!!.moveToNext()
+
+            if (c!!.getCount() > 0) {
+                //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+                c!!.moveToFirst()
+
+                for (i in 0 until c!!.getCount()) {
+                    Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+                    co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+                    // sqlite比較不嚴僅，都用getString()取值即可
+                    co14T += c!!.getString(4) + "\n"
+                    Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+                    c!!.moveToNext()
+                }
+
+                Count = c!!.getCount().toLong()
+                //c.close();
+                val CountString = Count.toString()
+                Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
             }
-
-            Count = c!!.getCount().toLong()
-            //c.close();
-            val CountString = Count.toString()
-            Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
-        }
-*/
+    */
 //*********************************************************************************************
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -252,7 +254,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         //unbindService(mServiceConnection)
     }
-
+//123
     // 20171130 add by Raymond 增加權限 Request
     // 允許權限後的方法實作
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
@@ -325,7 +327,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-//20171128 Andy SQL
+    //20171128 Andy SQL
     private fun AddedSQLlite(intData: Int)
     {
         //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -335,6 +337,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //idTTDB = c!!.getCount().toLong()
         //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
+
         if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && idTTDB >= 0) {//****************************************************************************
             //Toast.makeText(this@MainActivity, "資料滿4筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
             //cv.put(columT[0],c.getPosition());
@@ -342,8 +345,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             cv!!.put(columT[2], SaveToDB[1])
             cv!!.put(columT[3], SaveToDB[2])
             cv!!.put(columT[4], SaveToDB[3])
-            //新增一筆四個測項資料到資料庫中
+            cv!!.put(columT[5], SaveToDB[4])
+            //新增一筆五個測項資料到資料庫中
             idTTDB = dbrw.insert(tablename, null, cv)
+
             //Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
         } else {
             //Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
@@ -357,50 +362,50 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
-private fun SearchSQLlite() {
-    //****************************************************************************************************************************************************
+    private fun SearchSQLlite() {
+        //****************************************************************************************************************************************************
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-    //查詢CO2資料
-    //查詢CO2資料
-    //查詢CO2資料
-    c = dbrw.query(tablename, columT, null, null, null, null, null)
+        //查詢CO2資料
+        //查詢CO2資料
+        //查詢CO2資料
+        c = dbrw.query(tablename, columT, null, null, null, null, null)
 
-    //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
-    //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
-
-
-    // 排版
-    co10T += colstT[0] + "\n";
-    co11T += colstT[1] + "\n";
-    co12T += colstT[2] + "\n";
-     co13T += colstT[3] + "\n";
-    co14T += colstT[4] + "\n"
+        //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+        //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
 
 
-    if (c!!.getCount() > 0) {
-        //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-        c!!.moveToFirst()
+        // 排版
+        co10T += colstT[0] + "\n";
+        co11T += colstT[1] + "\n";
+        co12T += colstT[2] + "\n";
+        co13T += colstT[3] + "\n";
+        co14T += colstT[4] + "\n"
 
-        for (i in 0 until c!!.getCount()) {
-            //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-            //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
-            //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
-            //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
-            //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
-            //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
-            // sqlite比較不嚴僅，都用getString()取值即可
-            co10T += c!!.getString(0) + "\n"
-            //co11T += c!!.getString(1) + "\n"
-            //co12T += c!!.getString(2) + "\n"
-            //co13T += c!!.getString(3) + "\n"
-            //co14T += c!!.getString(4) + "\n"
-            //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
 
-            Count = c!!.getCount().toLong()
-            //c.close();
-            val CountString = Count.toString()
-            //Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
-            /*
+        if (c!!.getCount() > 0) {
+            //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+            c!!.moveToFirst()
+
+            for (i in 0 until c!!.getCount()) {
+                //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+                //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+                //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
+                //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
+                //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
+                //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
+                // sqlite比較不嚴僅，都用getString()取值即可
+                co10T += c!!.getString(0) + "\n"
+                //co11T += c!!.getString(1) + "\n"
+                //co12T += c!!.getString(2) + "\n"
+                //co13T += c!!.getString(3) + "\n"
+                //co14T += c!!.getString(4) + "\n"
+                //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+
+                Count = c!!.getCount().toLong()
+                //c.close();
+                val CountString = Count.toString()
+                //Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
+                /*
             Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0)  +"\n"
                     +"資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) +"C \n"
                     +"資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) +"% \n"
@@ -409,13 +414,59 @@ private fun SearchSQLlite() {
 
             c!!.moveToNext()
             */
+            }
+            //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+            //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
+
+
+            // 排版
+            co10T += colstT[0] + "\n";
+            co11T += colstT[1] + "\n";
+            co12T += colstT[2] + "\n";
+            co13T += colstT[3] + "\n";
+            co14T += colstT[4] + "\n"
+            co15T += colstT[5] + "\n"
+
+            if (c!!.getCount() > 0) {
+                //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+                c!!.moveToFirst()
+
+                for (i in 0 until c!!.getCount()) {
+                    //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+                    //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+                    //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
+                    //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
+                    //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
+                    //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
+                    // sqlite比較不嚴僅，都用getString()取值即可
+                    //co10T += c!!.getString(0) + "\n"
+                    //co11T += c!!.getString(1) + "\n"
+                    //co12T += c!!.getString(2) + "\n"
+                    //co13T += c!!.getString(3) + "\n"
+                    //co14T += c!!.getString(4) + "\n"
+                    //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+
+                    Count = c!!.getCount().toLong()
+                    //c.close();
+                    val CountString = Count.toString()
+                    Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
+
+                    Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0) + "\n"
+                            + "資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) + " \n"
+                            + "資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) + "C \n"
+                            + "資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) + "% \n"
+                            + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
+                            + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
+
+                    c!!.moveToNext()
+                }
+
+
+            } else {
+                Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
+            }
         }
-
-
-    } else {
-        Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
     }
-}
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -444,12 +495,12 @@ private fun SearchSQLlite() {
                         cal.get(Calendar.DAY_OF_MONTH)).show()
             }
             */
-              //  R.id.Andy_calendarView ->{
-                 //   CalendarShow("月曆","月曆選擇")
-           // }
+        //  R.id.Andy_calendarView ->{
+        //   CalendarShow("月曆","月曆選擇")
+        // }
 
 
-            //點選ActionBAR會返回
+        //點選ActionBAR會返回
             android.R.id.home -> {
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
@@ -575,12 +626,12 @@ private fun SearchSQLlite() {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_air_map -> airmapShow()
-            //R.id.nav_about -> AboutActivity
-            //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+        //R.id.nav_about -> AboutActivity
+        //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_setting -> settingShow()
-            //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
-            //else -> fragmentClass = FirstFragment::class.java
+        //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
+        //else -> fragmentClass = FirstFragment::class.java
         }
 
 //        try {
@@ -628,17 +679,17 @@ private fun SearchSQLlite() {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             REQUEST_SELECT_DEVICE ->
-            //When the DeviceListActivity return, with the selected device address
-            //得到Address後將Address後傳遞至Service後啟動 171129
-            if (resultCode == Activity.RESULT_OK && data != null) {
-                //val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
-                //mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
-                //val serviceIntent :Intent? = Intent(this, UartService::class.java)
-                //serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
-                //startService(serviceIntent)
-                //Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
-                print("MainActivity")
-            }
+                //When the DeviceListActivity return, with the selected device address
+                //得到Address後將Address後傳遞至Service後啟動 171129
+                if (resultCode == Activity.RESULT_OK && data != null) {
+                    //val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
+                    //mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
+                    //val serviceIntent :Intent? = Intent(this, UartService::class.java)
+                    //serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
+                    //startService(serviceIntent)
+                    //Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
+                    print("MainActivity")
+                }
             else -> {
                 print("test")
             }
@@ -691,6 +742,6 @@ private fun SearchSQLlite() {
 
         }
 
-}
+    }
 
 

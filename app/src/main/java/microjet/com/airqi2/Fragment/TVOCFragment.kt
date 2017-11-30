@@ -1,5 +1,6 @@
 package microjet.com.airqi2.Fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -22,6 +23,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import microjet.com.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
@@ -41,16 +43,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     private var mContext : Context? = null
 
-    private var mChart : BarChart? = null
+    private var mChart : FixBarChart? = null
 
-    private var mButtonDate: Button?=null
-    private var mButtonTimeStart: Button?=null
-    private var mButtonTimeEnd: Button?=null
-    private var mTextViewTimeRange: TextView?=null
-    private var mTextViewValue: TextView?=null
-    private var mSpinner : Spinner?=null
+    private var mButtonDate: Button? = null
+    private var mButtonTimeStart: Button? = null
+    private var mButtonTimeEnd: Button? = null
+    private var mTextViewTimeRange: TextView? = null
+    private var mTextViewValue: TextView? = null
+    private var mSpinner : Spinner? = null
     private var DATA_COUNT : Int = 60
-    private var mRadioGroup :RadioGroup?=null
+    private var mRadioGroup :RadioGroup? = null
 
     private var mHour: RadioButton? = null
 
@@ -82,26 +84,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             when (i){
                 R.id.radioButton_Hour->{
                     mChart?.data = getBarData()
-                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-                    mChart?.animateX(20)
-                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())//移動視圖by x index
                 }
                 R.id.radioButton_Day->{
                     mChart?.data = getBarData()
-                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
                 }
                 R.id.radioButton_Week->{
                     mChart?.data = getBarData()
-                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
                 }
                 R.id.radioButton_Month->{
+
                     mChart?.data = getBarData()
-                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-                    mChart?.moveViewToX((DATA_COUNT-1).toFloat())
+
                 }
             }
+            mChart?.setVisibleXRangeMinimum(5.0f)
+            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+            mChart?.moveViewToX((DATA_COUNT-1).toFloat())//移動視圖by x index
          //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
         })
 
@@ -298,6 +296,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
         rightAxis.isEnabled = false
+        mChart?.setDescription("")// clear default string
     }
 
     //20171124 Andy日期月曆

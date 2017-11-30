@@ -54,6 +54,29 @@
     <string name="frg_tvocRadioButtonDay">日</string>
     <string name="frg_tvocRadioButtonWeek">周</string>
     <string name="frg_tvocRadioButtonMonth">月</string>
+
+    <string name="text_setting_test_cycle">测试周期选择</string>
+    <string name="text_setting_allow_notification">允许通知</string>
+    <string name="text_setting_notify_message">讯息</string>
+    <string name="text_setting_notify_viberation">震动</string>
+    <string name="text_setting_notify_sound">提示音</string>
+    <string name="text_setting_on">开启</string>
+    <string name="text_setting_off">关闭</string>
+    <string name="text_setting_notify_comment_1">浓度高于220 ppb通知/首次通知/每小时一次</string>
+    <string name="text_setting_notify_comment_2">浓度高于660 ppb通知/首次通知/每10分钟一次</string>
+    <string name="text_setting_history">历史资料</string>
+    <string name="text_setting_history_clean">清除</string>
+    <string name="text_setting_history_export">汇出</string>
+    <string name="text_setting_allow_in_background">允许APP在背景执行</string>
+    <string name="text_setting_pollution_total_notification">污染物累积吸入总量通知</string>
+    <string name="text_setting_pollution_comment_1"><![CDATA[小时平均浓度<220 ppb/每日一次]]></string>
+    <string name="text_setting_pollution_comment_2">小时平均浓度220~660 ppb/8小时一次</string>
+    <string name="text_setting_pollution_comment_3"><![CDATA[小时平均浓度>660 ppb/每小时一次]]></string>
+    <string name="text_tvoc_meter_220ppb">220</string>
+    <string name="text_tvoc_meter_660ppb">660</string>
+
+
+
     <string-array name="SpinnerArray" >
         <item>时</item>
         <item>日</item>

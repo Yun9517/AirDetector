@@ -451,8 +451,10 @@ public class UartService extends Service {
                     break;
                 case "connect":
                     connect(intent.getStringExtra("mac"));
+                    break;
                 case "message":
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetBatteryLife());
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(5000));
+                    break;
             }
         }
 
