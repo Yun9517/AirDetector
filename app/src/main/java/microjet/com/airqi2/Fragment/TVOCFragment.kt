@@ -4,7 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.ContentValues
 import android.content.Context
+import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -23,6 +26,7 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import microjet.com.airqi2.AndyAirDBhelper
 import microjet.com.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
@@ -67,6 +71,37 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mContext = this.context.applicationContext
     }
+
+
+    //20171130   Andy SQLlite
+    internal lateinit var dbrw: SQLiteDatabase
+    internal lateinit var dbhelper: AndyAirDBhelper
+    internal var tablename = "Andyairtable"
+
+
+    internal var colstT = arrayOf("編號","時間","溫度", "濕度", "揮發", "二氧")// };
+    internal var columT = arrayOf("_id", "collection_time","temper", "hum", "tvoc", "co2")//,"CO2"};
+    internal var co10T = ""
+    internal var co11T = ""
+    internal var co12T = ""
+    internal var co13T = ""
+    internal var co14T = ""
+    internal var co15T = ""
+
+    internal var coTTDBTEST = ""
+    internal var SaveToDB = arrayOf("2017/11/30","10", "20", "30", "40")
+    internal var idTTDB: Long = 4
+    internal var c: Cursor? = null
+    internal var cv: ContentValues? = null
+    internal var IDID = ""
+    internal var Count: Long = 0
+    internal var idTTDBStr = ""
+
+
+
+
+
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
@@ -224,6 +259,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }, mCalendar!!.get(Calendar.HOUR), mCalendar!!.get(Calendar.MINUTE), true)
         dialog.show()
         */
+        //20171128 Andy SQL
+        //*********************************************************************************************
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
+        dbhelper = AndyAirDBhelper(mContext)
+        dbrw = dbhelper.writableDatabase
+        Toast.makeText(mContext,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
+        SearchSQLlite()
+
+
+
+        //20171128 Andy SQL
+        //*********************************************************************************************
+// ------------------------------------------------------------------------------------------------------------------------------------------------
+
 
     }
 
@@ -318,6 +368,65 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //  Toast.makeText(mContext,sdf.format(cal.getTime()), Toast.LENGTH_LONG).show()
     }
 
+//20171130 Andy SQL
+private fun SearchSQLlite() {
+    //****************************************************************************************************************************************************
+//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+    //查詢CO2資料
+    //查詢CO2資料
+    //查詢CO2資料
+    c = dbrw.query(tablename, columT, null, null, null, null, null)
 
+    //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
+    //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
+
+
+    // 排版
+    co10T += colstT[0] + "\n";
+    co11T += colstT[1] + "\n";
+    co12T += colstT[2] + "\n";
+    co13T += colstT[3] + "\n";
+    co14T += colstT[4] + "\n"
+    co15T += colstT[5] + "\n"
+
+    if (c!!.getCount() > 0) {
+        //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
+        c!!.moveToFirst()
+
+        for (i in 0 until c!!.getCount()) {
+            //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
+            //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
+            //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
+            //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
+            //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
+            //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
+            // sqlite比較不嚴僅，都用getString()取值即可
+            //co10T += c!!.getString(0) + "\n"
+            //co11T += c!!.getString(1) + "\n"
+            //co12T += c!!.getString(2) + "\n"
+            //co13T += c!!.getString(3) + "\n"
+            //co14T += c!!.getString(4) + "\n"
+            //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
+
+            Count = c!!.getCount().toLong()
+            //c.close();
+            val CountString = Count.toString()
+            Toast.makeText(mContext, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
+
+            Toast.makeText(mContext, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0)  +"\n"
+                    +"資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) +" \n"
+                    +"資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) +"C \n"
+                    +"資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) +"% \n"
+                    +"資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) +"ppm \n"
+                    +"資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) +"ppb", Toast.LENGTH_LONG).show()
+
+            c!!.moveToNext()
+        }
+
+
+    } else {
+        Toast.makeText(mContext, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
+    }
+}
 
 }

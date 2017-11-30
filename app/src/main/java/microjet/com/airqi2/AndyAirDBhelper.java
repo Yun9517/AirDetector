@@ -21,7 +21,7 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 	//final static String database13 = "AirDataBase13";
     //final static String database14 = "AirDataBase14";
     //final static String database16 = "AndyAirDataBase16";
-	final static String database17 = "AndyAirDataBase17";
+	public final static String database17 = "AndyAirDataBase17";
 
 	//final static int version = 1;
 	//final static int version2 = 3;

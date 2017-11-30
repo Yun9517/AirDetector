@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         dbrw = dbhelper.writableDatabase
         Toast.makeText(this,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
         AddedSQLlite(60000)
-        SearchSQLlite()
+        //SearchSQLlite()
 
 
 
