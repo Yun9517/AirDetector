@@ -1,13 +1,22 @@
 package microjet.com.airqi2
 
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
+import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import android.widget.TextView
-import microjet.com.airqi2.BuildConfig
-import microjet.com.airqi2.R
+import microjet.com.airqi2.BlueTooth.UartService
+import microjet.com.airqi2.Definition.SavePreferences
+import android.widget.AdapterView
+import android.widget.Toast
+
+
 
 /**
  * Created by B00174 on 2017/11/29.
@@ -28,51 +37,52 @@ class SettingActivity : AppCompatActivity() {
     var btn_clean: Button? = null
     var btn_export: Button? = null
 
+    var mPreference: SharedPreferences? = null
+
+    var spCycleVal: Int = 0
+    var swMessageVal: Boolean = false
+    var swViberateVal: Boolean = false
+    var swSoundVal: Boolean = false
+    var swRunInBgVal: Boolean = false
+    var swTotalNotifyVal: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
         uiFindViewById()
+        uiSetListener()
 
-        swMessage!!.setOnClickListener {
-            if (swMessage!!.isChecked) {
-                text_msg_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_msg_stat!!.text = getString(R.string.text_setting_off)
-            }
-        }
+        val mCycleAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
+                this, R.array.pickCycle, android.R.layout.simple_spinner_item)
+        mCycleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        spCycle!!.adapter = mCycleAdapter
 
-        swViberate!!.setOnClickListener {
-            if (swViberate!!.isChecked) {
-                text_vibe_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_vibe_stat!!.text = getString(R.string.text_setting_off)
-            }
-        }
+        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY,0)
 
-        swSound!!.setOnClickListener {
-            if (swSound!!.isChecked) {
-                text_sound_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_sound_stat!!.text = getString(R.string.text_setting_off)
-            }
-        }
+    }
 
-        swRunInBg!!.setOnClickListener {
-            if (swRunInBg!!.isChecked) {
-                text_run_bg_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_run_bg_stat!!.text = getString(R.string.text_setting_off)
-            }
-        }
+    override fun onResume() {
+        super.onResume()
+        readPreferences()   // 當Activity onResume時載入設定值
+    }
 
-        swTotalNotify!!.setOnClickListener {
-            if (swTotalNotify!!.isChecked) {
-                text_total_notify_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_total_notify_stat!!.text = getString(R.string.text_setting_off)
-            }
-        }
+    private fun readPreferences() {
+        spCycleVal = mPreference!!.getInt(SavePreferences.SETTING_TEST_CYCLE, 0)
+        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
+        swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
+        swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
+        swTotalNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY, false)
+
+        spCycle!!.setSelection(spCycleVal)
+
+        swMessage!!.isChecked = swMessageVal
+        swViberate!!.isChecked = swViberateVal
+        swSound!!.isChecked = swSoundVal
+        swRunInBg!!.isChecked = swRunInBgVal
+        swTotalNotify!!.isChecked = swTotalNotifyVal
+
     }
 
     private fun uiFindViewById() {
@@ -92,5 +102,73 @@ class SettingActivity : AppCompatActivity() {
 
         btn_clean = findViewById(R.id.btn_clean)
         btn_export = findViewById(R.id.btn_export)
+    }
+
+    private fun uiSetListener() {
+        spCycle!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_TEST_CYCLE,
+                        position).apply()
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+
+            }
+        }
+        
+        swMessage!!.setOnClickListener {
+            if (swMessage!!.isChecked) {
+                text_msg_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_msg_stat!!.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, 
+                    swMessage!!.isChecked).apply()
+        }
+
+        swViberate!!.setOnClickListener {
+            if (swViberate!!.isChecked) {
+                text_vibe_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_vibe_stat!!.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
+                    swViberate!!.isChecked).apply()
+        }
+
+        swSound!!.setOnClickListener {
+            if (swSound!!.isChecked) {
+                text_sound_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_sound_stat!!.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
+                    swSound!!.isChecked).apply()
+        }
+
+        swRunInBg!!.setOnClickListener {
+            if (swRunInBg!!.isChecked) {
+                text_run_bg_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_run_bg_stat!!.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG,
+                    swRunInBg!!.isChecked).apply()
+        }
+
+        swTotalNotify!!.setOnClickListener {
+            if (swTotalNotify!!.isChecked) {
+                text_total_notify_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_total_notify_stat!!.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
+                    swTotalNotify!!.isChecked).apply()
+        }
     }
 }
