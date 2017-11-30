@@ -186,7 +186,7 @@
 
         <Button
             android:id="@+id/btn_clean"
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="33dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dp"
@@ -197,7 +197,7 @@
 
         <Button
             android:id="@+id/btn_export"
-            android:layout_width="50dp"
+            android:layout_width="70dp"
             android:layout_height="33dp"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="5dp"
