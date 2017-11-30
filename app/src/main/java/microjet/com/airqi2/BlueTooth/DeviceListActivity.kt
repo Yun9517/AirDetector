@@ -33,6 +33,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
+import android.transition.Visibility
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -47,7 +48,6 @@ class DeviceListActivity : Activity() {
     private var targetUUID = ParcelUuid(UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"))
 
     private var listBT: ListView? = null
-    private var mEmptyList: TextView? = null
     private var cancelButton: Button? = null
 
     private var mBluetoothAdapter: BluetoothAdapter? = null
@@ -60,6 +60,8 @@ class DeviceListActivity : Activity() {
     //ListAdapter mLeDeviceListAdapter;
 
     private var mHandler: Handler? = null
+
+    private var scanProgress: ProgressBar? = null
 
     // ListView 項目點選監聽器
     internal var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
@@ -104,6 +106,9 @@ class DeviceListActivity : Activity() {
 
         setContentView(R.layout.device_list)
 
+        scanProgress = findViewById(R.id.scanProgress)
+        scanProgress!!.bringToFront()
+
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -126,8 +131,6 @@ class DeviceListActivity : Activity() {
         //populateList()
 
         getBluetoothAdapterAndLeScanner()
-
-        mEmptyList = findViewById(R.id.empty)
 
         cancelButton = findViewById<View>(R.id.btn_cancel) as Button
 
@@ -209,16 +212,18 @@ class DeviceListActivity : Activity() {
             mLeDeviceListAdapter!!.notifyDataSetChanged()
             listBT!!.invalidateViews()
 
-            mEmptyList!!.text = resources.getText(R.string.scanning)
             cancelButton!!.text = resources.getText(android.R.string.cancel)
+
+            scanProgress!!.visibility = View.VISIBLE
 
             // Stops scanning after a pre-defined scan period.
             mHandler!!.postDelayed({
                 mBluetoothLeScanner!!.stopScan(scanCallback)
                 listBT!!.invalidateViews()
 
-                mEmptyList!!.text = resources.getText(R.string.stopped)
                 cancelButton!!.text = resources.getText(R.string.scan)
+
+                scanProgress!!.visibility = View.GONE
 
                 mScanning = false
 
