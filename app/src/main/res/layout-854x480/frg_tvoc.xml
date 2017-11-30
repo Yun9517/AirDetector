@@ -32,10 +32,11 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
+                android:checked="true"
                 android:text="@string/frg_tvocRadioButtonHour" />
 
             <RadioButton
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -56,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -120,7 +121,7 @@
         android:layout_marginTop="15dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="12:05"
-        android:textSize="28sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:textAlignment="center" />
 
@@ -131,7 +132,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="783ppb"
-        android:textSize="28sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:textAlignment="center" />
 
@@ -141,11 +142,10 @@
         android:gravity="end"
         android:text="@string/text_label_tvoc"
         android:background="@drawable/chart_subtitle"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="10dp"
-        android:textSize="22sp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
         android:textStyle="bold"
-        android:layout_gravity="end"
+        android:layout_gravity="right"
         android:textAlignment="gravity" />
 
     <microjet.com.airqi2.CustomAPI.FixBarChart

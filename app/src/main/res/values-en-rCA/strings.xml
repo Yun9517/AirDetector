@@ -62,8 +62,8 @@
     <string name="text_setting_notify_sound">Sound</string>
     <string name="text_setting_on">On</string>
     <string name="text_setting_off">Off</string>
-    <string name="text_setting_notify_comment_1">Over 220 ppb/First Alert/Repeat Once an hour</string>
-    <string name="text_setting_notify_comment_2">Over 660 ppb/First Alert/Repeat Once 10 mins</string>
+    <string name="text_setting_notify_comment_1">Over 220 ppb / First Alert / Repeat Once an hour</string>
+    <string name="text_setting_notify_comment_2">Over 660 ppb / First Alert / Repeat Once 10 mins</string>
     <string name="text_setting_history">History</string>
     <string name="text_setting_history_clean">Erase</string>
     <string name="text_setting_history_export">Export</string>

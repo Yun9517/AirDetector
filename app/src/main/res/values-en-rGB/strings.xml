@@ -62,11 +62,11 @@
     <string name="text_setting_notify_sound">Sound</string>
     <string name="text_setting_on">On</string>
     <string name="text_setting_off">Off</string>
-    <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
-    <string name="text_setting_notify_comment_2">濃度高於660 ppb通知/首次通知/每10分鐘一次</string>
+    <string name="text_setting_notify_comment_1">Over 220 ppb / First Alert / Repeat Once an hour</string>
+    <string name="text_setting_notify_comment_2">Over 660 ppb / First Alert / Repeat Once 10 mins</string>
     <string name="text_setting_history">History</string>
-    <string name="text_setting_history_clean">清除</string>
-    <string name="text_setting_history_export">匯出</string>
+    <string name="text_setting_history_clean">Erase</string>
+    <string name="text_setting_history_export">Export</string>
     <string name="text_setting_allow_in_background">允許APP在背景執行</string>
     <string name="text_setting_pollution_total_notification">污染物累積吸入總量通知</string>
     <string name="text_setting_pollution_comment_1"><![CDATA[小時平均濃度<220 ppb/每日一次]]></string>
