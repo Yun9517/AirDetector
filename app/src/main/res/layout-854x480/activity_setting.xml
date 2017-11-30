@@ -19,7 +19,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/text_setting_test_cycle"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <Spinner
             android:id="@+id/spCycle"
@@ -32,7 +32,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
+        android:layout_height="0.5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="#484848" />
@@ -44,7 +44,7 @@
         android:layout_gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="@string/text_setting_allow_notification"
-        android:textSize="14sp" />
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -152,7 +152,7 @@
         android:layout_gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="@string/text_setting_notify_comment_1"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/textView25"
@@ -161,11 +161,11 @@
         android:layout_gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="@string/text_setting_notify_comment_2"
-        android:textSize="10sp" />
+        android:textSize="12sp" />
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
+        android:layout_height="0.5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="#484848" />
@@ -182,7 +182,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/text_setting_history"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/btn_clean"
@@ -208,7 +208,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
+        android:layout_height="0.5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="#484848" />
@@ -226,7 +226,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/text_setting_allow_in_background"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/swRunInBg"
@@ -249,7 +249,7 @@
 
     <ImageView
         android:layout_width="fill_parent"
-        android:layout_height="2dp"
+        android:layout_height="0.5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
         android:background="#484848" />
@@ -266,7 +266,7 @@
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/text_setting_pollution_total_notification"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/swTotalNotify"
