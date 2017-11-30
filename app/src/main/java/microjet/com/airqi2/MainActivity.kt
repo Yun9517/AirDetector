@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         //unbindService(mServiceConnection)
     }
-
+//123
     // 20171130 add by Raymond 增加權限 Request
     // 允許權限後的方法實作
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
