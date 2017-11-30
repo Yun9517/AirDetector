@@ -233,7 +233,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onDestroy() {
         super.onDestroy()
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
-        unbindService(mServiceConnection)
+        //unbindService(mServiceConnection)
     }
 
     // 20171130 add by Raymond 增加權限 Request

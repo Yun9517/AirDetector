@@ -136,12 +136,12 @@
         android:layout_gravity="right"
         android:textAlignment="gravity" />
 
-    <com.github.mikephil.charting.charts.BarChart
+    <microjet.com.airqi2.CustomAPI.FixBarChart
         android:id="@+id/chart_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp">
 
-    </com.github.mikephil.charting.charts.BarChart>
+    </microjet.com.airqi2.CustomAPI.FixBarChart>
 
 </LinearLayout>
