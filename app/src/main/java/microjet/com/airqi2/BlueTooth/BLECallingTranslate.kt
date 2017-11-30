@@ -7,7 +7,7 @@ import kotlin.experimental.and
 /**
  * Created by B00055 on 2017/11/29.
  */
-class CallingTranslate {
+object CallingTranslate {
 
     private fun getCheckSum(CMD: ByteArray): Byte {
         val j = CMD.size

@@ -102,6 +102,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //UArtService實體
     private var mService : UartService? = null
 
+    private var mIsReceiverRegistered : Boolean = false
+    private var mReceiver : MyBroadcastReceiver? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -221,19 +224,33 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         requestPermissionsForBluetooth()
 
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
-        //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
         startService(serviceIntent)
-        LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
+        //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
+        //LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
+        val mainIntent = Intent("Main")
+        sendBroadcast(mainIntent)
+
+                if (!mIsReceiverRegistered) {
+            if (mReceiver == null)
+                mReceiver = MyBroadcastReceiver()
+            registerReceiver(mReceiver, IntentFilter("mainActivity"))
+            mIsReceiverRegistered = true
+        }
     }
 
     override fun onPause() {
         super.onPause()
+        if (mIsReceiverRegistered) {
+            unregisterReceiver(mReceiver)
+            mReceiver = null
+            mIsReceiverRegistered = false
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
-        unbindService(mServiceConnection)
+        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
+        //unbindService(mServiceConnection)
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -247,7 +264,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 拒絕權限後的方法實作
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
         val mBuilder = AlertDialog.Builder(this)
-
         mBuilder.setTitle(R.string.text_message_need_permission)
                 .setMessage(R.string.text_message_need_permission)
                 .setCancelable(false)
@@ -320,7 +336,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
         if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && idTTDB >= 0) {//****************************************************************************
-            Toast.makeText(this@MainActivity, "資料滿4筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this@MainActivity, "資料滿4筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
             //cv.put(columT[0],c.getPosition());
             cv!!.put(columT[1], SaveToDB[0])
             cv!!.put(columT[2], SaveToDB[1])
@@ -328,9 +344,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             cv!!.put(columT[4], SaveToDB[3])
             //新增一筆四個測項資料到資料庫中
             idTTDB = dbrw.insert(tablename, null, cv)
-            Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
         } else {
-            Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
+            //Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
         }
         //新增一筆四個測項資料到資料庫中
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -383,8 +399,8 @@ private fun SearchSQLlite() {
             Count = c!!.getCount().toLong()
             //c.close();
             val CountString = Count.toString()
-            Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
-
+            //Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
+            /*
             Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0)  +"\n"
                     +"資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) +"C \n"
                     +"資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) +"% \n"
@@ -392,6 +408,7 @@ private fun SearchSQLlite() {
                     +"資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) +"ppb", Toast.LENGTH_LONG).show()
 
             c!!.moveToNext()
+            */
         }
 
 
@@ -600,8 +617,10 @@ private fun SearchSQLlite() {
     }
 
     private fun blueToothdisconnect() {
-        val serviceIntent :Intent? = Intent(this, UartService::class.java)
-        stopService(serviceIntent)
+        val serviceIntent :Intent? = Intent("Main")
+        serviceIntent!!.putExtra("status", "disconnect")
+        sendBroadcast(serviceIntent)
+        //stopService(serviceIntent)
     }
 
     //視回傳的code執行相對應的動作
@@ -648,6 +667,29 @@ private fun SearchSQLlite() {
 
         }
     }
+
+        private fun updateUI(intent : Intent) {
+            when (intent.getStringExtra("status")) {
+                "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
+                -> {
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                }
+                "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
+                -> {
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                }
+            }
+        }
+
+
+        inner class MyBroadcastReceiver : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent) {
+                updateUI(intent)
+            }
+
+        }
 
 }
 

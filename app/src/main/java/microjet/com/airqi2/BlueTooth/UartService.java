@@ -10,16 +10,20 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Binder;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import java.util.List;
 import java.util.UUID;
+import microjet.com.airqi2.BroadReceiver.MainReceiver;
 
 import microjet.com.airqi2.R;
 
@@ -44,17 +48,17 @@ public class UartService extends Service {
     private static final int STATE_DISCONNECTING = 3;
 
     public final static String ACTION_GATT_DISCONNECTED =
-            "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED";
+            "ACTION_GATT_DISCONNECTED";
     public final static String ACTION_GATT_CONNECTING =
-            "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTING";
+            "ACTION_GATT_CONNECTING";
     public final static String ACTION_GATT_CONNECTED =
-            "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED";
+            "ACTION_GATT_CONNECTED";
     public final static String ACTION_GATT_DISCONNECTING =
-            "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTING";
+            "ACTION_GATT_DISCONNECTING";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "com.nordicsemi.nrfUART.ACTION_GATT_SERVICES_DISCOVERED";
+            "ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
-            "com.nordicsemi.nrfUART.ACTION_DATA_AVAILABLE";
+            "ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
             "com.nordicsemi.nrfUART.EXTRA_DATA";
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
@@ -71,8 +75,11 @@ public class UartService extends Service {
 
     String intentAction;
 
+    private MainReceiver mMainReceiver;
+    private String shareStuff = "MACADDRESS";
 
-
+    private Boolean mIsReceiverRegistered = false;
+    private MyBroadcastReceiver mReceiver = null;
 
 //    public UartService() { //建構式
 //    }
@@ -86,30 +93,37 @@ public class UartService extends Service {
                     intentAction = ACTION_GATT_DISCONNECTED;
                     //mConnectionState = STATE_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
-                    broadcastUpdate(intentAction);
+                    //broadcastUpdate(intentAction);
+                    Intent mainIntent = new Intent("Main");
+                    mainIntent.putExtra("status",intentAction);
+                    sendBroadcast(mainIntent);
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTING: {
                     intentAction = ACTION_GATT_CONNECTING;
                     //mConnectionState = STATE_CONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
-                    broadcastUpdate(intentAction);
+                    //broadcastUpdate(intentAction);
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTED: {
                     intentAction = ACTION_GATT_CONNECTED;
                     //mConnectionState = STATE_CONNECTED;
-                    broadcastUpdate(intentAction);
+                    //broadcastUpdate(intentAction);
                     Log.i(TAG, "Connected to GATT server.");
                     Log.i(TAG, "Attempting to start service discovery:" +
                             mBluetoothGatt.discoverServices());
+
+                    Intent mainIntent = new Intent("Main");
+                    mainIntent.putExtra("status",intentAction);
+                    sendBroadcast(mainIntent);
                     break;
                 }
                 case BluetoothProfile.STATE_DISCONNECTING: {
                     intentAction = ACTION_GATT_DISCONNECTING;
                     //mConnectionState = STATE_DISCONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
-                    broadcastUpdate(intentAction);
+                    //broadcastUpdate(intentAction);
                     break;
                 }
             }
@@ -143,7 +157,7 @@ public class UartService extends Service {
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
 //    private void broadcastUpdate(final String action,
@@ -212,6 +226,17 @@ public class UartService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        mMainReceiver = new MainReceiver();
+        IntentFilter filter = new IntentFilter("Main");
+        registerReceiver(mMainReceiver,filter);
+
+        if (!mIsReceiverRegistered) {
+            if (mReceiver == null)
+                mReceiver = new MyBroadcastReceiver();
+            registerReceiver(mReceiver, new IntentFilter("UartService"));
+            mIsReceiverRegistered = true;
+        }
     }
 
 
@@ -256,12 +281,28 @@ public class UartService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(" ", "onStartCommand");
+        Log.d("UART ", "onStartCommand");
         //StartService後執行連線
         mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
-        mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-        connect(mBluetoothDeviceAddress);
+        if (mBluetoothDeviceAddress == null) {
+            SharedPreferences share = getSharedPreferences(shareStuff, MODE_PRIVATE);
+            mBluetoothDeviceAddress = share.getString("mac", "noValue");
+        }
+
+        if (mBluetoothDeviceAddress == "noValue") {
+            mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+        }else {
+            Intent mainintent = new Intent("Main");
+            mainintent.putExtra("status", "connect");
+            mainintent.putExtra("mac", mBluetoothDeviceAddress);
+            sendBroadcast(mainintent);
+            //connect(mBluetoothDeviceAddress);
+        }
+
+
+        //Intent mainIntent = new Intent("Main");
+        //sendBroadcast(mainIntent);
 
         return super.onStartCommand(intent, flags, startId);
     }
@@ -320,48 +361,47 @@ public class UartService extends Service {
      *
      * @return 
      */
-    public void enableTXNotification()
-    { 
-    	/*
-    	if (mBluetoothGatt == null) {
-    		showMessage("mBluetoothGatt null" + mBluetoothGatt);
-    		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-    		return;
-    	}
-    		*/
-    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-    	if (RxService == null) {
-            showMessage("Rx service not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-    	BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
-        if (TxChar == null) {
-            showMessage("Tx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        mBluetoothGatt.setCharacteristicNotification(TxChar,true);
-        BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
-        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-        mBluetoothGatt.writeDescriptor(descriptor);
-    	
-    }
+//    public void enableTXNotification()
+//    {
+//    	/*
+//    	if (mBluetoothGatt == null) {
+//    		showMessage("mBluetoothGatt null" + mBluetoothGatt);
+//    		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+//    		return;
+//    	}
+//    		*/
+//    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+//    	if (RxService == null) {
+//            showMessage("Rx service not found!");
+//            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+//            return;
+//        }
+//    	BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
+//        if (TxChar == null) {
+//            showMessage("Tx charateristic not found!");
+//            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+//            return;
+//        }
+//        mBluetoothGatt.setCharacteristicNotification(TxChar,true);
+//        BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
+//        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+//        mBluetoothGatt.writeDescriptor(descriptor);
+//
+//    }
     
     public void writeRXCharacteristic(byte[] value)
     {
     	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-    	//showMessage("mBluetoothGatt null "+ mBluetoothGatt);
     	if (RxService == null) {
             showMessage("mBluetoothGatt null "+ mBluetoothGatt);
             showMessage("Rx service not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
     	BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
         if (RxChar == null) {
             showMessage("Rx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
         RxChar.setValue(value);
@@ -392,8 +432,31 @@ public class UartService extends Service {
         intentAction = ACTION_GATT_DISCONNECTED;
         //mConnectionState = STATE_DISCONNECTED;
         Log.i(TAG, "Disconnected from GATT server.");
-        broadcastUpdate(intentAction);
+        //broadcastUpdate(intentAction);
+
+        unregisterReceiver(mMainReceiver);
+        unregisterReceiver(mReceiver);
+
         disconnect();
         close();
     }
+
+
+    private class MyBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getStringExtra("status")) {
+                case "disconnect":
+                    disconnect();
+                    break;
+                case "connect":
+                    connect(intent.getStringExtra("mac"));
+                case "message":
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetBatteryLife());
+            }
+        }
+
+
+    }
+
 }
