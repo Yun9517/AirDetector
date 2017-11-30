@@ -49,7 +49,7 @@
     <string name="About_App">關於APP</string>
     <string name="Already_Pair">已自動配對</string>
     <string name="Already_Connected">已手動連線</string>
-    <string name="No_Device_Connect">藍芽未連線</string>
+    <string name="No_Device_Connect">尚未链接装置</string> <!-- 2017/11/30 改抽屜標題 -->
     <string name="UART_Connecting">連線中</string>
     <string name="UART_Disconnecting">斷開裝置中</string>
 

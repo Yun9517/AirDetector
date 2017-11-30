@@ -39,7 +39,7 @@
     <string name="About_App">About APP</string>
     <string name="Already_Pair">Paired: </string>
     <string name="Already_Connected">Connected: </string>
-    <string name="No_Device_Connect">No Device Paired</string>
+    <string name="No_Device_Connect">No Device Paired</string> <!-- 2017/11/30 改抽屜標題 -->
     <string name="UART_Connecting">UART:Connecting</string>
     <string name="UART_Disconnecting">UART:Disconnecting</string>
 
