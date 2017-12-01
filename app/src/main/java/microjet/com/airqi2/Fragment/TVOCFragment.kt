@@ -33,6 +33,7 @@ import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 /**
@@ -98,6 +99,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     internal var idTTDBStr = ""
     //20171130   Andy SQLlite
     internal var values: ContentValues? = null
+    val list=ArrayList<ArrayList<String>>()
+
+
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
@@ -108,6 +112,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         dbhelper = AndyAirDBhelper(mContext)
         dbrw = dbhelper.writableDatabase
         Toast.makeText(mContext, AndyAirDBhelper.database18 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version, Toast.LENGTH_LONG).show()
+
+
+
+        //20171201  Andy 一次取資料庫
+
+
+
+
+
         //AddedSQLlite(60000)
         //SearchSQLlite()
 
@@ -561,9 +574,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         if (c!!.getCount() > 0) {
             //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-            //c!!.moveToFirst()
-            c!!.moveToLast()
-            for (i in c!!.getCount() downTo 0) {
+            c!!.moveToFirst()
+            //c!!.moveToLast()
+            for (i in 0 until  c!!.getCount()) {
                 //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
                 //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
                 //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
@@ -590,8 +603,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                         + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
                         + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
 
+                var DateTimeList = ArrayList<String>()
+                DateTimeList.add(c!!.getString(1))
+                DateTimeList.add(c!!.getString(5))
+                list.add(DateTimeList)
 
-                c!!.moveToPrevious()
+                c!!.moveToNext()
             }
 
         } else {
