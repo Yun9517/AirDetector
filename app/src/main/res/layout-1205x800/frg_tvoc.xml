@@ -121,7 +121,7 @@
         android:layout_marginTop="20dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="12:05"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:textSize="36sp"
         android:textAlignment="center" />
 
@@ -132,7 +132,7 @@
         android:gravity="center_vertical|fill_vertical"
         android:layout_marginTop="10dp"
         android:text="783ppb"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:textSize="36sp"
         android:textAlignment="center" />
 
