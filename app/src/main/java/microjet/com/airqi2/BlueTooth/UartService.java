@@ -231,10 +231,11 @@ public class UartService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        /* 寫在mainfest的不用註冊
         mMainReceiver = new MainReceiver();
         IntentFilter filter = new IntentFilter("Main");
         registerReceiver(mMainReceiver,filter);
+        */
 
         if (!mIsReceiverRegistered) {
             if (mReceiver == null)

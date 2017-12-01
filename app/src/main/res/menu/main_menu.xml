@@ -8,4 +8,10 @@
         android:title="電量"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/bleStatus"
+        android:icon="@drawable/bluetooth_disconnect"
+        android:title="藍芽"
+        app:showAsAction="always" />
+
 </menu>

@@ -56,6 +56,7 @@ class MainReceiver : BroadcastReceiver() {
                 var mainIntent = Intent("UartService")
                 mainIntent.putExtra("status", "message")
                 context.sendBroadcast(mainIntent)
+                Log.d("message","messageMAIN")
             }
         }
     }

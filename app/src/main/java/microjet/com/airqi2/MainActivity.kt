@@ -9,6 +9,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.media.Image
 import android.os.Bundle
 import android.os.IBinder
 import android.support.design.widget.NavigationView
@@ -23,6 +24,8 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
@@ -59,6 +62,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 電池電量數值
     private var batValue: Int = 0
 
+    // 藍芽icon in actionbar
+    private var btIcon: MenuItem? = null
 
 /*
     //20171124 Andy月曆的方法聆聽者
@@ -482,6 +487,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         menuInflater.inflate(R.menu.main_menu, menu)
 
         val menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
+        btIcon = menu!!.findItem(R.id.bleStatus)
 
         menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
@@ -741,12 +747,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
+                    btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="未連線"
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
+                    btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                 }
             }
         }
