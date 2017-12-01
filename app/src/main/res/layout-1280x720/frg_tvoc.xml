@@ -121,7 +121,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="12:05"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:textStyle="normal"
         android:textAlignment="center" />
 
@@ -132,7 +132,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
         android:text="783ppb"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:textStyle="normal"
         android:textAlignment="center" />
 
@@ -144,7 +144,7 @@
         android:background="@drawable/chart_subtitle"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="20dp"
-        android:textSize="20sp"
+        android:textSize="14sp"
         android:textStyle="bold"
         android:layout_gravity="end"
         android:textAlignment="gravity" />
