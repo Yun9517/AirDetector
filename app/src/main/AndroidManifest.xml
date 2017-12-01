@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="microjet.com.airqi2">
 
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
-    <!-- Android6.0 BLE Scan 才需要-->
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <!-- Android6.0 BLE Scan 才需要 -->
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -29,7 +29,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
-
         <activity
             android:name=".BlueTooth.DeviceListActivity"
             android:excludeFromRecents="true"
@@ -37,8 +36,8 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
-
-        <activity android:name=".KnowledgeActivity"
+        <activity
+            android:name=".KnowledgeActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -72,6 +71,7 @@
         <!-- 使用receiver標籤，名稱設定廣播接收元件類別名稱 -->
         <receiver android:name=".BroadReceiver.CharacteristicReceiver">
             <intent-filter>
+
                 <!-- 使用Action名稱設定接收的廣播事件 -->
                 <action android:name="Characteristic" />
             </intent-filter>
@@ -79,11 +79,16 @@
         <!-- 使用receiver標籤，名稱設定廣播接收元件類別名稱 -->
         <receiver android:name=".BroadReceiver.MainReceiver">
             <intent-filter>
+
                 <!-- 使用Action名稱設定接收的廣播事件 -->
                 <action android:name="Main" />
             </intent-filter>
         </receiver>
 
+        <activity
+            android:name=".TourActivity"
+            android:label="@string/title_activity_tour"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
