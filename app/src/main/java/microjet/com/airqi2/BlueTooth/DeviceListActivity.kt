@@ -126,8 +126,6 @@ class DeviceListActivity : Activity() {
             finish()
         }
 
-        getBluetoothAdapterAndLeScanner()
-
         // Initializes a Bluetooth adapter.  For API level 18 and above, get a reference to
         // BluetoothAdapter through BluetoothManager.
         val bluetoothManager = getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
