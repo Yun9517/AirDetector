@@ -23,6 +23,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.BlueTooth.DeviceListActivity
@@ -725,11 +726,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="未連線"
                 }
             }
         }
