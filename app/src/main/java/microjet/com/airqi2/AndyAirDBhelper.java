@@ -21,7 +21,8 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 	//final static String database13 = "AirDataBase13";
     //final static String database14 = "AirDataBase14";
     //final static String database16 = "AndyAirDataBase16";
-	public final static String database17 = "AndyAirDataBase17";
+	//public final static String database17 = "AndyAirDataBase17";
+	public final static String database18 = "AndyAirDataBase18";
 
 	//final static int version = 1;
 	//final static int version2 = 3;
@@ -46,18 +47,26 @@ public class AndyAirDBhelper extends SQLiteOpenHelper {
 	public AndyAirDBhelper(Context context, String name, CursorFactory factory,
                            int version) {
 		super(context, name, factory, version);
+
 		// TODO Auto-generated constructor stub
 	}
 
 	// 自建的建構子，只需傳入一個Context物件即可
 	public AndyAirDBhelper(Context context) {
-		super(context, database17, null, version17);
+		super(context,database18, null, version17);
 	}
 	//建立資料表
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-        db.execSQL(String.format("CREATE TABLE Andyairtable(_id integer primary key autoincrement,collection_time text no null,temper text no null,hum  text no null,tvoc  text no null,CO2  text no null)"));
+        db.execSQL(String.format("CREATE TABLE `Andyairtable` (\n" +
+				"\t`_id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+				"\t`collection_time`\tINTEGER,\n" +
+				"\t`temper`\tTEXT,\n" +
+				"\t`hum`\tTEXT,\n" +
+				"\t`tvoc`\tTEXT,\n" +
+				"\t`CO2`\tTEXT\n" +
+				");"));
 	}
 
 	//資料庫更新，刪除資料表，再次呼叫onCreate()重建資料表

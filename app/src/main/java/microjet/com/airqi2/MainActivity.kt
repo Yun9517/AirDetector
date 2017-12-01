@@ -95,7 +95,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     internal var SaveToDB = arrayOf("2017/11/30","10", "20", "30", "40")
     internal var idTTDB: Long = 4
     internal var c: Cursor? = null
-    internal var cv: ContentValues? = null
+    internal var values : ContentValues? = null
     internal var IDID = ""
     internal var Count: Long = 0
     internal var idTTDBStr = ""
@@ -125,10 +125,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //*********************************************************************************************
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
-        dbhelper = AndyAirDBhelper(this)
-        dbrw = dbhelper.writableDatabase
-        Toast.makeText(this,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
-        AddedSQLlite(60000)
+        //dbhelper = AndyAirDBhelper(this)
+        //dbrw = dbhelper.writableDatabase
+        //Toast.makeText(this,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
+        //AddedSQLlite(60000)
         //SearchSQLlite()
 
 
@@ -317,20 +317,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        cv = ContentValues()
+        values  = ContentValues()
         //idTTDB = c!!.getCount().toLong()
         //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
         if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== ""&&SaveToDB[4]!== "" && idTTDB >= 0) {//****************************************************************************
             Toast.makeText(this@MainActivity, "資料滿5筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
             //cv.put(columT[0],c.getPosition());
-            cv!!.put(columT[1], SaveToDB[0])
-            cv!!.put(columT[2], SaveToDB[1])
-            cv!!.put(columT[3], SaveToDB[2])
-            cv!!.put(columT[4], SaveToDB[3])
-            cv!!.put(columT[5], SaveToDB[4])
+            values !!.put(columT[1], SaveToDB[0])
+            values !!.put(columT[2], SaveToDB[1])
+            values !!.put(columT[3], SaveToDB[2])
+            values !!.put(columT[4], SaveToDB[3])
+            values !!.put(columT[5], SaveToDB[4])
             //新增一筆五個測項資料到資料庫中
-            idTTDB = dbrw.insert(tablename, null, cv)
+            idTTDB = dbrw.insert(tablename, null, values )
             Toast.makeText(this@MainActivity, "資料滿5，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+","+","+SaveToDB[4], Toast.LENGTH_LONG).show()
         } else {
             Toast.makeText(this@MainActivity, "時間、溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
