@@ -499,7 +499,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         c = dbrw.query(tablename, columT, null, null, null, null, null)
 
         //先行定義時間格式
-
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
 
         //取得現在時間
@@ -545,7 +544,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         Toast.makeText(mContext, "資料庫共:" + CountString + "筆", Toast.LENGTH_LONG).show()
         //新增一筆四個測項資料到資料庫中
-        SearchSQLlite()
+        SearchSQLlite_Day()
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////
@@ -606,14 +605,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 var DateTimeList = ArrayList<String>()
                 DateTimeList.add(c!!.getString(1))
                 DateTimeList.add(c!!.getString(5))
+                DateTimeList.clone()
                 list.add(DateTimeList)
 
                 c!!.moveToNext()
             }
-
         } else {
             Toast.makeText(mContext, "資料庫查無資料", Toast.LENGTH_LONG).show()
         }
     }
+
+
 //AAA
 }
