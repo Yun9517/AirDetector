@@ -353,14 +353,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             values !!.put(columT[4], SaveToDB[3])
             values !!.put(columT[5], SaveToDB[4])
             //新增一筆五個測項資料到資料庫中
-<<<<<<< HEAD
+
             idTTDB = dbrw.insert(tablename, null, values )
             Toast.makeText(this@MainActivity, "資料滿5，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+","+","+SaveToDB[4], Toast.LENGTH_LONG).show()
-=======
-            idTTDB = dbrw.insert(tablename, null, cv)
+
 
             //Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
->>>>>>> e2a3e6004e1f72119d47adfe1e8bdc956935d4c4
+
         } else {
             //Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
         }
