@@ -222,16 +222,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        startService(serviceIntent)
+    }
+
     override fun onResume() {
         super.onResume()
         requestPermissionsForBluetooth()
 
-        val serviceIntent :Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
         //LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
-        val mainIntent = Intent("Main")
-        sendBroadcast(mainIntent)
+        //val mainIntent = Intent("Main")
+        //sendBroadcast(mainIntent)
 
                 if (!mIsReceiverRegistered) {
             if (mReceiver == null)
