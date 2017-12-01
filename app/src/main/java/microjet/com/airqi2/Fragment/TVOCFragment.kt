@@ -598,5 +598,5 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             Toast.makeText(mContext, "資料庫查無資料", Toast.LENGTH_LONG).show()
         }
     }
-
+//AAA
 }

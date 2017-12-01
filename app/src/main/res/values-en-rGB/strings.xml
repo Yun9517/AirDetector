@@ -27,6 +27,15 @@
     <string name="text_navi_add_device">Add Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
+    <string name="ble_not_supported">Bluetooth not support.</string>
+    <string name="select_device">Select device</string>
+    <string name="scanning">Scanning...</string>
+    <string name="stopped">Scan Stop</string>
+    <string name="scan">Scan</string>
+    <string name="cancel">Cancel</string>
+    <string name="text_message_yes">OK</string>
+    <string name="text_need_bluetooth_perm">Need bluetooth permission!</string>
+    <string name="text_message_need_permission">Need Permission</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->
     <string name="ADDWII">ADDWII</string>
@@ -39,7 +48,7 @@
     <string name="About_App">About APP</string>
     <string name="Already_Pair">Paired: </string>
     <string name="Already_Connected">Connected: </string>
-    <string name="No_Device_Connect">No Device Paired</string>
+    <string name="No_Device_Connect">No Device Paired</string> <!-- 2017/11/30 改抽屜標題 -->
     <string name="UART_Connecting">UART:Connecting</string>
     <string name="UART_Disconnecting">UART:Disconnecting</string>
 
@@ -74,11 +83,6 @@
     <string name="text_setting_pollution_comment_3"><![CDATA[小時平均濃度>660 ppb/每小時一次]]></string>
     <string name="text_tvoc_meter_220ppb">220</string>
     <string name="text_tvoc_meter_660ppb">660</string>
-
-    <string-array name="SpinnerArray" >
-        <item>Hour</item>
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
-    </string-array>
+    <string name="text_navi_q_and_a">Q and A</string>
+    <string name="text_navi_tour">Guide Tour</string>
 </resources>

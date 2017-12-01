@@ -7,4 +7,11 @@
         <item>20分</item>
         <item>30分</item>
     </string-array>
+
+    <string-array name="SpinnerArray" >
+        <item>时</item>
+        <item>日</item>
+        <item>周</item>
+        <item>月</item>
+    </string-array>
 </resources>

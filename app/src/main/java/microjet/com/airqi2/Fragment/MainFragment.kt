@@ -43,7 +43,7 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bar1?.setMaxValues(1000f)
-        bar1?.setCurrentValues(220f)
+        bar1?.setCurrentValues(660f)
        // bar1!!.setCurrentValues(10f)
     }
 

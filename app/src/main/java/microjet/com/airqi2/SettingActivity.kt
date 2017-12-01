@@ -119,6 +119,9 @@ class SettingActivity : AppCompatActivity() {
         swMessage!!.setOnClickListener {
             if (swMessage!!.isChecked) {
                 text_msg_stat!!.text = getString(R.string.text_setting_on)
+                val mainintent = Intent("Main")
+                mainintent.putExtra("status", "message")
+                sendBroadcast(mainintent)
             } else {
                 text_msg_stat!!.text = getString(R.string.text_setting_off)
             }

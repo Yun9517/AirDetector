@@ -27,6 +27,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
+import android.bluetooth.le.ScanSettings.*
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -67,10 +68,19 @@ class DeviceListActivity : Activity() {
     internal var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val device = parent.getItemAtPosition(position) as BluetoothDevice
 
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        share.edit().clear().putString("mac",device.address)
+
+        val intent :Intent? = Intent("Main")
+        intent!!.putExtra("status", "connect")
+        intent!!.putExtra("mac", device.address)
+        sendBroadcast(intent)
+
+        /*
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, device.address)
         startService(serviceIntent)
-
+        */
         this@DeviceListActivity.finish()
     }
 
@@ -237,7 +247,8 @@ class DeviceListActivity : Activity() {
             val scanFilters = ArrayList<ScanFilter>()
             scanFilters.add(scanFilter)
 
-            val scanSettings = ScanSettings.Builder().build()
+            val scanSettings = ScanSettings.Builder().setScanMode(SCAN_MODE_BALANCED).build()
+
 
             mBluetoothLeScanner!!.startScan(scanFilters, scanSettings, scanCallback)
 

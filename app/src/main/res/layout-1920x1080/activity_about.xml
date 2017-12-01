@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="@color/AboutPageBackground"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/AboutPageBackground"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <ImageButton
+            android:layout_width="145dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:background="@drawable/app_android_icon_logo"
+            />
+
+        <TextView
+            android:id="@+id/aboutAppVersion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="25dp"
+            android:gravity="start"
+            android:text="@string/show_app_version"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:gravity="start"
+            android:layout_marginTop="15dp"
+            android:text="@string/ADDWII"
+            android:visibility="invisible"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:gravity="start"
+            android:visibility="invisible"
+            android:text="@string/MicroJetWeb"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="start"
+            android:text="@string/Contact_us"
+            android:visibility="invisible"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:gravity="start"
+            android:visibility="invisible"
+            android:text="@string/ContactUs"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:gravity="start"
+            android:visibility="invisible"
+            android:text="@string/Contact_mail"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp"
+            android:textStyle="normal" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:gravity="start"
+            android:visibility="invisible"
+            android:text="@string/CustomerService"
+            android:textColor="@color/AboutTextColor"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</RelativeLayout>
