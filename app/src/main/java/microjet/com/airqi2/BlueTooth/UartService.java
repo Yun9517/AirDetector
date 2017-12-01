@@ -15,13 +15,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
 
@@ -133,47 +138,47 @@ public class UartService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
             	Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt );
-                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
         }
 
-//        @Override
-//        public void onCharacteristicRead(BluetoothGatt gatt,
-//                                         BluetoothGattCharacteristic characteristic,
-//                                         int status) {
-//            if (status == BluetoothGatt.GATT_SUCCESS) {
-//                //broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-//            }
-//        }
-//
-//        @Override
-//        public void onCharacteristicChanged(BluetoothGatt gatt,
-//                                            BluetoothGattCharacteristic characteristic) {
-//            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
-//        }
+       @Override
+        public void onCharacteristicRead(BluetoothGatt gatt,
+                                         BluetoothGattCharacteristic characteristic,
+                                         int status) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            }
+        }
+
+        @Override
+        public void onCharacteristicChanged(BluetoothGatt gatt,
+                                            BluetoothGattCharacteristic characteristic) {
+            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+        }
     };
 
     private void broadcastUpdate(final String action) {
         final Intent intent = new Intent(action);
-        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
-//    private void broadcastUpdate(final String action,
-//                                 final BluetoothGattCharacteristic characteristic) {
-//        final Intent intent = new Intent(action);
-//
-//        // This is handling for the notification on TX Character of NUS service
-//        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-//
-//           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
-//            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-//        } else {
-//
-//        }
-//        //LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-//    }
+    private void broadcastUpdate(final String action,
+                                 final BluetoothGattCharacteristic characteristic) {
+        final Intent intent = new Intent(action);
+
+        // This is handling for the notification on TX Character of NUS service
+        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
+
+           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+        } else {
+
+        }
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
 
 
     //BindService專用
@@ -236,6 +241,7 @@ public class UartService extends Service {
                 mReceiver = new MyBroadcastReceiver();
             registerReceiver(mReceiver, new IntentFilter("UartService"));
             mIsReceiverRegistered = true;
+            LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
         }
     }
 
@@ -276,6 +282,7 @@ public class UartService extends Service {
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
+        enableTXNotification();
         return true;
     }
 
@@ -361,33 +368,33 @@ public class UartService extends Service {
      *
      * @return 
      */
-//    public void enableTXNotification()
-//    {
-//    	/*
-//    	if (mBluetoothGatt == null) {
-//    		showMessage("mBluetoothGatt null" + mBluetoothGatt);
-//    		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-//    		return;
-//    	}
-//    		*/
-//    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-//    	if (RxService == null) {
-//            showMessage("Rx service not found!");
-//            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-//            return;
-//        }
-//    	BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
-//        if (TxChar == null) {
-//            showMessage("Tx charateristic not found!");
-//            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-//            return;
-//        }
-//        mBluetoothGatt.setCharacteristicNotification(TxChar,true);
-//        BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
-//        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
-//        mBluetoothGatt.writeDescriptor(descriptor);
-//
-//    }
+    public void enableTXNotification()
+    {
+    	/*
+    	if (mBluetoothGatt == null) {
+    		showMessage("mBluetoothGatt null" + mBluetoothGatt);
+    		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+    		return;
+    	}
+    		*/
+    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+    	if (RxService == null) {
+            showMessage("Rx service not found!");
+            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
+    	BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
+        if (TxChar == null) {
+            showMessage("Tx charateristic not found!");
+            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
+        mBluetoothGatt.setCharacteristicNotification(TxChar,true);
+        BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
+        descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
+        mBluetoothGatt.writeDescriptor(descriptor);
+
+    }
     
     public void writeRXCharacteristic(byte[] value)
     {
@@ -453,12 +460,201 @@ public class UartService extends Service {
                     connect(intent.getStringExtra("mac"));
                     break;
                 case "message":
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(5000));
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                     break;
             }
         }
 
-
     }
 
+    private static IntentFilter makeGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
+        intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
+        intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
+        return intentFilter;
+    }
+
+    private final ThreadLocal<BroadcastReceiver> UARTStatusChangeReceiver = new ThreadLocal<BroadcastReceiver>() {
+        @Override
+        protected BroadcastReceiver initialValue() {
+            return new BroadcastReceiver() {
+                public void onReceive(Context context, Intent intent) {
+                    String action = intent.getAction();
+                    if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
+                        //showMessage("UART:Connecting");
+                        //showMessage(get(R.string.UART_Connecting));
+                    }
+                    if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+                        //showMessage("UART:Disconnecting");
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("Connect", 0);
+
+                     //   bundle.putInt("mStatus", UART_PROFILE_DISCONNECTED);
+                    }
+                    if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                       enableTXNotification();
+                    }
+                    //*********************//
+                    if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {//資料進來
+                        final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
+                        // if (txValue.length == 4 && txValue[0] == (byte) 0xEA) {
+                   //     while (ReturnQ.size()!=0) {
+                    //        ReturnQ.poll();
+                   //     }
+                        switch (txValue[2]) {
+                            case (byte) 0xE0:
+                                Log.d("UART feeback", "ok");
+                                return;
+                            case (byte) 0xE1:
+                                Log.d("UART feedback", "Couldn't write in device");
+                                return;
+                            case (byte) 0xE2:
+                                Log.d("UART feedback", "Temperature sensor fail");
+                                return;
+                            case (byte) 0xE3:
+                                Log.d("UART feedback", "TVOC sensor fail");
+                                return;
+                            case (byte) 0xE4:
+                                Log.d("UART feedback", "Pump power fail");
+                                return;
+                            case (byte) 0xE5:
+                                Log.d("UART feedback", "Invalid value");
+                                return;
+                            case (byte) 0xE6:
+                                Log.d("UART feedback", "Unknown command");
+                                return;
+                            case (byte) 0xE7:
+                                Log.d("UART feedback", "Waiting timeout");
+                                return;
+                            case (byte) 0xE8:
+                                Log.d("UART feedback", "Checksum error");
+                                return;
+                            case (byte) 0xB1:
+                                Log.d(TAG, "cmd:0xB1 feedback");
+                                break;
+                            case (byte )0xB2:
+                                Log.d(TAG, "cmd:0xB2 feedback");
+                                break;
+                            case (byte )0xB4:
+                                Log.d(TAG, "cmd:0xB4 feedback");
+                                break;
+                            case (byte )0xB5:
+                                Log.d(TAG, "cmd:0xB5 feedback");
+                                break;
+                        }
+
+                        if (getErrorTime() >= 3) {
+                            ResetErrorTime();
+                        }
+                        if (!checkCheckSum(txValue)) {
+                            setErrorTime();
+                        } else {
+
+                         //   final CallingTranslate CT = new CallingTranslate();
+                            ArrayList<String> RString;
+                            String val;
+                            switch (txValue[2]) {
+                                case (byte) 0xB1:
+                                    RString= CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                                    break;
+                                case (byte) 0xB2:
+                                    RString= CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                                    break;
+                                case (byte) 0xB4:
+                                    RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
+                                    // Integer.parseInt(RString.get(0))
+                                    setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
+
+                                    int j=0;
+                                    for (int i=0;i<RString.size();i++) {
+
+                                        j=i;
+                                    }
+                                 //   setCorrectTime(Integer.parseInt(RString.get(j)));
+                                    break;
+                                case (byte) 0xB5:
+                                    RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+                                  //      ReturnQ.offer(RString.get(i));
+                                    break;
+                                case (byte) 0xB6:
+                                    RString= CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                                    break;
+                            }
+                        }
+                        if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
+                            showMessage("Device support UART. Disconnecting");
+                        }
+                    }
+                }
+            };
+        }
+    };
+    private boolean checkCheckSum(byte[] InputValue){
+        //   InputValue.length;
+        int j=InputValue.length;
+        byte CheckSum=(byte)0x00;
+        byte max=(byte) 0xFF;
+        for (int i=0;i<j;i++)
+            CheckSum+=InputValue[i];
+        return CheckSum == max;
+    }
+
+    private int MaxItems;
+    void setMaxItems(int input ){MaxItems=input;}
+    private int ErrorTime;
+    private int getErrorTime()
+    {
+        return ErrorTime;
+    }
+    private void setErrorTime(){
+        ErrorTime+=1;
+    }
+    private void ResetErrorTime(){
+        ErrorTime=0;
+    }
+    class Data{
+        Data(String Temp,String Humidity,String Tvoc,String CO2,String Time){
+            Temperatur_Data=Temp;
+            Humidy_Data=Humidity;
+            TVOC_Data=Tvoc;
+            CO2_Data=CO2;
+            time=Time;
+        }
+        String Temperatur_Data;
+        String Humidy_Data;
+        String TVOC_Data;
+        String CO2_Data;
+        String time;
+    }
+    private class GetData extends AsyncTask<String , Integer ,Data > {
+
+        @Override
+        protected void onPreExecute() {
+            //執行前 設定可以在這邊設定
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Data doInBackground(String... params) {
+            //執行中 在背景做事情
+
+            return null;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            //執行中 可以在這邊告知使用者進度
+            super.onProgressUpdate(values);
+        }
+
+        @Override
+        protected void onPostExecute(Data bitmap) {
+            //執行後 完成背景任務
+            super.onPostExecute(bitmap);
+
+        }
+    }
 }
