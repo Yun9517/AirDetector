@@ -292,7 +292,7 @@ public class UartService extends Service {
         //StartService後執行連線
         mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
-        SharedPreferences share = getSharedPreferences(shareStuff, MODE_PRIVATE);
+        SharedPreferences share = getSharedPreferences("MACADDRESS", MODE_PRIVATE);
         mBluetoothDeviceAddress = share.getString("mac", "noValue");
 
         if (mBluetoothDeviceAddress != "noValue") {

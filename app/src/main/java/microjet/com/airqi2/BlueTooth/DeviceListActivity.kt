@@ -68,8 +68,8 @@ class DeviceListActivity : Activity() {
     internal var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val device = parent.getItemAtPosition(position) as BluetoothDevice
 
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        share.edit().clear().putString("mac",device.address)
+        val share = getSharedPreferences("MACADDRESS", MODE_PRIVATE)
+        share.edit().clear().putString("mac",device.address).apply()
 
         val intent :Intent? = Intent("Main")
         intent!!.putExtra("status", "connect")
