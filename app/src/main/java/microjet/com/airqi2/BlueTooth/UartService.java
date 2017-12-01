@@ -292,14 +292,12 @@ public class UartService extends Service {
         //StartService後執行連線
         mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
-        if (mBluetoothDeviceAddress == null) {
-            SharedPreferences share = getSharedPreferences(shareStuff, MODE_PRIVATE);
-            mBluetoothDeviceAddress = share.getString("mac", "noValue");
-        }
+        SharedPreferences share = getSharedPreferences(shareStuff, MODE_PRIVATE);
+        mBluetoothDeviceAddress = share.getString("mac", "noValue");
 
-        if (mBluetoothDeviceAddress == "noValue") {
-            mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-        }else {
+        if (mBluetoothDeviceAddress != "noValue") {
+            //mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+            //} else {
             Intent mainintent = new Intent("Main");
             mainintent.putExtra("status", "connect");
             mainintent.putExtra("mac", mBluetoothDeviceAddress);
