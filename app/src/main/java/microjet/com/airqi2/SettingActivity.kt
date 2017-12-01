@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
+import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -122,6 +123,7 @@ class SettingActivity : AppCompatActivity() {
                 val mainintent = Intent("Main")
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
+                Log.d("message","messageSETTING")
             } else {
                 text_msg_stat!!.text = getString(R.string.text_setting_off)
             }
