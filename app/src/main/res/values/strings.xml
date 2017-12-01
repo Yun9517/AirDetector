@@ -84,11 +84,6 @@
     <string name="text_setting_pollution_comment_3"><![CDATA[小時平均濃度>660 ppb/每小時一次]]></string>
     <string name="text_tvoc_meter_220ppb">220</string>
     <string name="text_tvoc_meter_660ppb">660</string>
-
-    <string-array name="SpinnerArray" >
-        <item>時</item>
-        <item>日</item>
-        <item>週</item>
-        <item>月</item>
-    </string-array>
+    <string name="text_navi_q_and_a">常見問題</string>
+    <string name="text_navi_tour">操作導覽</string>
 </resources>
