@@ -51,6 +51,7 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_tour"
+            android:visible="false"
             android:title="@string/text_navi_tour" />
     </group>
 

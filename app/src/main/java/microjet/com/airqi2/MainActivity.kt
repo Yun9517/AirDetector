@@ -222,16 +222,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        startService(serviceIntent)
+    }
+
     override fun onResume() {
         super.onResume()
         requestPermissionsForBluetooth()
 
-        val serviceIntent :Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
         //LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
-        val mainIntent = Intent("Main")
-        sendBroadcast(mainIntent)
+        //val mainIntent = Intent("Main")
+        //sendBroadcast(mainIntent)
 
                 if (!mIsReceiverRegistered) {
             if (mReceiver == null)
@@ -598,6 +603,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
+    private fun tourShow() {
+        val i : Intent? = Intent(this, TourActivity::class.java)
+        startActivity(i)
+    }
+
 
 /*
     //20171124 Andy叫出月曆的方法
@@ -627,7 +637,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_air_map -> airmapShow()
-        //R.id.nav_about -> AboutActivity
+            R.id.nav_tour -> tourShow()
         //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_setting -> settingShow()
