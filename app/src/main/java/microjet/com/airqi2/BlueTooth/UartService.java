@@ -598,6 +598,7 @@ public class UartService extends Service {
                                     myDeviceData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
                                     Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
                                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                                     setCorrectTime(0);
                                     //取得當前時間
@@ -624,7 +625,7 @@ public class UartService extends Service {
                                         myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
-                                            Toast.makeText(getApplicationContext(),"同步完成",Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                                             Intent mainIntent = new Intent("Main");
                                             mainIntent.putExtra("status","B5");
                                             Bundle data = new Bundle();

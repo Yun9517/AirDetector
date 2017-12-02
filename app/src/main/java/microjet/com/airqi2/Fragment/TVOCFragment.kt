@@ -139,7 +139,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener{
             mChart?.clear()
             when (i) {
                 R.id.radioButton_Hour -> {
-                    mChart?.data = getBarData()
+                 //   mChart?.data = getBarData()
                     //20171130   Andy使用傳統SQL語法新增資料
                     val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
                     //得到一个可写的数据库
@@ -350,8 +350,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener{
         // val DATA_COUNT = 5
         // DATA_COUNT
         val chartData = ArrayList<BarEntry>()
-        for (i  in 1 until DATA_COUNT) {
-            chartData.add(BarEntry(input[i].toFloat(), i))
+        if (input.size<DATA_COUNT-1){
+            for (i  in 0 until input.size) {
+                chartData.add(BarEntry(input[i].toFloat(), i))
+            }
+        }
+        else {
+            for (i in 0 until DATA_COUNT-1) {
+                chartData.add(BarEntry(input[i].toFloat(), i))
+            }
         }
         return chartData
     }
