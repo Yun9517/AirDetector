@@ -25,7 +25,9 @@ import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -585,28 +587,36 @@ public class UartService extends Service {
                                 case (byte) 0xB2:
                                     RString= CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                                     setSampleRateTime(Integer.parseInt(RString.get(0)));
-
+                                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                                     break;
                                 case (byte) 0xB4:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                                     myData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
                                     setCorrectTime(Integer.parseInt(RString.get(8)));
+                                    //取得當前時間
+                                    Date date = new Date();
+                                    setMyDate(date);
+                                   // String time=getDateTime();
+                                   // setGetDataTime(time);
                                     Log.d("UART", "getItem 1");
                                     if (getMaxItems()!=0) {
+                                        counter=0;
                                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                                     }
                                  //   setCorrectTime(Integer.parseInt(RString.get(j)));
                                     break;
                                 case (byte) 0xB5:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+                                    //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                                     if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
-                                        myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),"1122"));
+                                        myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
                                         }
                                         else {
                                             NowItem++;
+                                            counter++;
                                             Handler mHandler = new Handler();
                                             mHandler.post(runnable);
                                         }
@@ -667,7 +677,7 @@ public class UartService extends Service {
     private int SampleRateTime=0;
     void setSampleRateTime(int input){SampleRateTime=input;}
     int getSampleRateTime(){return SampleRateTime;}
-
+    private int counter=0;
     private int ErrorTime;
     private int getErrorTime()
     {
@@ -679,6 +689,28 @@ public class UartService extends Service {
     private void ResetErrorTime(){
         ErrorTime=0;
     }
+
+    public Date getMyDate() {
+        return myDate;
+    }
+
+    public void setMyDate(Date myDate) {
+        this.myDate = myDate;
+    }
+    private Date myDate;
+
+    private String getDateTime(long longtime){
+            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            Date date = new Date();
+            date.setTime(longtime);
+            return sdFormat.format(date);
+        }
+    private String DataTime;
+    public String getGetDataTime() {
+        return DataTime;
+    }
+
+
     class Data{
         Data(String Temp,String Humidity,String Tvoc,String CO2,String Time){
             Temperatur_Data=Temp;

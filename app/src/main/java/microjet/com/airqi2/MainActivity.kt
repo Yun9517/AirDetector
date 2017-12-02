@@ -653,7 +653,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> {
                 val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "setSampleRate")
+                intent!!.putExtra("status", "checkItems")
                 sendBroadcast(intent)
                 //    aboutShow()
             }
