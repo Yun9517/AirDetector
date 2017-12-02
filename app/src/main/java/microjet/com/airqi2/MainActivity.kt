@@ -652,24 +652,33 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_add_device -> blueToothShow()
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> {
-                val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "checkItems")
-                sendBroadcast(intent)
-                //    aboutShow()
-            }
-            R.id.nav_air_map -> airmapShow()
-            R.id.nav_tour -> tourShow()
-        //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
-            R.id.nav_knowledge ->{
+                aboutShow()
+                /*
+               val intent: Intent? = Intent("Main")
+               intent!!.putExtra("status", "checkItems")
+               sendBroadcast(intent)*/
+               //    aboutShow()
+           }
+           R.id.nav_air_map -> airmapShow()
+           R.id.nav_tour -> tourShow()
+       //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
+           R.id.nav_knowledge ->{
+               knowledgeShow()
+               /*
+               val intent: Intent? = Intent("Main")
+               intent!!.putExtra("status", "getSampleRate")
+               sendBroadcast(intent)*/
+             //  knowledgeShow()
+           }
+            R.id.nav_getData->{
                 val intent: Intent? = Intent("Main")
                 intent!!.putExtra("status", "getSampleRate")
                 sendBroadcast(intent)
-              //  knowledgeShow()
             }
-            R.id.nav_setting -> settingShow()
-        //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
-        //else -> fragmentClass = FirstFragment::class.java
-        }
+           R.id.nav_setting -> settingShow()
+       //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
+       //else -> fragmentClass = FirstFragment::class.java
+       }
 
 //        try {
 //            fragment = fragmentClass.newInstance() as Fragment
@@ -681,13 +690,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //        val fragmentManager = supportFragmentManager
 //        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
 
-        // Highlight the selected item has been done by NavigationView
-        //menuItem.isChecked = true
-        // Set action bar title
+       // Highlight the selected item has been done by NavigationView
+       //menuItem.isChecked = true
+       // Set action bar title
 
-        //title = menuItem.title
-        // Close the navigation drawer
-        // ******************************************************//
+       //title = menuItem.title
+       // Close the navigation drawer
+       // ******************************************************//
         //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
         //title = menuItem.title
         // ******************************************************//
@@ -789,6 +798,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
@@ -800,6 +810,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)

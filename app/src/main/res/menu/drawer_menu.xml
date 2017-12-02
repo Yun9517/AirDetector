@@ -56,6 +56,14 @@
     </group>
 
     <group
+        android:id="@+id/group_8"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_getData"
+            android:visible="false"
+            android:title="@string/text_navi_getData" />
+    </group>
+    <group
         android:id="@+id/group_7"
         android:checkableBehavior="none">
         <item

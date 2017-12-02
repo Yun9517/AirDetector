@@ -27,6 +27,7 @@
     <string name="text_navi_add_device">新增装置</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">知识库</string>
+    <string name="text_navi_getData">读取装置资料</string>
     <string name="ble_not_supported">蓝牙未支援</string>
     <string name="select_device">选择装置</string>
     <string name="scanning">扫描中</string>

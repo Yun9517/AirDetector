@@ -25,6 +25,7 @@
     <string name="text_navi_about">About APP</string>
     <string name="text_navi_air_map">Air Map</string>
     <string name="text_navi_add_device">Add Device</string>
+    <string name="text_navi_getData">Read Data From Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
     <string name="ble_not_supported">Bluetooth not support.</string>
