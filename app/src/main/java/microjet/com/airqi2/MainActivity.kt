@@ -645,11 +645,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         when (menuItem.itemId) {
             R.id.nav_add_device -> blueToothShow()
             R.id.nav_disconnect_device -> blueToothdisconnect()
-            R.id.nav_about -> aboutShow()
+            R.id.nav_about -> {
+                val intent: Intent? = Intent("Main")
+                intent!!.putExtra("status", "setSampleRate")
+                sendBroadcast(intent)
+                //    aboutShow()
+            }
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
         //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
-            R.id.nav_knowledge -> knowledgeShow()
+            R.id.nav_knowledge ->{
+                val intent: Intent? = Intent("Main")
+                intent!!.putExtra("status", "callDeviceStartSample")
+                sendBroadcast(intent)
+              //  knowledgeShow()
+            }
             R.id.nav_setting -> settingShow()
         //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
         //else -> fragmentClass = FirstFragment::class.java
@@ -757,6 +767,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+                }
+                "B6"->{
+                    intent.getStringExtra("TVOCValue")
+                    intent.getStringExtra("BatteryLife")
+                   // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
+                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
+
+                    // mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+                   // mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
                 }
             }
         }

@@ -1,5 +1,7 @@
 package microjet.com.airqi2
 
+import android.app.Activity
+import android.bluetooth.BluetoothDevice
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -16,7 +18,7 @@ import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.Definition.SavePreferences
 import android.widget.AdapterView
 import android.widget.Toast
-
+import microjet.com.airqi2.Fragment.TVOCFragment
 
 
 /**
@@ -60,6 +62,9 @@ class SettingActivity : AppCompatActivity() {
         spCycle!!.adapter = mCycleAdapter
 
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY,0)
+        //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
+
+
 
     }
 
@@ -110,13 +115,24 @@ class SettingActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TEST_CYCLE,
                         position).apply()
+
+
+                val intent :Intent? = Intent("TVOCFragment")
+                intent!!.putExtra("rangeTime", position)
+                sendBroadcast(intent)
+
             }
+
+
+
+
+
 
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
         }
-        
+
         swMessage!!.setOnClickListener {
             if (swMessage!!.isChecked) {
                 text_msg_stat!!.text = getString(R.string.text_setting_on)
@@ -128,7 +144,7 @@ class SettingActivity : AppCompatActivity() {
                 text_msg_stat!!.text = getString(R.string.text_setting_off)
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, 
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
                     swMessage!!.isChecked).apply()
         }
 
@@ -176,4 +192,8 @@ class SettingActivity : AppCompatActivity() {
                     swTotalNotify!!.isChecked).apply()
         }
     }
+
+
+
+
 }

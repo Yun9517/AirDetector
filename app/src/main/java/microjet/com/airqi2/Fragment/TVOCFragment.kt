@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.BroadcastReceiver
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
@@ -99,8 +101,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     internal var idTTDBStr = ""
     //20171130   Andy SQLlite
     internal var values: ContentValues? = null
-    val list=ArrayList<ArrayList<String>>()
+    var list=ArrayList<ArrayList<String>>()
 
+    //20171202 Andy 選取範圍時間變數
+     var rangeTime=0
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -612,6 +616,36 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
         } else {
             Toast.makeText(mContext, "資料庫查無資料", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    //20171201 Andy SQL取依造時間間隔中的資料筆數
+    private fun  Getcount(TimeRange: Int,rangeTime: ArrayList<ArrayList<String>> ):Int {
+        var eCount:Int=0
+
+        //取依造時間間隔中的資料筆數
+
+
+        return eCount
+    }
+
+
+
+    //20171201 Andy SQL取依造時間間隔中的資料筆數平均
+    private fun AVGData(DataConut: Int,rangeTime: ArrayList<ArrayList<String>> ):ArrayList<ArrayList<String>> {
+        var DataAVGArray=ArrayList<ArrayList<String>>()
+
+        //取依造時間間隔中的資料筆數平均
+
+        return DataAVGArray
+    }
+
+    //20171202   Andy  SQL計算時間範圍
+    inner class MyBroadcastReceiver : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+
+            var rangeTime  = intent.getStringExtra("rangeTime");
+
         }
     }
 
