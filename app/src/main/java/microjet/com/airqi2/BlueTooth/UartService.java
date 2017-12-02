@@ -29,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
@@ -593,7 +594,8 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                                     myDeviceData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
-                                    setCorrectTime(Integer.parseInt(RString.get(8)));
+                                    //setCorrectTime(Integer.parseInt(RString.get(8)));
+                                    setCorrectTime(0);
                                     //取得當前時間
                                     Date date = new Date();
                                     setMyDate(date);
@@ -610,6 +612,10 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                                     if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
+                                    //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
+                                    //   long yy= getSampleRateTime()*counter*60*1000;
+                                    //   long zz=getCorrectTime()*60*1000;
+
                                         myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
@@ -705,7 +711,7 @@ public class UartService extends Service {
     private Date myDate;
 
     private String getDateTime(long longtime){
-            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss");
+            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN);
             Date date = new Date();
             date.setTime(longtime);
             return sdFormat.format(date);

@@ -25,9 +25,11 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.formatter.XAxisValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.github.mikephil.charting.utils.ViewPortHandler
 import microjet.com.airqi2.AndyAirDBhelper
 import microjet.com.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
@@ -35,6 +37,8 @@ import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
 import microjet.com.airqi2.myData
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -47,8 +51,7 @@ import kotlin.collections.ArrayList
  * Use the [TVOCFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
-
+class TVOCFragment : Fragment()  ,OnChartValueSelectedListener{
     private var mContext: Context? = null
 
     private var mChart: FixBarChart? = null
@@ -106,8 +109,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var bigTimeData=ArrayList<ArrayList<String>>()
     var smallTimeData=ArrayList<ArrayList<String>>()
 
-
-
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
 
@@ -116,7 +117,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         dbhelper = AndyAirDBhelper(mContext)
         dbrw = dbhelper.writableDatabase
-        Toast.makeText(mContext, AndyAirDBhelper.database18 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version, Toast.LENGTH_LONG).show()
+      //  Toast.makeText(mContext, AndyAirDBhelper.database18 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version, Toast.LENGTH_LONG).show()
 
 
 
@@ -144,7 +145,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //得到一个可写的数据库
                     val db = dbHelper.getReadableDatabase()
                     //insertDB(db)
-                    SearchSQLlite()
+
+                   // SearchSQLlite()
+                    mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
                     mChart?.data = getBarData()
@@ -160,7 +163,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
             mChart?.setVisibleXRangeMinimum(5.0f)
             mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-            mChart?.moveViewToX((DATA_COUNT - 1).toFloat())//移動視圖by x index
+            mChart?.moveViewToX((100).toFloat())//移動視圖by x index
             //   Toast.makeText(mContext,i.toString(),Toast.LENGTH_SHORT).show()
         })
 
@@ -287,7 +290,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         dbhelper = AndyAirDBhelper(mContext)
         dbrw = dbhelper.writableDatabase
-        Toast.makeText(mContext, AndyAirDBhelper.database18 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version, Toast.LENGTH_LONG).show()
+     //   Toast.makeText(mContext, AndyAirDBhelper.database18 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version, Toast.LENGTH_LONG).show()
         //SearchSQLlite()
 
 
@@ -307,8 +310,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         mTextViewValue!!.text = h!!.value.toString() + "ppb"
         // mTextViewTimeRange!!.text=h.toString()
-        val listString: List<String> = getLabels()
-        mTextViewTimeRange!!.text = listString[h.xIndex]
+       // val listString: List<String> = getLabels2()
+        mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
     }
 
     override fun onResume() {
@@ -321,7 +324,17 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onStop() {
         super.onStop()
     }
+    private fun getBarData2(inputTVOC:ArrayList<String>,inputTime:ArrayList<String>):BarData{
+        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "LabelA")
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
+                ContextCompat.getColor(context, R.color.progressBarMidColor),
+                ContextCompat.getColor(context, R.color.progressBarEndColor)))
 
+        val dataSets = ArrayList<IBarDataSet>()
+        dataSets.add(dataSetA) // add the datasets
+
+        return BarData(getLabels2(inputTime), dataSets)
+    }
     private fun getBarData(): BarData {
         val dataSetA = MyBarDataSet(getChartData(), "LabelA")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
@@ -333,16 +346,30 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         return BarData(getLabels(), dataSets)
     }
-
+    private fun getChartData2(input:ArrayList<String>): List<BarEntry> {
+        // val DATA_COUNT = 5
+        // DATA_COUNT
+        val chartData = ArrayList<BarEntry>()
+        for (i  in 1 until DATA_COUNT) {
+            chartData.add(BarEntry(input[i].toFloat(), i))
+        }
+        return chartData
+    }
     private fun getChartData(): List<BarEntry> {
         // val DATA_COUNT = 5
         // DATA_COUNT
         val chartData = ArrayList<BarEntry>()
-
         for (i in 1 until DATA_COUNT) {
             chartData.add(BarEntry((i * 20).toFloat(), i))
         }
         return chartData
+    }
+    private fun getLabels2(input: ArrayList<String>): List<String> {
+        val chartLabels = ArrayList<String>()
+        for (i in 1 until DATA_COUNT) {
+            chartLabels.add(input[i])
+        }
+        return chartLabels
     }
 
     private fun getLabels(): List<String> {
@@ -352,7 +379,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
         return chartLabels
     }
-
+    private fun setLabels(){}
     // 20171128 Added by Raymond
     private fun configChartView() {
         val xAxis: XAxis = mChart!!.xAxis
@@ -361,7 +388,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
         leftAxis.setDrawLabels(true) // no axis labels
@@ -433,15 +459,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 Count = c!!.getCount().toLong()
                 //c.close();
                 val CountString = Count.toString()
-                Toast.makeText(mContext, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
-
+            //    Toast.makeText(mContext, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
+/*
                 Toast.makeText(mContext, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0) + "\n"
                         + "資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) + " \n"
                         + "資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) + "C \n"
                         + "資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) + "% \n"
                         + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
                         + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
-
+*/
                 c!!.moveToNext()
             }
 
@@ -545,14 +571,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
        // } else {
        //     Toast.makeText(mContext, "時間、溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
       //  }
-        Toast.makeText(mContext, "插入完成", Toast.LENGTH_LONG).show()
+     //   Toast.makeText(mContext, "插入完成", Toast.LENGTH_LONG).show()
 
         Count = c!!.getCount().toLong()+1
         //c.close();
         CountString = Count.toString()
 
 
-        Toast.makeText(mContext, "資料庫共:" + CountString + "筆", Toast.LENGTH_LONG).show()
+     //   Toast.makeText(mContext, "資料庫共:" + CountString + "筆", Toast.LENGTH_LONG).show()
         //新增一筆四個測項資料到資料庫中
         SearchSQLlite_Day()
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -561,7 +587,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     //20171130 Andy SQL
-    private fun SearchSQLlite_Day() {
+    private fun SearchSQLlite_Day() :BarData{
         //****************************************************************************************************************************************************
 //------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
         //查詢CO2資料
@@ -626,11 +652,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
         //
         var randTime:Int=15*30*1000
-        Getcount(c!!.getCount().toInt(),randTime,list)
+       return Getcount(c!!.getCount().toInt(),randTime,list)
     }
 
+
+
+
     //20171201 Andy SQL取依造時間間隔中的資料筆數
-    private fun  Getcount(AllDataConut: Int,randTime:Int,rangeTimeData: ArrayList<ArrayList<String>>):Int {
+    private fun  Getcount(AllDataConut: Int,randTime:Int,rangeTimeData: ArrayList<ArrayList<String>>):BarData {
         var eCount:Int=0
 
         //取依造時間間隔中的資料筆數
@@ -640,7 +669,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         var nowS = sdf.format(Date()).toString()
         var now=sdf.parse(nowS).time
-
+        var tempTime = ArrayList<String>()
+        var tempTVOC = ArrayList<String>()
         //var now=nowS.time
 
         //var past=sdf.parse(str1).time
@@ -650,7 +680,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         //(0 until AllDataConut).forEach { i ->
 
-            (0 until AllDataConut ).forEach { j ->
+            (AllDataConut-1 downTo  0 ).forEach { j ->
                 //var DataValue=ArrayList<ArrayList<String>>()
 
                 var past = sdf.parse(rangeTimeData[j][0]).time
@@ -658,27 +688,32 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 var temp2: String? = null
                 //Toast.makeText(mContext, "共有" + past.toString(), Toast.LENGTH_LONG).show()
                 if ((now - past) <= 900000000000) {
+                    val formatter = SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN)
+                    var Date=formatter.parse(rangeTimeData[j][0])
+                    val sdf2 = SimpleDateFormat("HH:mm:ss", Locale.TAIWAN)
 
-                    var temp = ArrayList<String>()
-                    temp.add(rangeTimeData[j][0])
-                    smallTimeData.add(temp)
-                    temp2=rangeTimeData[j][0]
+                    var rangeTimeData2=sdf2.format(Date)
+
+                    tempTime.add(rangeTimeData2)
+                    tempTVOC.add(rangeTimeData[j][1])
+                    //smallTimeData.add(temp)
+                 //   temp2=rangeTimeData[j][0]
 
                     //smallTimeData[j][0]=rangeTimeData[j][0]
                     //smallTimeData[j][1]=rangeTimeData[j][1]
                     //var list=temp
                    // Toast.makeText(mContext, "符合的資料時間" + temp2, Toast.LENGTH_SHORT).show()
                 }
+
             }
         //}
-
         //}
         //val date = format.parse(rangeTime[])
 
 
 
 
-        return 0
+        return getBarData2(tempTVOC,tempTime)
     }
 
 
