@@ -373,8 +373,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener{
     }
     private fun getLabels2(input: ArrayList<String>): List<String> {
         val chartLabels = ArrayList<String>()
-        for (i in 1 until DATA_COUNT) {
-            chartLabels.add(input[i])
+
+        if (input.size<DATA_COUNT-1){
+            for (i  in 0 until input.size) {
+                chartLabels.add(input[i])
+            }
+        }
+        else {
+            for (i in 0 until DATA_COUNT-1) {
+                chartLabels.add(input[i])
+            }
         }
         return chartLabels
     }
