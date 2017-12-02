@@ -24,6 +24,7 @@ import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -546,6 +547,8 @@ public class UartService extends Service {
                                 Log.d("UART feedback", "Pump power fail");
                                 return;
                             case (byte) 0xE5:
+                                if (NowItem>0)
+                                    Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
                                 Log.d("UART feedback", "Invalid value");
                                 return;
                             case (byte) 0xE6:
@@ -594,6 +597,7 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                                     myDeviceData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
+                                    Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
                                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                                     setCorrectTime(0);
                                     //取得當前時間
@@ -603,6 +607,7 @@ public class UartService extends Service {
                                    // setGetDataTime(time);
                                     Log.d("UART", "getItem 1");
                                     if (getMaxItems()!=0) {
+                                        NowItem=0;
                                         counter=0;
                                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                                     }
@@ -615,10 +620,11 @@ public class UartService extends Service {
                                     //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
                                     //   long yy= getSampleRateTime()*counter*60*1000;
                                     //   long zz=getCorrectTime()*60*1000;
-
+                                        Log.d("UART:ITEM ", Integer.toString(NowItem));
                                         myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
+                                            Toast.makeText(getApplicationContext(),"同步完成",Toast.LENGTH_LONG).show();
                                             Intent mainIntent = new Intent("Main");
                                             mainIntent.putExtra("status","B5");
                                             Bundle data = new Bundle();
