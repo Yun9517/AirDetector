@@ -197,9 +197,9 @@ object CallingTranslate {
                 6 -> b[10] = a[3]
             }
         }
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteElevenBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10])
+        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.writeTwelveBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteElevenBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], checkSum)
+        return byteArrayOf(Command_List.WriteCmd, Command_List.writeTwelveBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], checkSum)
     }
 
     /**
@@ -400,7 +400,6 @@ object CallingTranslate {
     fun ParserGetHistorySampleItem(bytes: ByteArray): ArrayList<String> {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
-        var stringHex = ""
         var value = 0
         var i = 0
         while (i < bytes.size) {
@@ -427,7 +426,6 @@ object CallingTranslate {
                             value -= 6
                             ReturnValue.add(Integer.toString(value))
                             value = 0
-                            stringHex = ""
                         }
                         5//
                         -> {
@@ -446,10 +444,7 @@ object CallingTranslate {
                         }
                         else -> {
                         }
-                    }//   ReturnValue.add(stringHex);
-                    //   stringHex="";
-                    //   ReturnValue.add(stringHex);
-                    //   stringHex="";
+                    }
                 }
                 i = i + 1//Point to Cmd's CheckSum;
                 // ReturnValue.add(Integer.toString(value));
@@ -538,8 +533,8 @@ object CallingTranslate {
     fun ParserGetSampleRate(bytes: ByteArray): ArrayList<String> {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
-        var stringHex = ""
         var i = 0
+        var value=0
         while (i < bytes.size) {
             if (bytes[i] == Command_List.StopCmd) {
                 i = i + 1//point to DataLength
@@ -547,42 +542,44 @@ object CallingTranslate {
                 i = i + 1//point to CMD;
                 for (j in 0 until CountTemp - 2) {
                     i = i + 1//Point to DataValue
-                    stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
+                    value = value shl 8
+                    value = value + bytes[i].toPositiveInt()
+                   // stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
                     when (j) {
                         0//sample rate
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         2//sensor on time
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         4//time to get sample
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         6//pump on time
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         8//pumping time
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         9//get data in cycle 間隔多久取資料
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         10//期間內取幾次資料
                         -> {
-                            ReturnValue.add(stringHex)
-                            stringHex = ""
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
                         }
                         else -> {
                         }

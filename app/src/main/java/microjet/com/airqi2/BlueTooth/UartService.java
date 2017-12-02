@@ -470,9 +470,14 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                     break;
                 case "setSampleRate":
-                    int[] param = { 1, 5, 3, 3, 3, 1, 1 };
+                    int SampleTime =intent.getIntExtra("SampleTime",2);
+                    int[] param = { SampleTime, 58, 55, 54, 5, 0, 0 };
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                    break;
+                case "getSampleRate":
+                    Log.d(TAG, "getSampleRate");
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
                     int []param2={17,12,2,13,19,30};
@@ -538,7 +543,6 @@ public class UartService extends Service {
                                 Log.d("UART feedback", "Pump power fail");
                                 return;
                             case (byte) 0xE5:
-                               int i= myData.size();
                                 Log.d("UART feedback", "Invalid value");
                                 return;
                             case (byte) 0xE6:
@@ -580,6 +584,8 @@ public class UartService extends Service {
                                     break;
                                 case (byte) 0xB2:
                                     RString= CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                                    setSampleRateTime(Integer.parseInt(RString.get(0)));
+
                                     break;
                                 case (byte) 0xB4:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
@@ -647,13 +653,21 @@ public class UartService extends Service {
             // 需要背景作的事
         }
     };
-    private int MaxItems=0;
+
     private int NowItem=0;
-    private int CorrectTime=0;
+
+    private int MaxItems=0;
     void setMaxItems(int input ){MaxItems=input;}
     int getMaxItems(){return MaxItems;}
+
+    private int CorrectTime=0;
     void setCorrectTime(int input){CorrectTime=input;}
     int getCorrectTime(){return CorrectTime;}
+
+    private int SampleRateTime=0;
+    void setSampleRateTime(int input){SampleRateTime=input;}
+    int getSampleRateTime(){return SampleRateTime;}
+
     private int ErrorTime;
     private int getErrorTime()
     {

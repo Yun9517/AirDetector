@@ -176,4 +176,11 @@ class SettingActivity : AppCompatActivity() {
                     swTotalNotify!!.isChecked).apply()
         }
     }
+
+    override fun finish() {
+        val intent = Intent()
+        intent.putExtra("choseCycle", mPreference?.getInt(SavePreferences.SETTING_TEST_CYCLE, 0))
+        setResult(2, intent)
+        super.finish()
+    }
 }

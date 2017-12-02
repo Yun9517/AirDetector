@@ -81,6 +81,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDevice: BluetoothDevice? = null
     private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
+    private val REQUEST_SELECT_SAMPLE = 2
     //private var mBluetoothManager : BluetoothManager? = null
     //private var mBluetoothAdapter : BluetoothAdapter? = null
 
@@ -531,7 +532,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
-        nvDrawerNavigation = this.findViewById(R.id.navigation);
+        nvDrawerNavigation = this.findViewById(R.id.navigation)
+        nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
     }
 
     @Suppress("DEPRECATION")
@@ -613,7 +615,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun settingShow() {
         val i : Intent? = Intent(this, SettingActivity::class.java)
-        startActivity(i)
+        startActivityForResult(i,REQUEST_SELECT_SAMPLE)
+        //startActivity(i)
     }
 
     private fun tourShow() {
@@ -650,7 +653,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> {
                 val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "checkItems")
+                intent!!.putExtra("status", "setSampleRate")
                 sendBroadcast(intent)
                 //    aboutShow()
             }
@@ -659,7 +662,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
             R.id.nav_knowledge ->{
                 val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "callDeviceStartSample")
+                intent!!.putExtra("status", "getSampleRate")
                 sendBroadcast(intent)
               //  knowledgeShow()
             }
@@ -724,6 +727,32 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
                     print("MainActivity")
                 }
+            REQUEST_SELECT_SAMPLE->{
+                if ( data != null) {
+                   var value= data.getIntExtra("choseCycle",0)
+                    val intent: Intent? = Intent("Main")
+                    intent!!.putExtra("status", "setSampleRate")
+
+                    when(value){
+                        0->{//2min
+                            intent.putExtra("SampleTime",2)
+                        }
+                        1->{//10min
+                            intent.putExtra("SampleTime",10)
+                        }
+                        2->{//15min
+                            intent.putExtra("SampleTime",15)
+                        }
+                        3->{//20min
+                            intent.putExtra("SampleTime",20)
+                        }
+                        4->{//30min
+                            intent.putExtra("SampleTime",30)
+                        }
+                    }
+                    sendBroadcast(intent)
+                }
+            }
             else -> {
                 print("test")
             }
@@ -759,6 +788,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
@@ -769,6 +799,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 -> {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
