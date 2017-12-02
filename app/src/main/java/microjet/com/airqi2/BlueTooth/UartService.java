@@ -462,9 +462,11 @@ public class UartService extends Service {
                 case "message":
                     break;
                 case "checkItems":
+                    Log.d(TAG, "checkItems");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                     break;
                 case "callItems":
+                    Log.d(TAG, "callItems");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                     break;
                 case "setSampleRate":
@@ -583,27 +585,28 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                                     myData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
-                                    NowItem=0;
+                                    setCorrectTime(Integer.parseInt(RString.get(8)));
+                                    Log.d("UART", "getItem 1");
+                                    if (getMaxItems()!=0) {
+                                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                                    }
                                  //   setCorrectTime(Integer.parseInt(RString.get(j)));
                                     break;
                                 case (byte) 0xB5:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                                     if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
                                         myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),"1122"));
-                                        NowItem++;
-                                        if (NowItem>=getMaxItems())
-                                        NowItem=0;
+                                        if (NowItem>=getMaxItems()){
+                                            NowItem=0;
+                                        }
                                         else {
+                                            NowItem++;
                                             Handler mHandler = new Handler();
                                             mHandler.post(runnable);
                                         }
                                     }
-                                    //else if (NowItem==getMaxItems()){//資料收完
-                                    //    myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),"1122"));
-                                   // }
                                     else {//重送
                                         myData.add(new Data(RString.get(1), RString.get(2), RString.get(3), RString.get(4), "1122"));
-                                        NowItem++;
                                         Handler  mHandler = new Handler();
                                         mHandler.post(runnable);
                                     }
@@ -644,11 +647,13 @@ public class UartService extends Service {
             // 需要背景作的事
         }
     };
-    private int MaxItems;
-    private int NowItem;
-
+    private int MaxItems=0;
+    private int NowItem=0;
+    private int CorrectTime=0;
     void setMaxItems(int input ){MaxItems=input;}
     int getMaxItems(){return MaxItems;}
+    void setCorrectTime(int input){CorrectTime=input;}
+    int getCorrectTime(){return CorrectTime;}
     private int ErrorTime;
     private int getErrorTime()
     {

@@ -64,6 +64,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 藍芽icon in actionbar
     private var btIcon: MenuItem? = null
+    //電量icon
+    private var battreyIcon:MenuItem?=null
 
 /*
     //20171124 Andy月曆的方法聆聽者
@@ -489,7 +491,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         myMenu=menu
         val menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
         btIcon = menu!!.findItem(R.id.bleStatus)
-
+        battreyIcon=menu?.findItem(R.id.batStatus)
         menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
         return super.onCreateOptionsMenu(menu)
@@ -648,7 +650,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> {
                 val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "setSampleRate")
+                intent!!.putExtra("status", "checkItems")
                 sendBroadcast(intent)
                 //    aboutShow()
             }
@@ -760,6 +762,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+                    battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
+
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {
@@ -768,28 +772,33 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+                    battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
                 "B6"->{
                     intent.getStringExtra("TVOCValue")
                     batValue=intent.getStringExtra("BatteryLife").toInt()
                     if (batValue>100){
-                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
                     }
                     else if(batValue in 60..100){
-                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_3grid)
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_3grid)
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_3grid)
                     }
-                    else if(batValue in 39..59){
-                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
+                    else if(batValue in 29..59){
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
                     }
-                    else{
-                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
+                    else if (batValue in 10..28){
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_1grid)
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
+                    }
+                    else {
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
                     }
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
-
-                    // mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
-                   // mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
                 }
             }
         }
