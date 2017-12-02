@@ -207,13 +207,12 @@ object CallingTranslate {
      * REQUEST_DEVICE_STARTING_GETSAMPLE
      *
      *
-     * input [0] = sample rate
-     * input [1] = sensor on time
-     * input [2] = time to get sample
-     * input [3] = pump on time
-     * input [4] = pumping time
-     * input [5] = 每間隔多久取資料
-     * input [6] = 期間內取幾次資料
+     * input [0] = 年
+     * input [1] = 月
+     * input [2] = 日
+     * input [3] = 時
+     * input [4] = 分
+     * input [5] = 秒
      *
      * @param input for item of data
      * @return the command include CheckSum
@@ -238,9 +237,9 @@ object CallingTranslate {
                 5 -> b[5] = a[3]
             }
         }
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5])
+        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], checkSum)
+        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5], checkSum)
     }
 
     fun GetSampleRate(): ByteArray {
@@ -300,44 +299,6 @@ object CallingTranslate {
         val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo)
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo, checkSum)
-    }
-    /**
-     * Return the command include CheckSum
-     *
-     * <p>input 0 for stop 1~255 for minutes
-     * for example input 3 to set Device get sample every 3 minutes
-     * </p>
-     *
-     * @param input 0 for  device stop sample
-     * @return the command include CheckSum
-     */
-
-
-    /**
-     * Return the command include CheckSum
-     *
-     *
-     *
-     * input for sample time
-     * ex:99/11/30
-     * 0x99 0x11 0x30
-     *
-     *
-     * @param input 0 for  device stop sample
-     * @return the command include CheckSum
-     */
-    fun CallDeviceStartingSample(inPut: Int): ByteArray {
-        var input = inPut
-        val b = ByteArray(4)
-        if (input > 65535)
-            input = 65535
-        b[0] = (input and -0x1000000).ushr(24).toByte()//big
-        b[1] = (input and 0x00ff0000).ushr(16).toByte()
-        b[2] = (input and 0x0000ff00).ushr(8).toByte()
-        b[3] = (input and 0x000000ff).toByte()//little
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.WriteThreeBytesLens, Command_List.CallDeviceStartingGetSample, b[1], b[2], b[3])
-        val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.WriteThreeBytesLens, Command_List.CallDeviceStartingGetSample, b[1], b[2], b[3], checkSum)
     }
 
     fun SensorOn_OffCall(inPut: Int): ByteArray {
@@ -721,8 +682,9 @@ object CallingTranslate {
                             value = 0
                         }
                         8->{//battery life
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
+
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                          //  value = 0
                         }
                         else -> {
                         }
@@ -734,4 +696,5 @@ object CallingTranslate {
         }
         return ReturnValue
     }
+    fun Byte.toPositiveInt() = toInt() and 0xFF
 }

@@ -9,6 +9,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import kotlinx.android.synthetic.main.frg_main.*
 import microjet.com.airqi2.CustomAPI.ColorArcProgressBar
 import microjet.com.airqi2.MainActivity
 import microjet.com.airqi2.R
@@ -22,7 +24,7 @@ class MainFragment : Fragment() {
     private var mContext : Context? = null
 
     private var bar1 : ColorArcProgressBar? = null
-
+    //private var tvocValue2: TextView?=null
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -37,7 +39,7 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
-
+     //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
     }
 
     override fun onResume() {
@@ -50,5 +52,9 @@ class MainFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
+    }
+     fun setBar1CurrentValue( currentValue: String){
+         bar1?.setCurrentValues(currentValue.toFloat())
+         tvocValue2?.text=currentValue
     }
 }

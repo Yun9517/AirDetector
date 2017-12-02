@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.support.v4.content.LocalBroadcastManager;
@@ -459,7 +460,20 @@ public class UartService extends Service {
                     connect(intent.getStringExtra("mac"));
                     break;
                 case "message":
+                    break;
+                case "checkItems":
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                    break;
+                case "callItems":
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                    break;
+                case "setSampleRate":
+                    int[] param = { 1, 5, 3, 3, 3, 1, 1 };
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                    break;
+                case "callDeviceStartSample":
+                    int []param2={17,12,2,13,19,30};
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
             }
         }
@@ -520,6 +534,7 @@ public class UartService extends Service {
                                 Log.d("UART feedback", "Pump power fail");
                                 return;
                             case (byte) 0xE5:
+                               int i= myData.size();
                                 Log.d("UART feedback", "Invalid value");
                                 return;
                             case (byte) 0xE6:
@@ -564,22 +579,40 @@ public class UartService extends Service {
                                     break;
                                 case (byte) 0xB4:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
-                                    // Integer.parseInt(RString.get(0))
+                                    myData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
-
-                                    int j=0;
-                                    for (int i=0;i<RString.size();i++) {
-
-                                        j=i;
-                                    }
+                                    NowItem=0;
                                  //   setCorrectTime(Integer.parseInt(RString.get(j)));
                                     break;
                                 case (byte) 0xB5:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
-                                  //      ReturnQ.offer(RString.get(i));
+                                    if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
+                                        myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),"1122"));
+                                        NowItem++;
+                                        if (NowItem>=getMaxItems())
+                                        NowItem=0;
+                                        else {
+                                            Handler mHandler = new Handler();
+                                            mHandler.post(runnable);
+                                        }
+                                    }
+                                    //else if (NowItem==getMaxItems()){//資料收完
+                                    //    myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),"1122"));
+                                   // }
+                                    else {//重送
+                                        myData.add(new Data(RString.get(1), RString.get(2), RString.get(3), RString.get(4), "1122"));
+                                        NowItem++;
+                                        Handler  mHandler = new Handler();
+                                        mHandler.post(runnable);
+                                    }
                                     break;
                                 case (byte) 0xB6:
                                     RString= CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                                    Intent mainIntent = new Intent("Main");
+                                    mainIntent.putExtra("status","B6");
+                                    mainIntent.putExtra("TVOCValue",RString.get(2));
+                                    mainIntent.putExtra("BatteryLife",RString.get(4));
+                                    sendBroadcast(mainIntent);
                                     break;
                             }
                         }
@@ -600,9 +633,20 @@ public class UartService extends Service {
             CheckSum+=InputValue[i];
         return CheckSum == max;
     }
+    ArrayList<Data> myData = new ArrayList<Data>();
 
+    final Runnable runnable = new Runnable() {
+        public void run() {
+            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+            // TODO Auto-generated method stub
+            // 需要背景作的事
+        }
+    };
     private int MaxItems;
+    private int NowItem;
+
     void setMaxItems(int input ){MaxItems=input;}
+    int getMaxItems(){return MaxItems;}
     private int ErrorTime;
     private int getErrorTime()
     {

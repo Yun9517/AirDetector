@@ -52,13 +52,43 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("mac",macAddress)
                 context.sendBroadcast(mainIntent)
             }
+
+            "B6"->{
+                var mainIntent = Intent("mainActivity")
+                mainIntent.putExtra("status","B6")
+                mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+                mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+                context.sendBroadcast(mainIntent)
+
+            }
             "message" -> {
                 var mainIntent = Intent("UartService")
                 mainIntent.putExtra("status", "message")
                 context.sendBroadcast(mainIntent)
                 Log.d("message","messageMAIN")
             }
+            "callItems" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "callItems")
+                context.sendBroadcast(mainIntent)
+            }
+            "checkItems" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "checkItems")
+                context.sendBroadcast(mainIntent)
+            }
+            "setSampleRate" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "setSampleRate")
+                context.sendBroadcast(mainIntent)
+            }
+            "callDeviceStartSample" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "callDeviceStartSample")
+                context.sendBroadcast(mainIntent)
+            }
         }
+
     }
 
     companion object {
