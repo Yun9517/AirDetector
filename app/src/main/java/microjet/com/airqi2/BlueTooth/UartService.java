@@ -469,10 +469,12 @@ public class UartService extends Service {
                     break;
                 case "setSampleRate":
                     int[] param = { 1, 5, 3, 3, 3, 1, 1 };
+                    Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
                 case "callDeviceStartSample":
                     int []param2={17,12,2,13,19,30};
+                    Log.d(TAG, "callDeviceStartSample");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
             }

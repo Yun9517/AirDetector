@@ -127,7 +127,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
 
         // 電池電量假資料
-        batValue = 30
+     //   batValue = 30
 
 
 //20171128 Andy SQL
@@ -483,9 +483,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    private var myMenu : Menu? = null
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
-
+        myMenu=menu
         val menuItem : MenuItem? = menu!!.findItem(R.id.batStatus)
         btIcon = menu!!.findItem(R.id.bleStatus)
 
@@ -770,7 +771,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 "B6"->{
                     intent.getStringExtra("TVOCValue")
-                    intent.getStringExtra("BatteryLife")
+                    batValue=intent.getStringExtra("BatteryLife").toInt()
+                    if (batValue>100){
+                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
+                    }
+                    else if(batValue in 60..100){
+                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_3grid)
+                    }
+                    else if(batValue in 39..59){
+                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
+                    }
+                    else{
+                        myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
+                    }
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))

@@ -412,7 +412,7 @@ object CallingTranslate {
                     i = i + 1//Point to DataValue
                     //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
                     value = value shl 8
-                    value = value + (bytes[i] and 0xFF.toByte())
+                    value = value + bytes[i].toPositiveInt()
                     when (j) {
                         1//Item Index
                         -> {
@@ -474,7 +474,7 @@ object CallingTranslate {
                 for (j in 0 until CountTemp - 2) {
                     i = i + 1//Point to DataValue
                     value = value shl 8
-                    value = value + (bytes[i] and 0xFF.toByte())
+                    value = value + bytes[i].toPositiveInt()
                     //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
                     when (j) {
                         1//Max Items
@@ -660,7 +660,7 @@ object CallingTranslate {
                     i = i + 1//Point to DataValue
                     //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
                     value = value shl 8
-                    value = value + (bytes[i] and 0xFF.toByte())
+                    value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
                         1-> {//Temperature
                             value = -45 + 175 * value / 65535
