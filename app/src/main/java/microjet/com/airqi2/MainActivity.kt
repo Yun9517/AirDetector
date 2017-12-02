@@ -805,6 +805,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
+                "B5"->{
+                    var bundle= intent.getBundleExtra("result")
+                    var data= bundle.getParcelableArrayList<myData>("resultSet")
+                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
+
+                }
                 "B6"->{
                     intent.getStringExtra("TVOCValue")
                     batValue=intent.getStringExtra("BatteryLife").toInt()

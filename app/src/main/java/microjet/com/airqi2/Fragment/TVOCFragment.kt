@@ -33,6 +33,7 @@ import microjet.com.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
 import microjet.com.airqi2.R
+import microjet.com.airqi2.myData
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -142,8 +143,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
                     //得到一个可写的数据库
                     val db = dbHelper.getReadableDatabase()
-                    insertDB(db)
-                    //SearchSQLlite()
+                    //insertDB(db)
+                    SearchSQLlite()
                 }
                 R.id.radioButton_Day -> {
                     mChart?.data = getBarData()
@@ -489,29 +490,31 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //        Toast.makeText(mContext, "插入完成", Toast.LENGTH_LONG).show()
 //        Toast.makeText(mContext, "資料庫共:" + CountString + "筆", Toast.LENGTH_LONG).show()
 
-        AddedSQLlite(6000)
+      //  AddedSQLlite(6000)
     }
     //20171130 Andy 傳統SQL寫法ADD
 
 
     //20171128 Andy SQL
-    private fun AddedSQLlite(intData: Int) {
+    public fun AddedSQLlite(Datalist: java.util.ArrayList<myData>) {
         //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         values = ContentValues()
         c = dbrw.query(tablename, columT, null, null, null, null, null)
+       var mydata : myData =Datalist.get(0)
+
 
         //先行定義時間格式
-        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+       // val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
 
         //取得現在時間
 
-        val dt = Date()
+       // val dt = Date()
 
         //透過SimpleDateFormat的format方法將Date轉為字串
 
-        val dts = sdf.format(dt)
+       //val dts = sdf.format(dt)
 
 
         Count = c!!.getCount().toLong()
@@ -524,21 +527,24 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //idTTDB = c!!.getCount().toLong()
         //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
-        SaveToDB[0]=dts
-        if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && SaveToDB[4] !== "" && idTTDB >= 0) {//****************************************************************************
-                Toast.makeText(mContext, "資料滿5筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
+       // SaveToDB[0]=dts
+      //  if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && SaveToDB[4] !== "" && idTTDB >= 0) {//****************************************************************************
+      //          Toast.makeText(mContext, "資料滿5筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
                 //cv.put(columT[0],c.getPosition());
-                values!!.put(columT[1], SaveToDB[0])
-                values!!.put(columT[2], SaveToDB[1])
-                values!!.put(columT[3], SaveToDB[2])
-                values!!.put(columT[4], SaveToDB[3])
-                values!!.put(columT[5], SaveToDB[4])
+            for (i in 0 until  Datalist.size) {
+                values!!.put(columT[1], Datalist[i].time)//時間
+                values!!.put(columT[2], Datalist[i].temperatur_Data)//溫度
+                values!!.put(columT[3], Datalist[i].humidy_Data)//humidity
+                values!!.put(columT[4], Datalist[i].cO2_Data)//C02
+                values!!.put(columT[5], Datalist[i].tvoC_Data)//TVOC
+                idTTDB = dbrw.insert(tablename, null, values)
+            }
             //新增一筆五個測項資料到資料庫中
-            idTTDB = dbrw.insert(tablename, null, values)
-            Toast.makeText(mContext, "資料滿5，這筆資料內容:" + SaveToDB[0] + "," + SaveToDB[1] + "," + SaveToDB[2] + "," + SaveToDB[3] + "," + "," + SaveToDB[4], Toast.LENGTH_LONG).show()
-        } else {
-            Toast.makeText(mContext, "時間、溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
-        }
+
+        //    Toast.makeText(mContext, "資料滿5，這筆資料內容:" + SaveToDB[0] + "," + SaveToDB[1] + "," + SaveToDB[2] + "," + SaveToDB[3] + "," + "," + SaveToDB[4], Toast.LENGTH_LONG).show()
+       // } else {
+       //     Toast.makeText(mContext, "時間、溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
+      //  }
         Toast.makeText(mContext, "插入完成", Toast.LENGTH_LONG).show()
 
         Count = c!!.getCount().toLong()+1
@@ -661,7 +667,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //smallTimeData[j][0]=rangeTimeData[j][0]
                     //smallTimeData[j][1]=rangeTimeData[j][1]
                     //var list=temp
-                    Toast.makeText(mContext, "符合的資料時間" + temp2, Toast.LENGTH_SHORT).show()
+                   // Toast.makeText(mContext, "符合的資料時間" + temp2, Toast.LENGTH_SHORT).show()
                 }
             }
         //}

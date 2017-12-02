@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
-
+import microjet.com.airqi2.myData;
 import microjet.com.airqi2.R;
 
 /**
@@ -591,7 +591,7 @@ public class UartService extends Service {
                                     break;
                                 case (byte) 0xB4:
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
-                                    myData.clear();
+                                    myDeviceData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
                                     setCorrectTime(Integer.parseInt(RString.get(8)));
                                     //取得當前時間
@@ -610,9 +610,15 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                                     if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
-                                        myData.add(new Data(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
+                                        myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
+                                            Intent mainIntent = new Intent("Main");
+                                            mainIntent.putExtra("status","B5");
+                                            Bundle data = new Bundle();
+                                            data.putParcelableArrayList("resultSet", myDeviceData);
+                                            mainIntent.putExtra("result", data);
+                                            sendBroadcast(mainIntent);
                                         }
                                         else {
                                             NowItem++;
@@ -622,7 +628,6 @@ public class UartService extends Service {
                                         }
                                     }
                                     else {//重送
-                                        myData.add(new Data(RString.get(1), RString.get(2), RString.get(3), RString.get(4), "1122"));
                                         Handler  mHandler = new Handler();
                                         mHandler.post(runnable);
                                     }
@@ -654,7 +659,7 @@ public class UartService extends Service {
             CheckSum+=InputValue[i];
         return CheckSum == max;
     }
-    ArrayList<Data> myData = new ArrayList<Data>();
+    ArrayList<myData> myDeviceData = new ArrayList<myData>();
 
     final Runnable runnable = new Runnable() {
         public void run() {

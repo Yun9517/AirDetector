@@ -61,6 +61,16 @@ class MainReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
 
             }
+            "B5"->{
+                var mainIntent = Intent("mainActivity")
+                mainIntent.putExtra("status","B5")
+                mainIntent.putExtras(intent)
+                context.sendBroadcast(mainIntent)
+               // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
+              //  var mydata=bundle.getParcelableArrayExtra("resultSet")
+              //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+              //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+            }
             "message" -> {
                 var mainIntent = Intent("UartService")
                 mainIntent.putExtra("status", "message")
