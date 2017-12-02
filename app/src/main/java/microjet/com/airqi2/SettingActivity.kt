@@ -187,16 +187,12 @@ class SettingActivity : AppCompatActivity() {
         }
     }
 
-<<<<<<< HEAD
 
-
-
-=======
     override fun finish() {
         val intent = Intent()
         intent.putExtra("choseCycle", mPreference?.getInt(SavePreferences.SETTING_TEST_CYCLE, 0))
         setResult(2, intent)
         super.finish()
     }
->>>>>>> f21e7a87b7fc2921bab4c6da650c3db4f19a3bc3
+
 }
