@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pickCycle" >
-        <item>30秒</item>
+        <item>2分</item>
         <item>10分</item>
         <item>15分</item>
         <item>20分</item>

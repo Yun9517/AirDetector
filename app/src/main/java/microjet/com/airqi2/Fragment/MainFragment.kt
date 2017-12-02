@@ -45,7 +45,6 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         bar1?.setMaxValues(1000f)
-        bar1?.setCurrentValues(660f)
        // bar1!!.setCurrentValues(10f)
     }
 
@@ -53,8 +52,20 @@ class MainFragment : Fragment() {
         super.onStop()
 
     }
-     fun setBar1CurrentValue( currentValue: String){
+     fun setBar1CurrentValue( currentValue: String) {
          bar1?.setCurrentValues(currentValue.toFloat())
+         if (currentValue.toFloat() < 221){
+             textView?.text=getString(R.string.text_message_air_good)
+             tvocStatus?.text=getString(R.string.text_label_ststus_good)
+         }
+         else if (currentValue.toFloat()>661) {
+             textView?.text=getString(R.string.text_message_air_bad)
+             tvocStatus?.text=getString(R.string.text_label_ststus_bad)
+         }
+         else{
+             textView?.text=getString(R.string.text_message_air_mid)
+             tvocStatus?.text=getString(R.string.text_label_ststus_mid)
+         }
          tvocValue2?.text=currentValue
     }
 }
