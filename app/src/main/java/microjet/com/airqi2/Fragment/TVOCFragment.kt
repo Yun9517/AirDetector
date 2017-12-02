@@ -102,9 +102,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //20171130   Andy SQLlite
     internal var values: ContentValues? = null
     var list=ArrayList<ArrayList<String>>()
+    var bigTimeData=ArrayList<ArrayList<String>>()
+    var smallTimeData=ArrayList<ArrayList<String>>()
 
-    //20171202 Andy 選取範圍時間變數
-     var rangeTime=0
 
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -549,6 +549,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         Toast.makeText(mContext, "資料庫共:" + CountString + "筆", Toast.LENGTH_LONG).show()
         //新增一筆四個測項資料到資料庫中
         SearchSQLlite_Day()
+        Getcount(c!!.getCount().toInt(),list)
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////
@@ -597,14 +598,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 Count = c!!.getCount().toLong()
                 //c.close();
                 val CountString = Count.toString()
-                Toast.makeText(mContext, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
+                //Toast.makeText(mContext, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
 
-                Toast.makeText(mContext, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0) + "\n"
-                        + "資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) + " \n"
-                        + "資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) + "C \n"
-                        + "資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) + "% \n"
-                        + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
-                        + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
+//                Toast.makeText(mContext, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0) + "\n"
+//                        + "資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) + " \n"
+//                        + "資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) + "C \n"
+//                        + "資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) + "% \n"
+//                        + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
+//                        + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
 
                 var DateTimeList = ArrayList<String>()
                 DateTimeList.add(c!!.getString(1))
@@ -613,20 +614,65 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 list.add(DateTimeList)
 
                 c!!.moveToNext()
+
             }
         } else {
             Toast.makeText(mContext, "資料庫查無資料", Toast.LENGTH_LONG).show()
         }
+        //
+        Getcount(c!!.getCount().toInt(),15,list)
     }
 
     //20171201 Andy SQL取依造時間間隔中的資料筆數
-    private fun  Getcount(TimeRange: Int,rangeTime: ArrayList<ArrayList<String>> ):Int {
+    private fun  Getcount(AllDataConut: Int,randTime:Int,rangeTimeData: ArrayList<ArrayList<String>>):Int {
         var eCount:Int=0
 
         //取依造時間間隔中的資料筆數
+        //先行定義時間格式
+        //val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        //取得現在時間
+        val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+        var nowS = sdf.format(Date()).toString()
+        var now=sdf.parse(nowS).time
+
+        //var now=nowS.time
+
+        //var past=sdf.parse(str1).time
 
 
-        return eCount
+        //for (i in 0 until AllDataConut){
+
+        //(0 until AllDataConut).forEach { i ->
+
+            (0 until AllDataConut ).forEach { j ->
+                //var DataValue=ArrayList<ArrayList<String>>()
+
+                var past = sdf.parse(rangeTimeData[j][0]).time
+                //歷史資料
+                var temp2: String? = null
+                //Toast.makeText(mContext, "共有" + past.toString(), Toast.LENGTH_LONG).show()
+                if ((now - past) <= 900000000000) {
+
+                    var temp = ArrayList<String>()
+                    temp.add(rangeTimeData[j][0])
+                    smallTimeData.add(temp)
+                    temp2=rangeTimeData[j][0]
+
+                    //smallTimeData[j][0]=rangeTimeData[j][0]
+                    //smallTimeData[j][1]=rangeTimeData[j][1]
+                    //var list=temp
+                    Toast.makeText(mContext, "符合的資料時間" + temp2, Toast.LENGTH_SHORT).show()
+                }
+            }
+        //}
+
+        //}
+        //val date = format.parse(rangeTime[])
+
+
+
+
+        return 0
     }
 
 
@@ -640,14 +686,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         return DataAVGArray
     }
 
-    //20171202   Andy  SQL計算時間範圍
-    inner class MyBroadcastReceiver : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent) {
-
-            var rangeTime  = intent.getStringExtra("rangeTime");
-
-        }
-    }
 
 
 //AAA

@@ -115,12 +115,6 @@ class SettingActivity : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TEST_CYCLE,
                         position).apply()
-
-
-                val intent :Intent? = Intent("TVOCFragment")
-                intent!!.putExtra("rangeTime", position)
-                sendBroadcast(intent)
-
             }
 
 

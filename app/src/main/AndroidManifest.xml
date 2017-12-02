@@ -84,7 +84,14 @@
                 <action android:name="Main" />
             </intent-filter>
         </receiver>
+        <!-- 使用receiver標籤，名稱設定廣播接收元件類別名稱 -->
+        <receiver android:name=".BroadReceiver.TVOCFragment">
+            <intent-filter>
 
+                <!-- 使用Action名稱設定接收的廣播事件 -->
+                <action android:name="Characteristic" />
+            </intent-filter>
+        </receiver>
         <activity
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"

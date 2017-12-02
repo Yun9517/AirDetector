@@ -8,6 +8,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import android.util.Log
+import android.widget.Toast
 import microjet.com.airqi2.MainActivity
 
 /**
@@ -20,7 +22,6 @@ class CharacteristicReceiver : BroadcastReceiver() {
         private val NOTIFY_ID = 1
 
     override fun onReceive(context: Context, intent: Intent) {
-
     }
 
 
