@@ -597,8 +597,11 @@ public class UartService extends Service {
                                     RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                                     myDeviceData.clear();
                                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
-                                    Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
+                                    //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
+                                    //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),getText(R.string.Total_Data)+Integer.toString(getMaxItems())+getText(R.string.Total_Data_Finish),Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),getText(R.string.Loading_Data),Toast.LENGTH_LONG).show();
                                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                                     setCorrectTime(0);
                                     //取得當前時間

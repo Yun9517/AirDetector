@@ -799,7 +799,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text="已連線"
+                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
