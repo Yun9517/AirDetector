@@ -653,9 +653,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothdisconnect()
             R.id.nav_about -> {
                 aboutShow()
-                /*
+            /*
                val intent: Intent? = Intent("Main")
-               intent!!.putExtra("status", "checkItems")
+               intent!!.putExtra("status", "callDeviceStartSample")
                sendBroadcast(intent)*/
                //    aboutShow()
            }
@@ -803,6 +803,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
+                    val intent: Intent? = Intent("Main")
+                    intent!!.putExtra("status", "callDeviceStartSample")
+                    sendBroadcast(intent)
 
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"

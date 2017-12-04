@@ -484,7 +484,15 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
-                    int []param2={17,12,2,13,19,30};
+                    Date date = new Date();
+                    SimpleDateFormat sdFormatY = new SimpleDateFormat("yy", Locale.TAIWAN);
+                    SimpleDateFormat sdFormatM = new SimpleDateFormat("MM", Locale.TAIWAN);
+                    SimpleDateFormat sdFormatD = new SimpleDateFormat("dd", Locale.TAIWAN);
+                    SimpleDateFormat sdFormatH = new SimpleDateFormat("hh", Locale.TAIWAN);
+                    SimpleDateFormat sdFormatm = new SimpleDateFormat("mm", Locale.TAIWAN);
+                    SimpleDateFormat sdFormatS = new SimpleDateFormat("ss", Locale.TAIWAN);
+                    String[] strY = {sdFormatY.format(date),sdFormatM.format(date),sdFormatD.format(date),sdFormatH.format(date),sdFormatm.format(date),sdFormatS.format(date)};
+                    int []param2={Integer.parseInt(strY[0]),Integer.parseInt(strY[1]),Integer.parseInt(strY[2]),Integer.parseInt(strY[3]),Integer.parseInt(strY[4]),Integer.parseInt(strY[5])};
                     Log.d(TAG, "callDeviceStartSample");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
