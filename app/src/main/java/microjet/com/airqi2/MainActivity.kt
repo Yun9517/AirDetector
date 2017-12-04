@@ -830,12 +830,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     intent.getStringExtra("TVOCValue")
                     batValue=intent.getStringExtra("BatteryLife").toInt()
                     if (batValue>100){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_charge)
+                        batValue = batValue - 100
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_charge)
                     }
                     else if(batValue in 60..100){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_3grid)
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_3grid)
+                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
+                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
                     }
                     else if(batValue in 29..59){
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)

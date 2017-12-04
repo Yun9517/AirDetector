@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/batStatus"
-        android:icon="@drawable/battery_icon_1grid"
+        android:icon="@drawable/battery_icon_disconnect"
         android:title="電量"
         app:showAsAction="always" />
 
