@@ -128,6 +128,14 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/imgPanel"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/temp_main" />
+
     <LinearLayout
         android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
