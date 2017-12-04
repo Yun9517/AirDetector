@@ -66,7 +66,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/test_result_background_green"
                     android:gravity="center"
-                    android:text="@string/text_default_value"
+                    android:text="0"
                     android:textAlignment="center"
                     android:textSize="38sp" />
 
@@ -78,7 +78,6 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/test_result_background_green"
                     android:gravity="center"
-                    android:text="@string/text_label_ststus_good"
                     android:textAlignment="center"
                     android:textSize="26sp" />
             </LinearLayout>
@@ -126,7 +125,6 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="@string/text_message_air_good"
             android:textSize="18sp" />
 
     </LinearLayout>

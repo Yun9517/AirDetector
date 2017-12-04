@@ -3,9 +3,9 @@
     <string name="app_name_air_map">空气地图</string>
     <string name="app_name_knowledge">知识库</string>
     <string name="app_name_about">关于APP</string>
-    <string name="text_message_air_good">空气良好\n请继续保持\n空气质量令人满意 空气污染很少\n并无存在风险</string>
-    <string name="text_message_air_mid">空气质量稍有污染</string>
-    <string name="text_message_air_bad">空气质量极糟</string>
+    <string name="text_message_air_good">空气质量一般\n请保持空气流通\n挥发性有机物浓度低\n没有刺激或不适风险</string>
+    <string name="text_message_air_mid">空气质量差\n建议改善通风或配戴口罩\n长时间处于此环境下\n可能会导致眼睛和呼吸道不适</string>
+    <string name="text_message_air_bad">空气质量很差\n建议改善通风或离开污染的环境\n长期处于此环境下\n会伤害人体的健康</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">CO2</string>
@@ -55,6 +55,9 @@
     <string name="Loading_Data">读取数据中请稍候</string> <!-- 2017/12/03 新增文字 -->
     <string name="Total_Data">共有资料</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
     <string name="Total_Data_Finish">笔</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
+    <string name="Loading_Completely">读取完成</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
+    <string name="Number_of_data">读取第</string> <!-- 2017/12/04 新增文字 读取装置数据的Toast-->
+    <string name="Loading_fail">笔资料</string> <!-- 2017/12/04 新增文字 读取装置数据的Toast-->
 
     <!-- Add website for about page-->
     <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>
