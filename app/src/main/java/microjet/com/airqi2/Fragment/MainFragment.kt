@@ -1,5 +1,6 @@
 package microjet.com.airqi2.Fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.os.Bundle
@@ -52,20 +53,28 @@ class MainFragment : Fragment() {
         super.onStop()
 
     }
-     fun setBar1CurrentValue( currentValue: String) {
+     @SuppressLint("SetTextI18n")
+     fun setBar1CurrentValue(currentValue: String) {
          bar1?.setCurrentValues(currentValue.toFloat())
          if (currentValue.toFloat() < 221){
-             textView?.text=getString(R.string.text_message_air_good)
-             tvocStatus?.text=getString(R.string.text_label_ststus_good)
+             textView?.text = getString(R.string.text_message_air_good)
+             tvocStatus?.text = getString(R.string.text_label_ststus_good)
+
+             tvocValue2.setTextColor(resources.getColor(R.color.progressBarStartColor))
          }
-         else if (currentValue.toFloat()>661) {
-             textView?.text=getString(R.string.text_message_air_bad)
-             tvocStatus?.text=getString(R.string.text_label_ststus_bad)
+         else if (currentValue.toFloat() > 661) {
+             textView?.text = getString(R.string.text_message_air_bad)
+             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
+
+             tvocValue2.setTextColor(resources.getColor(R.color.progressBarEndColor))
          }
          else{
-             textView?.text=getString(R.string.text_message_air_mid)
-             tvocStatus?.text=getString(R.string.text_label_ststus_mid)
+             textView?.text = getString(R.string.text_message_air_mid)
+             tvocStatus?.text = getString(R.string.text_label_ststus_mid)
+
+             tvocValue2.setTextColor(resources.getColor(R.color.progressBarMidColor))
          }
-         tvocValue2?.text=currentValue
+         tvocValue2?.text = currentValue + " ppb"
+         tvocValue?.text = currentValue + " ppb"
     }
 }
