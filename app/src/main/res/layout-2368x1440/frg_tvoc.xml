@@ -1,0 +1,160 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="microjet.com.airqi2.Fragment.TVOCFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <!--<Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:foreground="@drawable/message_block_background"
+            android:popupBackground="@drawable/message_block_background">
+        </Spinner>
+        -->
+        <RadioGroup
+            android:id="@+id/frg_radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton_Hour"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:checked="true"
+                android:text="@string/frg_tvocRadioButtonHour" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonDay" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonWeek" />
+
+            <RadioButton
+                android:id="@+id/radioButton_Month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/radiobackground"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonMonth" />
+
+
+
+        </RadioGroup>
+
+        <!--
+        <Button
+            android:id="@+id/btnPickDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:text="日期"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp" />
+
+        <Button
+            android:id="@+id/btnPickTimeStart"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:text="起始時間"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp" />
+        <Button
+            android:id="@+id/btnPickTimeEnd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/bottom_layout_background"
+            android:text="結束時間"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp" />
+            -->
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/textVSelectDetectionTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical|fill_vertical"
+        android:text="12:05"
+        android:textSize="26sp"
+        android:textStyle="normal"
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/textVSelectDetectionValue"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical|fill_vertical"
+        android:text="783ppb"
+        android:textSize="26sp"
+        android:textStyle="normal"
+        android:textAlignment="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:text="@string/text_label_tvoc"
+        android:background="@drawable/chart_subtitle"
+        android:layout_marginEnd="20dp"
+        android:layout_marginTop="20dp"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_gravity="end"
+        android:textAlignment="gravity" />
+
+    <microjet.com.airqi2.CustomAPI.FixBarChart
+        android:id="@+id/chart_line"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+    </microjet.com.airqi2.CustomAPI.FixBarChart>
+
+</LinearLayout>
