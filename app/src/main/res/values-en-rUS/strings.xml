@@ -3,9 +3,10 @@
     <string name="app_name_air_map">空氣地圖</string>
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
-    <string name="text_message_air_good">Excellent\nThe air quality is good\nNo Danger</string>
-    <string name="text_message_air_mid">Poor</string>
-    <string name="text_message_air_bad">Unhealthy</string>
+    <string name="text_message_air_good">Mediocre\nAir quality is normal, please keep it fresh.\nTVOC is low, no irritation or discomfort risk.</string>
+    <string name="text_message_air_mid">Minor Pollution\nAir quality is bad.\nplease improve the ventilation or wear a mask
+TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
+    <string name="text_message_air_bad">Serious Pollution\nAir quality is horrible\nplease improve the ventilation or leave.\nTVOC is unhealthy, it will damage people health.</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">CO2</string>
@@ -55,6 +56,9 @@
     <string name="Loading_Data">Waiting for Data Loading</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
     <string name="Total_Data">Number of Data:\t</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
     <string name="Total_Data_Finish">.</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
+    <string name="Loading_Completely">Loading Completely</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
+    <string name="Number_of_data">Data NO. </string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
+    <string name="Loading_fail">Loading Fail</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
 
     <!-- Add website for about page-->
     <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>

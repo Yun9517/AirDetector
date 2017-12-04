@@ -566,7 +566,10 @@ public class UartService extends Service {
                                 return;
                             case (byte) 0xE5:
                                 if (NowItem>0)
-                                    Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
+                                    //************** 2017/12/04 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料 *****************************//
+                                    //Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getApplicationContext(),getText(R.string.Number_of_data)+Integer.toString(NowItem)+getText(R.string.Loading_fail),Toast.LENGTH_LONG).show();
+                                    //***************************************************************************************************************//
                                 Log.d("UART feedback", "Invalid value");
                                 return;
                             case (byte) 0xE6:
@@ -646,7 +649,10 @@ public class UartService extends Service {
                                         myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
                                         if (NowItem>=getMaxItems()){
                                             NowItem=0;
-                                            Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
+                                            //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
+                                            //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
+                                            //*****************************************************************************************************************//
+                                            Toast.makeText(getApplicationContext(),getText(R.string.Loading_Completely),Toast.LENGTH_LONG).show();
                                             Intent mainIntent = new Intent("Main");
                                             mainIntent.putExtra("status","B5");
                                             Bundle data = new Bundle();

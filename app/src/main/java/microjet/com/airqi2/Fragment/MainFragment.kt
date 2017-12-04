@@ -60,19 +60,19 @@ class MainFragment : Fragment() {
              textView?.text = getString(R.string.text_message_air_good)
              tvocStatus?.text = getString(R.string.text_label_ststus_good)
 
-             tvocValue2.setTextColor(resources.getColor(R.color.progressBarStartColor))
+             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Good))
          }
          else if (currentValue.toFloat() > 661) {
              textView?.text = getString(R.string.text_message_air_bad)
              tvocStatus?.text = getString(R.string.text_label_ststus_bad)
 
-             tvocValue2.setTextColor(resources.getColor(R.color.progressBarEndColor))
+             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
          }
          else{
              textView?.text = getString(R.string.text_message_air_mid)
              tvocStatus?.text = getString(R.string.text_label_ststus_mid)
 
-             tvocValue2.setTextColor(resources.getColor(R.color.progressBarMidColor))
+             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
          }
          tvocValue2?.text = currentValue + " ppb"
          tvocValue?.text = currentValue + " ppb"
