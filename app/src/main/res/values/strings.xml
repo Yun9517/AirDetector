@@ -13,7 +13,7 @@
     <string name="text_label_humidity">濕度</string>
     <string name="text_default_value">65536</string>
     <string name="text_label_auto_detect">TVOC\n總揮發性有機化合物</string>
-    <string name="text_label_ststus_good">良好</string>
+    <string name="text_label_ststus_good">普通</string>
     <string name="text_label_ststus_mid">輕度污染</string>
     <string name="text_label_ststus_bad">重度污染</string>
     <string name="text_battery_value">電池電量：</string>

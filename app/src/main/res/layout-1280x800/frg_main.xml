@@ -68,7 +68,7 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="60sp" />
+                    android:textSize="50sp" />
 
                 <TextView
                     android:id="@+id/tvocStatus"
@@ -80,7 +80,7 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="60sp" />
+                    android:textSize="28sp" />
             </LinearLayout>
         </RelativeLayout>
 

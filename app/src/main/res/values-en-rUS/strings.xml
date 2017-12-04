@@ -14,9 +14,9 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_label_humidity">Humidity</string>
     <string name="text_default_value">65536</string>
     <string name="text_label_auto_detect">TVOC</string>
-    <string name="text_label_ststus_good">Good</string>
-    <string name="text_label_ststus_mid">Poor</string>
-    <string name="text_label_ststus_bad">Unhealthy</string>
+    <string name="text_label_ststus_good">Mediocre </string> <!-- 原 Good-->
+    <string name="text_label_ststus_mid">Minor Pollution</string> <!-- 原 Poor-->
+    <string name="text_label_ststus_bad">Serious Pollution</string> <!-- 原 Unhealthy-->
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>
