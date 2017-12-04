@@ -49,7 +49,7 @@ public class UartService extends Service {
     public BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
-    private int mConnectionState = STATE_DISCONNECTED;
+    public static int mConnectionState = 0;
 
 
     private static final int STATE_DISCONNECTED = 0;
@@ -101,7 +101,7 @@ public class UartService extends Service {
             switch (newState) {
                 case BluetoothProfile.STATE_DISCONNECTED: {
                     intentAction = ACTION_GATT_DISCONNECTED;
-                    //mConnectionState = STATE_DISCONNECTED;
+                    mConnectionState = STATE_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent("Main");
@@ -111,14 +111,17 @@ public class UartService extends Service {
                 }
                 case BluetoothProfile.STATE_CONNECTING: {
                     intentAction = ACTION_GATT_CONNECTING;
-                    //mConnectionState = STATE_CONNECTING;
+                    mConnectionState = STATE_CONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
+                    Intent mainIntent = new Intent("Main");
+                    mainIntent.putExtra("status",intentAction);
+                    sendBroadcast(mainIntent);
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTED: {
                     intentAction = ACTION_GATT_CONNECTED;
-                    //mConnectionState = STATE_CONNECTED;
+                    mConnectionState = STATE_CONNECTED;
                     //broadcastUpdate(intentAction);
                     Log.i(TAG, "Connected to GATT server.");
                     Log.i(TAG, "Attempting to start service discovery:" +
@@ -131,7 +134,7 @@ public class UartService extends Service {
                 }
                 case BluetoothProfile.STATE_DISCONNECTING: {
                     intentAction = ACTION_GATT_DISCONNECTING;
-                    //mConnectionState = STATE_DISCONNECTING;
+                    mConnectionState = STATE_DISCONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     break;
@@ -243,11 +246,12 @@ public class UartService extends Service {
         */
 
         if (!mIsReceiverRegistered) {
-            if (mReceiver == null)
+            if (mReceiver == null) {
                 mReceiver = new MyBroadcastReceiver();
-            registerReceiver(mReceiver, new IntentFilter("UartService"));
-            mIsReceiverRegistered = true;
-            LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
+                registerReceiver(mReceiver, new IntentFilter("UartService"));
+                mIsReceiverRegistered = true;
+                LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
+            }
         }
     }
 
@@ -268,6 +272,7 @@ public class UartService extends Service {
             return false;
         }
         // Previously connected device.  Try to reconnect.
+        /*
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
@@ -277,6 +282,7 @@ public class UartService extends Service {
                 return false;
             }
         }
+        */
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");
@@ -496,6 +502,10 @@ public class UartService extends Service {
                     Log.d(TAG, "callDeviceStartSample");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
+                case "ACTION_GATT_SERVICES_DISCOVERED" :
+                    enableTXNotification();
+                    break;
+                //case "ACTION_DATA_AVAILABLE":
             }
         }
 
@@ -517,20 +527,20 @@ public class UartService extends Service {
             return new BroadcastReceiver() {
                 public void onReceive(Context context, Intent intent) {
                     String action = intent.getAction();
-                    if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
+                    //if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
                         //showMessage("UART:Connecting");
                         //showMessage(get(R.string.UART_Connecting));
-                    }
-                    if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
-                        //showMessage("UART:Disconnecting");
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("Connect", 0);
+                    //}
+                    //if (action.equals(UartService.ACTION_GATT_DISCONNECTED)) {
+                    //    //showMessage("UART:Disconnecting");
+                    //    Bundle bundle = new Bundle();
+                    //    bundle.putInt("Connect", 0);
 
                      //   bundle.putInt("mStatus", UART_PROFILE_DISCONNECTED);
-                    }
-                    if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                       enableTXNotification();
-                    }
+                    //}
+                    //if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                    //   enableTXNotification();
+                    //}
                     //*********************//
                     if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {//資料進來
                         final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);

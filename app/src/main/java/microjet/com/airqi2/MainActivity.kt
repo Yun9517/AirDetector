@@ -238,7 +238,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
+        if (!mIsReceiverRegistered) {
+            if (mReceiver == null)
+                mReceiver = MyBroadcastReceiver()
+            registerReceiver(mReceiver, IntentFilter("mainActivity"))
+            mIsReceiverRegistered = true
+        }
         requestPermissionsForBluetooth()
+        checkConnection()
 
 
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
@@ -246,12 +253,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //val mainIntent = Intent("Main")
         //sendBroadcast(mainIntent)
 
-                if (!mIsReceiverRegistered) {
-            if (mReceiver == null)
-                mReceiver = MyBroadcastReceiver()
-            registerReceiver(mReceiver, IntentFilter("mainActivity"))
-            mIsReceiverRegistered = true
-        }
     }
 
     override fun onPause() {
@@ -816,7 +817,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-                    btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+                    btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
                 "B5"->{
@@ -863,7 +864,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
 
         }
+        private fun checkConnection() {
+            if (UartService.mConnectionState == 0) {
+                val mainIntent = Intent("Main")
+                mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
+                sendBroadcast(mainIntent)
+            }else{
+                val mainIntent = Intent("Main")
+                mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
+                sendBroadcast(mainIntent)
+            }
+        }
 
     }
+
 
 

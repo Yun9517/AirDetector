@@ -104,6 +104,9 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "callDeviceStartSample")
                 context.sendBroadcast(mainIntent)
             }
+            else -> {
+                Log.d("MAINRECIVER","ERROR")
+            }
         }
 
     }

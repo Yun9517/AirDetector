@@ -71,10 +71,10 @@ class DeviceListActivity : Activity() {
         val share = getSharedPreferences("MACADDRESS", MODE_PRIVATE)
         share.edit().clear().putString("mac",device.address).apply()
 
-        val intent :Intent? = Intent("Main")
-        intent!!.putExtra("status", "connect")
-        intent!!.putExtra("mac", device.address)
-        sendBroadcast(intent)
+        val serviceIntent :Intent? = Intent("Main")
+        serviceIntent!!.putExtra("status", "connect")
+        serviceIntent!!.putExtra("mac", device.address)
+        sendBroadcast(serviceIntent)
 
         /*
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
