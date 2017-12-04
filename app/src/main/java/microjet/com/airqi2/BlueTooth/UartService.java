@@ -445,17 +445,17 @@ public class UartService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        intentAction = ACTION_GATT_DISCONNECTED;
+        //intentAction = ACTION_GATT_DISCONNECTED;
         //mConnectionState = STATE_DISCONNECTED;
         Log.i(TAG, "Disconnected from GATT server.");
         //broadcastUpdate(intentAction);
 
-        unregisterReceiver(mMainReceiver);
+        //unregisterReceiver(mMainReceiver);
         unregisterReceiver(mReceiver);
 
         disconnect();
         close();
+        super.onDestroy();
     }
 
 

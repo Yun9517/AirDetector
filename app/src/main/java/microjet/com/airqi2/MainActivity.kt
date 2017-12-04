@@ -234,6 +234,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onStart()
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         startService(serviceIntent)
+        Log.d("MAIN","START")
     }
 
     override fun onResume() {
@@ -265,6 +266,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onDestroy() {
+        val serviceIntent :Intent? = Intent("Main")
+        serviceIntent!!.putExtra("status", "disconnect")
+        sendBroadcast(serviceIntent)
+
+        val intent :Intent? = Intent(this, UartService::class.java)
+        stopService(intent)
+
         super.onDestroy()
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         //unbindService(mServiceConnection)
