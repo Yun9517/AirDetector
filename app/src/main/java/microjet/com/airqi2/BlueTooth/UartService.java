@@ -538,9 +538,9 @@ public class UartService extends Service {
 
                      //   bundle.putInt("mStatus", UART_PROFILE_DISCONNECTED);
                     //}
-                    //if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                    //   enableTXNotification();
-                    //}
+                    if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                       enableTXNotification();
+                    }
                     //*********************//
                     if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {//資料進來
                         final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);

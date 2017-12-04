@@ -863,6 +863,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
                 }
             }
+            checkBluetooth()
         }
 
 
