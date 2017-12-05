@@ -330,7 +330,7 @@ class ColorArcProgressBar : View {
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
     //    k = sweepAngle / maxValues
-        setRangeValues(floatArrayOf(220f,440f,340f))
+        setRangeValues(floatArrayOf(220f,440f,maxValues-660f))
     }
     private var k: FloatArray = floatArrayOf(0f,0f,0f) //(0-220
    // private var m: Float=0.toFloat()   // 220-660
@@ -366,7 +366,7 @@ class ColorArcProgressBar : View {
         else if (currentValues>220 && currentValues<=660){
             setAnimation(lastAngle, (currentValues-220) * k[1]+90, aniSpeed)}
         else{
-            setAnimation(lastAngle, currentValues-660 * k[2]+180, aniSpeed)}
+            setAnimation(lastAngle, (currentValues-660) * k[2]+180, aniSpeed)}
     }
     private fun setAnimation(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)
