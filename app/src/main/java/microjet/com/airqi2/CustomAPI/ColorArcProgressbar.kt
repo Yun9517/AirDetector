@@ -89,8 +89,9 @@ class ColorArcProgressBar : View {
     private val isAutoTextSize = true
 
     // sweepAngle / maxValues 的值
-    private var k: Float = 0.toFloat()
-
+  //  private var k: Float = 0.toFloat() //(0-220
+  //  private var m: Float=0.toFloat()   // 220-660
+  //  private var q: Float=0.toFloat()    //660-MaxValue
     private var listener: OnSeekArcChangeListener? = null
 
     private var seekEnable: Boolean = false
@@ -328,7 +329,21 @@ class ColorArcProgressBar : View {
      */
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
-        k = sweepAngle / maxValues
+    //    k = sweepAngle / maxValues
+        setRangeValues(floatArrayOf(220f,440f,340f))
+    }
+    private var k: FloatArray = floatArrayOf(0f,0f,0f) //(0-220
+   // private var m: Float=0.toFloat()   // 220-660
+  //  private var q: Float=0.toFloat()    //660-MaxValue
+    /**
+     * 设置區間值
+     *
+     * @param Values
+     */
+    fun setRangeValues(Values: FloatArray) {
+        for (i in 0 until Values.size){
+            k[i]= 90/(Values[i])
+        }
     }
 
     /**
@@ -346,9 +361,37 @@ class ColorArcProgressBar : View {
         }
         this.currentValues = currentValues
         lastAngle = currentAngle
-        setAnimation(lastAngle, currentValues * k, aniSpeed)
+        if (currentValues<=220){
+            setAnimation(lastAngle, currentValues * k[0], aniSpeed)}
+        else if (currentValues>220 && currentValues<=660){
+            setAnimation(lastAngle, (currentValues-220) * k[1]+90, aniSpeed)}
+        else{
+            setAnimation(lastAngle, currentValues-660 * k[2]+180, aniSpeed)}
     }
+    private fun setAnimation(last: Float, current: Float, length: Int) {
+        progressAnimator = ValueAnimator.ofFloat(last, current)
+        progressAnimator!!.duration = length.toLong()
+        progressAnimator!!.setTarget(currentAngle)
 
+        if (currentValues <=220) {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[0]
+            }
+        }else if (currentValues>220 && currentValues<=660) {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[1]
+            }
+        }
+        else {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[2]
+            }
+        }
+        progressAnimator!!.start()
+    }
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (seekEnable) {
             this.parent.requestDisallowInterceptTouchEvent(true)//一旦底层View收到touch的action后调用这个方法那么父层View就不会再调用onInterceptTouchEvent了，也无法截获以后的action
@@ -581,16 +624,7 @@ class ColorArcProgressBar : View {
      * @param last
      * @param current
      */
-    private fun setAnimation(last: Float, current: Float, length: Int) {
-        progressAnimator = ValueAnimator.ofFloat(last, current)
-        progressAnimator!!.duration = length.toLong()
-        progressAnimator!!.setTarget(currentAngle)
-        progressAnimator!!.addUpdateListener { animation ->
-            currentAngle = animation.animatedValue as Float
-            currentValues = currentAngle / k
-        }
-        progressAnimator!!.start()
-    }
+
 
     fun setSeekEnable(seekEnable: Boolean) {
         this.seekEnable = seekEnable

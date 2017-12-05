@@ -844,15 +844,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         batValue = batValue - 100
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_charge)
                     }
-                    else if(batValue in 60..100){
+                    else if(batValue in 66..100){
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
                     }
-                    else if(batValue in 29..59){
+                    else if(batValue in 23..65){
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
                     }
-                    else if (batValue in 10..28){
+                    else if (batValue in 10..32){
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_1grid)
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
                     }
