@@ -508,7 +508,7 @@ public class UartService extends Service {
                     break;
                 case "setSampleRate":
                     int SampleTime = intent.getIntExtra("SampleTime", 1);
-                    int[] param = {SampleTime, SampleTime*30-5, SampleTime*30-1, SampleTime*30-5, 5, 1, 1};
+                    int[] param = {SampleTime, SampleTime*30, SampleTime*30-1, SampleTime*30-2, 1, 0, 0};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
@@ -795,7 +795,7 @@ public class UartService extends Service {
                     int number=Integer.parseInt(RString.get(0));
                     if (CallFromConnect) {//從connect來的呼叫，檢查是否是舊的參數是的話則修改參數
                         if ( number!=1&&number!=30&&number!=40&&number!=60) {//設定新參數設為預設值
-                            int []array={1,25,29,25,5,1,1};
+                            int []array={1,30,29,28,1,0,0};
                             writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(array));
                         }
                         CallFromConnect=false;
@@ -812,7 +812,6 @@ public class UartService extends Service {
                     //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
                     //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
                     Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
                     //取得當前時間
@@ -823,6 +822,7 @@ public class UartService extends Service {
                     Log.d("UART", "total item "+Integer.toString(getMaxItems()));
                    // Log.d("UART", "getItem 1");
                     if (getMaxItems() != 0) {
+                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
                         Log.d("UART", "getItem 1");
                         NowItem = 0;
                         counter = 0;

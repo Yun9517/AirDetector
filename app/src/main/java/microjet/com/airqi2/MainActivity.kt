@@ -272,17 +272,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStop() {
         super.onStop()
+
+    }
+
+    override fun onDestroy() {
         val serviceIntent :Intent? = Intent("Main")
         serviceIntent!!.putExtra("status", "disconnect")
         sendBroadcast(serviceIntent)
 
         val intent :Intent? = Intent(this, UartService::class.java)
         stopService(intent)
-    }
-
-    override fun onDestroy() {
-
         super.onDestroy()
+
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         //unbindService(mServiceConnection)
     }
@@ -756,29 +757,35 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     print("MainActivity")
                 }
             REQUEST_SELECT_SAMPLE->{
-                if ( data != null) {
-                   var value= data.getIntExtra("choseCycle",0)
-                    val intent: Intent? = Intent("Main")
-                    intent!!.putExtra("status", "setSampleRate")
+                if ( data != null)
+                {
+                    var value= data.getIntExtra("choseCycle",0)
+                    val uuintent: Intent? = Intent("Main")
+                    uuintent!!.putExtra("status", "setSampleRate")
 
-                    when(value){//resolution 1= 30 second
+                    when(value)
+                    {//resolution 1= 30 second
                         0->{//30s
-                            intent.putExtra("SampleTime",1)//
+                            uuintent.putExtra("SampleTime",1)//
                         }
                         1->{//10min
-                            intent.putExtra("SampleTime",20)
+                            uuintent.putExtra("SampleTime",20)
                         }
                         2->{//15min
-                            intent.putExtra("SampleTime",30)
+                            uuintent.putExtra("SampleTime",30)
                         }
                         3->{//20min
-                            intent.putExtra("SampleTime",40)
+                            uuintent.putExtra("SampleTime",40)
                         }
                         4->{//30min
-                            intent.putExtra("SampleTime",60)
+                            uuintent.putExtra("SampleTime",60)
+                        }
+                        else-> {
+                            uuintent.putExtra("SampleTime",1)
                         }
                     }
-                    sendBroadcast(intent)
+                    sendBroadcast(uuintent)
+
                 }
             }
             else -> {
