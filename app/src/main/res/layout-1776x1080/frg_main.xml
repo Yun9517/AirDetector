@@ -124,8 +124,10 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="20sp"
 
-            android:textSize="10sp" />
+             />
 
     </LinearLayout>
 

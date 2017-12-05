@@ -5,6 +5,12 @@ import android.app.Activity
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v4.widget.AutoSizeableTextView
+import android.support.v4.widget.TextViewCompat
+import android.text.AutoText
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.AbsoluteSizeSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.LayoutInflater
@@ -68,20 +74,35 @@ class MainFragment : Fragment() {
              tvocStatus?.text = getString(R.string.text_label_ststus_good)
 
              tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Good))
          }
          else if (currentValue.toFloat() > 661) {
              textView?.text = getString(R.string.text_message_air_bad)
              tvocStatus?.text = getString(R.string.text_label_ststus_bad)
 
              tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
          }
          else{
              textView?.text = getString(R.string.text_message_air_mid)
              tvocStatus?.text = getString(R.string.text_label_ststus_mid)
 
              tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
          }
-         tvocValue2?.text = currentValue + " ppb"
-         tvocValue?.text = currentValue + " ppb"
+     // ********* 2017/12/05 主頁面大小字 ************************************************* //
+         var temp = ""
+
+         temp = currentValue + " ppb "
+
+         val textSpan = SpannableStringBuilder(temp)
+
+         textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+         textSpan.setSpan(AbsoluteSizeSpan(20), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+         textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+
+         tvocValue2?.text = textSpan
+         //tvocValue?.text = textSpan
+     // *********************************************************************************** //
     }
 }

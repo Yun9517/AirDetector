@@ -60,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -69,11 +69,11 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="56sp" />
+                    android:textSize="50sp" />
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="150dp"
+                    android:layout_width="220dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
@@ -81,7 +81,7 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="48sp" />
+                    android:textSize="40sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -108,11 +108,11 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="400dp"
-        android:layout_height="175dp"
+        android:layout_width="410dp"
+        android:layout_height="230dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/message_block_background"
         android:orientation="horizontal">
 
@@ -136,7 +136,7 @@
     <ImageView
         android:id="@+id/imgPanel"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="175dp"
         android:layout_alignParentBottom="true"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/temp_main" />
