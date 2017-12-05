@@ -853,7 +853,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     var bundle= intent.getBundleExtra("result")
                     var data= bundle.getParcelableArrayList<myData>("resultSet")
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
+                    //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
 
                 }
                 "B6"->{

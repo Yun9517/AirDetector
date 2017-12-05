@@ -141,13 +141,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 R.id.radioButton_Hour -> {
                     //   mChart?.data = getBarData()
                     //20171130   Andy使用傳統SQL語法新增資料
-                    val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
+                //    val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
                     //得到一个可写的数据库
-                    val db = dbHelper.getReadableDatabase()
+             //       val db = dbHelper.getReadableDatabase()
                     //insertDB(db)
-
+                    mChart?.data=getBarData2(tvoc1,time1)
                     // SearchSQLlite()
-                    mChart?.data = SearchSQLlite_Day()
+                  //  mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
                     mChart?.data = getBarData()
@@ -538,8 +538,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //  AddedSQLlite(6000)
     }
     //20171130 Andy 傳統SQL寫法ADD
+     var time1=ArrayList<String>()
+     var tvoc1=ArrayList<String>()
+    public fun ADDDATAForDatachart(Datalist: java.util.ArrayList<myData>):BarData{
+        var  time =ArrayList<String>()
+        var  tvoc =ArrayList<String>()
+        time1=time
+        tvoc1=tvoc
+        for (i in 0 until Datalist.size) {
+           time.add(Datalist[i].time)
+            tvoc.add(Datalist[i].tvoC_Data)
+        }
+        getLabels2(time)
+    return  getBarData2(tvoc, time)
+       // getChartData2(tvoc)
 
-
+    }
     //20171128 Andy SQL
     public fun AddedSQLlite(Datalist: java.util.ArrayList<myData>) {
         //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
