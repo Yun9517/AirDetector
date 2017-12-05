@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pickCycle" >
-        <item>2min.</item>
+        <item>30sec.</item>
         <item>10min.</item>
         <item>15min.</item>
         <item>20min.</item>

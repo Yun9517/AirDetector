@@ -11,6 +11,8 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.media.Image
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.os.IBinder
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -752,21 +754,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val intent: Intent? = Intent("Main")
                     intent!!.putExtra("status", "setSampleRate")
 
-                    when(value){
-                        0->{//2min
-                            intent.putExtra("SampleTime",2)
+                    when(value){//resolution 1= 30 second
+                        0->{//30s
+                            intent.putExtra("SampleTime",1)//
                         }
                         1->{//10min
-                            intent.putExtra("SampleTime",10)
-                        }
-                        2->{//15min
-                            intent.putExtra("SampleTime",15)
-                        }
-                        3->{//20min
                             intent.putExtra("SampleTime",20)
                         }
-                        4->{//30min
+                        2->{//15min
                             intent.putExtra("SampleTime",30)
+                        }
+                        3->{//20min
+                            intent.putExtra("SampleTime",40)
+                        }
+                        4->{//30min
+                            intent.putExtra("SampleTime",60)
                         }
                     }
                     sendBroadcast(intent)
@@ -800,7 +802,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         }
     }
-
+        val handler: Handler=Handler()
         private fun updateUI(intent : Intent) {
             when (intent.getStringExtra("status")) {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
@@ -813,10 +815,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
-                    val intent: Intent? = Intent("Main")
-                    intent!!.putExtra("status", "callDeviceStartSample")
-                    sendBroadcast(intent)
-
+                  /*  val intent: Intent? = Intent("Main")
+                                         intent!!.putExtra("status", "callDeviceStartSample")*/
+                    handler.postDelayed({
+                        val intent: Intent? = Intent("Main")
+                        intent!!.putExtra("status", "getSampleRate")
+                        intent!!.putExtra("callFromConnect", "yes")
+                        sendBroadcast(intent)
+                    }, (3 * 1000).toLong())
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {

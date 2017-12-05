@@ -485,7 +485,7 @@ public class UartService extends Service {
         super.onDestroy();
     }
 
-
+    boolean CallFromConnect =false;
     private class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -507,13 +507,17 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                     break;
                 case "setSampleRate":
-                    int SampleTime = intent.getIntExtra("SampleTime", 2);
-                    int[] param = {SampleTime, 58, 55, 54, 5, 0, 0};
+                    int SampleTime = intent.getIntExtra("SampleTime", 1);
+                    int[] param = {SampleTime, SampleTime*30-5, SampleTime*30-1, SampleTime*30-5, 5, 1, 1};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
                 case "getSampleRate":
                     Log.d(TAG, "getSampleRate");
+                    if (intent.getStringExtra("callFromConnect").equals("yes"))
+                        CallFromConnect=true;
+                    else
+                        CallFromConnect=false;
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
@@ -788,7 +792,17 @@ public class UartService extends Service {
                 case (byte) 0xB2:
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     setSampleRateTime(Integer.parseInt(RString.get(0)));
+                    int number=Integer.parseInt(RString.get(0));
+                    if (CallFromConnect) {//從connect來的呼叫，檢查是否是舊的參數是的話則修改參數
+                        if ( number!=1&&number!=30&&number!=40&&number!=60) {//設定新參數設為預設值
+                            int []array={1,25,29,25,5,1,1};
+                            writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(array));
+                        }
+                        CallFromConnect=false;
+                    }
+                    else{
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                    }
                     break;
                 case (byte) 0xB4:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
@@ -806,8 +820,10 @@ public class UartService extends Service {
                     setMyDate(date);
                     // String time=getDateTime();
                     // setGetDataTime(time);
-                    Log.d("UART", "getItem 1");
+                    Log.d("UART", "total item "+Integer.toString(getMaxItems()));
+                   // Log.d("UART", "getItem 1");
                     if (getMaxItems() != 0) {
+                        Log.d("UART", "getItem 1");
                         NowItem = 0;
                         counter = 0;
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));

@@ -97,6 +97,11 @@ class MainReceiver : BroadcastReceiver() {
             "getSampleRate" -> {
                 var mainIntent = Intent("UartService")
                 mainIntent.putExtra("status", "getSampleRate")
+                when( intent.getStringExtra("callFromConnect"))
+                {
+                    "yes"-> mainIntent.putExtra("callFromConnect", "yes")
+                    else -> mainIntent.putExtra("callFromConnect", "no")
+                }
                 context.sendBroadcast(mainIntent)
             }
             "callDeviceStartSample" -> {
