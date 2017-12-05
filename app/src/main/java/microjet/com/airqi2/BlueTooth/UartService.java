@@ -279,7 +279,7 @@ public class UartService extends Service {
             return false;
         }
         // Previously connected device.  Try to reconnect.
-        /*
+
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
@@ -289,7 +289,7 @@ public class UartService extends Service {
                 return false;
             }
         }
-        */
+        
         final BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
         if (device == null) {
             Log.w(TAG, "Device not found.  Unable to connect.");

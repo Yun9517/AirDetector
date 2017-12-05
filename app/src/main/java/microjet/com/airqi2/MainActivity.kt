@@ -232,6 +232,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStart() {
         super.onStart()
+        var intent = Intent("mainActivity")
+        intent.putExtra("status", "ACTION_GATT_DISCONNECTED")
+        updateUI(intent)
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         startService(serviceIntent)
         Log.d("MAIN","START")
@@ -265,13 +268,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         val serviceIntent :Intent? = Intent("Main")
         serviceIntent!!.putExtra("status", "disconnect")
         sendBroadcast(serviceIntent)
 
         val intent :Intent? = Intent(this, UartService::class.java)
         stopService(intent)
+    }
+
+    override fun onDestroy() {
 
         super.onDestroy()
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
@@ -876,13 +883,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         private fun checkConnection() {
             if (UartService.mConnectionState == 0) {
-                val mainIntent = Intent("Main")
-                mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
-                sendBroadcast(mainIntent)
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                //val mainIntent = Intent("Main")
+                //mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
+                //sendBroadcast(mainIntent)
             }else{
-                val mainIntent = Intent("Main")
-                mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
-                sendBroadcast(mainIntent)
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+//                val mainIntent = Intent("Main")
+//                mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
+//                sendBroadcast(mainIntent)
             }
         }
 
