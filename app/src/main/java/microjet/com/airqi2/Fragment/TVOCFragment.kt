@@ -621,12 +621,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         var TimeReuge =arrayOf(Time+colum_collection_time)
         //internal var c: Cursor? = null
 
-        val literals = arrayOf("2017/11/30 20:20:20","2017/11/30 20:20:26")
-
+        val literals = arrayOf("2017/12/4 20:20:20","2017/11/30 20:20:26")
+        val str = "collection_time >=? AND collection_time <=?"
         //ContactValues Time = new ContactValues();
         //Time = colum_collection_time[0]
         //c = dbrw.query(tablename, columT, columT[1] + ">? AND  <?", literals, null, null, null)
-        c = dbrw.query(tablename, columT, columT[1] + ">=? AND <?", literals, null, null, null)
+        c = dbrw.query(tablename, columT, str, literals, null, null, null)
         //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
         //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
 

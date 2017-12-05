@@ -46,8 +46,8 @@ class MainReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "connect" -> {
-                var macAddress = intent.getStringExtra("mac")
                 var mainIntent = Intent("UartService")
+                var macAddress = intent.getStringExtra("mac")
                 mainIntent.putExtra("status", "connect")
                 mainIntent.putExtra("mac",macAddress)
                 context.sendBroadcast(mainIntent)
@@ -102,6 +102,28 @@ class MainReceiver : BroadcastReceiver() {
             "callDeviceStartSample" -> {
                 var mainIntent = Intent("UartService")
                 mainIntent.putExtra("status", "callDeviceStartSample")
+                context.sendBroadcast(mainIntent)
+            }
+            "ACTION_GATT_SERVICES_DISCOVERED" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "ACTION_GATT_SERVICES_DISCOVERED")
+                context.sendBroadcast(mainIntent)
+            }
+            "EXTRA_DATA" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "getSampleRate")
+                context.sendBroadcast(mainIntent)
+            }
+            "ACTION_DATA_AVAILABLE" -> {
+                var mainIntent = Intent("UartService")
+                var char = intent.getByteArrayExtra("txValue")
+                mainIntent.putExtra("status", "ACTION_DATA_AVAILABLE")
+                mainIntent.putExtra("EXTRA_DATA",char)
+                context.sendBroadcast(mainIntent)
+            }
+            "DEVICE_DOES_NOT_SUPPORT_UART" -> {
+                var mainIntent = Intent("UartService")
+                mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }
             else -> {

@@ -729,6 +729,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //stopService(serviceIntent)
     }
 
+
     //視回傳的code執行相對應的動作
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -810,7 +811,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-                    btIcon!!.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+                    btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
                     val intent: Intent? = Intent("Main")
                     intent!!.putExtra("status", "callDeviceStartSample")

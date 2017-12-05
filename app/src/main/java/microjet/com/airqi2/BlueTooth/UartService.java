@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
+
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
 import microjet.com.airqi2.myData;
 import microjet.com.airqi2.R;
@@ -70,10 +71,10 @@ public class UartService extends Service {
     public final static String ACTION_DATA_AVAILABLE =
             "ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
-            "com.nordicsemi.nrfUART.EXTRA_DATA";
+            "EXTRA_DATA";
     public final static String DEVICE_DOES_NOT_SUPPORT_UART =
-            "com.nordicsemi.nrfUART.DEVICE_DOES_NOT_SUPPORT_UART";
-    
+            "DEVICE_DOES_NOT_SUPPORT_UART";
+
     public static final UUID TX_POWER_UUID = UUID.fromString("00001804-0000-1000-8000-00805f9b34fb");
     public static final UUID TX_POWER_LEVEL_UUID = UUID.fromString("00002a07-0000-1000-8000-00805f9b34fb");
     public static final UUID CCCD = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -85,13 +86,13 @@ public class UartService extends Service {
 
     String intentAction;
 
-    private MainReceiver mMainReceiver;
-    private String shareStuff = "MACADDRESS";
+    //private MainReceiver mMainReceiver;
+    //private String shareStuff = "MACADDRESS";
 
     private Boolean mIsReceiverRegistered = false;
     private MyBroadcastReceiver mReceiver = null;
 
-//    public UartService() { //建構式
+    //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
     // connection change and services discovered.
@@ -105,7 +106,7 @@ public class UartService extends Service {
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent("Main");
-                    mainIntent.putExtra("status",intentAction);
+                    mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     break;
                 }
@@ -115,7 +116,7 @@ public class UartService extends Service {
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent("Main");
-                    mainIntent.putExtra("status",intentAction);
+                    mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     break;
                 }
@@ -128,7 +129,7 @@ public class UartService extends Service {
                             mBluetoothGatt.discoverServices());
 
                     Intent mainIntent = new Intent("Main");
-                    mainIntent.putExtra("status",intentAction);
+                    mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     break;
                 }
@@ -145,55 +146,62 @@ public class UartService extends Service {
         @Override
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-            	Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt );
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt);
+                //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
+                sendToMainBroadcast(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
         }
 
-       @Override
+        @Override
         public void onCharacteristicRead(BluetoothGatt gatt,
                                          BluetoothGattCharacteristic characteristic,
                                          int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                //broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+                //Intent mainIntent = new Intent("Main");
+                //mainIntent.putExtra("status","ACTION_DATA_AVAILABLE");
+                //mainIntent.putExtra("txValue",characteristic.getValue());
+                //sendBroadcast(mainIntent);
+                sendCharToMainBroadcast(characteristic);
             }
         }
 
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt,
                                             BluetoothGattCharacteristic characteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            //broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic);
+            sendCharToMainBroadcast(characteristic);
         }
     };
 
-    private void broadcastUpdate(final String action) {
-        final Intent intent = new Intent(action);
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
+    //private void broadcastUpdate(final String action) {
+    //    final Intent intent = new Intent(action);
+    //    LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    //}
 
-    private void broadcastUpdate(final String action,
-                                 final BluetoothGattCharacteristic characteristic) {
-        final Intent intent = new Intent(action);
-
-        // This is handling for the notification on TX Character of NUS service
-        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-
-           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
-            intent.putExtra(EXTRA_DATA, characteristic.getValue());
-        } else {
-
-        }
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-    }
+//    private void broadcastUpdate(final String action,
+//                                 final BluetoothGattCharacteristic characteristic) {
+//        final Intent intent = new Intent(action);
+//
+//        // This is handling for the notification on TX Character of NUS service
+//        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
+//
+//           // Log.d(TAG, String.format("Received TX: %d",characteristic.getValue() ));
+//            intent.putExtra(EXTRA_DATA, characteristic.getValue());
+//        } else {
+//
+//        }
+//        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+//    }
 
 
     //BindService專用
     public class LocalBinder extends Binder {
-       public UartService getServerInstance() {
+        public UartService getServerInstance() {
             return UartService.this;
-       }
+        }
     }
 
     IBinder mBinder = new LocalBinder();
@@ -250,7 +258,7 @@ public class UartService extends Service {
                 mReceiver = new MyBroadcastReceiver();
                 registerReceiver(mReceiver, new IntentFilter("UartService"));
                 mIsReceiverRegistered = true;
-                LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
+                //LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
             }
         }
     }
@@ -260,11 +268,10 @@ public class UartService extends Service {
      * Connects to the GATT server hosted on the Bluetooth LE device.
      *
      * @param address The device address of the destination device.
-     *
      * @return Return true if the connection is initiated successfully. The connection result
-     *         is reported asynchronously through the
-     *         {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
-     *         callback.
+     * is reported asynchronously through the
+     * {@code BluetoothGattCallback#onConnectionStateChange(android.bluetooth.BluetoothGatt, int, int)}
+     * callback.
      */
     public boolean connect(final String address) {
         if (mBluetoothAdapter == null || address == null) {
@@ -294,7 +301,7 @@ public class UartService extends Service {
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
-        enableTXNotification();
+        //enableTXNotification();
         return true;
     }
 
@@ -336,6 +343,7 @@ public class UartService extends Service {
             return;
         }
         mBluetoothGatt.disconnect();
+        disableTXNotification();
     }
 
     /**
@@ -371,64 +379,83 @@ public class UartService extends Service {
      * Enables or disables notification on a give characteristic.
      *
 
-    */
-    
+     */
+
     /**
      * Enable Notification on TX characteristic
      *
-     * @return 
+     * @return
      */
-    public void enableTXNotification()
-    {
-    	/*
+    public void enableTXNotification() {
+        /*
     	if (mBluetoothGatt == null) {
     		showMessage("mBluetoothGatt null" + mBluetoothGatt);
     		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
     		return;
     	}
     		*/
-    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-    	if (RxService == null) {
+        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+        if (RxService == null) {
             showMessage("Rx service not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
-    	BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
+        BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null) {
             showMessage("Tx charateristic not found!");
-            broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
-        mBluetoothGatt.setCharacteristicNotification(TxChar,true);
+        mBluetoothGatt.setCharacteristicNotification(TxChar, true);
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
 
     }
-    
-    public void writeRXCharacteristic(byte[] value)
-    {
-    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-    	if (RxService == null) {
-            showMessage("mBluetoothGatt null "+ mBluetoothGatt);
+
+    public void disableTXNotification() {
+        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+        if (RxService == null) {
+            showMessage("Rx service not found!");
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
+        BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
+        if (TxChar == null) {
+            showMessage("Tx charateristic not found!");
+            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+            return;
+        }
+        mBluetoothGatt.setCharacteristicNotification(TxChar, false);
+    }
+
+    public void writeRXCharacteristic(byte[] value) {
+        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+        if (RxService == null) {
+            showMessage("mBluetoothGatt null " + mBluetoothGatt);
             showMessage("Rx service not found!");
             //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
-    	BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
+        BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
         if (RxChar == null) {
             showMessage("Rx charateristic not found!");
             //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
         }
         RxChar.setValue(value);
-    	boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
+        boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
         Log.d(TAG, "write TXchar - status=" + status);
     }
-    
+
     private void showMessage(String msg) {
         Log.e(TAG, msg);
     }
+
     /**
      * Retrieves a list of supported GATT services on the connected device. This should be
      * invoked only after {@code BluetoothGatt#discoverServices()} completes successfully.
@@ -439,6 +466,7 @@ public class UartService extends Service {
         if (mBluetoothGatt == null) return null;
         return mBluetoothGatt.getServices();
     }
+
     public int getmConnectionState() {
         return mConnectionState;
     }
@@ -446,14 +474,13 @@ public class UartService extends Service {
     @Override
     public void onDestroy() {
         //intentAction = ACTION_GATT_DISCONNECTED;
-        //mConnectionState = STATE_DISCONNECTED;
+        mConnectionState = STATE_DISCONNECTED;
         Log.i(TAG, "Disconnected from GATT server.");
         //broadcastUpdate(intentAction);
-
+        //sendToMainBroadcast(intentAction);
         //unregisterReceiver(mMainReceiver);
-        unregisterReceiver(mReceiver);
-
         disconnect();
+        unregisterReceiver(mReceiver);
         close();
         super.onDestroy();
     }
@@ -480,8 +507,8 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                     break;
                 case "setSampleRate":
-                    int SampleTime =intent.getIntExtra("SampleTime",2);
-                    int[] param = { SampleTime, 58, 55, 54, 5, 0, 0 };
+                    int SampleTime = intent.getIntExtra("SampleTime", 2);
+                    int[] param = {SampleTime, 58, 55, 54, 5, 0, 0};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
@@ -497,36 +524,42 @@ public class UartService extends Service {
                     SimpleDateFormat sdFormatH = new SimpleDateFormat("hh", Locale.TAIWAN);
                     SimpleDateFormat sdFormatm = new SimpleDateFormat("mm", Locale.TAIWAN);
                     SimpleDateFormat sdFormatS = new SimpleDateFormat("ss", Locale.TAIWAN);
-                    String[] strY = {sdFormatY.format(date),sdFormatM.format(date),sdFormatD.format(date),sdFormatH.format(date),sdFormatm.format(date),sdFormatS.format(date)};
-                    int []param2={Integer.parseInt(strY[0]),Integer.parseInt(strY[1]),Integer.parseInt(strY[2]),Integer.parseInt(strY[3]),Integer.parseInt(strY[4]),Integer.parseInt(strY[5])};
+                    String[] strY = {sdFormatY.format(date), sdFormatM.format(date), sdFormatD.format(date), sdFormatH.format(date), sdFormatm.format(date), sdFormatS.format(date)};
+                    int[] param2 = {Integer.parseInt(strY[0]), Integer.parseInt(strY[1]), Integer.parseInt(strY[2]), Integer.parseInt(strY[3]), Integer.parseInt(strY[4]), Integer.parseInt(strY[5])};
                     Log.d(TAG, "callDeviceStartSample");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
-                case "ACTION_GATT_SERVICES_DISCOVERED" :
+                case ACTION_GATT_SERVICES_DISCOVERED:
                     enableTXNotification();
                     break;
-                //case "ACTION_DATA_AVAILABLE":
+                case ACTION_DATA_AVAILABLE:
+                    dataAvaliable(intent);
+                    break;
+                case DEVICE_DOES_NOT_SUPPORT_UART:
+                    showMessage("Device Does Not support UART. Disconnecting");
+                    break;
+
             }
         }
 
     }
 
-    private static IntentFilter makeGattUpdateIntentFilter() {
-        final IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
-        intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
-        intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
-        intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
-        intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
-        return intentFilter;
-    }
+//    private static IntentFilter makeGattUpdateIntentFilter() {
+//        final IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(UartService.ACTION_GATT_CONNECTED);
+//        intentFilter.addAction(UartService.ACTION_GATT_DISCONNECTED);
+//        intentFilter.addAction(UartService.ACTION_GATT_SERVICES_DISCOVERED);
+//        intentFilter.addAction(UartService.ACTION_DATA_AVAILABLE);
+//        intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
+//        return intentFilter;
+//    }
 
-    private final ThreadLocal<BroadcastReceiver> UARTStatusChangeReceiver = new ThreadLocal<BroadcastReceiver>() {
-        @Override
-        protected BroadcastReceiver initialValue() {
-            return new BroadcastReceiver() {
-                public void onReceive(Context context, Intent intent) {
-                    String action = intent.getAction();
+//    private final ThreadLocal<BroadcastReceiver> UARTStatusChangeReceiver = new ThreadLocal<BroadcastReceiver>() {
+//        @Override
+//        protected BroadcastReceiver initialValue() {
+//            return new BroadcastReceiver() {
+//                public void onReceive(Context context, Intent intent) {
+//                    String action = intent.getAction();
                     //if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
                         //showMessage("UART:Connecting");
                         //showMessage(get(R.string.UART_Connecting));
@@ -538,167 +571,318 @@ public class UartService extends Service {
 
                      //   bundle.putInt("mStatus", UART_PROFILE_DISCONNECTED);
                     //}
-                    if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
-                       enableTXNotification();
-                    }
-                    //*********************//
-                    if (action.equals(UartService.ACTION_DATA_AVAILABLE)) {//資料進來
-                        final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
-                        // if (txValue.length == 4 && txValue[0] == (byte) 0xEA) {
-                   //     while (ReturnQ.size()!=0) {
-                    //        ReturnQ.poll();
-                   //     }
-                        switch (txValue[2]) {
-                            case (byte) 0xE0:
-                                Log.d("UART feeback", "ok");
-                                return;
-                            case (byte) 0xE1:
-                                Log.d("UART feedback", "Couldn't write in device");
-                                return;
-                            case (byte) 0xE2:
-                                Log.d("UART feedback", "Temperature sensor fail");
-                                return;
-                            case (byte) 0xE3:
-                                Log.d("UART feedback", "TVOC sensor fail");
-                                return;
-                            case (byte) 0xE4:
-                                Log.d("UART feedback", "Pump power fail");
-                                return;
-                            case (byte) 0xE5:
-                                if (NowItem>0)
-                                    //************** 2017/12/04 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料 *****************************//
-                                    //Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),getText(R.string.Number_of_data)+Integer.toString(NowItem)+getText(R.string.Loading_fail),Toast.LENGTH_LONG).show();
-                                    //***************************************************************************************************************//
-                                Log.d("UART feedback", "Invalid value");
-                                return;
-                            case (byte) 0xE6:
-                                Log.d("UART feedback", "Unknown command");
-                                return;
-                            case (byte) 0xE7:
-                                Log.d("UART feedback", "Waiting timeout");
-                                return;
-                            case (byte) 0xE8:
-                                Log.d("UART feedback", "Checksum error");
-                                return;
-                            case (byte) 0xB1:
-                                Log.d(TAG, "cmd:0xB1 feedback");
-                                break;
-                            case (byte )0xB2:
-                                Log.d(TAG, "cmd:0xB2 feedback");
-                                break;
-                            case (byte )0xB4:
-                                Log.d(TAG, "cmd:0xB4 feedback");
-                                break;
-                            case (byte )0xB5:
-                                Log.d(TAG, "cmd:0xB5 feedback");
-                                break;
-                        }
+                    //if (action.equals(UartService.ACTION_GATT_SERVICES_DISCOVERED)) {
+                    //   enableTXNotification();
+                    //}
+                     //*********************/
+//
+//    if(action.equals(UartService.ACTION_DATA_AVAILABLE))
+//            {//資料進來
+//        final byte[] txValue = intent.getByteArrayExtra(UartService.EXTRA_DATA);
+//        // if (txValue.length == 4 && txValue[0] == (byte) 0xEA) {
+//        //     while (ReturnQ.size()!=0) {
+//        //        ReturnQ.poll();
+//        //     }
+//        switch (txValue[2]) {
+//            case (byte) 0xE0:
+//                Log.d("UART feeback", "ok");
+//                return;
+//            case (byte) 0xE1:
+//                Log.d("UART feedback", "Couldn't write in device");
+//                return;
+//            case (byte) 0xE2:
+//                Log.d("UART feedback", "Temperature sensor fail");
+//                return;
+//            case (byte) 0xE3:
+//                Log.d("UART feedback", "TVOC sensor fail");
+//                return;
+//            case (byte) 0xE4:
+//                Log.d("UART feedback", "Pump power fail");
+//                return;
+//            case (byte) 0xE5:
+//                if (NowItem > 0)
+//                    //************** 2017/12/04 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料 *****************************//
+//                    //Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), getText(R.string.Number_of_data) + Integer.toString(NowItem) + getText(R.string.Loading_fail), Toast.LENGTH_LONG).show();
+//                //***************************************************************************************************************//
+//                Log.d("UART feedback", "Invalid value");
+//                return;
+//            case (byte) 0xE6:
+//                Log.d("UART feedback", "Unknown command");
+//                return;
+//            case (byte) 0xE7:
+//                Log.d("UART feedback", "Waiting timeout");
+//                return;
+//            case (byte) 0xE8:
+//                Log.d("UART feedback", "Checksum error");
+//                return;
+//            case (byte) 0xB1:
+//                Log.d(TAG, "cmd:0xB1 feedback");
+//                break;
+//            case (byte) 0xB2:
+//                Log.d(TAG, "cmd:0xB2 feedback");
+//                break;
+//            case (byte) 0xB4:
+//                Log.d(TAG, "cmd:0xB4 feedback");
+//                break;
+//            case (byte) 0xB5:
+//                Log.d(TAG, "cmd:0xB5 feedback");
+//                break;
+//        }
+//
+//        if (getErrorTime() >= 3) {
+//            ResetErrorTime();
+//        }
+//        if (!checkCheckSum(txValue)) {
+//            setErrorTime();
+//        } else {
+//
+//            //   final CallingTranslate CT = new CallingTranslate();
+//            ArrayList<String> RString;
+//            String val;
+//            switch (txValue[2]) {
+//                case (byte) 0xB1:
+//                    RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+//                    break;
+//                case (byte) 0xB2:
+//                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+//                    setSampleRateTime(Integer.parseInt(RString.get(0)));
+//                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+//                    break;
+//                case (byte) 0xB4:
+//                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
+//                    myDeviceData.clear();
+//                    setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
+//                    //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
+//                    //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
+//                    //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+//                    Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+//                    //setCorrectTime(Integer.parseInt(RString.get(8)));
+//                    setCorrectTime(0);
+//                    //取得當前時間
+//                    Date date = new Date();
+//                    setMyDate(date);
+//                    // String time=getDateTime();
+//                    // setGetDataTime(time);
+//                    Log.d("UART", "getItem 1");
+//                    if (getMaxItems() != 0) {
+//                        NowItem = 0;
+//                        counter = 0;
+//                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+//                    }
+//                    //   setCorrectTime(Integer.parseInt(RString.get(j)));
+//                    break;
+//                case (byte) 0xB5:
+//                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+//                    //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
+//                    if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
+//                        //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
+//                        //   long yy= getSampleRateTime()*counter*60*1000;
+//                        //   long zz=getCorrectTime()*60*1000;
+//                        Log.d("UART:ITEM ", Integer.toString(NowItem));
+//                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateTime() * counter * 60 * 1000 - getCorrectTime() * 60 * 1000)));
+//                        if (NowItem >= getMaxItems()) {
+//                            NowItem = 0;
+//                            //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
+//                            //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
+//                            //*****************************************************************************************************************//
+//                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+//                            Intent mainIntent = new Intent("Main");
+//                            mainIntent.putExtra("status", "B5");
+//                            Bundle data = new Bundle();
+//                            data.putParcelableArrayList("resultSet", myDeviceData);
+//                            mainIntent.putExtra("result", data);
+//                            sendBroadcast(mainIntent);
+//                        } else {
+//                            NowItem++;
+//                            counter++;
+//                            Handler mHandler = new Handler();
+//                            mHandler.post(runnable);
+//                        }
+//                    } else {//重送
+//                        Handler mHandler = new Handler();
+//                        mHandler.post(runnable);
+//                    }
+//                    break;
+//                case (byte) 0xB6:
+//                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+//                    Intent mainIntent = new Intent("Main");
+//                    mainIntent.putExtra("status", "B6");
+//                    mainIntent.putExtra("TVOCValue", RString.get(2));
+//                    mainIntent.putExtra("BatteryLife", RString.get(4));
+//                    sendBroadcast(mainIntent);
+//                    break;
+//            }
+//        }
+//        if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
+//            showMessage("Device support UART. Disconnecting");
+//        }
+//    }
 
-                        if (getErrorTime() >= 3) {
-                            ResetErrorTime();
-                        }
-                        if (!checkCheckSum(txValue)) {
-                            setErrorTime();
-                        } else {
 
-                         //   final CallingTranslate CT = new CallingTranslate();
-                            ArrayList<String> RString;
-                            String val;
-                            switch (txValue[2]) {
-                                case (byte) 0xB1:
-                                    RString= CallingTranslate.INSTANCE.ParserGetInfo(txValue);
-                                    break;
-                                case (byte) 0xB2:
-                                    RString= CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
-                                    setSampleRateTime(Integer.parseInt(RString.get(0)));
-                                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
-                                    break;
-                                case (byte) 0xB4:
-                                    RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
-                                    myDeviceData.clear();
-                                    setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
-                                    //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
-                                    //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
-                                    //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),getText(R.string.Total_Data)+Integer.toString(getMaxItems())+getText(R.string.Total_Data_Finish),Toast.LENGTH_LONG).show();
-                                    Toast.makeText(getApplicationContext(),getText(R.string.Loading_Data),Toast.LENGTH_LONG).show();
-                                    //setCorrectTime(Integer.parseInt(RString.get(8)));
-                                    setCorrectTime(0);
-                                    //取得當前時間
-                                    Date date = new Date();
-                                    setMyDate(date);
-                                   // String time=getDateTime();
-                                   // setGetDataTime(time);
-                                    Log.d("UART", "getItem 1");
-                                    if (getMaxItems()!=0) {
-                                        NowItem=0;
-                                        counter=0;
-                                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
-                                    }
-                                 //   setCorrectTime(Integer.parseInt(RString.get(j)));
-                                    break;
-                                case (byte) 0xB5:
-                                    RString= CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
-                                    //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
-                                    if (Integer.parseInt(RString.get(0))==NowItem) {//將資料存入MyData
-                                    //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
-                                    //   long yy= getSampleRateTime()*counter*60*1000;
-                                    //   long zz=getCorrectTime()*60*1000;
-                                        Log.d("UART:ITEM ", Integer.toString(NowItem));
-                                        myDeviceData.add(new myData(RString.get(1),RString.get(2),RString.get(3),RString.get(4),getDateTime(getMyDate().getTime()-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000)));
-                                        if (NowItem>=getMaxItems()){
-                                            NowItem=0;
-                                            //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
-                                            //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
-                                            //*****************************************************************************************************************//
-                                            Toast.makeText(getApplicationContext(),getText(R.string.Loading_Completely),Toast.LENGTH_LONG).show();
-                                            Intent mainIntent = new Intent("Main");
-                                            mainIntent.putExtra("status","B5");
-                                            Bundle data = new Bundle();
-                                            data.putParcelableArrayList("resultSet", myDeviceData);
-                                            mainIntent.putExtra("result", data);
-                                            sendBroadcast(mainIntent);
-                                        }
-                                        else {
-                                            NowItem++;
-                                            counter++;
-                                            Handler mHandler = new Handler();
-                                            mHandler.post(runnable);
-                                        }
-                                    }
-                                    else {//重送
-                                        Handler  mHandler = new Handler();
-                                        mHandler.post(runnable);
-                                    }
-                                    break;
-                                case (byte) 0xB6:
-                                    RString= CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
-                                    Intent mainIntent = new Intent("Main");
-                                    mainIntent.putExtra("status","B6");
-                                    mainIntent.putExtra("TVOCValue",RString.get(2));
-                                    mainIntent.putExtra("BatteryLife",RString.get(4));
-                                    sendBroadcast(mainIntent);
-                                    break;
-                            }
-                        }
-                        if (action.equals(UartService.DEVICE_DOES_NOT_SUPPORT_UART)) {
-                            showMessage("Device support UART. Disconnecting");
-                        }
-                    }
-                }
-            };
+    public void dataAvaliable(Intent intent) {
+        final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
+        switch (txValue[2]) {
+            case (byte) 0xE0:
+                Log.d("UART feeback", "ok");
+                return;
+            case (byte) 0xE1:
+                Log.d("UART feedback", "Couldn't write in device");
+                return;
+            case (byte) 0xE2:
+                Log.d("UART feedback", "Temperature sensor fail");
+                return;
+            case (byte) 0xE3:
+                Log.d("UART feedback", "TVOC sensor fail");
+                return;
+            case (byte) 0xE4:
+                Log.d("UART feedback", "Pump power fail");
+                return;
+            case (byte) 0xE5:
+                if (NowItem > 0)
+                    //************** 2017/12/04 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料 *****************************//
+                    //Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getText(R.string.Number_of_data) + Integer.toString(NowItem) + getText(R.string.Loading_fail), Toast.LENGTH_LONG).show();
+                //***************************************************************************************************************//
+                Log.d("UART feedback", "Invalid value");
+                return;
+            case (byte) 0xE6:
+                Log.d("UART feedback", "Unknown command");
+                return;
+            case (byte) 0xE7:
+                Log.d("UART feedback", "Waiting timeout");
+                return;
+            case (byte) 0xE8:
+                Log.d("UART feedback", "Checksum error");
+                return;
+            case (byte) 0xB1:
+                Log.d(TAG, "cmd:0xB1 feedback");
+                break;
+            case (byte) 0xB2:
+                Log.d(TAG, "cmd:0xB2 feedback");
+                break;
+            case (byte) 0xB4:
+                Log.d(TAG, "cmd:0xB4 feedback");
+                break;
+            case (byte) 0xB5:
+                Log.d(TAG, "cmd:0xB5 feedback");
+                break;
         }
-    };
-    private boolean checkCheckSum(byte[] InputValue){
+
+        if (getErrorTime() >= 3) {
+            ResetErrorTime();
+        }
+
+        if (!checkCheckSum(txValue)) {
+            setErrorTime();
+        } else {
+
+            //   final CallingTranslate CT = new CallingTranslate();
+            ArrayList<String> RString;
+            String val;
+            switch (txValue[2]) {
+                case (byte) 0xB1:
+                    RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                    break;
+                case (byte) 0xB2:
+                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                    setSampleRateTime(Integer.parseInt(RString.get(0)));
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                    break;
+                case (byte) 0xB4:
+                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
+                    myDeviceData.clear();
+                    setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
+                    //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
+                    //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+                    //setCorrectTime(Integer.parseInt(RString.get(8)));
+                    setCorrectTime(0);
+                    //取得當前時間
+                    Date date = new Date();
+                    setMyDate(date);
+                    // String time=getDateTime();
+                    // setGetDataTime(time);
+                    Log.d("UART", "getItem 1");
+                    if (getMaxItems() != 0) {
+                        NowItem = 0;
+                        counter = 0;
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                    }
+                    //   setCorrectTime(Integer.parseInt(RString.get(j)));
+                    break;
+                case (byte) 0xB5:
+                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+                    //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
+                    if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
+                        //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
+                        //   long yy= getSampleRateTime()*counter*60*1000;
+                        //   long zz=getCorrectTime()*60*1000;
+                        Log.d("UART:ITEM ", Integer.toString(NowItem));
+                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateTime() * counter * 60 * 1000 - getCorrectTime() * 60 * 1000)));
+                        if (NowItem >= getMaxItems()) {
+                            NowItem = 0;
+                            //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
+                            //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
+                            //*****************************************************************************************************************//
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            Intent mainIntent = new Intent("Main");
+                            mainIntent.putExtra("status", "B5");
+                            Bundle data = new Bundle();
+                            data.putParcelableArrayList("resultSet", myDeviceData);
+                            mainIntent.putExtra("result", data);
+                            sendBroadcast(mainIntent);
+                        } else {
+                            NowItem++;
+                            counter++;
+                            Handler mHandler = new Handler();
+                            mHandler.post(runnable);
+                        }
+                    } else {//重送
+                        Handler mHandler = new Handler();
+                        mHandler.post(runnable);
+                    }
+                    break;
+                case (byte) 0xB6:
+                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                    Intent mainIntent = new Intent("Main");
+                    mainIntent.putExtra("status", "B6");
+                    mainIntent.putExtra("TVOCValue", RString.get(2));
+                    mainIntent.putExtra("BatteryLife", RString.get(4));
+                    sendBroadcast(mainIntent);
+                    break;
+            }
+        }
+    }
+
+    private void sendToMainBroadcast(String value) {
+        Intent mainIntent = new Intent("Main");
+        mainIntent.putExtra("status", value);
+        sendBroadcast(mainIntent);
+    }
+
+    private void sendCharToMainBroadcast(BluetoothGattCharacteristic characteristic) {
+        if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
+            Intent mainIntent = new Intent("Main");
+            mainIntent.putExtra("status", ACTION_DATA_AVAILABLE);
+            mainIntent.putExtra("txValue", characteristic.getValue());
+            sendBroadcast(mainIntent);
+        }
+    }
+
+    private boolean checkCheckSum(byte[] InputValue) {
         //   InputValue.length;
-        int j=InputValue.length;
-        byte CheckSum=(byte)0x00;
-        byte max=(byte) 0xFF;
-        for (int i=0;i<j;i++)
-            CheckSum+=InputValue[i];
+        int j = InputValue.length;
+        byte CheckSum = (byte) 0x00;
+        byte max = (byte) 0xFF;
+        for (int i = 0; i < j; i++)
+            CheckSum += InputValue[i];
         return CheckSum == max;
     }
+
     ArrayList<myData> myDeviceData = new ArrayList<myData>();
 
     final Runnable runnable = new Runnable() {
@@ -709,30 +893,51 @@ public class UartService extends Service {
         }
     };
 
-    private int NowItem=0;
+    private int NowItem = 0;
 
-    private int MaxItems=0;
-    void setMaxItems(int input ){MaxItems=input;}
-    int getMaxItems(){return MaxItems;}
+    private int MaxItems = 0;
 
-    private int CorrectTime=0;
-    void setCorrectTime(int input){CorrectTime=input;}
-    int getCorrectTime(){return CorrectTime;}
+    void setMaxItems(int input) {
+        MaxItems = input;
+    }
 
-    private int SampleRateTime=0;
-    void setSampleRateTime(int input){SampleRateTime=input;}
-    int getSampleRateTime(){return SampleRateTime;}
-    private int counter=0;
+    int getMaxItems() {
+        return MaxItems;
+    }
+
+    private int CorrectTime = 0;
+
+    void setCorrectTime(int input) {
+        CorrectTime = input;
+    }
+
+    int getCorrectTime() {
+        return CorrectTime;
+    }
+
+    private int SampleRateTime = 0;
+
+    void setSampleRateTime(int input) {
+        SampleRateTime = input;
+    }
+
+    int getSampleRateTime() {
+        return SampleRateTime;
+    }
+
+    private int counter = 0;
     private int ErrorTime;
-    private int getErrorTime()
-    {
+
+    private int getErrorTime() {
         return ErrorTime;
     }
-    private void setErrorTime(){
-        ErrorTime+=1;
+
+    private void setErrorTime() {
+        ErrorTime += 1;
     }
-    private void ResetErrorTime(){
-        ErrorTime=0;
+
+    private void ResetErrorTime() {
+        ErrorTime = 0;
     }
 
     public Date getMyDate() {
@@ -742,35 +947,40 @@ public class UartService extends Service {
     public void setMyDate(Date myDate) {
         this.myDate = myDate;
     }
+
     private Date myDate;
 
-    private String getDateTime(long longtime){
-            SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN);
-            Date date = new Date();
-            date.setTime(longtime);
-            return sdFormat.format(date);
-        }
+    private String getDateTime(long longtime) {
+        SimpleDateFormat sdFormat = new SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN);
+        Date date = new Date();
+        date.setTime(longtime);
+        return sdFormat.format(date);
+    }
+
     private String DataTime;
+
     public String getGetDataTime() {
         return DataTime;
     }
 
 
-    class Data{
-        Data(String Temp,String Humidity,String Tvoc,String CO2,String Time){
-            Temperatur_Data=Temp;
-            Humidy_Data=Humidity;
-            TVOC_Data=Tvoc;
-            CO2_Data=CO2;
-            time=Time;
+    class Data {
+        Data(String Temp, String Humidity, String Tvoc, String CO2, String Time) {
+            Temperatur_Data = Temp;
+            Humidy_Data = Humidity;
+            TVOC_Data = Tvoc;
+            CO2_Data = CO2;
+            time = Time;
         }
+
         String Temperatur_Data;
         String Humidy_Data;
         String TVOC_Data;
         String CO2_Data;
         String time;
     }
-    private class GetData extends AsyncTask<String , Integer ,Data > {
+
+    private class GetData extends AsyncTask<String, Integer, Data> {
 
         @Override
         protected void onPreExecute() {
