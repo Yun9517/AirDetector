@@ -734,8 +734,8 @@ public class UartService extends Service {
         pumpOnTime=Integer.parseInt(RString.get(3));
         pumpingTime=Integer.parseInt(RString.get(4));
 
-        if ( sampleRate!=1&&sampleRate!=30&&sampleRate!=40&&sampleRate!=60
-            && sensorOntime!=30&& timeToGetSample!=29&& pumpOnTime!=28&&pumpingTime!=1 ) {//設定新參數設為預設值
+        if ( sampleRate!=1||sampleRate!=30||sampleRate!=40||sampleRate!=60
+            || sensorOntime!=30|| timeToGetSample!=29|| pumpOnTime!=28||pumpingTime!=1 ) {//設定新參數設為預設值
             return true;//參數不正確須重置
         }
         else {
