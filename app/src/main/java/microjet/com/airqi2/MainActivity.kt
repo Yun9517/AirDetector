@@ -72,6 +72,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //電量icon
     private var battreyIcon:MenuItem?=null
 
+
+    private var connState = false
 /*
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
@@ -539,8 +541,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item!!.itemId) {
             R.id.batStatus -> {
-                dialogShow(getString(R.string.text_battery_title),
-                        getString(R.string.text_battery_value) + batValue + "%")
+                if(connState) {
+                    dialogShow(getString(R.string.text_battery_title),
+                            getString(R.string.text_battery_value) + batValue + "%")
+                }
             }
 
 /*
@@ -851,6 +855,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (intent.getStringExtra("status")) {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
                 -> {
+                    connState = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -870,6 +875,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {
+                    connState = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
@@ -888,6 +894,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                 }
                 "B6"->{
+                    connState = true
                     intent.getStringExtra("TVOCValue")
                     batValue=intent.getStringExtra("BatteryLife").toInt()
                     if (batValue>100){
