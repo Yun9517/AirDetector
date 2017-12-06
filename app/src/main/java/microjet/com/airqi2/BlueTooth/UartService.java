@@ -726,7 +726,22 @@ public class UartService extends Service {
 //        }
 //    }
 
+    public boolean CompareDufaultValue(ArrayList<String> RString){
+        int sampleRate,sensorOntime,timeToGetSample,pumpOnTime,pumpingTime;
+        sampleRate=Integer.parseInt(RString.get(0));
+        sensorOntime=Integer.parseInt(RString.get(1));
+        timeToGetSample=Integer.parseInt(RString.get(2));
+        pumpOnTime=Integer.parseInt(RString.get(3));
+        pumpingTime=Integer.parseInt(RString.get(4));
 
+        if ( sampleRate!=1&&sampleRate!=30&&sampleRate!=40&&sampleRate!=60
+            && sensorOntime!=30&& timeToGetSample!=29&& pumpOnTime!=28&&pumpingTime!=1 ) {//設定新參數設為預設值
+            return true;//參數不正確須重置
+        }
+        else {
+            return false;
+        }
+    }
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
         switch (txValue[2]) {
@@ -794,16 +809,17 @@ public class UartService extends Service {
                 case (byte) 0xB2:
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     setSampleRateTime(Integer.parseInt(RString.get(0)));
-                    int number=Integer.parseInt(RString.get(0));
+                  //  int number=Integer.parseInt(RString.get(0));
                     if (CallFromConnect) {//從connect來的呼叫，檢查是否是舊的參數是的話則修改參數
-                        if ( number!=1&&number!=30&&number!=40&&number!=60) {//設定新參數設為預設值
+                        if (CompareDufaultValue(RString)==true)
+                        {
                             int []array={1,30,29,28,1,0,0};
                             writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(array));
                         }
                         CallFromConnect=false;
                     }
                     else{
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                     }
                     break;
                 case (byte) 0xB4:
