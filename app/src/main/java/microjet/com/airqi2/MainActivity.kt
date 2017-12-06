@@ -35,6 +35,7 @@ import android.widget.Toast
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
+import microjet.com.airqi2.BlueTooth.UartService.mConnectionState
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.CustomAPI.Utils
 import microjet.com.airqi2.Definition.RequestPermission
@@ -241,14 +242,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStart() {
         super.onStart()
-        var intent = Intent("mainActivity")
-        intent.putExtra("status", "ACTION_GATT_DISCONNECTED")
-        updateUI(intent)
+        //var intent = Intent("mainActivity")
+        //.putExtra("status", "ACTION_GATT_DISCONNECTED")
+        //updateUI(intent)
 
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         var mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
-        if (mBluetoothDeviceAddress != "noValue") {
+        if (mBluetoothDeviceAddress != "noValue" && mConnectionState == 0) {
             val mainintent = Intent("Main")
             mainintent.putExtra("status", "connect")
             mainintent.putExtra("mac", mBluetoothDeviceAddress)
@@ -289,12 +290,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
 
-        val serviceIntent :Intent? = Intent("Main")
-        serviceIntent!!.putExtra("status", "disconnect")
-        sendBroadcast(serviceIntent)
+
     }
 
     override fun onDestroy() {
+
+        val serviceIntent :Intent? = Intent("Main")
+        serviceIntent!!.putExtra("status", "disconnect")
+        sendBroadcast(serviceIntent)
 
         val intent :Intent? = Intent(this, UartService::class.java)
         stopService(intent)
