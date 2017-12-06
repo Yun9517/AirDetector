@@ -880,7 +880,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
                     }
-                    else if(batValue in 23..65){
+                    else if(batValue in 33..65){
                         battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)
                         //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
                     }
