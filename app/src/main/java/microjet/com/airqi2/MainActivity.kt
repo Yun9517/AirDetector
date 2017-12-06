@@ -209,6 +209,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         */
 
+        val serviceIntent :Intent? = Intent(this, UartService::class.java)
+        startService(serviceIntent)
+
         setupDrawerContent(nvDrawerNavigation)
     }
 
@@ -237,8 +240,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var intent = Intent("mainActivity")
         intent.putExtra("status", "ACTION_GATT_DISCONNECTED")
         updateUI(intent)
-        val serviceIntent :Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        var mBluetoothDeviceAddress = share.getString("mac", "noValue")
+
+        if (mBluetoothDeviceAddress != "noValue") {
+            val mainintent = Intent("Main")
+            mainintent.putExtra("status", "connect")
+            mainintent.putExtra("mac", mBluetoothDeviceAddress)
+            sendBroadcast(mainintent)
+        }
         Log.d("MAIN","START")
     }
 
@@ -273,12 +284,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
 
-    }
-
-    override fun onDestroy() {
         val serviceIntent :Intent? = Intent("Main")
         serviceIntent!!.putExtra("status", "disconnect")
         sendBroadcast(serviceIntent)
+    }
+
+    override fun onDestroy() {
 
         val intent :Intent? = Intent(this, UartService::class.java)
         stopService(intent)
@@ -902,12 +913,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //val mainIntent = Intent("Main")
                 //mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
                 //sendBroadcast(mainIntent)
-            }else{
-                nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-                nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-//                val mainIntent = Intent("Main")
-//                mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
-//                sendBroadcast(mainIntent)
             }
         }
 

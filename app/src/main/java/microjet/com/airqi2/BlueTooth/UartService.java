@@ -274,6 +274,8 @@ public class UartService extends Service {
      * callback.
      */
     public boolean connect(final String address) {
+        mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
+        mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
@@ -311,18 +313,18 @@ public class UartService extends Service {
         //StartService後執行連線
         mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         mBluetoothAdapter = mBluetoothManager.getAdapter();
-        SharedPreferences share = getSharedPreferences("MACADDRESS", MODE_PRIVATE);
-        mBluetoothDeviceAddress = share.getString("mac", "noValue");
+//        SharedPreferences share = getSharedPreferences("MACADDRESS", MODE_PRIVATE);
+//        mBluetoothDeviceAddress = share.getString("mac", "noValue");
 
-        if (mBluetoothDeviceAddress != "noValue") {
-            //mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
-            //} else {
-            Intent mainintent = new Intent("Main");
-            mainintent.putExtra("status", "connect");
-            mainintent.putExtra("mac", mBluetoothDeviceAddress);
-            sendBroadcast(mainintent);
-            //connect(mBluetoothDeviceAddress);
-        }
+//        if (mBluetoothDeviceAddress != "noValue") {
+//            //mBluetoothDeviceAddress = intent.getStringExtra(BluetoothDevice.EXTRA_DEVICE);
+//            //} else {
+//            Intent mainintent = new Intent("Main");
+//            mainintent.putExtra("status", "connect");
+//            mainintent.putExtra("mac", mBluetoothDeviceAddress);
+//            sendBroadcast(mainintent);
+//            //connect(mBluetoothDeviceAddress);
+//        }
 
 
         //Intent mainIntent = new Intent("Main");
