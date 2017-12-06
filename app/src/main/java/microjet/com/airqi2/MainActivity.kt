@@ -9,11 +9,13 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.location.LocationManager
 import android.media.Image
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.IBinder
+import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
@@ -117,6 +119,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var mIsReceiverRegistered : Boolean = false
     private var mReceiver : MyBroadcastReceiver? = null
+    private var isGPSEnabled : Boolean = false
+    private var mLocationManager : LocationManager? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -251,6 +255,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             sendBroadcast(mainintent)
         }
         Log.d("MAIN","START")
+
     }
 
     override fun onResume() {
@@ -573,7 +578,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mTvocFg = TVOCFragment()
 
         mFragmentList.add(mMainFg)
-        mFragmentList.add(mTvocFg)
+        //mFragmentList.add(mTvocFg)
 
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
@@ -737,10 +742,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     //menuItem點下去後StartActivityResult等待回傳
     private fun blueToothShow() {
-        val i : Intent? = Intent(this,
+        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        isGPSEnabled = mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        if (!isGPSEnabled) {
+            setGPSEnabled()
+        } else {
+            val i : Intent? = Intent(this,
                 DeviceListActivity::class.java)
-        startActivity(i)
+            startActivity(i)
+        }
         //startActivityForResult(i,REQUEST_SELECT_DEVICE)
+    }
+
+    private fun setGPSEnabled() {
+        Toast.makeText(this, "無法取得定位，手機請開啟定位", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
     private fun blueToothdisconnect() {
@@ -863,8 +879,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 "B5"->{
                     var bundle= intent.getBundleExtra("result")
                     var data= bundle.getParcelableArrayList<myData>("resultSet")
-                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
+                    //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
                     //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
 
                 }
