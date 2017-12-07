@@ -510,7 +510,7 @@ public class UartService extends Service {
                     break;
                 case "setSampleRate":
                     int SampleTime = intent.getIntExtra("SampleTime", 1);
-                    int[] param = {SampleTime, SampleTime*30, SampleTime*30-1, SampleTime*30-2, 1, 0, 0};
+                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/3, /*SampleTime*30-*/2, 1, 0, 0};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
