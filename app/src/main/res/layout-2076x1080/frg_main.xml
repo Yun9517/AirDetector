@@ -59,7 +59,7 @@
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -72,7 +72,7 @@
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="100dp"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
