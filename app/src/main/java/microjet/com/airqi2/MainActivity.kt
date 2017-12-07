@@ -767,9 +767,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothdisconnect() {
-        val serviceIntent :Intent? = Intent("Main")
-        serviceIntent!!.putExtra("status", "disconnect")
-        sendBroadcast(serviceIntent)
+        if (UartService.mConnectionState != 0) {
+            val serviceIntent: Intent? = Intent("Main")
+            serviceIntent!!.putExtra("status", "disconnect")
+            sendBroadcast(serviceIntent)
+        }
         //stopService(serviceIntent)
     }
 
@@ -858,8 +860,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
                     nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
@@ -923,6 +925,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
             checkBluetooth()
+            checkConnection()
         }
 
 
