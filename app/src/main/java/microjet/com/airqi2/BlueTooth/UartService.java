@@ -281,7 +281,7 @@ public class UartService extends Service {
             return false;
         }
         // Previously connected device.  Try to reconnect.
-
+        // 會慢一點點連上去，但是可以保持一條主從的關係，如果拿掉會一直新增新的CLient Server到後期就會錯誤
         if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
@@ -299,12 +299,18 @@ public class UartService extends Service {
         }
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
-        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
+        //自動連線當裝置在範圍內時
+        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
         //enableTXNotification();
         return true;
+    }
+
+    //CallBack只能有一個實體的方法,NORDIC的作法，但如果用變數用 FINAL也是同樣意思
+    protected BluetoothGattCallback getGattCallback() {
+        return mGattCallback;
     }
 
     @Override
@@ -436,22 +442,25 @@ public class UartService extends Service {
     }
 
     public void writeRXCharacteristic(byte[] value) {
-        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-        if (RxService == null) {
-            showMessage("mBluetoothGatt null " + mBluetoothGatt);
-            showMessage("Rx service not found!");
-            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
+        //確定mBluetoothGatt存在才去取uuid
+        if (mBluetoothGatt != null) {
+            BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+            if (RxService == null) {
+                showMessage("mBluetoothGatt null " + mBluetoothGatt);
+                showMessage("Rx service not found!");
+                //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                return;
+            }
+            BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
+            if (RxChar == null) {
+                showMessage("Rx charateristic not found!");
+                //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                return;
+            }
+            RxChar.setValue(value);
+            boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
+            Log.d(TAG, "write TXchar - status=" + status);
         }
-        BluetoothGattCharacteristic RxChar = RxService.getCharacteristic(RX_CHAR_UUID);
-        if (RxChar == null) {
-            showMessage("Rx charateristic not found!");
-            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        RxChar.setValue(value);
-        boolean status = mBluetoothGatt.writeCharacteristic(RxChar);
-        Log.d(TAG, "write TXchar - status=" + status);
     }
 
     private void showMessage(String msg) {
@@ -497,6 +506,10 @@ public class UartService extends Service {
                     break;
                 case "connect":
                     connect(intent.getStringExtra("mac"));
+                    break;
+                case "close":
+                    disconnect();
+                    close();
                     break;
                 case "message":
                     break;

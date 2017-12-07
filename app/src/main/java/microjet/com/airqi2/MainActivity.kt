@@ -770,9 +770,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothdisconnect() {
+        //手動斷線改用close
         if (UartService.mConnectionState != 0) {
             val serviceIntent: Intent? = Intent("Main")
-            serviceIntent!!.putExtra("status", "disconnect")
+            serviceIntent!!.putExtra("status", "close")
             sendBroadcast(serviceIntent)
         }
         //stopService(serviceIntent)
@@ -928,9 +929,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
 
-
             checkConnection()
-            Log.d("ss","sss")
+            Log.d("MAINAC","UPDATEUI")
         }
 
 
