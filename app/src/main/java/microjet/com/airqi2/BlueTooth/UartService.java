@@ -50,7 +50,7 @@ public class UartService extends Service {
     public BluetoothAdapter mBluetoothAdapter;
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
-    public static int mConnectionState = 0;
+    public static int mConnectionState;
 
 
     private static final int STATE_DISCONNECTED = 0;

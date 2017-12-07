@@ -219,6 +219,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         startService(serviceIntent)
 
+        if (!mIsReceiverRegistered) {
+            if (mReceiver == null)
+                mReceiver = MyBroadcastReceiver()
+            registerReceiver(mReceiver, IntentFilter("mainActivity"))
+            mIsReceiverRegistered = true
+        }
+
         setupDrawerContent(nvDrawerNavigation)
     }
 
@@ -263,14 +270,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
-        if (!mIsReceiverRegistered) {
-            if (mReceiver == null)
-                mReceiver = MyBroadcastReceiver()
-            registerReceiver(mReceiver, IntentFilter("mainActivity"))
-            mIsReceiverRegistered = true
-        }
+
         requestPermissionsForBluetooth()
-        checkConnection()
 
 
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
@@ -282,11 +283,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPause() {
         super.onPause()
-        if (mIsReceiverRegistered) {
-            unregisterReceiver(mReceiver)
-            mReceiver = null
-            mIsReceiverRegistered = false
-        }
+
     }
 
     override fun onStop() {
@@ -296,6 +293,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onDestroy() {
+
+        if (mIsReceiverRegistered) {
+            unregisterReceiver(mReceiver)
+            mReceiver = null
+            mIsReceiverRegistered = false
+        }
 
         val serviceIntent :Intent? = Intent("Main")
         serviceIntent!!.putExtra("status", "disconnect")
@@ -858,13 +861,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
                 -> {
                     connState = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-                    btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+                    //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
+                    //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
+                    //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
                   /*  val intent: Intent? = Intent("Main")
                                          intent!!.putExtra("status", "callDeviceStartSample")*/
@@ -878,13 +881,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {
                     connState = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
                     nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
-                    nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-                    btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+                    //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
+                    //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
+                    //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
                 "B5"->{
@@ -924,24 +927,37 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
                 }
             }
-            checkBluetooth()
+
+
             checkConnection()
+            Log.d("ss","sss")
         }
 
 
         inner class MyBroadcastReceiver : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
                 updateUI(intent)
+                checkBluetooth()
+
             }
 
         }
-        private fun checkConnection() {
+        @Synchronized private fun checkConnection() {
             if (UartService.mConnectionState == 0) {
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+                nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
+                nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
+                btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                 //val mainIntent = Intent("Main")
                 //mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
                 //sendBroadcast(mainIntent)
+            } else {
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+                nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
+                nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
+                btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
             }
         }
 
