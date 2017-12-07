@@ -3,6 +3,7 @@ package microjet.com.airqi2.Fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.widget.AutoSizeableTextView
