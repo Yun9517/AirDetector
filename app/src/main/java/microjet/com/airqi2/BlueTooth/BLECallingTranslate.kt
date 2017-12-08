@@ -691,6 +691,7 @@ object CallingTranslate {
             }
             i++
         }
+        Log.d("PARSERB6",ReturnValue.toString())
         return ReturnValue
     }
     fun Byte.toPositiveInt() = toInt() and 0xFF

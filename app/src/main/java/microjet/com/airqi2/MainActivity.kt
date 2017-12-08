@@ -864,8 +864,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = true
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
@@ -884,12 +884,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = false
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+                    //nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-                    battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
+                    //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
                 "B5"->{
                     var bundle= intent.getBundleExtra("result")
@@ -940,8 +940,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 checkBluetooth()
 
             }
-
         }
+
         @Synchronized private fun checkConnection() {
             if (UartService.mConnectionState == 0) {
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
@@ -949,6 +949,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                 btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+                battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
                 //val mainIntent = Intent("Main")
                 //mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
                 //sendBroadcast(mainIntent)
@@ -958,6 +961,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                 btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
             }
         }
 

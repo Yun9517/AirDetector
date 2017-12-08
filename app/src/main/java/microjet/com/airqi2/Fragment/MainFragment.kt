@@ -51,9 +51,9 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
-        imgPanel = this.view!!.findViewById(R.id.imgPanel)
+        //imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
-        imgPanel!!.bringToFront()
+        //imgPanel!!.bringToFront()
      //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
     }
 
