@@ -8,7 +8,7 @@
     <string name="text_message_air_bad">空气质量很差\n建议改善通风或离开污染的环境\n长期处于此环境下\n会伤害人体的健康</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
-    <string name="text_label_co2">CO2</string>
+    <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">温度</string>
     <string name="text_label_humidity">湿度</string>
     <string name="text_default_value">65536</string>

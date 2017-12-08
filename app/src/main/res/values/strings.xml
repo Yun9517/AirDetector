@@ -8,10 +8,10 @@
     <string name="text_message_air_bad">空氣品質很差\n建議改善通風或離開汙染的環境\n長期處於此環境下\n會傷害人體的健康</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
-    <string name="text_label_co2">CO2</string>
+    <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">溫度</string>
     <string name="text_label_humidity">濕度</string>
-    <string name="text_default_value">65536</string>
+    <string name="text_default_value">----</string>
     <string name="text_label_auto_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_ststus_good">普通</string>
     <string name="text_label_ststus_mid">輕度污染</string>

@@ -9,9 +9,9 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_message_air_bad">Serious Pollution\nAir quality is horrible\nplease improve the ventilation or leave.\nTVOC is unhealthy, it will damage people health.</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
-    <string name="text_label_co2">CO2</string>
-    <string name="text_label_temperature">°C</string>
-    <string name="text_label_humidity">Humidity</string>
+    <string name="text_label_co2">eCO2</string>
+    <string name="text_label_temperature">Temp.</string>
+    <string name="text_label_humidity">RH</string>
     <string name="text_default_value">65536</string>
     <string name="text_label_auto_detect">TVOC</string>
     <string name="text_label_ststus_good">Mediocre </string> <!-- 原 Good-->
