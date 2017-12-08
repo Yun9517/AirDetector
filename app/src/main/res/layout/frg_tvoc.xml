@@ -120,10 +120,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
-        android:text="12:05"
+        android:textAlignment="center"
         android:textSize="26sp"
-        android:textStyle="normal"
-        android:textAlignment="center" />
+        android:textStyle="normal" />
 
     <TextView
         android:id="@+id/textVSelectDetectionValue"
@@ -131,10 +130,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center_vertical|fill_vertical"
-        android:text="783ppb"
+        android:textAlignment="center"
         android:textSize="26sp"
-        android:textStyle="normal"
-        android:textAlignment="center" />
+        android:textStyle="normal" />
 
     <TextView
         android:layout_width="wrap_content"
