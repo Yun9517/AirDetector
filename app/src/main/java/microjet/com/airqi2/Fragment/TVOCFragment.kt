@@ -67,7 +67,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mRadioGroup: RadioGroup? = null
 
     private var mHour: RadioButton? = null
-
+    private var mMyCharData:ArrayList<String>?=null
+    private var mMyCharLabel:ArrayList<String>?=null
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener: DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
@@ -112,6 +113,30 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var list = ArrayList<ArrayList<String>>()
     var bigTimeData = ArrayList<ArrayList<String>>()
     var smallTimeData = ArrayList<ArrayList<String>>()
+
+    //TestValue Start chungyen
+    val tvocArray = ArrayList<String>()
+    val timeArray = ArrayList<String>()
+    val batteryArray= ArrayList<String>()
+    fun setRealTimeBarData(Tvoc:String,Battery:String){
+        val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
+        val date = Date()
+        sdFormat.format(date)
+        timeArray.add(sdFormat.format(date))
+        tvocArray.add(Tvoc)
+        batteryArray.add(Battery)
+        mChart?.clear()
+        if (tvocArray.size>DATA_COUNT)
+            {tvocArray.removeAt(0)}
+        if (timeArray.size>DATA_COUNT)
+            {timeArray.removeAt(0)}
+        mChart?.data=getBarData2(tvocArray,timeArray)
+        mChart?.setVisibleXRangeMinimum(5.0f)
+        mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+        mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
+    }
+
+    //TestValue End chungyen
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
