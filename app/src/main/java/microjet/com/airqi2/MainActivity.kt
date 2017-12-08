@@ -932,7 +932,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     stringArray.add(intent.getStringExtra("TVOCValue"))
                     stringArray.add(intent.getStringExtra("CO2Value"))
                     stringArray.add(intent.getStringExtra("BatteryLife"))
-                    (mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
+                    //(mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TemperatureValue"))
                     //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
