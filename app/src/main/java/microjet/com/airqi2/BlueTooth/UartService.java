@@ -300,7 +300,7 @@ public class UartService extends Service {
         // We want to directly connect to the device, so we are setting the autoConnect
         // parameter to false.
         //自動連線當裝置在範圍內時
-        mBluetoothGatt = device.connectGatt(this, true, mGattCallback);
+        mBluetoothGatt = device.connectGatt(this, false, mGattCallback);
         Log.d(TAG, "Trying to create a new connection.");
         mBluetoothDeviceAddress = address;
         mConnectionState = STATE_CONNECTING;
@@ -424,21 +424,23 @@ public class UartService extends Service {
     }
 
     public void disableTXNotification() {
-        BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
-        if (RxService == null) {
-            showMessage("Rx service not found!");
-            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
+        if (mBluetoothGatt != null) {
+            BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+            if (RxService == null) {
+                showMessage("Rx service not found!");
+                //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+                return;
+            }
+            BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
+            if (TxChar == null) {
+                showMessage("Tx charateristic not found!");
+                //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
+                sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+                return;
+            }
+            mBluetoothGatt.setCharacteristicNotification(TxChar, false);
         }
-        BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
-        if (TxChar == null) {
-            showMessage("Tx charateristic not found!");
-            //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
-            sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
-            return;
-        }
-        mBluetoothGatt.setCharacteristicNotification(TxChar, false);
     }
 
     public void writeRXCharacteristic(byte[] value) {
