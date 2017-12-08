@@ -897,7 +897,13 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                     Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", "B6");
+
+                    mainIntent.putExtra("TEMPValue", RString.get(0));
+                    mainIntent.putExtra("HUMIValue", RString.get(1));
+
                     mainIntent.putExtra("TVOCValue", RString.get(2));
+
+                    mainIntent.putExtra("eCO2Value", RString.get(3));
                     mainIntent.putExtra("BatteryLife", RString.get(4));
                     sendBroadcast(mainIntent);
                     break;

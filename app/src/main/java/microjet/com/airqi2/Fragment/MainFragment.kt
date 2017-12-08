@@ -75,16 +75,16 @@ class MainFragment : Fragment() {
 
     }
      @SuppressLint("SetTextI18n")
-     fun setBar1CurrentValue(currentValue: String) {
-         bar1?.setCurrentValues(currentValue.toFloat())
-         if (currentValue.toFloat() < 221){
+     fun setBar1CurrentValue(tempVal: String, humiVal: String, tvocVal: String, co2Val: String, pm25Val: String) {
+         bar1?.setCurrentValues(tvocVal.toFloat())
+         if (tvocVal.toFloat() < 221){
              textView?.text = getString(R.string.text_message_air_good)
              tvocStatus?.text = getString(R.string.text_label_ststus_good)
 
              tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Good))
              tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Good))
          }
-         else if (currentValue.toFloat() > 661) {
+         else if (tvocVal.toFloat() > 661) {
              textView?.text = getString(R.string.text_message_air_bad)
              tvocStatus?.text = getString(R.string.text_label_ststus_bad)
 
@@ -101,7 +101,7 @@ class MainFragment : Fragment() {
      // ********* 2017/12/05 主頁面大小字 ************************************************* //
          var temp = ""
 
-         temp = currentValue + " ppb "
+         temp = tvocVal + " ppb "
 
          val textSpan = SpannableStringBuilder(temp)
 
@@ -111,6 +111,14 @@ class MainFragment : Fragment() {
 
          tvocValue2?.text = textSpan
          //tvocValue?.text = textSpan
+         tvocValue?.text = tvocVal + " ppb"
+         pmValue?.text = pm25Val
+         carbonValue?.text = co2Val + " ppm"
+         tempValue?.text = tempVal + " ℃"
+         wetValue?.text = humiVal + " %"
+
+         Log.v("MainFragment", "收到數值 - 溫度: $tempVal, 濕度: $humiVal ,TVOC: $tvocVal ppb, 二氧化碳: $co2Val, PM2.5: $pm25Val")
+
      // *********************************************************************************** //
     }
 }
