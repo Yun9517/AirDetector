@@ -52,7 +52,7 @@ class ColorArcProgressBar : View {
     private var rotateMatrix: Matrix? = null
 
     private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)
-
+    private var range= floatArrayOf(30f,70f)
     private var mTouchInvalidateRadius: Float = 0.toFloat()//触摸失效半径,控件外层都可触摸,当触摸区域小于这个值的时候触摸失效
 
     private val startAngle = 135f//开始角度(0°与控件X轴平行)
@@ -135,14 +135,15 @@ class ColorArcProgressBar : View {
         val color1 = a.getColor(R.styleable.ColorArcProgressBar_front_color1, Color.GREEN)
         val color2 = a.getColor(R.styleable.ColorArcProgressBar_front_color2, color1)
         val color3 = a.getColor(R.styleable.ColorArcProgressBar_front_color3, color1)
-
+        var threadhold1=30f
+        var threadhold2=70f
         bgArcColor = a.getColor(R.styleable.ColorArcProgressBar_bg_arc_color, -0xeeeeef)
         longDegreeColor = a.getColor(R.styleable.ColorArcProgressBar_degree_color, -0xeeeeef)
         shortDegreeColor = a.getColor(R.styleable.ColorArcProgressBar_degree_color, -0xeeeeef)
         hintColor = a.getColor(R.styleable.ColorArcProgressBar_hint_color, -0x989899)
 
         colors = intArrayOf(color1, color2, color3, color3)
-
+        range = floatArrayOf(threadhold1,threadhold2)
         sweepAngle = a.getInteger(R.styleable.ColorArcProgressBar_sweep_angle, 270).toFloat()
         bgArcWidth = a.getDimension(R.styleable.ColorArcProgressBar_bg_arc_width, dipToPx(10f).toFloat())
         progressWidth = a.getDimension(R.styleable.ColorArcProgressBar_front_width, dipToPx(10f).toFloat())
@@ -329,15 +330,20 @@ class ColorArcProgressBar : View {
      */
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
-    //    k = sweepAngle / maxValues
-        setRangeValues(floatArrayOf(220f,440f,maxValues-660f))
+        setRangeValues(floatArrayOf(range[0],range[1]-range[0],maxValues-range[1]))
+    }
+    fun setThreadholdValue(Range:FloatArray){
+       for ( i in 0 until range.size) {
+            range[i]=Range[i]
+        }
     }
     private var k: FloatArray = floatArrayOf(0f,0f,0f) //(0-220
    // private var m: Float=0.toFloat()   // 220-660
   //  private var q: Float=0.toFloat()    //660-MaxValue
     /**
      * 设置區間值
-     *
+     *角度與數值分配
+     * k=角度/數值
      * @param Values
      */
     fun setRangeValues(Values: FloatArray) {
@@ -345,7 +351,6 @@ class ColorArcProgressBar : View {
             k[i]= 90/(Values[i])
         }
     }
-
     /**
      * 设置当前值
      *
@@ -361,12 +366,12 @@ class ColorArcProgressBar : View {
         }
         this.currentValues = currentValues
         lastAngle = currentAngle
-        if (currentValues<=220){
+        if (currentValues<=range[0]){
             setAnimation(lastAngle, currentValues * k[0], aniSpeed)}
-        else if (currentValues>220 && currentValues<=660){
-            setAnimation(lastAngle, (currentValues-220) * k[1]+90, aniSpeed)}
+        else if (currentValues>range[0] && currentValues<=range[1]){
+            setAnimation(lastAngle, (currentValues-range[0]) * k[1]+90, aniSpeed)}
         else{
-            setAnimation(lastAngle, (currentValues-660) * k[2]+180, aniSpeed)}
+            setAnimation(lastAngle, (currentValues-range[1]) * k[2]+180, aniSpeed)}
     }
     private fun setAnimation(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)

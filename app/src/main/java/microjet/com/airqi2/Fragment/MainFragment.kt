@@ -33,7 +33,8 @@ class MainFragment : Fragment() {
     private var mContext : Context? = null
 
     private var bar1 : ColorArcProgressBar? = null
-
+    private var ThreadHold1:TextView?=null
+    private var ThreadHold2:TextView?=null
     private var imgPanel: ImageView? = null
 
     //private var tvocValue2: TextView?=null
@@ -51,14 +52,20 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
-        //imgPanel = this.view!!.findViewById(R.id.imgPanel)
+        ThreadHold1=this.view?.findViewById(R.id.textView13)
+        ThreadHold2=this.view?.findViewById(R.id.textView14)
 
-        //imgPanel!!.bringToFront()
+    //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
+
+     //   imgPanel!!.bringToFront()
      //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
     }
 
     override fun onResume() {
         super.onResume()
+        val range1:Float=ThreadHold1?.text.toString().toFloat()
+        val range2:Float=ThreadHold2?.text.toString().toFloat()
+        bar1?.setThreadholdValue(floatArrayOf(range1,range2))
         bar1?.setMaxValues(1000f)
        // bar1!!.setCurrentValues(10f)
     }
