@@ -61,7 +61,10 @@ class MainReceiver : BroadcastReceiver() {
             "B6"->{
                 var mainIntent = Intent("mainActivity")
                 mainIntent.putExtra("status","B6")
+                mainIntent.putExtra("TemperatureValue",intent.getStringExtra("TemperatureValue"))
+                mainIntent.putExtra("HumidityValue",intent.getStringExtra("HumidityValue"))
                 mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+                mainIntent.putExtra("CO2Value",intent.getStringExtra("CO2Value"))
                 mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
                 context.sendBroadcast(mainIntent)
 

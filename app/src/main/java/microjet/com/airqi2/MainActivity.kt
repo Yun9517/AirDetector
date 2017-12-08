@@ -44,6 +44,7 @@ import microjet.com.airqi2.Fragment.TVOCFragment
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -588,7 +589,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mTvocFg = TVOCFragment()
 
         mFragmentList.add(mMainFg)
-        //mFragmentList.add(mTvocFg)
+        mFragmentList.add(mTvocFg)
 
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
@@ -924,7 +925,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
+                   // (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue"))
+                    val stringArray=ArrayList<String>()
+                    stringArray.add(intent.getStringExtra("TemperatureValue"))
+                    stringArray.add(intent.getStringExtra("HumidityValue"))
+                    stringArray.add(intent.getStringExtra("TVOCValue"))
+                    stringArray.add(intent.getStringExtra("CO2Value"))
+                    stringArray.add(intent.getStringExtra("BatteryLife"))
+                    (mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
+                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TemperatureValue"))
+                    //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
+                    //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
                 }
             }
 

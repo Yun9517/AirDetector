@@ -869,7 +869,7 @@ public class UartService extends Service {
                         //   long yy= getSampleRateTime()*counter*60*1000;
                         //   long zz=getCorrectTime()*60*1000;
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
-                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateTime() * counter * 60 * 1000 - getCorrectTime() * 60 * 1000)));
+                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
                         if (NowItem >= getMaxItems()) {
                             NowItem = 0;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
@@ -897,7 +897,10 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                     Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", "B6");
+                    mainIntent.putExtra("TemperatureValue",RString.get(0));
+                    mainIntent.putExtra("HumidityValue",RString.get(1));
                     mainIntent.putExtra("TVOCValue", RString.get(2));
+                    mainIntent.putExtra("CO2Value", RString.get(3));
                     mainIntent.putExtra("BatteryLife", RString.get(4));
                     sendBroadcast(mainIntent);
                     break;
@@ -968,7 +971,7 @@ public class UartService extends Service {
         SampleRateTime = input;
     }
 
-    int getSampleRateTime() {
+    int getSampleRateUnit() {
         return SampleRateTime;
     }
 
@@ -1019,7 +1022,6 @@ public class UartService extends Service {
             CO2_Data = CO2;
             time = Time;
         }
-
         String Temperatur_Data;
         String Humidy_Data;
         String TVOC_Data;
