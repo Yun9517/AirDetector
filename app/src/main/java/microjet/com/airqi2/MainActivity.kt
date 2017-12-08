@@ -926,7 +926,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
 
-                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TEMPValue"),intent.getStringExtra("HUMIValue"),intent.getStringExtra("TVOCValue"),intent.getStringExtra("eCO2Value"),"On working")
+                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TEMPValue"),intent.getStringExtra("HUMIValue"),intent.getStringExtra("TVOCValue"),intent.getStringExtra("eCO2Value"),"coming soon")
 
                     val stringArray=ArrayList<String>()
                     stringArray.add(intent.getStringExtra("TemperatureValue"))
