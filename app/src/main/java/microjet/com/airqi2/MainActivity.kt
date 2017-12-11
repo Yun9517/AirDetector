@@ -927,14 +927,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
 
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TEMPValue"),intent.getStringExtra("HUMIValue"),intent.getStringExtra("TVOCValue"),intent.getStringExtra("eCO2Value"),"coming soon")
-
+/*
                     val stringArray=ArrayList<String>()
-                    stringArray.add(intent.getStringExtra("TemperatureValue"))
-                    stringArray.add(intent.getStringExtra("HumidityValue"))
+                    stringArray.add(intent.getStringExtra("TEMPValue"))
+                    stringArray.add(intent.getStringExtra("HUMIValue"))
                     stringArray.add(intent.getStringExtra("TVOCValue"))
-                    stringArray.add(intent.getStringExtra("CO2Value"))
+                    stringArray.add(intent.getStringExtra("eCO2Value"))
                     stringArray.add(intent.getStringExtra("BatteryLife"))
-                    //(mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
+                    (mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
+                    */
                     //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
                     //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
