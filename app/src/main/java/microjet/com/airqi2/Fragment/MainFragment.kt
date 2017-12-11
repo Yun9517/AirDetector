@@ -208,11 +208,11 @@ class MainFragment : Fragment() {
     }
     fun setCurrentValue(currentValue:ArrayList<String>){
         DetectorValue=currentValue
-        tvocValue?.text=currentValue[2]
-        pmValue?.text="on working"
-        carbonValue?.text=currentValue[3]
-        tempValue?.text=currentValue[0]
-        wetValue?.text=currentValue[1]
+        tvocValue?.text=currentValue[2] + " ppb"
+        pmValue?.text="Coming soon"
+        carbonValue?.text=currentValue[3] + " ppm"
+        tempValue?.text=currentValue[0] + " ℃"
+        wetValue?.text=currentValue[1] + " %"
 
     }
      @SuppressLint("SetTextI18n")

@@ -59,7 +59,7 @@
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -72,7 +72,7 @@
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="120dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
@@ -106,7 +106,7 @@
 
     <LinearLayout
         android:layout_width="275dp"
-        android:layout_height="120dp"
+        android:layout_height="130dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
         android:background="@drawable/message_block_background"
@@ -149,8 +149,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -167,7 +167,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -178,15 +178,15 @@
                     android:layout_weight="1"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imgDivider1"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
@@ -203,7 +203,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_pm25"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -214,7 +214,7 @@
                     android:layout_weight="1"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -223,8 +223,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -241,7 +241,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_co2"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -252,7 +252,7 @@
                     android:layout_weight="1"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -260,8 +260,8 @@
                 android:id="@+id/imgDivider2"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
@@ -278,7 +278,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_temperature"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -289,7 +289,7 @@
                     android:layout_weight="1"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
 
             </LinearLayout>
 
@@ -297,8 +297,8 @@
                 android:id="@+id/imgDivider3"
                 android:layout_width="wrap_content"
                 android:layout_height="30dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
@@ -315,7 +315,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_humidity"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -326,7 +326,7 @@
                     android:layout_weight="1"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
         </LinearLayout>
