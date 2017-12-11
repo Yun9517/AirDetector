@@ -126,6 +126,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var isGPSEnabled : Boolean = false
     private var mLocationManager : LocationManager? = null
 
+    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+    private var drawerDeviceAddress : String? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -862,6 +865,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
                 -> {
                     connState = true
+                    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+                    drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                     //nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -972,7 +977,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             } else {
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
+                //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
+                nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                 btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true

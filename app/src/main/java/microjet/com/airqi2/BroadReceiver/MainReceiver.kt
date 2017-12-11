@@ -38,6 +38,8 @@ class MainReceiver : BroadcastReceiver() {
             -> {
                 var mainIntent = Intent("mainActivity")
                 mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
+                // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+                mainIntent.putExtra("macAddress", intent.getStringExtra("macAddress"))
                 context.sendBroadcast(mainIntent)
             }
             "disconnect" -> {

@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
+import microjet.com.airqi2.MainActivity;
 import microjet.com.airqi2.myData;
 import microjet.com.airqi2.R;
 
@@ -130,6 +131,8 @@ public class UartService extends Service {
 
                     Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", intentAction);
+                    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+                    mainIntent.putExtra("macAddress", mBluetoothDeviceAddress);
                     sendBroadcast(mainIntent);
                     break;
                 }
