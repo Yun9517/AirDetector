@@ -276,6 +276,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onResume()
 
         requestPermissionsForBluetooth()
+        checkBluetooth()
 
 
         //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
@@ -896,14 +897,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
-                "B5"->{
-                    var bundle= intent.getBundleExtra("result")
-                    var data= bundle.getParcelableArrayList<myData>("resultSet")
-                    //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
-                    //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
-
-                }
+                "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
                     connState = true
                     intent.getStringExtra("TVOCValue")
@@ -947,7 +941,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                 }
             }
-
             checkConnection()
             Log.d("MAINAC","UPDATEUI")
         }
@@ -955,9 +948,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         inner class MyBroadcastReceiver : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent) {
-                updateUI(intent)
-                checkBluetooth()
-
+                //updateUI(intent)
+                //checkBluetooth()
+                when (intent.getStringExtra("status")) {
+                    "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
+                    -> { updateUI(intent) }
+                    "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
+                    -> { updateUI(intent) }
+                    "B5" -> {
+                        var bundle= intent.getBundleExtra("result")
+                        var data= bundle.getParcelableArrayList<myData>("resultSet")
+                        //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                        //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
+                        //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
+                    }
+                    "B6" -> { updateUI(intent) }
+                }
             }
         }
 
@@ -971,9 +977,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-                //val mainIntent = Intent("Main")
-                //mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
-                //sendBroadcast(mainIntent)
             } else {
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
