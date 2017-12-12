@@ -59,7 +59,7 @@
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="150dp"
+                    android:layout_width="138dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -68,11 +68,11 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="30sp" />
+                    android:textSize="34sp" />
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="150dp"
+                    android:layout_width="138dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
@@ -105,8 +105,8 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="275dp"
-        android:layout_height="120dp"
+        android:layout_width="290dp"
+        android:layout_height="110dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
         android:background="@drawable/message_block_background"
