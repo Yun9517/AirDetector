@@ -30,6 +30,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
@@ -928,6 +929,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     mWaitLayout!!.visibility = View.VISIBLE
                     mWaitLayout!!.bringToFront()
                     mPageVp!!.setPagingEnabled(false)
+                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(
+                            intent.getStringExtra("TEMPValue"),
+                            intent.getStringExtra("HUMIValue"),
+                            intent.getStringExtra("TVOCValue"),
+                            intent.getStringExtra("eCO2Value"),
+                            "coming soon")
+
+                    var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt()).toString()
+                    mWaitLayout?.findViewById<TextView>(R.id.textView18)?.text = sec + "秒"
                 }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
@@ -936,7 +947,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     displayBatteryLife(intent)
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TEMPValue"),intent.getStringExtra("HUMIValue"),intent.getStringExtra("TVOCValue"),intent.getStringExtra("eCO2Value"),"coming soon")
+                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(
+                            intent.getStringExtra("TEMPValue"),
+                            intent.getStringExtra("HUMIValue"),
+                            intent.getStringExtra("TVOCValue"),
+                            intent.getStringExtra("eCO2Value"),
+                            "coming soon")
 /*
                     val stringArray=ArrayList<String>()
                     stringArray.add(intent.getStringExtra("TEMPValue"))

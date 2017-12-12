@@ -823,7 +823,13 @@ public class UartService extends Service {
                 case (byte) 0xB0:
                     RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
                     mainIntent.putExtra("status", "B0");
+                    mainIntent.putExtra("TEMPValue", RString.get(0));
+                    mainIntent.putExtra("HUMIValue", RString.get(1));
+                    mainIntent.putExtra("TVOCValue", RString.get(2));
+                    mainIntent.putExtra("eCO2Value", RString.get(3));
+                    //mainIntent.putExtra("PM25", RString.get(4));
                     mainIntent.putExtra("BatteryLife", RString.get(5));
+                    mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
                     break;
                 case (byte) 0xB1:
