@@ -60,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="220dp"
+                    android:layout_width="290dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -69,11 +69,11 @@
                     android:gravity="center"
                     android:text="----"
                     android:textAlignment="center"
-                    android:textSize="36sp" />
+                    android:textSize="60sp" />
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="220dp"
+                    android:layout_width="270dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
