@@ -818,9 +818,13 @@ public class UartService extends Service {
             //   final CallingTranslate CT = new CallingTranslate();
             ArrayList<String> RString;
             String val;
+            Intent mainIntent = new Intent("Main");
             switch (txValue[2]) {
                 case (byte) 0xB0:
                     RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
+                    mainIntent.putExtra("status", "B0");
+                    mainIntent.putExtra("BatteryLife", RString.get(5));
+                    sendBroadcast(mainIntent);
                     break;
                 case (byte) 0xB1:
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
@@ -874,7 +878,6 @@ public class UartService extends Service {
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
                             Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
-                            Intent mainIntent = new Intent("Main");
                             mainIntent.putExtra("status", "B5");
                             Bundle data = new Bundle();
                             data.putParcelableArrayList("resultSet", myDeviceData);
@@ -893,7 +896,6 @@ public class UartService extends Service {
                     break;
                 case (byte) 0xB6:
                     RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
-                    Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", "B6");
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));

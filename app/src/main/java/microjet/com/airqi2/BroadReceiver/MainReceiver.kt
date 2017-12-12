@@ -59,7 +59,6 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "close")
                 context.sendBroadcast(mainIntent)
             }
-
             "B6"->{
                 var mainIntent = Intent("mainActivity")
                 mainIntent.putExtra("status","B6")
@@ -72,6 +71,12 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
                 context.sendBroadcast(mainIntent)
 
+            }
+            "B0"->{
+                var mainIntent = Intent("mainActivity")
+                mainIntent.putExtra("status","B0")
+                mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+                context.sendBroadcast(mainIntent)
             }
             "B5"->{
                 var mainIntent = Intent("mainActivity")
@@ -147,7 +152,6 @@ class MainReceiver : BroadcastReceiver() {
                 Log.d("MAINRECIVER","ERROR")
             }
         }
-
     }
 
     companion object {

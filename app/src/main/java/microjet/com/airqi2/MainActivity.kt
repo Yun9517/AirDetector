@@ -849,6 +849,34 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return intentF
     }
 
+    private fun displayBatteryLife(intent: Intent){
+        batValue=intent.getStringExtra("BatteryLife").toInt()
+        if (batValue>100){
+            battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_charge)
+            batValue = batValue - 100
+            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_charge)
+        }
+        else if(batValue in 66..100){
+            battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
+            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
+        }
+        else if(batValue in 33..65){
+            battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)
+            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
+        }
+        else if (batValue in 10..32){
+            battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_1grid)
+            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
+        }
+        else {
+            battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
+        }
+        // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
+        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+
+        (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
+    }
+
 
 
     private val mServiceConnection = object : ServiceConnection {
@@ -891,34 +919,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                 }
+                "B0"->{
+                    displayBatteryLife(intent)
+                }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
                     connState = true
                     intent.getStringExtra("TVOCValue")
-                    batValue=intent.getStringExtra("BatteryLife").toInt()
-                    if (batValue>100){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_charge)
-                        batValue = batValue - 100
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_charge)
-                    }
-                    else if(batValue in 66..100){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_full)
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
-                    }
-                    else if(batValue in 33..65){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_2grid)
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
-                    }
-                    else if (batValue in 10..32){
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_1grid)
-                        //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
-                    }
-                    else {
-                        battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
-                    }
+                    displayBatteryLife(intent)
                    // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-
                     (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(intent.getStringExtra("TEMPValue"),intent.getStringExtra("HUMIValue"),intent.getStringExtra("TVOCValue"),intent.getStringExtra("eCO2Value"),"coming soon")
 /*
                     val stringArray=ArrayList<String>()
