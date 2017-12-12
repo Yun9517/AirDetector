@@ -52,6 +52,7 @@ public class UartService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     public static int mConnectionState;
+    private BroadcastReceiver mMainReceiver;
 
 
     private static final int STATE_DISCONNECTED = 0;
@@ -255,6 +256,11 @@ public class UartService extends Service {
         IntentFilter filter = new IntentFilter("Main");
         registerReceiver(mMainReceiver,filter);
         */
+        mMainReceiver = new MainReceiver();
+        IntentFilter filter = new IntentFilter("Main");
+        //intent.setClass(this, MainReceiver.class);
+        this.registerReceiver(mMainReceiver,filter);
+
 
         if (!mIsReceiverRegistered) {
             if (mReceiver == null) {
@@ -497,6 +503,7 @@ public class UartService extends Service {
         //unregisterReceiver(mMainReceiver);
         disconnect();
         unregisterReceiver(mReceiver);
+        unregisterReceiver(mMainReceiver);
         close();
         super.onDestroy();
     }
