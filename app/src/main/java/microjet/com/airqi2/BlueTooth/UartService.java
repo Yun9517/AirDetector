@@ -528,7 +528,7 @@ public class UartService extends Service {
                     break;
                 case "setSampleRate":
                     int SampleTime = intent.getIntExtra("SampleTime", 1);
-                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/3, /*SampleTime*30-*/2, 1, 0, 0};
+                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/15, /*SampleTime*30-*/2, 1, 0, 0};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
@@ -829,17 +829,9 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     setSampleRateTime(Integer.parseInt(RString.get(0)));
                   //  int number=Integer.parseInt(RString.get(0));
-                    if (CallFromConnect) {//從connect來的呼叫，檢查是否是舊的參數是的話則修改參數
-                        if (CompareDufaultValue(RString)==true)
-                        {
-                            int []array={1,30,29,28,1,0,0};
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(array));
-                        }
-                        CallFromConnect=false;
-                    }
-                    else{
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
-                    }
+
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+
                     break;
                 case (byte) 0xB4:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
@@ -903,16 +895,12 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                     Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", "B6");
-
-
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));
-
                     mainIntent.putExtra("TVOCValue", RString.get(2));
-
                     mainIntent.putExtra("eCO2Value", RString.get(3));
-
-                    mainIntent.putExtra("BatteryLife", RString.get(4));
+                    //mainIntent.putExtra("PM25", RString.get(4));
+                    mainIntent.putExtra("BatteryLife", RString.get(5));
                     sendBroadcast(mainIntent);
                     break;
             }

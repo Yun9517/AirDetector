@@ -878,12 +878,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
                   /*  val intent: Intent? = Intent("Main")
                                          intent!!.putExtra("status", "callDeviceStartSample")*/
-                    handler.postDelayed({
-                        val intent: Intent? = Intent("Main")
-                        intent!!.putExtra("status", "getSampleRate")
-                        intent!!.putExtra("callFromConnect", "yes")
-                        sendBroadcast(intent)
-                    }, (3 * 1000).toLong())
                 }
                 "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                 -> {

@@ -657,7 +657,6 @@ object CallingTranslate {
                             value = 0
                         }
                         10->{//Preheater
-
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
@@ -730,7 +729,7 @@ object CallingTranslate {
             }
             i++
         }
-        Log.d("PARSERB6",ReturnValue.toString())
+        Log.d("PARSERB0",ReturnValue.toString())
         return ReturnValue
     }
 
