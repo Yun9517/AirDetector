@@ -18,6 +18,7 @@ import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.Definition.SavePreferences
 import android.widget.AdapterView
 import android.widget.Toast
+import io.realm.Realm
 import microjet.com.airqi2.Fragment.TVOCFragment
 
 
@@ -63,6 +64,15 @@ class SettingActivity : AppCompatActivity() {
 
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY,0)
         //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
+
+        //測試資料庫讀是否成功
+        /*
+        var realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        query.equalTo("TVOCValue", "16")
+        val result1 = query.findAllAsync()
+        Toast.makeText(this,result1.first()?.created_time.toString(),Toast.LENGTH_SHORT).show()
+        */
 
 
 

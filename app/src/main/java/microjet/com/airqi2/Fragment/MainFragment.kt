@@ -223,7 +223,7 @@ class MainFragment : Fragment() {
             m_flagTemp = flag
         }
     }
-    private fun getDateTime(): String {
+    fun getDateTime(): String {
         val sdFormat = SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN)
         val date = Date().time
         return sdFormat.format(date)

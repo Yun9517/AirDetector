@@ -30,11 +30,14 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.view.*
+import kotlinx.android.synthetic.main.frg_main.*
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.BlueTooth.UartService.mConnectionState
+import microjet.com.airqi2.BroadReceiver.MainReceiver
 import microjet.com.airqi2.CustomAPI.CustomViewPager
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.CustomAPI.Utils
@@ -43,6 +46,7 @@ import microjet.com.airqi2.Fragment.MainFragment
 import microjet.com.airqi2.Fragment.TVOCFragment
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -132,6 +136,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171212 Raymond added Wait screen
     private var mWaitLayout: RelativeLayout? = null
     private var mainLayout: LinearLayout? = null
+    private var mMainReceiver : BroadcastReceiver? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -231,6 +236,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 mReceiver = MyBroadcastReceiver()
             registerReceiver(mReceiver, IntentFilter("mainActivity"))
             mIsReceiverRegistered = true
+        }
+
+        //Use Realm
+        val realm = Realm.getDefaultInstance() // opens "myrealm.realm"
+        try {
+            // ... Do something ...
+        } finally {
+            realm.close()
         }
 
         setupDrawerContent(nvDrawerNavigation)
@@ -937,8 +950,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             intent.getStringExtra("eCO2Value"),
                             "coming soon")
 
-                    var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt()).toString()
-                    mWaitLayout?.findViewById<TextView>(R.id.textView18)?.text = sec + "秒"
+                    var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt())
+                    mWaitLayout?.findViewById<TextView>(R.id.textView18)?.text = sec.toString() + "秒"
+                    //120秒預熱畫面消失
+                    if (intent.getStringExtra("PreheatCountDown") == "255")
+                    {   mWaitLayout!!.visibility = View.INVISIBLE
+                        mWaitLayout!!.bringToFront()
+                    }
+                    //更新時間
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                    val date = Date()
+                    lastDetectTime?.text = dateFormat.format(date).toString()
+                    //(mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(1)
+                    mPageVp!!.setPagingEnabled(true)
+
                 }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{

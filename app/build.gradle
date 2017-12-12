@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'realm-android'
+
 android {
     compileSdkVersion 26
     defaultConfig {
@@ -20,6 +22,14 @@ android {
     buildToolsVersion '27.0.0'
     productFlavors {
     }
+    realm {
+        syncEnabled = true
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

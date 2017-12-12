@@ -34,6 +34,8 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.UUID;
 
+import io.realm.Realm;
+import microjet.com.airqi2.AsmDataModel;
 import microjet.com.airqi2.BroadReceiver.MainReceiver;
 import microjet.com.airqi2.MainActivity;
 import microjet.com.airqi2.myData;
@@ -52,7 +54,7 @@ public class UartService extends Service {
     private String mBluetoothDeviceAddress;
     private BluetoothGatt mBluetoothGatt;
     public static int mConnectionState;
-    private BroadcastReceiver mMainReceiver;
+    private static BroadcastReceiver mMainReceiver;
 
 
     private static final int STATE_DISCONNECTED = 0;
@@ -93,6 +95,8 @@ public class UartService extends Service {
 
     private Boolean mIsReceiverRegistered = false;
     private MyBroadcastReceiver mReceiver = null;
+    private Realm realm;
+
 
     //    public UartService() { //建構式
 //    }
@@ -256,10 +260,6 @@ public class UartService extends Service {
         IntentFilter filter = new IntentFilter("Main");
         registerReceiver(mMainReceiver,filter);
         */
-        mMainReceiver = new MainReceiver();
-        IntentFilter filter = new IntentFilter("Main");
-        //intent.setClass(this, MainReceiver.class);
-        this.registerReceiver(mMainReceiver,filter);
 
 
         if (!mIsReceiverRegistered) {
@@ -270,6 +270,13 @@ public class UartService extends Service {
                 //LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
             }
         }
+        realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
+        try {
+            // ... Do something ...
+        } finally {
+            realm.close();
+        }
+
     }
 
 
@@ -503,8 +510,8 @@ public class UartService extends Service {
         //unregisterReceiver(mMainReceiver);
         disconnect();
         unregisterReceiver(mReceiver);
-        unregisterReceiver(mMainReceiver);
         close();
+        realm.close();
         super.onDestroy();
     }
 
@@ -885,6 +892,24 @@ public class UartService extends Service {
                         //   long zz=getCorrectTime()*60*1000;
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
+                        Realm realm = Realm.getDefaultInstance();
+                        Number num = realm.where(AsmDataModel.class).max("id");
+                        int nextID;
+                        if(num == null) {
+                            nextID = 1;
+                        } else {
+                            nextID = num.intValue() + 1;
+                        }
+                        realm.executeTransaction(r -> {
+                            AsmDataModel asmData = r.createObject(AsmDataModel.class,nextID);
+                            asmData.setTEMPValue(RString.get(1));
+                            asmData.setHUMIValue(RString.get(2));
+                            asmData.setTVOCValue(RString.get(3));
+                            asmData.seteCO2Value(RString.get(4));
+                            asmData.setCreated_time(getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000));
+                        });
+                        realm.close();
+
                         if (NowItem >= getMaxItems()) {
                             NowItem = 0;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
