@@ -872,9 +872,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
         }
         // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
-        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-
-        (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
     }
 
 
@@ -955,7 +952,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //updateUI(intent)
                 //checkBluetooth()
                 when (intent.getStringExtra("status")) {
-                    "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
+                    "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING","B0","B6"
                     -> { updateUI(intent) }
                     "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
                     -> { updateUI(intent) }
@@ -966,7 +963,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
                     }
-                    "B6" -> { updateUI(intent) }
+                    //"B6" -> { updateUI(intent) }
                 }
             }
         }
