@@ -949,7 +949,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
                     //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
-
+                    (mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(intent.getStringExtra("flag").toInt())
                     // 20171212 Raymond added Wati screen
                     mWaitLayout!!.visibility = View.INVISIBLE
                     mainLayout!!.bringToFront()

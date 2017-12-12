@@ -106,7 +106,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="420dp"
+        android:layout_width="425dp"
         android:layout_height="215dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
@@ -121,11 +121,24 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_msgbox" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="20sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:textSize="16sp" />
+            <TextView
+                android:id="@+id/lastDetectTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end"
+                android:layout_weight="0.3"
+                android:textSize="16sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -177,7 +190,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -213,7 +226,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -251,7 +264,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -288,7 +301,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -325,7 +338,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>

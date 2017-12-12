@@ -16,6 +16,8 @@ import android.widget.TextView
 import kotlinx.android.synthetic.main.frg_main.*
 import microjet.com.airqi2.CustomAPI.ColorArcProgressBar
 import microjet.com.airqi2.R
+import java.text.SimpleDateFormat
+import java.util.*
 
 /**
  * Created by ray650128 on 2017/11/23.
@@ -24,7 +26,6 @@ import microjet.com.airqi2.R
 class MainFragment : Fragment() {
 
     private var mContext : Context? = null
-
     private var bar1 : ColorArcProgressBar? = null
     private var ThreadHold1:TextView?=null
     private var ThreadHold2:TextView?=null
@@ -40,6 +41,7 @@ class MainFragment : Fragment() {
 
     private var imgPanel: ImageView? = null
     private var LabelText:TextView?=null
+    private var LastDetecterTime:TextView?=null
     private var pressed="TVOC"//0=temperature 1=humidity 2=TVOC 3=CO2
     private var DetectorValue=ArrayList<String>()
     //private var tvocValue2: TextView?=null
@@ -121,6 +123,8 @@ class MainFragment : Fragment() {
             textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             tvocValue2?.text = textSpan
         }
+
+        LastDetecterTime=this.view?.findViewById(R.id.lastDetectTime)
     //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
      //   imgPanel!!.bringToFront()
@@ -205,6 +209,24 @@ class MainFragment : Fragment() {
     override fun onStop() {
         super.onStop()
 
+    }
+    var m_flagTemp=0
+    fun setGetTimeFlag(flag:Int) {
+        if (flag == m_flagTemp) {
+            //no change
+        } else {//change
+            if (flag>m_flagTemp)//jude 0 to 1 or 1 to 0
+            {
+                LastDetecterTime?.text = getDateTime()
+
+            }
+            m_flagTemp = flag
+        }
+    }
+    private fun getDateTime(): String {
+        val sdFormat = SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN)
+        val date = Date().time
+        return sdFormat.format(date)
     }
     fun setCurrentValue(currentValue:ArrayList<String>){
         DetectorValue=currentValue

@@ -69,6 +69,7 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("eCO2Value",intent.getStringExtra("eCO2Value"))
 
                 mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+                mainIntent.putExtra("flag",intent.getStringExtra("flag"))
                 context.sendBroadcast(mainIntent)
 
             }

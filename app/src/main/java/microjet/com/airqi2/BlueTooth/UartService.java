@@ -903,6 +903,7 @@ public class UartService extends Service {
                     mainIntent.putExtra("eCO2Value", RString.get(3));
                     //mainIntent.putExtra("PM25", RString.get(4));
                     mainIntent.putExtra("BatteryLife", RString.get(5));
+                    mainIntent.putExtra("flag",RString.get(6));
                     sendBroadcast(mainIntent);
                     break;
             }

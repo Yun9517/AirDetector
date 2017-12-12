@@ -8,15 +8,16 @@
 
     <RelativeLayout
         android:id="@+id/tvocPanel"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
+        android:layout_width="325dp"
+        android:layout_height="325dp"
         android:layout_centerHorizontal="true">
 
         <microjet.com.airqi2.CustomAPI.ColorArcProgressBar
             android:id="@+id/tvocBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerInParent="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             app:bg_arc_color="@android:color/black"
             app:bg_arc_width="23dp"
             app:front_color1="@color/progressBarStartColor"
@@ -32,8 +33,8 @@
             app:sweep_angle="270" />
 
         <RelativeLayout
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:layout_width="225dp"
+            android:layout_height="225dp"
             android:layout_centerInParent="true"
             android:background="@drawable/circle_panel"
             android:id="@+id/relativeLayout">
@@ -66,7 +67,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/test_result_background_green"
                     android:gravity="center"
-                    android:text="----"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="34sp" />
 
@@ -78,7 +79,7 @@
                     android:layout_marginTop="5dp"
                     android:background="@drawable/test_result_background_green"
                     android:gravity="center"
-                    android:text="----"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -98,7 +99,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/relativeLayout"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="5dp"
             android:layout_toEndOf="@+id/relativeLayout"
             android:text="@string/text_tvoc_meter_660ppb" />
 
@@ -106,7 +107,7 @@
 
     <LinearLayout
         android:layout_width="275dp"
-        android:layout_height="130dp"
+        android:layout_height="125dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
         android:background="@drawable/message_block_background"
@@ -120,11 +121,24 @@
             android:scaleType="fitXY"
             android:src="@drawable/ic_msgbox" />
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:textSize="12sp" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
+                android:textSize="12sp" />
+            <TextView
+                android:id="@+id/lastDetectTime"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="end"
+                android:layout_weight="0.3"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 

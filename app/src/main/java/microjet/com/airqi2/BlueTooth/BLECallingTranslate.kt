@@ -656,7 +656,7 @@ object CallingTranslate {
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
-                        10->{//Preheater
+                        10->{//flag 0 for old 1 for new
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
