@@ -1,27 +1,62 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <me.kaelaela.verticalviewpager.VerticalViewPager
-        android:id="@+id/id_page_vp"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
- <!--   <android.support.v4.view.ViewPager
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/waitLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/blackTransparentColor"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="false"
+                android:text="請稍候..."
+                android:textColor="@color/whiteColor"
+                android:textSize="30sp" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView15"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="29dp"
+                android:text="貼心小提醒：裝置開機後需等待兩分鐘"
+                android:textColor="@color/whiteColor" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <microjet.com.airqi2.CustomAPI.CustomViewPager
+                android:id="@+id/id_page_vp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <!--   <android.support.v4.view.ViewPager
         android:id="@+id/id_page_vp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </android.support.v4.view.ViewPager>
 -->
-</LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/navigation"

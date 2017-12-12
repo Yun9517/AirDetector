@@ -28,14 +28,13 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import me.kaelaela.verticalviewpager.VerticalViewPager
 import microjet.com.airqi2.BlueTooth.DeviceListActivity
 import microjet.com.airqi2.BlueTooth.UartService
 import microjet.com.airqi2.BlueTooth.UartService.mConnectionState
+import microjet.com.airqi2.CustomAPI.CustomViewPager
 import microjet.com.airqi2.CustomAPI.FragmentAdapter
 import microjet.com.airqi2.CustomAPI.Utils
 import microjet.com.airqi2.Definition.RequestPermission
@@ -55,7 +54,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val mFragmentList = ArrayList<Fragment>()
 
     // ViewPager
-    private var mPageVp: VerticalViewPager? = null
+    private var mPageVp: CustomViewPager? = null
 
     // var viewPager = VerticalViewPager()
     // ViewPager目前頁面
@@ -80,7 +79,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     var dateSetListener : DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
 */
-
 
 
 
@@ -129,6 +127,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
     private var drawerDeviceAddress : String? = null
 
+
+    // 20171212 Raymond added Wait screen
+    private var mWaitLayout: RelativeLayout? = null
+    private var mainLayout: LinearLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -584,6 +586,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
         nvDrawerNavigation = this.findViewById(R.id.navigation)
         nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+
+
+        // 20171212 Raymond added Wait screen
+        mWaitLayout = this.findViewById(R.id.waitLayout)
+        mainLayout = this.findViewById(R.id.mainLayout)
     }
 
     @Suppress("DEPRECATION")
@@ -918,6 +925,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 "B0"->{
                     displayBatteryLife(intent)
+                    mWaitLayout!!.visibility = View.VISIBLE
+                    mWaitLayout!!.bringToFront()
+                    mPageVp!!.setPagingEnabled(false)
                 }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
@@ -940,6 +950,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
                     //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
 
+                    // 20171212 Raymond added Wati screen
+                    mWaitLayout!!.visibility = View.INVISIBLE
+                    mainLayout!!.bringToFront()
+                    mPageVp!!.setPagingEnabled(true)
                 }
             }
             checkConnection()
