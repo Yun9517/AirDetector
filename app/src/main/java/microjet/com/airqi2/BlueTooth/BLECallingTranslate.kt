@@ -477,42 +477,12 @@ object CallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        2//sample time Year
+                        2//sample status
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        3//sample time month
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        4//sample time date
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        5//sample time hour
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        6//sample time minute
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        7//sample time second
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        8//sample status
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        9//correct time
+                        3//correct time
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
@@ -666,22 +636,30 @@ object CallingTranslate {
                             value = 0
                             stringHex = ""
                         }
-                        3 -> {//Humidity
+                        2-> {//Humidity
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        5 -> {//TVOC
+                        4-> {//TVOC
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        7-> {//CO2
+                        6-> {//CO2
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        8->{//battery life
+                        8->{//PM25
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            value = 0
+                        }
+                        9->{//battery life
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            value = 0
+                        }
+                        10->{//Preheater
 
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
-                          //  value = 0
+                            value = 0
                         }
                         else -> {
                         }
@@ -694,5 +672,68 @@ object CallingTranslate {
         Log.d("PARSERB6",ReturnValue.toString())
         return ReturnValue
     }
+
+    fun GetAllSensor(bytes: ByteArray): ArrayList<String> {
+        val ReturnValue = ArrayList<String>()
+        var CountTemp = 0
+        var stringHex = ""
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i = i + 1//point to DataLength
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                i = i + 1//point to CMD;
+                for (j in 0 until CountTemp - 2) {
+                    i = i + 1//Point to DataValue
+                    //    stringHex+=Integer.toString( ( bytes[i] & 0xff ) + 0x100, 16).substring( 1 );
+                    value = value shl 8
+                    value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1-> {//Temperature
+                            value = -45 + 175 * value / 65535
+                            value -= 6
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                            stringHex = ""
+                        }
+                        2-> {//Humidity
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        4-> {//TVOC
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        6-> {//CO2
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        8->{//PM25
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            value = 0
+                        }
+                        9->{//battery life
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            value = 0
+                        }
+                        10->{//Preheater
+
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i = i + 1//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        Log.d("PARSERB6",ReturnValue.toString())
+        return ReturnValue
+    }
+
+
     fun Byte.toPositiveInt() = toInt() and 0xFF
 }

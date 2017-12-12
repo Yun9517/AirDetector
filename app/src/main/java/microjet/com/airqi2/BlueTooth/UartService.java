@@ -819,6 +819,9 @@ public class UartService extends Service {
             ArrayList<String> RString;
             String val;
             switch (txValue[2]) {
+                case (byte) 0xB0:
+                    RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
+                    break;
                 case (byte) 0xB1:
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
                     break;
