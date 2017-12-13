@@ -775,7 +775,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
-
+     fun loadDeviceData(){
+        val intent: Intent? = Intent("Main")
+        intent!!.putExtra("status", "getSampleRate")
+        sendBroadcast(intent)
+    }
     //menuItem點下去後StartActivityResult等待回傳
     private fun blueToothShow() {
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -1041,7 +1045,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                 btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
-                nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
+                nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             }
         }
 

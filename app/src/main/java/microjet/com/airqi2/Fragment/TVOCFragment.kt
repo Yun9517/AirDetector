@@ -34,6 +34,7 @@ import microjet.com.airqi2.AndyAirDBhelper
 import microjet.com.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
 import microjet.com.airqi2.CustomAPI.MyBarDataSet
+import microjet.com.airqi2.MainActivity
 import microjet.com.airqi2.R
 import microjet.com.airqi2.myData
 import java.sql.Time
@@ -118,6 +119,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     val tvocArray = ArrayList<String>()
     val timeArray = ArrayList<String>()
     val batteryArray= ArrayList<String>()
+    private var mButtonDataUpdate: Button? = null
     fun setRealTimeBarData(Tvoc:String,Battery:String){
         val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
         val date = Date()
@@ -138,6 +140,27 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     //TestValue End chungyen
 
+    /**
+    *
+    * @param conncetStatus for BlueTooth Connect Status
+     * true for connect
+     * false for disconnect
+    * //@return
+    */
+    fun setCurrentConnectStatusIcon(conncetStatus:Boolean){
+        if (conncetStatus) {
+            mButtonDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_connect)
+            mButtonDataUpdate?.isEnabled = conncetStatus
+        }
+        else {
+            mButtonDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_disconnect)
+            mButtonDataUpdate?.isEnabled = conncetStatus
+        }
+    }
+    fun getDeviceData() {
+        val mainactivity : MainActivity =(getActivity()as MainActivity)
+        mainactivity.loadDeviceData()
+    }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
 
@@ -328,6 +351,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onNothingSelected() {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
 

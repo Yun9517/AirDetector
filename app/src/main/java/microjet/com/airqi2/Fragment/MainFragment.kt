@@ -98,7 +98,7 @@ class MainFragment : Fragment() {
             tvocValue2?.text = textSpan
         }
         textView5Temperature=this.view?.findViewById(R.id.textView5)
-        textView5Temperature?.setOnClickListener { pressed="temperature"
+    /*    textView5Temperature?.setOnClickListener { pressed="temperature"
             SetThresholdValue()
             SetbarMaxValue()
             bar1?.setCurrentValues(DetectorValue[0].toFloat())
@@ -123,7 +123,7 @@ class MainFragment : Fragment() {
             textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
             tvocValue2?.text = textSpan
         }
-
+        */
         LastDetecterTime=this.view?.findViewById(R.id.lastDetectTime)
     //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
@@ -131,7 +131,7 @@ class MainFragment : Fragment() {
      //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
     }
     private fun SetThresholdValue(){
-        when (pressed){
+        when (pressed){/*
             "temperature"->{
                 ThreadHold1?.text="20"
                 ThreadHold2?.text="50"
@@ -139,7 +139,7 @@ class MainFragment : Fragment() {
             "humidity"->{
                 ThreadHold1?.text="20"
                 ThreadHold2?.text="50"
-            }
+            }*/
             "TVOC"->{
                 ThreadHold1?.text="220"
                 ThreadHold2?.text="660"
@@ -160,13 +160,14 @@ class MainFragment : Fragment() {
         bar1?.setThreadholdValue(floatArrayOf(range1,range2))
     //    pressed="temperature"
         when (pressed){
-            "temperature"->{
+        /*    "temperature"->{
                 bar1?.setMaxValues(100f)
 
             }
             "humidity"->{
                 bar1?.setMaxValues(100f)
             }
+            */
             "TVOC"->{
                 bar1?.setMaxValues(1000f)
             }
@@ -185,13 +186,14 @@ class MainFragment : Fragment() {
         val range2:Float=ThreadHold2?.text.toString().toFloat()
         bar1?.setThreadholdValue(floatArrayOf(range1,range2))
     //    pressed="temperature"
-        when (pressed){
+        when (pressed){/*
             "temperature"->{
                 bar1?.setMaxValues(100f)
             }
             "humidity"->{
                 bar1?.setMaxValues(100f)
             }
+            */
             "TVOC"->{
                 bar1?.setMaxValues(1000f)
             }
@@ -233,10 +235,11 @@ class MainFragment : Fragment() {
         tvocValue?.text=currentValue[2] + " ppb"
         pmValue?.text="Coming soon"
         carbonValue?.text=currentValue[3] + " ppm"
-        tempValue?.text=currentValue[0] + " ℃"
-        wetValue?.text=currentValue[1] + " %"
+        tempValue?.text="Coming soon"/*currentValue[0] + " ℃"*/
+        wetValue?.text="Coming soon"/*currentValue[1] + " %"*/
 
     }
+
      @SuppressLint("SetTextI18n")
      fun setBar1CurrentValue(tempVal: String, humiVal: String, tvocVal: String, co2Val: String, pm25Val: String) {
 
