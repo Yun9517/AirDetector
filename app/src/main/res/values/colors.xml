@@ -10,6 +10,9 @@
     <color name="radioButtonInSelected">#78BAB4</color><!-- Radio Button In Selected -->
     <color name="radioButtonNormal">#8AE2D9</color><!-- Radio Button Normal -->
 
+    <!-- 直方圖頁面，Data Loading -->
+    <color name="data_Loading">#FFB400</color>
+
     <!-- Color for About Page -->
     <color name="AboutPageBackground">#EDF7F4</color>
     <color name="AboutTitle">#005041</color>
