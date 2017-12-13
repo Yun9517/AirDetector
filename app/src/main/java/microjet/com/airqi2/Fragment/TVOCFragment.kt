@@ -128,15 +128,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
     //    setFisrtChooseChartTimeLableAndData()
-        mChart?.clear()
-        if (tvocArray.size>DATA_COUNT)
-            {tvocArray.removeAt(0)}
-        if (timeArray.size>DATA_COUNT)
-            {timeArray.removeAt(0)}
-        mChart?.data=getBarData2(tvocArray,timeArray)
-        mChart?.setVisibleXRangeMinimum(5.0f)
-        mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-        mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
+        val radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
+
+        if (radioButtonID==R.id.radioButton_Hour) {
+            mChart?.clear()
+            if (tvocArray.size > DATA_COUNT) {
+                tvocArray.removeAt(0)
+            }
+            if (timeArray.size > DATA_COUNT) {
+                timeArray.removeAt(0)
+            }
+            mChart?.data = getBarData2(tvocArray, timeArray)
+            mChart?.setVisibleXRangeMinimum(5.0f)
+            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+            mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
+        }
     }
 
     //TestValue End chungyen
