@@ -906,7 +906,7 @@ public class UartService extends Service {
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
                             asmData.seteCO2Value(RString.get(4));
-                            asmData.setCreated_time(getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000));
+                            asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
                         });
                         realm.close();
 
