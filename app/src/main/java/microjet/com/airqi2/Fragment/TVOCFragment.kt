@@ -119,7 +119,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     val tvocArray = ArrayList<String>()
     val timeArray = ArrayList<String>()
     val batteryArray= ArrayList<String>()
-    private var mButtonDataUpdate: Button? = null
+    private var mImageViewDataUpdate: ImageView? = null
     fun setRealTimeBarData(Tvoc:String,Battery:String){
         val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
         val date = Date()
@@ -127,6 +127,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         timeArray.add(sdFormat.format(date))
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
+    //    setFisrtChooseChartTimeLableAndData()
         mChart?.clear()
         if (tvocArray.size>DATA_COUNT)
             {tvocArray.removeAt(0)}
@@ -149,17 +150,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     */
     fun setCurrentConnectStatusIcon(conncetStatus:Boolean){
         if (conncetStatus) {
-            mButtonDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_connect)
-            mButtonDataUpdate?.isEnabled = conncetStatus
+            mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_connect)
+            mImageViewDataUpdate?.isEnabled = conncetStatus
         }
         else {
-            mButtonDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_disconnect)
-            mButtonDataUpdate?.isEnabled = conncetStatus
+            mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_disconnect)
+            mImageViewDataUpdate?.isEnabled = conncetStatus
         }
     }
     fun getDeviceData() {
         val mainactivity : MainActivity =(getActivity()as MainActivity)
         mainactivity.loadDeviceData()
+    }
+    fun setFisrtChooseChartTimeLableAndData(){
+        mTextViewValue?.text = tvocArray.get(tvocArray.size-1)+ "ppb"
+        mTextViewTimeRange?.text = timeArray.get(timeArray.size-1)
+    //    mTextViewTimeRange?.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
@@ -182,7 +188,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart = this.view!!.findViewById(R.id.chart_line)
 
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
-
+        mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
+        mImageViewDataUpdate?.setOnClickListener {
+            getDeviceData()
+        }
         mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
             mChart?.clear()
             when (i) {

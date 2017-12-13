@@ -960,6 +960,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
+                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).setCurrentConnectStatusIcon(connState)
                   /*  val intent: Intent? = Intent("Main")
                                          intent!!.putExtra("status", "callDeviceStartSample")*/
                 }
@@ -974,6 +977,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                     //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
+                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).setCurrentConnectStatusIcon(connState)
                 }
                 "B0"->{
                     displayBatteryLife(intent)
@@ -1009,7 +1014,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     lastDetectTime?.text = dateFormat.format(date).toString()
                     //(mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(1)
                     mPageVp!!.setPagingEnabled(true)
-
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
                 }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
