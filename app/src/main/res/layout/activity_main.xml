@@ -13,9 +13,19 @@
         <RelativeLayout
             android:id="@+id/waitLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="40dp"
+            android:animateLayoutChanges="true"
             android:background="@color/blackTransparentColor"
             android:visibility="invisible">
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentStart="false"
+                android:layout_centerInParent="true"
+                android:layout_toStartOf="@+id/textView15" />
 
             <TextView
                 android:id="@+id/textView15"
@@ -23,19 +33,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:layout_centerVertical="false"
-                android:text="請稍候..."
+                android:text="@string/text_message_heating"
                 android:textColor="@color/whiteColor"
-                android:textSize="30sp" />
-
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView15"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="29dp"
-                android:text="貼心小提醒：裝置開機後需等待兩分鐘"
-                android:textColor="@color/whiteColor" />
+                android:textSize="20sp" />
         </RelativeLayout>
 
         <LinearLayout

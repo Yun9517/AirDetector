@@ -1,5 +1,9 @@
 package microjet.com.airqi2
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
+import android.animation.ValueAnimator
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
@@ -29,6 +33,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -808,6 +813,34 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //stopService(serviceIntent)
     }
 
+    private fun heatingPanelShow() {
+        mWaitLayout!!.visibility = View.VISIBLE
+        val va = createDropAnim(mWaitLayout!!, 0, 100)
+        va.start()
+    }
+    private fun heatingPanelHide() {
+        val origHeight: Int = mWaitLayout!!.height
+        val va: ValueAnimator = createDropAnim(mWaitLayout!!, origHeight,0)
+        va.addUpdateListener {  }
+        va.addListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                mWaitLayout!!.visibility = View.INVISIBLE
+            }
+        })
+        va.start()
+    }
+
+    private fun createDropAnim(view: View, start: Int, end: Int): ValueAnimator {
+        val va: ValueAnimator = ValueAnimator.ofInt(start, end)
+        va.addUpdateListener { valueAnimator ->
+            val value: Int = valueAnimator!!.animatedValue as Int     //根据时间因子的变化系数进行设置高度
+            val layoutParams: ViewGroup.LayoutParams = view.layoutParams
+            layoutParams.height = value
+            view.layoutParams = layoutParams    //设置高度
+        }
+        return va
+    }
+
 
     //視回傳的code執行相對應的動作
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -911,6 +944,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
         val handler: Handler=Handler()
+        @SuppressLint("SetTextI18n")
         private fun updateUI(intent : Intent) {
             when (intent.getStringExtra("status")) {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
@@ -943,7 +977,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 "B0"->{
                     displayBatteryLife(intent)
-                    mWaitLayout!!.visibility = View.VISIBLE
+
+                    if(mWaitLayout!!.visibility == View.INVISIBLE) {
+                        heatingPanelShow()
+                    }
+
+
                     mWaitLayout!!.bringToFront()
                     mPageVp!!.setPagingEnabled(false)
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
@@ -955,10 +994,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             "coming soon")
 
                     var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt())
-                    mWaitLayout?.findViewById<TextView>(R.id.textView18)?.text = sec.toString() + "秒"
+                    mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + sec.toString() + "秒"
                     //120秒預熱畫面消失
                     if (intent.getStringExtra("PreheatCountDown") == "255")
-                    {   mWaitLayout!!.visibility = View.INVISIBLE
+                    {
+                        if(mWaitLayout!!.visibility == View.VISIBLE) {
+                            heatingPanelHide()
+                        }
                         mWaitLayout!!.bringToFront()
                     }
                     //更新時間
@@ -996,7 +1038,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
                     (mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(intent.getStringExtra("flag").toInt())
                     // 20171212 Raymond added Wati screen
-                    mWaitLayout!!.visibility = View.INVISIBLE
+                    if(mWaitLayout!!.visibility == View.VISIBLE) {
+                        heatingPanelHide()
+                    }
                     mainLayout!!.bringToFront()
                     mPageVp!!.setPagingEnabled(true)
                 }

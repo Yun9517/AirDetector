@@ -101,4 +101,5 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_tvoc_meter_660ppb">660</string>
     <string name="text_navi_q_and_a">Q and A</string>
     <string name="text_navi_tour">Guide Tour</string>
+    <string name="text_message_heating">Please wait...</string>
 </resources>

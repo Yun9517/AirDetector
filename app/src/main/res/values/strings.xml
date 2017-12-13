@@ -102,4 +102,5 @@
     <string name="text_navi_q_and_a">常見問題</string>
     <string name="text_navi_tour">操作導覽</string>
     <string name="title_activity_tour">TourActivity</string>
+    <string name="text_message_heating">請稍候...</string>
 </resources>
