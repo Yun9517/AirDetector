@@ -944,8 +944,19 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         for (y in 1..61) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
-            var startTime = Date().time - 60 * 60 * 1000 * (hour*y)
+            //設定時間區間
+            var nowHourRemainer = Date().hours % 4
+//            when (nowHourRemainer) {
+//                0 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
+//                1 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
+//                2 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
+//                3 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
+//            }
+            var endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000
+            var startTime = endTime - 3600000 * (hour*y)
+
+            //var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
+            //var startTime = Date().time - 60 * 60 * 1000 * (hour*y)
             query.between("Created_time", startTime, endTime)
             //query.lessThan("Created_time",Date().time).greaterThan("Created_time",countTime)
             var result1 = query.findAll()
