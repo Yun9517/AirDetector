@@ -53,6 +53,7 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "connect")
                 mainIntent.putExtra("mac",macAddress)
                 context.sendBroadcast(mainIntent)
+                Log.d("MAINRECEIVER","CONNECT")
             }
             "close" -> {
                 var mainIntent = Intent("UartService")

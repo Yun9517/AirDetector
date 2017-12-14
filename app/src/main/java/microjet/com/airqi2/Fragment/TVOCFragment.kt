@@ -218,15 +218,19 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                   //  mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
-                    getRealmFour()
+                    getRealmFour(4)
                     mChart?.data = getBarData3(tvoc3,time3)
                 }
                 R.id.radioButton_Week -> {
-                    mChart?.data = getBarData()
+                    //mChart?.data = getBarData()
+                    getRealmFour(8)
+                    mChart?.data = getBarData3(tvoc3,time3)
                 }
                 R.id.radioButton_Month -> {
 
-                    mChart?.data = getBarData()
+                    //mChart?.data = getBarData()
+                    getRealmFour(12)
+                    mChart?.data = getBarData3(tvoc3,time3)
 
                 }
             }
@@ -920,14 +924,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var time3=ArrayList<String>()
     var tvoc3=ArrayList<String>()
 
-    private fun getRealmFour() {
+    private fun getRealmFour(hour:Int) {
         time3.clear()
         tvoc3.clear()
         for (y in 1..15) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            var endTime = Date().time - 60 * 60 * 1000 * (4*(y-1))
-            var startTime = Date().time - 60 * 60 * 1000 * (4*y)
+            var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
+            var startTime = Date().time - 60 * 60 * 1000 * (hour*y)
             query.between("Created_time", startTime, endTime)
             //query.lessThan("Created_time",Date().time).greaterThan("Created_time",countTime)
             var result1 = query.findAll()
@@ -950,7 +954,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvoc3.reverse()
         time3.reverse()
 
-        Toast.makeText(context,tvoc3.size.toString(),Toast.LENGTH_SHORT).show()
+        var realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        query.lessThan("Created_time", Date().time)
+        var result2 = query.findAll()
+        Toast.makeText(context,result2.size.toString(),Toast.LENGTH_SHORT).show()
     }
 
     private fun nothing() {
