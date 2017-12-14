@@ -30,7 +30,7 @@
             android:layout_weight="1"
             android:text="@string/No_Device_Connect"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:textColor="@android:color/black"
+            android:textColor="@color/progressBarMidColor"
             android:textSize="18sp" />
     </LinearLayout>
 
