@@ -215,7 +215,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                   //  mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
-                    getRealmFour(4)
+                    getRealmFour()
                     mChart?.data = getBarData3(tvoc3,time3)
                 }
                 R.id.radioButton_Week -> {
@@ -917,14 +917,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var time3=ArrayList<String>()
     var tvoc3=ArrayList<String>()
 
-    private fun getRealmFour(hour:Int) {
+    private fun getRealmFour() {
         time3.clear()
         tvoc3.clear()
         for (y in 1..15) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            var endTime = Date().time - 60 * 15 * 1000 * (hour*(y-1))
-            var startTime = Date().time - 60 * 15 * 1000 * (hour*y)
+            var endTime = Date().time - 60 * 60 * 1000 * (4*(y-1))
+            var startTime = Date().time - 60 * 60 * 1000 * (4*y)
             query.between("Created_time", startTime, endTime)
             //query.lessThan("Created_time",Date().time).greaterThan("Created_time",countTime)
             var result1 = query.findAll()
