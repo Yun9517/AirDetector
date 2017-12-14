@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            app:bg_arc_color="@color/whiteColor"
+            app:bg_arc_color="@color/whiteTransparentColor_80"
             app:bg_arc_width="23dp"
             app:front_color1="@color/progressBarStartColor"
             app:front_color2="@color/progressBarMidColor"
