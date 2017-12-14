@@ -961,7 +961,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                2 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //                3 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //            }
-
             //var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
             //var startTime = Date().time - 60 * 60 * 1000 * (hour*y)
             query.between("Created_time", startTime, endTime)
