@@ -215,7 +215,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                   //  mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
-                    getRealmFour()
+                    getRealmFour(4)
                     mChart?.data = getBarData3(tvoc3,time3)
                 }
                 R.id.radioButton_Week -> {
@@ -917,14 +917,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var time3=ArrayList<String>()
     var tvoc3=ArrayList<String>()
 
-    private fun getRealmFour() {
+    private fun getRealmFour(hour:Int) {
         time3.clear()
         tvoc3.clear()
-        for (y in 10 downTo 1) {
+        for (y in 1..15) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            var countTime = Date().time - 60 * 60 * 1000 * (4*y)
-            query.between("Created_time", countTime, Date().time)
+            var endTime = Date().time - 60 * 15 * 1000 * (hour*(y-1))
+            var startTime = Date().time - 60 * 15 * 1000 * (hour*y)
+            query.between("Created_time", startTime, endTime)
             //query.lessThan("Created_time",Date().time).greaterThan("Created_time",countTime)
             var result1 = query.findAll()
             if (result1.size != 0) {
@@ -935,7 +936,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 var aveTvoc = (sumTvoc / result1.size)
                 Log.d("getRealmFour", result1.last().toString())
                 tvoc3.add(aveTvoc.toString())
-                time3.add(result1.first()?.created_time.toString())
+                time3.add(endTime.toString())
             }
 
             //realm.executeTransaction { result1.deleteAllFromRealm() }
@@ -943,8 +944,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //tvoc3.add(i.tvocValue.toString())
         //time3.add(i.created_time.toString())
 
-        tvoc3.reversed()
-        time3.reversed()
+        tvoc3.reverse()
+        time3.reverse()
+
         Toast.makeText(context,tvoc3.size.toString(),Toast.LENGTH_SHORT).show()
     }
 
@@ -1000,7 +1002,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         val chartLabels = ArrayList<String>()
         for (i in 0 until time3.size) {
-            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            val dateFormat = SimpleDateFormat("MM/dd HH:mm")
             val date = dateFormat.format(input[i].toLong())
             chartLabels.add(date)
         }
