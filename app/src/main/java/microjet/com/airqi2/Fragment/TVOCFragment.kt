@@ -156,11 +156,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     */
     fun setCurrentConnectStatusIcon(conncetStatus:Boolean){
         if (conncetStatus) {
-            mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_connect)
+            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
             mImageViewDataUpdate?.isEnabled = conncetStatus
         }
         else {
-            mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_disconnect)
+            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
+        //    mImageViewDataUpdate?.setImageDrawable(resources.getDrawable(R.drawable.chart_update_icon_disconnect))
+        //    mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
             mImageViewDataUpdate?.isEnabled = conncetStatus
         }
     }
@@ -195,6 +197,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
         mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
+        mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
             getDeviceData()
         }
