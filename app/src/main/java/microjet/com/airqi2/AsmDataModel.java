@@ -14,7 +14,7 @@ public class AsmDataModel extends RealmObject {
     private String HUMIValue;
     private String TVOCValue;
     private String eCO2Value;
-    private String Created_time;
+    private Long Created_time;
 
     public Integer getDataId() {
         return id;
@@ -56,11 +56,11 @@ public class AsmDataModel extends RealmObject {
         this.eCO2Value = eCO2Value;
     }
 
-    public String getCreated_time() {
+    public Long getCreated_time() {
         return Created_time;
     }
 
-    public void setCreated_time(String Created_time) {
+    public void setCreated_time(Long Created_time) {
         this.Created_time = Created_time;
     }
 
