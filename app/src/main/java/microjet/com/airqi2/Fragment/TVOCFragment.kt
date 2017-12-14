@@ -927,7 +927,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getRealmFour(hour:Int) {
         time3.clear()
         tvoc3.clear()
-        for (y in 1..15) {
+        for (y in 1..61) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
@@ -943,6 +943,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 var aveTvoc = (sumTvoc / result1.size)
                 Log.d("getRealmFour", result1.last().toString())
                 tvoc3.add(aveTvoc.toString())
+                time3.add(endTime.toString())
+            }else{
+                tvoc3.add("0")
                 time3.add(endTime.toString())
             }
 
