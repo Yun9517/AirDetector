@@ -875,6 +875,9 @@ public class UartService extends Service {
                     Log.d("UART", "total item "+Integer.toString(getMaxItems()));
                    // Log.d("UART", "getItem 1");
                     if (getMaxItems() != 0) {
+                        mainIntent.putExtra("status", "MAXPROGRESSITEM");
+                        mainIntent.putExtra("MAXPROGRESSITEM", getMaxItems());
+                        sendBroadcast(mainIntent);
                         Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
                         Log.d("UART", "getItem 1");
                         NowItem = 0;
@@ -886,10 +889,15 @@ public class UartService extends Service {
                 case (byte) 0xB5:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
+
+
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
                         //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
                         //   long yy= getSampleRateTime()*counter*60*1000;
                         //   long zz=getCorrectTime()*60*1000;
+                        mainIntent.putExtra("status", "NOWPROGRESSITEM");
+                        mainIntent.putExtra("NOWPROGRESSITEM",NowItem);
+                        sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
                         Realm realm = Realm.getDefaultInstance();

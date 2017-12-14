@@ -121,6 +121,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     val tvocArray = ArrayList<String>()
     val timeArray = ArrayList<String>()
     val batteryArray= ArrayList<String>()
+    var mProgressBar:ProgressBar?=null
     private var mImageViewDataUpdate: ImageView? = null
     fun setRealTimeBarData(Tvoc:String,Battery:String){
         val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
@@ -156,7 +157,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
      * false for disconnect
     * //@return
     */
+    var mConnectStatus:Boolean=false
     fun setCurrentConnectStatusIcon(conncetStatus:Boolean){
+        mConnectStatus=conncetStatus
         if (conncetStatus) {
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
             mImageViewDataUpdate?.isEnabled = conncetStatus
@@ -171,6 +174,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     fun getDeviceData() {
         val mainactivity : MainActivity =(getActivity()as MainActivity)
         mainactivity.loadDeviceData()
+    }
+    fun setProgessBarMax(input:Int){
+        mProgressBar?.progress=0
+        mProgressBar?.max=input
+    }
+    fun setProgessBarNow(input:Int) {
+        mProgressBar?.progress=input
+    }
+    fun afterGetDeviceData(){
+        mImageViewDataUpdate?.isEnabled=mConnectStatus
     }
     fun setFisrtChooseChartTimeLableAndData(){
         mTextViewValue?.text = tvocArray.get(tvocArray.size-1)+ "ppb"
@@ -196,11 +209,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mRadioGroup = this.view?.findViewById(R.id.frg_radioGroup)
         mChart = this.view!!.findViewById(R.id.chart_line)
-
+        mProgressBar=this.view!!.findViewById(R.id.chartDataLoading)
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
         mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
+            mImageViewDataUpdate?.isEnabled =false
             getDeviceData()
         }
         mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
@@ -948,6 +962,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 tvoc3.add("0")
                 time3.add(endTime.toString())
             }
+
 
             //realm.executeTransaction { result1.deleteAllFromRealm() }
         }

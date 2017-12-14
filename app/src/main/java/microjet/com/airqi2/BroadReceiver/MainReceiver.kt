@@ -155,6 +155,18 @@ class MainReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }
+            "NOWPROGRESSITEM"->{
+            var mainIntent = Intent("mainActivity")
+            mainIntent.putExtra("status", "NOWPROGRESSITEM")
+            mainIntent.putExtra("NOWPROGRESSITEM",intent.getIntExtra("NOWPROGRESSITEM",0))
+            context.sendBroadcast(mainIntent)
+            }
+            "MAXPROGRESSITEM"->{
+                var mainIntent = Intent("mainActivity")
+                mainIntent.putExtra("status", "MAXPROGRESSITEM")
+                mainIntent.putExtra("MAXPROGRESSITEM",intent.getIntExtra("MAXPROGRESSITEM",0))
+                context.sendBroadcast(mainIntent)
+            }
             else -> {
                 Log.d("MAINRECIVER","ERROR")
             }

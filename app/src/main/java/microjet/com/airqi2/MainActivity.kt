@@ -944,7 +944,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
         val handler: Handler=Handler()
-        @SuppressLint("SetTextI18n")
+        var counter:Int=0
+        var TVOCAVG=0
+    @SuppressLint("SetTextI18n")
         private fun updateUI(intent : Intent) {
             when (intent.getStringExtra("status")) {
                 "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
@@ -980,18 +982,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setCurrentConnectStatusIcon(connState)
                 }
-                "B0"->{
+                "B0"-> {
                     displayBatteryLife(intent)
 
-                    if(mWaitLayout!!.visibility == View.INVISIBLE) {
+                    if (mWaitLayout!!.visibility == View.INVISIBLE) {
                         heatingPanelShow()
                     }
 
 
                     mWaitLayout!!.bringToFront()
                     mPageVp!!.setPagingEnabled(false)
-                    val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(0)as MainFragment).setBar1CurrentValue(
+                    val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(0) as MainFragment).setBar1CurrentValue(
                             intent.getStringExtra("TEMPValue"),
                             intent.getStringExtra("HUMIValue"),
                             intent.getStringExtra("TVOCValue"),
@@ -1001,9 +1003,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt())
                     mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + sec.toString() + "秒"
                     //120秒預熱畫面消失
-                    if (intent.getStringExtra("PreheatCountDown") == "255")
-                    {
-                        if(mWaitLayout!!.visibility == View.VISIBLE) {
+                    if (intent.getStringExtra("PreheatCountDown") == "255") {
+                        if (mWaitLayout!!.visibility == View.VISIBLE) {
                             heatingPanelHide()
                         }
                         mWaitLayout!!.bringToFront()
@@ -1014,7 +1015,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     lastDetectTime?.text = dateFormat.format(date).toString()
                     //(mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(1)
                     mPageVp!!.setPagingEnabled(true)
-                    (mFragmentAdapter.getItem(1)as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"),intent.getStringExtra("BatteryLife"))
+                    counter++
+                    TVOCAVG+=intent.getStringExtra("TVOCValue").toInt()
+                    if (counter % 15 == 0){
+                        counter=0
+                        TVOCAVG/=15
+                        (mFragmentAdapter.getItem(1) as TVOCFragment).setRealTimeBarData(TVOCAVG.toString(), intent.getStringExtra("BatteryLife"))
+                        TVOCAVG=0
+                    }
                 }
                 "B5"->{   Log.d("UPDATEUI","Nothing")   }
                 "B6"->{
@@ -1070,6 +1078,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
+                    }
+                    "NOWPROGRESSITEM"->{
+                        var nowitem= intent.getIntExtra("NOWPROGRESSITEM",0)
+                        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                        (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarNow(nowitem)
+
+                    }
+                    "MAXPROGRESSITEM"->{
+                       var maxitems=intent.getIntExtra("MAXPROGRESSITEM",0)
+                        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                        (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarMax(maxitems)
+
                     }
                     //"B6" -> { updateUI(intent) }
                 }
