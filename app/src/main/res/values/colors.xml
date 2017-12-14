@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="titleBarColor">#CC000000</color><!-- 標題列&海苔條色彩 11/30 Peter Change to #76CDC5 from #69bbb0 -->
+    <color name="titleBarColor">#B4B4B4</color><!-- 標題列&海苔條色彩 11/30 Peter Change to #76CDC5 from #69bbb0 -->
 
     <color name="progressBarStartColor">#00ff00</color><!-- 進度條起始色彩 -->
     <color name="progressBarMidColor">#ffff00</color><!-- 進度條中間色彩 -->
