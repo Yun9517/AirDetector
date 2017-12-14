@@ -214,7 +214,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
-            mImageViewDataUpdate?.isEnabled =false
+            //mImageViewDataUpdate?.isEnabled =false
             getDeviceData()
         }
         mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
@@ -941,19 +941,26 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getRealmFour(hour:Int) {
         time3.clear()
         tvoc3.clear()
+        var touchTime = Date().time
         for (y in 1..61) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             //設定時間區間
-            var nowHourRemainer = Date().hours % 4
-//            when (nowHourRemainer) {
+            var nowHourRemainer = 0
+            when (hour) {
+                4 -> {nowHourRemainer = Date().hours % 4}
+                8 -> {nowHourRemainer = Date().hours % 8}
+                12 -> {nowHourRemainer = Date().hours % 12}
+            }
+            var endTime = ((touchTime/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000
+            var startTime = endTime - (hour) * 3600000
+            Log.d("TimePeriod",((endTime-startTime)/3600000).toString() + "Hour")
+            //            when (nowHourRemainer) {
 //                0 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //                1 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //                2 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //                3 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //            }
-            var endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000
-            var startTime = endTime - 3600000 * (hour*y)
 
             //var endTime = Date().time - 60 * 60 * 1000 * (hour*(y-1))
             //var startTime = Date().time - 60 * 60 * 1000 * (hour*y)
