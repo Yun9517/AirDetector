@@ -392,6 +392,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //*********************************************************************************************
 // ------------------------------------------------------------------------------------------------------------------------------------------------
 
+        mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
 
     }
 
