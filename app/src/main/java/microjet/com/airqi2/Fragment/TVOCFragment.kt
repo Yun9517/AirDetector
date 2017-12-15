@@ -17,6 +17,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -414,7 +417,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
@@ -427,7 +430,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
 
     private fun getBarData(): BarData {
-        val dataSetA = MyBarDataSet(getChartData(), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData(), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
@@ -1022,7 +1025,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
 
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
@@ -1073,6 +1076,20 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             chartData.add(BarEntry(input[i].toFloat(), i))
         }
         return chartData
+    }
+
+
+    fun startUpdateDataAnimation() {
+        val operatingAnim: Animation = AnimationUtils.loadAnimation(mContext, R.anim.tip)
+        val lin = LinearInterpolator()
+        operatingAnim.interpolator = lin
+        mImageViewDataUpdate?.startAnimation(operatingAnim)
+        mImageViewDataUpdate?.isEnabled = false
+    }
+
+    fun stopUpdateDataAnimation() {
+        mImageViewDataUpdate?.clearAnimation()
+        mImageViewDataUpdate?.isEnabled = true
     }
 
 }
