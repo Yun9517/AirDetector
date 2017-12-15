@@ -984,6 +984,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
                     val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                     (mFragmentAdapter.getItem(1)as TVOCFragment).setCurrentConnectStatusIcon(connState)
+
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).stopUpdateDataAnimation()
+                    (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarNow(0)
                 }
                 "B0"-> {
                     displayBatteryLife(intent)
