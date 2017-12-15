@@ -974,11 +974,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             //設定時間區間
             var nowHourRemainer = 0
             when (hour) {
-                4 -> {nowHourRemainer = Date().hours % 4}
-                8 -> {nowHourRemainer = Date().hours % 8}
-                12 -> {nowHourRemainer = Date().hours % 12}
+                //將sql搜尋時間往後推至區間 4 8 12 16 20 24
+                4 -> {nowHourRemainer = 4 - (Date().hours % 4) }
+                8 -> {nowHourRemainer = 8 - (Date().hours % 8) }
+                12 -> {nowHourRemainer = 12 - (Date().hours % 12)}
             }
-            var endTime = ((touchTime/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000
+            var endTime = ((touchTime/3600000) + nowHourRemainer - (hour*(y-1))) * 3600000
             var startTime = endTime - (hour) * 3600000
             Log.d("TimePeriod",((endTime-startTime)/3600000).toString() + "Hour")
             //            when (nowHourRemainer) {
