@@ -123,6 +123,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     val batteryArray= ArrayList<String>()
     var mProgressBar:ProgressBar?=null
     private var mImageViewDataUpdate: ImageView? = null
+    var radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
+
+
     fun setRealTimeBarData(Tvoc:String,Battery:String){
         val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
         val date = Date()
@@ -131,7 +134,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
     //    setFisrtChooseChartTimeLableAndData()
-        val radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
+        //val radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
 
         if (radioButtonID==R.id.radioButton_Hour) {
             mChart?.clear()
@@ -227,7 +230,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //得到一个可写的数据库
              //       val db = dbHelper.getReadableDatabase()
                     //insertDB(db)
-                    mChart?.data=getBarData2(tvoc1,time1)
+                    mChart?.data = getBarData2(tvocArray, timeArray)
                     // SearchSQLlite()
                   //  mChart?.data = SearchSQLlite_Day()
                 }
@@ -404,9 +407,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onResume() {
         super.onResume()
+        //視Radio id畫圖
+        when (radioButtonID) {
+            0 -> {
+                mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+            1,2,3 -> {
+                mChart?.data = getBarData3(tvoc3,time3)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+        }
 
-        mChart!!.data = getBarData()
-        mChart?.setVisibleXRangeMaximum(5.0f)
+        //mChart!!.data = getBarData()
+        //mChart?.setVisibleXRangeMaximum(5.0f)
     }
 
     override fun onStop() {
@@ -1074,5 +1090,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
         return chartData
     }
+
 
 }
