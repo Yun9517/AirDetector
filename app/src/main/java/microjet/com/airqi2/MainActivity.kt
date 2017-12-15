@@ -34,6 +34,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import android.widget.*
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.view.*
@@ -1078,6 +1081,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
                         //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
+
+                        val mFragmentAdapter :FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+                        (mFragmentAdapter.getItem(1)as TVOCFragment).stopUpdateDataAnimation()
                     }
                     "NOWPROGRESSITEM"->{
                         var nowitem= intent.getIntExtra("NOWPROGRESSITEM",0)
@@ -1086,10 +1092,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                     }
                     "MAXPROGRESSITEM"->{
-                       var maxitems=intent.getIntExtra("MAXPROGRESSITEM",0)
-                        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
+                        var maxitems=intent.getIntExtra("MAXPROGRESSITEM",0)
+                        val mFragmentAdapter :FragmentAdapter = mPageVp?.adapter as FragmentAdapter
                         (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarMax(maxitems)
 
+                        (mFragmentAdapter.getItem(1)as TVOCFragment).startUpdateDataAnimation()
                     }
                     //"B6" -> { updateUI(intent) }
                 }

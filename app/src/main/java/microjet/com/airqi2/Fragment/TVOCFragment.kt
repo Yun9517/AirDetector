@@ -17,6 +17,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.AnimationUtils
+import android.view.animation.LinearInterpolator
 import android.widget.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -217,7 +220,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
-            mImageViewDataUpdate?.isEnabled =false
+            //mImageViewDataUpdate?.isEnabled =false
             getDeviceData()
         }
         mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
@@ -258,6 +261,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         })
 
         mHour!!.isChecked = true
+        mChart?.data = getBarData2(tvocArray, timeArray)
 
         configChartView()
 
@@ -425,25 +429,30 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //mChart?.setVisibleXRangeMaximum(5.0f)
     }
 
+    private fun cleanTextViewInTVOC() {
+        mTextViewValue?.text = ""
+        mTextViewTimeRange?.text = ""
+    }
+
     override fun onStop() {
         super.onStop()
     }
 
     private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
-
+        cleanTextViewInTVOC()
         return BarData(getLabels2(inputTime), dataSets)
     }
 
 
     private fun getBarData(): BarData {
-        val dataSetA = MyBarDataSet(getChartData(), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData(), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
@@ -1005,11 +1014,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvoc3.reverse()
         time3.reverse()
 
+        //顯示手機資料庫總筆數
+        /*
         var realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
         query.lessThan("Created_time", Date().time)
         var result2 = query.findAll()
         Toast.makeText(context,result2.size.toString(),Toast.LENGTH_SHORT).show()
+        */
     }
 
     private fun nothing() {
@@ -1038,14 +1050,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
 
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "LabelA")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
                 ContextCompat.getColor(context, R.color.progressBarEndColor)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
-
+        cleanTextViewInTVOC()
         return BarData(getLabels3(inputTime), dataSets)
     }
 
@@ -1091,5 +1103,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         return chartData
     }
 
+    fun startUpdateDataAnimation() {
+        val operatingAnim: Animation = AnimationUtils.loadAnimation(mContext, R.anim.tip)
+        val lin = LinearInterpolator()
+        operatingAnim.interpolator = lin
+        mImageViewDataUpdate?.startAnimation(operatingAnim)
+        mImageViewDataUpdate?.isEnabled = false
+    }
 
+    fun stopUpdateDataAnimation() {
+        mImageViewDataUpdate?.clearAnimation()
+        mImageViewDataUpdate?.isEnabled = true
+    }
 }

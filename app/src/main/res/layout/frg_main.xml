@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/new_background_2"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            app:bg_arc_color="@android:color/black"
+            app:bg_arc_color="@color/whiteTransparentColor_80"
             app:bg_arc_width="23dp"
             app:front_color1="@color/progressBarStartColor"
             app:front_color2="@color/progressBarMidColor"
@@ -36,7 +37,7 @@
             android:layout_width="250dp"
             android:layout_height="250dp"
             android:layout_centerInParent="true"
-            android:background="@drawable/circle_panel">
+            android:background="@drawable/circle_transparent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -50,35 +51,40 @@
                     android:id="@+id/textView2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView14"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="26dp"
                     android:gravity="center"
                     android:text="@string/text_label_auto_detect"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/tvocValue2"
-                    android:layout_width="120dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/test_result_background_green"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:text="----"
+                    android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/tvocStatus"
-                    android:layout_width="120dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
-                    android:background="@drawable/test_result_background_green"
+                    android:background="@android:color/transparent"
                     android:gravity="center"
-                    android:text="----"
+                    android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -92,6 +98,7 @@
             android:layout_marginEnd="10dp"
             android:layout_toStartOf="@+id/relativeLayout"
             android:text="@string/text_tvoc_meter_220ppb"
+            android:textColor="@color/whiteColor"
             android:textSize="18sp" />
 
         <TextView
@@ -102,6 +109,7 @@
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/relativeLayout"
             android:text="@string/text_tvoc_meter_660ppb"
+            android:textColor="@color/whiteColor"
             android:textSize="18sp" />
 
     </RelativeLayout>
@@ -111,7 +119,7 @@
         android:layout_height="100dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/message_block_background"
+        android:background="@android:color/transparent"
         android:orientation="horizontal"
         android:layout_marginBottom="7dp">
 
@@ -158,7 +166,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_alignParentBottom="true"
-        android:background="@drawable/bottom_layout_background"
+        android:background="#80000000"
         android:orientation="vertical">
 
         <LinearLayout
@@ -182,6 +190,7 @@
                     android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
                     android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -191,7 +200,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
-                    android:text="----"
+                    android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -199,7 +209,7 @@
             <ImageView
                 android:id="@+id/imgDivider1"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
@@ -219,6 +229,7 @@
                     android:text="@string/text_label_pm25"
                     android:textAlignment="center"
                     android:textSize="18sp"
+                    android:textColor="@color/whiteColor"
                     android:textStyle="bold" />
 
                 <TextView
@@ -228,6 +239,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="16sp" />
 
@@ -255,6 +267,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_co2"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -266,6 +279,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="16sp" />
 
@@ -274,7 +288,7 @@
             <ImageView
                 android:id="@+id/imgDivider2"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
@@ -292,6 +306,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_temperature"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -303,6 +318,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="16sp" />
 
@@ -311,7 +327,7 @@
             <ImageView
                 android:id="@+id/imgDivider3"
                 android:layout_width="wrap_content"
-                android:layout_height="30dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
@@ -329,6 +345,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_humidity"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -340,6 +357,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="16sp" />
             </LinearLayout>
