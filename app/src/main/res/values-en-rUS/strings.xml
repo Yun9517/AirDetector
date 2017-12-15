@@ -76,9 +76,9 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <!-- 2017/12/12 直方圖 暫時 改 -->
     <string name="TVOCUnit">ppb</string>
     <string name="frg_tvocRadioButtonHour">即時</string>
-    <string name="frg_tvocRadioButtonDay">4小時</string>
-    <string name="frg_tvocRadioButtonWeek">8小時</string>
-    <string name="frg_tvocRadioButtonMonth">12小時</string>
+    <string name="frg_tvocRadioButtonDay">4hr平均</string>
+    <string name="frg_tvocRadioButtonWeek">8hr平均</string>
+    <string name="frg_tvocRadioButtonMonth">12hr平均</string>
 
     <string name="text_setting_test_cycle">Choose a detect cycle</string>
     <string name="text_setting_allow_notification">Allow Notification</string>

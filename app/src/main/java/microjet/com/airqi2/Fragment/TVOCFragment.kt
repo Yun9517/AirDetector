@@ -137,9 +137,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
     //    setFisrtChooseChartTimeLableAndData()
-        //val radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
+        val radioButtonIDBar = mRadioGroup?.getCheckedRadioButtonId()
 
-        if (radioButtonID==R.id.radioButton_Hour) {
+        if (radioButtonIDBar == R.id.radioButton_Hour) {
             mChart?.clear()
             if (tvocArray.size > DATA_COUNT) {
                 tvocArray.removeAt(0)
