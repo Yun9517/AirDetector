@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Service
 import android.content.Context
+import android.content.SharedPreferences
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Vibrator
@@ -18,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.frg_main.*
 import microjet.com.airqi2.CustomAPI.ColorArcProgressBar
+import microjet.com.airqi2.Definition.SavePreferences
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
@@ -340,13 +342,17 @@ class MainFragment : Fragment() {
             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-
-            //20171219   Andy
-            mp.start ()
-            if (mVibrator == null) {
-            } else {
-                // 震动 1s
-                mVibrator!!.vibrate(1000)
+            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false)) {
+                //20171219   Andy
+                mp.start()
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,false)) {
+                if (mVibrator == null) {
+                } else {
+                    // 震动 1s
+                    mVibrator!!.vibrate(1000)
+                }
             }
         }
         else{
