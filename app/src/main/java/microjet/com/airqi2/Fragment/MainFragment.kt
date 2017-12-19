@@ -2,8 +2,11 @@ package microjet.com.airqi2.Fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Service
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.Vibrator
 import android.support.v4.app.Fragment
 import android.text.Spannable
 import android.text.SpannableStringBuilder
@@ -46,6 +49,12 @@ class MainFragment : Fragment() {
     private var DetectorValue=ArrayList<String>()
     //private var tvocValue2: TextView?=null
     @Suppress("OverridingDeprecatedMember")
+
+    //20171219   Andy
+    private var mp = MediaPlayer()
+    private var mVibrator: Vibrator? = null
+
+
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
 
@@ -129,6 +138,14 @@ class MainFragment : Fragment() {
 
      //   imgPanel!!.bringToFront()
      //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
+        //20171219   Andy
+        mp = MediaPlayer.create (mContext, R.raw.pixiedust)
+        // 初始化震动通知
+        if (isInitVibratorNotify()) {
+            mVibrator = mContext!!.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator?
+        }
+
+
     }
     private fun SetThresholdValue(){
         when (pressed){/*
@@ -323,6 +340,14 @@ class MainFragment : Fragment() {
             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+
+            //20171219   Andy
+            mp.start ()
+            if (mVibrator == null) {
+            } else {
+                // 震动 1s
+                mVibrator!!.vibrate(1000)
+            }
         }
         else{
             textView?.text = getString(R.string.text_message_air_mid)
@@ -331,5 +356,9 @@ class MainFragment : Fragment() {
             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
         }
+    }
+
+    protected fun isInitVibratorNotify(): Boolean {
+        return true
     }
 }
