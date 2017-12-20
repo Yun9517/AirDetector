@@ -868,7 +868,12 @@ public class UartService extends Service {
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
                     //取得當前時間
-                    Date date = new Date();
+                    //將時間秒數寫入設定為 00  或  30
+                    Long dateSecMil = new Date().getTime();
+                    Long dateSecChange  = (dateSecMil / 1000)/30 * (1000*30);
+                    //Log.d("0xB4",dateSecChange.toString());
+                    Date date = new Date(dateSecChange);
+                    Log.d("0xB4 Adjust_Time",date.toString());
                     setMyDate(date);
                     // String time=getDateTime();
                     // setGetDataTime(time);
@@ -900,6 +905,8 @@ public class UartService extends Service {
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
+
+                        //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         Number num = realm.where(AsmDataModel.class).max("id");
                         int nextID;
@@ -915,6 +922,7 @@ public class UartService extends Service {
                             asmData.setTVOCValue(RString.get(3));
                             asmData.seteCO2Value(RString.get(4));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
+                            Log.d("RealmTime",new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
 
