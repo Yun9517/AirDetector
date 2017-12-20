@@ -514,7 +514,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart!!.isScaleYEnabled = false
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-        leftAxis.setDrawLabels(true) // no axis labels
+        leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(false) // no grid lines
 
@@ -953,11 +953,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //試Realm拉資料
     var time3=ArrayList<String>()
     var tvoc3=ArrayList<String>()
+    var touchTime = Date().time
 
     private fun getRealmFour(hour:Int) {
         time3.clear()
         tvoc3.clear()
-        var touchTime = Date().time
+        //touchTime = Date().time
         for (y in 1..61) {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
@@ -1072,6 +1073,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             val date = dateFormat.format(input[i].toLong())
             chartLabels.add(date)
         }
+        Log.d("TVOCGETLABEL3",chartLabels.lastIndex.toString())
         return chartLabels
     }
 
