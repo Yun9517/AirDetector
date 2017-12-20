@@ -366,7 +366,6 @@ class MainFragment : Fragment() {
             {
 
                 if ((countsound660 == 5 || countsound660 == 0)) {
-
                     //20171220   Andy
                     try {
                         alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
