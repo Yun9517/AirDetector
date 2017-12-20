@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="microjet.com.airqi2.Fragment.TVOCFragment">
+    tools:context="com.microjet.airqi2.Fragment.TVOCFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -178,12 +178,12 @@
             android:textAlignment="gravity" />
     </RelativeLayout>
 
-    <microjet.com.airqi2.CustomAPI.FixBarChart
+    <com.microjet.airqi2.CustomAPI.FixBarChart
         android:id="@+id/chart_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp">
 
-    </microjet.com.airqi2.CustomAPI.FixBarChart>
+    </com.microjet.airqi2.CustomAPI.FixBarChart>
 
 </LinearLayout>

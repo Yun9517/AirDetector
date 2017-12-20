@@ -44,7 +44,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <microjet.com.airqi2.CustomAPI.CustomViewPager
+            <com.microjet.airqi2.CustomAPI.CustomViewPager
                 android:id="@+id/id_page_vp"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />

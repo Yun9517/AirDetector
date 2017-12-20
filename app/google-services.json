@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "565341274499",
+    "firebase_url": "https://airqi2-42d34.firebaseio.com",
+    "project_id": "airqi2-42d34",
+    "storage_bucket": "airqi2-42d34.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:565341274499:android:58cc088e26611cd7",
+        "android_client_info": {
+          "package_name": "com.microjet.airqi2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "565341274499-fa0185s9om2d6hon05l24ub0a2rg5hoe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAjkdHwoixxIm11VnR9lzChFJSaTsRsEo8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
