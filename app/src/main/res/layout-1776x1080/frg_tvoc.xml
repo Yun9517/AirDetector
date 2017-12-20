@@ -181,12 +181,84 @@
             android:textAlignment="gravity" />
     </RelativeLayout>
 
-    <com.microjet.airqi2.CustomAPI.FixBarChart
-        android:id="@+id/chart_line"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="10dp">
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
 
-    </com.microjet.airqi2.CustomAPI.FixBarChart>
+        <RelativeLayout
+            android:layout_width="45dp"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/imageView3"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentStart="true"
+                android:text="(ppb)" />
+
+            <TextView
+                android:id="@+id/textView18"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageView3"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentStart="true"
+                android:text="660" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/imageView4"
+                android:layout_alignParentBottom="false"
+                android:layout_alignParentStart="true"
+                android:text="220" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="10dp"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/imageView4"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="15dp"
+                android:src="@color/progressBarEndColor" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="10dp"
+                android:layout_height="130dp"
+                android:layout_above="@+id/imageView5"
+                android:layout_alignParentEnd="true"
+                android:src="@color/progressBarMidColor" />
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="10dp"
+                android:layout_height="65dp"
+                android:layout_above="@+id/imageView6"
+                android:layout_alignParentEnd="true"
+                android:src="@color/progressBarStartColor" />
+
+            <ImageView
+                android:id="@+id/imageView6"
+                android:layout_width="10dp"
+                android:layout_height="15dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="false"
+                android:src="@android:color/transparent" />
+        </RelativeLayout>
+
+        <com.microjet.airqi2.CustomAPI.FixBarChart
+            android:id="@+id/chart_line"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.microjet.airqi2.CustomAPI.FixBarChart>
+    </LinearLayout>
 
 </LinearLayout>

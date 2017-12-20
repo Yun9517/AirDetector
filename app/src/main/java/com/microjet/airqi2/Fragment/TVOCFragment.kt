@@ -514,9 +514,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart!!.isScaleYEnabled = false
         xAxis.position = XAxis.XAxisPosition.BOTTOM
 
+        mChart!!.legend.isEnabled = false
+
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
-        leftAxis.setDrawGridLines(false) // no grid lines
+        leftAxis.setDrawGridLines(true) // no grid lines
 
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero

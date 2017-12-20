@@ -69,6 +69,8 @@ class DeviceListActivity : Activity() {
         val share = getSharedPreferences("MACADDRESS", MODE_PRIVATE)
         share.edit().clear().putString("mac",device.address).apply()
 
+        scanLeDevice(false)
+
         //先拿掉該判斷，如有問題再補回來,原本mConnectionState初始化無值不給connect
         //if (UartService.mConnectionState == 0) {
             val serviceIntent: Intent? = Intent("Main")
