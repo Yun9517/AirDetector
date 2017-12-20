@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp">
 
-        <microjet.com.airqi2.CustomAPI.ColorArcProgressBar
+        <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
             android:id="@+id/tvocBar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

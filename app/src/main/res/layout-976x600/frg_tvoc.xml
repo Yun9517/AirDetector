@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="microjet.com.airqi2.Fragment.TVOCFragment">
+    android:background="@drawable/backgroung_chart"
+    tools:context="com.microjet.airqi2.Fragment.TVOCFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -44,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -56,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/radiobackground"
                 android:textColor="@color/whiteColor"
-                android:textSize="26sp"
+                android:textSize="22sp"
                 android:layout_weight="1"
                 android:button="@null"
                 android:gravity="center"
@@ -168,22 +169,23 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/text_label_tvoc"
+            android:textColor="@color/whiteColor"
             android:background="@drawable/chart_subtitle"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
             android:layout_alignRight="@+id/textVSelectDetectionValue"
             android:textSize="22sp"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:layout_gravity="end"
             android:textAlignment="gravity" />
     </RelativeLayout>
 
-    <microjet.com.airqi2.CustomAPI.FixBarChart
+    <com.microjet.airqi2.CustomAPI.FixBarChart
         android:id="@+id/chart_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp">
 
-    </microjet.com.airqi2.CustomAPI.FixBarChart>
+    </com.microjet.airqi2.CustomAPI.FixBarChart>
 
 </LinearLayout>

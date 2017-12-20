@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="microjet.com.airqi2.Fragment.TVOCFragment">
+    android:background="@drawable/backgroung_chart"
+    tools:context="com.microjet.airqi2.Fragment.TVOCFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -142,8 +143,8 @@
 
         <ImageView
             android:id="@+id/chart_Refresh"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_alignRight="@+id/textVSelectDetectionTime"
@@ -171,21 +172,24 @@
             android:layout_height="wrap_content"
             android:gravity="end"
             android:text="@string/text_label_tvoc"
+            android:textColor="@color/whiteColor"
             android:background="@drawable/chart_subtitle"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
             android:layout_alignRight="@+id/textVSelectDetectionValue"
-            android:textStyle="bold"
+            android:textStyle="normal"
             android:layout_gravity="end"
             android:textAlignment="gravity" />
     </RelativeLayout>
 
-    <microjet.com.airqi2.CustomAPI.FixBarChart
+
+
+    <com.microjet.airqi2.CustomAPI.FixBarChart
         android:id="@+id/chart_line"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp">
 
-    </microjet.com.airqi2.CustomAPI.FixBarChart>
+    </com.microjet.airqi2.CustomAPI.FixBarChart>
 
 </LinearLayout>

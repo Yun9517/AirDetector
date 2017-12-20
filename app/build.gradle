@@ -2,11 +2,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'realm-android'
+apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
     defaultConfig {
-        applicationId "microjet.com.airqi2"
+        applicationId 'com.microjet.airqi2'
         minSdkVersion 21
         targetSdkVersion 26
         versionCode 1
@@ -26,8 +27,8 @@ android {
         syncEnabled = true
     }
     compileOptions {
-        targetCompatibility 1.8
-        sourceCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
 }
@@ -38,15 +39,22 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.android.support:support-v4:26.1.0'
+    //noinspection GradleCompatible
+    implementation 'com.google.firebase:firebase-crash:11.6.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile 'me.kaelaela:verticalviewpager:1.0.0@aar'
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.5'
     compile 'pub.devrel:easypermissions:1.0.0'
+    compile 'com.google.firebase:firebase-core:11.6.2'
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
+        transitive = true
+    }
 }
 
 repositories {
     mavenCentral()
     maven { url "https://jitpack.io" }
 }
+apply plugin: 'com.google.gms.google-services'
