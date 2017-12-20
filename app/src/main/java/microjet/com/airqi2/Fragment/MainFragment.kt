@@ -23,6 +23,10 @@ import microjet.com.airqi2.Definition.SavePreferences
 import microjet.com.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
+import android.media.AudioManager
+import android.media.SoundPool
+
+
 
 /**
  * Created by ray650128 on 2017/11/23.
@@ -55,6 +59,16 @@ class MainFragment : Fragment() {
     //20171219   Andy
     private var mp = MediaPlayer()
     private var mVibrator: Vibrator? = null
+
+    //20171220   Andy
+    private var alertId: Int = 0
+    private var soundPool: SoundPool? = null
+
+    private var sourceid: Int = 0
+    private var spool: SoundPool? = null
+
+    private var countsound660:Int?=0
+    private var countsound220:Int?=0
 
 
     override fun onAttach(activity: Activity?) {
@@ -147,6 +161,11 @@ class MainFragment : Fragment() {
             mVibrator = mContext!!.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator?
         }
 
+
+        //20171220   Andy
+        soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 1)
+        //alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
+        //sourceid = spool!!.load(mContext, R.raw.tvoc_over220, 1)
 
     }
     private fun SetThresholdValue(){
@@ -342,18 +361,41 @@ class MainFragment : Fragment() {
             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false)) {
-                //20171219   Andy
-                mp.start()
-            }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,false)) {
-                if (mVibrator == null) {
-                } else {
-                    // 震动 1s
-                    mVibrator!!.vibrate(1000)
+            var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
+            {
+
+                if ((countsound660 == 5 || countsound660 == 0)) {
+
+                    //20171220   Andy
+                    try {
+                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
+                        Thread.sleep(500)
+                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                        //20171219   Andy
+                        //mp.start()
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+
                 }
             }
+
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                if ((countsound660 == 5|| countsound660 == 0)) {
+                    if (mVibrator == null) {
+                    } else {
+                        // 震动 1s
+                        mVibrator!!.vibrate(2000)
+                    }
+                }
+            }
+
+            if (countsound660 == 5) {
+                countsound660 = 0
+            }
+            countsound660 = countsound660!! + 1
         }
         else{
             textView?.text = getString(R.string.text_message_air_mid)
@@ -361,6 +403,42 @@ class MainFragment : Fragment() {
 
             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+
+            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
+            {
+
+                if ((countsound220 == 5 || countsound220 == 0)) {
+                    //20171219   Andy
+                    //mp.start()
+                    //20171220   Andy
+                    try {
+                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over220, 1)
+                        Thread.sleep(500)
+                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                if ((countsound220 == 5|| countsound220 == 0)) {
+                    if (mVibrator == null) {
+                    } else {
+                        // 震动 1s
+                        mVibrator!!.vibrate(1000)
+                    }
+                }
+
+            }
+
+            if (countsound220 == 5) {
+                countsound220 = 0
+            }
+            countsound220 = countsound220!! + 1
+
         }
     }
 
