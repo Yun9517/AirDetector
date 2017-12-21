@@ -14,7 +14,7 @@ object Utils {
         get() {
             val time = System.currentTimeMillis()
             val timeD = time - lastClickTime
-            if (0 < timeD && timeD < 750) {
+            if (0 < timeD && timeD < 5000) {
                 return true
             }
             lastClickTime = time
