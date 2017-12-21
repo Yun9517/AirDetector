@@ -1,15 +1,16 @@
 package com.microjet.airqi2.Fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import android.content.ContentValues
-import android.content.Context
+import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -32,6 +33,7 @@ import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
+import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import com.microjet.airqi2.myData
@@ -63,8 +65,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mRadioGroup: RadioGroup? = null
 
     private var mHour: RadioButton? = null
-    private var mMyCharData:ArrayList<String>?=null
-    private var mMyCharLabel:ArrayList<String>?=null
+    private var mMyCharData: ArrayList<String>? = null
+    private var mMyCharLabel: ArrayList<String>? = null
     //20171124 Andy月曆的方法聆聽者
     var dateSetListener: DatePickerDialog.OnDateSetListener? = null
     var cal = Calendar.getInstance()
@@ -113,20 +115,20 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //TestValue Start chungyen
     val tvocArray = ArrayList<String>()
     val timeArray = ArrayList<String>()
-    val batteryArray= ArrayList<String>()
-    var mProgressBar:ProgressBar?=null
+    val batteryArray = ArrayList<String>()
+    var mProgressBar: ProgressBar? = null
     private var mImageViewDataUpdate: ImageView? = null
     var radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
 
 
-    fun setRealTimeBarData(Tvoc:String,Battery:String){
-        val sdFormat = SimpleDateFormat("MM/dd hh:mm:ss", Locale.TAIWAN)
+    fun setRealTimeBarData(Tvoc: String, Battery: String) {
+        val sdFormat = SimpleDateFormat("MM/dd HH:mm:ss", Locale.TAIWAN)
         val date = Date()
         sdFormat.format(date)
         timeArray.add(sdFormat.format(date))
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
-    //    setFisrtChooseChartTimeLableAndData()
+        //    setFisrtChooseChartTimeLableAndData()
         val radioButtonIDBar = mRadioGroup?.getCheckedRadioButtonId()
 
         if (radioButtonIDBar == R.id.radioButton_Hour) {
@@ -147,45 +149,51 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //TestValue End chungyen
 
     /**
-    *
-    * @param conncetStatus for BlueTooth Connect Status
+     *
+     * @param conncetStatus for BlueTooth Connect Status
      * true for connect
      * false for disconnect
-    * //@return
-    */
-    var mConnectStatus:Boolean=false
-    fun setCurrentConnectStatusIcon(conncetStatus:Boolean){
-        mConnectStatus=conncetStatus
+     * //@return
+     */
+    var mConnectStatus: Boolean = false
+
+    fun setCurrentConnectStatusIcon(conncetStatus: Boolean) {
+        mConnectStatus = conncetStatus
         if (conncetStatus) {
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
             mImageViewDataUpdate?.isEnabled = conncetStatus
-        }
-        else {
+        } else {
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
-        //    mImageViewDataUpdate?.setImageDrawable(resources.getDrawable(R.drawable.chart_update_icon_disconnect))
-        //    mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
+            //    mImageViewDataUpdate?.setImageDrawable(resources.getDrawable(R.drawable.chart_update_icon_disconnect))
+            //    mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
             mImageViewDataUpdate?.isEnabled = conncetStatus
         }
     }
+
     fun getDeviceData() {
-        val mainactivity : MainActivity =(getActivity()as MainActivity)
+        val mainactivity: MainActivity = (getActivity() as MainActivity)
         mainactivity.loadDeviceData()
     }
-    fun setProgessBarMax(input:Int){
-        mProgressBar?.progress=0
-        mProgressBar?.max=input
+
+    fun setProgessBarMax(input: Int) {
+        mProgressBar?.progress = 0
+        mProgressBar?.max = input
     }
-    fun setProgessBarNow(input:Int) {
-        mProgressBar?.progress=input
+
+    fun setProgessBarNow(input: Int) {
+        mProgressBar?.progress = input
     }
-    fun afterGetDeviceData(){
-        mImageViewDataUpdate?.isEnabled=mConnectStatus
+
+    fun afterGetDeviceData() {
+        mImageViewDataUpdate?.isEnabled = mConnectStatus
     }
-    fun setFisrtChooseChartTimeLableAndData(){
-        mTextViewValue?.text = tvocArray.get(tvocArray.size-1)+ "ppb"
-        mTextViewTimeRange?.text = timeArray.get(timeArray.size-1)
-    //    mTextViewTimeRange?.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
+
+    fun setFisrtChooseChartTimeLableAndData() {
+        mTextViewValue?.text = tvocArray.get(tvocArray.size - 1) + "ppb"
+        mTextViewTimeRange?.text = timeArray.get(timeArray.size - 1)
+        //    mTextViewTimeRange?.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
     }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
 
@@ -205,9 +213,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mRadioGroup = this.view?.findViewById(R.id.frg_radioGroup)
         mChart = this.view!!.findViewById(R.id.chart_line)
-        mProgressBar=this.view!!.findViewById(R.id.chartDataLoading)
+        mProgressBar = this.view!!.findViewById(R.id.chartDataLoading)
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
-        mImageViewDataUpdate=this.view?.findViewById(R.id.chart_Refresh)
+        mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
             //mImageViewDataUpdate?.isEnabled =false
@@ -219,28 +227,28 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 R.id.radioButton_Hour -> {
                     //   mChart?.data = getBarData()
                     //20171130   Andy使用傳統SQL語法新增資料
-                //    val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
+                    //    val dbHelper = AndyAirDBhelper(mContext, tablename, null, 1)
                     //得到一个可写的数据库
-             //       val db = dbHelper.getReadableDatabase()
+                    //       val db = dbHelper.getReadableDatabase()
                     //insertDB(db)
                     mChart?.data = getBarData2(tvocArray, timeArray)
                     // SearchSQLlite()
-                  //  mChart?.data = SearchSQLlite_Day()
+                    //  mChart?.data = SearchSQLlite_Day()
                 }
                 R.id.radioButton_Day -> {
                     getRealmFour(4)
-                    mChart?.data = getBarData3(tvoc3,time3)
+                    mChart?.data = getBarData3(tvoc3, time3)
                 }
                 R.id.radioButton_Week -> {
                     //mChart?.data = getBarData()
                     getRealmFour(8)
-                    mChart?.data = getBarData3(tvoc3,time3)
+                    mChart?.data = getBarData3(tvoc3, time3)
                 }
                 R.id.radioButton_Month -> {
 
                     //mChart?.data = getBarData()
                     getRealmFour(12)
-                    mChart?.data = getBarData3(tvoc3,time3)
+                    mChart?.data = getBarData3(tvoc3, time3)
 
                 }
             }
@@ -402,6 +410,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onResume() {
         super.onResume()
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
         //視Radio id畫圖
         when (radioButtonID) {
             0 -> {
@@ -409,8 +418,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
-            1,2,3 -> {
-                mChart?.data = getBarData3(tvoc3,time3)
+            1, 2, 3 -> {
+                mChart?.data = getBarData3(tvoc3, time3)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
@@ -418,6 +427,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         //mChart!!.data = getBarData()
         //mChart?.setVisibleXRangeMaximum(5.0f)
+    }
+
+    override fun onPause() {
+        try {
+            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(mGattUpdateReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onPause()
     }
 
     private fun cleanTextViewInTVOC() {
@@ -644,23 +662,25 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         //  AddedSQLlite(6000)
     }
+
     //20171130 Andy 傳統SQL寫法ADD
-     var time1=ArrayList<String>()
-     var tvoc1=ArrayList<String>()
-    public fun ADDDATAForDatachart(Datalist: java.util.ArrayList<myData>):BarData{
-        var  time =ArrayList<String>()
-        var  tvoc =ArrayList<String>()
-        time1=time
-        tvoc1=tvoc
+    var time1 = ArrayList<String>()
+    var tvoc1 = ArrayList<String>()
+    public fun ADDDATAForDatachart(Datalist: java.util.ArrayList<myData>): BarData {
+        var time = ArrayList<String>()
+        var tvoc = ArrayList<String>()
+        time1 = time
+        tvoc1 = tvoc
         for (i in 0 until Datalist.size) {
-           time.add(Datalist[i].time)
+            time.add(Datalist[i].time)
             tvoc.add(Datalist[i].tvoC_Data)
         }
         getLabels2(time)
-    return  getBarData2(tvoc, time)
-       // getChartData2(tvoc)
+        return getBarData2(tvoc, time)
+        // getChartData2(tvoc)
 
     }
+
     //20171128 Andy SQL
     public fun AddedSQLlite(Datalist: java.util.ArrayList<myData>) {
         //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -738,11 +758,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //internal var Count: Long = 0
         //20171204   Andy 嘗試用SQL語法用時間查資料
         colum_collection_time = arrayOf("2017/11/30 , 2017/11/30 20:20:26 ")//,"CO2"};
-        var Time:String = "2017/11/30 20:20:20 , "
-        var TimeReuge =arrayOf(Time+colum_collection_time)
+        var Time: String = "2017/11/30 20:20:20 , "
+        var TimeReuge = arrayOf(Time + colum_collection_time)
         //internal var c: Cursor? = null
 
-        val literals = arrayOf("2017/12/4 20:20:20","2017/11/30 20:20:26")
+        val literals = arrayOf("2017/12/4 20:20:20", "2017/11/30 20:20:26")
         val str = "collection_time >=? AND collection_time <=?"
         //ContactValues Time = new ContactValues();
         //Time = colum_collection_time[0]
@@ -953,11 +973,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     //試Realm拉資料
-    var time3=ArrayList<String>()
-    var tvoc3=ArrayList<String>()
+    var time3 = ArrayList<String>()
+    var tvoc3 = ArrayList<String>()
     var touchTime = Date().time
 
-    private fun getRealmFour(hour:Int) {
+    private fun getRealmFour(hour: Int) {
         time3.clear()
         tvoc3.clear()
         //touchTime = Date().time
@@ -967,14 +987,20 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             //設定時間區間
             var nowHourRemainer = 0
             when (hour) {
-                //將sql搜尋時間往後推至區間 4 8 12 16 20 24
-                4 -> {nowHourRemainer = 4 - (Date().hours % 4) }
-                8 -> {nowHourRemainer = 8 - (Date().hours % 8) }
-                12 -> {nowHourRemainer = 12 - (Date().hours % 12)}
+            //將sql搜尋時間往後推至區間 4 8 12 16 20 24
+                4 -> {
+                    nowHourRemainer = 4 - (Date().hours % 4)
+                }
+                8 -> {
+                    nowHourRemainer = 8 - (Date().hours % 8)
+                }
+                12 -> {
+                    nowHourRemainer = 12 - (Date().hours % 12)
+                }
             }
-            var endTime = ((touchTime/3600000) + nowHourRemainer - (hour*(y-1))) * 3600000
+            var endTime = ((touchTime / 3600000) + nowHourRemainer - (hour * (y - 1))) * 3600000
             var startTime = endTime - (hour) * 3600000
-            Log.d("TimePeriod",((endTime-startTime)/3600000).toString() + "Hour")
+            Log.d("TimePeriod", ((endTime - startTime) / 3600000).toString() + "Hour")
             //            when (nowHourRemainer) {
 //                0 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
 //                1 -> { endTime = ((Date().time/3600000) - nowHourRemainer - (hour*(y-1))) * 3600000 }
@@ -995,7 +1021,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 Log.d("getRealmFour", result1.last().toString())
                 tvoc3.add(aveTvoc.toString())
                 time3.add(endTime.toString())
-            }else{
+            } else {
                 tvoc3.add("0")
                 time3.add(endTime.toString())
             }
@@ -1022,26 +1048,25 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun nothing() {
         var realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-    for (y in 10..1) {
-        var countTime = Date().time - 60 * 60 * 1000 * (y)
-        //query.between("Created_time",countTime,Date().time)
-        query.lessThan("Created_time", countTime)//.greaterThan("Created_time",countTime)
-        val result1 = query.findAll()
-        var sumTvoc = 0
-        var sumTime: Long = 0
-        for (i in result1) {
-            sumTvoc += i.tvocValue.toInt()
-            sumTime += i.created_time.toLong()
-            if (result1.size != 0) {
-                tvoc3.add((sumTvoc / result1.size).toString())
-                //time3.add((sumTime / result1.size).toString())
+        for (y in 10..1) {
+            var countTime = Date().time - 60 * 60 * 1000 * (y)
+            //query.between("Created_time",countTime,Date().time)
+            query.lessThan("Created_time", countTime)//.greaterThan("Created_time",countTime)
+            val result1 = query.findAll()
+            var sumTvoc = 0
+            var sumTime: Long = 0
+            for (i in result1) {
+                sumTvoc += i.tvocValue.toInt()
+                sumTime += i.created_time.toLong()
+                if (result1.size != 0) {
+                    tvoc3.add((sumTvoc / result1.size).toString())
+                    //time3.add((sumTime / result1.size).toString())
+                }
             }
         }
-    }
         //tvoc3.add(i.tvocValue.toString())
         //time3.add(i.created_time.toString())
     }
-
 
 
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
@@ -1075,7 +1100,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             val date = dateFormat.format(input[i].toLong())
             chartLabels.add(date)
         }
-        Log.d("TVOCGETLABEL3",chartLabels.lastIndex.toString())
+        Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())
         return chartLabels
     }
 
@@ -1111,4 +1136,75 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mImageViewDataUpdate?.clearAnimation()
         mImageViewDataUpdate?.isEnabled = true
     }
+
+    private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
+        intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
+        intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
+        intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
+        return intentFilter
+    }
+    var counter = 0
+    var TVOCAVG = 0
+    private val mGattUpdateReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SimpleDateFormat", "SetTextI18n")
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            when (action) {
+                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
+                    //執行斷線後的事
+                    counter = 0
+                    setCurrentConnectStatusIcon(false)
+                    stopUpdateDataAnimation()
+                    setProgessBarNow(0)
+                }
+                BroadcastActions.ACTION_GATT_CONNECTED -> {
+                    //執行連線後的事
+                    counter = 0
+                    setCurrentConnectStatusIcon(true)
+
+                }
+                BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
+                    val bundle = intent.extras
+                    val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
+                    setProgessBarMax(totalData.toInt())
+                    startUpdateDataAnimation()
+                }
+                BroadcastActions.ACTION_LOADING_DATA -> {
+                    val bundle = intent.extras
+                    val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
+                    setProgessBarNow(nowData.toInt())
+                    if(nowData.toInt()==mProgressBar?.max)
+                        stopUpdateDataAnimation()
+
+                }
+                BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    val bundle = intent.extras
+                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    val BatteryLife = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE)
+                    //setBar1CurrentValue(tempVal,humiVal,tvocVal,co2Val,"0")
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                    val date = Date()
+
+                    counter++
+                    TVOCAVG += tvocVal.toInt()
+                    if (counter % 15 == 0) {
+                        counter = 0
+                        TVOCAVG /= 15
+                        setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
+                        TVOCAVG = 0
+
+                        //   setProgressBarValue(tempVal, humiVal, tvocVal, co2Val, "0")
+                    }
+                }
+            }
+        }
+    }
 }
+
+

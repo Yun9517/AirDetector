@@ -3,12 +3,12 @@ package com.microjet.airqi2.Fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Service
-import android.content.Context
-import android.content.SharedPreferences
+import android.content.*
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.v4.app.Fragment
+import android.support.v4.content.LocalBroadcastManager
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.frg_main.*
 import com.microjet.airqi2.CustomAPI.ColorArcProgressBar
+import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.R
 import java.text.SimpleDateFormat
@@ -219,6 +220,7 @@ class MainFragment : Fragment() {
     }
     override fun onResume() {
         super.onResume()
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
         SetThresholdValue()
         val range1:Float=ThreadHold1?.text.toString().toFloat()
         val range2:Float=ThreadHold2?.text.toString().toFloat()
@@ -244,6 +246,14 @@ class MainFragment : Fragment() {
         }
 
        // bar1!!.setCurrentValues(10f)
+    }
+    override fun onPause() {
+        try {
+            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(mGattUpdateReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        super.onPause()
     }
 
     override fun onStop() {
@@ -352,15 +362,14 @@ class MainFragment : Fragment() {
         if (currentValue.toFloat() < 221){
             textView?.text = getString(R.string.text_message_air_good)
             tvocStatus?.text = getString(R.string.text_label_ststus_good)
-
-            tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-            tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
         }
         else if (currentValue.toFloat() > 661) {
             textView?.text = getString(R.string.text_message_air_bad)
             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
-            tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
             {
@@ -400,8 +409,8 @@ class MainFragment : Fragment() {
             textView?.text = getString(R.string.text_message_air_mid)
             tvocStatus?.text = getString(R.string.text_label_ststus_mid)
 
-            tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-            tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
 
             var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
@@ -444,4 +453,37 @@ class MainFragment : Fragment() {
     protected fun isInitVibratorNotify(): Boolean {
         return true
     }
+    private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
+        intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        return intentFilter
+    }
+    private val mGattUpdateReceiver = object: BroadcastReceiver() {
+        @SuppressLint("SimpleDateFormat", "SetTextI18n")
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            when (action) {
+                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
+                    setBar1CurrentValue("0","0","0","0","0")
+                }
+                BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    val bundle = intent.extras
+                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    setBar1CurrentValue(tempVal,humiVal,tvocVal,co2Val,"0")
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                    val date = Date()
+                    lastDetectTime?.text = dateFormat.format(date).toString()
+
+                    //   setProgressBarValue(tempVal, humiVal, tvocVal, co2Val, "0")
+                }
+            }
+
+        }
+    }
+
+
 }
