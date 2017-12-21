@@ -904,7 +904,7 @@ public class UartService extends Service {
                             countForItem = (int) (countForItemTime / (30L * 1000L));
                             if (countForItem > 1440) { countForItem = 1440; }
                             Log.d("0xB4countItem", Long.toString(countForItem));
-                            Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
                         if (countForItem > 0){
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));

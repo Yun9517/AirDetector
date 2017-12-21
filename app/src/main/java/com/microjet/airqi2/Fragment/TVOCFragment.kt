@@ -1166,21 +1166,23 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     setCurrentConnectStatusIcon(true)
-
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                    setProgessBarMax(totalData.toInt())
-                    startUpdateDataAnimation()
+                    if (totalData.toInt() != 0) {
+                        setProgessBarMax(totalData.toInt())
+                        startUpdateDataAnimation()
+                    }
+                    Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgessBarNow(nowData.toInt())
-                    if(nowData.toInt()==mProgressBar?.max)
+                    if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
-
+                    }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     val bundle = intent.extras
