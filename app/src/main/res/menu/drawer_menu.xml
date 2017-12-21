@@ -42,7 +42,6 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_qanda"
-            android:visible="false"
             android:title="@string/text_navi_q_and_a" />
     </group>
 

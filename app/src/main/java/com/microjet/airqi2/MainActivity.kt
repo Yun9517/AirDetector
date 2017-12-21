@@ -687,6 +687,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
+    // 20171219 Raymond 新增：Q&A activity
+    private fun qandaShow() {
+        val i: Intent? = Intent(this, QandAActivity::class.java)
+        startActivity(i)
+    }
+
     private fun settingShow() {
         val i: Intent? = Intent(this, SettingActivity::class.java)
         startActivityForResult(i, REQUEST_SELECT_SAMPLE)
@@ -744,6 +750,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                sendBroadcast(intent)*/
                 //  knowledgeShow()
             }
+            R.id.nav_qanda -> qandaShow()
+
+
             R.id.nav_getData -> {
                 val intent: Intent? = Intent("Main")
                 intent!!.putExtra("status", "getSampleRate")
