@@ -96,6 +96,7 @@ public class UartService extends Service {
     private Boolean mIsReceiverRegistered = false;
     private MyBroadcastReceiver mReceiver = null;
     private Realm realm;
+    private Integer countForItem = 0;
 
 
     //    public UartService() { //建構式
@@ -864,7 +865,7 @@ public class UartService extends Service {
                     //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
                     //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
                     //Toast.makeText(getApplicationContext(),"讀取資料中請稍候",Toast.LENGTH_LONG).show();
-                    Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
                     //取得當前時間
@@ -880,14 +881,38 @@ public class UartService extends Service {
                     Log.d("UART", "total item "+Integer.toString(getMaxItems()));
                     // Log.d("UART", "getItem 1");
                     if (getMaxItems() != 0) {
-                        mainIntent.putExtra("status", "MAXPROGRESSITEM");
-                        mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
-                        sendBroadcast(mainIntent);
+                        //mainIntent.putExtra("status", "MAXPROGRESSITEM");
+                        //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
+                        //sendBroadcast(mainIntent);
                         Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
                         Log.d("UART", "getItem 1");
                         NowItem = 0;
                         counter = 0;
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                        //將時間秒數寫入設定為 00  或  30
+                        timeSetNowToThirty();
+                        //Realm 資料庫
+                        Realm realm = Realm.getDefaultInstance();
+                        Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
+                        if (maxCreatedTime == null) { maxCreatedTime = 0000000000000; }
+                        if (maxCreatedTime != null) {
+                            //Long lastRowSaveTime = realm.where(AsmDataModel.class).equalTo("Created_time", maxCreatedTime.longValue())
+                            //.findAll().first().getCreated_time().longValue();
+                            Long nowTime = getMyDate().getTime();
+                            Log.d("0xB4countLast",  new Date(maxCreatedTime.longValue()).toString());
+                            Log.d("0xB4countNow",  new Date(nowTime).toString());
+                            Long countForItemTime = nowTime - maxCreatedTime.longValue();
+                            countForItem = (int) (countForItemTime / (30L * 1000L));
+                            if (countForItem > 1440) { countForItem = 1440; }
+                            Log.d("0xB4countItem", Long.toString(countForItem));
+                            Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+                        }
+                        if (countForItem > 0){
+                            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                        }
+                        mainIntent.putExtra("status", "MAXPROGRESSITEM");
+                        mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(countForItem));
+                        sendBroadcast(mainIntent);
+
                     }
                     //   setCorrectTime(Integer.parseInt(RString.get(j)));
                     break;
@@ -922,11 +947,12 @@ public class UartService extends Service {
                             asmData.setTVOCValue(RString.get(3));
                             asmData.seteCO2Value(RString.get(4));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
-                            Log.d("RealmTime",new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                            Log.d("RealmTime", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
 
-                        if (NowItem >= getMaxItems()) {
+                        //if (NowItem >= getMaxItems()) {
+                        if (NowItem >= countForItem || NowItem >= getMaxItems()) {
                             NowItem = 0;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
@@ -1062,6 +1088,19 @@ public class UartService extends Service {
         date.setTime(longtime);
         return sdFormat.format(date);
     }
+
+    private void timeSetNowToThirty() {
+        //取得當前時間
+        //將時間秒數寫入設定為 00  或  30
+        Long dateSecMil = new Date().getTime();
+        Long dateSecChange = (dateSecMil / 1000)/30 * (1000*30);
+        //Log.d("0xB4",dateSecChange.toString());
+        Date date = new Date(dateSecChange);
+        Log.d("timeSetNowToThirty",date.toString());
+        setMyDate(date);
+    }
+
+
 
     private String DataTime;
 

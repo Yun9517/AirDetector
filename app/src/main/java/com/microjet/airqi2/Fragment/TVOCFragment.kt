@@ -975,7 +975,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //試Realm拉資料
     var time3 = ArrayList<String>()
     var tvoc3 = ArrayList<String>()
-    var touchTime = Date().time
 
     private fun getRealmFour(hour: Int) {
         time3.clear()
@@ -985,6 +984,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             //設定時間區間
+            var touchTime = Date().time
             var nowHourRemainer = 0
             when (hour) {
             //將sql搜尋時間往後推至區間 4 8 12 16 20 24
@@ -1095,11 +1095,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //        }
 
         val chartLabels = ArrayList<String>()
+        val dateFormat = SimpleDateFormat("MM/dd HH:mm")
         for (i in 0 until time3.size) {
-            val dateFormat = SimpleDateFormat("MM/dd HH:mm")
             val date = dateFormat.format(input[i].toLong())
             chartLabels.add(date)
         }
+        chartLabels.removeAt(time3.size - 1)
+        chartLabels.add(time3.size - 1,dateFormat.format(Date().time))
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())
         return chartLabels
     }
