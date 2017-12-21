@@ -315,9 +315,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     override fun onDestroy() {
-
+        super.onDestroy()
         if (mIsReceiverRegistered) {
-            unregisterReceiver(MyBroadcastReceiver)
+           // unregisterReceiver(MyBroadcastReceiver)
+            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
          //   unregisterReceiver(mReceiver)
          //   mReceiver = null
             mIsReceiverRegistered = false
@@ -329,7 +330,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         val intent: Intent? = Intent(this, UartService::class.java)
         stopService(intent)
-        super.onDestroy()
+
 
         //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
         //unbindService(mServiceConnection)
