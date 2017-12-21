@@ -62,6 +62,8 @@ class DeviceListActivity : Activity() {
 
     private var scanProgress: ProgressBar? = null
 
+    private var devScanningPanel: LinearLayout? = null
+
     // ListView 項目點選監聽器
     internal var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val device = parent.getItemAtPosition(position) as BluetoothDevice
@@ -121,6 +123,10 @@ class DeviceListActivity : Activity() {
 
         scanProgress = findViewById(R.id.scanProgress)
         scanProgress!!.bringToFront()
+
+        devScanningPanel = findViewById(R.id.devScanningPanel)
+        devScanningPanel!!.visibility = View.VISIBLE
+        devScanningPanel!!.bringToFront()
 
         // Use this check to determine whether BLE is supported on the device.  Then you can
         // selectively disable BLE-related features.
@@ -235,6 +241,8 @@ class DeviceListActivity : Activity() {
                 cancelButton!!.text = resources.getText(R.string.scan)
 
                 scanProgress!!.visibility = View.GONE
+
+                devScanningPanel!!.visibility = View.INVISIBLE
 
                 mScanning = false
 

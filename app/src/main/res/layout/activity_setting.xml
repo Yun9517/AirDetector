@@ -10,6 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:orientation="horizontal">
 
         <TextView
@@ -37,7 +38,9 @@
         android:layout_height="2dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
+        android:visibility="invisible"
         android:background="#484848" />
+
 
     <TextView
         android:id="@+id/textView6"
@@ -51,6 +54,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:orientation="horizontal">
 
         <TextView
