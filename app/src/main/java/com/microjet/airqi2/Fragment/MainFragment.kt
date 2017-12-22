@@ -112,48 +112,47 @@ class MainFragment : Fragment() {
             tvocValue2?.text = textSpan
 
         }
-        /*
-      textView3CO2=this.view?.findViewById(R.id.textView3)
-      show_eCO2?.setOnClickListener { pressed="CO2"
-          SetThresholdValue()
-          SetbarMaxValue()
-          bar1?.setCurrentValues(DetectorValue[3].toFloat())
-          textView2.text=getString(R.string.text_label_co2)
-          val temp=DetectorValue[3]+" ppm "
-          val textSpan= SpannableStringBuilder(temp)
-          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textView3CO2=this.view?.findViewById(R.id.textView3)
+        show_eCO2?.setOnClickListener { pressed="CO2"
+            SetThresholdValue()
+            SetbarMaxValue()
+            bar1?.setCurrentValues(DetectorValue[3].toFloat())
+            textView2.text=getString(R.string.text_label_co2)
+            val temp=DetectorValue[3]+" ppm "
+            val textSpan= SpannableStringBuilder(temp)
+            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-          tvocValue2?.text = textSpan
-      }
-      textView5Temperature=this.view?.findViewById(R.id.textView5)
- show_Temp?.setOnClickListener { pressed="temperature"
-          SetThresholdValue()
-          SetbarMaxValue()
-          bar1?.setCurrentValues(DetectorValue[0].toFloat())
-          textView2.text=getString(R.string.text_label_temperature)
-          val temp=DetectorValue[0]+" °C "
-          val textSpan= SpannableStringBuilder(temp)
-          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          tvocValue2?.text = textSpan
-      }
-      textView7Humidity=this.view?.findViewById(R.id.textView7)
-      show_RH?.setOnClickListener { pressed="humidity"
-          SetThresholdValue()
-          SetbarMaxValue()
-          bar1?.setCurrentValues(DetectorValue[1].toFloat())
-          textView2.text=getString(R.string.text_label_humidity)
-          val temp=DetectorValue[1]+" ％ "
-          val textSpan= SpannableStringBuilder(temp)
-          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-          tvocValue2?.text = textSpan
-      }
-      */
+            tvocValue2?.text = textSpan
+        }
+        textView5Temperature=this.view?.findViewById(R.id.textView5)
+    /*    show_Temp?.setOnClickListener { pressed="temperature"
+            SetThresholdValue()
+            SetbarMaxValue()
+            bar1?.setCurrentValues(DetectorValue[0].toFloat())
+            textView2.text=getString(R.string.text_label_temperature)
+            val temp=DetectorValue[0]+" °C "
+            val textSpan= SpannableStringBuilder(temp)
+            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            tvocValue2?.text = textSpan
+        }
+        textView7Humidity=this.view?.findViewById(R.id.textView7)
+        show_RH?.setOnClickListener { pressed="humidity"
+            SetThresholdValue()
+            SetbarMaxValue()
+            bar1?.setCurrentValues(DetectorValue[1].toFloat())
+            textView2.text=getString(R.string.text_label_humidity)
+            val temp=DetectorValue[1]+" ％ "
+            val textSpan= SpannableStringBuilder(temp)
+            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+            tvocValue2?.text = textSpan
+        }
+        */
         LastDetecterTime=this.view?.findViewById(R.id.lastDetectTime)
     //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
