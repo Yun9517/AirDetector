@@ -70,6 +70,8 @@ class MainFragment : Fragment() {
 
     private var countsound660:Int?=0
     private var countsound220:Int?=0
+    private var countsound800:Int?=0
+    private var countsound1500:Int?=0
 
 
     override fun onAttach(activity: Activity?) {
@@ -110,47 +112,48 @@ class MainFragment : Fragment() {
             tvocValue2?.text = textSpan
 
         }
-        textView3CO2=this.view?.findViewById(R.id.textView3)
-        show_eCO2?.setOnClickListener { pressed="CO2"
-            SetThresholdValue()
-            SetbarMaxValue()
-            bar1?.setCurrentValues(DetectorValue[3].toFloat())
-            textView2.text=getString(R.string.text_label_co2)
-            val temp=DetectorValue[3]+" ppm "
-            val textSpan= SpannableStringBuilder(temp)
-            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        /*
+      textView3CO2=this.view?.findViewById(R.id.textView3)
+      show_eCO2?.setOnClickListener { pressed="CO2"
+          SetThresholdValue()
+          SetbarMaxValue()
+          bar1?.setCurrentValues(DetectorValue[3].toFloat())
+          textView2.text=getString(R.string.text_label_co2)
+          val temp=DetectorValue[3]+" ppm "
+          val textSpan= SpannableStringBuilder(temp)
+          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
 
-            tvocValue2?.text = textSpan
-        }
-        textView5Temperature=this.view?.findViewById(R.id.textView5)
-    /*    show_Temp?.setOnClickListener { pressed="temperature"
-            SetThresholdValue()
-            SetbarMaxValue()
-            bar1?.setCurrentValues(DetectorValue[0].toFloat())
-            textView2.text=getString(R.string.text_label_temperature)
-            val temp=DetectorValue[0]+" °C "
-            val textSpan= SpannableStringBuilder(temp)
-            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            tvocValue2?.text = textSpan
-        }
-        textView7Humidity=this.view?.findViewById(R.id.textView7)
-        show_RH?.setOnClickListener { pressed="humidity"
-            SetThresholdValue()
-            SetbarMaxValue()
-            bar1?.setCurrentValues(DetectorValue[1].toFloat())
-            textView2.text=getString(R.string.text_label_humidity)
-            val temp=DetectorValue[1]+" ％ "
-            val textSpan= SpannableStringBuilder(temp)
-            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            tvocValue2?.text = textSpan
-        }
-        */
+          tvocValue2?.text = textSpan
+      }
+      textView5Temperature=this.view?.findViewById(R.id.textView5)
+ show_Temp?.setOnClickListener { pressed="temperature"
+          SetThresholdValue()
+          SetbarMaxValue()
+          bar1?.setCurrentValues(DetectorValue[0].toFloat())
+          textView2.text=getString(R.string.text_label_temperature)
+          val temp=DetectorValue[0]+" °C "
+          val textSpan= SpannableStringBuilder(temp)
+          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          tvocValue2?.text = textSpan
+      }
+      textView7Humidity=this.view?.findViewById(R.id.textView7)
+      show_RH?.setOnClickListener { pressed="humidity"
+          SetThresholdValue()
+          SetbarMaxValue()
+          bar1?.setCurrentValues(DetectorValue[1].toFloat())
+          textView2.text=getString(R.string.text_label_humidity)
+          val temp=DetectorValue[1]+" ％ "
+          val textSpan= SpannableStringBuilder(temp)
+          textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+          tvocValue2?.text = textSpan
+      }
+      */
         LastDetecterTime=this.view?.findViewById(R.id.lastDetectTime)
     //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
@@ -343,6 +346,7 @@ class MainFragment : Fragment() {
              "CO2"->{
                  temp = DetectorValue[3] +" ppm "
                  bar1?.setCurrentValues(DetectorValue[3].toFloat())
+                 CO2tatusTextShow(DetectorValue[3])
              }
              else ->{
                  temp = DetectorValue[3] +" ppb "
@@ -450,7 +454,97 @@ class MainFragment : Fragment() {
 
         }
     }
+    fun CO2tatusTextShow(currentValue:String){
+        if (currentValue.toFloat() < 800){
+            textView?.text = getString(R.string.text_message_air_good)
+            tvocStatus?.text = getString(R.string.text_label_ststus_good)
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+        }
+        else if (currentValue.toFloat() > 1500) {
+            textView?.text = getString(R.string.text_message_air_bad)
+            tvocStatus?.text = getString(R.string.text_label_ststus_bad)
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+            var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
+            {
 
+                if ((countsound1500 == 5 || countsound1500 == 0)) {
+                    //20171220   Andy
+                    try {
+                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
+                        Thread.sleep(500)
+                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                        //20171219   Andy
+                        //mp.start()
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                if ((countsound1500 == 5|| countsound1500 == 0)) {
+                    if (mVibrator == null) {
+                    } else {
+                        // 震动 1s
+                        mVibrator!!.vibrate(2000)
+                    }
+                }
+            }
+
+            if (countsound1500 == 5) {
+                countsound1500 = 0
+            }
+            countsound1500 = countsound1500!! + 1
+        }
+        else{
+            textView?.text = getString(R.string.text_message_air_mid)
+            tvocStatus?.text = getString(R.string.text_label_ststus_mid)
+
+            tvocValue2?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            tvocStatus?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+
+            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
+            {
+
+                if ((countsound800 == 5 || countsound800 == 0)) {
+                    //20171219   Andy
+                    //mp.start()
+                    //20171220   Andy
+                    try {
+                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over220, 1)
+                        Thread.sleep(500)
+                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+
+                }
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                if ((countsound800 == 5|| countsound800 == 0)) {
+                    if (mVibrator == null) {
+                    } else {
+                        // 震动 1s
+                        mVibrator!!.vibrate(1000)
+                    }
+                }
+
+            }
+
+            if (countsound800 == 5) {
+                countsound800 = 0
+            }
+            countsound800 = countsound220!! + 1
+
+        }
+    }
     protected fun isInitVibratorNotify(): Boolean {
         return true
     }
