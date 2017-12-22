@@ -998,48 +998,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 (mFragmentAdapter.getItem(1) as TVOCFragment).stopUpdateDataAnimation()
                 (mFragmentAdapter.getItem(1) as TVOCFragment).setProgessBarNow(0)
             }
-            "B0" -> {
-                displayBatteryLife(intent)
-
-                if (mWaitLayout!!.visibility == View.INVISIBLE) {
-                    heatingPanelShow()
-                }
-
-
-                mWaitLayout!!.bringToFront()
-                mPageVp!!.setPagingEnabled(false)
-                val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                (mFragmentAdapter.getItem(0) as MainFragment).setBar1CurrentValue(
-                        intent.getStringExtra("TEMPValue"),
-                        intent.getStringExtra("HUMIValue"),
-                        intent.getStringExtra("TVOCValue"),
-                        intent.getStringExtra("eCO2Value"),
-                        "coming soon")
-
-                var sec = (120 - intent.getStringExtra("PreheatCountDown").toInt())
-                mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + sec.toString() + "秒"
-                //120秒預熱畫面消失
-                if (intent.getStringExtra("PreheatCountDown") == "255") {
-                    if (mWaitLayout!!.visibility == View.VISIBLE) {
-                        heatingPanelHide()
-                    }
-                    mWaitLayout!!.bringToFront()
-                }
-                //更新時間
-                val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                val date = Date()
-                lastDetectTime?.text = dateFormat.format(date).toString()
-                //(mFragmentAdapter.getItem(0)as MainFragment).setGetTimeFlag(1)
-                mPageVp!!.setPagingEnabled(true)
-                counter++
-                TVOCAVG += intent.getStringExtra("TVOCValue").toInt()
-                if (counter % 15 == 0) {
-                    counter = 0
-                    TVOCAVG /= 15
-                    (mFragmentAdapter.getItem(1) as TVOCFragment).setRealTimeBarData(TVOCAVG.toString(), intent.getStringExtra("BatteryLife"))
-                    TVOCAVG = 0
-                }
-            }
             "B5" -> {
                 Log.d("UPDATEUI", "Nothing")
             }
@@ -1083,6 +1041,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val TAG = MainActivity::class.java.simpleName
     // inner class MyBroadcastReceiver : BroadcastReceiver()
     private val MyBroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent) {
             //updateUI(intent)
             //checkBluetooth()
@@ -1136,6 +1095,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         batValue in 10..32 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_1grid)
 
                         else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_low)
+                    }
+
+                    // 預熱畫面
+                    if (mWaitLayout!!.visibility == View.INVISIBLE) {
+                        heatingPanelShow()
+                        mWaitLayout!!.bringToFront()
+                    }
+
+                    val sec = (120 - preheatCountDown.toInt())
+                    Log.v(TAG, "Preheat Count Down: " + sec)
+                    mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + sec.toString() + "秒"
+                    //120秒預熱畫面消失
+                    if (preheatCountDown == "255") {
+                        if (mWaitLayout!!.visibility == View.VISIBLE) {
+                            heatingPanelHide()
+                        }
+                        mWaitLayout!!.bringToFront()
                     }
                 }
             }
