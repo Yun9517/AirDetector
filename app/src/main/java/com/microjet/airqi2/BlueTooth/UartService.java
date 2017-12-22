@@ -115,6 +115,9 @@ public class UartService extends Service {
                     Intent mainIntent = new Intent("Main");
                     mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
+                    mBluetoothAdapter = mBluetoothManager.getAdapter();
+                    if (!mBluetoothAdapter.isEnabled()) {
+                        close();}
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTING: {
@@ -235,7 +238,7 @@ public class UartService extends Service {
      *
      * @return Return true if the initialization is successful.
      */
-    public boolean initialize() {
+    public boolean initailze() {
         // For API level 18 and above, get a reference to BluetoothAdapter through
         // BluetoothManager.
         if (mBluetoothManager == null) {
@@ -299,7 +302,7 @@ public class UartService extends Service {
         }
         // Previously connected device.  Try to reconnect.
         // 會慢一點點連上去，但是可以保持一條主從的關係，如果拿掉會一直新增新的CLient Server到後期就會錯誤
-        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null) {
+        if (mBluetoothDeviceAddress != null && address.equals(mBluetoothDeviceAddress) && mBluetoothGatt != null && mBluetoothAdapter != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             if (mBluetoothGatt.connect()) {
                 mConnectionState = STATE_CONNECTING;
@@ -334,8 +337,9 @@ public class UartService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("UART ", "onStartCommand");
         //StartService後執行連線
-        mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        initailze();
+        //mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
+        //mBluetoothAdapter = mBluetoothManager.getAdapter();
 //        SharedPreferences share = getSharedPreferences("MACADDRESS", MODE_PRIVATE);
 //        mBluetoothDeviceAddress = share.getString("mac", "noValue");
 
