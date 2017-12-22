@@ -75,9 +75,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var batValue: Int = 0
 
     // 藍芽icon in actionbar
-    private var btIcon: MenuItem? = null
+    private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
+    private var menuItem: MenuItem? = null
 
 
     private var connState = false
@@ -557,8 +558,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         myMenu = menu
-        val menuItem: MenuItem? = menu!!.findItem(R.id.batStatus)
-        btIcon = menu!!.findItem(R.id.bleStatus)
+        menuItem= menu!!.findItem(R.id.batStatus)
+        bleIcon = menu!!.findItem(R.id.bleStatus)
         battreyIcon = menu?.findItem(R.id.batStatus)
         menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
@@ -1115,6 +1116,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
             }
+            Log.d("MainActivity","OnReceive")
             checkConnection()
             /*   when (intent.getStringExtra("status")) {
 
@@ -1155,23 +1157,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     @Synchronized private fun checkConnection() {
-        if (UartService.mConnectionState == 0) {
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-            btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_disconnect)
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-        } else {
+        if (UartService.mConnectionState == 2) {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+        }else {
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
+            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_disconnect)
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
         }
     }

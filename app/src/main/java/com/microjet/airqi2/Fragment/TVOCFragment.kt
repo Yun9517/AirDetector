@@ -1186,6 +1186,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     setProgessBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
+                        mRadioGroup?.check(R.id.radioButton_Hour)
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {

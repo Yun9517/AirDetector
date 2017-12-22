@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
 import android.webkit.WebView
 import java.util.*
 
@@ -23,6 +24,7 @@ class KnowledgeActivity : AppCompatActivity() {
         mContext = this@KnowledgeActivity.applicationContext
 
         readHtmlFormAssets()
+        initActionBar()
     }
 
 
@@ -45,5 +47,25 @@ class KnowledgeActivity : AppCompatActivity() {
         } else {
             webView!!.loadUrl("file:///android_asset/knowledge/index-en_US.html")
         }
+    }
+
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

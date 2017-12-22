@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.SwitchCompat
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Button
@@ -67,6 +68,7 @@ class SettingActivity : AppCompatActivity() {
         Toast.makeText(this,result1.first()?.created_time.toString(),Toast.LENGTH_SHORT).show()
         */
 
+        initActionBar()
 
 
     }
@@ -192,10 +194,30 @@ class SettingActivity : AppCompatActivity() {
 
 
     override fun finish() {
-        val intent = Intent()
-        intent.putExtra("choseCycle", mPreference?.getInt(SavePreferences.SETTING_TEST_CYCLE, 0))
-        setResult(2, intent)
+        //val intent = Intent()
+        //intent.putExtra("choseCycle", mPreference?.getInt(SavePreferences.SETTING_TEST_CYCLE, 0))
+        //setResult(2, intent)
         super.finish()
+    }
+
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
 }
