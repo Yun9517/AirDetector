@@ -180,6 +180,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_TVOC"
                 android:orientation="vertical">
 
                 <TextView
@@ -218,6 +219,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/show_PM"
                 android:orientation="vertical">
 
                 <TextView
@@ -258,6 +260,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_eCO2"
                 android:orientation="vertical">
 
                 <TextView
@@ -297,6 +300,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_Temp"
                 android:orientation="vertical">
 
                 <TextView
@@ -336,6 +340,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_RH"
                 android:orientation="vertical">
 
                 <TextView

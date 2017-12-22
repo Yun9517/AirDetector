@@ -96,7 +96,8 @@ class MainFragment : Fragment() {
         wetValue=this.view?.findViewById(R.id.wetValue)
 
         textView11Tvoc=this.view?.findViewById(R.id.textView11)
-        textView11Tvoc?.setOnClickListener { pressed="TVOC"
+
+        show_TVOC?.setOnClickListener { pressed="TVOC"
             SetThresholdValue()
             SetbarMaxValue()
            bar1?.setCurrentValues(DetectorValue[2].toFloat())
@@ -110,7 +111,7 @@ class MainFragment : Fragment() {
 
         }
         textView3CO2=this.view?.findViewById(R.id.textView3)
-        textView3CO2?.setOnClickListener { pressed="CO2"
+        show_eCO2?.setOnClickListener { pressed="CO2"
             SetThresholdValue()
             SetbarMaxValue()
             bar1?.setCurrentValues(DetectorValue[3].toFloat())
@@ -124,7 +125,7 @@ class MainFragment : Fragment() {
             tvocValue2?.text = textSpan
         }
         textView5Temperature=this.view?.findViewById(R.id.textView5)
-    /*    textView5Temperature?.setOnClickListener { pressed="temperature"
+    /*    show_Temp?.setOnClickListener { pressed="temperature"
             SetThresholdValue()
             SetbarMaxValue()
             bar1?.setCurrentValues(DetectorValue[0].toFloat())
@@ -137,7 +138,7 @@ class MainFragment : Fragment() {
             tvocValue2?.text = textSpan
         }
         textView7Humidity=this.view?.findViewById(R.id.textView7)
-        textView7Humidity?.setOnClickListener { pressed="humidity"
+        show_RH?.setOnClickListener { pressed="humidity"
             SetThresholdValue()
             SetbarMaxValue()
             bar1?.setCurrentValues(DetectorValue[1].toFloat())

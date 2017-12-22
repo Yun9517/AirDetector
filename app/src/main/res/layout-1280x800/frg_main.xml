@@ -177,6 +177,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_TVOC"
                 android:orientation="vertical">
 
                 <TextView
@@ -186,6 +187,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -197,6 +199,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp" />
             </LinearLayout>
@@ -213,6 +216,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/show_PM"
                 android:orientation="vertical">
 
                 <TextView
@@ -222,6 +226,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_pm25"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -233,6 +238,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -251,6 +257,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_eCO2"
                 android:orientation="vertical">
 
                 <TextView
@@ -260,6 +267,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_co2"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -271,6 +279,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -288,6 +297,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_Temp"
                 android:orientation="vertical">
 
                 <TextView
@@ -297,6 +307,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_temperature"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -308,6 +319,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
@@ -325,6 +337,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_RH"
                 android:orientation="vertical">
 
                 <TextView
@@ -334,6 +347,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_humidity"
+                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -344,6 +358,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
+                    android:textColor="@color/whiteColor"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textSize="18sp" />

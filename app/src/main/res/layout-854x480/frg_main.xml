@@ -180,6 +180,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/show_TVOC"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -219,6 +220,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:id="@+id/show_PM"
                 android:orientation="vertical">
 
                 <TextView
@@ -259,6 +261,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/show_eCO2"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -299,6 +302,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_Temp"
                 android:orientation="vertical">
 
                 <TextView
@@ -338,6 +342,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:id="@+id/show_RH"
                 android:orientation="vertical">
 
                 <TextView
