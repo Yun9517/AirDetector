@@ -1062,6 +1062,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             mDeviceMAC = mPreference!!.getString(SavePreferences.SETTING_KEY_DEVICE_ADDR, null)*/
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
+                    connState = false
 
                     //    updateUI(intent)
                     /*    connState = false
