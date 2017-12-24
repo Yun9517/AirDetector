@@ -43,6 +43,7 @@ import com.microjet.airqi2.CustomAPI.CustomViewPager
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.TVOCFragment
@@ -281,7 +282,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
         if (mBluetoothDeviceAddress != "noValue" && mConnectionState == 0) {
-            val mainintent = Intent("Main")
+            val mainintent = Intent(BroadcastIntents.PRIMARY)
             mainintent.putExtra("status", "connect")
             mainintent.putExtra("mac", mBluetoothDeviceAddress)
             sendBroadcast(mainintent)
@@ -325,7 +326,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mIsReceiverRegistered = false
         }
 
-        val serviceIntent: Intent? = Intent("Main")
+        val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
         serviceIntent!!.putExtra("status", "disconnect")
         sendBroadcast(serviceIntent)
 
@@ -755,7 +756,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
             R.id.nav_getData -> {
-                val intent: Intent? = Intent("Main")
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                 intent!!.putExtra("status", "getSampleRate")
                 sendBroadcast(intent)
             }
@@ -790,7 +791,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     fun loadDeviceData() {
-        val intent: Intent? = Intent("Main")
+        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
         intent!!.putExtra("status", "getSampleRate")
         sendBroadcast(intent)
     }
@@ -816,7 +817,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun blueToothdisconnect() {
         if (UartService.mConnectionState != 0) {
-            val serviceIntent: Intent? = Intent("Main")
+            val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             serviceIntent!!.putExtra("status", "disconnect")
             sendBroadcast(serviceIntent)
         }
@@ -872,7 +873,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             REQUEST_SELECT_SAMPLE -> {
                 if (data != null) {
                     var value = data.getIntExtra("choseCycle", 0)
-                    val uuintent: Intent? = Intent("Main")
+                    val uuintent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     uuintent!!.putExtra("status", "setSampleRate")
 
                     when (value) {//resolution 1= 30 second

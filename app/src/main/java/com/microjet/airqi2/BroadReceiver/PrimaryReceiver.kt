@@ -7,13 +7,14 @@ import android.os.Bundle
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 
 
 /**
  * Created by B00175 on 2017/11/9.
  */
 
-class MainReceiver : BroadcastReceiver() {
+class PrimaryReceiver : BroadcastReceiver() {
     //private var nm: NotificationManager? = null
 
     private val NOTIFY_ID = 1
@@ -43,12 +44,12 @@ class MainReceiver : BroadcastReceiver() {
             //    context.sendBroadcast(mainIntent)
             }
             "disconnect" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "disconnect")
                 context.sendBroadcast(mainIntent)
             }
             "connect" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 var macAddress = intent.getStringExtra("mac")
                 mainIntent.putExtra("status", "connect")
                 mainIntent.putExtra("mac",macAddress)
@@ -56,12 +57,12 @@ class MainReceiver : BroadcastReceiver() {
                 Log.d("MAINRECEIVER","CONNECT")
             }
             "close" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "close")
                 context.sendBroadcast(mainIntent)
             }
             "B6"->{
-                var mainIntent = Intent("mainActivity")
+                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
                 mainIntent.putExtra("status","B6")
 
                 mainIntent.putExtra("TEMPValue",intent.getStringExtra("TEMPValue"))
@@ -97,7 +98,7 @@ class MainReceiver : BroadcastReceiver() {
                 */
             }
             "B5"->{
-                var mainIntent = Intent("mainActivity")
+                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
                 mainIntent.putExtra("status","B5")
                 mainIntent.putExtras(intent)
                 context.sendBroadcast(mainIntent)
@@ -107,30 +108,30 @@ class MainReceiver : BroadcastReceiver() {
               //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
             }
             "message" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "message")
                 context.sendBroadcast(mainIntent)
                 Log.d("message","messageMAIN")
             }
             "callItems" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "callItems")
                 context.sendBroadcast(mainIntent)
             }
             "checkItems" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "checkItems")
                 context.sendBroadcast(mainIntent)
             }
             "setSampleRate" -> {
                 var SampleTime= intent.getIntExtra("SampleTime",2)
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "setSampleRate")
                 mainIntent.putExtra("SampleTime",SampleTime)
                 context.sendBroadcast(mainIntent)
             }
             "getSampleRate" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "getSampleRate")
                 when( intent.getStringExtra("callFromConnect"))
                 {
@@ -140,29 +141,29 @@ class MainReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "callDeviceStartSample" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "callDeviceStartSample")
                 context.sendBroadcast(mainIntent)
             }
             "ACTION_GATT_SERVICES_DISCOVERED" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "ACTION_GATT_SERVICES_DISCOVERED")
                 context.sendBroadcast(mainIntent)
             }
             "EXTRA_DATA" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "getSampleRate")
                 context.sendBroadcast(mainIntent)
             }
             "ACTION_DATA_AVAILABLE" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 var char = intent.getByteArrayExtra("txValue")
                 mainIntent.putExtra("status", "ACTION_DATA_AVAILABLE")
                 mainIntent.putExtra("EXTRA_DATA",char)
                 context.sendBroadcast(mainIntent)
             }
             "DEVICE_DOES_NOT_SUPPORT_UART" -> {
-                var mainIntent = Intent("UartService")
+                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }

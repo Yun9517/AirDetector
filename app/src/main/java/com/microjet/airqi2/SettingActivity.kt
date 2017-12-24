@@ -14,6 +14,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import com.microjet.airqi2.Definition.SavePreferences
 import android.widget.AdapterView
+import com.microjet.airqi2.Definition.BroadcastIntents
 
 
 /**
@@ -135,7 +136,7 @@ class SettingActivity : AppCompatActivity() {
         swMessage!!.setOnClickListener {
             if (swMessage!!.isChecked) {
                 text_msg_stat!!.text = getString(R.string.text_setting_on)
-                val mainintent = Intent("Main")
+                val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
                 Log.d("message","messageSETTING")

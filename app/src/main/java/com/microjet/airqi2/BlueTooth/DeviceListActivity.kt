@@ -39,6 +39,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import java.util.*
 
@@ -75,7 +76,7 @@ class DeviceListActivity : Activity() {
 
         //先拿掉該判斷，如有問題再補回來,原本mConnectionState初始化無值不給connect
         //if (UartService.mConnectionState == 0) {
-            val serviceIntent: Intent? = Intent("Main")
+            val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             serviceIntent!!.putExtra("status", "connect")
             serviceIntent!!.putExtra("mac", device.address)
             sendBroadcast(serviceIntent)

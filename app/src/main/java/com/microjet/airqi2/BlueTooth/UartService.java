@@ -14,15 +14,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.SystemClock;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,13 +27,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.UUID;
 
 import io.realm.Realm;
 import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.BroadReceiver.MainReceiver;
-import com.microjet.airqi2.MainActivity;
+import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 
@@ -90,7 +84,7 @@ public class UartService extends Service {
 
     String intentAction;
 
-    //private MainReceiver mMainReceiver;
+    //private PrimaryReceiver mPrimaryReceiver;
     //private String shareStuff = "MACADDRESS";
 
     private Boolean mIsReceiverRegistered = false;
@@ -112,7 +106,7 @@ public class UartService extends Service {
                     mConnectionState = STATE_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
-                    Intent mainIntent = new Intent("Main");
+                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
                     mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     mBluetoothAdapter = mBluetoothManager.getAdapter();
@@ -125,7 +119,7 @@ public class UartService extends Service {
                     mConnectionState = STATE_CONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
-                    Intent mainIntent = new Intent("Main");
+                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
                     mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     break;
@@ -138,7 +132,7 @@ public class UartService extends Service {
                     Log.i(TAG, "Attempting to start service discovery:" +
                             mBluetoothGatt.discoverServices());
 
-                    Intent mainIntent = new Intent("Main");
+                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
                     mainIntent.putExtra("status", intentAction);
                     // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
                     mainIntent.putExtra("macAddress", mBluetoothDeviceAddress);
@@ -260,16 +254,16 @@ public class UartService extends Service {
     public void onCreate() {
         super.onCreate();
         /* 寫在mainfest的不用註冊
-        mMainReceiver = new MainReceiver();
+        mPrimaryReceiver = new PrimaryReceiver();
         IntentFilter filter = new IntentFilter("Main");
-        registerReceiver(mMainReceiver,filter);
+        registerReceiver(mPrimaryReceiver,filter);
         */
 
 
         if (!mIsReceiverRegistered) {
             if (mReceiver == null) {
                 mReceiver = new MyBroadcastReceiver();
-                registerReceiver(mReceiver, new IntentFilter("UartService"));
+                registerReceiver(mReceiver, new IntentFilter(BroadcastIntents.UART_SERVICE));
                 mIsReceiverRegistered = true;
                 //LocalBroadcastManager.getInstance(this).registerReceiver(UARTStatusChangeReceiver.get(), makeGattUpdateIntentFilter());
             }
@@ -512,7 +506,7 @@ public class UartService extends Service {
         Log.i(TAG, "Disconnected from GATT server.");
         //broadcastUpdate(intentAction);
         //sendToMainBroadcast(intentAction);
-        //unregisterReceiver(mMainReceiver);
+        //unregisterReceiver(mPrimaryReceiver);
         disconnect();
         unregisterReceiver(mReceiver);
         close();
@@ -837,7 +831,7 @@ public class UartService extends Service {
             //   final CallingTranslate CT = new CallingTranslate();
             ArrayList<String> RString;
             String val;
-            Intent mainIntent = new Intent("Main");
+            Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
             switch (txValue[2]) {
                 case (byte) 0xB0:
                     RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
@@ -996,14 +990,14 @@ public class UartService extends Service {
     }
 
     private void sendToMainBroadcast(String value) {
-        Intent mainIntent = new Intent("Main");
+        Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
         mainIntent.putExtra("status", value);
         sendBroadcast(mainIntent);
     }
 
     private void sendCharToMainBroadcast(BluetoothGattCharacteristic characteristic) {
         if (TX_CHAR_UUID.equals(characteristic.getUuid())) {
-            Intent mainIntent = new Intent("Main");
+            Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
             mainIntent.putExtra("status", ACTION_DATA_AVAILABLE);
             mainIntent.putExtra("txValue", characteristic.getValue());
             sendBroadcast(mainIntent);
