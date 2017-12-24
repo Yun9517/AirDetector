@@ -140,6 +140,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mWaitLayout: RelativeLayout? = null
     private var mainLayout: LinearLayout? = null
     private var mMainReceiver: BroadcastReceiver? = null
+    private var preheatCountDownInt = 0
+
+    private var topMenu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -234,10 +237,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startService(serviceIntent)
 
         if (!mIsReceiverRegistered) {
-        //    if (mReceiver == null)
-         //       mReceiver = MyBroadcastReceiver()
             LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
-        //    registerReceiver(mReceiver, IntentFilter("mainActivity"))
             mIsReceiverRegistered = true
         }
 
@@ -252,56 +252,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         setupDrawerContent(nvDrawerNavigation)
     }
 
-
-    private val mMessageReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context, intent: Intent) {
-            // on background handler thread, and verified CONNECTIVITY_INTERNAL
-            // permission above.
-            when (intent.action) {
-                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED",
-                "com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTING"
-                -> {
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-                }
-                "com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED" -> {
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-                    nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                }
-            }
-        }
-    }
-
     override fun onStart() {
         super.onStart()
-        //var intent = Intent("mainActivity")
-        //.putExtra("status", "ACTION_GATT_DISCONNECTED")
-        //updateUI(intent)
 
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         var mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
-        if (mBluetoothDeviceAddress != "noValue" && mConnectionState == 0) {
+        if (mBluetoothDeviceAddress != "noValue" && !connState) {
             val mainintent = Intent(BroadcastIntents.PRIMARY)
             mainintent.putExtra("status", "connect")
             mainintent.putExtra("mac", mBluetoothDeviceAddress)
             sendBroadcast(mainintent)
         }
-        Log.d("MAIN", "START")
+
+        requestPermissionsForBluetooth()
+        checkBluetooth()
+        checkUIState()
+
+        Log.d(TAG, "START")
 
     }
 
     override fun onResume() {
         super.onResume()
-
-        requestPermissionsForBluetooth()
-        checkBluetooth()
-
-
-        //bindService(serviceIntent, mServiceConnection ,Context.BIND_AUTO_CREATE)
-        //LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver,makeGattUpdateIntentFilter())
-        //val mainIntent = Intent("Main")
-        //sendBroadcast(mainIntent)
 
     }
 
@@ -313,16 +286,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
 
-
     }
 
     override fun onDestroy() {
         super.onDestroy()
         if (mIsReceiverRegistered) {
-           // unregisterReceiver(MyBroadcastReceiver)
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
-         //   unregisterReceiver(mReceiver)
-         //   mReceiver = null
             mIsReceiverRegistered = false
         }
 
@@ -333,12 +302,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val intent: Intent? = Intent(this, UartService::class.java)
         stopService(intent)
 
-
-        //LocalBroadcastManager.getInstance(this).unregisterReceiver(mMessageReceiver)
-        //unbindService(mServiceConnection)
     }
 
-    //123
     // 20171130 add by Raymond 增加權限 Request
     // 允許權限後的方法實作
     override fun onPermissionsGranted(requestCode: Int, perms: List<String>) {
@@ -555,57 +520,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private var myMenu: Menu? = null
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.main_menu, menu)
-        myMenu = menu
-        menuItem= menu!!.findItem(R.id.batStatus)
-        bleIcon = menu!!.findItem(R.id.bleStatus)
-        battreyIcon = menu?.findItem(R.id.batStatus)
-        menuItem!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item!!.itemId) {
-            R.id.batStatus -> {
-                if (connState) {
-                    dialogShow(getString(R.string.text_battery_title),
-                            getString(R.string.text_battery_value) + batValue + "%")
-                }
-            }
-
-/*
-            R.id.calendarView -> {
-                DatePickerDialog(this@MainActivity, R.style.MyDatePickerDialogTheme,
-                        dateSetListener,
-                        // set DatePickerDialog to point to today's date when it loads up
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)).show()
-            }
-            */
-        //  R.id.Andy_calendarView ->{
-        //   CalendarShow("月曆","月曆選擇")
-        // }
-
-
-        //點選ActionBAR會返回
-            android.R.id.home -> {
-                mDrawerToggle!!.onOptionsItemSelected(item)
-            }
-
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
         nvDrawerNavigation = this.findViewById(R.id.navigation)
         nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-
 
         // 20171212 Raymond added Wait screen
         mWaitLayout = this.findViewById(R.id.waitLayout)
@@ -660,6 +579,51 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mDrawerToggle!!.syncState()
         // 設定 DrawerLayout 監聽事件
         mDrawerLayout!!.addDrawerListener(mDrawerToggle!!)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        topMenu = menu
+        //menuItem= menu!!.findItem(R.id.batStatus)
+        bleIcon = menu!!.findItem(R.id.bleStatus)
+        battreyIcon = menu!!.findItem(R.id.batStatus)
+        bleIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        battreyIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.batStatus -> {
+                if (connState) {
+                    dialogShow(getString(R.string.text_battery_title),
+                            getString(R.string.text_battery_value) + batValue + "%")
+                }
+            }
+
+/*
+            R.id.calendarView -> {
+                DatePickerDialog(this@MainActivity, R.style.MyDatePickerDialogTheme,
+                        dateSetListener,
+                        // set DatePickerDialog to point to today's date when it loads up
+                        cal.get(Calendar.YEAR),
+                        cal.get(Calendar.MONTH),
+                        cal.get(Calendar.DAY_OF_MONTH)).show()
+            }
+            */
+        //  R.id.Andy_calendarView ->{
+        //   CalendarShow("月曆","月曆選擇")
+        // }
+
+
+        //點選ActionBAR會返回
+            android.R.id.home -> {
+                mDrawerToggle!!.onOptionsItemSelected(item)
+            }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun dialogShow(title: String, content: String) {
@@ -731,16 +695,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //var fragment: Fragment? = null
         //val fragmentClass: Class<*>
         when (menuItem.itemId) {
-            R.id.nav_add_device -> blueToothShow()
-            R.id.nav_disconnect_device -> blueToothdisconnect()
-            R.id.nav_about -> {
-                aboutShow()
-                /*
-               val intent: Intent? = Intent("Main")
-               intent!!.putExtra("status", "callDeviceStartSample")
-               sendBroadcast(intent)*/
-                //    aboutShow()
-            }
+            R.id.nav_add_device -> blueToothConnect()
+            R.id.nav_disconnect_device -> blueToothDisconnect()
+            R.id.nav_about ->  aboutShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
         //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
@@ -753,12 +710,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //  knowledgeShow()
             }
             R.id.nav_qanda -> qandaShow()
-
-
             R.id.nav_getData -> {
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                /*
+                val intent: Intent? = Intent("Main")
                 intent!!.putExtra("status", "getSampleRate")
-                sendBroadcast(intent)
+                sendBroadcast(intent)*/
             }
             R.id.nav_setting -> settingShow()
         //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
@@ -790,14 +746,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
 
-    fun loadDeviceData() {
+    private fun loadDeviceData() {
         val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
         intent!!.putExtra("status", "getSampleRate")
         sendBroadcast(intent)
     }
 
     //menuItem點下去後StartActivityResult等待回傳
-    private fun blueToothShow() {
+    private fun blueToothConnect() {
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         isGPSEnabled = mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
         if (!isGPSEnabled) {
@@ -810,18 +766,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //startActivityForResult(i,REQUEST_SELECT_DEVICE)
     }
 
-    private fun setGPSEnabled() {
-        Toast.makeText(this, "無法取得定位，手機請開啟定位", Toast.LENGTH_SHORT).show()
-        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-    }
-
-    private fun blueToothdisconnect() {
-        if (UartService.mConnectionState != 0) {
+    private fun blueToothDisconnect() {
+        if (connState) {
             val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             serviceIntent!!.putExtra("status", "disconnect")
             sendBroadcast(serviceIntent)
         }
         //stopService(serviceIntent)
+    }
+
+    private fun setGPSEnabled() {
+        Toast.makeText(this, "無法取得定位，手機請開啟定位", Toast.LENGTH_SHORT).show()
+        startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
 
     private fun heatingPanelShow() {
@@ -840,6 +796,24 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         })
         va.start()
+    }
+
+    private fun heatingPanelControl(preheatCountDownString : String) {
+        if (mWaitLayout!!.visibility == View.INVISIBLE) {
+            heatingPanelShow()
+            mWaitLayout!!.bringToFront()
+        }
+
+        preheatCountDownInt = (120 - preheatCountDownString.toInt())
+        Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
+        mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+        //120秒預熱畫面消失
+        if (preheatCountDownString == "255") {
+            if (mWaitLayout!!.visibility == View.VISIBLE) {
+                heatingPanelHide()
+            }
+            mWaitLayout!!.bringToFront()
+        }
     }
 
     private fun createDropAnim(view: View, start: Int, end: Int): ValueAnimator {
@@ -927,37 +901,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return intentFilter
     }
 
-    private fun displayBatteryLife(intent: Intent) {
-        batValue = intent.getStringExtra("BatteryLife").toInt()
-        if (batValue > 100) {
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_charge)
-            batValue = batValue - 100
-            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_charge)
-        } else if (batValue in 66..100) {
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_full)
-            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_full)
-        } else if (batValue in 33..65) {
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_2grid)
-            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_2grid)
-        } else if (batValue in 10..32) {
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_1grid)
-            //myMenu?.findItem(R.id.batStatus)?.icon=getDrawable(R.drawable.battery_icon_1grid)
-        } else {
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_low)
-        }
-        // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
+    private fun displayBatteryLife() {
+        //batValue = intent.getStringExtra("BatteryLife").toInt()
+        //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
+            when {
+                batValue > 100 -> {
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_charge)
+                    batValue -= 100
+                }
+                batValue in 66..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_full)
+                batValue in 33..65 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_2grid)
+                batValue in 10..32 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_1grid)
+
+                else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_low)
+            }
     }
 
-
-    private val mServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(className: ComponentName, rawBinder: IBinder) {
-            mService = (rawBinder as UartService.LocalBinder).serverInstance
-        }
-
-        override fun onServiceDisconnected(classname: ComponentName) {
-
-        }
-    }
     val handler: Handler = Handler()
     var counter: Int = 0
     var TVOCAVG = 0
@@ -1006,7 +965,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             "B6" -> {
                 connState = true
                 intent.getStringExtra("TVOCValue")
-                displayBatteryLife(intent)
+                //displayBatteryLife(intent)
                 // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                 val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
                 (mFragmentAdapter.getItem(0) as MainFragment).setBar1CurrentValue(
@@ -1036,7 +995,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 mPageVp!!.setPagingEnabled(true)
             }
         }
-        checkConnection()
+        checkUIState()
         Log.d("MAINAC", "UPDATEUI")
     }
 
@@ -1046,7 +1005,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         @SuppressLint("SetTextI18n")
         override fun onReceive(context: Context?, intent: Intent) {
             //updateUI(intent)
-            //checkBluetooth()
             checkBluetooth()
             val action = intent.action
             when (action) {
@@ -1086,40 +1044,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                     val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
                     batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-                    val preheatCountDown = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     Log.v(TAG, "電池電量: $batValue%")
-                    when {
-                        batValue > 100 -> {
-                            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_charge)
-                            batValue -= 100
-                        }
-                        batValue in 66..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_full)
-                        batValue in 33..65 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_2grid)
-                        batValue in 10..32 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_1grid)
-
-                        else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_low)
-                    }
-
-                    // 預熱畫面
-                    if (mWaitLayout!!.visibility == View.INVISIBLE) {
-                        heatingPanelShow()
-                        mWaitLayout!!.bringToFront()
-                    }
-
-                    val sec = (120 - preheatCountDown.toInt())
-                    Log.v(TAG, "Preheat Count Down: " + sec)
-                    mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + sec.toString() + "秒"
-                    //120秒預熱畫面消失
-                    if (preheatCountDown == "255") {
-                        if (mWaitLayout!!.visibility == View.VISIBLE) {
-                            heatingPanelHide()
-                        }
-                        mWaitLayout!!.bringToFront()
-                    }
+                    // 預熱畫面控制
+                    heatingPanelControl(preheatCountDownString)
                 }
             }
             Log.d("MainActivity","OnReceive")
-            checkConnection()
+            checkUIState()
             /*   when (intent.getStringExtra("status")) {
 
 
@@ -1158,16 +1090,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
-    @Synchronized private fun checkConnection() {
-        if (UartService.mConnectionState == 2) {
+    @Synchronized private fun checkUIState() {
+        if (connState) {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-            //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
             bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+            displayBatteryLife()
         }else {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false

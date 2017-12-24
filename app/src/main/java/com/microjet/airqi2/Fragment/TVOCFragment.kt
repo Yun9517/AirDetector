@@ -35,6 +35,7 @@ import com.microjet.airqi2.CustomAPI.FixBarChart
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import com.microjet.airqi2.myData
@@ -172,8 +173,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     fun getDeviceData() {
-        val mainactivity: MainActivity = (getActivity() as MainActivity)
-        mainactivity.loadDeviceData()
+        //val mainactivity: MainActivity = (getActivity() as MainActivity)
+        //mainactivity.loadDeviceData()
+        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+        intent!!.putExtra("status", "getSampleRate")
+        context.sendBroadcast(intent)
     }
 
     fun setProgessBarMax(input: Int) {
