@@ -547,7 +547,7 @@ class MainFragment : Fragment() {
 
         when (dataForState) {
             DetectionData.TVOC -> {
-                tvInCycleTitle!!.text = getString(R.string.text_label_tvoc)
+                tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                 bar1?.setCurrentValues(tvocDataFloat)
                 SetbarMaxValue(dataForState)
                 TVOCStatusTextShow(tvocDataFloat)

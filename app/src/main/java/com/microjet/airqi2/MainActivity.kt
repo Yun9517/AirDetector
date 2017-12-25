@@ -901,7 +901,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return intentFilter
     }
 
-    private fun displayBatteryLife() {
+    private fun displayConnetedBatteryLife() {
         //batValue = intent.getStringExtra("BatteryLife").toInt()
         //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
             when {
@@ -936,9 +936,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
                 //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
-                val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+                //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
 
-                (mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
+                //(mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
                 /*  val intent: Intent? = Intent("Main")
                                          intent!!.putExtra("status", "callDeviceStartSample")*/
             }
@@ -953,11 +953,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
                 //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
                 //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
-                val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                (mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
+                //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+                //(mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
 
-                (mFragmentAdapter.getItem(1) as TVOCFragment).stopUpdateDataAnimation()
-                (mFragmentAdapter.getItem(1) as TVOCFragment).setProgessBarNow(0)
+                //(mFragmentAdapter.getItem(1) as TVOCFragment).stopUpdateDataAnimation()
+                //(mFragmentAdapter.getItem(1) as TVOCFragment).setProgessBarNow(0)
             }
             "B5" -> {
                 Log.d("UPDATEUI", "Nothing")
@@ -984,7 +984,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     (mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
                     */
                 //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                (mFragmentAdapter.getItem(1) as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"), intent.getStringExtra("BatteryLife"))
+                //(mFragmentAdapter.getItem(1) as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"), intent.getStringExtra("BatteryLife"))
                 //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
                 //(mFragmentAdapter.getItem(0) as MainFragment).setGetTimeFlag(intent.getStringExtra("flag").toInt())
                 // 20171212 Raymond added Wati screen
@@ -1048,6 +1048,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     Log.v(TAG, "電池電量: $batValue%")
                     // 預熱畫面控制
                     heatingPanelControl(preheatCountDownString)
+                    displayConnetedBatteryLife()
                 }
             }
             Log.d("MainActivity","OnReceive")
@@ -1099,7 +1100,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-            displayBatteryLife()
         }else {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
