@@ -12,7 +12,7 @@
     <string name="text_label_temperature">温度</string>
     <string name="text_label_humidity">湿度</string>
     <string name="text_default_value">----</string>
-    <string name="text_label_auto_detect">自动侦测\n总挥发性有机化合物</string>
+    <string name="text_label_tvoc_detect">自动侦测\n总挥发性有机化合物</string>
     <string name="text_label_ststus_good">普通</string>
     <string name="text_label_ststus_mid">轻度污染</string>
     <string name="text_label_ststus_bad">重度污染</string>

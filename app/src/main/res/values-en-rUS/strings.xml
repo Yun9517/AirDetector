@@ -13,7 +13,7 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_label_temperature">Temp.</string>
     <string name="text_label_humidity">RH</string>
     <string name="text_default_value">----</string>
-    <string name="text_label_auto_detect">TVOC</string>
+    <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_ststus_good">Mediocre </string> <!-- 原 Good-->
     <string name="text_label_ststus_mid">Minor Pollution</string> <!-- 原 Poor-->
     <string name="text_label_ststus_bad">Serious Pollution</string> <!-- 原 Unhealthy-->

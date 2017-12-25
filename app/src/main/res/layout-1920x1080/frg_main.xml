@@ -49,19 +49,19 @@
 
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/inCycleTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
                     android:gravity="center"
-                    android:text="@string/text_label_auto_detect"
+                    android:text="@string/text_label_tvoc_detect"
                     android:textColor="@color/whiteColor"
                     android:textAlignment="center"
                     android:textSize="20sp" />
 
                 <TextView
-                    android:id="@+id/tvocValue2"
+                    android:id="@+id/inCycleValue"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -75,7 +75,7 @@
                     android:textSize="30sp" />
 
                 <TextView
-                    android:id="@+id/tvocStatus"
+                    android:id="@+id/inCycleState"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -90,7 +90,7 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView13"
+            android:id="@+id/tvRange1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/relativeLayout"
@@ -100,7 +100,7 @@
             android:text="@string/text_tvoc_meter_220ppb" />
 
         <TextView
-            android:id="@+id/textView14"
+            android:id="@+id/tvRange2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/relativeLayout"
@@ -132,13 +132,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/textView"
+                android:id="@+id/tvNotify"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:textSize="12sp" />
             <TextView
-                android:id="@+id/lastDetectTime"
+                android:id="@+id/tvLastDetectTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="end"
@@ -232,7 +232,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/pmValue"
+                    android:id="@+id/tvBtmPMValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -313,7 +313,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tempValue"
+                    android:id="@+id/tvBtmTEMPValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

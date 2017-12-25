@@ -199,6 +199,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //    mTextViewTimeRange?.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
+    }
+
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_tvoc, container, false)
 
@@ -418,7 +423,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onResume() {
         super.onResume()
-        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
         //視Radio id畫圖
         when (radioButtonID) {
             0 -> {
@@ -438,11 +442,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     override fun onPause() {
-        try {
-            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(mGattUpdateReceiver)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
         super.onPause()
     }
 
@@ -453,6 +452,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onStop() {
         super.onStop()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(mGattUpdateReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
