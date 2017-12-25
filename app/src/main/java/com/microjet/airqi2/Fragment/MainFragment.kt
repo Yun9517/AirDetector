@@ -23,7 +23,9 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.media.AudioManager
 import android.media.SoundPool
-
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.AbsoluteSizeSpan
 
 
 /**
@@ -52,17 +54,9 @@ class MainFragment : Fragment() {
     private var tvBtmCarbonValue:TextView?=null
     private var tvBtmTempValue:TextView?=null
     private var tvBtmHUMIValue:TextView?=null
-    //private var inCycleValueTvoc:TextView?=null
-    //private var textView3CO2:TextView?=null
-    //private var textView5Temperature:TextView?=null
-    //private var textView7Humidity:TextView?=null
-
-    private var imgPanel: ImageView? = null
 
     private var tvLastDetecterTime:TextView?=null
     //private var pressed="TVOC"//0=temperature 1=humidity 2=TVOC 3=CO2
-    //private var DetectorValue=ArrayList<String>()
-    //private var tvocValue2: TextView?=null
 
     private var tvocDataFloat = 0f
     private var tempDataFloat = 0f
@@ -89,10 +83,6 @@ class MainFragment : Fragment() {
     private var countsound220:Int?=0
     private var countsound800:Int?=0
     private var countsound1500:Int?=0
-
-    //private val range1:Float = 0f
-    //private val range2:Float = 0f
-
 
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -126,34 +116,12 @@ class MainFragment : Fragment() {
         tvBtmHUMIValue=this.view!!.findViewById(R.id.wetValue)
 
         show_TVOC?.setOnClickListener {
-            //pressed="TVOC"
             dataForState = DetectionData.TVOC
-            //SetThresholdValue(dataForState)
-            //SetbarMaxValue(dataForState)
-            //bar1?.setCurrentValues(tvocDataFloat)
-            //textView2.text=getString(R.string.text_label_auto_detect)
-            //val temp=DetectorValue[2]+" ppb "
-            //val textSpan= SpannableStringBuilder(temp)
-            //textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //tvocValue2?.text = textSpan
             checkUIState()
 
         }
         show_eCO2?.setOnClickListener {
-            //pressed="CO2"
             dataForState = DetectionData.CO2
-            //SetThresholdValue(dataForState)
-            //SetbarMaxValue(dataForState)
-            //bar1?.setCurrentValues(DetectorValue[3].toFloat())
-            //textView2.text=getString(R.string.text_label_co2)
-            //val temp=DetectorValue[3]+" ppm "
-            //val textSpan= SpannableStringBuilder(temp)
-            //textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            //tvocValue2?.text = textSpan
             checkUIState()
         }
 
@@ -209,41 +177,13 @@ class MainFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         checkUIState()
-        //SetThresholdValue(DetectorData)
-        //val range1:Float=tvThreadHold1?.text.toString().toFloat()
-        //val range2:Float=tvThreadHold2?.text.toString().toFloat()
-        //bar1?.setThreadholdValue(floatArrayOf(range1,range2))
-    //    pressed="temperature"
-
-        /*when (pressed){/*
-            "temperature"->{
-                bar1?.setMaxValues(100f)
-            }
-            "humidity"->{
-                bar1?.setMaxValues(100f)
-            }
-            */
-            "TVOC"->{
-                bar1?.setMaxValues(1000f)
-            }
-            "CO2"->{
-                bar1?.setMaxValues(2000f)
-            }
-            else ->{pressed="TVOC"
-                bar1?.setMaxValues(1000f)
-            }
-        }*/
-
-       // bar1!!.setCurrentValues(10f)
     }
     override fun onPause() {
-
         super.onPause()
     }
 
     override fun onStop() {
         super.onStop()
-
     }
 
     override fun onDestroyView() {
@@ -264,38 +204,12 @@ class MainFragment : Fragment() {
     }
 
     private fun SetThresholdValue(dataForState: DetectionData){
-        /*
-        when (pressed){/*
-            "temperature"->{
-                ThreadHold1?.text="20"
-                ThreadHold2?.text="50"
-            }
-            "humidity"->{
-                ThreadHold1?.text="20"
-                ThreadHold2?.text="50"
-            }*/
-            "TVOC"->{
-                tvThreadHold1?.text= DetectionData.range1
-                tvThreadHold2?.text= DetectionData.range2
-            }
-            "CO2"->{
-                tvThreadHold1?.text="800"
-                tvThreadHold2?.text="1500"
-            }
-            else ->{pressed="TVOC"
-                tvThreadHold1?.text="220"
-                tvThreadHold2?.text="660"
-            }
-        }
-        */
         tvThreadHold1!!.text= dataForState.range1.toString()
         tvThreadHold2!!.text= dataForState.range2.toString()
     }
+
     private fun SetbarMaxValue(state: DetectionData){
-        //val range1:Float=tvThreadHold1?.text.toString().toFloat()
-        //val range2:Float=tvThreadHold2?.text.toString().toFloat()
         bar1?.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
-        //    pressed="temperature"
         when (state){
             /*
             "temperature"->{
@@ -341,7 +255,6 @@ class MainFragment : Fragment() {
         tvBtmCarbonValue?.text=co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue?.text="Coming soon"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue?.text="Coming soon"/*currentValue[1] + " %"*/
-
     }
 
      @SuppressLint("SetTextI18n")
@@ -522,14 +435,14 @@ class MainFragment : Fragment() {
 
         }
     }
-    private fun CO2tatusTextShow(currentValue:String){
-        if (currentValue.toFloat() < 800){
+    private fun CO2tatusTextShow(currentValue:Float){
+        if (currentValue < 800){
             tvNotify?.text = getString(R.string.text_message_air_good)
             tvInCycleState?.text = getString(R.string.text_label_ststus_good)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
         }
-        else if (currentValue.toFloat() > 1500) {
+        else if (currentValue > 1500) {
             tvNotify?.text = getString(R.string.text_message_air_bad)
             tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
@@ -616,6 +529,7 @@ class MainFragment : Fragment() {
     protected fun isInitVibratorNotify(): Boolean {
         return true
     }
+
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
@@ -627,23 +541,36 @@ class MainFragment : Fragment() {
         SetThresholdValue(dataForState)
         SetbarMaxValue(dataForState)
         setBtmCurrentValue()
-        when (dataForState) {
-            DetectionData.TVOC -> {
-                tvInCycleTitle!!.text = getString(R.string.text_label_tvoc)
-                tvInCycleValue!!.text = tvocDataFloat.toInt().toString() + " ppb"
-                bar1?.setCurrentValues(tvocDataFloat)
-                TVOCStatusTextShow(tvocDataFloat)
-            }
-            DetectionData.CO2 -> {
-                tvInCycleTitle!!.text = getString(R.string.text_label_co2)
-                tvInCycleValue!!.text = co2DataFloat.toInt().toString() + " ppm"
-                bar1?.setCurrentValues(co2DataFloat)
-                CO2tatusTextShow(co2DataFloat.toString())
-            }
-        }
         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
         val date = Date()
         tvLastDetectTime?.text = dateFormat.format(date).toString()
+
+        when (dataForState) {
+            DetectionData.TVOC -> {
+                tvInCycleTitle!!.text = getString(R.string.text_label_tvoc)
+                bar1?.setCurrentValues(tvocDataFloat)
+                SetbarMaxValue(dataForState)
+                TVOCStatusTextShow(tvocDataFloat)
+                val temp = tvocDataFloat.toInt().toString() + " ppb "
+                textSpannble(temp)
+            }
+            DetectionData.CO2 -> {
+                tvInCycleTitle!!.text = getString(R.string.text_label_co2)
+                bar1?.setCurrentValues(co2DataFloat)
+                SetbarMaxValue(dataForState)
+                CO2tatusTextShow(co2DataFloat)
+                val temp = co2DataFloat.toInt().toString() + " ppm "
+                textSpannble(temp)
+            }
+        }
+    }
+
+    private fun textSpannble (temp : String) {
+        val textSpan= SpannableStringBuilder(temp)
+        textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        tvInCycleValue!!.text = textSpan
     }
 
 
