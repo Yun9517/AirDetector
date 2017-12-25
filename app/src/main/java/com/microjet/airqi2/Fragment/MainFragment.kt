@@ -55,7 +55,7 @@ class MainFragment : Fragment() {
     private var tvBtmTempValue:TextView?=null
     private var tvBtmHUMIValue:TextView?=null
 
-    private var tvLastDetecterTime:TextView?=null
+    private var tvLastDetecteTime:TextView?=null
     //private var pressed="TVOC"//0=temperature 1=humidity 2=TVOC 3=CO2
 
     private var tvocDataFloat = 0f
@@ -64,6 +64,7 @@ class MainFragment : Fragment() {
     private var co2DataFloat = 0f
 
     private var dataForState = DetectionData.TVOC
+    private var mConnState = false
 
 
     @Suppress("OverridingDeprecatedMember")
@@ -107,7 +108,7 @@ class MainFragment : Fragment() {
         tvInCycleValue= this.view!!.findViewById(R.id.inCycleValue)
         tvInCycleState= this.view!!.findViewById(R.id.inCycleState)
         tvNotify = this.view!!.findViewById(R.id.tvNotify)
-        tvLastDetecterTime=this.view!!.findViewById(R.id.tvLastDetectTime)
+        tvLastDetecteTime=this.view!!.findViewById(R.id.tvLastDetectTime)
 
         tvBtmTVOCValue =this.view!!.findViewById(R.id.tvocValue)
         tvBtmPmValue=this.view!!.findViewById(R.id.tvBtmPMValue)
@@ -533,35 +534,49 @@ class MainFragment : Fragment() {
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
+        intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
         intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
         return intentFilter
     }
 
     @Synchronized private fun checkUIState() {
-        SetThresholdValue(dataForState)
-        SetbarMaxValue(dataForState)
-        setBtmCurrentValue()
-        val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-        val date = Date()
-        tvLastDetectTime?.text = dateFormat.format(date).toString()
-
-        when (dataForState) {
-            DetectionData.TVOC -> {
-                tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
-                bar1?.setCurrentValues(tvocDataFloat)
-                SetbarMaxValue(dataForState)
-                TVOCStatusTextShow(tvocDataFloat)
-                val temp = tvocDataFloat.toInt().toString() + " ppb "
-                textSpannble(temp)
+        if (mConnState) {
+            //SetThresholdValue(dataForState)
+            //SetbarMaxValue(dataForState)
+            when (dataForState) {
+                DetectionData.TVOC -> {
+                    tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
+                    SetThresholdValue(dataForState)
+                    bar1?.setCurrentValues(tvocDataFloat)
+                    SetbarMaxValue(dataForState)
+                    TVOCStatusTextShow(tvocDataFloat)
+                    val temp = tvocDataFloat.toInt().toString() + " ppb "
+                    textSpannble(temp)
+                }
+                DetectionData.CO2 -> {
+                    tvInCycleTitle!!.text = getString(R.string.text_label_co2)
+                    SetThresholdValue(dataForState)
+                    bar1?.setCurrentValues(co2DataFloat)
+                    SetbarMaxValue(dataForState)
+                    CO2tatusTextShow(co2DataFloat)
+                    val temp = co2DataFloat.toInt().toString() + " ppm "
+                    textSpannble(temp)
+                }
             }
-            DetectionData.CO2 -> {
-                tvInCycleTitle!!.text = getString(R.string.text_label_co2)
-                bar1?.setCurrentValues(co2DataFloat)
-                SetbarMaxValue(dataForState)
-                CO2tatusTextShow(co2DataFloat)
-                val temp = co2DataFloat.toInt().toString() + " ppm "
-                textSpannble(temp)
-            }
+            setBtmCurrentValue()
+            val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+            val date = Date()
+            tvLastDetecteTime?.text = dateFormat.format(date).toString()
+        } else {
+            tvInCycleValue?.text = "---"
+            tvInCycleState?.text = "---"
+            tvBtmTVOCValue?.text= "---"
+            tvBtmPmValue?.text= "---"
+            tvBtmCarbonValue?.text= "---"
+            tvBtmTempValue?.text= "---"/*currentValue[0] + " ℃"*/
+            tvBtmHUMIValue?.text= "---"/*currentValue[1] + " %"*/
+            tvLastDetecteTime?.text = "---"
+            bar1?.setCurrentValues(0f)
         }
     }
 
@@ -580,12 +595,12 @@ class MainFragment : Fragment() {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    tvBtmCarbonValue!!.text = "---"
-                    tvBtmHUMIValue!!.text = "---"
-                    tvBtmPmValue!!.text = "---"
-                    tvBtmTVOCValue!!.text = "---"
-                    tvBtmTempValue!!.text = "---"
+                    mConnState = false
                     //setBar1CurrentValue("0","0","0","0","0")
+                }
+
+                BroadcastActions.ACTION_GATT_CONNECTED -> {
+                    mConnState = true
                 }
 
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
