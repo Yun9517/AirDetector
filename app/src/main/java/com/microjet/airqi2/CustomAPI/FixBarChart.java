@@ -29,7 +29,7 @@ public class FixBarChart extends BarChart {
         super(context, attrs, defStyle);
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    /*@SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent evt) {
         switch (evt.getAction()) {
@@ -45,5 +45,36 @@ public class FixBarChart extends BarChart {
                 break;
         }
         return super.onTouchEvent(evt);
+    }*/
+
+    private float mDownPosX = 0;
+    private float mDownPosY = 0;
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent event) {
+        final float x = event.getX();
+        final float y = event.getY();
+
+        final int action = event.getAction();
+        Log.e("FixBarChart", String.valueOf(action));
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                mDownPosX = x;
+                mDownPosY = y;
+                Log.e("FixBarChart", "mDownPosX: " + x + "  mDownPosY: " + y);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                final float deltaX = Math.abs(x - mDownPosX);
+                final float deltaY = Math.abs(y - mDownPosY);
+                Log.e("FixBarChart", "deltaX: " + deltaX + "  deltaY: " + deltaY);
+                // 这里是否拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
+
+                if (deltaX < deltaY) {// 上下滑動不攔截
+                    return false;
+                }
+        }
+        return super.onInterceptTouchEvent(event);
+        //return this.isPagingEnabled && super.onInterceptTouchEvent(event);
     }
 }
