@@ -110,11 +110,11 @@ class MainFragment : Fragment() {
         tvNotify = this.view!!.findViewById(R.id.tvNotify)
         tvLastDetecteTime=this.view!!.findViewById(R.id.tvLastDetectTime)
 
-        tvBtmTVOCValue =this.view!!.findViewById(R.id.tvocValue)
+        tvBtmTVOCValue =this.view!!.findViewById(R.id.tvBtmTVOCValue)
         tvBtmPmValue=this.view!!.findViewById(R.id.tvBtmPMValue)
-        tvBtmCarbonValue =this.view!!.findViewById(R.id.carbonValue)
+        tvBtmCarbonValue =this.view!!.findViewById(R.id.tvBtmCarbonValue)
         tvBtmTempValue =this.view!!.findViewById(R.id.tvBtmTEMPValue)
-        tvBtmHUMIValue=this.view!!.findViewById(R.id.wetValue)
+        tvBtmHUMIValue=this.view!!.findViewById(R.id.tvBtmHUMIValue)
 
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC

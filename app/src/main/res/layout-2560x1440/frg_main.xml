@@ -48,7 +48,7 @@
 
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/inCycleTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -190,7 +190,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tvocValue"
+                    android:id="@+id/tvBtmTVOCValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -270,7 +270,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/carbonValue"
+                    android:id="@+id/tvBtmCarbonValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -350,7 +350,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/wetValue"
+                    android:id="@+id/tvBtmHUMIValue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
