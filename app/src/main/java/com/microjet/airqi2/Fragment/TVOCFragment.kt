@@ -351,14 +351,29 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
     fun setImageBarSize(){
         mChart!!.data = getBarData()
-        val line660= mChart!!.getBarBounds(BarEntry(660f, 2))
-        val line220= mChart!!.getBarBounds(BarEntry(220f, 1))
-        val line1000= mChart!!.getBarBounds(BarEntry(1000f, 3))
-        textView18.y=line660.top-textView18.height//Text660 position
-        textView20.y=line220.top-textView20.height//Text220 position
-        imageView3.y=line1000.top//red
-        imageView4.y=line660.top//yellow
-        imageView5.y=line220.top//green
+        val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
+        val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
+        val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 3))
+        textView18.y = line660.top-textView18.height//Text660 position
+        textView20.y = line220.top-textView20.height//Text220 position
+        imageView3.y = line1000.top//red
+        imageView4.y = line660.top//yellow
+        imageView5.y = line220.top//green
+
+        //視Radio id畫圖
+        mChart!!.clear()
+        when (radioButtonID) {
+            0 -> {
+                mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+            1, 2, 3 -> {
+                mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+        }
     }
     override fun onStart() {
         super.onStart()
@@ -522,7 +537,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
 
-        var yLimitLine =  LimitLine(220f,"yLimit 测试");
+        /*var yLimitLine =  LimitLine(220f,"yLimit 测试");
         yLimitLine.setLineColor(Color.RED)
         yLimitLine.setTextColor(Color.RED)
         leftAxis.addLimitLine(yLimitLine)
@@ -530,7 +545,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         var yLimitLine2 =  LimitLine(660f,"yLimit 测试");
         yLimitLine2.setLineColor(Color.RED)
         yLimitLine2.setTextColor(Color.RED)
-        leftAxis.addLimitLine(yLimitLine2)
+        leftAxis.addLimitLine(yLimitLine2)*/
 
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
