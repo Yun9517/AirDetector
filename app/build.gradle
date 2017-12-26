@@ -31,6 +31,13 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
 }
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
