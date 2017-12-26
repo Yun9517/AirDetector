@@ -163,9 +163,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             sendBroadcast(mainintent)
         }
 
+        checkUIState()
         requestPermissionsForBluetooth()
         checkBluetooth()
-        checkUIState()
+
 
         Log.d(TAG, "START")
 
@@ -249,16 +250,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun checkBluetooth() {
+        // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothAdapter = mBluetoothManager.adapter
+
         // 若手機不支援BLE則離開APP
         if (!packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             Utils.toastMakeTextAndShow(mContext, resources.getString(R.string.ble_not_supported),
                     Toast.LENGTH_SHORT)
             finish()
         }
-
-        // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
-        val bluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
-        val mBluetoothAdapter = bluetoothManager.adapter
 
         // Checks if Bluetooth is supported on the device.
         if (mBluetoothAdapter == null) {
@@ -366,6 +367,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //點選ActionBAR會返回
             android.R.id.home -> {
+                checkUIState()
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
 
@@ -466,11 +468,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     //menuItem點下去後StartActivityResult等待回傳
     private fun blueToothConnect() {
+        checkBluetooth()
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         isGPSEnabled = mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
+        // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothAdapter = mBluetoothManager.adapter
         if (!isGPSEnabled) {
             setGPSEnabled()
-        } else {
+        } else if (isGPSEnabled && mBluetoothAdapter.isEnabled) {
             val i: Intent? = Intent(this,
                     DeviceListActivity::class.java)
             startActivity(i)
