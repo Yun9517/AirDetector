@@ -220,48 +220,13 @@ class MainFragment : Fragment() {
             }
         }
         else if (currentValue  > 661) {
+            countsound220=0
+            Log.e("更新TVOC220計數變數:",countsound220.toString())
             tvNotify?.text = getString(R.string.text_message_air_bad)
             tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                //20171226  Andy
-                countsound220=0
-                Log.e("更新TVOC220計數變數:",countsound220.toString())
-                if ((countsound660 == 5 || countsound660 == 0))
-                {
-                    //20171220   Andy
-                    try {
-                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
-                        Thread.sleep(500)
-                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
-                        //20171219   Andy
-                        //mp.start()
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
-                }
-            }
-
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if ((countsound660 == 5|| countsound660 == 0)) {
-                    if (mVibrator == null) {
-                    } else {
-                        // 震动 1s
-                        mVibrator!!.vibrate(2000)
-                    }
-                }
-            }
-
-            if (countsound660 == 5) {
-                countsound660 = 0
-            }
-            countsound660 = countsound660!! + 1
-            Log.e("TVOC660計數變數:",countsound660.toString())
+            hightBeBEBEBE()
         }
         else{
             //20171226  Andy
@@ -272,42 +237,8 @@ class MainFragment : Fragment() {
 
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            lowtBeBEBEBE()
 
-            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
-            {
-
-                if ((countsound220 == 5 || countsound220 == 0)) {
-                    //20171219   Andy
-                    //mp.start()
-                    //20171220   Andy
-                    try {
-                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over220, 1)
-                        Thread.sleep(500)
-                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
-                }
-            }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if ((countsound220 == 5|| countsound220 == 0)) {
-                    if (mVibrator == null) {
-                    } else {
-                        // 震动 1s
-                        mVibrator!!.vibrate(1000)
-                    }
-                }
-
-            }
-
-            if (countsound220 == 5) {
-                countsound220 = 0
-            }
-            countsound220 = countsound220!! + 1
-            Log.e("TVOC220計數變數:",countsound220.toString())
         }
     }
     private fun CO2tatusTextShow(currentValue:Float){
@@ -461,6 +392,82 @@ class MainFragment : Fragment() {
         tvInCycleValue!!.text = textSpan
     }
 
+
+    private fun hightBeBEBEBE(){
+        var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+        if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
+        {
+            //20171226  Andy
+            countsound220=0
+            Log.e("更新TVOC220計數變數:",countsound220.toString())
+            if ((countsound660 == 5 || countsound660 == 0))
+            {
+                //20171220   Andy
+                try {
+                    alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
+                    Thread.sleep(500)
+                    soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+
+        if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+        {
+            if ((countsound660 == 5|| countsound660 == 0)) {
+                if (mVibrator == null) {
+                } else {
+                    // 震动 1s
+                    mVibrator!!.vibrate(2000)
+                }
+            }
+        }
+
+        if (countsound660 == 5) {
+            countsound660 = 0
+        }
+        countsound660 = countsound660!! + 1
+        Log.e("TVOC660計數變數:",countsound660.toString())
+    }
+    private fun lowtBeBEBEBE(){
+        var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
+        if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
+        {
+
+            if ((countsound220 == 5 || countsound220 == 0)) {
+                //20171219   Andy
+                //mp.start()
+                //20171220   Andy
+                try {
+                    alertId = soundPool!!.load(mContext, R.raw.tvoc_over220, 1)
+                    Thread.sleep(500)
+                    soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                } catch (e: InterruptedException) {
+                    e.printStackTrace()
+                }
+
+            }
+        }
+        if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+        {
+            if ((countsound220 == 5|| countsound220 == 0)) {
+                if (mVibrator == null) {
+                } else {
+                    // 震动 1s
+                    mVibrator!!.vibrate(1000)
+                }
+            }
+
+        }
+
+        if (countsound220 == 5) {
+            countsound220 = 0
+        }
+        countsound220 = countsound220!! + 1
+        Log.e("TVOC220計數變數:",countsound220.toString())
+    }
 
     private val MyBroadcastReceiver = object: BroadcastReceiver() {
         @SuppressLint("SimpleDateFormat", "SetTextI18n")

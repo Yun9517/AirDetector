@@ -32,7 +32,6 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import io.realm.Realm
-import com.microjet.airqi2.AndyAirDBhelper
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.FixBarChart
 //import com.github.mikephil.charting.utils.Highlight
