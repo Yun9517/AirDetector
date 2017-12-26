@@ -26,6 +26,9 @@ import android.media.SoundPool
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.util.Log
+
+
 
 
 /**
@@ -70,15 +73,15 @@ class MainFragment : Fragment() {
     @Suppress("OverridingDeprecatedMember")
 
     //20171219   Andy
-    private var mp = MediaPlayer()
+//    private var mp = MediaPlayer()
     private var mVibrator: Vibrator? = null
 
     //20171220   Andy
     private var alertId: Int = 0
     private var soundPool: SoundPool? = null
 
-    private var sourceid: Int = 0
-    private var spool: SoundPool? = null
+//    private var sourceid: Int = 0
+//    private var spool: SoundPool? = null
 
     private var countsound660:Int?=0
     private var countsound220:Int?=0
@@ -126,38 +129,9 @@ class MainFragment : Fragment() {
             checkUIState()
         }
 
-    /*    show_Temp?.setOnClickListener { pressed="temperature"
-            SetThresholdValue()
-            SetbarMaxValue()
-            bar1?.setCurrentValues(DetectorValue[0].toFloat())
-            textView2.text=getString(R.string.text_label_temperature)
-            val temp=DetectorValue[0]+" °C "
-            val textSpan= SpannableStringBuilder(temp)
-            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            tvocValue2?.text = textSpan
-        }
-        textView7Humidity=this.view?.findViewById(R.id.textView7)
-        show_RH?.setOnClickListener { pressed="humidity"
-            SetThresholdValue()
-            SetbarMaxValue()
-            bar1?.setCurrentValues(DetectorValue[1].toFloat())
-            textView2.text=getString(R.string.text_label_humidity)
-            val temp=DetectorValue[1]+" ％ "
-            val textSpan= SpannableStringBuilder(temp)
-            textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-            tvocValue2?.text = textSpan
-        }
-        */
-    //    imgPanel = this.view!!.findViewById(R.id.imgPanel)
 
-     //   imgPanel!!.bringToFront()
-     //   tvocValue2=this.view?.findViewById(R.id.tvocValue2)
         //20171219   Andy
-        mp = MediaPlayer.create (mContext, R.raw.pixiedust)
+        //mp = MediaPlayer.create (mContext, R.raw.pixiedust)
         // 初始化震动通知
         if (isInitVibratorNotify()) {
             mVibrator = mContext!!.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator?
@@ -166,9 +140,6 @@ class MainFragment : Fragment() {
 
         //20171220   Andy
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 1)
-        //alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
-        //sourceid = spool!!.load(mContext, R.raw.tvoc_over220, 1)
-
     }
 
     override fun onStart() {
@@ -212,15 +183,7 @@ class MainFragment : Fragment() {
     private fun SetbarMaxValue(state: DetectionData){
         bar1?.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
         when (state){
-            /*
-            "temperature"->{
-                bar1?.setMaxValues(100f)
 
-            }
-            "humidity"->{
-                bar1?.setMaxValues(100f)
-            }
-            */
             DetectionData.TVOC ->{
                 bar1?.setMaxValues(1000f)
             }
@@ -229,25 +192,7 @@ class MainFragment : Fragment() {
             }
         }
     }
-//    var m_flagTemp=0
-//    private fun setGetTimeFlag(flag:Int) {
-//        if (flag == m_flagTemp) {
-//            //no change
-//        } else {//change
-//            if (flag>m_flagTemp)//jude 0 to 1 or 1 to 0
-//            {
-//                tvLastDetecterTime?.text = getDateTime()
-//
-//            }
-//            m_flagTemp = flag
-//        }
-//    }
 
-//    fun getDateTime(): String {
-//        val sdFormat = SimpleDateFormat("yyyy/MM/dd hh:mm:ss", Locale.TAIWAN)
-//        val date = Date().time
-//        return sdFormat.format(date)
-//    }
 
     fun setBtmCurrentValue(){
         //DetectorValue=currentValue
@@ -259,98 +204,20 @@ class MainFragment : Fragment() {
     }
 
      @SuppressLint("SetTextI18n")
-//     fun setBar1CurrentValue() {
-         //fun setBar1CurrentValue(tempVal: String, humiVal: String, tvocVal: String, co2Val: String, pm25Val: String) {
 
-//         val stringArray=ArrayList<String>()
-//         stringArray.add(tempVal)
-//         stringArray.add(humiVal)
-//         stringArray.add(tvocVal)
-//         stringArray.add(co2Val)
-         //setCurrentValue(stringArray)
-/*
-
-         if (currentValue.toFloat() < 221){
-             textView?.text = getString(R.string.text_message_air_good)
-             tvocStatus?.text = getString(R.string.text_label_ststus_good)
-
-             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-         }
-         else if (currentValue.toFloat() > 661) {
-             textView?.text = getString(R.string.text_message_air_bad)
-             tvocStatus?.text = getString(R.string.text_label_ststus_bad)
-             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-         }
-         else{
-             textView?.text = getString(R.string.text_message_air_mid)
-             tvocStatus?.text = getString(R.string.text_label_ststus_mid)
-
-             tvocValue2.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-             tvocStatus.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-         }
-     // ********* 2017/12/05 主頁面大小字 ************************************************* //
-
-         */
-         //SetThresholdValue(DetectionData.TVOC)
-         //SetbarMaxValue(DetectionData.TVOC)
-         //var temp = ""
-
-//         when (dataForState){
-//             DetectionData.TVOC-> {
-//                 bar1?.setCurrentValues(tvocDataFloat)
-//                 TVOCStatusTextShow(tvocDataFloat.toString())
-//             }
-//             DetectionData.CO2 -> {
-//                 bar1?.setCurrentValues(co2DataFloat)
-//                 CO2tatusTextShow(co2DataFloat.toString())
-//
-//             }
-//             "temperature"->{
-//                 temp = DetectorValue[0] + " °C "
-//                 bar1?.setCurrentValues(DetectorValue[0].toFloat())
-//             }
-//             "humidity"->{
-//                 temp = DetectorValue[1] + " ％ "
-//                 bar1?.setCurrentValues(DetectorValue[1].toFloat())
-//             }
-//             "TVOC"->{
-//                 temp = DetectorValue[2] +" ppb "
-//                 bar1?.setCurrentValues(DetectorValue[2].toFloat())
-//                 TVOCStatusTextShow(DetectorValue[2])
-//             }
-//             "CO2"->{
-//                 temp = DetectorValue[3] +" ppm "
-//                 bar1?.setCurrentValues(DetectorValue[3].toFloat())
-//                 CO2tatusTextShow(DetectorValue[3])
-//             }
-//             else ->{
-//                 temp = DetectorValue[3] +" ppb "
-//                 bar1?.setCurrentValues(DetectorValue[2].toFloat())
-//             }
-//         }
-
-//         val textSpan = SpannableStringBuilder(temp)
-//         textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-//         textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-//         textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-//
-//         inCycleValue?.text = textSpan
-         //tvocValue?.text = textSpan
-
-//         val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-//         val date = Date()
-//         tvLastDetectTime?.text = dateFormat.format(date).toString()
-
-     // *********************************************************************************** //
-//    }
      private fun TVOCStatusTextShow(currentValue:Float){
         if (currentValue < 221){
             tvNotify?.text = getString(R.string.text_message_air_good)
             tvInCycleState?.text = getString(R.string.text_label_ststus_good)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
+            //20171226  Andy
+            if(countsound220!=0||countsound660!=0) {
+                countsound220=0
+                countsound660=0
+                Log.e("歸零TVOC220計數變數:", countsound220.toString())
+                Log.e("歸零TVOC660計數變數:", countsound660.toString())
+            }
         }
         else if (currentValue  > 661) {
             tvNotify?.text = getString(R.string.text_message_air_bad)
@@ -360,8 +227,11 @@ class MainFragment : Fragment() {
             var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
             {
-
-                if ((countsound660 == 5 || countsound660 == 0)) {
+                //20171226  Andy
+                countsound220=0
+                Log.e("更新TVOC220計數變數:",countsound220.toString())
+                if ((countsound660 == 5 || countsound660 == 0))
+                {
                     //20171220   Andy
                     try {
                         alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
@@ -391,8 +261,12 @@ class MainFragment : Fragment() {
                 countsound660 = 0
             }
             countsound660 = countsound660!! + 1
+            Log.e("TVOC660計數變數:",countsound660.toString())
         }
         else{
+            //20171226  Andy
+            countsound660=0
+            Log.e("更新TVOC660計數變數:",countsound660.toString())
             tvNotify?.text = getString(R.string.text_message_air_mid)
             tvInCycleState?.text = getString(R.string.text_label_ststus_mid)
 
@@ -433,7 +307,7 @@ class MainFragment : Fragment() {
                 countsound220 = 0
             }
             countsound220 = countsound220!! + 1
-
+            Log.e("TVOC220計數變數:",countsound220.toString())
         }
     }
     private fun CO2tatusTextShow(currentValue:Float){
@@ -493,7 +367,6 @@ class MainFragment : Fragment() {
             var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
             {
-
                 if ((countsound800 == 5 || countsound800 == 0)) {
                     //20171219   Andy
                     //mp.start()
@@ -608,13 +481,7 @@ class MainFragment : Fragment() {
                     tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
                     humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
                     tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
-                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
-                    //setBar1CurrentValue(tempVal,humiVal,tvocVal,co2Val,"0")
-                    //val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                    //val date = Date()
-                    //tvLastDetectTime?.text = dateFormat.format(date).toString()
-                    //   setProgressBarValue(tempVal, humiVal, tvocVal, co2Val, "0")
-                }
+                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()                }
             }
             checkUIState()
         }
