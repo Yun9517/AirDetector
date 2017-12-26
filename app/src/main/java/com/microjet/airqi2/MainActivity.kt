@@ -96,33 +96,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
     private val REQUEST_SELECT_SAMPLE = 2
-    //private var mBluetoothManager : BluetoothManager? = null
-    //private var mBluetoothAdapter : BluetoothAdapter? = null
-
-    //20171128   Andy SQLlite
-    internal lateinit var dbrw: SQLiteDatabase
-    internal lateinit var dbhelper: AndyAirDBhelper
-    internal var tablename = "Andyairtable"
-
-
-    internal var colstT = arrayOf("編號", "時間", "溫度", "濕度", "揮發", "二氧")// };
-    internal var columT = arrayOf("_id", "collection_time", "temper", "hum", "tvoc", "co2")//,"CO2"};
-    internal var co10T = ""
-    internal var co11T = ""
-    internal var co12T = ""
-    internal var co13T = ""
-    internal var co14T = ""
-    internal var co15T = ""
-
-    internal var coTTDBTEST = ""
-    internal var SaveToDB = arrayOf("2017/11/30", "10", "20", "30", "40")
-    internal var idTTDB: Long = 4
-    internal var c: Cursor? = null
-    internal var values: ContentValues? = null
-    internal var IDID = ""
-    internal var Count: Long = 0
-    internal var idTTDBStr = ""
-
 
     //UArtService實體
     private var mService: UartService? = null
@@ -158,81 +131,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // 電池電量假資料
         //   batValue = 30
-
-
-//20171128 Andy SQL
-        //*********************************************************************************************
-// ------------------------------------------------------------------------------------------------------------------------------------------------
-
-        //dbhelper = AndyAirDBhelper(this)
-        //dbrw = dbhelper.writableDatabase
-        //Toast.makeText(this,AndyAirDBhelper.database17 + "資料庫是否建立?" + dbrw.isOpen + "版本" + dbrw.version,Toast.LENGTH_LONG).show()
-        //AddedSQLlite(60000)
-        //SearchSQLlite()
-
-
-        //20171128 Andy SQL
-        //*********************************************************************************************
-// ------------------------------------------------------------------------------------------------------------------------------------------------
-        //查詢CO2資料
-        //查詢CO2資料
-        //查詢CO2資料
-        /*
-            c = dbrw.query(tablename, columT, null, null, null, null, null)
-
-            //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
-            //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
-
-
-            // 排版
-            //co10T += colstT[0] + "\n";
-            //co11T += colstT[1] + "\n";
-            //co12T += colstT[2] + "\n";
-            // co13T += colstT[3] + "\n";
-            co14T += colstT[4] + "\n"
-
-
-
-
-            if (c!!.getCount() > 0) {
-                //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-                c!!.moveToFirst()
-
-                for (i in 0 until c!!.getCount()) {
-                    Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-                    co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
-                    // sqlite比較不嚴僅，都用getString()取值即可
-                    co14T += c!!.getString(4) + "\n"
-                    Toast.makeText(this@MainActivity, "將新增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
-                    c!!.moveToNext()
-                }
-
-                Count = c!!.getCount().toLong()
-                //c.close();
-                val CountString = Count.toString()
-                Toast.makeText(this@MainActivity, "共有" + CountString + "筆CO2紀錄", Toast.LENGTH_LONG).show()
-            } else {
-                Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
-            }
-    */
-//*********************************************************************************************
-// ------------------------------------------------------------------------------------------------------------------------------------------------
-
-/*
-        //20171124 Andy月曆實現
-        // create an OnDateSetListener
-        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
-        dateSetListener = object : DatePickerDialog.OnDateSetListener {
-            override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                   dayOfMonth: Int) {
-                cal.set(Calendar.YEAR, year)
-                cal.set(Calendar.MONTH, monthOfYear)
-                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                updateDateInView()
-            }
-        }
-        */
-
         val serviceIntent: Intent? = Intent(this, UartService::class.java)
         startService(serviceIntent)
 
@@ -376,149 +274,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    //20171128 Andy SQL
-    private fun AddedSQLlite(intData: Int) {
-        //////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        values = ContentValues()
-        //idTTDB = c!!.getCount().toLong()
-        //Toast.makeText(this,"我要查比數:"+idTTDB,Toast.LENGTH_LONG).show()
 
-
-        if (SaveToDB[0] !== "" && SaveToDB[1] !== "" && SaveToDB[2] !== "" && SaveToDB[3] !== "" && idTTDB >= 0) {//****************************************************************************
-            //Toast.makeText(this@MainActivity, "資料滿4筆，我將要存到資料庫去!!!!!", Toast.LENGTH_LONG).show()
-            //cv.put(columT[0],c.getPosition());
-            values!!.put(columT[1], SaveToDB[0])
-            values!!.put(columT[2], SaveToDB[1])
-            values!!.put(columT[3], SaveToDB[2])
-            values!!.put(columT[4], SaveToDB[3])
-            values!!.put(columT[5], SaveToDB[4])
-            //新增一筆五個測項資料到資料庫中
-
-            idTTDB = dbrw.insert(tablename, null, values)
-            Toast.makeText(this@MainActivity, "資料滿5，這筆資料內容:" + SaveToDB[0] + "," + SaveToDB[1] + "," + SaveToDB[2] + "," + SaveToDB[3] + "," + "," + SaveToDB[4], Toast.LENGTH_LONG).show()
-
-
-            //Toast.makeText(this@MainActivity, "資料滿4，這筆資料內容:" + SaveToDB[0]+","+SaveToDB[1]+","+SaveToDB[2]+","+SaveToDB[3]+",", Toast.LENGTH_LONG).show()
-
-        } else {
-            //Toast.makeText(this@MainActivity, "溫度、濕度、TVOC、CO2未滿，不新增資料庫", Toast.LENGTH_LONG).show()
-        }
-        //新增一筆四個測項資料到資料庫中
-//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////一次新增四個測項資料///////////////////////////////////////////////////一次新增四個測項資料//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-//****************************************************************************************************************************************************
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-
-    private fun SearchSQLlite() {
-        //****************************************************************************************************************************************************
-//------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        //查詢CO2資料
-        //查詢CO2資料
-        //查詢CO2資料
-        c = dbrw.query(tablename, columT, null, null, null, null, null)
-
-        //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
-        //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
-
-
-        // 排版
-        co10T += colstT[0] + "\n";
-        co11T += colstT[1] + "\n";
-        co12T += colstT[2] + "\n";
-        co13T += colstT[3] + "\n";
-        co14T += colstT[4] + "\n"
-
-
-        if (c!!.getCount() > 0) {
-            //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-            c!!.moveToFirst()
-
-            for (i in 0 until c!!.getCount()) {
-                //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-                //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
-                //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
-                //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
-                //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
-                //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
-                // sqlite比較不嚴僅，都用getString()取值即可
-                co10T += c!!.getString(0) + "\n"
-                //co11T += c!!.getString(1) + "\n"
-                //co12T += c!!.getString(2) + "\n"
-                //co13T += c!!.getString(3) + "\n"
-                //co14T += c!!.getString(4) + "\n"
-                //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
-
-                Count = c!!.getCount().toLong()
-                //c.close();
-                val CountString = Count.toString()
-                //Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第["+(i+1)+"]筆資料內容", Toast.LENGTH_LONG).show()
-                /*
-            Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0)  +"\n"
-                    +"資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) +"C \n"
-                    +"資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) +"% \n"
-                    +"資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) +"ppm \n"
-                    +"資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) +"ppb", Toast.LENGTH_LONG).show()
-
-            c!!.moveToNext()
-            */
-            }
-            //Toast.makeText(MainActivity.this, "現在位置:"+c.getPosition(), 3000).show();
-            //Toast.makeText(MainActivity.this, "現在ColumnIndex:"+ c.getString(c.getColumnIndex(columT[0])), 3000).show();
-
-
-            // 排版
-            co10T += colstT[0] + "\n";
-            co11T += colstT[1] + "\n";
-            co12T += colstT[2] + "\n";
-            co13T += colstT[3] + "\n";
-            co14T += colstT[4] + "\n"
-            co15T += colstT[5] + "\n"
-
-            if (c!!.getCount() > 0) {
-                //Toast.makeText(MainActivity.this, "測試是否有進去!!  " + c.getCount() + "筆紀錄",Toast.LENGTH_LONG).show();
-                c!!.moveToFirst()
-
-                for (i in 0 until c!!.getCount()) {
-                    //Toast.makeText(this@MainActivity, "測試是否進For!!  " + c!!.getCount() + "第" + i + "筆紀錄", Toast.LENGTH_LONG).show()
-                    //co10T += c!!.getString(c!!.getColumnIndex(columT[0])) + "\n"
-                    //co11T += c!!.getString(c!!.getColumnIndex(columT[1])) + "\n"
-                    //co12T += c!!.getString(c!!.getColumnIndex(columT[2])) + "\n"
-                    //co13T += c!!.getString(c!!.getColumnIndex(columT[3])) + "\n"
-                    //co14T += c!!.getString(c!!.getColumnIndex(columT[4])) + "\n"
-                    // sqlite比較不嚴僅，都用getString()取值即可
-                    //co10T += c!!.getString(0) + "\n"
-                    //co11T += c!!.getString(1) + "\n"
-                    //co12T += c!!.getString(2) + "\n"
-                    //co13T += c!!.getString(3) + "\n"
-                    //co14T += c!!.getString(4) + "\n"
-                    //Toast.makeText(this@MainActivity, "增資料庫CO2第 [ " + (i + 1) + " ]筆CO2:" + c!!.getString(0 + 1) +"ppm", Toast.LENGTH_LONG).show()
-
-                    Count = c!!.getCount().toLong()
-                    //c.close();
-                    val CountString = Count.toString()
-                    Toast.makeText(this@MainActivity, "共有" + CountString + "筆紀錄，第[" + (i + 1) + "]筆資料內容", Toast.LENGTH_LONG).show()
-
-                    Toast.makeText(this@MainActivity, "資料庫ID第 [ " + (i + 1) + " ]筆: NO" + c!!.getString(0) + "\n"
-                            + "資料庫時間第 [ " + (i + 1) + " ]筆:" + c!!.getString(1) + " \n"
-                            + "資料庫溫度第 [ " + (i + 1) + " ]筆:" + c!!.getString(2) + "C \n"
-                            + "資料庫濕度第 [ " + (i + 1) + " ]筆:" + c!!.getString(3) + "% \n"
-                            + "資料庫CO2第 [ " + (i + 1) + " ]筆:" + c!!.getString(4) + "ppm \n"
-                            + "資料庫TVOC第 [ " + (i + 1) + " ]筆:" + c!!.getString(5) + "ppb", Toast.LENGTH_LONG).show()
-
-                    c!!.moveToNext()
-                }
-
-
-            } else {
-                Toast.makeText(this@MainActivity, "資料庫無查CO2資料", Toast.LENGTH_LONG).show()
-            }
-        }
-    }
 
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
@@ -606,19 +362,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
 
-/*
-            R.id.calendarView -> {
-                DatePickerDialog(this@MainActivity, R.style.MyDatePickerDialogTheme,
-                        dateSetListener,
-                        // set DatePickerDialog to point to today's date when it loads up
-                        cal.get(Calendar.YEAR),
-                        cal.get(Calendar.MONTH),
-                        cal.get(Calendar.DAY_OF_MONTH)).show()
-            }
-            */
-        //  R.id.Andy_calendarView ->{
-        //   CalendarShow("月曆","月曆選擇")
-        // }
 
 
         //點選ActionBAR會返回
@@ -675,15 +418,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
-/*
-    //20171124 Andy叫出月曆的方法
-    private fun updateDateInView() {
-        val myFormat = "yyyy/MM/dd" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
-        Toast.makeText(this,sdf.format(cal.getTime()),Toast.LENGTH_LONG).show()
-
-    }
-    */
 
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
@@ -715,38 +449,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             R.id.nav_qanda -> qandaShow()
             R.id.nav_getData -> {
-                /*
-                val intent: Intent? = Intent("Main")
-                intent!!.putExtra("status", "getSampleRate")
-                sendBroadcast(intent)*/
+
             }
             R.id.nav_setting -> settingShow()
-        //R.id.nav_third_fragment -> fragmentClass = ThirdFragment::class.java
-        //else -> fragmentClass = FirstFragment::class.java
+
         }
 
-//        try {
-//            fragment = fragmentClass.newInstance() as Fragment
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//        }
-//
-//        // Insert the fragment by replacing any existing fragment
-//        val fragmentManager = supportFragmentManager
-//        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit()
-
-        // Highlight the selected item has been done by NavigationView
-        //menuItem.isChecked = true
-        // Set action bar title
-
-        //title = menuItem.title
-        // Close the navigation drawer
-        // ******************************************************//
-        //    2017/11/28 Peter Title文字 不會隨著點選抽屜改變
-        //title = menuItem.title
-        // ******************************************************//
-
-        // Close the navigation drawer
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
 
@@ -840,12 +548,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    //val deviceAddress = data.getStringExtra(BluetoothDevice.EXTRA_DEVICE)
-                    //mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress)
-                    //val serviceIntent :Intent? = Intent(this, UartService::class.java)
-                    //serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, deviceAddress)
-                    //startService(serviceIntent)
-                    //Log.d("MAINActivity", "... onActivityResultdevice.address==" + mDevice + "mserviceValue" + mBluetoothLeService)
                     print("MainActivity")
                 }
             REQUEST_SELECT_SAMPLE -> {
@@ -886,13 +588,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         var intentFilter = IntentFilter()
-        /*
-        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_CONNECTED")
-        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_DISCONNECTED")
-        intentF.addAction("com.nordicsemi.nrfUART.ACTION_GATT_SERVICES_DISCOVERED")
-        intentF.addAction("com.nordicsemi.nrfUART.ACTION_DATA_AVAILABLE")
-        intentF.addAction("com.nordicsemi.nrfUART.EXTRA_DATA")
-        intentF.addAction("com.nordicsemi.nrfUART.DEVICE_DOES_NOT_SUPPORT_UART")*/
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
         intentFilter.addAction(BroadcastActions.EXTRA_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
@@ -923,7 +618,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     val handler: Handler = Handler()
     var counter: Int = 0
-    var TVOCAVG = 0
     @SuppressLint("SetTextI18n")
     private fun updateUI(intent: Intent) {
         when (intent.getStringExtra("status")) {
@@ -949,19 +643,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
             -> {
                 connState = false
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-                //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.No_Device_Connect)
-                //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-                //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-                //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_disconnect)
-                //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
-
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).stopUpdateDataAnimation()
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).setProgessBarNow(0)
             }
             "B5" -> {
                 Log.d("UPDATEUI", "Nothing")
@@ -972,25 +653,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //displayBatteryLife(intent)
                 // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
                 val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                //(mFragmentAdapter.getItem(0) as MainFragment).setBar1CurrentValue(
-//                        intent.getStringExtra("TEMPValue"),
-//                        intent.getStringExtra("HUMIValue"),
-//                        intent.getStringExtra("TVOCValue"),
-//                        intent.getStringExtra("eCO2Value"),
-//                        "coming soon")
-/*
-                    val stringArray=ArrayList<String>()
-                    stringArray.add(intent.getStringExtra("TEMPValue"))
-                    stringArray.add(intent.getStringExtra("HUMIValue"))
-                    stringArray.add(intent.getStringExtra("TVOCValue"))
-                    stringArray.add(intent.getStringExtra("eCO2Value"))
-                    stringArray.add(intent.getStringExtra("BatteryLife"))
-                    (mFragmentAdapter.getItem(0)as MainFragment).setCurrentValue(stringArray)
-                    */
-                //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).setRealTimeBarData(intent.getStringExtra("TVOCValue"), intent.getStringExtra("BatteryLife"))
-                //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
-                //(mFragmentAdapter.getItem(0) as MainFragment).setGetTimeFlag(intent.getStringExtra("flag").toInt())
                 // 20171212 Raymond added Wati screen
                 if (mWaitLayout!!.visibility == View.VISIBLE) {
                     heatingPanelHide()
@@ -1018,28 +680,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
                     // drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //    updateUI(intent)
-                    /*    connState = true
-                            appFirstStart = false
-                            setUiConnectState(true)
-
-                            mDeviceMAC = mPreference!!.getString(SavePreferences.SETTING_KEY_DEVICE_ADDR, null)*/
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = false
 
                     //    updateUI(intent)
-                    /*    connState = false
-                            setUiConnectState(false)
-
-                            if(appFirstStart && !mDeviceMAC.isNullOrEmpty()) {
-                                val i = Intent(this@MainActivity, BluetoothLeService::class.java)
-                                i.action = BroadcastActions.ACTION_CONNECT_DEVICE
-                                startService(i)
-                                appFirstStart = false
-                                Log.v(TAG, "首次開啟APP狀態: " + appFirstStart)
-                            }
-                            */
-
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     val bundle = intent.extras
@@ -1057,39 +702,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             Log.d("MainActivity","OnReceive")
             checkUIState()
-            /*   when (intent.getStringExtra("status")) {
-
-
-
-                    "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING","B0","B6"
-                    -> { updateUI(intent) }
-                    "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
-                    -> { updateUI(intent) }
-                    "B5" -> {
-                        var bundle= intent.getBundleExtra("result")
-                        var data= bundle.getParcelableArrayList<myData>("resultSet")
-                        //val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                        //(mFragmentAdapter.getItem(1)as TVOCFragment).ADDDATAForDatachart(data)
-                        //(mFragmentAdapter.getItem(1)as TVOCFragment).AddedSQLlite(data)
-
-                        val mFragmentAdapter :FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                        (mFragmentAdapter.getItem(1)as TVOCFragment).stopUpdateDataAnimation()
-                    }
-                    "NOWPROGRESSITEM"->{
-                        var nowitem= intent.getIntExtra("NOWPROGRESSITEM",0)
-                        val mFragmentAdapter :FragmentAdapter=mPageVp?.adapter as FragmentAdapter
-                        (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarNow(nowitem)
-
-                    }
-                    "MAXPROGRESSITEM"->{
-                        var maxitems=intent.getIntExtra("MAXPROGRESSITEM",0)
-                        val mFragmentAdapter :FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                        (mFragmentAdapter.getItem(1)as TVOCFragment).setProgessBarMax(maxitems)
-
-                        (mFragmentAdapter.getItem(1)as TVOCFragment).startUpdateDataAnimation()
-                    }
-                    //"B6" -> { updateUI(intent) }
-                    */
         }
 
 
