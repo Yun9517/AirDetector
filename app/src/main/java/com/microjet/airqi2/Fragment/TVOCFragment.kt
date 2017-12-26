@@ -7,6 +7,9 @@ import android.app.TimePickerDialog
 import android.content.*
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.Color
+import android.graphics.Rect
+import android.graphics.RectF
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -19,6 +22,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.*
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -39,6 +43,7 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import com.microjet.airqi2.myData
+import kotlinx.android.synthetic.main.frg_tvoc.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -141,7 +146,32 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         configChartView()
         mChart!!.setOnChartValueSelectedListener(this)
     }
+    fun setImageBarSize(){
+        mChart!!.data = getBarData()
+        val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
+        val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
+        val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 3))
+        textView18.y = line660.top-textView18.height//Text660 position
+        textView20.y = line220.top-textView20.height//Text220 position
+        imageView3.y = line1000.top//red
+        imageView4.y = line660.top//yellow
+        imageView5.y = line220.top//green
 
+        //視Radio id畫圖
+        mChart!!.clear()
+        when (radioButtonID) {
+            0 -> {
+                mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+            1, 2, 3 -> {
+                mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+        }
+    }
     override fun onStart() {
         super.onStart()
         checkUIState()
@@ -298,8 +328,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
 
+        /*var yLimitLine =  LimitLine(220f,"yLimit 测试");
+        yLimitLine.setLineColor(Color.RED)
+        yLimitLine.setTextColor(Color.RED)
+        leftAxis.addLimitLine(yLimitLine)
+
+        var yLimitLine2 =  LimitLine(660f,"yLimit 测试");
+        yLimitLine2.setLineColor(Color.RED)
+        yLimitLine2.setTextColor(Color.RED)
+        leftAxis.addLimitLine(yLimitLine2)*/
+
         leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
+        //var top=leftAxis.spaceTop
+        //var bottom=leftAxis.spaceBottom
+    //    mChart?.setDrawValueAboveBar(false)
         rightAxis.isEnabled = false
         mChart?.setDescription("")// clear default string
     }
@@ -527,9 +570,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         // val DATA_COUNT = 5
         // DATA_COUNT
         val chartData = ArrayList<BarEntry>()
-        for (i in 1 until DATA_COUNT) {
-            chartData.add(BarEntry((i * 20).toFloat(), i))
-        }
+       // for (i in 1 until DATA_COUNT) {
+            chartData.add(BarEntry((220).toFloat(), 1))
+            chartData.add(BarEntry((660).toFloat(), 2))
+            chartData.add(BarEntry((1000).toFloat(), 3))
+       // }
         return chartData
     }
 

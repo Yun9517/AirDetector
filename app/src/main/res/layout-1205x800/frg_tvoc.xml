@@ -222,7 +222,6 @@
                 android:id="@+id/imageView3"
                 android:layout_width="10dp"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/imageView4"
                 android:layout_alignParentEnd="true"
                 android:layout_marginTop="15dp"
                 android:src="@color/progressBarEndColor" />
@@ -230,15 +229,14 @@
             <ImageView
                 android:id="@+id/imageView4"
                 android:layout_width="10dp"
-                android:layout_height="130dp"
-                android:layout_above="@+id/imageView5"
+                android:layout_height="match_parent"
                 android:layout_alignParentEnd="true"
                 android:src="@color/progressBarMidColor" />
 
             <ImageView
                 android:id="@+id/imageView5"
                 android:layout_width="10dp"
-                android:layout_height="65dp"
+                android:layout_height="match_parent"
                 android:layout_above="@+id/imageView6"
                 android:layout_alignParentEnd="true"
                 android:src="@color/progressBarStartColor" />

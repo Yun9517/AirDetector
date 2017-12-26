@@ -564,6 +564,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
             override fun onPageSelected(position: Int) {
                 currentIndex = position
+                if (currentIndex==1) {
+                    val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+                    (mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
+                }
             }
         })
     }
