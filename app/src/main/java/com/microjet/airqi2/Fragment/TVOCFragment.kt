@@ -2,14 +2,7 @@ package com.microjet.airqi2.Fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DatePickerDialog
-import android.app.TimePickerDialog
 import android.content.*
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
-import android.graphics.Color
-import android.graphics.Rect
-import android.graphics.RectF
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -22,7 +15,6 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.*
-import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -39,9 +31,7 @@ import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
-import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
-import com.microjet.airqi2.myData
 import kotlinx.android.synthetic.main.frg_tvoc.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -64,25 +54,23 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mTextViewValue: TextView? = null
     private var DATA_COUNT: Int = 60
     private var mRadioGroup: RadioGroup? = null
-
     private var mHour: RadioButton? = null
-
-
-
-    @Suppress("OverridingDeprecatedMember")
-    override fun onAttach(activity: Activity?) {
-        super.onAttach(activity)
-
-        mContext = this.context.applicationContext
-    }
+    private var mProgressBar: ProgressBar? = null
+    private var mImageViewDataUpdate: ImageView? = null
+    private var tvCharLabel: TextView? = null
+    private var tvChartTitleTop : TextView? = null
+    private var tvChartTitleMiddle : TextView? = null
+    private var tvChartTitleBottom : TextView? = null
+    private var imgBarRed : ImageView? = null
+    private var imgBarYellow : ImageView? = null
+    private var imgBarGreen : ImageView? = null
+    //UI元件
 
 
     //TestValue Start chungyen
     private val tvocArray = ArrayList<String>()
     private val timeArray = ArrayList<String>()
     private val batteryArray = ArrayList<String>()
-    private var mProgressBar: ProgressBar? = null
-    private var mImageViewDataUpdate: ImageView? = null
     private var radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
 
     private var mConnectStatus: Boolean = false
@@ -92,6 +80,14 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var arrTvoc3 = ArrayList<String>()
 
     private var animationCount = 0
+
+
+    @Suppress("OverridingDeprecatedMember")
+    override fun onAttach(activity: Activity?) {
+        super.onAttach(activity)
+
+        mContext = this.context.applicationContext
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +103,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart = this.view!!.findViewById(R.id.chart_line)
         mProgressBar = this.view!!.findViewById(R.id.chartDataLoading)
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
+        mTextViewTimeRange = this.view!!.findViewById(R.id.tvSelectDetectionTime)
+        mTextViewValue = this.view?.findViewById(R.id.tvSelectDetectionValue)
+        tvCharLabel = this.view?.findViewById(R.id.tvChartLabel)
+        tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
+        tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
+        tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
+        imgBarRed = this.view?.findViewById(R.id.imgBarRed)
+        imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
+        imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
@@ -150,11 +155,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
         val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
         val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 3))
-        textView18.y = line660.top-textView18.height//Text660 position
-        textView20.y = line220.top-textView20.height//Text220 position
-        imageView3.y = line1000.top//red
-        imageView4.y = line660.top//yellow
-        imageView5.y = line220.top//green
+        tvChartTitleMiddle?.y = line660.top- tvChartTitleMiddle!!.height//Text660 position
+        tvChartTitleBottom?.y = line220.top- tvChartTitleBottom!!.height//Text220 position
+        imgBarRed?.y = line1000.top//red
+        imgBarYellow?.y = line660.top//yellow
+        imgBarGreen?.y = line220.top//green
 
         //視Radio id畫圖
         mChart!!.clear()
@@ -216,8 +221,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
         //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
         mTextViewValue!!.text = h!!.value.toString() + "ppb"
-        mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h.xIndex)//listString[h.xIndex]
     }
 
     @Synchronized private fun checkUIState() {
@@ -245,9 +250,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     private fun getDeviceData() {
-        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        intent!!.putExtra("status", "getSampleRate")
-        context.sendBroadcast(intent)
+        if (mConnectStatus) {
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            intent!!.putExtra("status", "getSampleRate")
+            context.sendBroadcast(intent)
+        }
     }
 
     private fun setProgessBarMax(input: Int) {
