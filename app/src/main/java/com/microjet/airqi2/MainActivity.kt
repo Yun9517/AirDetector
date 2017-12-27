@@ -24,15 +24,13 @@ import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
+import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import io.realm.Realm
 import kotlinx.android.synthetic.main.frg_main.*
@@ -340,6 +338,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mDrawerToggle!!.syncState()
         // 設定 DrawerLayout 監聽事件
         mDrawerLayout!!.addDrawerListener(mDrawerToggle!!)
+
+        actionBar.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        actionBar.setCustomView(R.layout.custom_actionbar)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
