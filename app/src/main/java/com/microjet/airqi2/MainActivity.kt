@@ -611,14 +611,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
             when {
                 batValue > 100 -> {
-                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_charge)
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_charge)
                     batValue -= 100
                 }
-                batValue in 66..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_full)
-                batValue in 33..65 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_2grid)
-                batValue in 10..32 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_1grid)
+                batValue in 96..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
+                batValue in 76..95 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
+                batValue in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
+                batValue in 41..55 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+                batValue in 21..40 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x2)
+                batValue in 10..20 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x1)
 
-                else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.battery_icon_low)
+                else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
             }
     }
 
@@ -679,7 +682,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
             bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_disconnect)
+            battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
         }
