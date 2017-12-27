@@ -57,6 +57,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mHour: RadioButton? = null
     private var mProgressBar: ProgressBar? = null
     private var mImageViewDataUpdate: ImageView? = null
+    private var tvCharLabel: TextView? = null
     private var tvChartTitleTop : TextView? = null
     private var tvChartTitleMiddle : TextView? = null
     private var tvChartTitleBottom : TextView? = null
@@ -104,6 +105,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
         mTextViewTimeRange = this.view!!.findViewById(R.id.tvSelectDetectionTime)
         mTextViewValue = this.view?.findViewById(R.id.tvSelectDetectionValue)
+        tvCharLabel = this.view?.findViewById(R.id.tvChartLabel)
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)

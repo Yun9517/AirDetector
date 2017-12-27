@@ -167,20 +167,21 @@
             android:textSize="26sp"
             android:textStyle="normal" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="@string/text_label_tvoc"
-        android:textColor="@color/whiteColor"
-        android:background="@drawable/chart_subtitle"
-        android:layout_marginEnd="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_alignRight="@+id/tvSelectDetectionValue"
-        android:textSize="20sp"
-        android:textStyle="normal"
-        android:layout_gravity="end"
-        android:textAlignment="gravity" />
+        <TextView
+            android:id="@+id/tvChartLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/tvSelectDetectionValue"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/chart_subtitle"
+            android:gravity="end"
+            android:text="@string/text_label_tvoc"
+            android:textAlignment="gravity"
+            android:textColor="@color/whiteColor"
+            android:textSize="20sp"
+            android:textStyle="normal" />
     </RelativeLayout>
 
     <LinearLayout
