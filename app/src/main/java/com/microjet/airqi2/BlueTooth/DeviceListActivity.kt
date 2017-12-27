@@ -74,21 +74,24 @@ class DeviceListActivity : Activity() {
 
         scanLeDevice(false)
 
+
         //先拿掉該判斷，如有問題再補回來,原本mConnectionState初始化無值不給connect
         //if (UartService.mConnectionState == 0) {
             val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             serviceIntent!!.putExtra("status", "connect")
             serviceIntent!!.putExtra("mac", device.address)
             sendBroadcast(serviceIntent)
-        //}
+        //
 
         /*
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, device.address)
         startService(serviceIntent)
         */
-        this@DeviceListActivity.finish()
+        //this@DeviceListActivity.finish()
+        finish()
     }
+
 
     private val scanCallback = object : ScanCallback() {
         override fun onScanResult(callbackType: Int, result: ScanResult) {
@@ -176,10 +179,8 @@ class DeviceListActivity : Activity() {
         super.onResume()
 
         if (!mBluetoothAdapter!!.isEnabled) {
-            if (!mBluetoothAdapter!!.isEnabled) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                startActivityForResult(enableBtIntent, RQS_ENABLE_BLUETOOTH)
-            }
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            startActivityForResult(enableBtIntent, RQS_ENABLE_BLUETOOTH)
         } else {
             scanLeDevice(true)
         }

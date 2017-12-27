@@ -275,6 +275,8 @@ public class UartService extends Service {
             realm.close();
         }
 
+
+        registerReceiver(mBluetoothStateBroadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
     }
 
 
@@ -509,6 +511,7 @@ public class UartService extends Service {
         //unregisterReceiver(mPrimaryReceiver);
         disconnect();
         unregisterReceiver(mReceiver);
+        unregisterReceiver(mBluetoothStateBroadcastReceiver);
         close();
         realm.close();
         super.onDestroy();
@@ -1151,4 +1154,42 @@ public class UartService extends Service {
 
         }
     }
+
+    private final BroadcastReceiver mBluetoothStateBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(final Context context, final Intent intent) {
+            final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF);
+            //final int previousState = intent.getIntExtra(BluetoothAdapter.EXTRA_PREVIOUS_STATE, BluetoothAdapter.STATE_OFF);
+
+            final String stateString = "[Broadcast] Action received: " + BluetoothAdapter.ACTION_STATE_CHANGED + ", state changed to " + state2String(state);
+
+            switch (state) {
+                case BluetoothAdapter.STATE_TURNING_OFF:
+                case BluetoothAdapter.STATE_OFF:
+                    //if (mConnected && previousState != BluetoothAdapter.STATE_TURNING_OFF && previousState != BluetoothAdapter.STATE_OFF) {
+                        // The connection is killed by the system, no need to gently disconnect
+                        //mGattCallback.notifyDeviceDisconnected(mBluetoothDevice);
+                    //}
+                    // Calling close() will prevent the STATE_OFF event from being logged (this receiver will be unregistered). But it doesn't matter.
+                    disconnect();
+                    break;
+            }
+            Log.d("UARTSERVICE",stateString);
+        }
+
+        private String state2String(final int state) {
+            switch (state) {
+                case BluetoothAdapter.STATE_TURNING_ON:
+                    return "TURNING ON";
+                case BluetoothAdapter.STATE_ON:
+                    return "ON";
+                case BluetoothAdapter.STATE_TURNING_OFF:
+                    return "TURNING OFF";
+                case BluetoothAdapter.STATE_OFF:
+                    return "OFF";
+                default:
+                    return "UNKNOWN (" + state + ")";
+            }
+        }
+    };
 }

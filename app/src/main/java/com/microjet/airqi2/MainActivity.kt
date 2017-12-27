@@ -622,6 +622,69 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
     }
 
+    private val TAG = MainActivity::class.java.simpleName
+    // inner class MyBroadcastReceiver : BroadcastReceiver()
+    private val MyBroadcastReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SetTextI18n")
+        override fun onReceive(context: Context?, intent: Intent) {
+            //updateUI(intent)
+            checkBluetooth()
+            val action = intent.action
+            when (action) {
+                BroadcastActions.ACTION_GATT_CONNECTED -> {
+                    connState = true
+                    val bundle = intent.extras
+                    drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
+                    // drawerDeviceAddress = intent.getStringExtra("macAddress")
+                    //    updateUI(intent)
+                }
+                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
+                    connState = false
+                    checkUIState()
+                    //    updateUI(intent)
+                }
+                BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    val bundle = intent.extras
+                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
+                    val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    Log.v(TAG, "電池電量: $batValue%")
+                    // 預熱畫面控制
+                    heatingPanelControl(preheatCountDownString)
+                    displayConnetedBatteryLife()
+                }
+            }
+            Log.d("MainActivity","OnReceive")
+            checkUIState()
+        }
+
+
+    }
+
+    @Synchronized private fun checkUIState() {
+        if (connState) {
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
+            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+        }else {
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
+            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_disconnect)
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
+            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+        }
+    }
+
     val handler: Handler = Handler()
     var counter: Int = 0
     @SuppressLint("SetTextI18n")
@@ -667,72 +730,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 mPageVp!!.setPagingEnabled(true)
             }
         }
-        checkUIState()
+        //checkUIState()
         Log.d("MAINAC", "UPDATEUI")
     }
 
-    private val TAG = MainActivity::class.java.simpleName
-    // inner class MyBroadcastReceiver : BroadcastReceiver()
-    private val MyBroadcastReceiver = object : BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
-        override fun onReceive(context: Context?, intent: Intent) {
-            //updateUI(intent)
-            checkBluetooth()
-            val action = intent.action
-            when (action) {
-                BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = true
-                    val bundle = intent.extras
-                    drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
-                    // drawerDeviceAddress = intent.getStringExtra("macAddress")
-                    //    updateUI(intent)
-                }
-                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = false
-
-                    //    updateUI(intent)
-                }
-                BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    val bundle = intent.extras
-                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
-                    batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-                    val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    Log.v(TAG, "電池電量: $batValue%")
-                    // 預熱畫面控制
-                    heatingPanelControl(preheatCountDownString)
-                    displayConnetedBatteryLife()
-                }
-            }
-            Log.d("MainActivity","OnReceive")
-            checkUIState()
-        }
-
-
-    }
-
-    @Synchronized private fun checkUIState() {
-        if (connState) {
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-        }else {
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-            battreyIcon?.icon = resources.getDrawable(R.drawable.battery_icon_disconnect)
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
-            nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-        }
-    }
 }
 
 
