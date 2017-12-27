@@ -15,6 +15,9 @@ import android.widget.TextView
 import com.microjet.airqi2.Definition.SavePreferences
 import android.widget.AdapterView
 import com.microjet.airqi2.Definition.BroadcastIntents
+import android.view.MotionEvent
+
+
 
 
 /**
@@ -94,6 +97,22 @@ class SettingActivity : AppCompatActivity() {
         swSound!!.isChecked = swSoundVal
         swRunInBg!!.isChecked = swRunInBgVal
         swTotalNotify!!.isChecked = swTotalNotifyVal
+
+        //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
+
+        swViberate?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
+        if (swViberate!!.isChecked) {
+            text_vibe_stat?.text = getString(R.string.text_setting_on)
+        } else {
+            text_vibe_stat?.text = getString(R.string.text_setting_off)
+        }
+
+        swSound?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
+        if (swSound!!.isChecked) {
+            text_sound_stat!!.text = getString(R.string.text_setting_on)
+        } else {
+            text_sound_stat!!.text = getString(R.string.text_setting_off)
+        }
 
     }
 
