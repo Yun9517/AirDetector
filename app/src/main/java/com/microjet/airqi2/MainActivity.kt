@@ -332,11 +332,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val actionBar = supportActionBar
 
         // 設定 actionbar layout
-        actionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
-        actionBar.setCustomView(R.layout.custom_actionbar)
+        //actionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        //actionBar.setCustomView(R.layout.custom_actionbar)
 
         // 設定顯示左上角的按鈕
-        actionBar.setDisplayHomeAsUpEnabled(true)
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
         // 將 actionBar 和 DrawerLayout 取得關聯
         mDrawerToggle = ActionBarDrawerToggle(this, mDrawerLayout, R.string.text_drawer_open, R.string.text_drawer_close)
         // 同步 actionBarDrawerToggle
