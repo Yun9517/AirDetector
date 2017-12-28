@@ -82,6 +82,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var animationCount = 0
     private var downloadingData = false
 
+    private var preHeat = "0"
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -554,17 +555,19 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     val BatteryLife = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE)
                     val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                     val date = Date()
+                    preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    if(preHeat=="255") {
+                        //新增AnimationCount
+                        animationCount++
 
-                    //新增AnimationCount
-                    animationCount++
-
-                    counter++
-                    TVOCAVG += tvocVal.toInt()
-                    if (counter % 3 == 0) {
-                        counter = 0
-                        TVOCAVG /= 3
-                        setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
-                        TVOCAVG = 0
+                        counter++
+                        TVOCAVG += tvocVal.toInt()
+                        if (counter % 15 == 0) {
+                            counter = 0
+                            TVOCAVG /= 15
+                            setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
+                            TVOCAVG = 0
+                        }
                     }
                 }
             }
