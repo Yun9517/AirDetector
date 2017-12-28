@@ -80,6 +80,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var arrTvoc3 = ArrayList<String>()
 
     private var animationCount = 0
+    private var downloadingData = false
 
 
     @Suppress("OverridingDeprecatedMember")
@@ -249,11 +250,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
     }
 
-    private fun getDeviceData() {
-        if (mConnectStatus) {
+    fun getDeviceData() {
+        if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
             intent!!.putExtra("status", "getSampleRate")
             context.sendBroadcast(intent)
+            downloadingData = true
         }
     }
 
@@ -452,6 +454,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun stopUpdateDataAnimation() {
         mImageViewDataUpdate?.clearAnimation()
         mImageViewDataUpdate?.isEnabled = true
+        downloadingData = false
     }
 
     private fun startDataAnimationCount() {
