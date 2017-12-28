@@ -233,6 +233,8 @@ class DeviceListActivity : Activity() {
 
             cancelButton!!.text = resources.getText(android.R.string.cancel)
 
+            devScanningPanel!!.visibility = View.VISIBLE
+            devScanningPanel!!.bringToFront()
             scanProgress!!.visibility = View.VISIBLE
             listBT!!.isEnabled = false
 
