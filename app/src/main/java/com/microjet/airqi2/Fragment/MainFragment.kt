@@ -382,6 +382,7 @@ class MainFragment : Fragment() {
             tvBtmCarbonValue?.text= "---"
             tvBtmTempValue?.text= "---"/*currentValue[0] + " ℃"*/
             tvBtmHUMIValue?.text= "---"/*currentValue[1] + " %"*/
+            tvNotify?.text = "---"
             tvLastDetecteTime?.text = "---"
             bar1?.setCurrentValues(0f)
         }

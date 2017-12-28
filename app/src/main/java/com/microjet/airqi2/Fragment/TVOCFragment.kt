@@ -237,34 +237,35 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     @Synchronized private fun checkUIState() {
         if (mConnectStatus) {
-
-        } else {
-            stopUpdateDataAnimation()
-            setProgessBarZero()
-        }
-        setCurrentConnectStatusIcon()
-        if (animationCount > 1440) {
-            stopUpdateDataAnimation()
-            setProgessBarZero()
-        }
-    }
-
-    private fun setCurrentConnectStatusIcon() {
-        if (mConnectStatus) {
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
             mImageViewDataUpdate?.isEnabled = true
+            if (animationCount > 1440) {
+                stopUpdateDataAnimation()
+                setProgessBarZero()
+            }
         } else {
+            stopUpdateDataAnimation()
+            setProgessBarZero()
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
             mImageViewDataUpdate?.isEnabled = false
         }
     }
+
+//    private fun setCurrentConnectStatusIcon() {
+//        if (mConnectStatus) {
+//            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
+//            mImageViewDataUpdate?.isEnabled = true
+//        } else {
+//            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
+//            mImageViewDataUpdate?.isEnabled = false
+//        }
+//    }
 
     fun getDeviceData() {
         if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
             intent!!.putExtra("status", "getSampleRate")
             context.sendBroadcast(intent)
-            downloadingData = true
         }
     }
 
@@ -460,7 +461,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         operatingAnim.interpolator = lin
         mImageViewDataUpdate?.startAnimation(operatingAnim)
         mImageViewDataUpdate?.isEnabled = false
-        startDataAnimationCount()
+        animationCount = 0
+        downloadingData = true
     }
 
     private fun stopUpdateDataAnimation() {
@@ -469,9 +471,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         downloadingData = false
     }
 
-    private fun startDataAnimationCount() {
-        animationCount = 0
-    }
+//    private fun startDataAnimationCount() {
+//        animationCount = 0
+//    }
 
     private fun setRealTimeBarData(Tvoc: String, Battery: String) {
         val sdFormat = SimpleDateFormat("MM/dd HH:mm:ss", Locale.TAIWAN)
