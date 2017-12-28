@@ -351,8 +351,8 @@ class MainFragment : Fragment() {
                 DetectionData.TVOC -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                     SetThresholdValue(dataForState)
-                    bar1?.setCurrentValues(tvocDataFloat)
                     SetbarMaxValue(dataForState)
+                    bar1?.setCurrentValues(tvocDataFloat)
                     TVOCStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
                     textSpannble(temp)
@@ -360,8 +360,8 @@ class MainFragment : Fragment() {
                 DetectionData.CO2 -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_co2)
                     SetThresholdValue(dataForState)
-                    bar1?.setCurrentValues(co2DataFloat)
                     SetbarMaxValue(dataForState)
+                    bar1?.setCurrentValues(co2DataFloat)
                     CO2tatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
                     textSpannble(temp)
