@@ -65,6 +65,7 @@ class MainFragment : Fragment() {
     private var tempDataFloat = 0f
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
+    private var preHeat = "0"
 
     private var dataForState = DetectionData.TVOC
     private var mConnState = false
@@ -344,7 +345,7 @@ class MainFragment : Fragment() {
     }
 
     @Synchronized private fun checkUIState() {
-        if (mConnState) {
+        if (mConnState && preHeat == "255") {
             //SetThresholdValue(dataForState)
             //SetbarMaxValue(dataForState)
             when (dataForState) {
@@ -488,7 +489,9 @@ class MainFragment : Fragment() {
                     tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
                     humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
                     tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
-                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()                }
+                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
+                    preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                }
             }
             checkUIState()
         }
