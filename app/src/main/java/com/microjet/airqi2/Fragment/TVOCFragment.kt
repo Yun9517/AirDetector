@@ -545,9 +545,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
                     counter++
                     TVOCAVG += tvocVal.toInt()
-                    if (counter % 15 == 0) {
+                    if (counter % 3 == 0) {
                         counter = 0
-                        TVOCAVG /= 15
+                        TVOCAVG /= 3
                         setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
                         TVOCAVG = 0
                     }
