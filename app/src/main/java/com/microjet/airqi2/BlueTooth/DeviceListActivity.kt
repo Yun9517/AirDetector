@@ -233,7 +233,10 @@ class DeviceListActivity : Activity() {
 
             cancelButton!!.text = resources.getText(android.R.string.cancel)
 
+            devScanningPanel!!.visibility = View.VISIBLE
+            devScanningPanel!!.bringToFront()
             scanProgress!!.visibility = View.VISIBLE
+            listBT!!.isEnabled = false
 
             // Stops scanning after a pre-defined scan period.
             mHandler!!.postDelayed({
@@ -247,6 +250,8 @@ class DeviceListActivity : Activity() {
                 devScanningPanel!!.visibility = View.INVISIBLE
 
                 mScanning = false
+                listBT!!.isEnabled = true
+
 
             }, SCAN_PERIOD)
 
@@ -267,6 +272,7 @@ class DeviceListActivity : Activity() {
         } else {
             mBluetoothLeScanner!!.stopScan(scanCallback)
             mScanning = false
+            listBT!!.isEnabled = true
         }
     }
 
