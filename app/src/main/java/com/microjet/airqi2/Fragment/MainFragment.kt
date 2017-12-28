@@ -368,10 +368,12 @@ class MainFragment : Fragment() {
                     textSpannble(temp)
                 }
             }
+
             setBtmCurrentValue()
             val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
             val date = Date()
             tvLastDetecteTime?.text = dateFormat.format(date).toString()
+            //20171228 ANDY增加
         } else {
             tvInCycleValue?.text = "---"
             tvInCycleState?.text = "---"
