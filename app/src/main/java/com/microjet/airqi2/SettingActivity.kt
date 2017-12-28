@@ -100,7 +100,7 @@ class SettingActivity : AppCompatActivity() {
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
-        swViberate?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
+        /*swViberate?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
         if (swViberate!!.isChecked) {
             text_vibe_stat?.text = getString(R.string.text_setting_on)
         } else {
@@ -112,7 +112,7 @@ class SettingActivity : AppCompatActivity() {
             text_sound_stat!!.text = getString(R.string.text_setting_on)
         } else {
             text_sound_stat!!.text = getString(R.string.text_setting_off)
-        }
+        }*/
 
     }
 
@@ -142,18 +142,13 @@ class SettingActivity : AppCompatActivity() {
                         position).apply()
             }
 
-
-
-
-
-
             override fun onNothingSelected(parent: AdapterView<*>) {
 
             }
         }
 
-        swMessage!!.setOnClickListener {
-            if (swMessage!!.isChecked) {
+        swMessage!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 text_msg_stat!!.text = getString(R.string.text_setting_on)
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
@@ -164,51 +159,51 @@ class SettingActivity : AppCompatActivity() {
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
-                    swMessage!!.isChecked).apply()
+                    isChecked).apply()
         }
 
-        swViberate!!.setOnClickListener {
-            if (swViberate!!.isChecked) {
+        swViberate!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 text_vibe_stat!!.text = getString(R.string.text_setting_on)
             } else {
                 text_vibe_stat!!.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
-                    swViberate!!.isChecked).apply()
+                    isChecked).apply()
         }
 
-        swSound!!.setOnClickListener {
-            if (swSound!!.isChecked) {
+        swSound!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 text_sound_stat!!.text = getString(R.string.text_setting_on)
             } else {
                 text_sound_stat!!.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
-                    swSound!!.isChecked).apply()
+                    isChecked).apply()
         }
 
-        swRunInBg!!.setOnClickListener {
-            if (swRunInBg!!.isChecked) {
+        swRunInBg!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 text_run_bg_stat!!.text = getString(R.string.text_setting_on)
             } else {
                 text_run_bg_stat!!.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG,
-                    swRunInBg!!.isChecked).apply()
+                    isChecked).apply()
         }
 
-        swTotalNotify!!.setOnClickListener {
-            if (swTotalNotify!!.isChecked) {
+        swTotalNotify!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
                 text_total_notify_stat!!.text = getString(R.string.text_setting_on)
             } else {
                 text_total_notify_stat!!.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
-                    swTotalNotify!!.isChecked).apply()
+                    isChecked).apply()
         }
     }
 

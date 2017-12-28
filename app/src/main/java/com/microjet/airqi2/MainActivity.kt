@@ -351,7 +351,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)
         bleIcon = menu!!.findItem(R.id.bleStatus)
-        battreyIcon = menu!!.findItem(R.id.batStatus)
+        battreyIcon = menu.findItem(R.id.batStatus)
         bleIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         battreyIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
