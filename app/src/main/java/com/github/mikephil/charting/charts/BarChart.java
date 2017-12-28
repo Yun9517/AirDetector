@@ -118,6 +118,19 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 		float top = y >= 0 ? y : 0;
 		float bottom = y <= 0 ? y : 0;
 
+		float valueLowLimite=220;
+		float valueHightLimite=660;
+
+		if (top <=valueLowLimite) {
+			top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+		}
+		else if (top>=valueHightLimite){
+			top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
+		}
+		else{
+			top = (float)(220*65535/3/220+(top-220)*49.64);
+		}
+
 		RectF bounds = new RectF(left, top, right, bottom);
 
 		getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);

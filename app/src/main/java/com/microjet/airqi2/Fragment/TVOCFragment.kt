@@ -126,19 +126,23 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             when (i) {
                 R.id.radioButton_Hour -> {
                     mChart?.data = getBarData2(tvocArray, timeArray)
+                    mChart?.data?.setDrawValues(false)
                 }
                 R.id.radioButton_Day -> {
                     getRealmFour(4)
                     mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    mChart?.data?.setDrawValues(false)
                 }
                 R.id.radioButton_Week -> {
 
                     getRealmFour(8)
                     mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    mChart?.data?.setDrawValues(false)
                 }
                 R.id.radioButton_Month -> {
                     getRealmFour(12)
                     mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    mChart?.data?.setDrawValues(false)
 
                 }
             }
@@ -155,7 +159,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart!!.data = getBarData()
         val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
         val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
-        val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 3))
+        val line1000 = mChart!!.getBarBounds(BarEntry(65535f, 3))
         tvChartTitleMiddle?.y = line660.top- tvChartTitleMiddle!!.height//Text660 position
         tvChartTitleBottom?.y = line220.top- tvChartTitleBottom!!.height//Text220 position
         imgBarRed?.y = line1000.top//red
@@ -167,11 +171,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         when (radioButtonID) {
             0 -> {
                 mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
             1, 2, 3 -> {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
@@ -188,11 +194,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         when (radioButtonID) {
             0 -> {
                 mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
             1, 2, 3 -> {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
@@ -335,6 +343,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
+     //   leftAxis.setDrawValues(false)
+    //    leftAxis.setDraw
+        mChart!!.setDrawValueAboveBar(false)
 
         /*var yLimitLine =  LimitLine(220f,"yLimit 测试");
         yLimitLine.setLineColor(Color.RED)
@@ -346,7 +357,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         yLimitLine2.setTextColor(Color.RED)
         leftAxis.addLimitLine(yLimitLine2)*/
 
-        leftAxis.setAxisMaxValue(1000f) // the axis maximum is 100
+        leftAxis.setAxisMaxValue(65535f) // the axis maximum is 100
         leftAxis.setAxisMinValue(0f) // start at zero
         //var top=leftAxis.spaceTop
         //var bottom=leftAxis.spaceBottom
@@ -480,6 +491,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 timeArray.removeAt(0)
             }
             mChart?.data = getBarData2(tvocArray, timeArray)
+            mChart?.data?.setDrawValues(false)
             mChart?.setVisibleXRangeMinimum(5.0f)
             mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
             mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
@@ -582,7 +594,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
        // for (i in 1 until DATA_COUNT) {
             chartData.add(BarEntry((220).toFloat(), 1))
             chartData.add(BarEntry((660).toFloat(), 2))
-            chartData.add(BarEntry((1000).toFloat(), 3))
+            chartData.add(BarEntry((65535).toFloat(), 3))
        // }
         return chartData
     }

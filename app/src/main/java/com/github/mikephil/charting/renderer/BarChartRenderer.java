@@ -32,6 +32,8 @@ public class BarChartRenderer extends DataRenderer {
 
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
+    private int valueLowLimite=220;
+    private int valueHightLimite=660;
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator,
             ViewPortHandler viewPortHandler) {
@@ -184,6 +186,16 @@ public class BarChartRenderer extends DataRenderer {
         float right = x + barWidth - barspaceHalf;
         float top = y1;
         float bottom = y2;
+
+        if (top <=valueLowLimite) {
+            top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+        }
+        else if (top>=valueHightLimite){
+            top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
+        }
+        else{
+            top = (float)(220*65535/3/220+(top-220)*49.64);
+        }
 
         mBarRect.set(left, top, right, bottom);
 
