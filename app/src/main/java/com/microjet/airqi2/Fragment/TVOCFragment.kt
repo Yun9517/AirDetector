@@ -71,7 +71,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private val tvocArray = ArrayList<String>()
     private val timeArray = ArrayList<String>()
     private val batteryArray = ArrayList<String>()
-    private var radioButtonID = mRadioGroup?.getCheckedRadioButtonId()
+    private var radioButtonID : Int? = 0
 
     private var mConnectStatus: Boolean = false
 
@@ -154,6 +154,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         })
 
         mHour!!.isChecked = true
+        radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
         mChart!!.setOnChartValueSelectedListener(this)
     }
@@ -488,15 +489,17 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
     }
 
-    private fun dependRadioIDDrawChart(radioID:Int?) {
+    fun dependRadioIDDrawChart(radioID:Int?) {
         when (radioID) {
-            0 -> {
+            R.id.radioButton_Hour -> {
                 mChart?.data = getBarData2(tvocArray, timeArray)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)
                 mChart?.setVisibleXRangeMaximum(5.0f)
             }
-            1, 2, 3 -> {
+            R.id.radioButton_Day,
+            R.id.radioButton_Week,
+            R.id.radioButton_Month -> {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRangeMinimum(5.0f)

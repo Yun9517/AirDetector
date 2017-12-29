@@ -125,10 +125,10 @@ class MainFragment : Fragment() {
             checkUIState()
 
         }
-        show_eCO2?.setOnClickListener {
-            dataForState = DetectionData.CO2
-            checkUIState()
-        }
+//        show_eCO2?.setOnClickListener {
+//            dataForState = DetectionData.CO2
+//            checkUIState()
+//        }
 
 
         //20171219   Andy
@@ -199,7 +199,7 @@ class MainFragment : Fragment() {
         //DetectorValue=currentValue
         tvBtmTVOCValue?.text=tvocDataFloat.toInt().toString() + " ppb"
         tvBtmPMValue?.text="Coming soon"
-        tvBtmCarbonValue?.text=co2DataFloat.toInt().toString()+ " ppm"
+        tvBtmCarbonValue?.text= "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue?.text="Coming soon"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue?.text="Coming soon"/*currentValue[1] + " %"*/
     }
