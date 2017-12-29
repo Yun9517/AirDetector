@@ -185,6 +185,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                mChart?.setVisibleXRangeMaximum(5.0f)
 //            }
 //        }
+        dependRadioIDDrawChart(radioButtonID)
     }
     override fun onStart() {
         super.onStart()
@@ -489,7 +490,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
     }
 
-    fun dependRadioIDDrawChart(radioID:Int?) {
+    private fun dependRadioIDDrawChart(radioID:Int?) {
         when (radioID) {
             R.id.radioButton_Hour -> {
                 mChart?.data = getBarData2(tvocArray, timeArray)
