@@ -83,6 +83,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var downloadingData = false
 
     private var preHeat = "0"
+    private var getDataCycle = 2
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -479,24 +480,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val sdFormat = SimpleDateFormat("MM/dd HH:mm:ss", Locale.TAIWAN)
         val date = Date()
         sdFormat.format(date)
+
         timeArray.add(sdFormat.format(date))
         tvocArray.add(Tvoc)
         batteryArray.add(Battery)
 
-        val radioButtonIDBar = mRadioGroup?.getCheckedRadioButtonId()
-
-        if (radioButtonIDBar == R.id.radioButton_Hour) {
-            mChart?.clear()
-            if (tvocArray.size > DATA_COUNT) {
-                tvocArray.removeAt(0)
-            }
-            if (timeArray.size > DATA_COUNT) {
-                timeArray.removeAt(0)
-            }
-            mChart?.data = getBarData2(tvocArray, timeArray)
-            mChart?.data?.setDrawValues(false)
-            mChart?.setVisibleXRangeMinimum(5.0f)
-            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+        while (tvocArray.size > DATA_COUNT) {
+            tvocArray.removeAt(0)
+            timeArray.removeAt(0)
+        }
+        if (radioButtonID == R.id.radioButton_Hour) {
+//            mChart?.clear()
+//            mChart?.data = getBarData2(tvocArray, timeArray)
+//            mChart?.data?.setDrawValues(false)
+//            mChart?.setVisibleXRangeMinimum(5.0f)
+//            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+            mRadioGroup.check(radioButtonID!!)
             mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
         }
     }
@@ -564,9 +563,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
                         counter++
                         TVOCAVG += tvocVal.toInt()
-                        if (counter % 15 == 0) {
+                        if (counter % getDataCycle == 0) {
                             counter = 0
-                            TVOCAVG /= 15
+                            TVOCAVG /= getDataCycle
                             setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
                             TVOCAVG = 0
                         }
