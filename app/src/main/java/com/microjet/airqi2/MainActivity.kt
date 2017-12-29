@@ -364,8 +364,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         when (item!!.itemId) {
             R.id.batStatus -> {
                 if (connState) {
-                    dialogShow(getString(R.string.text_battery_title),
-                            getString(R.string.text_battery_value) + batValue + "%")
+                    if (batValue != 0) {
+                        dialogShow(getString(R.string.text_battery_title),
+                                getString(R.string.text_battery_value) + batValue + "%")
+                    }else {
+                        dialogShow(getString(R.string.text_battery_title),
+                                getString(R.string.text_battery_value) + 1 + "%")
+                    }
                 }
             }
 
