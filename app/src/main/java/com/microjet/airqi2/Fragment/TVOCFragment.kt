@@ -83,7 +83,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var downloadingData = false
 
     private var preHeat = "0"
-    private var getDataCycle = 2
+    private var getDataCycle = 15
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -169,21 +169,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarGreen?.y = line220.top//green
 
         //視Radio id畫圖
-        mChart!!.clear()
-        when (radioButtonID) {
-            0 -> {
-                mChart?.data = getBarData2(tvocArray, timeArray)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-            1, 2, 3 -> {
-                mChart?.data = getBarData3(arrTvoc3, arrTime3)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-        }
+//        mChart!!.clear()
+//        when (radioButtonID) {
+//            0 -> {
+//                mChart?.data = getBarData2(tvocArray, timeArray)
+//                mChart?.data?.setDrawValues(false)
+//                mChart?.setVisibleXRangeMinimum(5.0f)
+//                mChart?.setVisibleXRangeMaximum(5.0f)
+//            }
+//            1, 2, 3 -> {
+//                mChart?.data = getBarData3(arrTvoc3, arrTime3)
+//                mChart?.data?.setDrawValues(false)
+//                mChart?.setVisibleXRangeMinimum(5.0f)
+//                mChart?.setVisibleXRangeMaximum(5.0f)
+//            }
+//        }
     }
     override fun onStart() {
         super.onStart()
@@ -193,20 +193,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onResume() {
         super.onResume()
         //視Radio id畫圖
-        when (radioButtonID) {
-            0 -> {
-                mChart?.data = getBarData2(tvocArray, timeArray)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-            1, 2, 3 -> {
-                mChart?.data = getBarData3(arrTvoc3, arrTime3)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-        }
+        dependRadioIDDrawChart(radioButtonID)
     }
 
     override fun onPause() {
@@ -495,8 +482,26 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //            mChart?.data?.setDrawValues(false)
 //            mChart?.setVisibleXRangeMinimum(5.0f)
 //            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-            mRadioGroup.check(radioButtonID!!)
+            //mRadioGroup?.check(radioButtonID!!)
+            dependRadioIDDrawChart(radioButtonID!!)
             mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
+        }
+    }
+
+    private fun dependRadioIDDrawChart(radioID:Int?) {
+        when (radioID) {
+            0 -> {
+                mChart?.data = getBarData2(tvocArray, timeArray)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
+            1, 2, 3 -> {
+                mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRangeMinimum(5.0f)
+                mChart?.setVisibleXRangeMaximum(5.0f)
+            }
         }
     }
 
