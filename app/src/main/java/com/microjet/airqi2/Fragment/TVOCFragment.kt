@@ -32,7 +32,6 @@ import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
-import kotlinx.android.synthetic.main.frg_tvoc.*
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,6 +63,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var imgBarRed : ImageView? = null
     private var imgBarYellow : ImageView? = null
     private var imgBarGreen : ImageView? = null
+    private var imgBarBase : ImageView? = null
     //UI元件
 
 
@@ -115,6 +115,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarRed = this.view?.findViewById(R.id.imgBarRed)
         imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
+        imgBarBase = this.view?.findViewById(R.id.imgBarBase)
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
@@ -163,11 +164,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
         val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
         val line1000 = mChart!!.getBarBounds(BarEntry(65535f, 3))
-        tvChartTitleMiddle?.y = line660.top- tvChartTitleMiddle!!.height//Text660 position
-        tvChartTitleBottom?.y = line220.top- tvChartTitleBottom!!.height//Text220 position
+        tvChartTitleMiddle?.y = line660.top - (tvChartTitleMiddle!!.height / 2)//Text660 position
+        tvChartTitleBottom?.y = line220.top - (tvChartTitleBottom!!.height / 2)//Text220 position
         imgBarRed?.y = line1000.top//red
         imgBarYellow?.y = line660.top//yellow
         imgBarGreen?.y = line220.top//green
+        imgBarBase?.y = line220.bottom//base
 
         //視Radio id畫圖
 //        mChart!!.clear()
