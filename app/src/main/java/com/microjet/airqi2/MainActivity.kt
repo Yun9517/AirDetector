@@ -151,16 +151,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
 
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        var mBluetoothDeviceAddress = share.getString("mac", "noValue")
-
-        if (mBluetoothDeviceAddress != "noValue" && !connState) {
-            val mainintent = Intent(BroadcastIntents.PRIMARY)
-            mainintent.putExtra("status", "connect")
-            mainintent.putExtra("mac", mBluetoothDeviceAddress)
-            sendBroadcast(mainintent)
-        }
-
+        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         checkUIState()
         requestPermissionsForBluetooth()
         checkBluetooth()
@@ -177,7 +168,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPause() {
         super.onPause()
-
     }
 
     override fun onStop() {
@@ -191,6 +181,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
             mIsReceiverRegistered = false
         }
+
+        unregisterReceiver(mBluetoothStateReceiver)
 
         val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
         serviceIntent!!.putExtra("status", "disconnect")
@@ -269,6 +261,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 enableBtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 mContext.startActivity(enableBtIntent)
+            } else {
+                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+                val mBluetoothDeviceAddress = share.getString("mac", "noValue")
+
+                if (mBluetoothDeviceAddress != "noValue" && !connState) {
+                    val mainintent = Intent(BroadcastIntents.PRIMARY)
+                    mainintent.putExtra("status", "connect")
+                    mainintent.putExtra("mac", mBluetoothDeviceAddress)
+                    sendBroadcast(mainintent)
+                }
             }
         }
     }
@@ -746,6 +748,35 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         //checkUIState()
         Log.d("MAINAC", "UPDATEUI")
+    }
+
+
+    private fun makeBluetoothStateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        return intentFilter
+    }
+
+    private val mBluetoothStateReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
+
+            when (state) {
+                BluetoothAdapter.STATE_TURNING_OFF, BluetoothAdapter.STATE_OFF -> {
+                }
+                BluetoothAdapter.STATE_ON -> {
+                    val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+                    val mBluetoothDeviceAddress = share.getString("mac", "noValue")
+
+                    if (mBluetoothDeviceAddress != "noValue" && !connState) {
+                        val mainintent = Intent(BroadcastIntents.PRIMARY)
+                        mainintent.putExtra("status", "connect")
+                        mainintent.putExtra("mac", mBluetoothDeviceAddress)
+                        sendBroadcast(mainintent)
+                    }
+                }
+            }
+        }
     }
 
 }
