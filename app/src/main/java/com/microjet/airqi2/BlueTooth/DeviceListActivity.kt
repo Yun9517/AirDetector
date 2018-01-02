@@ -77,10 +77,15 @@ class DeviceListActivity : Activity() {
 
         //先拿掉該判斷，如有問題再補回來,原本mConnectionState初始化無值不給connect
         //if (UartService.mConnectionState == 0) {
-            val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            serviceIntent!!.putExtra("status", "connect")
-            serviceIntent!!.putExtra("mac", device.address)
-            sendBroadcast(serviceIntent)
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            intent!!.putExtra("status", "connect")
+            //Use Bundle Save Address
+            val bundle: Bundle? = Bundle()
+            bundle!!.putString("mac", device.address)
+            //put bundle into intent
+            intent!!.putExtras(bundle)
+            //intent!!.putExtra("mac", device.address)
+            sendBroadcast(intent)
         //
 
         /*

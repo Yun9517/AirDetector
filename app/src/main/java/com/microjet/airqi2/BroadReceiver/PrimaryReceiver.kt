@@ -49,12 +49,17 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "connect" -> {
-                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
+                //get Address
                 var macAddress = intent.getStringExtra("mac")
-                mainIntent.putExtra("status", "connect")
-                mainIntent.putExtra("mac",macAddress)
-                context.sendBroadcast(mainIntent)
-                Log.d("MAINRECEIVER","CONNECT")
+
+                var intent = Intent(BroadcastIntents.UART_SERVICE)
+                intent.putExtra("status", "connect")
+                val bundle = Bundle()
+                bundle.putString("mac",macAddress.toString())
+                intent!!.putExtras(bundle)
+                //intent.putExtra("mac",macAddress)
+                context.sendBroadcast(intent)
+                Log.d("MAINRECEIVER","CONNECT$macAddress")
             }
             "close" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
