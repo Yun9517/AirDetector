@@ -1327,6 +1327,7 @@ public class UartService extends Service {
                     @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
                             .setSmallIcon(R.color.progressBarMidColor)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                            .setColor( Color.BLUE)
                             .setContentTitle(getString(R.string.Medium_warning_title))
                             //.setColor(R.color.Main_textResult_Unhealthy)
                             //.setBadgeIconType( R.drawable.app_android_icon_logo)
