@@ -14,17 +14,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -32,6 +38,7 @@ import java.util.UUID;
 import io.realm.Realm;
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.Definition.BroadcastIntents;
+import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 
@@ -92,6 +99,21 @@ public class UartService extends Service {
     private Realm realm;
     private Integer countForItem = 0;
 
+
+    //20180102   Andy
+    private int countsound660=0;
+    private int countsound220=0;
+    private int countsound800=0;
+    private int countsound1500=0;
+    private SoundPool soundPool= null;
+    private Vibrator mVibrator = null;
+    private int alertId = 0;
+    //private MediaPlayer mp = null;
+    private HashMap<Integer, Integer> soundsMap;
+    int SOUND1 = 1;
+    int SOUND2 = 2;
+    private Boolean showWithVibrate = false;
+    private SharedPreferences mPreference = null;
 
     //    public UartService() { //建構式
 //    }
@@ -259,6 +281,16 @@ public class UartService extends Service {
         registerReceiver(mPrimaryReceiver,filter);
         */
 
+
+        //20180102    Andy
+        // Create sound pool
+        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0);
+        soundPool = new SoundPool(4, AudioManager.STREAM_ALARM, 100);
+        soundsMap = new HashMap<>();
+        soundsMap.put(SOUND1, soundPool.load(this, R.raw.tvoc_over220, 1));
+        soundsMap.put(SOUND2, soundPool.load(this, R.raw.tvoc_over660, 1));
+        mVibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+        //showWithVibrate = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false);
 
         if (!mIsReceiverRegistered) {
             if (mReceiver == null) {
@@ -847,6 +879,29 @@ public class UartService extends Service {
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
+
+                    if (  Integer.valueOf(RString.get(2)) < 221){
+                        //20171226  Andy
+                        if(countsound220!=0||countsound660!=0) {
+                            countsound220=0;
+                            countsound660=0;
+                            Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
+                            Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
+                        }
+                    }
+                    else if ( Integer.valueOf(RString.get(2))  > 661) {
+                        countsound220=0;
+                        Log.e("更新TVOC220計數變數:",Integer.toString(countsound220));
+
+                        hightBeBEBEBE();
+                    }
+                    else{
+                        //20171226  Andy
+                        countsound660=0;
+                        Log.e("更新TVOC660計數變數:",Integer.toString(countsound660));
+                        lowtBeBEBEBE();
+
+                    }
                     break;
                 case (byte) 0xB1:
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
@@ -1153,6 +1208,84 @@ public class UartService extends Service {
             super.onPostExecute(bitmap);
 
         }
+    }
+
+    //20180102   Andy
+    public void hightBeBEBEBE(){
+        SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
+
+            if ((countsound660 == 5 || countsound660 == 0)) {
+                //20180102   Andy叫叫ABC
+                //mp = MediaPlayer.create (this, R.raw.pixiedust);
+                //20171226  Andy
+                countsound220 = 0;
+                Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
+                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
+                {
+                    //mp.start();
+                    //20171220   Andy
+                    try {
+                        alertId = soundPool.load(this, R.raw.tvoc_over660, 1);
+                        Thread.sleep(500);
+                        soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
+//                        if (showWithVibrate) {
+//                            mVibrator.vibrate(2000);
+//                        }
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+                {
+                    //if ((countsound800 == 5 || countsound800 == 0)) {
+                    if (mVibrator == null) {
+                    } else {
+                        // 震动 1s
+                        mVibrator.vibrate(2000);
+                    }
+                    //}
+
+                }
+            }
+
+        if (countsound660 == 5) {
+            countsound660 = 0;
+        }
+        countsound660 = countsound660 + 1;
+        Log.e("TVOC660計數變數:", Integer.toString(countsound660));
+    }
+    private void lowtBeBEBEBE(){
+        SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
+        if ((countsound220 == 5 || countsound220 == 0)) {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&&(countsound220==5||countsound220==0))
+            {
+                //20171219   Andy
+                //mp.start();
+                //20171220   Andy
+                try {
+                    alertId = soundPool.load(this, R.raw.tvoc_over220, 1);
+                    Thread.sleep(500);
+                    soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                if (mVibrator == null) {
+                } else {
+                    // 震动 1s
+                    mVibrator.vibrate(1000);
+                }
+            }
+        }
+
+        if (countsound220 == 5) {
+            countsound220 = 0;
+        }
+        countsound220 = countsound220 + 1;
+        Log.e("TVOC220計數變數:",Integer.toString(countsound220));
+
     }
 
     private final BroadcastReceiver mBluetoothStateBroadcastReceiver = new BroadcastReceiver() {
