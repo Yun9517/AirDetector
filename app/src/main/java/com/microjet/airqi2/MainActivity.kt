@@ -13,6 +13,7 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Handler
@@ -118,6 +119,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        Log.i(TAG, "call onCreate")
 
         uiFindViewById()
         viewPagerInit()
@@ -150,33 +152,44 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStart() {
         super.onStart()
+        Log.i(TAG, "call onStart")
 
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         checkUIState()
         requestPermissionsForBluetooth()
         checkBluetooth()
 
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
-        Log.d(TAG, "START")
-
+        if (mBluetoothDeviceAddress != "noValue" && !connState) {
+            val mainintent = Intent(BroadcastIntents.PRIMARY)
+            mainintent.putExtra("status", "connect")
+            mainintent.putExtra("mac", mBluetoothDeviceAddress)
+            sendBroadcast(mainintent)
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        Log.i(TAG, "call onResume")
 
     }
 
     override fun onPause() {
         super.onPause()
+        Log.i(TAG, "call onPause")
     }
 
     override fun onStop() {
         super.onStop()
+        Log.i(TAG, "call onStop")
 
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        Log.i(TAG, "call onDestroy")
         if (mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
             mIsReceiverRegistered = false
@@ -261,16 +274,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 enableBtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                 mContext.startActivity(enableBtIntent)
-            } else {
-                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-                val mBluetoothDeviceAddress = share.getString("mac", "noValue")
-
-                if (mBluetoothDeviceAddress != "noValue" && !connState) {
-                    val mainintent = Intent(BroadcastIntents.PRIMARY)
-                    mainintent.putExtra("status", "connect")
-                    mainintent.putExtra("mac", mBluetoothDeviceAddress)
-                    sendBroadcast(mainintent)
-                }
             }
         }
     }
@@ -365,13 +368,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
             R.id.batStatus -> {
-                if (connState) {
-                    if (batValue != 0) {
-                        dialogShow(getString(R.string.text_battery_title),
+                if(connState) {
+                    when (batValue) {
+                        in 1..100 -> dialogShow(getString(R.string.text_battery_title),
                                 getString(R.string.text_battery_value) + batValue + "%")
-                    }else {
-                        dialogShow(getString(R.string.text_battery_title),
-                                getString(R.string.text_battery_value) + 1 + "%")
+                        in 101..200 -> dialogShow(getString(R.string.text_battery_title),
+                                "充電中")
+                        else -> dialogShow(getString(R.string.text_battery_title),
+                                getString(R.string.text_battery_value) + "1 %")
                     }
                 }
             }
@@ -620,22 +624,72 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun displayConnetedBatteryLife() {
-        //batValue = intent.getStringExtra("BatteryLife").toInt()
-        //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-            when {
-                batValue > 100 -> {
-                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_charge)
-                    batValue -= 100
+        val icon: AnimationDrawable
+        when (batValue) {
+        // Charge
+            in 101..200 -> {
+                when (batValue) {
+                    in 198..200 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_6)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(icon.isRunning) {
+                            icon.stop()
+                        }
+                    }
+                    in 180..198 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_5)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(!icon.isRunning) {
+                            icon.start()
+                        }
+                    }
+                    in 160..180 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_4)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(!icon.isRunning) {
+                            icon.start()
+                        }
+                    }
+                    in 140..160 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_3)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(!icon.isRunning) {
+                            icon.start()
+                        }
+                    }
+                    in 120..140 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_2)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(!icon.isRunning) {
+                            icon.start()
+                        }
+                    }
+                    in 101..120 -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_1)
+                        icon = battreyIcon?.icon as AnimationDrawable
+                        if(!icon.isRunning) {
+                            icon.start()
+                        }
+                    }
                 }
-                batValue in 96..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
-                batValue in 76..95 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
-                batValue in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
-                batValue in 41..55 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
-                batValue in 21..40 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x2)
-                batValue in 10..20 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x1)
-
-                else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
             }
+        // Normal
+            in 10..100 -> {
+                /*if(icon.isRunning) {
+                    icon.stop()
+                }*/
+                when(batValue) {
+                    in 96..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
+                    in 76..95 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
+                    in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
+                    in 41..55 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+                    in 21..40 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x2)
+                    in 10..20 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x1)
+                }
+            }
+        // Exception
+            else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
+        }
     }
 
     private val TAG = MainActivity::class.java.simpleName
@@ -673,7 +727,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     displayConnetedBatteryLife()
                 }
             }
-            Log.d("MainActivity","OnReceive")
+            Log.d("MainActivity","OnReceive: " + action)
             checkUIState()
         }
 
@@ -760,11 +814,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val mBluetoothStateReceiver = object: BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
+            var stateStr = "BluetoothAdapter.STATE_OFF"
 
             when (state) {
-                BluetoothAdapter.STATE_TURNING_OFF, BluetoothAdapter.STATE_OFF -> {
+                BluetoothAdapter.STATE_TURNING_OFF -> {
+                    stateStr = "BluetoothAdapter.STATE_TURNING_OFF"
+                }
+                BluetoothAdapter.STATE_OFF -> {
+                    stateStr = "BluetoothAdapter.STATE_OFF"
                 }
                 BluetoothAdapter.STATE_ON -> {
+                    stateStr = "BluetoothAdapter.STATE_ON"
                     val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
                     val mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
@@ -776,6 +836,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
             }
+            Log.v(TAG, "mBluetoothStateReceiver: " + stateStr)
         }
     }
 
