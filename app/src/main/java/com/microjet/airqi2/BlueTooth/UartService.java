@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -49,6 +50,7 @@ import io.realm.Realm;
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
+import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 
@@ -124,6 +126,9 @@ public class UartService extends Service {
     int SOUND2 = 2;
     private Boolean showWithVibrate = false;
     private SharedPreferences mPreference = null;
+    //20180103   Andy
+    private final int NOTIFICATION_ID = 0xa01;
+    private final int REQUEST_CODE = 0xb01;
 
     //    public UartService() { //建構式
 //    }
@@ -1320,6 +1325,15 @@ public class UartService extends Service {
                             .build();
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     assert notificationManager != null;
+
+                    //20180103   Andy
+                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+                    Intent intent = new Intent(this, MainActivity.class);
+                    //當使用者點擊通知Bar時，切換回MainActivity
+                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    notification.contentIntent = pi;
+
                     notificationManager.notify(1, notification);
                 } catch (Exception e) {
                     e.printStackTrace();
