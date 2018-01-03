@@ -1314,7 +1314,7 @@ public class UartService extends Service {
                             .setSmallIcon(R.color.progressBarMidColor)
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                             .setContentTitle("中度危險警告通知!!")
-                            .setColor(Color.GRAY)
+                            .setColor(Color.BLUE)
                             .setBadgeIconType( R.drawable.app_android_icon_logo)
                             .setContentText("中度汙染，請竟快離開現場！！")
                             .build();

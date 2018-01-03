@@ -59,7 +59,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 intent!!.putExtras(bundle)
                 //intent.putExtra("mac",macAddress)
                 context.sendBroadcast(intent)
-                Log.d("MAINRECEIVER","CONNECT$macAddress")
+                Log.d("MAINRECEIVER","CONNECT: $macAddress")
             }
             "close" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
