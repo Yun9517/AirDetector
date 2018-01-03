@@ -1,5 +1,9 @@
 package com.microjet.airqi2.BlueTooth;
 
+import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -15,15 +19,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -806,6 +816,7 @@ public class UartService extends Service {
             return false;
         }
     }
+    @SuppressLint("NewApi")
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
         switch (txValue[2]) {
@@ -1211,9 +1222,9 @@ public class UartService extends Service {
     }
 
     //20180102   Andy
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void hightBeBEBEBE(){
         SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
-
             if ((countsound660 == 5 || countsound660 == 0)) {
                 //20180102   Andy叫叫ABC
                 //mp = MediaPlayer.create (this, R.raw.pixiedust);
@@ -1245,6 +1256,24 @@ public class UartService extends Service {
                     }
                     //}
 
+                }
+                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
+                {
+                    try {
+                       @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                                .setSmallIcon( R.color.progressBarEndColor)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                                .setContentTitle("重度危險警告通知!!")
+                                .setColor( Color.RED)
+                                .setBadgeIconType( R.drawable.app_android_icon_logo)
+                                .setContentText("高度汙染，請趕快離開現場，塊陶啊！！！")
+                                .build();
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        assert notificationManager != null;
+                        notificationManager.notify(1, notification);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
@@ -1278,6 +1307,25 @@ public class UartService extends Service {
                     mVibrator.vibrate(1000);
                 }
             }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                try {
+                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.color.progressBarMidColor)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                            .setContentTitle("中度危險警告通知!!")
+                            .setColor(Color.GRAY)
+                            .setBadgeIconType( R.drawable.app_android_icon_logo)
+                            .setContentText("中度汙染，請竟快離開現場！！")
+                            .build();
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    assert notificationManager != null;
+                    notificationManager.notify(1, notification);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
         }
 
         if (countsound220 == 5) {

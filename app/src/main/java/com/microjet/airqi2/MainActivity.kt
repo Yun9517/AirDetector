@@ -6,6 +6,8 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.Notification
+import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -13,7 +15,9 @@ import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
+import android.graphics.BitmapFactory
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -27,6 +31,7 @@ import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.app.NotificationCompat
 import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
@@ -45,6 +50,7 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.TVOCFragment
+import io.fabric.sdk.android.services.settings.IconRequest.build
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
