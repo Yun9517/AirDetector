@@ -7,11 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.webkit.WebView
+import kotlinx.android.synthetic.main.activity_qanda.*
 import java.util.*
 
 class QandAActivity : AppCompatActivity() {
-
-    private var webView: WebView? = null
 
     private var mContext: Context? = null
 
@@ -20,8 +19,6 @@ class QandAActivity : AppCompatActivity() {
         setContentView(R.layout.activity_qanda)
 
         initActionBar()
-
-        webView = findViewById(R.id.webView)
 
         mContext = this@QandAActivity.applicationContext
 

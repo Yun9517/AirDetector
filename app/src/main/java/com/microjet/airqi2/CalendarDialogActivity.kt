@@ -10,7 +10,7 @@ import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CalendarDualogActivity : AppCompatActivity() {
+class CalendarDialogActivity : AppCompatActivity() {
     var button_date: Button? = null
     var textview_date: TextView? = null
     var cal = Calendar.getInstance()
@@ -34,7 +34,7 @@ class CalendarDualogActivity : AppCompatActivity() {
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         button_date!!.setOnClickListener(object : View.OnClickListener {
             override fun onClick(view: View) {
-                DatePickerDialog(this@CalendarDualogActivity,
+                DatePickerDialog(this@CalendarDialogActivity,
                         dateSetListener,
                         // set DatePickerDialog to point to today's date when it loads up
                         cal.get(Calendar.YEAR),

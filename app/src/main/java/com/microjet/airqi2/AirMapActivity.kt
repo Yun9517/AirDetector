@@ -2,6 +2,7 @@ package com.microjet.airqi2
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import kotlinx.android.synthetic.main.activity_airmap.*
 
 /**
  * Created by B00174 on 2017/11/27.

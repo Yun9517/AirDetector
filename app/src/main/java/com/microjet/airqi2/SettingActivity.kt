@@ -17,9 +17,6 @@ import android.widget.AdapterView
 import com.microjet.airqi2.Definition.BroadcastIntents
 import android.view.MotionEvent
 
-
-
-
 /**
  * Created by B00174 on 2017/11/29.
  */

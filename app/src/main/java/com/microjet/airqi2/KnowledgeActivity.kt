@@ -6,20 +6,16 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
-import android.webkit.WebView
+import kotlinx.android.synthetic.main.activity_knowledge.*
 import java.util.*
 
 class KnowledgeActivity : AppCompatActivity() {
-
-    private var webView: WebView? = null
 
     private var mContext: Context? = null
 
     override fun onCreate(savedInstanceState:Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_knowledge)
-
-        webView = findViewById(R.id.webView)
 
         mContext = this@KnowledgeActivity.applicationContext
 
