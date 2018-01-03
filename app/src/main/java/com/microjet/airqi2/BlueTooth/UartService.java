@@ -1275,6 +1275,15 @@ public class UartService extends Service {
                                 .build();
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         assert notificationManager != null;
+
+                        //20180103   Andy
+                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+                        Intent intent = new Intent(this, MainActivity.class);
+                        //當使用者點擊通知Bar時，切換回MainActivity
+                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        notification.contentIntent = pi;
+
                         notificationManager.notify(1, notification);
                     } catch (Exception e) {
                         e.printStackTrace();
