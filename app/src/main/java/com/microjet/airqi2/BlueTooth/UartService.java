@@ -1237,7 +1237,7 @@ public class UartService extends Service {
                     //20171220   Andy
                     try {
                         alertId = soundPool.load(this, R.raw.babuchimam, 1);
-                        Thread.sleep(800);
+                        Thread.sleep(150);
                         soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
 //                        if (showWithVibrate) {
 //                            mVibrator.vibrate(2000);
@@ -1305,7 +1305,7 @@ public class UartService extends Service {
                 //20171220   Andy
                 try {
                     alertId = soundPool.load(this, R.raw.hawae, 1);
-                    Thread.sleep(800);
+                    Thread.sleep(150);
                     soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
