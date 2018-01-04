@@ -15,6 +15,10 @@ import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.renderer.BarChartRenderer;
 import com.github.mikephil.charting.renderer.XAxisRendererBarChart;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 /**
  * Chart that draws bars.
  * 
@@ -35,6 +39,7 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 	 */
 	private boolean mDrawBarShadow = false;
 
+	private List<Float >mYChartInterval=null;
 	public BarChart(Context context) {
 		super(context);
 	}
@@ -117,26 +122,57 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 		float right = x + barWidth - spaceHalf;
 		float top = y >= 0 ? y : 0;
 		float bottom = y <= 0 ? y : 0;
-
+        /*
 		float valueLowLimite=220;
 		float valueHightLimite=660;
-
+		float maxvalue=mAxisLeft.getAxisMaximum();
 		if (top <=valueLowLimite) {
-			top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+			//top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+			top *= mAxisLeft.getAxisMaximum()/3/220;
 		}
 		else if (top>=valueHightLimite){
-			top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
+			top=(float)(220*mAxisLeft.getAxisMaximum()/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
 		}
 		else{
-			top = (float)(220*65535/3/220+(top-220)*49.64);
-		}
-
+			top = (float)(220*mAxisLeft.getAxisMaximum()/3/220+(top-220)*49.64);
+		}*/
+        top=countTop(top);
 		RectF bounds = new RectF(left, top, right, bottom);
 
 		getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);
 
 		return bounds;
 	}
+
+    private float countTop(float top ){
+        float fYChartMax=mAxisLeft.getAxisMaximum();//mChart.getYChartMax();
+        List<Float> myInterval=getYChartInterval();
+        ArrayList<Float> myDistance=new ArrayList<>();
+        Float temp=Float.valueOf(0);//new Float(0);
+        for (Float a:myInterval){
+            myDistance.add(a-temp);
+            temp=a;
+        }
+        float topTemp=top;
+        float Temp2=0;
+        for (int i=0,j=-1;i<myInterval.size();i++) {
+            float counter=myInterval.get(i);
+            float value=myDistance.get(i);
+            if (top>=counter){
+                topTemp=topTemp-counter;
+                Temp2+= value*fYChartMax/(myInterval.size()-1)/value;
+                j++;
+                if (Float.isNaN(Temp2))
+                    Temp2=0;
+            }else{
+
+                top=Temp2+(top-myInterval.get(j))*fYChartMax/(myInterval.size()-1)/value;
+                break;
+            }
+
+        }
+        return top;
+    }
 
 	/**
 	 * set this to true to draw the highlightning arrow
@@ -231,4 +267,13 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 		getTransformer(AxisDependency.LEFT).pixelsToValue(pts);
 		return (int) ((pts[0] >= getXChartMax()) ? getXChartMax() / div : (pts[0] / div));
 	}
+   public  List<Float> getYChartInterval(){
+       Collections.sort(mYChartInterval);
+       return mYChartInterval;
+    }
+    public void setYChartInterval(List <Float > value){
+        mYChartInterval=value;
+        mYChartInterval.add(getYChartMax());
+        mYChartInterval.add(getYChartMin());
+    }
 }

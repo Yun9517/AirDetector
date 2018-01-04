@@ -19,6 +19,9 @@ import com.github.mikephil.charting.interfaces.dataprovider.ScatterDataProvider;
 import com.github.mikephil.charting.interfaces.datasets.IBubbleDataSet;
 import com.github.mikephil.charting.renderer.CombinedChartRenderer;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * This chart class allows the combination of lines, bars, scatter and candle
  * data all displayed in one chart area.
@@ -223,5 +226,13 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Lin
         if (order == null || order.length <= 0)
             return;
         mDrawOrder = order;
+    }
+    List<Float> mYChartInterval=null;
+    public List<Float> getYChartInterval(){
+        Collections.sort(mYChartInterval);
+        return mYChartInterval;
+    }
+    public void setYChartInterval(List <Float > value){
+        mYChartInterval=value;
     }
 }
