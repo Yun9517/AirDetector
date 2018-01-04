@@ -4,6 +4,9 @@ package com.github.mikephil.charting.buffer;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
     protected float mBarSpace = 0f;
@@ -36,22 +39,44 @@ public class BarBuffer extends AbstractBuffer<IBarDataSet> {
 
     protected void addBar(float left, float top, float right, float bottom) {
 
-        if (top<=valueLowLimite) {
-            top*= 65535/3/220;//65535/3=21845  21845/220=99.29
-        }
-        else if (top>=valueHightLimite){
-            top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
-        }
-        else{
-            top= (float)(220*65535/3/220+(top-220)*49.64);
-        }
-
         buffer[index++] = left;
         buffer[index++] = top;
         buffer[index++] = right;
         buffer[index++] = bottom;
     }
+    /*
+    private float countTop(float top ){
 
+        float fYChartMax=
+                mAxisLeft.getAxisMaximum();//mChart.getYChartMax();
+        List<Float> myInterval=getYChartInterval();
+        ArrayList<Float> myDistance=new ArrayList<>();
+        Float temp=Float.valueOf(0);//new Float(0);
+        for (Float a:myInterval){
+            myDistance.add(a-temp);
+            temp=a;
+        }
+        float topTemp=top;
+        float Temp2=0;
+        for (int i=0,j=-1;i<myInterval.size();i++) {
+            float counter=myInterval.get(i);
+            float value=myDistance.get(i);
+            if (top>=counter){
+                topTemp=topTemp-counter;
+                Temp2+= value*fYChartMax/(myInterval.size()-1)/value;
+                j++;
+                if (Float.isNaN(Temp2))
+                    Temp2=0;
+            }else{
+
+                top=Temp2+(top-myInterval.get(j))*fYChartMax/(myInterval.size()-1)/value;
+                break;
+            }
+
+        }
+        return top;
+    }
+    */
     @Override
     public void feed(IBarDataSet data) {
 

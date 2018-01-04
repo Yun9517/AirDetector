@@ -232,7 +232,4 @@ public class CombinedChart extends BarLineChartBase<CombinedData> implements Lin
         Collections.sort(mYChartInterval);
         return mYChartInterval;
     }
-    public void setYChartInterval(List <Float > value){
-        mYChartInterval=value;
-    }
 }
