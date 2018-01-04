@@ -19,6 +19,7 @@ import com.github.mikephil.charting.utils.Transformer;
 import com.github.mikephil.charting.utils.Utils;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BarChartRenderer extends DataRenderer {
@@ -32,8 +33,8 @@ public class BarChartRenderer extends DataRenderer {
 
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
-    private int valueLowLimite=220;
-    private int valueHightLimite=660;
+//    private int valueLowLimite=220;
+//    private int valueHightLimite=660;
 
     public BarChartRenderer(BarDataProvider chart, ChartAnimator animator,
             ViewPortHandler viewPortHandler) {
@@ -186,22 +187,61 @@ public class BarChartRenderer extends DataRenderer {
         float right = x + barWidth - barspaceHalf;
         float top = y1;
         float bottom = y2;
-
+       /*
+        ArrayList<Float> myDistance=new ArrayList<>();
+        Float temp=Float.valueOf(0);//new Float(0);
+        for (Float a:myInterval){
+            myDistance.add(a-temp);
+            temp=a;
+        }*/
+       top= countTop(top);
+       /*
         if (top <=valueLowLimite) {
-            top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+        //    top *= 65535/3/220;//65535/3=21845  21845/220=99.29
+            top *= mChart.getYChartMax()/(myInterval.size()+1)/220;//myInterval.size()+"1"->max
         }
         else if (top>=valueHightLimite){
-            top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
+        //    top=(float)(220*65535/3/220+440*49.64+(top-660)*0.33);//21845/440=49.64 21845/64875=0.33
+            top=(float)(220*mChart.getYChartMax()/(myInterval.size()+1)/220+440*49.64+(top-660)*0.33);
         }
         else{
-            top = (float)(220*65535/3/220+(top-220)*49.64);
+        //    top = (float)(220*65535/3/220+(top-220)*49.64);
+            top = (float)(220*mChart.getYChartMax()/(myInterval.size()+1)/220+(top-220)*49.64);
         }
-
+        */
         mBarRect.set(left, top, right, bottom);
 
         trans.rectValueToPixel(mBarRect, mAnimator.getPhaseY());
     }
+    private float countTop(float top ){
+        float fYChartMax=mChart.getYChartMax();
+        List<Float> myInterval=mChart.getYChartInterval();
+        ArrayList<Float> myDistance=new ArrayList<>();
+        Float temp=Float.valueOf(0);//new Float(0);
+        for (Float a:myInterval){
+            myDistance.add(a-temp);
+            temp=a;
+        }
+        float topTemp=top;
+        float Temp2=0;
+        for (int i=0,j=-1;i<myInterval.size();i++) {
+            float counter=myInterval.get(i);
+            float value=myDistance.get(i);
+            if (top>=counter){
+                topTemp=topTemp-counter;
+                Temp2+= value*fYChartMax/(myInterval.size()-1)/value;
+                j++;
+                if (Float.isNaN(Temp2))
+                    Temp2=0;
+            }else{
 
+                top=Temp2+(top-myInterval.get(j))*fYChartMax/(myInterval.size()-1)/value;
+                break;
+            }
+
+        }
+        return top;
+    }
     @Override
     public void drawValues(Canvas c) {
         // if values are drawn

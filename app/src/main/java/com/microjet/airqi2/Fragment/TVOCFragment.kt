@@ -152,6 +152,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             mChart?.setVisibleXRangeMinimum(5.0f)
             mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
             mChart?.moveViewToX((100).toFloat())//移動視圖by x index
+            radioButtonID = mRadioGroup?.checkedRadioButtonId
         })
 
         mHour!!.isChecked = true
@@ -330,17 +331,24 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
 
-        mChart!!.legend.isEnabled = false
-
+        leftAxis.setAxisMaxValue(65535f) // the axis maximum is 100
+        leftAxis.setAxisMinValue(0f) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        val nums = ArrayList<Float>()
+        nums.add(220f)
+        nums.add(660f)
+
+        mChart!!.legend.isEnabled = false
+        mChart!!.yChartInterval=nums
+
      //   leftAxis.setDrawValues(false)
     //    leftAxis.setDraw
         mChart!!.setDrawValueAboveBar(false)
-
         /*var yLimitLine =  LimitLine(220f,"yLimit 测试");
         yLimitLine.setLineColor(Color.RED)
         yLimitLine.setTextColor(Color.RED)
@@ -351,8 +359,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         yLimitLine2.setTextColor(Color.RED)
         leftAxis.addLimitLine(yLimitLine2)*/
 
-        leftAxis.setAxisMaxValue(65535f) // the axis maximum is 100
-        leftAxis.setAxisMinValue(0f) // start at zero
+
         //var top=leftAxis.spaceTop
         //var bottom=leftAxis.spaceBottom
     //    mChart?.setDrawValueAboveBar(false)
