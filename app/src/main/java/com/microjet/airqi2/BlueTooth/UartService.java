@@ -115,8 +115,10 @@ public class UartService extends Service {
     private int countsound800=0;
     private int countsound1500=0;
     private SoundPool soundPool= null;
+    private SoundPool soundPool2= null;
     private Vibrator mVibrator = null;
     private int alertId = 0;
+    private int alertId2 = 0;
     //private MediaPlayer mp = null;
     private HashMap<Integer, Integer> soundsMap;
     int SOUND1 = 1;
@@ -297,13 +299,16 @@ public class UartService extends Service {
         //20180102    Andy
         // Create sound pool
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0);
-        soundPool = new SoundPool(4, AudioManager.STREAM_ALARM, 100);
+        soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         soundsMap = new HashMap<>();
-        soundsMap.put(SOUND1, soundPool.load(this, R.raw.tvoc_over220, 1));
-        soundsMap.put(SOUND2, soundPool.load(this, R.raw.tvoc_over660, 1));
+        soundsMap.put(SOUND1, soundPool.load(this, R.raw.babuchimam, 1));
+        soundsMap.put(SOUND2, soundPool.load(this, R.raw.ballballbusabahuwa, 1));
         mVibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         //showWithVibrate = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false);
 
+        //20180104   Andy
+        //alertId = soundPool.load(this, R.raw.babuchimam, 1);
+        //alertId2 = soundPool2.load(this, R.raw.ballballbusabahuwa, 1);
         if (!mIsReceiverRegistered) {
             if (mReceiver == null) {
                 mReceiver = new MyBroadcastReceiver();
@@ -1236,13 +1241,11 @@ public class UartService extends Service {
                     //mp.start();
                     //20171220   Andy
                     try {
-                        alertId = soundPool.load(this, R.raw.babuchimam, 1);
-                        Thread.sleep(150);
-                        soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
-//                        if (showWithVibrate) {
-//                            mVibrator.vibrate(2000);
-//                        }
-                    } catch (InterruptedException e) {
+                        //alertId = soundPool.load(this, R.raw.babuchimam, 1);
+                        //Thread.sleep(150);
+                        //soundPool.play(alertId, 1F, 1F, 0, 0, 1.0f);
+                        playSound(SOUND1, 1.0f);
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -1304,10 +1307,10 @@ public class UartService extends Service {
                 //mp.start();
                 //20171220   Andy
                 try {
-                    alertId = soundPool.load(this, R.raw.hawae, 1);
-                    Thread.sleep(150);
-                    soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
-                } catch (InterruptedException e) {
+                    //Thread.sleep(150);
+                    //soundPool2.play(alertId2, 1F, 1F, 0, 0, 1.0f);
+                    playSound(SOUND2, 1.0f);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
@@ -1364,7 +1367,16 @@ public class UartService extends Service {
         Log.e("TVOC220計數變數:",Integer.toString(countsound220));
 
     }
+    public void playSound(int sound, float fSpeed) {
+        AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        assert mgr != null;
+        float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+        float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        float volume = streamVolumeCurrent / streamVolumeMax;
 
+
+        soundPool.play(soundsMap.get(sound), volume, volume, 1, 0, fSpeed);
+    }
     private final BroadcastReceiver mBluetoothStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
