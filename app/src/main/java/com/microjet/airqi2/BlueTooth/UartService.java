@@ -2,7 +2,6 @@ package com.microjet.airqi2.BlueTooth;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -23,7 +22,6 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
@@ -34,7 +32,6 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -907,16 +904,14 @@ public class UartService extends Service {
                     }
                     else if ( Integer.valueOf(RString.get(2))  > 661) {
                         countsound220=0;
-                        Log.e("更新TVOC220計數變數:",Integer.toString(countsound220));
-
+                        //Log.e("更新TVOC220計數變數:",Integer.toString(countsound220));
                         hightBeBEBEBE();
                     }
                     else{
                         //20171226  Andy
                         countsound660=0;
-                        Log.e("更新TVOC660計數變數:",Integer.toString(countsound660));
+                        //Log.e("更新TVOC660計數變數:",Integer.toString(countsound660));
                         lowtBeBEBEBE();
-
                     }
                     break;
                 case (byte) 0xB1:
@@ -1241,8 +1236,8 @@ public class UartService extends Service {
                     //mp.start();
                     //20171220   Andy
                     try {
-                        alertId = soundPool.load(this, R.raw.tvoc_over660, 1);
-                        Thread.sleep(500);
+                        alertId = soundPool.load(this, R.raw.babuchimam, 1);
+                        Thread.sleep(800);
                         soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
 //                        if (showWithVibrate) {
 //                            mVibrator.vibrate(2000);
@@ -1309,8 +1304,8 @@ public class UartService extends Service {
                 //mp.start();
                 //20171220   Andy
                 try {
-                    alertId = soundPool.load(this, R.raw.tvoc_over220, 1);
-                    Thread.sleep(500);
+                    alertId = soundPool.load(this, R.raw.hawae, 1);
+                    Thread.sleep(800);
                     soundPool.play(alertId, 1F, 1F, 0, 0, 1F);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
