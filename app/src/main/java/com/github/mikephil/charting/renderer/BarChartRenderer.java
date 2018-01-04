@@ -10,6 +10,7 @@ import android.graphics.RectF;
 
 import com.github.mikephil.charting.animation.ChartAnimator;
 import com.github.mikephil.charting.buffer.BarBuffer;
+import com.github.mikephil.charting.buffer.NewBarBuffer;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -29,8 +30,8 @@ public class BarChartRenderer extends DataRenderer {
     /** the rect object that is used for drawing the bars */
     protected RectF mBarRect = new RectF();
 
+    protected NewBarBuffer[] mBarBuffers2;
     protected BarBuffer[] mBarBuffers;
-
     protected Paint mShadowPaint;
     protected Paint mBarBorderPaint;
 //    private int valueLowLimite=220;
@@ -58,11 +59,14 @@ public class BarChartRenderer extends DataRenderer {
     public void initBuffers() {
 
         BarData barData = mChart.getBarData();
+        mBarBuffers2 = new NewBarBuffer[barData.getDataSetCount()];
         mBarBuffers = new BarBuffer[barData.getDataSetCount()];
-
         for (int i = 0; i < mBarBuffers.length; i++) {
             IBarDataSet set = barData.getDataSetByIndex(i);
-            mBarBuffers[i] = new BarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1),
+            mBarBuffers[i] = new NewBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1),
+                    barData.getGroupSpace(),
+                    barData.getDataSetCount(), set.isStacked());
+            mBarBuffers2[i] = new NewBarBuffer(set.getEntryCount() * 4 * (set.isStacked() ? set.getStackSize() : 1),
                     barData.getGroupSpace(),
                     barData.getDataSetCount(), set.isStacked());
         }
@@ -97,7 +101,8 @@ public class BarChartRenderer extends DataRenderer {
         float phaseY = mAnimator.getPhaseY();
 
         // initialize the buffer
-        BarBuffer buffer = mBarBuffers[index];
+        NewBarBuffer buffer = mBarBuffers2[index];
+        buffer.SetYChartInterval(mChart.getYChartInterval());
         buffer.setPhases(phaseX, phaseY);
         buffer.setBarSpace(dataSet.getBarSpace());
         buffer.setDataSet(index);
