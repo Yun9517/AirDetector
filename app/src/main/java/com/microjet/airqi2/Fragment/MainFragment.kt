@@ -40,7 +40,9 @@ class MainFragment : Fragment() {
 
     enum class DetectionData(val range1: Long,val range2: Long) {
         TVOC(220,660),
-        CO2(800,1500)
+        CO2(800,1500),
+        Temp(18,25),
+        Humi(45,65)
     }
 
     private var mContext : Context? = null
@@ -129,6 +131,14 @@ class MainFragment : Fragment() {
 //            dataForState = DetectionData.CO2
 //            checkUIState()
 //        }
+        show_Temp?.setOnClickListener{
+            dataForState = DetectionData.Temp
+            checkUIState()
+        }
+        show_RH?.setOnClickListener {
+            dataForState = DetectionData.Humi
+            checkUIState()
+        }
 
 
         //20171219   Andy
@@ -191,6 +201,12 @@ class MainFragment : Fragment() {
             DetectionData.CO2 ->{
                 bar1?.setMaxValues(2000f)
             }
+            DetectionData.Temp ->{
+                bar1?.setMaxValues(3000f)
+            }
+            DetectionData.Humi ->{
+                bar1?.setMaxValues(4000f)
+            }
         }
     }
 
@@ -200,8 +216,8 @@ class MainFragment : Fragment() {
         tvBtmTVOCValue?.text=tvocDataFloat.toInt().toString() + " ppb"
         tvBtmPMValue?.text="Coming soon"
         tvBtmCarbonValue?.text= "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue?.text="Coming soon"/*currentValue[0] + " ℃"*/
-        tvBtmHUMIValue?.text="Coming soon"/*currentValue[1] + " %"*/
+        tvBtmTEMPValue?.text=tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
+        tvBtmHUMIValue?.text=humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
 
      @SuppressLint("SetTextI18n")
@@ -239,16 +255,59 @@ class MainFragment : Fragment() {
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
         }
     }
+
+    private fun tempStatusTextShow(currentValue:Float){
+        if (currentValue < 18){
+            tvNotify?.text = getString(R.string.text_message_temperature)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+        }
+        else if (currentValue > 25){
+            tvNotify?.text = getString(R.string.text_message_temperature)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+        }
+        else{
+            tvNotify?.text = getString(R.string.text_message_temperature)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+        }
+    }
+
+    private fun humiStatusTextShow(currentValue:Float){
+        if (currentValue < 45){
+            tvNotify?.text = getString(R.string.text_message_humidity)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+        }
+        else if (currentValue >65){
+            tvNotify?.text = getString(R.string.text_message_humidity)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+        }
+        else{
+            tvNotify?.text = getString(R.string.text_message_humidity)
+            tvInCycleState?.text = " "
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+        }
+    }
+
     private fun CO2tatusTextShow(currentValue:Float){
         if (currentValue < 800){
-            tvNotify?.text = getString(R.string.text_message_air_good)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_good)
+            //tvNotify?.text = getString(R.string.text_message_air_good)
+            //tvInCycleState?.text = getString(R.string.text_label_ststus_good)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
         }
         else if (currentValue > 1500) {
-            tvNotify?.text = getString(R.string.text_message_air_bad)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
+            //tvNotify?.text = getString(R.string.text_message_air_bad)
+            //tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -362,6 +421,25 @@ class MainFragment : Fragment() {
                     bar1?.setCurrentValues(co2DataFloat)
                     CO2tatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
+                    textSpannble(temp)
+                }
+                DetectionData.Temp -> {
+                    tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
+                    SetThresholdValue(dataForState)
+                    SetbarMaxValue(dataForState)
+                    bar1?.setCurrentValues(tempDataFloat)
+                    tempStatusTextShow(tempDataFloat)
+                    val temp = tempDataFloat.toInt().toString() + " ℃"
+                    textSpannble(temp)
+                }
+
+                DetectionData.Humi -> {
+                    tvInCycleTitle!!.text = getString(R.string.text_label_humidity)
+                    SetThresholdValue(dataForState)
+                    SetbarMaxValue(dataForState)
+                    bar1?.setCurrentValues(humiDataFloat)
+                    humiStatusTextShow(humiDataFloat)
+                    val temp = humiDataFloat.toInt().toString() + " % "
                     textSpannble(temp)
                 }
             }

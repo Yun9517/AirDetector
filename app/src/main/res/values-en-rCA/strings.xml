@@ -7,6 +7,8 @@
     <string name="text_message_air_mid">Minor Pollution\nAir quality is bad.\nplease improve the ventilation or wear a mask
 TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_message_air_bad">Serious Pollution\nAir quality is horrible\nplease improve the ventilation or leave.\nTVOC is unhealthy, it will damage people health.</string>
+    <string name="text_message_humidity">Normally, Human feels cool and comfortable when the humidity percent range is about 45%~65%.\nYour body healthy can’t be afforded by too dry or too moist.</string>
+    <string name="text_message_temperature">Normally, the best temperature for human is about 18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>

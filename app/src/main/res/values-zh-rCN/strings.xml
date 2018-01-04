@@ -6,6 +6,8 @@
     <string name="text_message_air_good">空气质量一般\n请保持空气流通\n挥发性有机物浓度低\n没有刺激或不适风险</string>
     <string name="text_message_air_mid">空气质量差\n建议改善通风或配戴口罩\n长时间处于此环境下\n可能会导致眼睛和呼吸道不适</string>
     <string name="text_message_air_bad">空气质量很差\n建议改善通风或离开污染的环境\n长期处于此环境下\n会伤害人体的健康</string>
+    <string name="text_message_humidity">一般来说，湿度维持在45%~65％，不仅凉爽舒适，也不会因为过度干燥、潮湿而影响健康。</string> <!-- 2018/01/04 -->
+    <string name="text_message_temperature">一般来说，人体在室内感觉最舒适的温度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
