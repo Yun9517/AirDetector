@@ -1272,6 +1272,9 @@ public class UartService extends Service {
                                 .setColor( Color.RED)
                                 .setBadgeIconType( R.drawable.app_android_icon_logo)
                                 .setContentText("高度汙染，請趕快離開現場，塊陶啊！！！")
+                                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                                .setPriority(Notification.PRIORITY_DEFAULT)
+                                .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         assert notificationManager != null;
@@ -1329,9 +1332,11 @@ public class UartService extends Service {
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                             .setColor( Color.BLUE)
                             .setContentTitle(getString(R.string.Medium_warning_title))
-                            //.setColor(R.color.Main_textResult_Unhealthy)
                             //.setBadgeIconType( R.drawable.app_android_icon_logo)
                             .setContentText(getString(R.string.Medium_warning))
+                            //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setAutoCancel(true) // 點擊完notification自動消失
                             .build();
                     NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                     assert notificationManager != null;
@@ -1339,11 +1344,16 @@ public class UartService extends Service {
                     //20180103   Andy
                     // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                     Intent intent = new Intent(this, MainActivity.class);
+
+                    // 通知的時間
+                    notification.when = System.currentTimeMillis();
+
                     //當使用者點擊通知Bar時，切換回MainActivity
                     PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
                             intent, PendingIntent.FLAG_UPDATE_CURRENT);
                     notification.contentIntent = pi;
 
+                    //送到手機的通知欄
                     notificationManager.notify(1, notification);
                 } catch (Exception e) {
                     e.printStackTrace();
