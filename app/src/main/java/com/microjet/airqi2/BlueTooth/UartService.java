@@ -301,8 +301,8 @@ public class UartService extends Service {
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         soundPool = new SoundPool(4, AudioManager.STREAM_MUSIC, 100);
         soundsMap = new HashMap<>();
-        soundsMap.put(SOUND1, soundPool.load(this, R.raw.babuchimam, 1));
-        soundsMap.put(SOUND2, soundPool.load(this, R.raw.ballballbusabahuwa, 1));
+        soundsMap.put(SOUND1, soundPool.load(this, R.raw.tvoc_over660, 1));
+        soundsMap.put(SOUND2, soundPool.load(this, R.raw.tvoc_over220, 1));
         mVibrator = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         //showWithVibrate = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false);
 
