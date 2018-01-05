@@ -139,13 +139,13 @@ public class UartService extends Service {
             switch (newState) {
                 case BluetoothProfile.STATE_DISCONNECTED: {
                     intentAction = ACTION_GATT_DISCONNECTED;
-                    mConnectionState = STATE_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
                     mainIntent.putExtra("status", intentAction);
                     sendBroadcast(mainIntent);
                     mBluetoothAdapter = mBluetoothManager.getAdapter();
+                    mConnectionState = STATE_DISCONNECTED;
                     if (!mBluetoothAdapter.isEnabled()) {
                         close();}
                     break;

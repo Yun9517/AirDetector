@@ -454,15 +454,15 @@ class MainFragment : Fragment() {
             tvLastDetecteTime?.text = dateFormat.format(date).toString()
             //20171228 ANDY增加
         } else {
-            tvInCycleValue?.text = "---"
-            tvInCycleState?.text = "---"
+            tvInCycleValue?.text = " "
+            tvInCycleState?.text = " "
             tvBtmTVOCValue?.text= "---"
             tvBtmPmValue?.text= "---"
             tvBtmCarbonValue?.text= "---"
             tvBtmTempValue?.text= "---"/*currentValue[0] + " ℃"*/
             tvBtmHUMIValue?.text= "---"/*currentValue[1] + " %"*/
-            tvNotify?.text = "---"
-            tvLastDetecteTime?.text = "---"
+            tvNotify?.text = " "
+            tvLastDetecteTime?.text = " "
             bar1?.setCurrentValues(0f)
         }
     }
