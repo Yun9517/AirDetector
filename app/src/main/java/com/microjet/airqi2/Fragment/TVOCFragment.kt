@@ -162,8 +162,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
     fun setImageBarSize(){
         mChart!!.data = getBarData()
-        val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
         val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
+        val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
         val line1000 = mChart!!.getBarBounds(BarEntry(65535f, 3))
         tvChartTitleMiddle?.y = line660.top - (tvChartTitleMiddle!!.height / 2)//Text660 position
         tvChartTitleBottom?.y = line220.top - (tvChartTitleBottom!!.height / 2)//Text220 position
@@ -481,6 +481,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         timeArray.add(sdFormat.format(date))
         tvocArray.add(Tvoc)
+    //    tvocArray.add("20")
         batteryArray.add(Battery)
 
         while (tvocArray.size > DATA_COUNT) {

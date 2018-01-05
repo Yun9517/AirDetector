@@ -424,6 +424,7 @@ class MainFragment : Fragment() {
                     textSpannble(temp)
                 }
                 DetectionData.Temp -> {
+                    bar1?.setTemperaterColor()
                     tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
                     SetThresholdValue(dataForState)
                     SetbarMaxValue(dataForState)

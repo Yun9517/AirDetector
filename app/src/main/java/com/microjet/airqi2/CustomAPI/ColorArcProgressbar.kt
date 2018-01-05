@@ -121,7 +121,24 @@ class ColorArcProgressBar : View {
         initConfig(context, attrs)
         initView()
     }
+    fun setHumidityColor(){
 
+    }
+    fun setTvocCo2Color(){
+
+    //    val color1 = a.getColor(R.styleable.ColorArcProgressBar_front_color1, Color.GREEN)
+    //    val color2 = a.getColor(R.styleable.ColorArcProgressBar_front_color2, color1)
+    //   val color3 = a.getColor(R.styleable.ColorArcProgressBar_front_color3, color1)
+    //    colors = intArrayOf(color1, color2, color3, color3)
+    }
+    fun setTemperaterColor(){
+
+        bgArcColor =resources.getColor(R.color.progressBarLittleBlue)
+        longDegreeColor=resources.getColor(R.color.progressBarMiddleBlue)
+        shortDegreeColor=resources.getColor(R.color.progressBarLittleBlue)
+        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
+        sweepGradient=SweepGradient(centerX, centerY, colors, null)
+    }
     /**
      * 初始化布局配置
      *
@@ -130,7 +147,6 @@ class ColorArcProgressBar : View {
      */
     private fun initConfig(context: Context, attrs: AttributeSet) {
         val a = context.obtainStyledAttributes(attrs, R.styleable.ColorArcProgressBar)
-
         val color1 = a.getColor(R.styleable.ColorArcProgressBar_front_color1, Color.GREEN)
         val color2 = a.getColor(R.styleable.ColorArcProgressBar_front_color2, color1)
         val color3 = a.getColor(R.styleable.ColorArcProgressBar_front_color3, color1)
