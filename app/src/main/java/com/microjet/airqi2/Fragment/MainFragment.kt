@@ -260,20 +260,20 @@ class MainFragment : Fragment() {
         if (currentValue < 18){
             tvNotify?.text = getString(R.string.text_message_temperature)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
         }
         else if (currentValue > 25){
             tvNotify?.text = getString(R.string.text_message_temperature)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarEndColor))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarEndColor))
         }
         else{
             tvNotify?.text = getString(R.string.text_message_temperature)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarStartColor))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarStartColor))
         }
     }
 
@@ -281,20 +281,20 @@ class MainFragment : Fragment() {
         if (currentValue < 45){
             tvNotify?.text = getString(R.string.text_message_humidity)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMidColor))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMidColor))
         }
         else if (currentValue >65){
             tvNotify?.text = getString(R.string.text_message_humidity)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarDarkBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
         }
         else{
             tvNotify?.text = getString(R.string.text_message_humidity)
             tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarLittleBlue))
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarStartColor))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarStartColor))
         }
     }
 
@@ -409,6 +409,7 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                     SetThresholdValue(dataForState)
                     SetbarMaxValue(dataForState)
+                    bar1?.setTvocColor()
                     bar1?.setCurrentValues(tvocDataFloat)
                     TVOCStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
@@ -418,16 +419,17 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_co2)
                     SetThresholdValue(dataForState)
                     SetbarMaxValue(dataForState)
+                    bar1?.setTvocCo2Color()
                     bar1?.setCurrentValues(co2DataFloat)
                     CO2tatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
                     textSpannble(temp)
                 }
                 DetectionData.Temp -> {
-                    bar1?.setTemperaterColor()
                     tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
                     SetThresholdValue(dataForState)
                     SetbarMaxValue(dataForState)
+                    bar1?.setTemperaterColor()
                     bar1?.setCurrentValues(tempDataFloat)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
@@ -438,6 +440,7 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_humidity)
                     SetThresholdValue(dataForState)
                     SetbarMaxValue(dataForState)
+                    bar1?.setHumidityColor()
                     bar1?.setCurrentValues(humiDataFloat)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "

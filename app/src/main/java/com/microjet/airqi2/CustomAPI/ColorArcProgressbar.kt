@@ -121,8 +121,21 @@ class ColorArcProgressBar : View {
         initConfig(context, attrs)
         initView()
     }
-    fun setHumidityColor(){
 
+    fun setTvocColor(){
+        bgArcColor = resources.getColor(R.color.progressBarStartColor)
+        longDegreeColor = resources.getColor(R.color.progressBarMidColor)
+        shortDegreeColor = resources.getColor(R.color.progressBarEndColor)
+        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
+        sweepGradient = SweepGradient(centerX, centerY, colors, null)
+    }
+
+    fun setHumidityColor(){
+        bgArcColor = resources.getColor(R.color.progressBarLittleYellow)
+        longDegreeColor = resources.getColor(R.color.progressBarTiffanyGreen)
+        shortDegreeColor = resources.getColor(R.color.progressBarMiddleBlue)
+        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
+        sweepGradient = SweepGradient(centerX, centerY, colors, null)
     }
     fun setTvocCo2Color(){
 
@@ -133,11 +146,11 @@ class ColorArcProgressBar : View {
     }
     fun setTemperaterColor(){
 
-        bgArcColor =resources.getColor(R.color.progressBarLittleBlue)
-        longDegreeColor=resources.getColor(R.color.progressBarMiddleBlue)
-        shortDegreeColor=resources.getColor(R.color.progressBarLittleBlue)
+        bgArcColor = resources.getColor(R.color.progressBarMiddleBlue)
+        longDegreeColor = resources.getColor(R.color.progressBarStartColor)
+        shortDegreeColor = resources.getColor(R.color.progressBarEndColor)
         colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
-        sweepGradient=SweepGradient(centerX, centerY, colors, null)
+        sweepGradient = SweepGradient(centerX, centerY, colors, null)
     }
     /**
      * 初始化布局配置

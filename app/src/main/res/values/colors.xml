@@ -6,7 +6,9 @@
     <color name="progressBarMidColor">#ffff00</color><!-- 進度條中間色彩 -->
     <color name="progressBarEndColor">#ff0000</color><!-- 進度條末端色彩 -->
     <color name="progressBarLittleBlue">#18FFFF</color>
-    <color name="progressBarMiddleBlue">#00B8D4</color>
+    <color name="progressBarLittleYellow">#FFCA28</color>
+    <color name="progressBarTiffanyGreen">#00C853</color>
+    <color name="progressBarMiddleBlue">#00BCD4</color>
     <color name="progressBarDarkBlue">#01579B</color>
 
     <!-- 直方圖頁面，選擇時間單位的Radio Button 未選取 & 已選取配色 -->
