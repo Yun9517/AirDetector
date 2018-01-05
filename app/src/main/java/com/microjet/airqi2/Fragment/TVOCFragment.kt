@@ -32,8 +32,10 @@ import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import io.realm.Sort
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -130,29 +132,38 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 R.id.radioButton_Hour -> {
                     mChart?.data = getBarData2(tvocArray, timeArray)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRangeMinimum(5.0f)
+                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((100).toFloat())//移動視圖by x index
                 }
                 R.id.radioButton_Day -> {
-                    getRealmFour(4)
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    getRealmDay()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(5.0f,40.0f)
+                    //mChart?.setVisibleXRangeMinimum(20.0f)
+                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
                 }
                 R.id.radioButton_Week -> {
-
-                    getRealmFour(8)
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    getRealmWeek()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(7.0f,7.0f)
                 }
                 R.id.radioButton_Month -> {
-                    getRealmFour(12)
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                    getRealmMonth()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(35.0f,35.0f)
 
                 }
             }
-            mChart?.setVisibleXRangeMinimum(5.0f)
-            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-            mChart?.moveViewToX((100).toFloat())//移動視圖by x index
             radioButtonID = mRadioGroup?.checkedRadioButtonId
+            //mChart?.setVisibleXRangeMinimum(5.0f)
+            //mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
         })
 
         mHour!!.isChecked = true
@@ -367,57 +378,123 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart?.setDescription("")// clear default string
     }
 
-    private fun getRealmFour(hour: Int) {
+    private fun getRealmDay() {
         arrTime3.clear()
         arrTvoc3.clear()
-        //touchTime = Date().time
-        for (y in 1..61) {
+        //現在時間實體毫秒
+        var touchTime = Calendar.getInstance().timeInMillis
+        //將日期設為今天日子加一天減1秒
+        var endDay = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        var endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        var realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        //設定時間區間
+        var endTime = endDayLast
+        var startTime = endDay
+        //一天共有2880筆
+        var dataCount = (endTime - startTime) / (30 * 1000)
+        Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
+        query.between("Created_time", startTime, endTime).sort("Created_time",Sort.ASCENDING)
+        var result1 = query.findAll()
+        Log.d("getRealmDay", result1.size.toString())
+        //先生出2880筆值為0的陣列
+        for (y in 0..dataCount) {
+            arrTvoc3.add("0")
+            arrTime3.add((startTime + y * 30000).toString())
+        }
+        //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
+        if (result1.size != 0) {
+            result1.forEachIndexed { index, asmDataModel ->
+                var count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
+                arrTvoc3[count] = asmDataModel.tvocValue.toString()
+            }
+            Log.d("getRealmDay", result1.last().toString())
+        }
+    }
+
+    private fun getRealmWeek() {
+        arrTime3.clear()
+        arrTvoc3.clear()
+        //拿到現在是星期幾的Int
+        var dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
+        var touchTime = Calendar.getInstance().timeInMillis
+        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        //將星期幾退回到星期日為第一時間點
+        var sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+        for (y in 0..6) {
+            //第一筆為日 00:00
+            var sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
+            //結束點為日 23:59
+            var sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            //設定時間區間
-            var touchTime = Date().time
-            var nowHourRemainer = 0
-            when (hour) {
-            //將sql搜尋時間往後推至區間 4 8 12 16 20 24
-                4 -> {
-                    nowHourRemainer = 4 - (Date().hours % 4)
-                }
-                8 -> {
-                    nowHourRemainer = 8 - (Date().hours % 8)
-                }
-                12 -> {
-                    nowHourRemainer = 12 - (Date().hours % 12)
-                }
-            }
-            var endTime = ((touchTime / 3600000) + nowHourRemainer - (hour * (y - 1))) * 3600000
-            var startTime = endTime - (hour) * 3600000
-            Log.d("TimePeriod", ((endTime - startTime) / 3600000).toString() + "Hour")
-
-            query.between("Created_time", startTime, endTime)
-
+            Log.d("getRealmWeek", sqlStartDate.toString())
+            Log.d("getRealmWeek", sqlEndDate.toString())
+            query.between("Created_time", sqlStartDate, sqlEndDate)
             var result1 = query.findAll()
+            Log.d("getRealmWeek", result1.size.toString())
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
                     sumTvoc += i.tvocValue.toInt()
                 }
                 var aveTvoc = (sumTvoc / result1.size)
-                Log.d("getRealmFour", result1.last().toString())
                 arrTvoc3.add(aveTvoc.toString())
-                arrTime3.add(endTime.toString())
+                //依序加入時間
+                arrTime3.add(sqlStartDate.toString())
+                Log.d("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
-                arrTime3.add(endTime.toString())
+                arrTime3.add((sqlStartDate.toString()))
             }
-
+        }
+    }
+    private fun getRealmMonth() {
+        arrTime3.clear()
+        arrTvoc3.clear()
+        //拿到現在是星期幾的Int
+        var dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        var monthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
+        var touchTime = Calendar.getInstance().timeInMillis
+        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        //將星期幾退回到星期日為第一時間點
+        var sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+        for (y in 0..(monthCount-1)) {
+            //第一筆為日 00:00
+            var sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
+            //結束點為日 23:59
+            var sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            var realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            var dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
+            Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
+            Log.d("getRealmWeek", sqlStartDate.toString())
+            Log.d("getRealmWeek", sqlEndDate.toString())
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            var result1 = query.findAll()
+            Log.d("getRealmWeek", result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                for (i in result1) {
+                    sumTvoc += i.tvocValue.toInt()
+                }
+                var aveTvoc = (sumTvoc / result1.size)
+                arrTvoc3.add(aveTvoc.toString())
+                //依序加入時間
+                arrTime3.add(sqlStartDate.toString())
+                Log.d("getRealmWeek", result1.last().toString())
+            } else {
+                arrTvoc3.add("0")
+                arrTime3.add((sqlStartDate.toString()))
+            }
         }
 
-
-        arrTvoc3.reverse()
-        arrTime3.reverse()
-
     }
-    private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
+    private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,radioID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
@@ -426,20 +503,34 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
         cleanTextViewInTVOC()
-        return BarData(getLabels3(inputTime), dataSets)
+        return BarData(getLabels3(inputTime,radioID), dataSets)
     }
 
-    private fun getLabels3(input: ArrayList<String>): List<String> {
-
-
+    private fun getLabels3(input: ArrayList<String>, radioID: Int?): List<String> {
         val chartLabels = ArrayList<String>()
-        val dateFormat = SimpleDateFormat("MM/dd HH:mm")
-        for (i in 0 until arrTime3.size) {
-            val date = dateFormat.format(input[i].toLong())
-            chartLabels.add(date)
+        when (radioID) {
+            R.id.radioButton_Day -> {
+                var dateFormat = SimpleDateFormat("MM/dd HH:mm")
+                for (i in 0 until arrTime3.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                }
+            }
+            R.id.radioButton_Week -> {
+                var dateFormat = SimpleDateFormat("MM/dd EEEE")
+                for (i in 0 until arrTime3.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                }
+            }
+            R.id.radioButton_Month -> {
+                var dateFormat = SimpleDateFormat("yyyy/MM/dd")
+                for (i in 0 until arrTime3.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                }
+            }
         }
-        chartLabels.removeAt(arrTime3.size - 1)
-        chartLabels.add(arrTime3.size - 1,dateFormat.format(Date().time))
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())
         return chartLabels
     }
@@ -504,16 +595,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             R.id.radioButton_Hour -> {
                 mChart?.data = getBarData2(tvocArray, timeArray)
                 mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
+                //mChart?.setVisibleXRangeMinimum(5.0f)
+                //mChart?.setVisibleXRangeMaximum(5.0f)
             }
             R.id.radioButton_Day,
             R.id.radioButton_Week,
             R.id.radioButton_Month -> {
-                mChart?.data = getBarData3(arrTvoc3, arrTime3)
+                mChart?.data = getBarData3(arrTvoc3, arrTime3,radioID)
                 mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRangeMinimum(5.0f)
-                mChart?.setVisibleXRangeMaximum(5.0f)
+                //mChart?.setVisibleXRangeMinimum(5.0f)
+                //mChart?.setVisibleXRangeMaximum(5.0f)
             }
         }
     }
@@ -646,6 +737,43 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 }
             }
         }
+
+    }
+    private fun getRealmDay123() {
+        arrTime3.clear()
+        arrTvoc3.clear()
+        var touchTime = Calendar.getInstance().timeInMillis
+        var endDay = touchTime / 3600000 / 24 * 3600000 * 24 + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        for (y in 1..1440) {
+            var realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            //設定時間區間
+
+            var endTime = endDay - (y - 1) * 30000 - 3600000*8
+            var startTime = endTime - 30000
+            Log.d("TimePeriod", ((endTime - startTime) / 1000).toString() + "Second")
+
+            query.between("Created_time", startTime, endTime)
+
+            var result1 = query.findAll()
+            Log.d("getRealmFour", result1.size.toString())
+            if (result1.size != 0) {
+                //var vvoc = 0
+                //for (i in result1) {
+                //    sumTvoc += i.tvocValue.toInt()
+                //}
+                //var aveTvoc = (sumTvoc / result1.size)
+                Log.d("getRealmFour", result1.last().toString())
+                arrTvoc3.add(result1.first()?.tvocValue.toString())
+                arrTime3.add(endTime.toString())
+            } else {
+                arrTvoc3.add("0")
+                arrTime3.add(endTime.toString())
+            }
+
+        }
+        arrTvoc3.reverse()
+        arrTime3.reverse()
 
     }
 }
