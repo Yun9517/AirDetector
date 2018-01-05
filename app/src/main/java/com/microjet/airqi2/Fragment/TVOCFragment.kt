@@ -455,28 +455,28 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        var dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
+        var dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
         var monthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
         var touchTime = Calendar.getInstance().timeInMillis
         var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        var sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
-        Log.d("getRealmWeek", sqlWeekBase.toString())
+        var sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        Log.d("getRealmMonth", sqlMonthBase.toString())
         //跑七筆BarChart
         for (y in 0..(monthCount-1)) {
             //第一筆為日 00:00
-            var sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
+            var sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
             var sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             var realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             var dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
             Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
-            Log.d("getRealmWeek", sqlStartDate.toString())
-            Log.d("getRealmWeek", sqlEndDate.toString())
+            Log.d("getRealmMonth", sqlStartDate.toString())
+            Log.d("getRealmMonth", sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
             var result1 = query.findAll()
-            Log.d("getRealmWeek", result1.size.toString())
+            Log.d("getRealmMonth", result1.size.toString())
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
@@ -486,7 +486,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add(sqlStartDate.toString())
-                Log.d("getRealmWeek", result1.last().toString())
+                Log.d("getRealmMonth", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate.toString()))
