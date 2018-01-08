@@ -2,6 +2,7 @@ package com.microjet.airqi2.Fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -66,6 +67,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var imgBarYellow : ImageView? = null
     private var imgBarGreen : ImageView? = null
     private var imgBarBase : ImageView? = null
+    private var sprTVOC : Spinner? = null
+    private var btnCallDatePicker : Button? = null
     //UI元件
 
 
@@ -86,6 +89,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     private var preHeat = "0"
     private var getDataCycle = 15
+
+    private var calObject = Calendar.getInstance()
+    private var spinnerPositon = 0
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -118,6 +124,44 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
         imgBarBase = this.view?.findViewById(R.id.imgBarBase)
+        //修改上排Spinner及Button
+        sprTVOC = this.view?.findViewById(R.id.sprTVOC)
+        var cycleList = ArrayAdapter.createFromResource(activity,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
+        sprTVOC!!.adapter = cycleList
+        sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
+            {
+                spinnerPositon = position
+                drawChart(spinnerPositon)
+
+                val selectedItem = parent.getItemAtPosition(position).toString()
+//                if (selectedItem == "Add new category") {
+//                    // do your stuff
+//                }
+                Log.d("TVOC",selectedItem)
+            } // to close the onItemSelected
+
+            override fun onNothingSelected(parent: AdapterView<*>) {
+            }
+        }
+
+        btnCallDatePicker = this.view?.findViewById(R.id.btnCallDatePicker)
+        var dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        btnCallDatePicker?.text = dateFormat.format(calObject.time)
+        btnCallDatePicker?.setOnClickListener {
+            val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                calObject.set(year,month,dayOfMonth)
+                Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
+                var dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                btnCallDatePicker?.text = dateFormat.format(calObject.time)
+                drawChart(spinnerPositon)
+            },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
+            dpd.setMessage("請選擇日期")
+            dpd.show()
+        }
+
+
+
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
@@ -126,50 +170,79 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 Log.d("TVOC","TOAST_ON")
             }
         }
-        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
-            mChart?.clear()
-            when (i) {
-                R.id.radioButton_Hour -> {
-                    mChart?.data = getBarData2(tvocArray, timeArray)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRangeMinimum(5.0f)
-                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-                    mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-                }
-                R.id.radioButton_Day -> {
-                    getRealmDay()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRange(5.0f,40.0f)
-                    //mChart?.setVisibleXRangeMinimum(20.0f)
-                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
-                }
-                R.id.radioButton_Week -> {
-                    getRealmWeek()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRange(7.0f,7.0f)
-                }
-                R.id.radioButton_Month -> {
-                    getRealmMonth()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRange(35.0f,35.0f)
-
-                }
-            }
-            radioButtonID = mRadioGroup?.checkedRadioButtonId
-            //mChart?.setVisibleXRangeMinimum(5.0f)
-            //mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-        })
+//        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
+//            mChart?.clear()
+//            when (i) {
+//                R.id.radioButton_Hour -> {
+//                    mChart?.data = getBarData2(tvocArray, timeArray)
+//                    mChart?.data?.setDrawValues(false)
+//                    mChart?.setVisibleXRangeMinimum(5.0f)
+//                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+//                    mChart?.moveViewToX((100).toFloat())//移動視圖by x index
+//                }
+//                R.id.radioButton_Day -> {
+//                    getRealmDay()
+//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
+//                    mChart?.data?.setDrawValues(false)
+//                    mChart?.setVisibleXRange(5.0f,40.0f)
+//                    //mChart?.setVisibleXRangeMinimum(20.0f)
+//                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+//                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+//                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+//                }
+//                R.id.radioButton_Week -> {
+//                    getRealmWeek()
+//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
+//                    mChart?.data?.setDrawValues(false)
+//                    mChart?.setVisibleXRange(7.0f,7.0f)
+//                }
+//                R.id.radioButton_Month -> {
+//                    getRealmMonth()
+//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
+//                    mChart?.data?.setDrawValues(false)
+//                    mChart?.setVisibleXRange(35.0f,35.0f)
+//
+//                }
+//            }
+//            radioButtonID = mRadioGroup?.checkedRadioButtonId
+//            //mChart?.setVisibleXRangeMinimum(5.0f)
+//            //mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
+//            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
+//        })
 
         mHour!!.isChecked = true
         radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
         mChart!!.setOnChartValueSelectedListener(this)
+    }
+
+    private fun drawChart(position: Int?) {
+        mChart?.clear()
+        when (position) {
+            0 -> {
+                getRealmDay()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRange(5.0f,40.0f)
+                //mChart?.setVisibleXRangeMinimum(20.0f)
+                //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+            }
+            1 -> {
+                getRealmWeek()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRange(7.0f,7.0f)
+            }
+            2 -> {
+                getRealmMonth()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRange(35.0f,35.0f)
+
+            }
+        }
     }
     fun setImageBarSize(){
         mChart!!.data = getBarData()
@@ -382,9 +455,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //現在時間實體毫秒
-        var touchTime = Calendar.getInstance().timeInMillis
+        //var touchTime = Calendar.getInstance().timeInMillis
+        var touchTime = calObject.timeInMillis
+        Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
-        var endDay = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        var endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         var endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         var realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -416,9 +491,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        var dayOfWeek = Calendar.getInstance().get(Calendar.DAY_OF_WEEK)
-        var touchTime = Calendar.getInstance().timeInMillis
-        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        var dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        var touchTime = calObject.timeInMillis
+        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         var sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         Log.d("getRealmWeek", sqlWeekBase.toString())
@@ -455,10 +530,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        var dayOfMonth = Calendar.getInstance().get(Calendar.DAY_OF_MONTH)
-        var monthCount = Calendar.getInstance().getActualMaximum(Calendar.DAY_OF_MONTH)
-        var touchTime = Calendar.getInstance().timeInMillis
-        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - Calendar.getInstance().timeZone.rawOffset
+        var dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
+        var monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        var touchTime = calObject.timeInMillis
+        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         var sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth", sqlMonthBase.toString())
@@ -494,7 +569,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
 
     }
-    private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,radioID: Int?): BarData {
+    private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
                 ContextCompat.getColor(context, R.color.progressBarMidColor),
@@ -503,27 +578,27 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
         cleanTextViewInTVOC()
-        return BarData(getLabels3(inputTime,radioID), dataSets)
+        return BarData(getLabels3(inputTime,positionID), dataSets)
     }
 
-    private fun getLabels3(input: ArrayList<String>, radioID: Int?): List<String> {
+    private fun getLabels3(input: ArrayList<String>, positionID: Int?): List<String> {
         val chartLabels = ArrayList<String>()
-        when (radioID) {
-            R.id.radioButton_Day -> {
+        when (positionID) {
+            0 -> {
                 var dateFormat = SimpleDateFormat("MM/dd HH:mm")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
                 }
             }
-            R.id.radioButton_Week -> {
+            1 -> {
                 var dateFormat = SimpleDateFormat("MM/dd EEEE")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
                 }
             }
-            R.id.radioButton_Month -> {
+            2 -> {
                 var dateFormat = SimpleDateFormat("yyyy/MM/dd")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
@@ -676,7 +751,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                         if (counter % getDataCycle == 0) {
                             counter = 0
                             TVOCAVG /= getDataCycle
-                            setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
+                            //setRealTimeBarData(TVOCAVG.toString(), BatteryLife)
                             TVOCAVG = 0
                         }
                     }
@@ -743,7 +818,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getRealmDay123() {
         arrTime3.clear()
         arrTvoc3.clear()
-        var touchTime = Calendar.getInstance().timeInMillis
+        var touchTime = calObject.timeInMillis
         var endDay = touchTime / 3600000 / 24 * 3600000 * 24 + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         for (y in 1..1440) {
             var realm = Realm.getDefaultInstance()
