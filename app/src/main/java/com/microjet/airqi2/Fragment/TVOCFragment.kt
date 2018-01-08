@@ -155,11 +155,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                calObject.set(year,month,dayOfMonth)
-                Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    calObject.set(year,month,dayOfMonth)
+                    Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
-            },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
+                },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
             }
@@ -239,10 +239,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     private fun drawChart(position: Int?) {
-        chartHandler.post {
-            mChart?.clear()
-            when (position) {
-                0 -> {
+        setImageBarSize()
+        when (position) {
+            0 -> {
                     getRealmDay()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
@@ -252,23 +251,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                             + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
                 }
-                1 -> {
+            1 -> {
                     getRealmWeek()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
                 }
-                2 -> {
+            2 -> {
                     getRealmMonth()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
                     mChart?.setVisibleXRange(35.0f, 35.0f)
 
                 }
-            }
         }
     }
-    fun setImageBarSize(){
+    private fun setImageBarSize(){
         mChart!!.data = getBarData()
         val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
         val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
@@ -281,7 +279,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarBase?.y = line220.bottom//base
 
         //視Radio id畫圖
-//        mChart!!.clear()
+        mChart!!.clear()
 //        when (radioButtonID) {
 //            0 -> {
 //                mChart?.data = getBarData2(tvocArray, timeArray)
@@ -297,7 +295,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //            }
 //        }
         //dependRadioIDDrawChart(radioButtonID)
-        drawChart(spinnerPositon)
+        //chartHandler.post { drawChart(spinnerPositon) }
     }
     override fun onStart() {
         super.onStart()
@@ -695,16 +693,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun dependRadioIDDrawChart(radioID:Int?) {
         when (radioID) {
             R.id.radioButton_Hour -> {
-                mChart?.data = getBarData2(tvocArray, timeArray)
-                mChart?.data?.setDrawValues(false)
+                //mChart?.data = getBarData2(tvocArray, timeArray)
+                //mChart?.data?.setDrawValues(false)
                 //mChart?.setVisibleXRangeMinimum(5.0f)
                 //mChart?.setVisibleXRangeMaximum(5.0f)
             }
             R.id.radioButton_Day,
             R.id.radioButton_Week,
             R.id.radioButton_Month -> {
-                mChart?.data = getBarData3(arrTvoc3, arrTime3,radioID)
-                mChart?.data?.setDrawValues(false)
+                //mChart?.data = getBarData3(arrTvoc3, arrTime3,radioID)
+                //mChart?.data?.setDrawValues(false)
                 //mChart?.setVisibleXRangeMinimum(5.0f)
                 //mChart?.setVisibleXRangeMaximum(5.0f)
             }

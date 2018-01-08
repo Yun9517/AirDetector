@@ -334,7 +334,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 currentIndex = position
                 if (currentIndex==1) {
                     val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                    (mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
+                    //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
                     //先測試下載功能是否OK
                     (mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
                 }
