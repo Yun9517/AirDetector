@@ -164,7 +164,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         checkUIState()
         requestPermissionsForBluetooth()
-        checkBluetooth()
+        //checkBluetooth()
 
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         val mBluetoothDeviceAddress = share.getString("mac", "noValue")
@@ -253,9 +253,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     getString(R.string.text_need_bluetooth_perm),
                     RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION,
                     RequestPermission.PERMISSION_ACCESS_FINE_LOCATION)
-        } else {
-            checkBluetooth()
         }
+//        else {
+//            checkBluetooth()
+//        }
     }
 
 
@@ -279,8 +280,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } else {
             if (!mBluetoothAdapter.isEnabled) {
                 val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                enableBtIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                mContext.startActivity(enableBtIntent)
+                enableBtIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                mContext.startActivityForResult(enableBtIntent,5)
             }
         }
     }
@@ -609,6 +610,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     sendBroadcast(uuintent)
 
                 }
+            }
+            5->{
+                if (resultCode == Activity.RESULT_OK) {
+
+                }
+                else{ finish() }
             }
             else -> {
                 print("test")

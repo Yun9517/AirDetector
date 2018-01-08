@@ -37,7 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
-            android:text="Button" />
+            android:text="Button"
+            android:background="@android:color/transparent"/>
         <RadioGroup
             android:id="@+id/frg_radioGroup"
             android:layout_width="match_parent"

@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.*
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -92,6 +93,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     private var calObject = Calendar.getInstance()
     private var spinnerPositon = 0
+    private var datepickerHandler = Handler()
+    private var chartHandler = Handler()
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -132,6 +135,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
                 spinnerPositon = position
+                btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
 
                 val selectedItem = parent.getItemAtPosition(position).toString()
@@ -149,15 +153,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         var dateFormat = SimpleDateFormat("yyyy-MM-dd")
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
-            val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+            datepickerHandler.post {
+                val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                 calObject.set(year,month,dayOfMonth)
                 Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
-                var dateFormat = SimpleDateFormat("yyyy-MM-dd")
-                btnCallDatePicker?.text = dateFormat.format(calObject.time)
-                drawChart(spinnerPositon)
+                    btnTextChanged(spinnerPositon)
+                    drawChart(spinnerPositon)
             },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
-            dpd.setMessage("請選擇日期")
-            dpd.show()
+                dpd.setMessage("請選擇日期")
+                dpd.show()
+            }
         }
 
 
@@ -210,37 +215,56 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
 //        })
 
-        mHour!!.isChecked = true
-        radioButtonID = mRadioGroup?.checkedRadioButtonId
+        //mHour!!.isChecked = true
+        //radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
         mChart!!.setOnChartValueSelectedListener(this)
     }
 
-    private fun drawChart(position: Int?) {
-        mChart?.clear()
-        when (position) {
+    private fun btnTextChanged(position: Int?) {
+        when(position) {
             0 -> {
-                getRealmDay()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRange(5.0f,40.0f)
-                //mChart?.setVisibleXRangeMinimum(20.0f)
-                //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+                var dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
-                getRealmWeek()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRange(7.0f,7.0f)
+                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + "第" + calObject.get(Calendar.WEEK_OF_YEAR).toString() + "週"
             }
             2 -> {
-                getRealmMonth()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRange(35.0f,35.0f)
+                var dateFormat = SimpleDateFormat("yyyy-MM")
+                btnCallDatePicker?.text = dateFormat.format(calObject.time)
+            }
+        }
 
+    }
+
+    private fun drawChart(position: Int?) {
+        chartHandler.post {
+            mChart?.clear()
+            when (position) {
+                0 -> {
+                    getRealmDay()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                    mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(5.0f, 40.0f)
+                    //mChart?.setVisibleXRangeMinimum(20.0f)
+                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+                }
+                1 -> {
+                    getRealmWeek()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                    mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(7.0f, 7.0f)
+                }
+                2 -> {
+                    getRealmMonth()
+                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                    mChart?.data?.setDrawValues(false)
+                    mChart?.setVisibleXRange(35.0f, 35.0f)
+
+                }
             }
         }
     }
@@ -272,7 +296,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                mChart?.setVisibleXRangeMaximum(5.0f)
 //            }
 //        }
-        dependRadioIDDrawChart(radioButtonID)
+        //dependRadioIDDrawChart(radioButtonID)
+        drawChart(spinnerPositon)
     }
     override fun onStart() {
         super.onStart()
@@ -282,7 +307,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onResume() {
         super.onResume()
         //視Radio id畫圖
-        dependRadioIDDrawChart(radioButtonID)
+        //dependRadioIDDrawChart(radioButtonID)
+        drawChart(spinnerPositon)
     }
 
     override fun onPause() {
