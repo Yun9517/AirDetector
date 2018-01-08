@@ -33,6 +33,7 @@ import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -1264,18 +1265,19 @@ public class UartService extends Service {
                 {
                     try {
                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon( R.color.progressBarEndColor)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                                .setContentTitle("重度危險警告通知!!")
-                                .setColor( Color.RED)
-                                .setBadgeIconType( R.drawable.app_android_icon_logo)
-                                .setContentText("高度汙染，請趕快離開現場，塊陶啊！！！")
+                               .setSmallIcon(R.color.progressBarEndColor)
+                               .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                               .setContentTitle(getString(R.string.High_warning_title))
+                               .setColor(Color.RED)
+                               .setBadgeIconType( R.drawable.app_android_icon_logo)
+                               .setContentText(getString(R.string.High_warning))
                                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
+                               .setPriority(Notification.PRIORITY_DEFAULT)
+                               .setAutoCancel(true) // 點擊完notification自動消失
+                               .build();
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         assert notificationManager != null;
+
 
                         //20180103   Andy
                         // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()

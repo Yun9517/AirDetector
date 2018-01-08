@@ -67,8 +67,10 @@
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 
     <!-- Add String for Notification -->
-    <string name="Medium_warning_title">中度危險警告通知!!!</string>
-    <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
+    <string name="Medium_warning_title">中度危险警告通知!!!</string>
+    <string name="Medium_warning">中度危险，请尽快离开现场!!!</string>
+    <string name="High_warning_title">重度危险警告通知!!!</string>
+    <string name="High_warning">高度污染，请赶快离开现场!!!</string>
 
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
