@@ -148,8 +148,12 @@ public class UartService extends Service {
                     sendBroadcast(mainIntent);
                     mBluetoothAdapter = mBluetoothManager.getAdapter();
                     mConnectionState = STATE_DISCONNECTED;
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        close();}
+                    if (!mBluetoothAdapter.isEnabled())
+                    {
+                        close();
+                    } else {
+                        disconnect();
+                    }
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTING: {

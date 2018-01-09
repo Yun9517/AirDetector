@@ -736,8 +736,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     mConnectStatus = true
-
-
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras
@@ -754,7 +752,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     setProgessBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
-                        mRadioGroup?.check(R.id.radioButton_Hour)
+                        //mRadioGroup?.check(R.id.radioButton_Hour)
+                        drawChart(spinnerPositon)
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
@@ -794,7 +793,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                    mChart?.data = getBarData3(arrTvoc3, arrTime3, 0)
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
-                    drawChart(0)
+                    drawChart(spinnerPositon)
                 }
             }
             checkUIState()
