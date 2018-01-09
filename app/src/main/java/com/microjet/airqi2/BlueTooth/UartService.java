@@ -1269,13 +1269,17 @@ public class UartService extends Service {
 
                 if (isAppIsInBackground(nowActivity)) {
                     try {
+                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+                        bigStyle.bigText(getString(R.string.text_message_air_bad));
                         @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+
                                 .setSmallIcon(R.color.progressBarEndColor)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                                .setContentTitle("重度危險警告通知!!")
+                                .setContentTitle(getString(R.string.High_warning_title))
                                 .setColor(Color.RED)
                                 .setBadgeIconType(R.drawable.app_android_icon_logo)
-                                .setContentText("高度汙染，請趕快離開現場，塊陶啊！！！")
+                                //.setContentText(getString(R.string.text_message_air_bad))
+                                .setStyle(bigStyle)
                                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
@@ -1334,13 +1338,17 @@ public class UartService extends Service {
             {
                 if (isAppIsInBackground(nowActivity)) {
                     try {
+                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+                        bigStyle.bigText(getString(R.string.text_message_air_mid));
                         @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                                .setPriority(NotificationCompat.PRIORITY_MAX)
                                 .setSmallIcon(R.color.progressBarMidColor)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                                 .setColor(Color.BLUE)
                                 .setContentTitle(getString(R.string.Medium_warning_title))
                                 //.setBadgeIconType( R.drawable.app_android_icon_logo)
-                                .setContentText(getString(R.string.Medium_warning))
+                                //.setContentText(getString(R.string.Medium_warning))
+                                .setStyle(bigStyle)
                                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
