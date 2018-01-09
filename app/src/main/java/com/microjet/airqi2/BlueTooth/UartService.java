@@ -46,6 +46,7 @@ import java.util.UUID;
 
 import io.realm.Realm;
 import com.microjet.airqi2.AsmDataModel;
+import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.MainActivity;
@@ -942,13 +943,6 @@ public class UartService extends Service {
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
                     //取得當前時間
-                    //將時間秒數寫入設定為 00  或  30
-                    Long dateSecMil = new Date().getTime();
-                    Long dateSecChange  = (dateSecMil / 1000)/30 * (1000*30);
-                    //Log.d("0xB4",dateSecChange.toString());
-                    Date date = new Date(dateSecChange);
-                    Log.d("0xB4 Adjust_Time",date.toString());
-                    setMyDate(date);
                     // String time=getDateTime();
                     // setGetDataTime(time);
                     Log.d("UART", "total item "+Integer.toString(getMaxItems()));
@@ -1050,6 +1044,7 @@ public class UartService extends Service {
                     break;
                 case (byte) 0xB6:
                     RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                    timeSetNowToThirty();
                     mainIntent.putExtra("status", "B6");
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));
@@ -1058,7 +1053,30 @@ public class UartService extends Service {
                     //mainIntent.putExtra("PM25", RString.get(4));
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("flag",RString.get(6));
+                    mainIntent.putExtra(BroadcastActions.INTENT_KEY_CREATED_TIME,getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
                     sendBroadcast(mainIntent);
+
+                    //將時間秒數寫入設定為 00  或  30
+
+                    //Realm 資料庫
+                    Realm realm = Realm.getDefaultInstance();
+                    Number num = realm.where(AsmDataModel.class).max("id");
+                    int nextID;
+                    if(num == null) {
+                        nextID = 1;
+                    } else {
+                        nextID = num.intValue() + 1;
+                    }
+                    realm.executeTransaction(r -> {
+                        AsmDataModel asmData = r.createObject(AsmDataModel.class,nextID);
+                        asmData.setTEMPValue(RString.get(0));
+                        asmData.setHUMIValue(RString.get(1));
+                        asmData.setTVOCValue(RString.get(2));
+                        asmData.seteCO2Value(RString.get(3));
+                        asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
+                        Log.d("RealmTime", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                    });
+                    realm.close();
                     break;
             }
         }

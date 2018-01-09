@@ -67,17 +67,26 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "B6"->{
-                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
-                mainIntent.putExtra("status","B6")
+//                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
+//                mainIntent.putExtra("status","B6")
+//
+//                mainIntent.putExtra("TEMPValue",intent.getStringExtra("TEMPValue"))
+//                mainIntent.putExtra("HUMIValue",intent.getStringExtra("HUMIValue"))
+//                mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+//                mainIntent.putExtra("eCO2Value",intent.getStringExtra("eCO2Value"))
+//
+//                mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+//                mainIntent.putExtra("flag",intent.getStringExtra("flag"))
+//                context.sendBroadcast(mainIntent)
 
-                mainIntent.putExtra("TEMPValue",intent.getStringExtra("TEMPValue"))
-                mainIntent.putExtra("HUMIValue",intent.getStringExtra("HUMIValue"))
-                mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
-                mainIntent.putExtra("eCO2Value",intent.getStringExtra("eCO2Value"))
-
-                mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
-                mainIntent.putExtra("flag",intent.getStringExtra("flag"))
-                context.sendBroadcast(mainIntent)
+                val bundle = Bundle()
+//                bundle.putString(BroadcastActions.INTENT_KEY_TEMP_VALUE, intent.getStringExtra("TEMPValue"))
+//                bundle.putString(BroadcastActions.INTENT_KEY_HUMI_VALUE, intent.getStringExtra("HUMIValue"))
+//                bundle.putString(BroadcastActions.INTENT_KEY_TVOC_VALUE, intent.getStringExtra("TVOCValue"))
+//                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE, intent.getStringExtra("eCO2Value"))
+//                bundle.putLong(BroadcastActions.INTENT_KEY_CREATED_TIME, intent.getLongExtra(BroadcastActions.INTENT_KEY_CREATED_TIME,0))
+//                //   Bundle[{status=MAXPROGRESSITEM, MAXPROGRESSITEM=1440}]
+                broadcastUpdate(context,BroadcastActions.ACTION_SAVE_INSTANT_DATA, bundle)
 
             }
             "B0"->{

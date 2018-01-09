@@ -250,20 +250,20 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                     mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                             + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
-                }
+            }
             1 -> {
                     getRealmWeek()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
-                }
+            }
             2 -> {
                     getRealmMonth()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
                     mChart?.setVisibleXRange(35.0f, 35.0f)
 
-                }
+            }
         }
     }
     private fun setImageBarSize(){
@@ -716,6 +716,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
         intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
         return intentFilter
     }
 
@@ -779,6 +780,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                             TVOCAVG = 0
                         }
                     }
+                }
+                BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
+//                    val bundle = intent.extras
+//                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+//                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+//                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+//                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+//                    val createdTime = bundle.getLong(BroadcastActions.INTENT_KEY_CREATED_TIME)
+//                    arrTvoc3.add(arrTvoc3.lastIndex + 1,tvocVal)
+//                    arrTime3.add(arrTime3.lastIndex + 1,createdTime.toString())
+//                    mChart?.clear()
+//                    mChart?.data = getBarData3(arrTvoc3, arrTime3, 0)
+//                    mChart?.data?.setDrawValues(false)
+//                    mChart?.setVisibleXRange(5.0f, 40.0f)
+                    drawChart(0)
                 }
             }
             checkUIState()

@@ -70,7 +70,9 @@ object BroadcastActions {
     const val INTENT_KEY_PM25_VALUE = "airqi2.intent.PM25Value"
     const val INTENT_KEY_BATTERY_LIFE = "airqi2.intent.BatteryLife"
     const val INTENT_KEY_PREHEAT_COUNT = "airqi2.intent.PreheatCountDown"
+    const val INTENT_KEY_CREATED_TIME = "airqi2.intent.CreatedTime"
 
     const val INTENT_KEY_GET_HISTORY_COUNT = "airqi2.intent.GetHistoryCount"
     const val INTENT_KEY_LOADING_DATA = "airqi2.intent.NOWPROGRESSITEM"
+    const val ACTION_SAVE_INSTANT_DATA = "airqi2.intent.SAVE_INSTANT_DATA"
 }
