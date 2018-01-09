@@ -135,6 +135,9 @@ public class UartService extends Service {
     private final int REQUEST_CODE = 0xb01;
 
     public static Activity nowActivity=null;
+
+    private boolean downloading = false;
+    private int dataNotSaved = 0;
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -992,6 +995,7 @@ public class UartService extends Service {
                         }
                         if (countForItem > 0){
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                            downloading = true;
                         }
                         mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(countForItem));
@@ -1031,13 +1035,14 @@ public class UartService extends Service {
                             asmData.setTVOCValue(RString.get(3));
                             asmData.seteCO2Value(RString.get(4));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
-                            Log.d("RealmTime", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                            Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
 
                         //if (NowItem >= getMaxItems()) {
                         if (NowItem >= countForItem || NowItem >= getMaxItems()) {
                             NowItem = 0;
+                            downloading = false;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
@@ -1059,40 +1064,47 @@ public class UartService extends Service {
                     }
                     break;
                 case (byte) 0xB6:
-                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
-                    timeSetNowToThirty();
-                    mainIntent.putExtra("status", "B6");
-                    mainIntent.putExtra("TEMPValue", RString.get(0));
-                    mainIntent.putExtra("HUMIValue", RString.get(1));
-                    mainIntent.putExtra("TVOCValue", RString.get(2));
-                    mainIntent.putExtra("eCO2Value", RString.get(3));
-                    //mainIntent.putExtra("PM25", RString.get(4));
-                    mainIntent.putExtra("BatteryLife", RString.get(5));
-                    mainIntent.putExtra("flag",RString.get(6));
-                    mainIntent.putExtra(BroadcastActions.INTENT_KEY_CREATED_TIME,getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
-                    sendBroadcast(mainIntent);
-
-                    //將時間秒數寫入設定為 00  或  30
-
-                    //Realm 資料庫
-                    Realm realm = Realm.getDefaultInstance();
-                    Number num = realm.where(AsmDataModel.class).max("id");
-                    int nextID;
-                    if(num == null) {
-                        nextID = 1;
-                    } else {
-                        nextID = num.intValue() + 1;
+                        RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                        mainIntent.putExtra("status", "B6");
+                        mainIntent.putExtra("TEMPValue", RString.get(0));
+                        mainIntent.putExtra("HUMIValue", RString.get(1));
+                        mainIntent.putExtra("TVOCValue", RString.get(2));
+                        mainIntent.putExtra("eCO2Value", RString.get(3));
+                        //mainIntent.putExtra("PM25", RString.get(4));
+                        mainIntent.putExtra("BatteryLife", RString.get(5));
+                        mainIntent.putExtra("flag",RString.get(6));
+                        sendBroadcast(mainIntent);
+                        //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
+                        dataNotSaved++;
+                    if (!downloading && dataNotSaved != 0) {
+                        //將時間秒數寫入設定為 00  或  30
+                        timeSetNowToThirty();
+                        //如果來了10筆就用現在時間退10筆
+                        for (int i = 0; i < dataNotSaved; i++) {
+                            //Realm 資料庫
+                            Realm realm = Realm.getDefaultInstance();
+                            Number num = realm.where(AsmDataModel.class).max("id");
+                            int nextID;
+                            if (num == null) {
+                                nextID = 1;
+                            } else {
+                                nextID = num.intValue() + 1;
+                            }
+                            int count = i;
+                            realm.executeTransaction(r -> {
+                                AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                                asmData.setTEMPValue(RString.get(0));
+                                asmData.setHUMIValue(RString.get(1));
+                                asmData.setTVOCValue(RString.get(2));
+                                asmData.seteCO2Value(RString.get(3));
+                                asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * count * 30 * 1000 - getCorrectTime() * 30 * 1000);
+                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() - getSampleRateUnit() * count * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                            });
+                            realm.close();
+                        }
+                        //寫入完畢後將未寫入筆數設為0
+                        dataNotSaved = 0;
                     }
-                    realm.executeTransaction(r -> {
-                        AsmDataModel asmData = r.createObject(AsmDataModel.class,nextID);
-                        asmData.setTEMPValue(RString.get(0));
-                        asmData.setHUMIValue(RString.get(1));
-                        asmData.setTVOCValue(RString.get(2));
-                        asmData.seteCO2Value(RString.get(3));
-                        asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
-                        Log.d("RealmTime", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
-                    });
-                    realm.close();
                     break;
             }
         }
