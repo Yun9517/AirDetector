@@ -129,7 +129,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarBase = this.view?.findViewById(R.id.imgBarBase)
         //修改上排Spinner及Button
         sprTVOC = this.view?.findViewById(R.id.sprTVOC)
-        var cycleList = ArrayAdapter.createFromResource(activity,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
+        var cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
@@ -154,7 +154,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
-                val dpd = DatePickerDialog(activity, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                     calObject.set(year,month,dayOfMonth)
                     Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
