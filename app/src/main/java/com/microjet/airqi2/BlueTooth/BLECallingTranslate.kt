@@ -154,10 +154,11 @@ object CallingTranslate {
      *
      *
      * input [0] = sample rate
-     * input [1] = sensor on time
-     * input [2] = time to get sample
-     * input [3] = pump on time
-     * input [4] = pumping time
+     * input [1] = sensor-on time range Sensor開啟時間長度
+     * input [2] = time to get sample 第幾秒取資料
+     * input [3] = pump on time pump開啟時間點
+     * input [4] = pumping time pump開啟時間長度
+     *
      * input [5] = 每間隔多久取資料
      * input [6] = 期間內取幾次資料
      *
@@ -202,6 +203,12 @@ object CallingTranslate {
         return byteArrayOf(Command_List.WriteCmd, Command_List.writeTwelveBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], checkSum)
     }
 
+    fun GetSampleRate(): ByteArray {
+        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate, checkSum)
+    }
+
     /**
      * Return the command include CheckSum
      * REQUEST_DEVICE_STARTING_GETSAMPLE
@@ -240,12 +247,6 @@ object CallingTranslate {
         val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5])
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5], checkSum)
-    }
-
-    fun GetSampleRate(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate)
-        val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate, checkSum)
     }
 
     /**

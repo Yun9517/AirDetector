@@ -138,7 +138,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "setSampleRate" -> {
-                var SampleTime= intent.getIntExtra("SampleTime",2)
+                var SampleTime= intent.getIntExtra("SampleTime",1)
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "setSampleRate")
                 mainIntent.putExtra("SampleTime",SampleTime)

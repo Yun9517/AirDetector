@@ -793,7 +793,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                    mChart?.data = getBarData3(arrTvoc3, arrTime3, 0)
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
-                    drawChart(spinnerPositon)
+                    if (spinnerPositon == 0) {
+                        drawChart(0)
+                    }
                 }
             }
             checkUIState()

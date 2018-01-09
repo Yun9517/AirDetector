@@ -599,7 +599,15 @@ public class UartService extends Service {
                     break;
                 case "setSampleRate":
                     int SampleTime = intent.getIntExtra("SampleTime", 1);
-                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/15, /*SampleTime*30-*/2, 1, 0, 0};
+                        /*  設定 0xB6的設定
+                        * input [0] = sample rate
+                        * input [1] = sensor-on time range Sensor開啟時間長度
+                        * input [2] = sensor to get sample 第幾秒取資料
+                        *
+                        * input [3] = pump on time pump開啟時間點
+                        * input [4] = pumping time pump開啟時間長度
+                        */
+                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/2, /*SampleTime*30-*/1, 2, 0, 0};
                     Log.d(TAG, "setSampleRate");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                     break;
