@@ -69,9 +69,8 @@
 
     <!-- Add String for Notification -->
     <string name="Medium_warning_title">中度危險警告通知!!!</string>
-    <string name="Medium_warning">中度汙染，請盡快離開現場!!!</string>
+    <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
     <string name="High_warning_title">重度危險警告通知!!!</string>
-    <string name="High_warning">高度汙染，請趕快離開現場!!!</string>
 
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>

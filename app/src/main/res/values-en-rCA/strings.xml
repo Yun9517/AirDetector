@@ -73,6 +73,7 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="High_warning_title">Emergency!!!</string>
     <string name="High_warning">Leave the place as quick as you can!!!</string>
 
+
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
     <string name="frg_tvocRadioButtonHour">時</string>
