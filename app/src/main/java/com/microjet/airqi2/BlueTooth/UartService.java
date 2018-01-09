@@ -1,6 +1,8 @@
 package com.microjet.airqi2.BlueTooth;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -15,6 +17,7 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -129,6 +132,7 @@ public class UartService extends Service {
     private final int NOTIFICATION_ID = 0xa01;
     private final int REQUEST_CODE = 0xb01;
 
+    public static Activity nowActivity=null;
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -1228,52 +1232,55 @@ public class UartService extends Service {
 
     //20180102   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void hightBeBEBEBE(){
-        SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
-            if ((countsound660 == 5 || countsound660 == 0)) {
-                //20180102   Andy叫叫ABC
-                //mp = MediaPlayer.create (this, R.raw.pixiedust);
-                //20171226  Andy
-                countsound220 = 0;
-                Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
-                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-                {
-                    //mp.start();
-                    //20171220   Andy
-                    try {
-                        //alertId = soundPool.load(this, R.raw.babuchimam, 1);
-                        //Thread.sleep(150);
-                        //soundPool.play(alertId, 1F, 1F, 0, 0, 1.0f);
-                        playSound(SOUND1, 1.0f);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+    public void hightBeBEBEBE() {
+        SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
+        if ((countsound660 == 5 || countsound660 == 0)) {
+            //20180102   Andy叫叫ABC
+            //mp = MediaPlayer.create (this, R.raw.pixiedust);
+            //20171226  Andy
+            countsound220 = 0;
+            Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                //mp.start();
+                //20171220   Andy
+                try {
+                    //alertId = soundPool.load(this, R.raw.babuchimam, 1);
+                    //Thread.sleep(150);
+                    //soundPool.play(alertId, 1F, 1F, 0, 0, 1.0f);
+                    playSound(SOUND1, 1.0f);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-                {
-                    //if ((countsound800 == 5 || countsound800 == 0)) {
-                    if (mVibrator == null) {
-                    } else {
-                        // 震动 1s
-                        mVibrator.vibrate(2000);
-                    }
-                    //}
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
+            {
+                //if ((countsound800 == 5 || countsound800 == 0)) {
+                if (mVibrator == null) {
+                } else {
+                    // 震动 1s
+                    mVibrator.vibrate(2000);
+                }
+                //}
 
-                }
-                if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-                {
+            }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
+            {
+
+                if (isAppIsInBackground(nowActivity)) {
                     try {
-                       @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon( R.color.progressBarEndColor)
+                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.color.progressBarEndColor)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                                 .setContentTitle("重度危險警告通知!!")
-                                .setColor( Color.RED)
-                                .setBadgeIconType( R.drawable.app_android_icon_logo)
+                                .setColor(Color.RED)
+                                .setBadgeIconType(R.drawable.app_android_icon_logo)
                                 .setContentText("高度汙染，請趕快離開現場，塊陶啊！！！")
                                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
+
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         assert notificationManager != null;
 
@@ -1285,12 +1292,13 @@ public class UartService extends Service {
                                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         notification.contentIntent = pi;
 
-                        notificationManager.notify(1, notification);
+                        notificationManager.notify(REQUEST_CODE, notification);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
+        }
 
         if (countsound660 == 5) {
             countsound660 = 0;
@@ -1324,41 +1332,44 @@ public class UartService extends Service {
             }
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
             {
-                try {
-                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.color.progressBarMidColor)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                            .setColor( Color.BLUE)
-                            .setContentTitle(getString(R.string.Medium_warning_title))
-                            //.setBadgeIconType( R.drawable.app_android_icon_logo)
-                            .setContentText(getString(R.string.Medium_warning))
-                            //.setTicker("通知首次出现在通知栏，带上升动画效果的")
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setAutoCancel(true) // 點擊完notification自動消失
-                            .build();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    assert notificationManager != null;
+                if (isAppIsInBackground(nowActivity)) {
+                    try {
+                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                                .setSmallIcon(R.color.progressBarMidColor)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                                .setColor(Color.BLUE)
+                                .setContentTitle(getString(R.string.Medium_warning_title))
+                                //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                                .setContentText(getString(R.string.Medium_warning))
+                                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                                .setPriority(Notification.PRIORITY_DEFAULT)
+                                .setAutoCancel(true) // 點擊完notification自動消失
+                                .build();
+                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        assert notificationManager != null;
 
-                    //20180103   Andy
-                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                    Intent intent = new Intent(this, MainActivity.class);
+                        //20180103   Andy
+                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+                        Intent intent = new Intent(this, MainActivity.class);
 
-                    // 通知的時間
-                    notification.when = System.currentTimeMillis();
+                        // 通知的時間
+                        notification.when = System.currentTimeMillis();
 
-                    //當使用者點擊通知Bar時，切換回MainActivity
-                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    notification.contentIntent = pi;
+                        //當使用者點擊通知Bar時，切換回MainActivity
+                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                        notification.contentIntent = pi;
 
-                    //送到手機的通知欄
-                    notificationManager.notify(1, notification);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                        //送到手機的通知欄
+                        notificationManager.notify(1, notification);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
         }
+
 
         if (countsound220 == 5) {
             countsound220 = 0;
@@ -1414,4 +1425,30 @@ public class UartService extends Service {
             }
         }
     };
+
+    private boolean isAppIsInBackground(Context context) {
+        boolean isInBackground = true;
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+            List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+            for (ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                    for (String activeProcess : processInfo.pkgList) {
+                        if (activeProcess.equals(context.getPackageName())) {
+                            isInBackground = false;
+                        }
+                    }
+                }
+            }
+        } else {
+            List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+            ComponentName componentInfo = taskInfo.get(0).topActivity;
+            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+                isInBackground = false;
+            }
+        }
+
+        return isInBackground;
+    }
+
 }

@@ -4,10 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.app.AlertDialog
-import android.app.Notification
-import android.app.NotificationManager
+import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
@@ -62,7 +59,7 @@ import kotlin.collections.ArrayList
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
-    private val mContext = this@MainActivity
+    public val mContext = this@MainActivity
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -155,6 +152,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         setupDrawerContent(nvDrawerNavigation)
+
+        UartService.nowActivity=this
     }
 
     override fun onStart() {
@@ -846,7 +845,30 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.v(TAG, "mBluetoothStateReceiver: " + stateStr)
         }
     }
-
+//private boolean isAppIsInBackground(Context context) {
+//        var boolean isInBackground = true;
+//        var ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+//            var List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
+//            for (ActivityManager. android.app.ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
+//                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+//                    for (String activeProcess : processInfo.pkgList) {
+//                        if (activeProcess.equals(context.getPackageName())) {
+//                            isInBackground = false;
+//                        }
+//                    }
+//                }
+//            }
+//        } else {
+//            var List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+//             ComponentName componentInfo = taskInfo.get(0).topActivity;
+//            if (componentInfo.getPackageName().equals(context.getPackageName())) {
+//                isInBackground = false;
+//            }
+//        }
+//
+//        return isInBackground;
+//    }
 }
 
 
