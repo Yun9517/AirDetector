@@ -77,14 +77,6 @@ public class UartService extends Service {
     private static final int STATE_CONNECTED = 2;
     private static final int STATE_DISCONNECTING = 3;
 
-    public final static String ACTION_GATT_DISCONNECTED =
-            "ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_CONNECTING =
-            "ACTION_GATT_CONNECTING";
-    public final static String ACTION_GATT_CONNECTED =
-            "ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTING =
-            "ACTION_GATT_DISCONNECTING";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
             "ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
@@ -147,7 +139,7 @@ public class UartService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             switch (newState) {
                 case BluetoothProfile.STATE_DISCONNECTED: {
-                    intentAction = ACTION_GATT_DISCONNECTED;
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
@@ -164,7 +156,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTING: {
-                    intentAction = ACTION_GATT_CONNECTING;
+                    intentAction = BroadcastActions.ACTION_GATT_CONNECTING;
                     mConnectionState = STATE_CONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
@@ -174,7 +166,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTED: {
-                    intentAction = ACTION_GATT_CONNECTED;
+                    intentAction = BroadcastActions.ACTION_GATT_CONNECTED;
                     mConnectionState = STATE_CONNECTED;
                     //broadcastUpdate(intentAction);
                     Log.i(TAG, "Connected to GATT server.");
@@ -189,7 +181,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_DISCONNECTING: {
-                    intentAction = ACTION_GATT_DISCONNECTING;
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
                     mConnectionState = STATE_DISCONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);

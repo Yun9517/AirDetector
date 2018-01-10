@@ -362,7 +362,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //        }
 //    }
 
-    fun getDeviceData() {
+    private fun getDeviceData() {
         if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
             intent!!.putExtra("status", "getSampleRate")
@@ -736,6 +736,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     mConnectStatus = true
+                    getDeviceData()
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras
