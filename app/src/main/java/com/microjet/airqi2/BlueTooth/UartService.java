@@ -55,6 +55,7 @@ import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
+import com.microjet.airqi2.NotificationHelper;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -1330,8 +1331,18 @@ public class UartService extends Service {
                         PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
                                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
                         notification.contentIntent = pi;
+                        //20180109   Andy
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            notificationHelper = new NotificationHelper(this);
+                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.High_warning_title),getString(R.string.text_message_air_bad));
 
-                        notificationManager.notify(REQUEST_CODE, notification);
+
+                            notificationHelper.notify(REQUEST_CODE, NB);
+
+                        }else{
+                            //送到手機的通知欄
+                            notificationManager.notify(1, notification);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1345,6 +1356,7 @@ public class UartService extends Service {
         countsound660 = countsound660 + 1;
         Log.e("TVOC660計數變數:", Integer.toString(countsound660));
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void lowtBeBEBEBE(){
         SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound220 == 5 || countsound220 == 0)) {
@@ -1371,44 +1383,48 @@ public class UartService extends Service {
             }
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
             {
-                if (isAppIsInBackground(nowActivity)) {
-                    try {
-                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                        bigStyle.bigText(getString(R.string.text_message_air_mid));
-                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setPriority(NotificationCompat.PRIORITY_MAX)
-                                .setSmallIcon(R.color.progressBarMidColor)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                                .setColor(Color.BLUE)
-                                .setContentTitle(getString(R.string.Medium_warning_title))
-                                //.setBadgeIconType( R.drawable.app_android_icon_logo)
-                                //.setContentText(getString(R.string.Medium_warning))
-                                .setStyle(bigStyle)
-                                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null;
+                if (isAppIsInBackground(nowActivity)) try {
+                    NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+                    bigStyle.bigText(getString(R.string.text_message_air_mid));
+                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                            .setPriority(NotificationCompat.PRIORITY_MAX)
+                            .setSmallIcon(R.color.progressBarMidColor)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                            .setColor(Color.BLUE)
+                            .setContentTitle(getString(R.string.Medium_warning_title))
+                            //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                            //.setContentText(getString(R.string.Medium_warning))
+                            .setStyle(bigStyle)
+                            //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setAutoCancel(true) // 點擊完notification自動消失
+                            .build();
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    assert notificationManager != null;
 
-                        //20180103   Andy
-                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                        Intent intent = new Intent(this, MainActivity.class);
+                    //20180103   Andy
+                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+                    Intent intent = new Intent(this, MainActivity.class);
 
-                        // 通知的時間
-                        notification.when = System.currentTimeMillis();
+                    // 通知的時間
+                    notification.when = System.currentTimeMillis();
 
-                        //當使用者點擊通知Bar時，切換回MainActivity
-                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        notification.contentIntent = pi;
+                    //當使用者點擊通知Bar時，切換回MainActivity
+                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    notification.contentIntent = pi;
 
+                    //20180109   Andy
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notificationHelper = new NotificationHelper(this);
+                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.Medium_warning_title), getString(R.string.Medium_warning));
+                        notificationHelper.notify(REQUEST_CODE, NB);
+                    }else{
                         //送到手機的通知欄
                         notificationManager.notify(1, notification);
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -1421,6 +1437,19 @@ public class UartService extends Service {
         Log.e("TVOC220計數變數:",Integer.toString(countsound220));
 
     }
+    public NotificationHelper notificationHelper=null;
+
+//    public Notification.Builder getNotification1(String title, String body) {
+//        return new Notification.Builder(getApplicationContext(), CHANNEL_ONE_ID)
+//                .setContentTitle(title)
+//                .setContentText(body)
+//                .setSmallIcon(R.drawable.warning)
+//                .setAutoCancel(true);
+//    }
+
+
+
+
     public void playSound(int sound, float fSpeed) {
         AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
         assert mgr != null;
