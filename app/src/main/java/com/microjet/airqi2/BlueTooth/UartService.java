@@ -1316,7 +1316,6 @@ public class UartService extends Service {
                         NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
                         bigStyle.bigText(getString(R.string.text_message_air_bad));
                         @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-
                                 .setSmallIcon(R.color.progressBarEndColor)
                                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                                 .setContentTitle(getString(R.string.High_warning_title))
@@ -1324,14 +1323,11 @@ public class UartService extends Service {
                                 .setBadgeIconType(R.drawable.app_android_icon_logo)
                                 //.setContentText(getString(R.string.text_message_air_bad))
                                 .setStyle(bigStyle)
-                                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
                         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         assert notificationManager != null;
-
-
                         //20180103   Andy
                         // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                         Intent intent = new Intent(this, MainActivity.class);
@@ -1343,10 +1339,7 @@ public class UartService extends Service {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             notificationHelper = new NotificationHelper(this);
                             Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.High_warning_title),getString(R.string.text_message_air_bad));
-
-
                             notificationHelper.notify(REQUEST_CODE, NB);
-
                         }else{
                             //送到手機的通知欄
                             notificationManager.notify(1, notification);
@@ -1400,8 +1393,6 @@ public class UartService extends Service {
                             .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                             .setColor(Color.BLUE)
                             .setContentTitle(getString(R.string.Medium_warning_title))
-                            //.setBadgeIconType( R.drawable.app_android_icon_logo)
-                            //.setContentText(getString(R.string.Medium_warning))
                             .setStyle(bigStyle)
                             //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                             .setPriority(Notification.PRIORITY_DEFAULT)
@@ -1425,7 +1416,7 @@ public class UartService extends Service {
                     //20180109   Andy
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         notificationHelper = new NotificationHelper(this);
-                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.Medium_warning_title), getString(R.string.Medium_warning));
+                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.Medium_warning_title), getString(R.string.text_message_air_mid));
                         notificationHelper.notify(REQUEST_CODE, NB);
                     }else{
                         //送到手機的通知欄

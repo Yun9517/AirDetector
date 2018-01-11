@@ -7,6 +7,7 @@ package com.microjet.airqi2;
 import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.widget.Toast;
 
 import com.microjet.airqi2.BlueTooth.UartService;
 import com.microjet.airqi2.R;
@@ -61,6 +63,9 @@ public class NotificationHelper extends ContextWrapper {
     @RequiresApi(api = Build.VERSION_CODES.O)
 
     public Notification.Builder getNotification1(String title, String body) {
+
+        //showTwo();
+
 //        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
 //        bigStyle.bigText(getString(R.string.text_message_air_bad));
 //        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
@@ -69,21 +74,66 @@ public class NotificationHelper extends ContextWrapper {
         PendingIntent pi = PendingIntent.getActivity(this, 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
+//        /* Add Big View Specific Configuration */
+//        NotificationCompat.InboxStyle inboxStyle =
+//                new NotificationCompat.InboxStyle();
+//
+//        String[] events = new String[6];
+//        events[0] = new String("This is first line....");
+//        events[1] = new String("This is second line...");
+//        events[2] = new String("This is third line...");
+//        events[3] = new String("This is 4th line...");
+//        events[4] = new String("This is 5th line...");
+//        events[5] = new String("This is 6th line...");
+//
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("Big Title Details:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//
+//            inboxStyle.addLine(events[i]);
+//        }
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.app_android_icon_logo);
+        //取得要發送的圖片
 
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.bigPicture(bitmap);
+        //創建一個BigPictureStyle物件，並設定要傳送的圖片
         return new Notification.Builder(getApplicationContext(), CHANNEL_ONE_ID)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.color.progressBarMidColor)
                 .setAutoCancel(true)
-                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                .setColor(Color.BLUE)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                .setColor(Color.RED)
+                //.setColorized(true)
                 //.setBadgeIconType( R.drawable.app_android_icon_logo)
-                //.setSubText(bigStyle)
                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                 .setPriority(Notification.PRIORITY_DEFAULT)
-                .setContentIntent(pi); // 點擊完notification自動消失
-    }
+                //.setBadgeIconType(R.drawable.backgroung_chart) //your app icon
+                .setContentIntent(pi)
+                .setStyle(new Notification.BigTextStyle().bigText(body));
 
+    }
+    protected NotificationCompat.Builder builder;
+    protected NotificationManager manager;
+    public void showTwo() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            Toast.makeText(this, "ur device is not support media style, use stand instead", Toast.LENGTH_SHORT).show();
+        }
+        //builder.setTicker("MessagingNotification");
+        builder.setContentTitle("MessagingNotification");
+        builder.setContentText("MessagingNotificationMessagingNotificationMessagingNotification");
+
+        builder.setStyle(new NotificationCompat.MessagingStyle("DisplayName2")
+                .addMessage("addMessageA", (int)System.currentTimeMillis(), "sender1")
+                .addMessage("addMessageB", (int)System.currentTimeMillis(), "sender2")
+                .addMessage("addMessageC", (int)System.currentTimeMillis(), "sender3")
+                .addMessage("addMessageD", (int)System.currentTimeMillis(), "sender4")
+                .setConversationTitle("ConversationTitle"));
+
+        manager.notify((int)System.currentTimeMillis(), getNotification());
+    }
 ////Create the notification that’ll be posted to Channel Two//
 //
 //    public Notification.Builder getNotification2(String title, String body) {
@@ -108,5 +158,9 @@ public class NotificationHelper extends ContextWrapper {
 
         }
         return notifManager;
+    }
+
+    protected Notification getNotification() {
+        return builder.build();
     }
 }
