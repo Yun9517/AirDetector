@@ -78,14 +78,6 @@ public class UartService extends Service {
     private static final int STATE_CONNECTED = 2;
     private static final int STATE_DISCONNECTING = 3;
 
-    public final static String ACTION_GATT_DISCONNECTED =
-            "ACTION_GATT_DISCONNECTED";
-    public final static String ACTION_GATT_CONNECTING =
-            "ACTION_GATT_CONNECTING";
-    public final static String ACTION_GATT_CONNECTED =
-            "ACTION_GATT_CONNECTED";
-    public final static String ACTION_GATT_DISCONNECTING =
-            "ACTION_GATT_DISCONNECTING";
     public final static String ACTION_GATT_SERVICES_DISCOVERED =
             "ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
@@ -138,7 +130,9 @@ public class UartService extends Service {
     public static Activity nowActivity=null;
 
     private boolean downloading = false;
+    private boolean downloadComplete = false;
     private int dataNotSaved = 0;
+    private ArrayList<HashMap> arrB6 = new ArrayList();
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -148,7 +142,7 @@ public class UartService extends Service {
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
             switch (newState) {
                 case BluetoothProfile.STATE_DISCONNECTED: {
-                    intentAction = ACTION_GATT_DISCONNECTED;
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
                     Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
@@ -165,7 +159,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTING: {
-                    intentAction = ACTION_GATT_CONNECTING;
+                    intentAction = BroadcastActions.ACTION_GATT_CONNECTING;
                     mConnectionState = STATE_CONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
@@ -175,7 +169,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_CONNECTED: {
-                    intentAction = ACTION_GATT_CONNECTED;
+                    intentAction = BroadcastActions.ACTION_GATT_CONNECTED;
                     mConnectionState = STATE_CONNECTED;
                     //broadcastUpdate(intentAction);
                     Log.i(TAG, "Connected to GATT server.");
@@ -190,7 +184,7 @@ public class UartService extends Service {
                     break;
                 }
                 case BluetoothProfile.STATE_DISCONNECTING: {
-                    intentAction = ACTION_GATT_DISCONNECTING;
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
                     mConnectionState = STATE_DISCONNECTING;
                     Log.i(TAG, "Disconnected from GATT server.");
                     //broadcastUpdate(intentAction);
@@ -1044,6 +1038,7 @@ public class UartService extends Service {
                         if (NowItem >= countForItem || NowItem >= getMaxItems()) {
                             NowItem = 0;
                             downloading = false;
+                            downloadComplete = true;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
@@ -1067,21 +1062,29 @@ public class UartService extends Service {
                 case (byte) 0xB6:
                         RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                         mainIntent.putExtra("status", "B6");
-                        mainIntent.putExtra("TEMPValue", RString.get(0));
-                        mainIntent.putExtra("HUMIValue", RString.get(1));
-                        mainIntent.putExtra("TVOCValue", RString.get(2));
-                        mainIntent.putExtra("eCO2Value", RString.get(3));
-                        //mainIntent.putExtra("PM25", RString.get(4));
-                        mainIntent.putExtra("BatteryLife", RString.get(5));
-                        mainIntent.putExtra("flag",RString.get(6));
+//                        mainIntent.putExtra("TEMPValue", RString.get(0));
+//                        mainIntent.putExtra("HUMIValue", RString.get(1));
+//                        mainIntent.putExtra("TVOCValue", RString.get(2));
+//                        mainIntent.putExtra("eCO2Value", RString.get(3));
+//                        //mainIntent.putExtra("PM25", RString.get(4));
+//                        mainIntent.putExtra("BatteryLife", RString.get(5));
+//                        mainIntent.putExtra("flag",RString.get(6));
                         sendBroadcast(mainIntent);
+                        HashMap hashMapInB6 = new HashMap();
+                        hashMapInB6.put("TEMPValue",RString.get(0));
+                        hashMapInB6.put("HUMIValue",RString.get(1));
+                        hashMapInB6.put("TVOCValue",RString.get(2));
+                        hashMapInB6.put("eCO2Value",RString.get(3));
+                        hashMapInB6.put("BatteryLife",RString.get(5));
+                        arrB6.add(hashMapInB6);
                         //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                         dataNotSaved++;
-                    if (!downloading && dataNotSaved != 0) {
+                    if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        timeSetNowToThirty();
+                        Log.d("0xB6",Long.toString(getMyDate().getTime()));
+                        Log.d("0xB6",arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
-                        for (int i = 0; i < dataNotSaved; i++) {
+                        for (int i = 0; i < arrB6.size(); i++) {
                             //Realm 資料庫
                             Realm realm = Realm.getDefaultInstance();
                             Number num = realm.where(AsmDataModel.class).max("id");
@@ -1094,17 +1097,19 @@ public class UartService extends Service {
                             int count = i;
                             realm.executeTransaction(r -> {
                                 AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
-                                asmData.setTEMPValue(RString.get(0));
-                                asmData.setHUMIValue(RString.get(1));
-                                asmData.setTVOCValue(RString.get(2));
-                                asmData.seteCO2Value(RString.get(3));
-                                asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * count * 30 * 1000 - getCorrectTime() * 30 * 1000);
-                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() - getSampleRateUnit() * count * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                                asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
+                                asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
+                                asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
+                                asmData.seteCO2Value(arrB6.get(count).get("eCO2Value").toString());
+                                asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
                             realm.close();
                         }
                         //寫入完畢後將未寫入筆數設為0
                         dataNotSaved = 0;
+                        arrB6.clear();
+                        timeSetNowToThirty();
                     }
                     break;
             }

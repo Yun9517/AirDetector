@@ -22,8 +22,8 @@ class PrimaryReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.getStringExtra("status")) {
-            "ACTION_GATT_DISCONNECTED",
-            "ACTION_GATT_DISCONNECTING"
+            BroadcastActions.ACTION_GATT_DISCONNECTING,
+            BroadcastActions.ACTION_GATT_DISCONNECTED
             -> {
                 val bundle = Bundle()
                 broadcastUpdate(context, BroadcastActions.ACTION_GATT_DISCONNECTED, bundle)
@@ -31,8 +31,8 @@ class PrimaryReceiver : BroadcastReceiver() {
              //   mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
              //   context.sendBroadcast(mainIntent)
             }
-            "ACTION_GATT_CONNECTED",
-            "ACTION_GATT_CONNECTING"
+            BroadcastActions.ACTION_GATT_CONNECTED,
+            BroadcastActions.ACTION_GATT_CONNECTING
             -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_DEVICE_ADDR, intent.getStringExtra("macAddress"))

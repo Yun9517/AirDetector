@@ -335,7 +335,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
                     //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
                     //先測試下載功能是否OK
-                    (mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
+                    //(mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
                 }
             }
         })
@@ -374,18 +374,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.batStatus -> {
-                if(connState) {
-                    when (batValue) {
-                        in 1..100 -> dialogShow(getString(R.string.text_battery_title),
-                                getString(R.string.text_battery_value) + batValue + "%")
-                        in 101..200 -> dialogShow(getString(R.string.text_battery_title),
-                                "充電中")
-                        else -> dialogShow(getString(R.string.text_battery_title),
-                                getString(R.string.text_battery_value) + "1 %")
-                    }
-                }
-            }
+            //電池點選顯示對話方塊先關掉
+//            R.id.batStatus -> {
+//                if(connState) {
+//                    when (batValue) {
+//                        in 1..100 -> dialogShow(getString(R.string.text_battery_title),
+//                                getString(R.string.text_battery_value) + batValue + "%")
+//                        in 101..200 -> dialogShow(getString(R.string.text_battery_title),
+//                                "充電中")
+//                        else -> dialogShow(getString(R.string.text_battery_title),
+//                                getString(R.string.text_battery_value) + "1 %")
+//                    }
+//                }
+//            }
 
 
 
@@ -485,9 +486,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun getDeviceData() {
-        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        intent!!.putExtra("status", "getSampleRate")
-        sendBroadcast(intent)
+        //val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+        //intent!!.putExtra("status", "getSampleRate")
+        //sendBroadcast(intent)
     }
 
     //menuItem點下去後StartActivityResult等待回傳
@@ -766,55 +767,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
         }
-    }
-
-    val handler: Handler = Handler()
-    var counter: Int = 0
-    @SuppressLint("SetTextI18n")
-    private fun updateUI(intent: Intent) {
-        when (intent.getStringExtra("status")) {
-            "ACTION_GATT_CONNECTED", "ACTION_GATT_CONNECTING"
-            -> {
-                connState = true
-                // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
-                drawerDeviceAddress = intent.getStringExtra("macAddress")
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
-                //nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = true
-                //nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text=getText(R.string.Already_Connected)
-                //nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-                //btIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
-                //battreyIcon?.icon= resources.getDrawable(R.drawable.battery_icon_low)
-                //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).setCurrentConnectStatusIcon(connState)
-                /*  val intent: Intent? = Intent("Main")
-                                         intent!!.putExtra("status", "callDeviceStartSample")*/
-            }
-            "ACTION_GATT_DISCONNECTED", "ACTION_GATT_DISCONNECTING"
-            -> {
-                connState = false
-            }
-            "B5" -> {
-                Log.d("UPDATEUI", "Nothing")
-            }
-            "B6" -> {
-                connState = true
-                intent.getStringExtra("TVOCValue")
-                //displayBatteryLife(intent)
-                // (mPageVp?.adapter?.getItemPosition(0) as MainFragment).setBar1CurrentValue(intent.getStringExtra("TVOCValue").toFloat())
-                val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                // 20171212 Raymond added Wati screen
-                if (mWaitLayout!!.visibility == View.VISIBLE) {
-                    heatingPanelHide()
-                }
-                mainLayout!!.bringToFront()
-                mPageVp!!.setPagingEnabled(true)
-            }
-        }
-        //checkUIState()
-        Log.d("MAINAC", "UPDATEUI")
     }
 
 

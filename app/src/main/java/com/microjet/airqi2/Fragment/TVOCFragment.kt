@@ -17,6 +17,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.*
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -95,6 +96,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
     private var chartHandler = Handler()
+    private var downloadComplete = false
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -248,19 +250,23 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.setVisibleXRange(5.0f, 40.0f)
                     //mChart?.setVisibleXRangeMinimum(20.0f)
                     //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                    //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                    //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
                     mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
             }
             1 -> {
                     getRealmWeek()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
             }
             2 -> {
                     getRealmMonth()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(35.0f, 35.0f)
 
             }
@@ -362,11 +368,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //        }
 //    }
 
-    fun getDeviceData() {
+    private fun getDeviceData() {
         if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
             intent!!.putExtra("status", "getSampleRate")
             context.sendBroadcast(intent)
+            Log.d("TVOC","getDeviceData")
         }
     }
 
@@ -752,11 +759,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     setProgessBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
+                        downloadComplete = true
                         //mRadioGroup?.check(R.id.radioButton_Hour)
                         drawChart(spinnerPositon)
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    if (!downloadingData && !downloadComplete) {
+                        getDeviceData()
+                        downloadingData = true
+                    }
                     val bundle = intent.extras
                     val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                     val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
@@ -794,7 +806,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
                     if (spinnerPositon == 0) {
-                        drawChart(0)
+                        drawChart(spinnerPositon)
                     }
                 }
             }
