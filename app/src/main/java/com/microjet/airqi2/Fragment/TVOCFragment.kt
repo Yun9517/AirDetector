@@ -95,6 +95,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
     private var chartHandler = Handler()
+    private var downloadComplete = false
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -367,6 +368,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
             intent!!.putExtra("status", "getSampleRate")
             context.sendBroadcast(intent)
+            Log.d("TVOC","getDeviceData")
         }
     }
 
@@ -736,7 +738,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     mConnectStatus = true
-                    getDeviceData()
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras
@@ -753,11 +754,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     setProgessBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
+                        downloadComplete = true
                         //mRadioGroup?.check(R.id.radioButton_Hour)
                         drawChart(spinnerPositon)
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    if (!downloadingData && !downloadComplete) {
+                        getDeviceData()
+                        downloadingData = true
+                    }
                     val bundle = intent.extras
                     val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                     val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
@@ -795,7 +801,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
                     if (spinnerPositon == 0) {
-                        drawChart(0)
+                        drawChart(spinnerPositon)
                     }
                 }
             }
