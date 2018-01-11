@@ -17,6 +17,7 @@ import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.view.animation.LinearInterpolator
 import android.widget.*
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -249,19 +250,23 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.setVisibleXRange(5.0f, 40.0f)
                     //mChart?.setVisibleXRangeMinimum(20.0f)
                     //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                    //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                    //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
                     mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
+                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
             }
             1 -> {
                     getRealmWeek()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
             }
             2 -> {
                     getRealmMonth()
                     mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                     mChart?.data?.setDrawValues(false)
+                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(35.0f, 35.0f)
 
             }

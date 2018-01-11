@@ -374,18 +374,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            R.id.batStatus -> {
-                if(connState) {
-                    when (batValue) {
-                        in 1..100 -> dialogShow(getString(R.string.text_battery_title),
-                                getString(R.string.text_battery_value) + batValue + "%")
-                        in 101..200 -> dialogShow(getString(R.string.text_battery_title),
-                                "充電中")
-                        else -> dialogShow(getString(R.string.text_battery_title),
-                                getString(R.string.text_battery_value) + "1 %")
-                    }
-                }
-            }
+            //電池點選顯示對話方塊先關掉
+//            R.id.batStatus -> {
+//                if(connState) {
+//                    when (batValue) {
+//                        in 1..100 -> dialogShow(getString(R.string.text_battery_title),
+//                                getString(R.string.text_battery_value) + batValue + "%")
+//                        in 101..200 -> dialogShow(getString(R.string.text_battery_title),
+//                                "充電中")
+//                        else -> dialogShow(getString(R.string.text_battery_title),
+//                                getString(R.string.text_battery_value) + "1 %")
+//                    }
+//                }
+//            }
 
 
 
