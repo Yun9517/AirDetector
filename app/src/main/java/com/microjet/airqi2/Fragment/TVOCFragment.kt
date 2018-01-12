@@ -356,11 +356,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             mImageViewDataUpdate?.isEnabled = true
             if (animationCount > 1440) {
                 stopUpdateDataAnimation()
-                setProgessBarZero()
+                setProgressBarZero()
             }
         } else {
             stopUpdateDataAnimation()
-            setProgessBarZero()
+            setProgressBarZero()
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
             mImageViewDataUpdate?.isEnabled = false
         }
@@ -385,16 +385,16 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
     }
 
-    private fun setProgessBarMax(input: Int) {
+    private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
         mProgressBar?.max = input
     }
 
-    private fun setProgessBarNow(input: Int) {
+    private fun setProgressBarNow(input: Int) {
         mProgressBar?.progress = input
     }
 
-    private fun setProgessBarZero() {
+    private fun setProgressBarZero() {
         mProgressBar?.progress = 0
     }
 
@@ -508,7 +508,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //一天共有2880筆
         val dataCount = (endTime - startTime) / (30 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
-        query.between("Created_time", startTime, endTime).sort("Created_time",Sort.ASCENDING)
+        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
         //先生出2880筆值為0的陣列
@@ -756,7 +756,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
                     if (totalData.toInt() != 0) {
-                        setProgessBarMax(totalData.toInt())
+                        setProgressBarMax(totalData.toInt())
                         startUpdateDataAnimation()
                     }
                     Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
@@ -764,7 +764,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
-                    setProgessBarNow(nowData.toInt())
+                    setProgressBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
                         downloadComplete = true
