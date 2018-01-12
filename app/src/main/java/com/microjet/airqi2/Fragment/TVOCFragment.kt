@@ -174,10 +174,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
         }
 
-
-        mImageViewFace = this.view?.findViewById(R.id.imageFace)
-        mImageViewFace?.background = resources.getDrawable(R.drawable.history_face_icon_01)
-
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.visibility = View.INVISIBLE
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
