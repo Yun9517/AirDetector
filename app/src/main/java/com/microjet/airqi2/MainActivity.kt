@@ -135,8 +135,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // 電池電量假資料
         //   batValue = 30
-        val serviceIntent: Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceIntent: Intent? = Intent(this, UartService::class.java)
+            startForegroundService(serviceIntent)
+        } else {
+            val serviceIntent: Intent? = Intent(this, UartService::class.java)
+            startService(serviceIntent)
+        }
+
 
         if (!mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
