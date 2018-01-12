@@ -64,6 +64,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mHour: RadioButton? = null
     private var mProgressBar: ProgressBar? = null
     private var mImageViewDataUpdate: ImageView? = null
+    private var mImageViewFace: ImageView? = null
     private var tvCharLabel: TextView? = null
     private var tvChartTitleTop : TextView? = null
     private var tvChartTitleMiddle : TextView? = null
@@ -174,6 +175,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
 
 
+        mImageViewFace = this.view?.findViewById(R.id.imageFace)
+        mImageViewFace?.background = resources.getDrawable(R.drawable.history_face_icon_01)
 
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
