@@ -23,6 +23,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -137,7 +138,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //   batValue = 30
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceIntent: Intent? = Intent(this, UartService::class.java)
-            startForegroundService(serviceIntent)
+            ContextCompat.startForegroundService(this, serviceIntent)
+            //startForegroundService(serviceIntent)
         } else {
             val serviceIntent: Intent? = Intent(this, UartService::class.java)
             startService(serviceIntent)
