@@ -110,7 +110,7 @@ public class NotificationHelper extends ContextWrapper {
                 //.setBadgeIconType( R.drawable.app_android_icon_logo)
                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                 .setPriority(Notification.PRIORITY_DEFAULT)
-                //.setBadgeIconType(R.drawable.backgroung_chart) //your app icon
+                //.setBadgeIconType(R.drawable.background_chart) //your app icon
                 .setContentIntent(pi)
                 .setStyle(new Notification.BigTextStyle().bigText(body));
 

@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/backgroung_chart"
+    android:background="@drawable/background_chart"
     tools:context="com.microjet.airqi2.Fragment.TVOCFragment">
 
     <ProgressBar
