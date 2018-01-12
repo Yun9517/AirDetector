@@ -176,10 +176,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
 
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
+        mImageViewDataUpdate?.visibility = View.INVISIBLE
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
             if (!isFastDoubleClick){
-            getDeviceData()
+                getDeviceData()
                 Log.d("TVOC","TOAST_ON")
             }
         }
@@ -750,6 +751,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     mConnectStatus = true
+                    downloadComplete = false
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras

@@ -1081,7 +1081,7 @@ public class UartService extends Service {
                         dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        Log.d("0xB6",Long.toString(getMyDate().getTime()));
+                        Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6",arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
                         for (int i = 0; i < arrB6.size(); i++) {
@@ -1094,6 +1094,8 @@ public class UartService extends Service {
                             } else {
                                 nextID = num.intValue() + 1;
                             }
+                            Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
+                            Log.d("0xB6DBLastTime",new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
                             realm.executeTransaction(r -> {
                                 AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
