@@ -18,9 +18,12 @@
     <string name="text_label_humidity">RH</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
-    <string name="text_label_ststus_good">Mediocre </string> <!-- 原 Good-->
-    <string name="text_label_ststus_mid">Minor Pollution</string> <!-- 原 Poor-->
-    <string name="text_label_ststus_bad">Serious Pollution</string> <!-- 原 Unhealthy-->
+    <string name="text_label_status_good">Normal</string>
+    <string name="text_label_status_mid">Mild pollution</string>
+    <string name="text_label_status_medium_Orange">Medium pollution</string>
+    <string name="text_label_status_bad">High pollution</string>
+    <string name="text_label_status_Serious_Purple">Serious pollution</string>
+    <string name="text_label_status_Extreme_Dark_Purple">Extreme pollution</string>
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>

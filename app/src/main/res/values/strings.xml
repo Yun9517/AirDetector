@@ -4,8 +4,8 @@
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">空氣品質一般，請保持空氣流通。\n揮發性有機物濃度低，沒有刺激或不適風險</string>
-    <string name="text_message_air_mid">空氣品質輕度污染，避免長時間待在此環境下(十二個月)。\n建議改善通風。</string>
-    <string name="text_message_air_Medium_Orange">空氣品質不佳，避免長時間待在此環境下(一個月)。\n建議加強通風。</string>
+    <string name="text_message_air_mid">空氣品質輕度污染\n避免長時間待在此環境下(十二個月)\n建議改善通風。</string>
+    <string name="text_message_air_Medium_Orange">空氣品質不佳\n避免長時間待在此環境下(一個月)\n建議加強通風。</string>
     <string name="text_message_air_bad">空氣品質不健康。避免長時間待在此環境下(數小時)。\n必需加強通風。</string>
     <string name="text_message_air_Serious_Purple">空氣品質非常不健康。\n請離開並務必加強通風。</string>
     <string name="text_message_air_Extreme_Dark_Purple">空氣品質非常危險。\n請立即離開並務必加強通風。</string>
@@ -18,9 +18,12 @@
     <string name="text_label_humidity">濕度</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC\n總揮發性有機化合物</string>
-    <string name="text_label_ststus_good">普通</string>
-    <string name="text_label_ststus_mid">輕度污染</string>
-    <string name="text_label_ststus_bad">重度污染</string>
+    <string name="text_label_status_good">正常</string>
+    <string name="text_label_status_mid">輕度污染</string>
+    <string name="text_label_status_medium_Orange">中度汙染</string>
+    <string name="text_label_status_bad">重度污染</string>
+    <string name="text_label_status_Serious_Purple">嚴重汙染</string>
+    <string name="text_label_status_Extreme_Dark_Purple">非常嚴重汙染</string>
     <string name="text_battery_value">電池電量：</string>
     <string name="text_battery_title">裝置電量</string>
     <string name="button_label_ok">確認</string>
