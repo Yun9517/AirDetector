@@ -379,7 +379,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getDeviceData() {
         if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", "getSampleRate")
+            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
             context.sendBroadcast(intent)
             Log.d("TVOC","getDeviceData")
         }
