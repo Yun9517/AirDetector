@@ -3,9 +3,12 @@
     <string name="app_name_air_map">空气地图</string>
     <string name="app_name_knowledge">知识库</string>
     <string name="app_name_about">关于APP</string>
-    <string name="text_message_air_good">空气质量一般\n请保持空气流通\n挥发性有机物浓度低\n没有刺激或不适风险</string>
-    <string name="text_message_air_mid">空气质量差\n建议改善通风或配戴口罩\n长时间处于此环境下\n可能会导致眼睛和呼吸道不适</string>
-    <string name="text_message_air_bad">空气质量很差\n建议改善通风或离开污染的环境\n长期处于此环境下\n会伤害人体的健康</string>
+    <string name="text_message_air_good">空气质量一般，请保持空气流通。\n挥发性有机物浓度低，没有刺激或不适风险</string>
+    <string name="text_message_air_mid">空气质量轻度污染，避免长时间待在此环境下(十二个月)。\n建议改善通风。</string>
+    <string name="text_message_air_Medium_Orange">空气质量不佳，避免长时间待在此环境下(一个月)。\n建议加强通风。</string>
+    <string name="text_message_air_bad">空气质量不健康。避免长时间待在此环境下(数小时)。\n必需加强通风。</string>
+    <string name="text_message_air_Serious_Purple">空气质量非常不健康。\n请离开并务必加强通风。</string>
+    <string name="text_message_air_Extreme_Dark_Purple">空气质量非常危险。\n请立即离开并务必加强通风。</string>
     <string name="text_message_humidity">一般来说，湿度维持在45%~65％，不仅凉爽舒适，也不会因为过度干燥、潮湿而影响健康。</string> <!-- 2018/01/04 -->
     <string name="text_message_temperature">一般来说，人体在室内感觉最舒适的温度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
