@@ -493,12 +493,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
 
-    private fun getDeviceData() {
-        //val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        //intent!!.putExtra("status", "getSampleRate")
-        //sendBroadcast(intent)
-    }
-
     //menuItem點下去後StartActivityResult等待回傳
     private fun blueToothConnect() {
         checkBluetooth()
