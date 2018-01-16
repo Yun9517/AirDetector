@@ -223,9 +223,9 @@ class MainFragment : Fragment() {
      @SuppressLint("SetTextI18n")
 
      private fun TVOCStatusTextShow(currentValue:Float){
-        if (currentValue < 221){
+        if (currentValue <= 220){
             tvNotify?.text = getString(R.string.text_message_air_good)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_good)
+            tvInCycleState?.text = getString(R.string.text_label_status_good)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             //20171226  Andy
@@ -236,23 +236,46 @@ class MainFragment : Fragment() {
                 Log.e("歸零TVOC660計數變數:", countsound660.toString())
             }
         }
-        else if (currentValue  > 661) {
+        else if (currentValue > 220 && currentValue <= 660) {
+            countsound220=0
+            Log.e("更新TVOC220計數變數:",countsound220.toString())
+            tvNotify?.text = getString(R.string.text_message_air_mid)
+            tvInCycleState?.text = getString(R.string.text_label_status_mid)
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+        }
+        else if (currentValue > 660 && currentValue <= 2200) {
+            countsound220=0
+            Log.e("更新TVOC220計數變數:",countsound220.toString())
+            tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
+            tvInCycleState?.text = getString(R.string.text_label_status_medium_Orange)
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Orange))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Orange))
+        }
+        else if (currentValue > 2200 && currentValue <= 5500) {
             countsound220=0
             Log.e("更新TVOC220計數變數:",countsound220.toString())
             tvNotify?.text = getString(R.string.text_message_air_bad)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
+            tvInCycleState?.text = getString(R.string.text_label_status_bad)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
+        }
+        else if (currentValue > 5500 && currentValue <= 20000) {
+            countsound220=0
+            Log.e("更新TVOC220計數變數:",countsound220.toString())
+            tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
+            tvInCycleState?.text = getString(R.string.text_label_status_Serious_Purple)
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Purple))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Purple))
         }
         else{
             //20171226  Andy
             countsound660=0
             Log.e("更新TVOC660計數變數:",countsound660.toString())
-            tvNotify?.text = getString(R.string.text_message_air_mid)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_mid)
-
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
+            tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
+            tvInCycleState?.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
+            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Unhealthy))
+            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Unhealthy))
         }
     }
 
@@ -301,13 +324,13 @@ class MainFragment : Fragment() {
     private fun CO2tatusTextShow(currentValue:Float){
         if (currentValue < 800){
             //tvNotify?.text = getString(R.string.text_message_air_good)
-            //tvInCycleState?.text = getString(R.string.text_label_ststus_good)
+            //tvInCycleState?.text = getString(R.string.text_label_status_good)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
         }
         else if (currentValue > 1500) {
             //tvNotify?.text = getString(R.string.text_message_air_bad)
-            //tvInCycleState?.text = getString(R.string.text_label_ststus_bad)
+            //tvInCycleState?.text = getString(R.string.text_label_status_bad)
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
             var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -347,7 +370,7 @@ class MainFragment : Fragment() {
         }
         else{
             tvNotify?.text = getString(R.string.text_message_air_mid)
-            tvInCycleState?.text = getString(R.string.text_label_ststus_mid)
+            tvInCycleState?.text = getString(R.string.text_label_status_mid)
 
             tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
             tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))

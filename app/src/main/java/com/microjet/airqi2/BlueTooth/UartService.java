@@ -600,25 +600,25 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
                     break;
                 case "setSampleRate":
-                    int SampleTime = intent.getIntExtra("SampleTime", 1);
-                        /*  設定 0xB6的設定
-                        * input [0] = sample rate
-                        * input [1] = sensor-on time range Sensor開啟時間長度
-                        * input [2] = sensor to get sample 第幾秒取資料
-                        *
-                        * input [3] = pump on time pump開啟時間點
-                        * input [4] = pumping time pump開啟時間長度
-                        */
-                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/2, /*SampleTime*30-*/1, 2, 0, 0};
-                    Log.d(TAG, "setSampleRate");
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
-                    break;
-                case "getSampleRate":
-                    Log.d(TAG, "getSampleRate");
-                    if (intent.getStringExtra("callFromConnect").equals("yes"))
-                        CallFromConnect=true;
-                    else
-                        CallFromConnect=false;
+//                    int SampleTime = intent.getIntExtra("SampleTime", 1);
+//                        /*  設定 0xB6的設定
+//                        * input [0] = sample rate
+//                        * input [1] = sensor-on time range Sensor開啟時間長度
+//                        * input [2] = sensor to get sample 第幾秒取資料
+//                        *
+//                        * input [3] = pump on time pump開啟時間點
+//                        * input [4] = pumping time pump開啟時間長度
+//                        */
+//                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/2, /*SampleTime*30-*/1, 2, 0, 0};
+//                    Log.d(TAG, "setSampleRate");
+//                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+//                    break;
+                case BroadcastActions.ACTION_GET_SAMPLE_RATE:   //"getSampleRate":
+                    Log.d(TAG, BroadcastActions.ACTION_GET_SAMPLE_RATE);
+//                    if (intent.getStringExtra("callFromConnect").equals("yes"))
+//                        CallFromConnect=true;
+//                    else
+//                        CallFromConnect=false;
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
@@ -939,12 +939,30 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
                     break;
                 case (byte) 0xB2:
+                    SharedPreferences share = getSharedPreferences("ASMSetting", MODE_PRIVATE);
+                    String setting0 = share.getString("sample_rate", "1");
+                    String setting1 = share.getString("sensor_on_time_range", "30");
+                    String setting2 = share.getString("sensor_to_get_sample", "2");
+                    String setting3 = share.getString("pump_on_time", "1");
+                    String setting4 = share.getString("pumping_time_range", "2");
+
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                    Log.d("0xB2Compare",setting0 + ":" + RString.get(0) +" "+ setting1 + ":" + RString.get(1) + " " +setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4));
+                    if (setting0.equals(RString.get(0))
+                            && setting1.equals(RString.get(1))
+                            && setting2.equals(RString.get(2))
+                            && setting3.equals(RString.get(3))
+                            && setting4.equals(RString.get(4)))
+                    {
+                        Log.d("0xB2","True");
+                    } else {
+                        share.edit().putString("sample_rate","1").putString("sensor_on_time_range","30").putString("sensor_to_get_sample","2").putString("pump_on_time","1").putString("pumping_time_range","2").apply();
+                        int[] param = {1, 1*30, 2, 1, 2, 0, 0};
+                        Log.d(TAG, "setSampleRate");
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                    }
                     setSampleRateTime(Integer.parseInt(RString.get(0)));
-                    //  int number=Integer.parseInt(RString.get(0));
-
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
-
                     break;
                 case (byte) 0xB4:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
@@ -1081,7 +1099,7 @@ public class UartService extends Service {
                         dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        Log.d("0xB6",Long.toString(getMyDate().getTime()));
+                        Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6",arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
                         for (int i = 0; i < arrB6.size(); i++) {
@@ -1094,6 +1112,8 @@ public class UartService extends Service {
                             } else {
                                 nextID = num.intValue() + 1;
                             }
+                            Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
+                            Log.d("0xB6DBLastTime",new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
                             realm.executeTransaction(r -> {
                                 AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
@@ -1321,11 +1341,11 @@ public class UartService extends Service {
                         NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
                         bigStyle.bigText(getString(R.string.text_message_air_bad));
                         @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.color.progressBarEndColor)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                                .setSmallIcon(R.mipmap.ic_launcher)
+                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_04))
                                 .setContentTitle(getString(R.string.High_warning_title))
-                                .setColor(Color.RED)
-                                .setBadgeIconType(R.drawable.app_android_icon_logo)
+                                //.setColor(Color.RED)
+                                //.setBadgeIconType(R.drawable.app_android_icon_logo)
                                 //.setContentText(getString(R.string.text_message_air_bad))
                                 .setStyle(bigStyle)
                                 .setPriority(Notification.PRIORITY_DEFAULT)
@@ -1394,10 +1414,11 @@ public class UartService extends Service {
                     bigStyle.bigText(getString(R.string.text_message_air_mid));
                     @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
                             .setPriority(NotificationCompat.PRIORITY_MAX)
-                            .setSmallIcon(R.color.progressBarMidColor)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                            .setColor(Color.BLUE)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                            //.setColor(Color.BLUE)
                             .setContentTitle(getString(R.string.Medium_warning_title))
+                            //.setBadgeIconType(R.drawable.app_android_icon_logo)
                             .setStyle(bigStyle)
                             //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                             .setPriority(Notification.PRIORITY_DEFAULT)

@@ -4,9 +4,11 @@
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">Mediocre\nAir quality is normal, please keep it fresh.\nTVOC is low, no irritation or discomfort risk.</string>
-    <string name="text_message_air_mid">Minor Pollution\nAir quality is bad.\nplease improve the ventilation or wear a mask
-TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
-    <string name="text_message_air_bad">Serious Pollution\nAir quality is horrible\nplease improve the ventilation or leave.\nTVOC is unhealthy, it will damage people health.</string>
+    <string name="text_message_air_mid">The air quality is slightly polluted. Avoid staying in this situation too long (12 months). Improved ventilation recommended.</string>
+    <string name="text_message_air_Medium_Orange">The air quality is poor. Avoid staying in this situation too long (1 month). Intensified ventilation recommended.</string>
+    <string name="text_message_air_bad">The air quality is unhealthy. Avoid staying in this situation too long (Within hours). Intensified ventilation is necessary.</string>
+    <string name="text_message_air_Serious_Purple">The air quality is very unhealthy. Please leave here. Intensified ventilation is mandatory.</string>
+    <string name="text_message_air_Extreme_Dark_Purple">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
     <string name="text_message_humidity">Normally, Human feels cool and comfortable when the humidity percent range is about 45%~65%.\nYour body healthy can’t be afforded by too dry or too moist.</string>
     <string name="text_message_temperature">Normally, the best temperature for human is about 18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
@@ -16,9 +18,12 @@ TVOC is moderate.\nit may cause eyes and respiratory discomfort.</string>
     <string name="text_label_humidity">RH</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
-    <string name="text_label_ststus_good">Mediocre </string> <!-- 原 Good-->
-    <string name="text_label_ststus_mid">Minor Pollution</string> <!-- 原 Poor-->
-    <string name="text_label_ststus_bad">Serious Pollution</string> <!-- 原 Unhealthy-->
+    <string name="text_label_status_good">Normal</string>
+    <string name="text_label_status_mid">Mild pollution</string>
+    <string name="text_label_status_medium_Orange">Medium pollution</string>
+    <string name="text_label_status_bad">High pollution</string>
+    <string name="text_label_status_Serious_Purple">Serious pollution</string>
+    <string name="text_label_status_Extreme_Dark_Purple">Extreme pollution</string>
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>

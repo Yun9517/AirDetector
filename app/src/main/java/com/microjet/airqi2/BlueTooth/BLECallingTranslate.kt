@@ -542,6 +542,7 @@ object CallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
+                        /*暫時用不到
                         9//get data in cycle 間隔多久取資料
                         -> {
                             ReturnValue.add(Integer.toString(value))
@@ -551,7 +552,7 @@ object CallingTranslate {
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
-                        }
+                        }*/
                         else -> {
                         }
                     }

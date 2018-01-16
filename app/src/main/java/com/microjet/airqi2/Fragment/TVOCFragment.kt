@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
+@Suppress("DEPRECATION")
 /**
  * A simple [Fragment] subclass.
  * Activities that contain this fragment must implement the
@@ -53,14 +54,17 @@ import kotlin.collections.ArrayList
 class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var mContext: Context? = null
 
+    private var mDataCount: Int = 60
+
+    //UI元件
     private var mChart: FixBarChart? = null
     private var mTextViewTimeRange: TextView? = null
     private var mTextViewValue: TextView? = null
-    private var DATA_COUNT: Int = 60
     private var mRadioGroup: RadioGroup? = null
     private var mHour: RadioButton? = null
     private var mProgressBar: ProgressBar? = null
     private var mImageViewDataUpdate: ImageView? = null
+    private var mImageViewFace: ImageView? = null
     private var tvCharLabel: TextView? = null
     private var tvChartTitleTop : TextView? = null
     private var tvChartTitleMiddle : TextView? = null
@@ -98,6 +102,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var chartHandler = Handler()
     private var downloadComplete = false
 
+    var counter = 0
+    var TVOCAVG = 0
+
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -131,7 +138,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         imgBarBase = this.view?.findViewById(R.id.imgBarBase)
         //修改上排Spinner及Button
         sprTVOC = this.view?.findViewById(R.id.sprTVOC)
-        var cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
+        val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
@@ -152,7 +159,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         }
 
         btnCallDatePicker = this.view?.findViewById(R.id.btnCallDatePicker)
-        var dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
@@ -167,13 +174,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             }
         }
 
-
-
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
+        mImageViewDataUpdate?.visibility = View.INVISIBLE
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
             if (!isFastDoubleClick){
-            getDeviceData()
+                getDeviceData()
                 Log.d("TVOC","TOAST_ON")
             }
         }
@@ -223,17 +229,18 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart!!.setOnChartValueSelectedListener(this)
     }
 
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun btnTextChanged(position: Int?) {
         when(position) {
             0 -> {
-                var dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
                 btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + "第" + calObject.get(Calendar.WEEK_OF_YEAR).toString() + "週"
             }
             2 -> {
-                var dateFormat = SimpleDateFormat("yyyy-MM")
+                val dateFormat = SimpleDateFormat("yyyy-MM")
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
         }
@@ -336,6 +343,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
         //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
         mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
@@ -348,11 +356,11 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             mImageViewDataUpdate?.isEnabled = true
             if (animationCount > 1440) {
                 stopUpdateDataAnimation()
-                setProgessBarZero()
+                setProgressBarZero()
             }
         } else {
             stopUpdateDataAnimation()
-            setProgessBarZero()
+            setProgressBarZero()
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
             mImageViewDataUpdate?.isEnabled = false
         }
@@ -371,22 +379,22 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getDeviceData() {
         if (mConnectStatus && !downloadingData) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", "getSampleRate")
+            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
             context.sendBroadcast(intent)
             Log.d("TVOC","getDeviceData")
         }
     }
 
-    private fun setProgessBarMax(input: Int) {
+    private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
         mProgressBar?.max = input
     }
 
-    private fun setProgessBarNow(input: Int) {
+    private fun setProgressBarNow(input: Int) {
         mProgressBar?.progress = input
     }
 
-    private fun setProgessBarZero() {
+    private fun setProgressBarZero() {
         mProgressBar?.progress = 0
     }
 
@@ -408,15 +416,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     private fun getChartData2(input: ArrayList<String>): List<BarEntry> {
-        // val DATA_COUNT = 5
-        // DATA_COUNT
+        // val mDataCount = 5
+        // mDataCount
         val chartData = ArrayList<BarEntry>()
-        if (input.size < DATA_COUNT - 1) {
+        if (input.size < mDataCount - 1) {
             for (i in 0 until input.size) {
                 chartData.add(BarEntry(input[i].toFloat(), i))
             }
         } else {
-            for (i in 0 until DATA_COUNT - 1) {
+            for (i in 0 until mDataCount - 1) {
                 chartData.add(BarEntry(input[i].toFloat(), i))
             }
         }
@@ -426,12 +434,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getLabels2(input: ArrayList<String>): List<String> {
         val chartLabels = ArrayList<String>()
 
-        if (input.size < DATA_COUNT - 1) {
+        if (input.size < mDataCount - 1) {
             for (i in 0 until input.size) {
                 chartLabels.add(input[i])
             }
         } else {
-            for (i in 0 until DATA_COUNT - 1) {
+            for (i in 0 until mDataCount - 1) {
                 chartLabels.add(input[i])
             }
         }
@@ -487,21 +495,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTvoc3.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        var touchTime = calObject.timeInMillis
+        val touchTime = calObject.timeInMillis
         Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
-        var endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        var endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        var realm = Realm.getDefaultInstance()
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
         //設定時間區間
-        var endTime = endDayLast
-        var startTime = endDay
+        val endTime = endDayLast
+        val startTime = endDay
         //一天共有2880筆
-        var dataCount = (endTime - startTime) / (30 * 1000)
+        val dataCount = (endTime - startTime) / (30 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
-        query.between("Created_time", startTime, endTime).sort("Created_time",Sort.ASCENDING)
-        var result1 = query.findAll()
+        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
+        val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
@@ -522,31 +530,31 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        var dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        var touchTime = calObject.timeInMillis
-        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = calObject.timeInMillis
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        var sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..6) {
             //第一筆為日 00:00
-            var sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
+            val sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
-            var sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            var realm = Realm.getDefaultInstance()
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             Log.d("getRealmWeek", sqlStartDate.toString())
             Log.d("getRealmWeek", sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
-            var result1 = query.findAll()
+            val result1 = query.findAll()
             Log.d("getRealmWeek", result1.size.toString())
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
                     sumTvoc += i.tvocValue.toInt()
                 }
-                var aveTvoc = (sumTvoc / result1.size)
+                val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add(sqlStartDate.toString())
@@ -561,34 +569,34 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        var dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
-        var monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        var touchTime = calObject.timeInMillis
-        var nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
+        val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val touchTime = calObject.timeInMillis
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        var sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth", sqlMonthBase.toString())
         //跑七筆BarChart
         for (y in 0..(monthCount-1)) {
             //第一筆為日 00:00
-            var sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
+            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
-            var sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            var realm = Realm.getDefaultInstance()
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            var dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
+            val dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
             Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
             Log.d("getRealmMonth", sqlStartDate.toString())
             Log.d("getRealmMonth", sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
-            var result1 = query.findAll()
+            val result1 = query.findAll()
             Log.d("getRealmMonth", result1.size.toString())
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
                     sumTvoc += i.tvocValue.toInt()
                 }
-                var aveTvoc = (sumTvoc / result1.size)
+                val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add(sqlStartDate.toString())
@@ -612,25 +620,26 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         return BarData(getLabels3(inputTime,positionID), dataSets)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun getLabels3(input: ArrayList<String>, positionID: Int?): List<String> {
         val chartLabels = ArrayList<String>()
         when (positionID) {
             0 -> {
-                var dateFormat = SimpleDateFormat("MM/dd HH:mm")
+                val dateFormat = SimpleDateFormat("MM/dd HH:mm")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
                 }
             }
             1 -> {
-                var dateFormat = SimpleDateFormat("MM/dd EEEE")
+                val dateFormat = SimpleDateFormat("MM/dd EEEE")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
                 }
             }
             2 -> {
-                var dateFormat = SimpleDateFormat("yyyy/MM/dd")
+                val dateFormat = SimpleDateFormat("yyyy/MM/dd")
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -681,7 +690,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //    tvocArray.add("20")
         batteryArray.add(Battery)
 
-        while (tvocArray.size > DATA_COUNT) {
+        while (tvocArray.size > mDataCount) {
             tvocArray.removeAt(0)
             timeArray.removeAt(0)
         }
@@ -727,8 +736,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         return intentFilter
     }
 
-    var counter = 0
-    var TVOCAVG = 0
     private val mGattUpdateReceiver = object : BroadcastReceiver() {
         @SuppressLint("SimpleDateFormat", "SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
@@ -743,12 +750,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //執行連線後的事
                     counter = 0
                     mConnectStatus = true
+                    downloadComplete = false
                 }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
                     if (totalData.toInt() != 0) {
-                        setProgessBarMax(totalData.toInt())
+                        setProgressBarMax(totalData.toInt())
                         startUpdateDataAnimation()
                     }
                     Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
@@ -756,7 +764,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
-                    setProgessBarNow(nowData.toInt())
+                    setProgressBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
                         stopUpdateDataAnimation()
                         downloadComplete = true
@@ -770,15 +778,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                         downloadingData = true
                     }
                     val bundle = intent.extras
-                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
-                    val BatteryLife = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE)
-                    val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                    val date = Date()
+                    //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    //val BatteryLife = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE)
+                    //val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
+                    //val date = Date()
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    if(preHeat=="255") {
+                    if(preHeat == "255") {
                         //新增AnimationCount
                         animationCount++
 
@@ -830,10 +838,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
 
     private fun getChartData(): List<BarEntry> {
-        // val DATA_COUNT = 5
-        // DATA_COUNT
+        // val mDataCount = 5
+        // mDataCount
         val chartData = ArrayList<BarEntry>()
-       // for (i in 1 until DATA_COUNT) {
+       // for (i in 1 until mDataCount) {
             chartData.add(BarEntry((220).toFloat(), 1))
             chartData.add(BarEntry((660).toFloat(), 2))
             chartData.add(BarEntry((65535).toFloat(), 3))
@@ -843,17 +851,17 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     private fun getLabels(): List<String> {
         val chartLabels = ArrayList<String>()
-        for (i in 1 until DATA_COUNT) {
+        for (i in 1 until mDataCount) {
             chartLabels.add("X" + i)
         }
         return chartLabels
     }
 
     private fun nothing() {
-        var realm = Realm.getDefaultInstance()
+        val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
         for (y in 10..1) {
-            var countTime = Date().time - 60 * 60 * 1000 * (y)
+            val countTime = Date().time - 60 * 60 * 1000 * (y)
             query.lessThan("Created_time", countTime)//.greaterThan("Created_time",countTime)
             val result1 = query.findAll()
             var sumTvoc = 0
@@ -871,20 +879,20 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private fun getRealmDay123() {
         arrTime3.clear()
         arrTvoc3.clear()
-        var touchTime = calObject.timeInMillis
-        var endDay = touchTime / 3600000 / 24 * 3600000 * 24 + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val touchTime = calObject.timeInMillis
+        val endDay = touchTime / 3600000 / 24 * 3600000 * 24 + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         for (y in 1..1440) {
-            var realm = Realm.getDefaultInstance()
+            val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             //設定時間區間
 
-            var endTime = endDay - (y - 1) * 30000 - 3600000*8
-            var startTime = endTime - 30000
+            val endTime = endDay - (y - 1) * 30000 - 3600000*8
+            val startTime = endTime - 30000
             Log.d("TimePeriod", ((endTime - startTime) / 1000).toString() + "Second")
 
             query.between("Created_time", startTime, endTime)
 
-            var result1 = query.findAll()
+            val result1 = query.findAll()
             Log.d("getRealmFour", result1.size.toString())
             if (result1.size != 0) {
                 //var vvoc = 0

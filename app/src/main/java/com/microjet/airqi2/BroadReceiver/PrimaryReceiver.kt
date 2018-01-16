@@ -138,21 +138,24 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "setSampleRate" -> {
+                /*
                 var SampleTime= intent.getIntExtra("SampleTime",1)
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "setSampleRate")
                 mainIntent.putExtra("SampleTime",SampleTime)
                 context.sendBroadcast(mainIntent)
+                */
             }
-            "getSampleRate" -> {
-                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
-                mainIntent.putExtra("status", "getSampleRate")
-                when( intent.getStringExtra("callFromConnect"))
-                {
-                    "yes"-> mainIntent.putExtra("callFromConnect", "yes")
-                    else -> mainIntent.putExtra("callFromConnect", "no")
-                }
-                context.sendBroadcast(mainIntent)
+
+            BroadcastActions.ACTION_GET_SAMPLE_RATE -> {//"getSampleRate" -> {
+                var intent = Intent(BroadcastIntents.UART_SERVICE)
+                intent.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
+//                when( intent.getStringExtra("callFromConnect"))
+//                {
+//                    "yes"-> intent.putExtra("callFromConnect", "yes")
+//                    else -> intent.putExtra("callFromConnect", "no")
+//                }
+                context.sendBroadcast(intent)
             }
             "callDeviceStartSample" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
@@ -165,9 +168,9 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
             }
             "EXTRA_DATA" -> {
-                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
-                mainIntent.putExtra("status", "getSampleRate")
-                context.sendBroadcast(mainIntent)
+                //var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
+                //mainIntent.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
+                //context.sendBroadcast(mainIntent)
             }
             "ACTION_DATA_AVAILABLE" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)

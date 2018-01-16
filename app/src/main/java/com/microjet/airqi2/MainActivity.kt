@@ -23,6 +23,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -135,8 +136,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // 電池電量假資料
         //   batValue = 30
-        val serviceIntent: Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val serviceIntent: Intent? = Intent(this, UartService::class.java)
+            ContextCompat.startForegroundService(this, serviceIntent)
+            //startForegroundService(serviceIntent)
+        } else {
+            val serviceIntent: Intent? = Intent(this, UartService::class.java)
+            startService(serviceIntent)
+        }
+
 
         if (!mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
@@ -483,12 +491,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         mDrawerLayout?.closeDrawer(GravityCompat.START)
-    }
-
-    private fun getDeviceData() {
-        //val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        //intent!!.putExtra("status", "getSampleRate")
-        //sendBroadcast(intent)
     }
 
     //menuItem點下去後StartActivityResult等待回傳
