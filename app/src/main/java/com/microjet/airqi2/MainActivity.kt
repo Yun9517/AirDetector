@@ -286,9 +286,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             finish()
         } else {
             if (!mBluetoothAdapter.isEnabled) {
-                val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-                enableBtIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
-                mContext.startActivityForResult(enableBtIntent,5)
+                //val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+                //enableBtIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
+                //mContext.startActivityForResult(enableBtIntent,5)
+                var intentOpenBluetoothSettings = Intent()
+                intentOpenBluetoothSettings.action = android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+                startActivity(intentOpenBluetoothSettings)
             }
         }
     }
