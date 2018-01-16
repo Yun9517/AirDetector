@@ -93,7 +93,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.app_android_icon_logo);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.mipmap.ic_launcher);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -102,18 +102,18 @@ public class NotificationHelper extends ContextWrapper {
         return new Notification.Builder(getApplicationContext(), CHANNEL_ONE_ID)
                 .setContentTitle(title)
                 .setContentText(body)
-                .setSmallIcon(R.color.progressBarMidColor)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
                 //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 .setColor(Color.RED)
-                //.setColorized(true)
+                .setColorized(true)
+                .setLargeIcon(bitmap)
                 //.setBadgeIconType( R.drawable.app_android_icon_logo)
                 //.setTicker("通知首次出现在通知栏，带上升动画效果的")
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 //.setBadgeIconType(R.drawable.backgroung_chart) //your app icon
                 .setContentIntent(pi)
                 .setStyle(new Notification.BigTextStyle().bigText(body));
-
     }
     protected NotificationCompat.Builder builder;
     protected NotificationManager manager;
