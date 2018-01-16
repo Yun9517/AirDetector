@@ -136,14 +136,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // 電池電量假資料
         //   batValue = 30
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val serviceIntent: Intent? = Intent(this, UartService::class.java)
-            ContextCompat.startForegroundService(this, serviceIntent)
-            //startForegroundService(serviceIntent)
-        } else {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val serviceIntent: Intent? = Intent(this, UartService::class.java)
+//            ContextCompat.startForegroundService(this, serviceIntent)
+//            //startForegroundService(serviceIntent)
+//        } else {
             val serviceIntent: Intent? = Intent(this, UartService::class.java)
             startService(serviceIntent)
-        }
+        //}
 
 
         if (!mIsReceiverRegistered) {
