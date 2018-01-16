@@ -162,13 +162,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         setupDrawerContent(nvDrawerNavigation)
 
         UartService.nowActivity=this
+        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
     }
 
     override fun onStart() {
         super.onStart()
         Log.i(TAG, "call onStart")
 
-        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()

@@ -28,12 +28,15 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.bluetooth.le.ScanSettings.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -178,6 +181,7 @@ class DeviceListActivity : Activity() {
         listBT!!.onItemClickListener = scanResultOnItemClickListener
 
         mHandler = Handler()
+        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
     }
 
     override fun onResume() {
@@ -196,6 +200,7 @@ class DeviceListActivity : Activity() {
 
     public override fun onDestroy() {
         super.onDestroy()
+        unregisterReceiver(mBluetoothStateReceiver)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -373,4 +378,37 @@ class DeviceListActivity : Activity() {
         private val RQS_ENABLE_BLUETOOTH = 1
         private val SCAN_PERIOD: Long = 5000
     }
+
+    private fun makeBluetoothStateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED)
+        return intentFilter
+    }
+
+    private val mBluetoothStateReceiver = object: BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
+            var stateStr = "BluetoothAdapter.STATE_OFF"
+
+            when (state) {
+                BluetoothAdapter.STATE_TURNING_OFF -> {
+                    stateStr = "BluetoothAdapter.STATE_TURNING_OFF"
+                }
+                BluetoothAdapter.STATE_OFF -> {
+                    stateStr = "BluetoothAdapter.STATE_OFF"
+                    //當手機藍牙關掉的時候將裝置清單關閉免得Crash
+                    //因為有個handler會延後執行，需要移除裡面的內容才不會Crash
+                    mHandler?.removeCallbacksAndMessages(null)
+                    //兩種方法都可以收掉目前的DeviceList
+                    finish()
+                    onBackPressed()
+                }
+                BluetoothAdapter.STATE_ON -> {
+                    stateStr = "BluetoothAdapter.STATE_ON"
+                }
+            }
+            Log.v(TAG, "mBluetoothStateReceiver: " + stateStr)
+        }
+    }
+
 }
