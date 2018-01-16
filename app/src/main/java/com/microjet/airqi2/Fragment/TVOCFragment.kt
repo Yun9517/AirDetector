@@ -69,10 +69,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     private var tvChartTitleTop : TextView? = null
     private var tvChartTitleMiddle : TextView? = null
     private var tvChartTitleBottom : TextView? = null
-    private var imgBarRed : ImageView? = null
-    private var imgBarYellow : ImageView? = null
-    private var imgBarGreen : ImageView? = null
-    private var imgBarBase : ImageView? = null
+    //private var imgBarRed : ImageView? = null
+    //private var imgBarYellow : ImageView? = null
+    //private var imgBarGreen : ImageView? = null
+    //private var imgBarBase : ImageView? = null
     private var sprTVOC : Spinner? = null
     private var btnCallDatePicker : Button? = null
     //UI元件
@@ -132,10 +132,10 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
-        imgBarRed = this.view?.findViewById(R.id.imgBarRed)
-        imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
-        imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
-        imgBarBase = this.view?.findViewById(R.id.imgBarBase)
+       // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
+        //imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
+        //imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
+        //imgBarBase = this.view?.findViewById(R.id.imgBarBase)
         //修改上排Spinner及Button
         sprTVOC = this.view?.findViewById(R.id.sprTVOC)
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
@@ -281,15 +281,15 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
     private fun setImageBarSize(){
         mChart!!.data = getBarData()
-        val line220 = mChart!!.getBarBounds(BarEntry(220f, 1))
-        val line660 = mChart!!.getBarBounds(BarEntry(660f, 2))
-        val line1000 = mChart!!.getBarBounds(BarEntry(65535f, 3))
-        tvChartTitleMiddle?.y = line660.top - (tvChartTitleMiddle!!.height / 2)//Text660 position
-        tvChartTitleBottom?.y = line220.top - (tvChartTitleBottom!!.height / 2)//Text220 position
-        imgBarRed?.y = line1000.top//red
-        imgBarYellow?.y = line660.top//yellow
-        imgBarGreen?.y = line220.top//green
-        imgBarBase?.y = line220.bottom//base
+        val line500 = mChart!!.getBarBounds(BarEntry(500f, 1))
+        val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 2))
+        val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
+        tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2)//Text1000 position
+        tvChartTitleBottom?.y = line500.top - (tvChartTitleBottom!!.height / 2)//Text500 position
+        //imgBarRed?.y = line1000.top//red
+        //imgBarYellow?.y = line660.top//yellow
+        //imgBarGreen?.y = line220.top//green
+        //imgBarBase?.y = line220.bottom//base
 
         //視Radio id畫圖
         mChart!!.clear()
@@ -405,9 +405,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
         val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "TVOC")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
-                ContextCompat.getColor(context, R.color.progressBarMidColor),
-                ContextCompat.getColor(context, R.color.progressBarEndColor)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
+                ContextCompat.getColor(context, R.color.Main_textResult_Orange),
+                ContextCompat.getColor(context, R.color.Main_textResult_Bad),
+                ContextCompat.getColor(context, R.color.Main_textResult_Purple),
+                ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
@@ -455,7 +458,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
 
-        leftAxis.setAxisMaxValue(65535f) // the axis maximum is 100
+        leftAxis.setAxisMaxValue(1500f) // the axis maximum is 1500
         leftAxis.setAxisMinValue(0f) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
@@ -463,8 +466,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
-        nums.add(220f)
-        nums.add(660f)
+        nums.add(500f)
+        nums.add(1000f)
 
         mChart!!.legend.isEnabled = false
         mChart!!.yChartInterval=nums
@@ -610,9 +613,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
-                ContextCompat.getColor(context, R.color.progressBarMidColor),
-                ContextCompat.getColor(context, R.color.progressBarEndColor)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
+                ContextCompat.getColor(context, R.color.Main_textResult_Orange),
+                ContextCompat.getColor(context, R.color.Main_textResult_Bad),
+                ContextCompat.getColor(context, R.color.Main_textResult_Purple),
+                ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
@@ -842,9 +848,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         // mDataCount
         val chartData = ArrayList<BarEntry>()
        // for (i in 1 until mDataCount) {
-            chartData.add(BarEntry((220).toFloat(), 1))
-            chartData.add(BarEntry((660).toFloat(), 2))
-            chartData.add(BarEntry((65535).toFloat(), 3))
+            chartData.add(BarEntry((500).toFloat(), 1))
+            chartData.add(BarEntry((1000).toFloat(), 2))
+            chartData.add(BarEntry((20000).toFloat(), 3))
        // }
         return chartData
     }

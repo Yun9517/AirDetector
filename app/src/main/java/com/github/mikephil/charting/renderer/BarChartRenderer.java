@@ -199,7 +199,7 @@ public class BarChartRenderer extends DataRenderer {
             myDistance.add(a-temp);
             temp=a;
         }*/
-       top= countTop(top);
+      // top= countTop(top);
        /*
         if (top <=valueLowLimite) {
         //    top *= 65535/3/220;//65535/3=21845  21845/220=99.29

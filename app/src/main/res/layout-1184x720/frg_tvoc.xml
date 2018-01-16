@@ -214,64 +214,64 @@
                     android:layout_alignTop="@+id/imgBarRed"
                     android:text="(ppb)" />
 
-                <TextView
-                    android:id="@+id/tvChartTitleMiddle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
-                    android:text="660" />
+                         <TextView
+                             android:id="@+id/tvChartTitleMiddle"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_alignParentBottom="false"
+                             android:layout_alignParentStart="true"
+                             android:text="1000" />
 
-                <TextView
-                    android:id="@+id/tvChartTitleBottom"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
-                    android:text="220" />
+                         <TextView
+                             android:id="@+id/tvChartTitleBottom"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:layout_alignParentBottom="false"
+                             android:layout_alignParentStart="true"
+                             android:text="500" />
+                <!--
+                                  <ImageView
+                                              android:id="@+id/imgBarRed"
+                                              android:layout_width="10dp"
+                                              android:layout_height="match_parent"
+                                              android:layout_alignParentEnd="true"
+                                              android:layout_marginTop="15dp"
+                                              android:src="@color/progressBarEndColor" />
 
-                <ImageView
-                    android:id="@+id/imgBarRed"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="15dp"
-                    android:src="@color/progressBarEndColor" />
+                                          <ImageView
+                                              android:id="@+id/imgBarYellow"
+                                              android:layout_width="10dp"
+                                              android:layout_height="match_parent"
+                                              android:layout_alignParentEnd="true"
+                                              android:src="@color/progressBarMidColor" />
 
-                <ImageView
-                    android:id="@+id/imgBarYellow"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:src="@color/progressBarMidColor" />
+                                          <ImageView
+                                              android:id="@+id/imgBarGreen"
+                                              android:layout_width="10dp"
+                                              android:layout_height="match_parent"
+                                              android:layout_alignParentEnd="true"
+                                              android:src="@color/progressBarStartColor" />
+                          -->
+               </RelativeLayout>
 
-                <ImageView
-                    android:id="@+id/imgBarGreen"
-                    android:layout_width="10dp"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentEnd="true"
-                    android:src="@color/progressBarStartColor" />
+               <ImageView
+                   android:id="@+id/imgBarBase"
+                   android:layout_width="10dp"
+                   android:layout_height="15dp"
+                   android:layout_alignParentBottom="true"
+                   android:layout_alignParentEnd="true"
+                   android:layout_weight="1"
+                   android:src="@android:color/white"
+                   android:visibility="invisible" />
 
-            </RelativeLayout>
+           </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/imgBarBase"
-                android:layout_width="10dp"
-                android:layout_height="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_weight="1"
-                android:src="@android:color/white"
-                android:visibility="invisible" />
+           <com.microjet.airqi2.CustomAPI.FixBarChart
+               android:id="@+id/chart_line"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent">
 
-        </RelativeLayout>
+           </com.microjet.airqi2.CustomAPI.FixBarChart>
+       </LinearLayout>
 
-        <com.microjet.airqi2.CustomAPI.FixBarChart
-            android:id="@+id/chart_line"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </com.microjet.airqi2.CustomAPI.FixBarChart>
-    </LinearLayout>
-
-</LinearLayout>
+   </LinearLayout>
