@@ -355,11 +355,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
             mImageViewDataUpdate?.isEnabled = true
             if (animationCount > 1440) {
-                stopUpdateDataAnimation()
+                downloadingData = false
+                //stopUpdateDataAnimation()
                 setProgressBarZero()
             }
         } else {
-            stopUpdateDataAnimation()
+            downloadingData = false
+            //stopUpdateDataAnimation()
             setProgressBarZero()
             mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
             mImageViewDataUpdate?.isEnabled = false
@@ -763,7 +765,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
                     if (totalData.toInt() != 0) {
                         setProgressBarMax(totalData.toInt())
-                        startUpdateDataAnimation()
+                        //startUpdateDataAnimation()
+                        animationCount = 0
+                        downloadingData = true
                     }
                     Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
                 }
@@ -772,7 +776,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgressBarNow(nowData.toInt())
                     if(nowData.toInt() == mProgressBar?.max) {
-                        stopUpdateDataAnimation()
+                        downloadingData = false
+                        //stopUpdateDataAnimation()
                         downloadComplete = true
                         //mRadioGroup?.check(R.id.radioButton_Hour)
                         drawChart(spinnerPositon)

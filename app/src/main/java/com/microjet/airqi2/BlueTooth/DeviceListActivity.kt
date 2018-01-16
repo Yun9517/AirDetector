@@ -184,8 +184,11 @@ class DeviceListActivity : Activity() {
         super.onResume()
 
         if (!mBluetoothAdapter!!.isEnabled) {
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, RQS_ENABLE_BLUETOOTH)
+            //val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            //startActivityForResult(enableBtIntent, RQS_ENABLE_BLUETOOTH)
+            val intentOpenBluetoothSettings = Intent()
+            intentOpenBluetoothSettings.action = android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
+            startActivity(intentOpenBluetoothSettings)
         } else {
             scanLeDevice(true)
         }

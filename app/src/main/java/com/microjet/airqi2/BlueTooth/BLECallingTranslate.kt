@@ -375,7 +375,7 @@ object CallingTranslate {
                     value = value + (bytes[i] and 0xFF.toByte())
                     if (j == 1) {//Temperature
                         value = -45 + 175 * value / 65535
-                        value -= 6
+                        //value -= 6
                         ReturnValue.add(Integer.toString(value))
                         value = 0
                     } else if (j >= 3 && j % 2 == 1) {
@@ -424,7 +424,7 @@ object CallingTranslate {
                         3//Temp
                         -> {
                             value = -45 + 175 * value / 65535
-                            value -= 6
+                            //value -= 6
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
@@ -633,7 +633,7 @@ object CallingTranslate {
                     when (j) {
                         1-> {//Temperature
                             value = -45 + 175 * value / 65535
-                            value -= 6
+                            //value -= 6
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                             stringHex = ""
@@ -693,7 +693,7 @@ object CallingTranslate {
                     when (j) {
                         1-> {//Temperature
                             value = -45 + 175 * value / 65535
-                            value -= 6
+                            //value -= 6
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                             stringHex = ""
