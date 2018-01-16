@@ -41,8 +41,8 @@ class MainFragment : Fragment() {
     enum class DetectionData(val range1: Long,val range2: Long) {
         TVOC(220,660),
         CO2(800,1500),
-        Temp(18,25),
-        Humi(45,65)
+        Temp(33,65),
+        Humi(33,65)
     }
 
     private var mContext : Context? = null
@@ -202,10 +202,10 @@ class MainFragment : Fragment() {
                 bar1?.setMaxValues(2000f)
             }
             DetectionData.Temp ->{
-                bar1?.setMaxValues(3000f)
+                bar1?.setMaxValues(100f)
             }
             DetectionData.Humi ->{
-                bar1?.setMaxValues(4000f)
+                bar1?.setMaxValues(100f)
             }
         }
     }
