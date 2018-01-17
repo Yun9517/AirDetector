@@ -41,11 +41,13 @@ import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import com.microjet.airqi2.AsmDataModel;
@@ -992,7 +994,7 @@ public class UartService extends Service {
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
-                        if (maxCreatedTime == null) { maxCreatedTime = 0000000000000; }
+                        if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                         if (maxCreatedTime != null) {
                             //Long lastRowSaveTime = realm.where(AsmDataModel.class).equalTo("Created_time", maxCreatedTime.longValue())
                             //.findAll().first().getCreated_time().longValue();
@@ -1014,6 +1016,9 @@ public class UartService extends Service {
                         mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(countForItem));
                         sendBroadcast(mainIntent);
 
+                    } else if (getMaxItems() == 0) {
+                        timeSetNowToThirty();
+                        downloadComplete = true;
                     }
                     //   setCorrectTime(Integer.parseInt(RString.get(j)));
                     break;
@@ -1113,6 +1118,7 @@ public class UartService extends Service {
                                 nextID = num.intValue() + 1;
                             }
                             Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
+                            if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                             Log.d("0xB6DBLastTime",new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
                             realm.executeTransaction(r -> {
