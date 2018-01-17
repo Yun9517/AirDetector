@@ -34,6 +34,7 @@
     <color name="Main_textResult_Bad">#FA3C3C</color> <!-- 主頁圓圈內 測量結果 "差" 用色 -->
     <color name="Main_textResult_Purple">#B464EE</color>
     <color name="Main_textResult_Unhealthy">#762A2A</color> <!-- 主頁圓圈內 測量結果 "極差" 用色 -->
+    <color name="Test_Unhealthy">#F50057</color>
 
     <!-- 直方圖點選後變色 -->
     <color name="selected_Green">#207220</color>
