@@ -93,7 +93,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.mipmap.ic_launcher);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_02);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -104,6 +104,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
                 //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 .setColor(Color.RED)
                 .setColorized(true)

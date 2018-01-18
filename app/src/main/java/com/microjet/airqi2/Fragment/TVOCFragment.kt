@@ -105,6 +105,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     var counter = 0
     var TVOCAVG = 0
 
+    //Andy
+    private val arrayAvgData = ArrayList<String>()
+
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -268,6 +271,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.data?.setDrawValues(false)
                     mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
+                   Log.e("一週資料:",arrTvoc3.toString())
+                Log.e("一週時數:",arrTime3.toString())
+                getToAndYesterdayAvgData()
+                Log.e("兩天資料:",arrTvoc3.toString())
+                Log.e("兩天時數:",arrTime3.toString())
+                //Log.e("一週資料:",data)
             }
             2 -> {
                     getRealmMonth()
@@ -563,7 +572,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add(sqlStartDate.toString())
-                Log.d("getRealmWeek", result1.last().toString())
+                Log.e("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate.toString()))
@@ -923,6 +932,48 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         arrTvoc3.reverse()
         arrTime3.reverse()
 
+    }
+
+    private fun getToAndYesterdayAvgData(){
+        arrTime3.clear()
+        arrTvoc3.clear()
+        //拿到現在是星期幾的Int
+        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = calObject.timeInMillis
+        //今天的0點為起點
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        //前一天的０點起
+        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((1).toLong())
+        Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+        for (y in 0..1) {
+            //第一筆為日 00:00
+            val sqlStartDate = sqlWeekBase+TimeUnit.DAYS.toMillis((y.toLong()))
+            //結束點為日 23:59
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(y.toLong()+1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            Log.d("getRealmWeek", sqlStartDate.toString())
+            Log.d("getRealmWeek", sqlEndDate.toString())
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmWeek", result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                for (i in result1) {
+                    sumTvoc += i.tvocValue.toInt()
+                }
+                val aveTvoc = (sumTvoc / result1.size)
+                arrTvoc3.add(aveTvoc.toString())
+                //依序加入時間
+                arrTime3.add(sqlStartDate.toString())
+                Log.e("值:"+arrTvoc3[y] , result1.size.toString())
+                Log.e("getRealmWeek", result1.last().toString())
+            } else {
+                arrTvoc3.add("0")
+                arrTime3.add((sqlStartDate.toString()))
+            }
+        }
     }
 }
 
