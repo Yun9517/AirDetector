@@ -2,39 +2,24 @@ package com.microjet.airqi2.Fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.Service
 import android.content.*
-import android.media.MediaPlayer
 import android.os.Bundle
-import android.os.Vibrator
 import android.support.v4.app.Fragment
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.frg_main.*
 import com.microjet.airqi2.CustomAPI.ColorArcProgressBar
 import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.R
 import java.text.SimpleDateFormat
 import java.util.*
-import android.media.AudioManager
-import android.media.SoundPool
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
-import android.util.Log
-
-
-
-
-/**
- * Created by ray650128 on 2017/11/23.
- */
-
 
 class MainFragment : Fragment() {
 
@@ -47,11 +32,11 @@ class MainFragment : Fragment() {
 
     private var mContext : Context? = null
     private var bar1 : ColorArcProgressBar? = null
-    private var tvThreadHold1:TextView?=null
-    private var tvThreadHold2:TextView?=null
-    private var tvInCycleTitle:TextView?=null
-    private var tvInCycleValue:TextView?=null
-    private var tvInCycleState:TextView?=null
+    private var tvThreadHold1:TextView? = null
+    private var tvThreadHold2:TextView? = null
+    private var tvInCycleTitle:TextView? = null
+    private var tvInCycleValue:TextView? = null
+    private var tvInCycleState:TextView? = null
     private var tvNotify:TextView?=null
 
     private var tvBtmTVOCValue:TextView?=null
@@ -73,24 +58,7 @@ class MainFragment : Fragment() {
     private var mConnState = false
 
 
-    @Suppress("OverridingDeprecatedMember")
-
-    //20171219   Andy
-//    private var mp = MediaPlayer()
-    private var mVibrator: Vibrator? = null
-
-    //20171220   Andy
-    private var alertId: Int = 0
-    private var soundPool: SoundPool? = null
-
-//    private var sourceid: Int = 0
-//    private var spool: SoundPool? = null
-
-    private var countsound660:Int?=0
-    private var countsound220:Int?=0
-    private var countsound800:Int?=0
-    private var countsound1500:Int?=0
-
+    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         mContext = this.context.applicationContext
@@ -98,29 +66,32 @@ class MainFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(MyBroadcastReceiver, makeMainFragmentUpdateIntentFilter())
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(myBroadcastReceiver,
+                makeMainFragmentUpdateIntentFilter())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View?{
+    override fun onCreateView(inflater: LayoutInflater?,
+                              container: ViewGroup?,
+                              savedInstanceState: Bundle?): View?{
         return inflater!!.inflate(R.layout.frg_main, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
         bar1 = this.view!!.findViewById(R.id.tvocBar)
-        tvThreadHold1=this.view!!.findViewById(R.id.tvRange1)
-        tvThreadHold2=this.view!!.findViewById(R.id.tvRange2)
-        tvInCycleTitle=this.view!!.findViewById(R.id.inCycleTitle)
-        tvInCycleValue= this.view!!.findViewById(R.id.inCycleValue)
-        tvInCycleState= this.view!!.findViewById(R.id.inCycleState)
+        tvThreadHold1 = this.view!!.findViewById(R.id.tvRange1)
+        tvThreadHold2 = this.view!!.findViewById(R.id.tvRange2)
+        tvInCycleTitle = this.view!!.findViewById(R.id.inCycleTitle)
+        tvInCycleValue = this.view!!.findViewById(R.id.inCycleValue)
+        tvInCycleState = this.view!!.findViewById(R.id.inCycleState)
         tvNotify = this.view!!.findViewById(R.id.tvNotify)
-        tvLastDetecteTime=this.view!!.findViewById(R.id.tvLastDetectTime)
+        tvLastDetecteTime = this.view!!.findViewById(R.id.tvLastDetectTime)
 
-        tvBtmTVOCValue =this.view!!.findViewById(R.id.tvBtmTVOCValue)
-        tvBtmPmValue=this.view!!.findViewById(R.id.tvBtmPMValue)
-        tvBtmCarbonValue =this.view!!.findViewById(R.id.tvBtmCarbonValue)
-        tvBtmTempValue =this.view!!.findViewById(R.id.tvBtmTEMPValue)
-        tvBtmHUMIValue=this.view!!.findViewById(R.id.tvBtmHUMIValue)
+        tvBtmTVOCValue = this.view!!.findViewById(R.id.tvBtmTVOCValue)
+        tvBtmPmValue = this.view!!.findViewById(R.id.tvBtmPMValue)
+        tvBtmCarbonValue = this.view!!.findViewById(R.id.tvBtmCarbonValue)
+        tvBtmTempValue = this.view!!.findViewById(R.id.tvBtmTEMPValue)
+        tvBtmHUMIValue = this.view!!.findViewById(R.id.tvBtmHUMIValue)
 
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
@@ -139,18 +110,6 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.Humi
             checkUIState()
         }
-
-
-        //20171219   Andy
-        //mp = MediaPlayer.create (mContext, R.raw.pixiedust)
-        // 初始化震动通知
-        if (isInitVibratorNotify()) {
-            mVibrator = mContext!!.getSystemService(Service.VIBRATOR_SERVICE) as Vibrator?
-        }
-
-
-        //20171220   Andy
-        soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 1)
     }
 
     override fun onStart() {
@@ -176,7 +135,7 @@ class MainFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(MyBroadcastReceiver)
+            LocalBroadcastManager.getInstance(mContext!!).unregisterReceiver(myBroadcastReceiver)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -186,12 +145,12 @@ class MainFragment : Fragment() {
         super.onDetach()
     }
 
-    private fun SetThresholdValue(dataForState: DetectionData){
+    private fun setThresholdValue(dataForState: DetectionData){
         tvThreadHold1!!.text= dataForState.range1.toString()
         tvThreadHold2!!.text= dataForState.range2.toString()
     }
 
-    private fun SetbarMaxValue(state: DetectionData){
+    private fun setBarMaxValue(state: DetectionData){
         bar1?.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
         when (state){
 
@@ -210,208 +169,183 @@ class MainFragment : Fragment() {
         }
     }
 
-
-    fun setBtmCurrentValue(){
+    @SuppressLint("SetTextI18n")
+    private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
-        tvBtmTVOCValue?.text=tvocDataFloat.toInt().toString() + " ppb"
-        tvBtmPMValue?.text="Coming soon"
-        tvBtmCarbonValue?.text= "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue?.text=tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
-        tvBtmHUMIValue?.text=humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
+        tvBtmTVOCValue?.text = tvocDataFloat.toInt().toString() + " ppb"
+        tvBtmPMValue?.text = "Coming soon"
+        tvBtmCarbonValue?.text = "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
+        tvBtmTEMPValue?.text = tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
+        tvBtmHUMIValue?.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
 
      @SuppressLint("SetTextI18n")
-
-     private fun TVOCStatusTextShow(currentValue:Float){
-        if (currentValue <= 220){
-            tvNotify?.text = getString(R.string.text_message_air_good)
-            tvInCycleState?.text = getString(R.string.text_label_status_good)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-            //20171226  Andy
-            if(countsound220!=0||countsound660!=0) {
-                countsound220=0
-                countsound660=0
-                Log.e("歸零TVOC220計數變數:", countsound220.toString())
-                Log.e("歸零TVOC660計數變數:", countsound660.toString())
+     private fun tvocStatusTextShow(currentValue: Float) {
+        when(currentValue) {
+            in 0..219 -> {
+                tvNotify?.text = getString(R.string.text_message_air_good)
+                tvInCycleState?.text = getString(R.string.text_label_status_good)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+            }
+            in 220..659 -> {
+                tvNotify?.text = getString(R.string.text_message_air_mid)
+                tvInCycleState?.text = getString(R.string.text_label_status_mid)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+            }
+            in 660..2199 -> {
+                tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
+                tvInCycleState?.text = getString(R.string.text_label_status_medium_Orange)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+            }
+            in 2200..5499 -> {
+                tvNotify?.text = getString(R.string.text_message_air_bad)
+                tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+            }
+            in 5500..19999 -> {
+                tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
+                tvInCycleState?.text = getString(R.string.text_label_status_Serious_Purple)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
+                tvInCycleState?.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
             }
         }
-        else if (currentValue > 220 && currentValue <= 660) {
-            countsound220=0
-            Log.e("更新TVOC220計數變數:",countsound220.toString())
-            tvNotify?.text = getString(R.string.text_message_air_mid)
-            tvInCycleState?.text = getString(R.string.text_label_status_mid)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-        }
-        else if (currentValue > 660 && currentValue <= 2200) {
-            countsound220=0
-            Log.e("更新TVOC220計數變數:",countsound220.toString())
-            tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
-            tvInCycleState?.text = getString(R.string.text_label_status_medium_Orange)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Orange))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Orange))
-        }
-        else if (currentValue > 2200 && currentValue <= 5500) {
-            countsound220=0
-            Log.e("更新TVOC220計數變數:",countsound220.toString())
-            tvNotify?.text = getString(R.string.text_message_air_bad)
-            tvInCycleState?.text = getString(R.string.text_label_status_bad)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-        }
-        else if (currentValue > 5500 && currentValue <= 20000) {
-            countsound220=0
-            Log.e("更新TVOC220計數變數:",countsound220.toString())
-            tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
-            tvInCycleState?.text = getString(R.string.text_label_status_Serious_Purple)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Purple))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Purple))
-        }
-        else{
-            //20171226  Andy
-            countsound660=0
-            Log.e("更新TVOC660計數變數:",countsound660.toString())
-            tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
-            tvInCycleState?.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Test_Unhealthy))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Test_Unhealthy))
+    }
+
+    private fun eco2StatusTextShow(currentValue:Float){
+        when(currentValue) {
+            in 0..699 -> {
+                //tvNotify?.text = getString(R.string.text_message_air_good)
+                //tvInCycleState?.text = getString(R.string.text_label_status_good)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+            }
+            in 700..999 -> {
+                //tvNotify?.text = getString(R.string.text_message_air_bad)
+                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+            }
+            in 1000..1499 -> {
+                //tvNotify?.text = getString(R.string.text_message_air_bad)
+                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+            }
+            in 1500..2499 -> {
+                //tvNotify?.text = getString(R.string.text_message_air_bad)
+                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+            }
+            in 2500..4999 -> {
+                //tvNotify?.text = getString(R.string.text_message_air_bad)
+                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+            }
+            else -> {
+                //tvNotify?.text = getString(R.string.text_message_air_mid)
+                //tvInCycleState?.text = getString(R.string.text_label_status_mid)
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+            }
         }
     }
 
     private fun tempStatusTextShow(currentValue:Float){
-        if (currentValue < 18){
-            tvNotify?.text = getString(R.string.text_message_temperature)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
-        }
-        else if (currentValue > 25){
-            tvNotify?.text = getString(R.string.text_message_temperature)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarEndColor))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarEndColor))
-        }
-        else{
-            tvNotify?.text = getString(R.string.text_message_temperature)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarStartColor))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarStartColor))
+        when(currentValue) {
+            in 0..18 -> {
+                tvNotify?.text = getString(R.string.text_message_temperature)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+            }
+            in 19..27 -> {
+                tvNotify?.text = getString(R.string.text_message_temperature)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMidColor))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMidColor))
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.text_message_temperature)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+            }
         }
     }
 
     private fun humiStatusTextShow(currentValue:Float){
-        if (currentValue < 45){
-            tvNotify?.text = getString(R.string.text_message_humidity)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMidColor))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMidColor))
-        }
-        else if (currentValue >65){
-            tvNotify?.text = getString(R.string.text_message_humidity)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarMiddleBlue))
-        }
-        else{
-            tvNotify?.text = getString(R.string.text_message_humidity)
-            tvInCycleState?.text = " "
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.progressBarStartColor))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.progressBarStartColor))
-        }
-    }
-
-    private fun CO2tatusTextShow(currentValue:Float){
-        if (currentValue < 800){
-            //tvNotify?.text = getString(R.string.text_message_air_good)
-            //tvInCycleState?.text = getString(R.string.text_label_status_good)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Good))
-        }
-        else if (currentValue > 1500) {
-            //tvNotify?.text = getString(R.string.text_message_air_bad)
-            //tvInCycleState?.text = getString(R.string.text_label_status_bad)
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Bad))
-            var mPreference: SharedPreferences = this.activity.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
-
-                if ((countsound1500 == 5 || countsound1500 == 0)) {
-                    //20171220   Andy
-                    try {
-                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over660, 1)
-                        Thread.sleep(500)
-                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
-                        //20171219   Andy
-                        //mp.start()
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
-                }
+        when(currentValue) {
+            in 0..40 -> {
+                tvNotify?.text = getString(R.string.text_message_humidity)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
-
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if ((countsound1500 == 5|| countsound1500 == 0)) {
-                    if (mVibrator == null) {
-                    } else {
-                        // 震动 1s
-                        mVibrator!!.vibrate(2000)
-                    }
-                }
+            in 41..60 -> {
+                tvNotify?.text = getString(R.string.text_message_humidity)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarStartColor))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarStartColor))
             }
+            else -> {
 
-            if (countsound1500 == 5) {
-                countsound1500 = 0
+                tvNotify?.text = getString(R.string.text_message_humidity)
+                tvInCycleState?.text = " "
+                tvInCycleValue?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                tvInCycleState?.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
             }
-            countsound1500 = countsound1500!! + 1
-        }
-        else{
-            tvNotify?.text = getString(R.string.text_message_air_mid)
-            tvInCycleState?.text = getString(R.string.text_label_status_mid)
-
-            tvInCycleValue?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-            tvInCycleState?.setTextColor(resources.getColor(R.color.Main_textResult_Moderate))
-
-            var mPreference: SharedPreferences= this.activity.getSharedPreferences(SavePreferences.SETTING_KEY,0)
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false))//&&(countsound220==5||countsound220==0))
-            {
-                if ((countsound800 == 5 || countsound800 == 0)) {
-                    //20171219   Andy
-                    //mp.start()
-                    //20171220   Andy
-                    try {
-                        alertId = soundPool!!.load(mContext, R.raw.tvoc_over220, 1)
-                        Thread.sleep(500)
-                        soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
-                    } catch (e: InterruptedException) {
-                        e.printStackTrace()
-                    }
-
-                }
-            }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if ((countsound800 == 5|| countsound800 == 0)) {
-                    if (mVibrator == null) {
-                    } else {
-                        // 震动 1s
-                        mVibrator!!.vibrate(1000)
-                    }
-                }
-
-            }
-
-            if (countsound800 == 5) {
-                countsound800 = 0
-            }
-            countsound800 = countsound220!! + 1
-
         }
     }
-    protected fun isInitVibratorNotify(): Boolean {
+
+    private fun isInitVibratorNotify(): Boolean {
         return true
     }
 
@@ -423,51 +357,52 @@ class MainFragment : Fragment() {
         return intentFilter
     }
 
+    @SuppressLint("SimpleDateFormat")
     @Synchronized private fun checkUIState() {
         if (mConnState && preHeat == "255") {
-            //SetThresholdValue(dataForState)
-            //SetbarMaxValue(dataForState)
+            //setThresholdValue(dataForState)
+            //setBarMaxValue(dataForState)
             when (dataForState) {
                 DetectionData.TVOC -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
-                    SetThresholdValue(dataForState)
-                    SetbarMaxValue(dataForState)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
                     bar1?.setTvocColor()
                     bar1?.setCurrentValues(tvocDataFloat)
-                    TVOCStatusTextShow(tvocDataFloat)
+                    tvocStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
-                    textSpannble(temp)
+                    textSpannable(temp)
                 }
                 DetectionData.CO2 -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_co2)
-                    SetThresholdValue(dataForState)
-                    SetbarMaxValue(dataForState)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
                     bar1?.setTvocCo2Color()
                     bar1?.setCurrentValues(co2DataFloat)
-                    CO2tatusTextShow(co2DataFloat)
+                    eco2StatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
-                    textSpannble(temp)
+                    textSpannable(temp)
                 }
                 DetectionData.Temp -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
-                    SetThresholdValue(dataForState)
-                    SetbarMaxValue(dataForState)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
                     bar1?.setTemperaterColor()
                     bar1?.setCurrentValues(tempDataFloat)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
-                    textSpannble(temp)
+                    textSpannable(temp)
                 }
 
                 DetectionData.Humi -> {
                     tvInCycleTitle!!.text = getString(R.string.text_label_humidity)
-                    SetThresholdValue(dataForState)
-                    SetbarMaxValue(dataForState)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
                     bar1?.setHumidityColor()
                     bar1?.setCurrentValues(humiDataFloat)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "
-                    textSpannble(temp)
+                    textSpannable(temp)
                 }
             }
 
@@ -490,18 +425,15 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun textSpannble (temp : String) {
-        val textSpan= SpannableStringBuilder(temp)
+    private fun textSpannable(temp : String) {
+        val textSpan = SpannableStringBuilder(temp)
         textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         tvInCycleValue!!.text = textSpan
     }
 
-
-
-
-    private val MyBroadcastReceiver = object: BroadcastReceiver() {
+    private val myBroadcastReceiver = object: BroadcastReceiver() {
         @SuppressLint("SimpleDateFormat", "SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
