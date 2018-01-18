@@ -51,7 +51,7 @@ class ColorArcProgressBar : View {
     private var rotateMatrix: Matrix? = null
 
     private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)
-    private var range= floatArrayOf(30f,70f)
+    private var range = floatArrayOf(30f, 70f)
     private var mTouchInvalidateRadius: Float = 0.toFloat()//触摸失效半径,控件外层都可触摸,当触摸区域小于这个值的时候触摸失效
 
     private val startAngle = 135f//开始角度(0°与控件X轴平行)
@@ -122,7 +122,7 @@ class ColorArcProgressBar : View {
         initView()
     }
 
-    fun setTvocColor(){
+    fun setTvocColor() {
         bgArcColor = resources.getColor(R.color.progressBarStartColor)
         longDegreeColor = resources.getColor(R.color.progressBarMidColor)
         shortDegreeColor = resources.getColor(R.color.progressBarEndColor)
@@ -130,21 +130,27 @@ class ColorArcProgressBar : View {
         sweepGradient = SweepGradient(centerX, centerY, colors, null)
     }
 
-    fun setHumidityColor(){
+    fun setHumidityColor() {
         bgArcColor = resources.getColor(R.color.progressBarMidColor)
         longDegreeColor = resources.getColor(R.color.progressBarStartColor)
         shortDegreeColor = resources.getColor(R.color.progressBarLittleBlue)
         colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
         sweepGradient = SweepGradient(centerX, centerY, colors, null)
     }
-    fun setTvocCo2Color(){
 
-    //    val color1 = a.getColor(R.styleable.ColorArcProgressBar_front_color1, Color.GREEN)
-    //    val color2 = a.getColor(R.styleable.ColorArcProgressBar_front_color2, color1)
-    //   val color3 = a.getColor(R.styleable.ColorArcProgressBar_front_color3, color1)
-    //    colors = intArrayOf(color1, color2, color3, color3)
+    fun setTvocCo2Color() {
+        val color1 = resources.getColor(R.color.Main_textResult_Good)
+        val color2 = resources.getColor(R.color.Main_textResult_Moderate)
+        val color3 = resources.getColor(R.color.Main_textResult_Orange)
+        val color4 = resources.getColor(R.color.Main_textResult_Bad)
+        val color5 = resources.getColor(R.color.Main_textResult_Purple)
+        val color6 = resources.getColor(R.color.Main_textResult_Unhealthy)
+        colors = intArrayOf(color1, color2, color3, color4, color5, color6)
+        val angle = floatArrayOf(0f, 0.275f, 0.575f, 0.65f, 0.70f, 0.75f)
+        sweepGradient = SweepGradient(centerX, centerY, colors, angle)
     }
-    fun setTemperaterColor(){
+
+    fun setTemperaterColor() {
 
         bgArcColor = resources.getColor(R.color.progressBarLittleBlue)
         longDegreeColor = resources.getColor(R.color.progressBarStartColor)
@@ -163,8 +169,8 @@ class ColorArcProgressBar : View {
         val color1 = a.getColor(R.styleable.ColorArcProgressBar_front_color1, Color.GREEN)
         val color2 = a.getColor(R.styleable.ColorArcProgressBar_front_color2, color1)
         val color3 = a.getColor(R.styleable.ColorArcProgressBar_front_color3, color1)
-        var threadhold1=30f
-        var threadhold2=70f
+        val threadhold1 = 30f
+        val threadhold2 = 70f
         bgArcColor = a.getColor(R.styleable.ColorArcProgressBar_bg_arc_color, -0xeeeeef)
         longDegreeColor = a.getColor(R.styleable.ColorArcProgressBar_degree_color, -0xeeeeef)
         shortDegreeColor = a.getColor(R.styleable.ColorArcProgressBar_degree_color, -0xeeeeef)
@@ -329,7 +335,12 @@ class ColorArcProgressBar : View {
         canvas.drawArc(bgRect!!, startAngle, sweepAngle, false, allArcPaint!!)
 
         //设置渐变色
-        rotateMatrix!!.setRotate(130f, centerX, centerY)
+        if(colors.size > 3) {
+            rotateMatrix!!.setRotate(130f, centerX, centerY)
+        } else {
+            rotateMatrix!!.setRotate(130f, centerX, centerY)
+        }
+
         sweepGradient!!.setLocalMatrix(rotateMatrix)
         progressPaint!!.shader = sweepGradient
 
