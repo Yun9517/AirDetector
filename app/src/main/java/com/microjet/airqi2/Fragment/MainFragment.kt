@@ -25,27 +25,21 @@ class MainFragment : Fragment() {
 
     enum class DetectionData(val range1: Long,val range2: Long) {
         TVOC(220,660),
-        CO2(800,1500),
-        Temp(33,65),
-        Humi(33,65)
+        CO2(700,1000),
+        Temp(18,27),
+        Humi(40,60)
     }
 
-    private var mContext : Context? = null
-    private var bar1 : ColorArcProgressBar? = null
-    private var tvThreadHold1:TextView? = null
-    private var tvThreadHold2:TextView? = null
-    private var tvInCycleTitle:TextView? = null
-    private var tvInCycleValue:TextView? = null
-    private var tvInCycleState:TextView? = null
-    private var tvNotify:TextView?=null
+    private var mContext: Context? = null
+    private var bar1: ColorArcProgressBar? = null
+    private var tvThreadHold1: TextView? = null
+    private var tvThreadHold2: TextView? = null
+    private var tvInCycleTitle: TextView? = null
+    private var tvInCycleValue: TextView? = null
+    private var tvInCycleState: TextView? = null
+    private var tvNotify: TextView? = null
 
-    private var tvBtmTVOCValue:TextView?=null
-    private var tvBtmPmValue:TextView?=null
-    private var tvBtmCarbonValue:TextView?=null
-    private var tvBtmTempValue:TextView?=null
-    private var tvBtmHUMIValue:TextView?=null
-
-    private var tvLastDetecteTime:TextView?=null
+    private var tvLastDetecteTime:TextView? = null
     //private var pressed="TVOC"//0=temperature 1=humidity 2=TVOC 3=CO2
 
     private var tvocDataFloat = 0f
@@ -81,17 +75,11 @@ class MainFragment : Fragment() {
         bar1 = this.view!!.findViewById(R.id.tvocBar)
         tvThreadHold1 = this.view!!.findViewById(R.id.tvRange1)
         tvThreadHold2 = this.view!!.findViewById(R.id.tvRange2)
-        tvInCycleTitle = this.view!!.findViewById(R.id.inCycleTitle)
-        tvInCycleValue = this.view!!.findViewById(R.id.inCycleValue)
-        tvInCycleState = this.view!!.findViewById(R.id.inCycleState)
+        tvInCycleTitle = this.view!!.findViewById(R.id.inCircleTitle)
+        tvInCycleValue = this.view!!.findViewById(R.id.inCircleValue)
+        tvInCycleState = this.view!!.findViewById(R.id.inCircleState)
         tvNotify = this.view!!.findViewById(R.id.tvNotify)
         tvLastDetecteTime = this.view!!.findViewById(R.id.tvLastDetectTime)
-
-        tvBtmTVOCValue = this.view!!.findViewById(R.id.tvBtmTVOCValue)
-        tvBtmPmValue = this.view!!.findViewById(R.id.tvBtmPMValue)
-        tvBtmCarbonValue = this.view!!.findViewById(R.id.tvBtmCarbonValue)
-        tvBtmTempValue = this.view!!.findViewById(R.id.tvBtmTEMPValue)
-        tvBtmHUMIValue = this.view!!.findViewById(R.id.tvBtmHUMIValue)
 
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
@@ -172,11 +160,11 @@ class MainFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
-        tvBtmTVOCValue?.text = tvocDataFloat.toInt().toString() + " ppb"
-        tvBtmPMValue?.text = "Coming soon"
-        tvBtmCarbonValue?.text = "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue?.text = tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
-        tvBtmHUMIValue?.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
+        tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
+        tvBtmPM25Value.text = "Coming soon"
+        tvBtmCO2Value.text = "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
+        tvBtmTEMPValue.text = tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
+        tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
 
      @SuppressLint("SetTextI18n")
@@ -367,8 +355,9 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setTvocColor()
-                    bar1?.setCurrentValues(tvocDataFloat)
+                    bar1?.setTvocCo2Color()
+                    //bar1?.setCurrentValues(tvocDataFloat)
+                    bar1?.setCurrentValues(60000f)
                     tvocStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
                     textSpannable(temp)
@@ -414,11 +403,11 @@ class MainFragment : Fragment() {
         } else {
             tvInCycleValue?.text = " "
             tvInCycleState?.text = " "
-            tvBtmTVOCValue?.text= "---"
-            tvBtmPmValue?.text= "---"
-            tvBtmCarbonValue?.text= "---"
-            tvBtmTempValue?.text= "---"/*currentValue[0] + " ℃"*/
-            tvBtmHUMIValue?.text= "---"/*currentValue[1] + " %"*/
+            tvBtmTVOCValue.text= "---"
+            tvBtmPM25Value.text= "---"
+            tvBtmCO2Value?.text= "---"
+            tvBtmTEMPValue.text= "---"/*currentValue[0] + " ℃"*/
+            tvBtmHUMIValue.text= "---"/*currentValue[1] + " %"*/
             tvNotify?.text = " "
             tvLastDetecteTime?.text = " "
             bar1?.setCurrentValues(0f)
