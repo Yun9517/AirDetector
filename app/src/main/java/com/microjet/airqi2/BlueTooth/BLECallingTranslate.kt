@@ -428,17 +428,27 @@ object CallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        5//
+                        4//Humi
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        7//
+                        6//TVOC
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        9//
+                        8//CO2
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        10//PM25
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        12//RecectDataCheck
                         -> {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
