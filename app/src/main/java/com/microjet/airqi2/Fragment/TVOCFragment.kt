@@ -51,7 +51,7 @@ import kotlin.collections.ArrayList
  * Use the [TVOCFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
+class TVOCFragment : Fragment() {
     private var mContext: Context? = null
 
     private var mDataCount: Int = 60
@@ -123,7 +123,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mRadioGroup = this.view?.findViewById(R.id.frg_radioGroup)
-        mChart = this.view!!.findViewById(R.id.chart_line)
         mProgressBar = this.view!!.findViewById(R.id.chartDataLoading)
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
         mTextViewTimeRange = this.view!!.findViewById(R.id.tvSelectDetectionTime)
@@ -132,6 +131,18 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
+        mChart = this.view!!.findViewById(R.id.chart_line)
+        mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            @SuppressLint("SetTextI18n")
+            override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
+                //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
+                mTextViewValue!!.text = h!!.value.toString() + "ppb"
+            }
+        })
        // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
         //imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         //imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
@@ -226,7 +237,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //mHour!!.isChecked = true
         //radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
-        mChart!!.setOnChartValueSelectedListener(this)
+        //mChart!!.setOnChartValueSelectedListener(this)
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -337,17 +348,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    override fun onNothingSelected() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
-        //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-        mTextViewValue!!.text = h!!.value.toString() + "ppb"
     }
 
     @Synchronized private fun checkUIState() {
