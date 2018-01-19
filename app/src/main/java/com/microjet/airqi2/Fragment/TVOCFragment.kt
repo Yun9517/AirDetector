@@ -961,7 +961,7 @@ class TVOCFragment : Fragment() {
             //第一筆為日 00:00
             val sqlStartDate = sqlWeekBase+TimeUnit.DAYS.toMillis((y.toLong()))
             //結束點為日 23:59
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(y.toLong()+1) - TimeUnit.SECONDS.toMillis(1)
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             Log.d("getRealmWeek", sqlStartDate.toString())
@@ -977,12 +977,12 @@ class TVOCFragment : Fragment() {
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime3.add(sqlStartDate.toString())
+                //arrTime3.add(sqlStartDate.toString())
                 Log.e("值", arrTvoc3[y].toString())
                 Log.e("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate.toString()))
+                //arrTime3.add((sqlStartDate.toString()))
             }
 
         }

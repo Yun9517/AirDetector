@@ -145,7 +145,8 @@ class ECO2Fragment : Fragment() {
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-                mTextViewValue!!.text = h!!.value.toString() + "ppm"
+                //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
+                mTextViewValue!!.text = e?.`val`.toString()+"ppm"
             }
         })
         // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
@@ -275,10 +276,14 @@ class ECO2Fragment : Fragment() {
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
+                var p=Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60*60+Calendar.getInstance().get(Calendar.MINUTE)*60+Calendar.getInstance().get(Calendar.SECOND)
+                var l=p/30
                 mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
 
-
+                var y=mChart!!.data!!.dataSetCount
+                mChart?.highlightValue(l, y-1)
+                //Log.v("Highligh:",l.toString())
 
             }
             1 -> {
@@ -622,7 +627,7 @@ class ECO2Fragment : Fragment() {
 
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "ECO2")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
                 ContextCompat.getColor(context, R.color.Main_textResult_Orange),
@@ -648,8 +653,8 @@ class ECO2Fragment : Fragment() {
                 }
 
                 getCO2ToAndYesterdayAvgData()
-                result_Today!!.text = arrTvoc3[1] + " ppb"        //arrTvoc3[1].toString()+" ppb"
-                result_Yesterday!!.text = arrTvoc3[0] + " ppb"
+                result_Today!!.text = arrTvoc3[1] + " ppm"        //arrTvoc3[1].toString()+" ppb"
+                result_Yesterday!!.text = arrTvoc3[0] + " ppm"
                 Log.e("兩天資料:", arrTvoc3.toString())
                 Log.e("兩天時數:", arrTime3.toString())
             }
@@ -956,7 +961,7 @@ class ECO2Fragment : Fragment() {
             //第一筆為日 00:00
             val sqlStartDate = sqlWeekBase+TimeUnit.DAYS.toMillis((y.toLong()))
             //結束點為日 23:59
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(y.toLong()+1) - TimeUnit.SECONDS.toMillis(1)
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             Log.d("getRealmWeek", sqlStartDate.toString())
@@ -972,7 +977,7 @@ class ECO2Fragment : Fragment() {
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime3.add(sqlStartDate.toString())
+                //arrTime3.add(sqlStartDate.toString())
                 Log.e("值", arrTvoc3[y].toString())
                 Log.e("getRealmWeek", result1.last().toString())
             } else {
