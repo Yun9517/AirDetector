@@ -51,7 +51,7 @@ import kotlin.collections.ArrayList
  * Use the [TVOCFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
+class TVOCFragment : Fragment() {
     private var mContext: Context? = null
 
     private var mDataCount: Int = 60
@@ -128,7 +128,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mRadioGroup = this.view?.findViewById(R.id.frg_radioGroup)
-        mChart = this.view!!.findViewById(R.id.chart_line)
         mProgressBar = this.view!!.findViewById(R.id.chartDataLoading)
         mHour = this.view!!.findViewById(R.id.radioButton_Hour)
         mTextViewTimeRange = this.view!!.findViewById(R.id.tvSelectDetectionTime)
@@ -137,9 +136,21 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
-
         result_Yesterday=this.view?.findViewById(R.id.result_Yesterday)
         result_Today=this.view?.findViewById(R.id.result_Today)
+        mChart = this.view!!.findViewById(R.id.chart_line)
+        mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
+            override fun onNothingSelected() {
+                // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+            @SuppressLint("SetTextI18n")
+            override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
+                //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
+                //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
+                mTextViewValue!!.text = e?.`val`.toString()+"ppb"
+            }
+        })
        // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
         //imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         //imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
@@ -234,7 +245,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         //mHour!!.isChecked = true
         //radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
-        mChart!!.setOnChartValueSelectedListener(this)
+        //mChart!!.setOnChartValueSelectedListener(this)
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -259,36 +270,40 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         setImageBarSize()
         when (position) {
             0 -> {
-                    getRealmDay()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRange(5.0f, 40.0f)
-                    //mChart?.setVisibleXRangeMinimum(20.0f)
-                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                    //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                    //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                getRealmDay()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRange(5.0f, 40.0f)
+                //mChart?.setVisibleXRangeMinimum(20.0f)
+                //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
+                var p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
+                var l = p / 30
+                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                var y = mChart!!.data!!.dataSetCount
+                mChart?.highlightValue(l, y - 1)
 
                 getToAndYesterdayAvgData()
-                result_Today!!.text = arrTvoc3[1]+" ppb"        //arrTvoc3[1].toString()+" ppb"
-                result_Yesterday!!.text= arrTvoc3[0]+" ppb"
-                Log.e("兩天資料:",arrTvoc3.toString())
-                Log.e("兩天時數:",arrTime3.toString())
+                result_Today!!.text = arrTvoc3[1] + " ppb"        //arrTvoc3[1].toString()+" ppb"
+                result_Yesterday!!.text = arrTvoc3[0] + " ppb"
+                Log.e("兩天資料:", arrTvoc3.toString())
+                Log.e("兩天時數:", arrTime3.toString())
             }
             1 -> {
-                    getRealmWeek()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                    mChart?.setVisibleXRange(7.0f, 7.0f)
+                getRealmWeek()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
+                mChart?.setVisibleXRange(7.0f, 7.0f)
             }
             2 -> {
-                    getRealmMonth()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                    mChart?.setVisibleXRange(35.0f, 35.0f)
+                getRealmMonth()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
+                mChart?.setVisibleXRange(35.0f, 35.0f)
 
             }
         }
@@ -351,17 +366,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
-
-    override fun onNothingSelected() {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    @SuppressLint("SetTextI18n")
-    override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
-        //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-        mTextViewValue!!.text = h!!.value.toString() + "ppb"
     }
 
     @Synchronized private fun checkUIState() {
@@ -540,6 +544,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
             result1.forEachIndexed { index, asmDataModel ->
                 var count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
                 arrTvoc3[count] = asmDataModel.tvocValue.toString()
+                //Log.v("hilightCount:", count.toString())
             }
             Log.d("getRealmDay", result1.last().toString())
         }

@@ -49,6 +49,7 @@
 
     <color name="whiteColor">#ffffff</color>.
     <color name="blackColor">#000000</color>
+    <color name="grayColor">#323232</color>
 
     <!-- 半透明背景 規則 前兩碼 = 透明度，後六碼 = 顏色 -->
     <color name="blackTransparentColor">#50000000</color> <!-- 黑色半透明 -->

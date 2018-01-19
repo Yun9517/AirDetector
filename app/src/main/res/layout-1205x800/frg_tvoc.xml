@@ -6,21 +6,10 @@
     android:background="@drawable/background_chart"
     tools:context="com.microjet.airqi2.Fragment.TVOCFragment">
 
-    <ProgressBar
-        android:id="@+id/chartDataLoading"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/data_Loading"
-        android:gravity="center_horizontal|fill_horizontal"
-        android:text="@string/text_default_value"
-        android:textAlignment="center"
-        android:textSize="16sp"
-        android:textStyle="normal" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/whiteColor"
         android:orientation="horizontal">
         <Spinner
             android:id="@+id/sprTVOC"
@@ -134,6 +123,19 @@
             android:textSize="18sp" />
             -->
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/chartDataLoading"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:background="@color/data_Loading"
+        android:gravity="center_horizontal|fill_horizontal"
+        android:text="@string/text_default_value"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="normal" />
+
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -287,7 +289,7 @@
             android:id="@+id/faceBar"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:src="@drawable/tvoc_face_bar" />
+            android:src="@drawable/face_bar_tvoc" />
 
         <LinearLayout
             android:id="@+id/averageExposure"

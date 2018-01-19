@@ -48,6 +48,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
+import com.microjet.airqi2.Fragment.ECO2Fragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.TVOCFragment
 import io.fabric.sdk.android.services.settings.IconRequest.build
@@ -314,9 +315,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // 加入 Fragment 成員
         val mMainFg = MainFragment()
         val mTvocFg = TVOCFragment()
+        val mEco2Fg = ECO2Fragment()
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
+        mFragmentList.add(mEco2Fg)
 
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
