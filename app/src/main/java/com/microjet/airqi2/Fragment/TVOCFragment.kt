@@ -75,6 +75,8 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
     //private var imgBarBase : ImageView? = null
     private var sprTVOC : Spinner? = null
     private var btnCallDatePicker : Button? = null
+    private var result_Yesterday:TextView?=null
+    private var result_Today:TextView?=null
     //UI元件
 
 
@@ -135,6 +137,9 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
+
+        result_Yesterday=this.view?.findViewById(R.id.result_Yesterday)
+        result_Today=this.view?.findViewById(R.id.result_Today)
        // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
         //imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         //imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
@@ -264,6 +269,12 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
                     mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                             + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+
+                getToAndYesterdayAvgData()
+                result_Today!!.text = arrTvoc3[1]+" ppb"        //arrTvoc3[1].toString()+" ppb"
+                result_Yesterday!!.text= arrTvoc3[0]+" ppb"
+                Log.e("兩天資料:",arrTvoc3.toString())
+                Log.e("兩天時數:",arrTime3.toString())
             }
             1 -> {
                     getRealmWeek()
@@ -271,12 +282,6 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                     mChart?.data?.setDrawValues(false)
                     mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                     mChart?.setVisibleXRange(7.0f, 7.0f)
-                   Log.e("一週資料:",arrTvoc3.toString())
-                Log.e("一週時數:",arrTime3.toString())
-                getToAndYesterdayAvgData()
-                Log.e("兩天資料:",arrTvoc3.toString())
-                Log.e("兩天時數:",arrTime3.toString())
-                //Log.e("一週資料:",data)
             }
             2 -> {
                     getRealmMonth()
@@ -934,6 +939,7 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun getToAndYesterdayAvgData(){
         arrTime3.clear()
         arrTvoc3.clear()
@@ -967,12 +973,13 @@ class TVOCFragment : Fragment()  ,OnChartValueSelectedListener {
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add(sqlStartDate.toString())
-                Log.e("值:"+arrTvoc3[y] , result1.size.toString())
+                Log.e("值", arrTvoc3[y].toString())
                 Log.e("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate.toString()))
             }
+
         }
     }
 }
