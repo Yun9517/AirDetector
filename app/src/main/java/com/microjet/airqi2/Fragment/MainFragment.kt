@@ -20,6 +20,7 @@ import java.util.*
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import com.microjet.airqi2.Definition.Colors
 
 class MainFragment : Fragment() {
 
@@ -355,7 +356,8 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setTvocCo2Color()
+                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //bar1?.setTvocCo2Color()
                     //bar1?.setCurrentValues(tvocDataFloat)
                     bar1?.setCurrentValues(60000f)
                     tvocStatusTextShow(tvocDataFloat)
@@ -366,8 +368,10 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_co2)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setTvocCo2Color()
-                    bar1?.setCurrentValues(co2DataFloat)
+                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //bar1?.setTvocCo2Color()
+                    //bar1?.setCurrentValues(co2DataFloat)
+                    bar1?.setCurrentValues(60000f)
                     eco2StatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
                     textSpannable(temp)
@@ -376,8 +380,10 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setTemperaterColor()
-                    bar1?.setCurrentValues(tempDataFloat)
+                    bar1?.setColor(Colors.tempColors, Colors.tempAngles)
+                    //bar1?.setTemperaterColor()
+                    //bar1?.setCurrentValues(tempDataFloat)
+                    bar1?.setCurrentValues(60000f)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
                     textSpannable(temp)
@@ -387,8 +393,10 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_humidity)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setHumidityColor()
-                    bar1?.setCurrentValues(humiDataFloat)
+                    bar1?.setColor(Colors.humiColors, Colors.humiAngles)
+                    //bar1?.setHumidityColor()
+                    //bar1?.setCurrentValues(humiDataFloat)
+                    bar1?.setCurrentValues(60000f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "
                     textSpannable(temp)

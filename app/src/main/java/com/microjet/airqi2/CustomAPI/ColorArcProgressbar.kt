@@ -122,41 +122,8 @@ class ColorArcProgressBar : View {
         initView()
     }
 
-    fun setTvocColor() {
-        bgArcColor = resources.getColor(R.color.progressBarStartColor)
-        longDegreeColor = resources.getColor(R.color.progressBarMidColor)
-        shortDegreeColor = resources.getColor(R.color.progressBarEndColor)
-        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
-        sweepGradient = SweepGradient(centerX, centerY, colors, null)
-    }
-
-    fun setHumidityColor() {
-        bgArcColor = resources.getColor(R.color.progressBarMidColor)
-        longDegreeColor = resources.getColor(R.color.progressBarStartColor)
-        shortDegreeColor = resources.getColor(R.color.progressBarLittleBlue)
-        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
-        sweepGradient = SweepGradient(centerX, centerY, colors, null)
-    }
-
-    fun setTvocCo2Color() {
-        val color1 = resources.getColor(R.color.Main_textResult_Good)
-        val color2 = resources.getColor(R.color.Main_textResult_Moderate)
-        val color3 = resources.getColor(R.color.Main_textResult_Orange)
-        val color4 = resources.getColor(R.color.Main_textResult_Bad)
-        val color5 = resources.getColor(R.color.Main_textResult_Purple)
-        val color6 = resources.getColor(R.color.Main_textResult_Unhealthy)
-        colors = intArrayOf(color1, color2, color3, color4, color5, color6)
-        val angle = floatArrayOf(0f, 0.275f, 0.575f, 0.65f, 0.70f, 0.75f)
-        sweepGradient = SweepGradient(centerX, centerY, colors, angle)
-    }
-
-    fun setTemperaterColor() {
-
-        bgArcColor = resources.getColor(R.color.progressBarLittleBlue)
-        longDegreeColor = resources.getColor(R.color.progressBarStartColor)
-        shortDegreeColor = resources.getColor(R.color.progressBarEndColor)
-        colors = intArrayOf(bgArcColor, longDegreeColor, shortDegreeColor, shortDegreeColor)
-        sweepGradient = SweepGradient(centerX, centerY, colors, null)
+    fun setColor(colors: IntArray, angles: FloatArray) {
+        sweepGradient = SweepGradient(centerX, centerY, colors, angles)
     }
     /**
      * 初始化布局配置
