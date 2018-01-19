@@ -141,7 +141,8 @@ class ECO2Fragment : Fragment() {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
-                mTextViewValue!!.text = e?.`val`.toString()+"ppm"
+                var temp=e?.`val`
+                mTextViewValue!!.text = temp?.toInt().toString()+" ppm"
             }
         })
         // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
