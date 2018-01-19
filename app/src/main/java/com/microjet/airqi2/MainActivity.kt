@@ -301,6 +301,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
+        mPageVp!!.offscreenPageLimit = 3
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
         nvDrawerNavigation = this.findViewById(R.id.navigation)
         nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
@@ -324,7 +325,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
         mPageVp!!.currentItem = 0
-
         mPageVp!!.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
             // state：滑動狀態（0，1，2）
