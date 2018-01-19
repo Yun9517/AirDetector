@@ -140,7 +140,8 @@ class ECO2Fragment : Fragment() {
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-                mTextViewValue!!.text = h!!.value.toString() + "ppm"
+                //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
+                mTextViewValue!!.text = e?.`val`.toString()+"ppm"
             }
         })
         // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
@@ -270,8 +271,13 @@ class ECO2Fragment : Fragment() {
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
+                var p=Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60*60+Calendar.getInstance().get(Calendar.MINUTE)*60+Calendar.getInstance().get(Calendar.SECOND)
+                var l=p/30
                 mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                var y=mChart!!.data!!.dataSetCount
+                mChart?.highlightValue(l, y-1)
+                //Log.v("Highligh:",l.toString())
             }
             1 -> {
                 getRealmWeek()
