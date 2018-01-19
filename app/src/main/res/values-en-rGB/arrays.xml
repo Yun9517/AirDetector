@@ -9,8 +9,8 @@
     </string-array>
 
     <string-array name="SpinnerArray" >
-        <item>Day</item>
-        <item>Week</item>
-        <item>Month</item>
+        <item>Daily Average Record</item>
+        <item>Week Average Record</item>
+        <item>Month Average Record</item>
     </string-array>
 </resources>

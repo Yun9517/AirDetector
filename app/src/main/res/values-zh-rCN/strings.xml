@@ -11,6 +11,20 @@
     <string name="text_message_air_Extreme_Dark_Purple">空气质量非常危险。\n请立即离开并务必加强通风。</string>
     <string name="text_message_humidity">一般来说，湿度维持在45%~65％，不仅凉爽舒适，也不会因为过度干燥、潮湿而影响健康。</string> <!-- 2018/01/04 -->
     <string name="text_message_temperature">一般来说，人体在室内感觉最舒适的温度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <!-- eCO2 message -->
+    <string name="label_eCO2_Green">正常</string>
+    <string name="label_eCO2_Yellow">浓度中等</string>
+    <string name="label_eCO2_Orange">浓度过高</string>
+    <string name="label_eCO2_Red">有害健康</string>
+    <string name="label_eCO2_Purple">非常有害健康</string>
+    <string name="label_eCO2_Brown">极度危害健康</string>
+    <string name="message_eCO2_Green">空气质量一般</string>
+    <string name="message_eCO2_Yellow">空气质量中等，可能感觉不舒适\n建议改善通风</string>
+    <string name="message_eCO2_Orange">空气质量不佳，避免长时间待在此环境下\n建议加强通风。</string>
+    <string name="message_eCO2_Red">空气质量不健康，避免长时间待在此环境下\n必需加强通风</string>
+    <string name="message_eCO2_Purple">空气质量非常不健康，请离开并务必加强通风</string>
+    <string name="message_eCO2_Brown">空气质量极度危害健康，请立即离开并务必加强通风</string>
+
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>

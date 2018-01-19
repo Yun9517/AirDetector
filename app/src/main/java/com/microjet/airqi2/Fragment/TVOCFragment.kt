@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.*
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -148,7 +149,8 @@ class TVOCFragment : Fragment() {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
-                mTextViewValue!!.text = e?.`val`.toString()+"ppb"
+                var temp=e?.`val`
+                mTextViewValue!!.text = temp?.toInt().toString()+" ppb"
             }
         })
        // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
@@ -313,8 +315,8 @@ class TVOCFragment : Fragment() {
         val line500 = mChart!!.getBarBounds(BarEntry(500f, 1))
         val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 2))
         val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
-        tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2)//Text1000 position
-        tvChartTitleBottom?.y = line500.top - (tvChartTitleBottom!!.height / 2)//Text500 position
+        tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2)-(tvChartTitleMiddle!!.height/2)//Text1000 position
+        tvChartTitleBottom?.y = line500.top - (tvChartTitleBottom!!.height / 2)-(tvChartTitleBottom!!.height/2)//Text500 position
         //imgBarRed?.y = line1000.top//red
         //imgBarYellow?.y = line660.top//yellow
         //imgBarGreen?.y = line220.top//green
@@ -477,12 +479,15 @@ class TVOCFragment : Fragment() {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-
+        leftAxis.setLabelCount(15,true)
         leftAxis.setAxisMaxValue(1500f) // the axis maximum is 1500
         leftAxis.setAxisMinValue(0f) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
+        leftAxis.gridColor= Color.WHITE
+
+        xAxis.setDrawGridLines(false)
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
