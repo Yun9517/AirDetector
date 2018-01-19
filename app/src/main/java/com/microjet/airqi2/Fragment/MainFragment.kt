@@ -135,8 +135,8 @@ class MainFragment : Fragment() {
     }
 
     private fun setThresholdValue(dataForState: DetectionData){
-        tvThreadHold1!!.text= dataForState.range1.toString()
-        tvThreadHold2!!.text= dataForState.range2.toString()
+        tvThreadHold1!!.text = dataForState.range1.toString()
+        tvThreadHold2!!.text = dataForState.range2.toString()
     }
 
     private fun setBarMaxValue(state: DetectionData){
@@ -168,8 +168,8 @@ class MainFragment : Fragment() {
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
 
-     @SuppressLint("SetTextI18n")
-     private fun tvocStatusTextShow(currentValue: Float) {
+    @SuppressLint("SetTextI18n")
+    private fun tvocStatusTextShow(currentValue: Float) {
         when(currentValue) {
             in 0..219 -> {
                 tvNotify?.text = getString(R.string.text_message_air_good)
@@ -356,10 +356,18 @@ class MainFragment : Fragment() {
                     tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-                    //bar1?.setTvocCo2Color()
+                    //bar1?.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                     //bar1?.setCurrentValues(tvocDataFloat)
-                    bar1?.setCurrentValues(60000f)
+                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //數值不等比顯示
+                    when(tvocDataFloat) {
+                        in 0..660 -> bar1?.setCurrentValues(tvocDataFloat)
+                        in 661..2200 -> bar1?.setCurrentValues((tvocDataFloat / 60) + 700)
+                        in 2201..5500 -> bar1?.setCurrentValues((tvocDataFloat / 60) + 770)
+                        in 5501..20000 -> bar1?.setCurrentValues((tvocDataFloat / 180) + 830)
+                        else -> bar1?.setCurrentValues((tvocDataFloat / 360) + 890)
+                    }
+                    //bar1?.setCurrentValues(1000f)
                     tvocStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
                     textSpannable(temp)
@@ -369,9 +377,8 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-                    //bar1?.setTvocCo2Color()
-                    //bar1?.setCurrentValues(co2DataFloat)
-                    bar1?.setCurrentValues(60000f)
+                    bar1?.setCurrentValues(co2DataFloat)
+                    //bar1?.setCurrentValues(60000f)
                     eco2StatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
                     textSpannable(temp)
@@ -381,9 +388,8 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.tempColors, Colors.tempAngles)
-                    //bar1?.setTemperaterColor()
                     //bar1?.setCurrentValues(tempDataFloat)
-                    bar1?.setCurrentValues(60000f)
+                    bar1?.setCurrentValues(18f)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
                     textSpannable(temp)
@@ -394,9 +400,8 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.humiColors, Colors.humiAngles)
-                    //bar1?.setHumidityColor()
                     //bar1?.setCurrentValues(humiDataFloat)
-                    bar1?.setCurrentValues(60000f)
+                    bar1?.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "
                     textSpannable(temp)
