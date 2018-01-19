@@ -1051,7 +1051,7 @@ public class UartService extends Service {
                             asmData.setTEMPValue(RString.get(1));
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
-                            asmData.seteCO2Value(RString.get(4));
+                            asmData.setECO2Value(RString.get(4));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
                             Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1126,7 +1126,7 @@ public class UartService extends Service {
                                 asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
                                 asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
                                 asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
-                                asmData.seteCO2Value(arrB6.get(count).get("eCO2Value").toString());
+                                asmData.setECO2Value(arrB6.get(count).get("eCO2Value").toString());
                                 asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });

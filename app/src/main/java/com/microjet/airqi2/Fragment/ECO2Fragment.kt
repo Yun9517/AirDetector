@@ -51,7 +51,7 @@ import kotlin.collections.ArrayList
  * Use the [TVOCFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class TVOCFragment : Fragment() {
+class ECO2Fragment : Fragment() {
     private var mContext: Context? = null
 
     private var mDataCount: Int = 60
@@ -118,7 +118,7 @@ class TVOCFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater!!.inflate(R.layout.frg_tvoc, container, false)
+            inflater!!.inflate(R.layout.frg_eco2, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -140,16 +140,15 @@ class TVOCFragment : Fragment() {
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-                //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
-                mTextViewValue!!.text = e?.`val`.toString()+"ppb"
+                mTextViewValue!!.text = h!!.value.toString() + "ppm"
             }
         })
-       // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
+        // imgBarRed = this.view?.findViewById(R.id.imgBarRed)
         //imgBarYellow = this.view?.findViewById(R.id.imgBarYellow)
         //imgBarGreen = this.view?.findViewById(R.id.imgBarGreen)
         //imgBarBase = this.view?.findViewById(R.id.imgBarBase)
         //修改上排Spinner及Button
-        sprTVOC = this.view?.findViewById(R.id.sprTVOC)
+        sprTVOC = this.view?.findViewById(R.id.sprECO2)
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -163,7 +162,7 @@ class TVOCFragment : Fragment() {
 //                if (selectedItem == "Add new category") {
 //                    // do your stuff
 //                }
-                Log.d("TVOC",selectedItem)
+                Log.d("ECO2",selectedItem)
             } // to close the onItemSelected
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -177,7 +176,7 @@ class TVOCFragment : Fragment() {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                     calObject.set(year,month,dayOfMonth)
-                    Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    Log.d("ECO2btncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
                 },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
@@ -192,7 +191,7 @@ class TVOCFragment : Fragment() {
         mImageViewDataUpdate?.setOnClickListener {
             if (!isFastDoubleClick){
                 getDeviceData()
-                Log.d("TVOC","TOAST_ON")
+                Log.d("ECO2","TOAST_ON")
             }
         }
 //        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
@@ -263,36 +262,30 @@ class TVOCFragment : Fragment() {
         setImageBarSize()
         when (position) {
             0 -> {
-                    getRealmDay()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.setVisibleXRange(5.0f, 40.0f)
-                    //mChart?.setVisibleXRangeMinimum(20.0f)
-                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                    //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                    //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                    var p=Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60*60+Calendar.getInstance().get(Calendar.MINUTE)*60+Calendar.getInstance().get(Calendar.SECOND)
-                    var l=p/30
-                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
-                        var y=mChart!!.data!!.dataSetCount
-                        mChart?.highlightValue(l, y-1)
-
-                //Log.v("Highligh:",l.toString())
+                getRealmDay()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.setVisibleXRange(5.0f, 40.0f)
+                //mChart?.setVisibleXRangeMinimum(20.0f)
+                //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
+                //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
+                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
             }
             1 -> {
-                    getRealmWeek()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                    mChart?.setVisibleXRange(7.0f, 7.0f)
+                getRealmWeek()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
+                mChart?.setVisibleXRange(7.0f, 7.0f)
             }
             2 -> {
-                    getRealmMonth()
-                    mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
-                    mChart?.data?.setDrawValues(false)
-                    mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                    mChart?.setVisibleXRange(35.0f, 35.0f)
+                getRealmMonth()
+                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data?.setDrawValues(false)
+                mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
+                mChart?.setVisibleXRange(35.0f, 35.0f)
 
             }
         }
@@ -413,7 +406,7 @@ class TVOCFragment : Fragment() {
     }
 
     private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "TVOC")
+        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "ECO2")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
                 ContextCompat.getColor(context, R.color.Main_textResult_Orange),
@@ -481,8 +474,8 @@ class TVOCFragment : Fragment() {
         mChart!!.legend.isEnabled = false
         mChart!!.yChartInterval=nums
 
-     //   leftAxis.setDrawValues(false)
-    //    leftAxis.setDraw
+        //   leftAxis.setDrawValues(false)
+        //    leftAxis.setDraw
         mChart!!.setDrawValueAboveBar(false)
         /*var yLimitLine =  LimitLine(220f,"yLimit 测试");
         yLimitLine.setLineColor(Color.RED)
@@ -497,7 +490,7 @@ class TVOCFragment : Fragment() {
 
         //var top=leftAxis.spaceTop
         //var bottom=leftAxis.spaceBottom
-    //    mChart?.setDrawValueAboveBar(false)
+        //    mChart?.setDrawValueAboveBar(false)
         rightAxis.isEnabled = false
         mChart?.setDescription("")// clear default string
     }
@@ -508,7 +501,7 @@ class TVOCFragment : Fragment() {
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
         val touchTime = calObject.timeInMillis
-        Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
+        Log.d("ECO2btncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -532,8 +525,7 @@ class TVOCFragment : Fragment() {
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 var count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
-                arrTvoc3[count] = asmDataModel.tvocValue.toString()
-                //Log.v("hilightCount:", count.toString())
+                arrTvoc3[count] = asmDataModel.ecO2Value.toString()
             }
             Log.d("getRealmDay", result1.last().toString())
         }
@@ -565,7 +557,7 @@ class TVOCFragment : Fragment() {
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
-                    sumTvoc += i.tvocValue.toInt()
+                    sumTvoc += i.ecO2Value.toInt()
                 }
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
@@ -607,7 +599,7 @@ class TVOCFragment : Fragment() {
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
-                    sumTvoc += i.tvocValue.toInt()
+                    sumTvoc += i.ecO2Value.toInt()
                 }
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
@@ -703,7 +695,7 @@ class TVOCFragment : Fragment() {
 
         timeArray.add(sdFormat.format(date))
         tvocArray.add(Tvoc)
-    //    tvocArray.add("20")
+        //    tvocArray.add("20")
         batteryArray.add(Battery)
 
         while (tvocArray.size > mDataCount) {
@@ -860,11 +852,11 @@ class TVOCFragment : Fragment() {
         // val mDataCount = 5
         // mDataCount
         val chartData = ArrayList<BarEntry>()
-       // for (i in 1 until mDataCount) {
-            chartData.add(BarEntry((500).toFloat(), 1))
-            chartData.add(BarEntry((1000).toFloat(), 2))
-            chartData.add(BarEntry((20000).toFloat(), 3))
-       // }
+        // for (i in 1 until mDataCount) {
+        chartData.add(BarEntry((500).toFloat(), 1))
+        chartData.add(BarEntry((1000).toFloat(), 2))
+        chartData.add(BarEntry((20000).toFloat(), 3))
+        // }
         return chartData
     }
 
@@ -886,7 +878,7 @@ class TVOCFragment : Fragment() {
             var sumTvoc = 0
             var sumTime: Long = 0
             for (i in result1) {
-                sumTvoc += i.tvocValue.toInt()
+                sumTvoc += i.ecO2Value.toInt()
                 sumTime += i.created_time.toLong()
                 if (result1.size != 0) {
                     arrTvoc3.add((sumTvoc / result1.size).toString())
@@ -920,7 +912,7 @@ class TVOCFragment : Fragment() {
                 //}
                 //var aveTvoc = (sumTvoc / result1.size)
                 Log.d("getRealmFour", result1.last().toString())
-                arrTvoc3.add(result1.first()?.tvocValue.toString())
+                arrTvoc3.add(result1.first()?.ecO2Value.toString())
                 arrTime3.add(endTime.toString())
             } else {
                 arrTvoc3.add("0")
