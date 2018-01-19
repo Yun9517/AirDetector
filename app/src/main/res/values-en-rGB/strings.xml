@@ -11,6 +11,20 @@
     <string name="text_message_air_Extreme_Dark_Purple">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
     <string name="text_message_humidity">Normally, Human feels cool and comfortable when the humidity percent range is about 45%~65%.\nYour body healthy can't be afforded by too dry or too moist.</string>
     <string name="text_message_temperature">Normally, the best temperature for human is about 18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <!-- eCO2 message -->
+    <string name="label_eCO2_Green">Normal</string>
+    <string name="label_eCO2_Yellow">Moderate</string>
+    <string name="label_eCO2_Orange">High</string>
+    <string name="label_eCO2_Red">Unhealthy</string>
+    <string name="label_eCO2_Purple">Very Healthy</string>
+    <string name="label_eCO2_Brown">Hazardous</string>
+    <string name="message_eCO2_Green">The air quality is normal.</string>
+    <string name="message_eCO2_Yellow">The air quality is moderate. You may feel uncomfortable. Improved ventilation is recommended.</string>
+    <string name="message_eCO2_Orange">The air quality is poor. Avoid staying in this situation too long. Intensified ventilation is recommended.</string>
+    <string name="message_eCO2_Red">The air quality is unhealthy. Avoid staying in this situation too long. Intensified ventilation is necessary.</string>
+    <string name="message_eCO2_Purple">The air quality is very unhealthy. Please leave here. Intensified ventilation is mandatory.</string>
+    <string name="message_eCO2_Brown">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
+
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>

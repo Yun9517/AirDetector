@@ -87,10 +87,10 @@ class MainFragment : Fragment() {
             checkUIState()
 
         }
-//        show_eCO2?.setOnClickListener {
-//            dataForState = DetectionData.CO2
-//            checkUIState()
-//        }
+        show_eCO2?.setOnClickListener {
+            dataForState = DetectionData.CO2
+            checkUIState()
+        }
         show_Temp?.setOnClickListener{
             dataForState = DetectionData.Temp
             checkUIState()
@@ -163,7 +163,7 @@ class MainFragment : Fragment() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
         tvBtmPM25Value.text = "Coming soon"
-        tvBtmCO2Value.text = "Coming soon"//co2DataFloat.toInt().toString()+ " ppm"
+        tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
@@ -225,48 +225,48 @@ class MainFragment : Fragment() {
     private fun eco2StatusTextShow(currentValue:Float){
         when(currentValue) {
             in 0..699 -> {
-                //tvNotify?.text = getString(R.string.text_message_air_good)
-                //tvInCycleState?.text = getString(R.string.text_label_status_good)
+                tvNotify?.text = getString(R.string.message_eCO2_Green)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Green)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 tvInCycleState?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
             in 700..999 -> {
-                //tvNotify?.text = getString(R.string.text_message_air_bad)
-                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvNotify?.text = getString(R.string.message_eCO2_Yellow)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Yellow)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 tvInCycleState?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
             }
             in 1000..1499 -> {
-                //tvNotify?.text = getString(R.string.text_message_air_bad)
-                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvNotify?.text = getString(R.string.message_eCO2_Orange)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Orange)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 tvInCycleState?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
             }
             in 1500..2499 -> {
-                //tvNotify?.text = getString(R.string.text_message_air_bad)
-                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvNotify?.text = getString(R.string.message_eCO2_Red)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Red)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 tvInCycleState?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
             }
             in 2500..4999 -> {
-                //tvNotify?.text = getString(R.string.text_message_air_bad)
-                //tvInCycleState?.text = getString(R.string.text_label_status_bad)
+                tvNotify?.text = getString(R.string.message_eCO2_Purple)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Purple)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 tvInCycleState?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
             }
             else -> {
-                //tvNotify?.text = getString(R.string.text_message_air_mid)
-                //tvInCycleState?.text = getString(R.string.text_label_status_mid)
+                tvNotify?.text = getString(R.string.message_eCO2_Brown)
+                tvInCycleState?.text = getString(R.string.label_eCO2_Brown)
                 tvInCycleValue?.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 tvInCycleState?.setTextColor(

@@ -10,6 +10,20 @@
     <string name="text_message_air_Serious_Purple">空氣品質非常不健康。\n請離開並務必加強通風。</string>
     <string name="text_message_air_Extreme_Dark_Purple">空氣品質非常危險。\n請立即離開並務必加強通風。</string>
     <string name="text_message_humidity">一般來說，濕度維持在45%~65％，不僅涼爽舒適，也不會因為過度乾燥、潮濕而影響健康。</string> <!-- 2018/01/04 -->
+    <!-- eCO2 message -->
+    <string name="label_eCO2_Green">正常</string>
+    <string name="label_eCO2_Yellow">濃度中等</string>
+    <string name="label_eCO2_Orange">濃度過高</string>
+    <string name="label_eCO2_Red">有害健康</string>
+    <string name="label_eCO2_Purple">非常有害健康</string>
+    <string name="label_eCO2_Brown">極度危害健康</string>
+    <string name="message_eCO2_Green">空氣品質一般</string>
+    <string name="message_eCO2_Yellow">空氣品質中等，可能感覺不舒適\n建議改善通風</string>
+    <string name="message_eCO2_Orange">空氣品質不佳，避免長時間待在此環境下\n建議加強通風。</string>
+    <string name="message_eCO2_Red">空氣品質不健康，避免長時間待在此環境下\n必需加強通風</string>
+    <string name="message_eCO2_Purple">空氣品質非常不健康，請離開並務必加強通風</string>
+    <string name="message_eCO2_Brown">空氣品質極度危害健康，請立即離開並務必加強通風</string>
+
     <string name="text_message_temperature">一般來說，人體在室內感覺最舒適的溫度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
