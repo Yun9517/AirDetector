@@ -75,6 +75,8 @@ class ECO2Fragment : Fragment() {
     //private var imgBarBase : ImageView? = null
     private var sprTVOC : Spinner? = null
     private var btnCallDatePicker : Button? = null
+    private var result_Yesterday:TextView?=null
+    private var result_Today:TextView?=null
     //UI元件
 
 
@@ -132,6 +134,9 @@ class ECO2Fragment : Fragment() {
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
         mChart = this.view!!.findViewById(R.id.chart_line)
+        result_Yesterday=this.view?.findViewById(R.id.result_Yesterday)
+        result_Today=this.view?.findViewById(R.id.result_Today)
+
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -272,6 +277,9 @@ class ECO2Fragment : Fragment() {
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
                 mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+
+
+
             }
             1 -> {
                 getRealmWeek()
@@ -638,6 +646,12 @@ class ECO2Fragment : Fragment() {
                     val date = dateFormat.format(input[i].toLong())
                     chartLabels.add(date)
                 }
+
+                getCO2ToAndYesterdayAvgData()
+                result_Today!!.text = arrTvoc3[1] + " ppb"        //arrTvoc3[1].toString()+" ppb"
+                result_Yesterday!!.text = arrTvoc3[0] + " ppb"
+                Log.e("兩天資料:", arrTvoc3.toString())
+                Log.e("兩天時數:", arrTime3.toString())
             }
             1 -> {
                 val dateFormat = SimpleDateFormat("MM/dd EEEE")
@@ -923,6 +937,50 @@ class ECO2Fragment : Fragment() {
         arrTvoc3.reverse()
         arrTime3.reverse()
 
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun getCO2ToAndYesterdayAvgData(){
+        arrTime3.clear()
+        arrTvoc3.clear()
+        //拿到現在是星期幾的Int
+        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = calObject.timeInMillis
+        //今天的0點為起點
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        //前一天的０點起
+        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((1).toLong())
+        Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+        for (y in 0..1) {
+            //第一筆為日 00:00
+            val sqlStartDate = sqlWeekBase+TimeUnit.DAYS.toMillis((y.toLong()))
+            //結束點為日 23:59
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(y.toLong()+1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            Log.d("getRealmWeek", sqlStartDate.toString())
+            Log.d("getRealmWeek", sqlEndDate.toString())
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmWeek", result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                for (i in result1) {
+                    sumTvoc += i.ecO2Value.toInt()
+                }
+                val aveTvoc = (sumTvoc / result1.size)
+                arrTvoc3.add(aveTvoc.toString())
+                //依序加入時間
+                arrTime3.add(sqlStartDate.toString())
+                Log.e("值", arrTvoc3[y].toString())
+                Log.e("getRealmWeek", result1.last().toString())
+            } else {
+                arrTvoc3.add("0")
+                arrTime3.add((sqlStartDate.toString()))
+            }
+
+        }
     }
 }
 
