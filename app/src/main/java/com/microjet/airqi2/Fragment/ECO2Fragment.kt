@@ -620,7 +620,7 @@ class ECO2Fragment : Fragment() {
 
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "TVOC")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "ECO2")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
                 ContextCompat.getColor(context, R.color.Main_textResult_Orange),
