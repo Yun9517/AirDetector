@@ -11,6 +11,21 @@
         android:layout_height="wrap_content"
         android:background="@color/whiteColor"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCallDatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:text="Button" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="45dp"
+            android:background="@color/grayColor"
+            android:orientation="horizontal"/>
+
         <Spinner
             android:id="@+id/sprTVOC"
             android:layout_width="match_parent"
@@ -22,13 +37,7 @@
             <!--android:popupBackground="@drawable/message_block_background"-->
 
         </Spinner>
-        <Button
-            android:id="@+id/btnCallDatePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Button"
-            android:background="@android:color/transparent"/>
+
         <RadioGroup
             android:id="@+id/frg_radioGroup"
             android:layout_width="match_parent"
