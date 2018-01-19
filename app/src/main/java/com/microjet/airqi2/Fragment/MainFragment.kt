@@ -41,7 +41,7 @@ class MainFragment : Fragment() {
     enum class DetectionData(val range1: Long,val range2: Long) {
         TVOC(220,660),
         CO2(800,1500),
-        Temp(33,65),
+        Temp(18,27),
         Humi(33,65)
     }
 
