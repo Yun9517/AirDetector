@@ -681,8 +681,8 @@ class ECO2Fragment : Fragment() {
                 }
             }
             2 -> {
-                val dateFormat = SimpleDateFormat("yyyy/MM/dd")
-                val dateLabelFormat = SimpleDateFormat("MM/dd")
+                val dateFormat = SimpleDateFormat("MM/dd")
+                val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
