@@ -4,11 +4,17 @@
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">空氣品質一般，請保持空氣流通。\n揮發性有機物濃度低，沒有刺激或不適風險</string>
+
+
+
     <string name="text_message_air_mid">空氣品質輕度污染\n避免長時間待在此環境下(十二個月)\n建議改善通風。</string>
     <string name="text_message_air_Medium_Orange">空氣品質不佳\n避免長時間待在此環境下(一個月)\n建議加強通風。</string>
     <string name="text_message_air_bad">空氣品質不健康。避免長時間待在此環境下(數小時)。\n必需加強通風。</string>
     <string name="text_message_air_Serious_Purple">空氣品質非常不健康。\n請離開並務必加強通風。</string>
     <string name="text_message_air_Extreme_Dark_Purple">空氣品質非常危險。\n請立即離開並務必加強通風。</string>
+
+
+
     <string name="text_message_humidity">一般來說，濕度維持在45%~65％，不僅涼爽舒適，也不會因為過度乾燥、潮濕而影響健康。</string> <!-- 2018/01/04 -->
     <!-- eCO2 message -->
     <string name="label_eCO2_Green">正常</string>
@@ -88,9 +94,13 @@
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 
     <!-- Add String for Notification -->
-    <string name="Medium_warning_title">中度危險警告通知!!!</string>
+    <string name="warning_title_Yellow">輕度危險警告通知!!!</string>
+    <string name="warning_title_Orange">中度危險警告通知!!!</string>
+    <string name="warning_title_Red">重度危險警告通知!!!</string>
+    <string name="warning_title_Purple">嚴重危險警告通知!!!</string>
+    <string name="warning_title_Brown">非常嚴重危險警告通知!!!</string>
+
     <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
-    <string name="High_warning_title">重度危險警告通知!!!</string>
 
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
