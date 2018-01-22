@@ -188,7 +188,7 @@ class TVOCFragment : Fragment() {
         }
 
         btnCallDatePicker = this.view?.findViewById(R.id.btnCallDatePicker)
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
@@ -983,7 +983,7 @@ class TVOCFragment : Fragment() {
         //前一天的０點起
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((1).toLong())
         // Show Date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        val dateFormat = SimpleDateFormat("yyyy/MM/dd")
         show_Today!!.text = dateFormat.format(nowDateMills)
         show_Yesterday!!.text =  dateFormat.format(nowDateMills - TimeUnit.DAYS.toMillis((1).toLong()))
         Log.d("getRealmWeek", sqlWeekBase.toString())
