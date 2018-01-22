@@ -94,8 +94,8 @@ class PrimaryReceiver : BroadcastReceiver() {
                 bundle.putString(BroadcastActions.INTENT_KEY_TEMP_VALUE, intent.getStringExtra("TEMPValue"))
                 bundle.putString(BroadcastActions.INTENT_KEY_HUMI_VALUE, intent.getStringExtra("HUMIValue"))
                 bundle.putString(BroadcastActions.INTENT_KEY_TVOC_VALUE, intent.getStringExtra("TVOCValue"))
-                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE,intent.getStringExtra("eCO2Value"))
-                //bundle.putString(BroadcastActions.INTENT_KEY_PM25_VALUE, data.get(4));
+                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE,intent.getStringExtra("ECO2Value"))
+                bundle.putString(BroadcastActions.INTENT_KEY_PM25_VALUE, intent.getStringExtra("PM25Value"))
                 bundle.putString(BroadcastActions.INTENT_KEY_BATTERY_LIFE, intent.getStringExtra("BatteryLife"))
                 bundle.putString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT, intent.getStringExtra("PreheatCountDown"))
                 broadcastUpdate(context,BroadcastActions.ACTION_GET_NEW_DATA, bundle)
