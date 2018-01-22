@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
@@ -36,7 +35,6 @@ import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.RemoteViews;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -910,8 +908,8 @@ public class UartService extends Service {
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));
                     mainIntent.putExtra("TVOCValue", RString.get(2));
-                    mainIntent.putExtra("eCO2Value", RString.get(3));
-                    //mainIntent.putExtra("PM25", RString.get(4));
+                    mainIntent.putExtra("ECO2Value", RString.get(3));
+                    mainIntent.putExtra("PM25Value", RString.get(4));
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
@@ -1051,7 +1049,8 @@ public class UartService extends Service {
                             asmData.setTEMPValue(RString.get(1));
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
-                            asmData.seteCO2Value(RString.get(4));
+                            asmData.setECO2Value(RString.get(4));
+                            asmData.setPM25Value(RString.get(5));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
                             Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1097,7 +1096,8 @@ public class UartService extends Service {
                         hashMapInB6.put("TEMPValue",RString.get(0));
                         hashMapInB6.put("HUMIValue",RString.get(1));
                         hashMapInB6.put("TVOCValue",RString.get(2));
-                        hashMapInB6.put("eCO2Value",RString.get(3));
+                        hashMapInB6.put("ECO2Value",RString.get(3));
+                        hashMapInB6.put("PM25Value",RString.get(4));
                         hashMapInB6.put("BatteryLife",RString.get(5));
                         arrB6.add(hashMapInB6);
                         //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
@@ -1126,7 +1126,8 @@ public class UartService extends Service {
                                 asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
                                 asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
                                 asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
-                                asmData.seteCO2Value(arrB6.get(count).get("eCO2Value").toString());
+                                asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
+                                asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
                                 asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
