@@ -75,8 +75,10 @@ class ECO2Fragment : Fragment() {
     //private var imgBarBase : ImageView? = null
     private var sprTVOC : Spinner? = null
     private var btnCallDatePicker : Button? = null
-    private var result_Yesterday:TextView?=null
-    private var result_Today:TextView?=null
+    private var show_Yesterday : TextView? = null
+    private var show_Today : TextView? = null
+    private var result_Yesterday : TextView? = null
+    private var result_Today : TextView? = null
     //UI元件
 
 
@@ -137,6 +139,8 @@ class ECO2Fragment : Fragment() {
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
         mChart = this.view!!.findViewById(R.id.chart_line)
+        show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
+        show_Today = this.view!!.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
 
@@ -974,6 +978,10 @@ class ECO2Fragment : Fragment() {
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //前一天的０點起
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((1).toLong())
+        // Show Date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        show_Today!!.text = dateFormat.format(nowDateMills)
+        show_Yesterday!!.text =  dateFormat.format(nowDateMills - TimeUnit.DAYS.toMillis((1).toLong()))
         Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..1) {
