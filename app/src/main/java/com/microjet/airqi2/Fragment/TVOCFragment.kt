@@ -663,7 +663,7 @@ class TVOCFragment : Fragment() {
         when (positionID) {
             0 -> {
                 val dateFormat = SimpleDateFormat("HH:mm")
-                val dateLabelFormat = SimpleDateFormat("HH:mm:ss")
+                val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
@@ -675,7 +675,7 @@ class TVOCFragment : Fragment() {
             }
             1 -> {
                 val dateFormat = SimpleDateFormat("EEEE")
-                val dateLabelFormat = SimpleDateFormat("MM/dd, EEEE")
+                val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
@@ -685,7 +685,7 @@ class TVOCFragment : Fragment() {
                 }
             }
             2 -> {
-                val dateFormat = SimpleDateFormat("dd")
+                val dateFormat = SimpleDateFormat("MM/dd")
                 val dateLabelFormat = SimpleDateFormat("MM/dd")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
