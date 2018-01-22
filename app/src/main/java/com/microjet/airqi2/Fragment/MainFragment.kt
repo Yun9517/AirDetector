@@ -377,6 +377,14 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //數值不等比顯示
+                    when(co2DataFloat) {
+                        in 0..700 -> bar1?.setCurrentValues(co2DataFloat)
+                        in 701..1000 -> bar1?.setCurrentValues((co2DataFloat / 60) + 700)
+                        in 1001..1500 -> bar1?.setCurrentValues((co2DataFloat / 60) + 770)
+                        in 1501..2500 -> bar1?.setCurrentValues((co2DataFloat / 180) + 830)
+                        else -> bar1?.setCurrentValues((co2DataFloat / 360) + 890)
+                    }
                     bar1?.setCurrentValues(co2DataFloat)
                     //bar1?.setCurrentValues(60000f)
                     eco2StatusTextShow(co2DataFloat)
@@ -388,8 +396,13 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.tempColors, Colors.tempAngles)
-                    //bar1?.setCurrentValues(tempDataFloat)
-                    bar1?.setCurrentValues(18f)
+                    //Modify Progress Bar
+                    when(tempDataFloat) {
+                        in -10..18 -> bar1?.setCurrentValues(tempDataFloat)
+                        else -> bar1?.setCurrentValues((tempDataFloat / 60) + 700)
+                    }
+                    bar1?.setCurrentValues(tempDataFloat)
+                    //bar1?.setCurrentValues(18f)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
                     textSpannable(temp)
@@ -400,8 +413,13 @@ class MainFragment : Fragment() {
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     bar1?.setColor(Colors.humiColors, Colors.humiAngles)
-                    //bar1?.setCurrentValues(humiDataFloat)
-                    bar1?.setCurrentValues(40f)
+                    //Modify Progress Bar
+                    when(humiDataFloat) {
+                        in 0..40 -> bar1?.setCurrentValues(humiDataFloat)
+                        else -> bar1?.setCurrentValues((humiDataFloat / 60) + 700)
+                    }
+                    bar1?.setCurrentValues(humiDataFloat)
+                    //bar1?.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "
                     textSpannable(temp)
