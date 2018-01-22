@@ -262,14 +262,14 @@ class TVOCFragment : Fragment() {
     private fun btnTextChanged(position: Int?) {
         when(position) {
             0 -> {
-                val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+                val dateFormat = SimpleDateFormat("yyyy/MM/dd")
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
                 btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + "第" + calObject.get(Calendar.WEEK_OF_YEAR).toString() + "週"
             }
             2 -> {
-                val dateFormat = SimpleDateFormat("yyyy-MM")
+                val dateFormat = SimpleDateFormat("yyyy/MM")
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
         }
