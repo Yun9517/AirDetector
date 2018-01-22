@@ -3,7 +3,10 @@ package com.microjet.airqi2.Fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
@@ -14,9 +17,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
-import android.view.animation.AnimationUtils
-import android.view.animation.LinearInterpolator
 import android.widget.*
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
@@ -27,15 +27,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import io.realm.Realm
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.FixBarChart
-//import com.github.mikephil.charting.utils.Highlight
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import io.realm.Realm
 import io.realm.Sort
 import java.text.SimpleDateFormat
 import java.util.*
@@ -65,7 +64,7 @@ class ECO2Fragment : Fragment() {
     private var mHour: RadioButton? = null
     private var mProgressBar: ProgressBar? = null
     private var mImageViewDataUpdate: ImageView? = null
-    private var mImageViewFace: ImageView? = null
+    //private var mImageViewFace: ImageView? = null
     private var tvCharLabel: TextView? = null
     private var tvChartTitleTop : TextView? = null
     private var tvChartTitleMiddle : TextView? = null
@@ -82,10 +81,10 @@ class ECO2Fragment : Fragment() {
 
 
     //TestValue Start chungyen
-    private val tvocArray = ArrayList<String>()
-    private val timeArray = ArrayList<String>()
-    private val batteryArray = ArrayList<String>()
-    private var radioButtonID : Int? = 0
+    //private val tvocArray = ArrayList<String>()
+    //private val timeArray = ArrayList<String>()
+    //private val batteryArray = ArrayList<String>()
+    //private var radioButtonID : Int? = 0
 
     private var mConnectStatus: Boolean = false
 
@@ -102,11 +101,13 @@ class ECO2Fragment : Fragment() {
     private var calObject = Calendar.getInstance()
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
-    private var chartHandler = Handler()
+    //private var chartHandler = Handler()
     private var downloadComplete = false
 
     var counter = 0
     var TVOCAVG = 0
+
+    private var labelArray = ArrayList<String>()
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -123,6 +124,7 @@ class ECO2Fragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_eco2, container, false)
 
+    @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         mRadioGroup = this.view?.findViewById(R.id.frg_radioGroup)
@@ -135,8 +137,8 @@ class ECO2Fragment : Fragment() {
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
         mChart = this.view!!.findViewById(R.id.chart_line)
-        result_Yesterday=this.view?.findViewById(R.id.result_Yesterday)
-        result_Today=this.view?.findViewById(R.id.result_Today)
+        result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
+        result_Today = this.view?.findViewById(R.id.result_Today)
 
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -145,9 +147,10 @@ class ECO2Fragment : Fragment() {
             @SuppressLint("SetTextI18n")
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
+                mTextViewTimeRange!!.text = labelArray[h!!.xIndex]//listString[h.xIndex]
+                //mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
-                var temp=e?.`val`
+                val temp = e?.`val`
                 mTextViewValue!!.text = temp?.toInt().toString()+" ppm"
             }
         })
@@ -183,11 +186,11 @@ class ECO2Fragment : Fragment() {
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    calObject.set(year,month,dayOfMonth)
-                    Log.d("ECO2btncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    calObject.set(year, month, dayOfMonth)
+                    Log.d("ECO2btncall", calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
-                },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
+                },calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
             }
@@ -278,12 +281,12 @@ class ECO2Fragment : Fragment() {
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                var p=Calendar.getInstance().get(Calendar.HOUR_OF_DAY)*60*60+Calendar.getInstance().get(Calendar.MINUTE)*60+Calendar.getInstance().get(Calendar.SECOND)
-                var l=p/30
+                val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60+Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
+                val l = p/30
                 mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
 
-                var y=mChart!!.data!!.dataSetCount
+                val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y-1)
                 //Log.v("Highligh:",l.toString())
 
@@ -309,9 +312,9 @@ class ECO2Fragment : Fragment() {
         mChart!!.data = getBarData()
         val line500 = mChart!!.getBarBounds(BarEntry(500f, 1))
         val line1000 = mChart!!.getBarBounds(BarEntry(1000f, 2))
-        val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
-        tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2)-(tvChartTitleMiddle!!.height/2)//Text1000 position
-        tvChartTitleBottom?.y = line500.top - (tvChartTitleBottom!!.height / 2)-(tvChartTitleBottom!!.height/2)//Text500 position
+        //val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
+        tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2) - (tvChartTitleMiddle!!.height / 2)//Text1000 position
+        tvChartTitleBottom?.y = line500.top - (tvChartTitleBottom!!.height / 2) - (tvChartTitleBottom!!.height / 2)//Text500 position
         //imgBarRed?.y = line1000.top//red
         //imgBarYellow?.y = line660.top//yellow
         //imgBarGreen?.y = line220.top//green
@@ -420,7 +423,7 @@ class ECO2Fragment : Fragment() {
         mTextViewTimeRange?.text = ""
     }
 
-    private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
+    /*private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
         val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "ECO2")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
@@ -464,7 +467,7 @@ class ECO2Fragment : Fragment() {
             }
         }
         return chartLabels
-    }
+    }*/
 
     // 20171128 Added by Raymond
     private fun configChartView() {
@@ -541,7 +544,7 @@ class ECO2Fragment : Fragment() {
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
-                var count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
+                val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
                 arrTvoc3[count] = asmDataModel.ecO2Value.toString()
             }
             Log.d("getRealmDay", result1.last().toString())
@@ -645,15 +648,19 @@ class ECO2Fragment : Fragment() {
         return BarData(getLabels3(inputTime,positionID), dataSets)
     }
 
-    @SuppressLint("SimpleDateFormat")
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun getLabels3(input: ArrayList<String>, positionID: Int?): List<String> {
         val chartLabels = ArrayList<String>()
         when (positionID) {
             0 -> {
                 val dateFormat = SimpleDateFormat("MM/dd HH:mm")
+                val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
+                labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
+                    labelArray.add(dateLabel)
                 }
 
                 getCO2ToAndYesterdayAvgData()
@@ -664,16 +671,24 @@ class ECO2Fragment : Fragment() {
             }
             1 -> {
                 val dateFormat = SimpleDateFormat("MM/dd EEEE")
+                val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
+                labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
+                    labelArray.add(dateLabel)
                 }
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd")
+                val dateLabelFormat = SimpleDateFormat("MM/dd")
+                labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
+                    labelArray.add(dateLabel)
                 }
             }
         }
@@ -691,7 +706,7 @@ class ECO2Fragment : Fragment() {
         return chartData
     }
 
-    private fun startUpdateDataAnimation() {
+    /*private fun startUpdateDataAnimation() {
         val operatingAnim: Animation = AnimationUtils.loadAnimation(mContext, R.anim.tip)
         val lin = LinearInterpolator()
         operatingAnim.interpolator = lin
@@ -705,13 +720,13 @@ class ECO2Fragment : Fragment() {
         mImageViewDataUpdate?.clearAnimation()
         mImageViewDataUpdate?.isEnabled = true
         downloadingData = false
-    }
+    }*/
 
 //    private fun startDataAnimationCount() {
 //        animationCount = 0
 //    }
 
-    private fun setRealTimeBarData(Tvoc: String, Battery: String) {
+    /*private fun setRealTimeBarData(Tvoc: String, Battery: String) {
         val sdFormat = SimpleDateFormat("MM/dd HH:mm:ss", Locale.TAIWAN)
         val date = Date()
         sdFormat.format(date)
@@ -754,7 +769,7 @@ class ECO2Fragment : Fragment() {
                 //mChart?.setVisibleXRangeMaximum(5.0f)
             }
         }
-    }
+    }*/
 
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
@@ -891,10 +906,10 @@ class ECO2Fragment : Fragment() {
         return chartLabels
     }
 
-    private fun nothing() {
+    /*private fun nothing() {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-        for (y in 10..1) {
+        for (y in 10 downTo 1) {
             val countTime = Date().time - 60 * 60 * 1000 * (y)
             query.lessThan("Created_time", countTime)//.greaterThan("Created_time",countTime)
             val result1 = query.findAll()
@@ -908,9 +923,9 @@ class ECO2Fragment : Fragment() {
                 }
             }
         }
+    }*/
 
-    }
-    private fun getRealmDay123() {
+    /*private fun getRealmDay123() {
         arrTime3.clear()
         arrTvoc3.clear()
         val touchTime = calObject.timeInMillis
@@ -946,10 +961,10 @@ class ECO2Fragment : Fragment() {
         arrTvoc3.reverse()
         arrTime3.reverse()
 
-    }
+    }*/
 
     @SuppressLint("SetTextI18n")
-    private fun getCO2ToAndYesterdayAvgData(){
+    private fun getCO2ToAndYesterdayAvgData() {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
@@ -982,7 +997,7 @@ class ECO2Fragment : Fragment() {
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 //arrTime3.add(sqlStartDate.toString())
-                Log.e("值", arrTvoc3[y].toString())
+                Log.e("值", arrTvoc3[y])
                 Log.e("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
