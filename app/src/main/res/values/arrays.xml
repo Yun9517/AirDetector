@@ -9,8 +9,8 @@
     </string-array>
 
     <string-array name="SpinnerArray" >
-        <item>日平均紀錄</item>
-        <item>週平均紀錄</item>
-        <item>月平均紀錄</item>
+        <item>日</item>
+        <item>週</item>
+        <item>月</item>
     </string-array>
 </resources>
