@@ -87,11 +87,13 @@
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 
     <!-- Add String for Notification -->
-    <string name="Medium_warning_title">Warning!!!</string>
-    <string name="Medium_warning">Leave the place as quick as you can!!!</string>
-    <string name="High_warning_title">Emergency!!!</string>
-    <string name="High_warning">Leave the place as quick as you can!!!</string>
+    <string name="warning_title_Yellow">Warning!!!</string>
+    <string name="warning_title_Orange">Warning!!!</string>
+    <string name="warning_title_Red">Emergency!!!</string>
+    <string name="warning_title_Purple">Emergency!!!</string>
+    <string name="warning_title_Brown">Emergency!!!</string>
 
+    <string name="Medium_warning">Leave the place as quick as you can!!!</string>
 
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>

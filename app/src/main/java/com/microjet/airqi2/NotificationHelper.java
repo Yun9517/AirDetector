@@ -29,6 +29,12 @@ public class NotificationHelper extends ContextWrapper {
     public static final String CHANNEL_ONE_NAME = "Channel One";
     public static final String CHANNEL_TWO_ID = "com.jessicathornsby.myapplication.TWO";
     public static final String CHANNEL_TWO_NAME = "Channel Two";
+    public static final String CHANNEL_THREE_ID = "com.jessicathornsby.myapplication.THREE";
+    public static final String CHANNEL_THREE_NAME = "Channel Three";
+    public static final String CHANNEL_FOU_ID = "com.jessicathornsby.myapplication.FOU";
+    public static final String CHANNEL_FOU_NAME = "Channel Fou";
+    public static final String CHANNEL_FIVE_ID = "com.jessicathornsby.myapplication.FIVE";
+    public static final String CHANNEL_FIVE_NAME = "Channel Five";
 
 //Create your notification channels//
 
@@ -43,7 +49,7 @@ public class NotificationHelper extends ContextWrapper {
         NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
                 CHANNEL_ONE_NAME, notifManager.IMPORTANCE_HIGH);
         notificationChannel.enableLights(true);
-        notificationChannel.setLightColor(Color.RED);
+        //notificationChannel.setLightColor(Color.RED);
         notificationChannel.setShowBadge(true);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
         getManager().createNotificationChannel(notificationChannel);
@@ -52,9 +58,33 @@ public class NotificationHelper extends ContextWrapper {
                 CHANNEL_TWO_NAME, notifManager.IMPORTANCE_DEFAULT);
         notificationChannel2.enableLights(false);
         notificationChannel2.enableVibration(true);
-        notificationChannel2.setLightColor(Color.RED);
+        //notificationChannel2.setLightColor(Color.RED);
         notificationChannel2.setShowBadge(false);
         getManager().createNotificationChannel(notificationChannel2);
+
+        NotificationChannel notificationChannel3 = new NotificationChannel(CHANNEL_THREE_ID,
+                CHANNEL_TWO_NAME, notifManager.IMPORTANCE_DEFAULT);
+        notificationChannel3.enableLights(false);
+        notificationChannel3.enableVibration(true);
+        //notificationChannel3.setLightColor(Color.RED);
+        notificationChannel3.setShowBadge(false);
+        getManager().createNotificationChannel(notificationChannel3);
+
+        NotificationChannel notificationChannel4 = new NotificationChannel(CHANNEL_FOU_ID,
+                CHANNEL_TWO_NAME, notifManager.IMPORTANCE_DEFAULT);
+        notificationChannel4.enableLights(false);
+        notificationChannel4.enableVibration(true);
+        //notificationChannel4.setLightColor(Color.RED);
+        notificationChannel4.setShowBadge(false);
+        getManager().createNotificationChannel(notificationChannel4);
+
+        NotificationChannel notificationChannel5 = new NotificationChannel(CHANNEL_FIVE_ID,
+                CHANNEL_TWO_NAME, notifManager.IMPORTANCE_DEFAULT);
+        notificationChannel5.enableLights(false);
+        notificationChannel5.enableVibration(true);
+        //notificationChannel5.setLightColor(Color.RED);
+        notificationChannel5.setShowBadge(false);
+        getManager().createNotificationChannel(notificationChannel5);
 
     }
 
@@ -106,7 +136,7 @@ public class NotificationHelper extends ContextWrapper {
                 .setAutoCancel(true)
                 //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
                 //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
-                .setColor(Color.RED)
+                //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
                 //.setBadgeIconType( R.drawable.app_android_icon_logo)
@@ -116,34 +146,233 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentIntent(pi)
                 .setStyle(new Notification.BigTextStyle().bigText(body));
     }
-    protected NotificationCompat.Builder builder;
-    protected NotificationManager manager;
-    public void showTwo() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-            Toast.makeText(this, "ur device is not support media style, use stand instead", Toast.LENGTH_SHORT).show();
-        }
-        //builder.setTicker("MessagingNotification");
-        builder.setContentTitle("MessagingNotification");
-        builder.setContentText("MessagingNotificationMessagingNotificationMessagingNotification");
 
-        builder.setStyle(new NotificationCompat.MessagingStyle("DisplayName2")
-                .addMessage("addMessageA", (int)System.currentTimeMillis(), "sender1")
-                .addMessage("addMessageB", (int)System.currentTimeMillis(), "sender2")
-                .addMessage("addMessageC", (int)System.currentTimeMillis(), "sender3")
-                .addMessage("addMessageD", (int)System.currentTimeMillis(), "sender4")
-                .setConversationTitle("ConversationTitle"));
 
-        manager.notify((int)System.currentTimeMillis(), getNotification());
-    }
-////Create the notification that’ll be posted to Channel Two//
+
+    @SuppressLint("NewApi")
+    public Notification.Builder getNotification12(String title, String body) {
+
+        //showTwo();
+
+//        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+//        bigStyle.bigText(getString(R.string.text_message_air_bad));
+//        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+        Intent intent = new Intent(this, MainActivity.class);
+//        //當使用者點擊通知Bar時，切換回MainActivity
+        PendingIntent pi = PendingIntent.getActivity(this, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        /* Add Big View Specific Configuration */
+//        NotificationCompat.InboxStyle inboxStyle =
+//                new NotificationCompat.InboxStyle();
 //
-//    public Notification.Builder getNotification2(String title, String body) {
-//        return new Notification.Builder(getApplicationContext(), CHANNEL_TWO_ID)
-//                .setContentTitle(title)
-//                .setContentText(body)
-//                .setSmallIcon(R.color.progressBarMidColor)
-//                .setAutoCancel(true);
-//    }
+//        String[] events = new String[6];
+//        events[0] = new String("This is first line....");
+//        events[1] = new String("This is second line...");
+//        events[2] = new String("This is third line...");
+//        events[3] = new String("This is 4th line...");
+//        events[4] = new String("This is 5th line...");
+//        events[5] = new String("This is 6th line...");
+//
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("Big Title Details:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//
+//            inboxStyle.addLine(events[i]);
+//        }
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_03);
+        //取得要發送的圖片
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.bigPicture(bitmap);
+        //創建一個BigPictureStyle物件，並設定要傳送的圖片
+        return new Notification.Builder(getApplicationContext(), CHANNEL_TWO_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                //.setColor(Color.RED)
+                .setColorized(true)
+                .setLargeIcon(bitmap)
+                //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setBadgeIconType(R.drawable.background_chart) //your app icon
+                .setContentIntent(pi)
+                .setStyle(new Notification.BigTextStyle().bigText(body));
+    }
+
+    @SuppressLint("NewApi")
+    public Notification.Builder getNotification13(String title, String body) {
+
+        //showTwo();
+
+//        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+//        bigStyle.bigText(getString(R.string.text_message_air_bad));
+//        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+        Intent intent = new Intent(this, MainActivity.class);
+//        //當使用者點擊通知Bar時，切換回MainActivity
+        PendingIntent pi = PendingIntent.getActivity(this, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        /* Add Big View Specific Configuration */
+//        NotificationCompat.InboxStyle inboxStyle =
+//                new NotificationCompat.InboxStyle();
+//
+//        String[] events = new String[6];
+//        events[0] = new String("This is first line....");
+//        events[1] = new String("This is second line...");
+//        events[2] = new String("This is third line...");
+//        events[3] = new String("This is 4th line...");
+//        events[4] = new String("This is 5th line...");
+//        events[5] = new String("This is 6th line...");
+//
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("Big Title Details:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//
+//            inboxStyle.addLine(events[i]);
+//        }
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_04);
+        //取得要發送的圖片
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.bigPicture(bitmap);
+        //創建一個BigPictureStyle物件，並設定要傳送的圖片
+        return new Notification.Builder(getApplicationContext(), CHANNEL_THREE_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                //.setColor(Color.RED)
+                .setColorized(true)
+                .setLargeIcon(bitmap)
+                //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setBadgeIconType(R.drawable.background_chart) //your app icon
+                .setContentIntent(pi)
+                .setStyle(new Notification.BigTextStyle().bigText(body));
+    }
+
+    @SuppressLint("NewApi")
+    public Notification.Builder getNotification14(String title, String body) {
+
+        //showTwo();
+
+//        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+//        bigStyle.bigText(getString(R.string.text_message_air_bad));
+//        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+        Intent intent = new Intent(this, MainActivity.class);
+//        //當使用者點擊通知Bar時，切換回MainActivity
+        PendingIntent pi = PendingIntent.getActivity(this, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        /* Add Big View Specific Configuration */
+//        NotificationCompat.InboxStyle inboxStyle =
+//                new NotificationCompat.InboxStyle();
+//
+//        String[] events = new String[6];
+//        events[0] = new String("This is first line....");
+//        events[1] = new String("This is second line...");
+//        events[2] = new String("This is third line...");
+//        events[3] = new String("This is 4th line...");
+//        events[4] = new String("This is 5th line...");
+//        events[5] = new String("This is 6th line...");
+//
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("Big Title Details:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//
+//            inboxStyle.addLine(events[i]);
+//        }
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_05);
+        //取得要發送的圖片
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.bigPicture(bitmap);
+        //創建一個BigPictureStyle物件，並設定要傳送的圖片
+        return new Notification.Builder(getApplicationContext(), CHANNEL_FOU_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                //.setColor(Color.RED)
+                .setColorized(true)
+                .setLargeIcon(bitmap)
+                //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setBadgeIconType(R.drawable.background_chart) //your app icon
+                .setContentIntent(pi)
+                .setStyle(new Notification.BigTextStyle().bigText(body));
+    }
+
+    @SuppressLint("NewApi")
+    public Notification.Builder getNotification15(String title, String body) {
+
+        //showTwo();
+
+//        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+//        bigStyle.bigText(getString(R.string.text_message_air_bad));
+//        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+        Intent intent = new Intent(this, MainActivity.class);
+//        //當使用者點擊通知Bar時，切換回MainActivity
+        PendingIntent pi = PendingIntent.getActivity(this, 1,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        /* Add Big View Specific Configuration */
+//        NotificationCompat.InboxStyle inboxStyle =
+//                new NotificationCompat.InboxStyle();
+//
+//        String[] events = new String[6];
+//        events[0] = new String("This is first line....");
+//        events[1] = new String("This is second line...");
+//        events[2] = new String("This is third line...");
+//        events[3] = new String("This is 4th line...");
+//        events[4] = new String("This is 5th line...");
+//        events[5] = new String("This is 6th line...");
+//
+//        // Sets a title for the Inbox style big view
+//        inboxStyle.setBigContentTitle("Big Title Details:");
+//        // Moves events into the big view
+//        for (int i=0; i < events.length; i++) {
+//
+//            inboxStyle.addLine(events[i]);
+//        }
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_06);
+        //取得要發送的圖片
+
+        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        bigPictureStyle.bigPicture(bitmap);
+        //創建一個BigPictureStyle物件，並設定要傳送的圖片
+        return new Notification.Builder(getApplicationContext(), CHANNEL_FIVE_ID)
+                .setContentTitle(title)
+                .setContentText(body)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setAutoCancel(true)
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
+                //.setColor(Color.RED)
+                .setColorized(true)
+                .setLargeIcon(bitmap)
+                //.setBadgeIconType( R.drawable.app_android_icon_logo)
+                //.setTicker("通知首次出现在通知栏，带上升动画效果的")
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setBadgeIconType(R.drawable.background_chart) //your app icon
+                .setContentIntent(pi)
+                .setStyle(new Notification.BigTextStyle().bigText(body));
+    }
+
 
 
     public void notify(int id, Notification.Builder notification) {
@@ -161,7 +390,7 @@ public class NotificationHelper extends ContextWrapper {
         return notifManager;
     }
 
-    protected Notification getNotification() {
-        return builder.build();
-    }
+    //protected Notification getNotification() {
+    //    return builder.build();
+   // }
 }
