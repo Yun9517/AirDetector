@@ -165,7 +165,7 @@
             android:text="@string/text_default_value"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textStyle="normal" />
 
         <ImageView
@@ -190,7 +190,7 @@
             android:gravity="center_vertical|fill_vertical"
             android:text="@string/text_default_value"
             android:textAlignment="center"
-            android:textSize="16sp"
+            android:textSize="20sp"
             android:textColor="@color/whiteColor"
             android:textStyle="normal" />
 
@@ -213,7 +213,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="282dp"
+        android:layout_height="555dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
