@@ -199,7 +199,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
             android:layout_alignRight="@+id/tvSelectDetectionValue"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="normal"
             android:layout_gravity="end"
             android:textAlignment="gravity" />
@@ -302,7 +302,7 @@
 
         <LinearLayout
             android:id="@+id/averageExposure"
-            android:layout_width="300dp"
+            android:layout_width="315dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
@@ -313,9 +313,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
+                android:layout_weight=".39"
+                android:layout_marginStart="0dp"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/averageExposure"
                 android:textColor="@color/whiteColor" />
 
@@ -323,7 +323,7 @@
                 android:id="@+id/show_Date"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".25"
+                android:layout_weight=".33"
                 android:background="@color/whiteTransparentColor_80"
                 android:orientation="vertical">
 
@@ -332,7 +332,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Yesterday"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
@@ -341,7 +341,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Today"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
@@ -350,7 +350,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".2"
+                android:layout_weight=".28"
                 android:orientation="vertical">
 
                 <TextView

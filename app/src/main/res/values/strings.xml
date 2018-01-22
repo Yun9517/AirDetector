@@ -108,7 +108,7 @@
     <string name="frg_tvocRadioButtonMonth">12hr平均</string>
 
     <!-- 2018/01/17 Average Exposure -->
-    <string name="averageExposure">平均曝露濃度</string>
+    <string name="averageExposure">日平均曝露濃度</string>
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
     <string name="text_setting_allow_notification">允許通知</string>

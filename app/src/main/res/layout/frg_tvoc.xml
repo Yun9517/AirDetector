@@ -204,13 +204,13 @@
             android:text="@string/text_label_tvoc"
             android:textAlignment="gravity"
             android:textColor="@color/whiteColor"
-            android:textSize="16sp"
+            android:textSize="12sp"
             android:textStyle="normal" />
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="258dp"
+        android:layout_height="282dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
@@ -304,7 +304,7 @@
 
         <LinearLayout
             android:id="@+id/averageExposure"
-            android:layout_width="300dp"
+            android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
@@ -315,9 +315,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
+                android:layout_weight=".39"
+                android:layout_marginStart="0dp"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/averageExposure"
                 android:textColor="@color/whiteColor" />
 
@@ -325,7 +325,7 @@
                 android:id="@+id/show_Date"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".25"
+                android:layout_weight=".33"
                 android:background="@color/whiteTransparentColor_80"
                 android:orientation="vertical">
 
@@ -334,8 +334,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Yesterday"
                     android:textAlignment="center"
+                    android:text="@string/text_default_value"
                     android:textColor="@color/blackColor" />
 
                 <TextView
@@ -343,8 +343,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Today"
                     android:textAlignment="center"
+                    android:text="@string/text_default_value"
                     android:textColor="@color/blackColor" />
 
             </LinearLayout>
@@ -352,7 +352,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".2"
+                android:layout_weight=".28"
                 android:orientation="vertical">
 
                 <TextView

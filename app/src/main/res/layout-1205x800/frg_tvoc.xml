@@ -9,8 +9,23 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/whiteColor"
+        android:background="@color/whiteTransparentColor_80"
         android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCallDatePicker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:background="@android:color/transparent"
+            android:text="Button" />
+
+        <LinearLayout
+            android:layout_width="1dp"
+            android:layout_height="46dp"
+            android:background="@color/grayColor"
+            android:orientation="horizontal"/>
+
         <Spinner
             android:id="@+id/sprTVOC"
             android:layout_width="match_parent"
@@ -22,13 +37,7 @@
             <!--android:popupBackground="@drawable/message_block_background"-->
 
         </Spinner>
-        <Button
-            android:id="@+id/btnCallDatePicker"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Button"
-            android:background="@android:color/transparent"/>
+
         <RadioGroup
             android:id="@+id/frg_radioGroup"
             android:layout_width="match_parent"
@@ -40,51 +49,50 @@
                 android:id="@+id/radioButton_Hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
-                android:gravity="center"
                 android:checked="true"
-                android:text="@string/frg_tvocRadioButtonHour" />
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonHour"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonDay" />
+                android:text="@string/frg_tvocRadioButtonDay"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonWeek" />
+                android:text="@string/frg_tvocRadioButtonWeek"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonMonth" />
-
+                android:text="@string/frg_tvocRadioButtonMonth"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
 
         </RadioGroup>
@@ -128,7 +136,7 @@
         android:id="@+id/chartDataLoading"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="7dp"
         android:background="@color/data_Loading"
         android:gravity="center_horizontal|fill_horizontal"
         android:text="@string/text_default_value"
@@ -149,7 +157,7 @@
             android:text="@string/text_default_value"
             android:textColor="@color/whiteColor"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <ImageView
@@ -176,7 +184,7 @@
             android:text="@string/text_default_value"
             android:textColor="@color/whiteColor"
             android:textAlignment="center"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <TextView
@@ -190,7 +198,7 @@
             android:layout_marginEnd="20dp"
             android:layout_marginTop="5dp"
             android:layout_alignRight="@+id/tvSelectDetectionValue"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textStyle="normal"
             android:layout_gravity="end"
             android:textAlignment="gravity" />
@@ -198,7 +206,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="260dp"
+        android:layout_height="282dp"
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
@@ -293,7 +301,7 @@
 
         <LinearLayout
             android:id="@+id/averageExposure"
-            android:layout_width="300dp"
+            android:layout_width="315dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
@@ -304,9 +312,9 @@
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:layout_marginStart="5dp"
-                android:gravity="center_vertical"
+                android:layout_weight=".39"
+                android:layout_marginStart="0dp"
+                android:gravity="center_vertical|center_horizontal"
                 android:text="@string/averageExposure"
                 android:textColor="@color/whiteColor" />
 
@@ -314,7 +322,7 @@
                 android:id="@+id/show_Date"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".25"
+                android:layout_weight=".33"
                 android:background="@color/whiteTransparentColor_80"
                 android:orientation="vertical">
 
@@ -323,7 +331,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Yesterday"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
@@ -332,7 +340,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Today"
+                    android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
@@ -341,7 +349,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".2"
+                android:layout_weight=".28"
                 android:orientation="vertical">
 
                 <TextView
@@ -349,8 +357,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/text_default_value"
                     android:textAlignment="center"
+                    android:text="@string/text_default_value"
                     android:textColor="@color/whiteColor" />
 
                 <TextView
@@ -358,8 +366,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="@string/text_default_value"
                     android:textAlignment="center"
+                    android:text="@string/text_default_value"
                     android:textColor="@color/whiteColor" />
             </LinearLayout>
 
