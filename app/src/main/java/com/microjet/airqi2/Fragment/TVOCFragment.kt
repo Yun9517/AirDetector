@@ -101,7 +101,7 @@ class TVOCFragment : Fragment() {
     private var preHeat = "0"
     private var getDataCycle = 15
 
-    private var calObject = Calendar.getInstance()
+    private val calObject = Calendar.getInstance()
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
     //private var chartHandler = Handler()
@@ -281,6 +281,12 @@ class TVOCFragment : Fragment() {
         setImageBarSize()
         when (position) {
             0 -> {
+                val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
+                val l = p / 30
+                if (l <= 2) {
+                    calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+                    Log.d("drawChart",calObject.toString())
+                }
                 getRealmDay()
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
@@ -289,8 +295,6 @@ class TVOCFragment : Fragment() {
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
-                val l = p / 30
                 mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
@@ -359,6 +363,7 @@ class TVOCFragment : Fragment() {
         super.onResume()
         //視Radio id畫圖
         //dependRadioIDDrawChart(radioButtonID)
+        btnTextChanged(spinnerPositon)
         drawChart(spinnerPositon)
     }
 
@@ -532,10 +537,10 @@ class TVOCFragment : Fragment() {
         arrTvoc3.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -551,7 +556,7 @@ class TVOCFragment : Fragment() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
-            arrTime3.add((startTime + y * 30000).toString())
+            arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
         }
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
@@ -569,8 +574,8 @@ class TVOCFragment : Fragment() {
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = calObject.timeInMillis
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         Log.d("getRealmWeek", sqlWeekBase.toString())
@@ -595,11 +600,11 @@ class TVOCFragment : Fragment() {
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime3.add(sqlStartDate.toString())
+                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.e("getRealmWeek", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate.toString()))
+                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
     }
@@ -609,8 +614,8 @@ class TVOCFragment : Fragment() {
         //拿到現在是星期幾的Int
         val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
         val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = calObject.timeInMillis
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth", sqlMonthBase.toString())
@@ -637,11 +642,11 @@ class TVOCFragment : Fragment() {
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime3.add(sqlStartDate.toString())
+                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmMonth", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate.toString()))
+                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
 
@@ -826,6 +831,7 @@ class TVOCFragment : Fragment() {
                         //stopUpdateDataAnimation()
                         downloadComplete = true
                         //mRadioGroup?.check(R.id.radioButton_Hour)
+                        btnTextChanged(spinnerPositon)
                         drawChart(spinnerPositon)
                     }
                 }
@@ -871,6 +877,7 @@ class TVOCFragment : Fragment() {
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
                     if (spinnerPositon == 0) {
+                        btnTextChanged(spinnerPositon)
                         drawChart(spinnerPositon)
                     }
                 }
@@ -977,9 +984,9 @@ class TVOCFragment : Fragment() {
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
         //val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = calObject.timeInMillis
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
         //今天的0點為起點
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //前一天的０點起
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((1).toLong())
         // Show Date
