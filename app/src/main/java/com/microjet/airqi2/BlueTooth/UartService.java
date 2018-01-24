@@ -943,23 +943,23 @@ public class UartService extends Service {
                     }
                     else if ( Integer.valueOf(RString.get(2))  >= 220 && (Integer.valueOf(RString.get(2))  < 660)) {
                         //20180122  Andy
-                        BEBEBEBE1();
+                        BEBEBEBE1(RString);
                     }
                     else if ( (Integer.valueOf(RString.get(2))  >= 660) && (Integer.valueOf(RString.get(2))  < 2200)) {
                         //20180122  Andy
-                        BEBEBEBE2();
+                        BEBEBEBE2(RString);
                     }
                     else if ( (Integer.valueOf(RString.get(2))  >= 2200) && (Integer.valueOf(RString.get(2))  < 5500)) {
                         //20180122  Andy
-                        BEBEBEBE3();
+                        BEBEBEBE3(RString);
                     }
                     else if ( (Integer.valueOf(RString.get(2))  >= 5500) && (Integer.valueOf(RString.get(2))  < 20000)) {
                         //20180122  Andy
-                        BEBEBEBE4();
+                        BEBEBEBE4(RString);
                     }
                     else {
                         //20180122  Andy
-                        BEBEBEBE5();
+                        BEBEBEBE5(RString);
                     }
 
                     break;
@@ -1336,7 +1336,9 @@ public class UartService extends Service {
 
     //20180102   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void BEBEBEBE1() {
+    public void BEBEBEBE1(ArrayList<String> BEBERString) {
+        //20180124
+        ArrayList<String> bebe1RString=BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound220 == 5 || countsound220 == 0)) {
             //20180102   Andy叫叫ABC
@@ -1379,42 +1381,42 @@ public class UartService extends Service {
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
             {
 
-                if (isAppIsInBackground(nowActivity)) {
-                    try {
-                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                        bigStyle.bigText(getString((R.string.text_message_air_mid)));
-                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                                .setContentTitle(getString(R.string.warning_title_Yellow))
-                                //.setColor(Color.RED)
-                                //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                                //.setContentText(getString(R.string.text_message_air_bad))
-                                .setStyle(bigStyle)
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null;
-                        //20180103   Andy
-                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                        Intent intent = new Intent(this, MainActivity.class);
-                        //當使用者點擊通知Bar時，切換回MainActivity
-                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        notification.contentIntent = pi;
-                        //20180109   Andy
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationHelper = new NotificationHelper(this);
-                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Yellow),getString(R.string.text_message_air_mid));
-                            notificationHelper.notify(REQUEST_CODE, NB);
-                        }else{
-                            //送到手機的通知欄
-                            notificationManager.notify(1, notification);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                if (isAppIsInBackground(nowActivity)) try {
+                    NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+                    bigStyle.bigText(getString((R.string.text_message_air_mid)));
+                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
+                            .setContentTitle(getString(R.string.warning_title_Yellow))
+                            //.setColor(Color.RED)
+                            //.setBadgeIconType(R.drawable.app_android_icon_logo)
+                            //.setContentText(getString(R.string.text_message_air_bad))
+                            .setStyle(bigStyle)
+                            .setPriority(Notification.PRIORITY_DEFAULT)
+                            .setAutoCancel(true) // 點擊完notification自動消失
+                            .build();
+                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    assert notificationManager != null;
+                    //20180103   Andy
+                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
+                    Intent intent = new Intent(this, MainActivity.class);
+                    //當使用者點擊通知Bar時，切換回MainActivity
+                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                    notification.contentIntent = pi;
+                    //20180109   Andy
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        notificationHelper = new NotificationHelper(this);
+                        //20180123
+                        notificationHelper.set_TCOC_Value(Integer.parseInt(bebe1RString.get(2)));//RString.get(2)));
+                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Yellow), getString(R.string.text_message_air_mid));
+                        notificationHelper.notify(REQUEST_CODE, NB);
+                    } else {
+                        //送到手機的通知欄
+                        notificationManager.notify(1, notification);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -1426,7 +1428,9 @@ public class UartService extends Service {
         Log.e("TVOC220計數變數:", Integer.toString(countsound220));
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void BEBEBEBE2(){
+    private void BEBEBEBE2(ArrayList<String> BEBERString){
+        //20180124
+        ArrayList<String> bebe2RString=BEBERString;
         SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound660 == 5 || countsound660 == 0)) {
 
@@ -1498,7 +1502,8 @@ public class UartService extends Service {
                     //20180109   Andy
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         notificationHelper = new NotificationHelper(this);
-                        Notification.Builder NB = notificationHelper.getNotification12(getString(R.string.warning_title_Orange), getString(R.string.text_message_air_Medium_Orange));
+                        notificationHelper.set_TCOC_Value(Integer.parseInt(bebe2RString.get(2)));//RString.get(2)));
+                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Orange), getString(R.string.text_message_air_Medium_Orange));
                         notificationHelper.notify(REQUEST_CODE, NB);
                     }else{
                         //送到手機的通知欄
@@ -1521,7 +1526,9 @@ public class UartService extends Service {
 
     //20180122   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void BEBEBEBE3() {
+    public void BEBEBEBE3(ArrayList<String> BEBERString) {
+        //20180124
+        ArrayList<String> bebe3RString=BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound2200 == 5 || countsound2200 == 0)) {
 
@@ -1588,7 +1595,8 @@ public class UartService extends Service {
                         //20180109   Andy
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             notificationHelper = new NotificationHelper(this);
-                            Notification.Builder NB = notificationHelper.getNotification13(getString(R.string.warning_title_Red),getString(R.string.text_message_air_bad));
+                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe3RString.get(2)));//RString.get(2)));
+                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Red),getString(R.string.text_message_air_bad));
                             notificationHelper.notify(REQUEST_CODE, NB);
                         }else{
                             //送到手機的通知欄
@@ -1609,7 +1617,9 @@ public class UartService extends Service {
     }
     //20180122   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void BEBEBEBE4() {
+    public void BEBEBEBE4(ArrayList<String> BEBERString) {
+        //20180124
+        ArrayList<String> bebe4RString=BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound5500 == 5 || countsound5500 == 0)) {
             countsound220=0;
@@ -1675,7 +1685,8 @@ public class UartService extends Service {
                         //20180109   Andy
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             notificationHelper = new NotificationHelper(this);
-                            Notification.Builder NB = notificationHelper.getNotification14(getString(R.string.warning_title_Purple),getString(R.string.text_message_air_Serious_Purple));
+                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe4RString.get(2)));//RString.get(2)));
+                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Purple),getString(R.string.text_message_air_Serious_Purple));
                             notificationHelper.notify(REQUEST_CODE, NB);
                         }else{
                             //送到手機的通知欄
@@ -1696,7 +1707,9 @@ public class UartService extends Service {
     }
     //20180122   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public void BEBEBEBE5() {
+    public void BEBEBEBE5(ArrayList<String> BEBERString) {
+        //20180124
+        ArrayList<String> bebe5RString=BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound20000 == 5 || countsound20000 == 0)) {
             countsound220=0;
@@ -1761,7 +1774,8 @@ public class UartService extends Service {
                         //20180109   Andy
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             notificationHelper = new NotificationHelper(this);
-                            Notification.Builder NB = notificationHelper.getNotification15(getString(R.string.warning_title_Brown),getString(R.string.text_message_air_Extreme_Dark_Purple));
+                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe5RString.get(2)));//RString.get(2)));
+                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Brown),getString(R.string.text_message_air_Extreme_Dark_Purple));
                             notificationHelper.notify(REQUEST_CODE, NB);
                         }else{
                             //送到手機的通知欄

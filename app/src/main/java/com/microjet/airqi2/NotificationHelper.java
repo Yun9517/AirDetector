@@ -9,7 +9,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.app.Notification;
@@ -18,10 +17,11 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.widget.Toast;
+import android.support.v7.content.res.AppCompatResources;
 
-import com.microjet.airqi2.BlueTooth.UartService;
-import com.microjet.airqi2.R;
+import javax.annotation.meta.When;
+
+import static java.lang.System.in;
 
 public class NotificationHelper extends ContextWrapper {
     private NotificationManager notifManager;
@@ -36,6 +36,7 @@ public class NotificationHelper extends ContextWrapper {
     public static final String CHANNEL_FIVE_ID = "com.jessicathornsby.myapplication.FIVE";
     public static final String CHANNEL_FIVE_NAME = "Channel Five";
 
+    private Bitmap bitmap=null;
 //Create your notification channels//
 
     public NotificationHelper(Context base) {
@@ -104,38 +105,27 @@ public class NotificationHelper extends ContextWrapper {
         PendingIntent pi = PendingIntent.getActivity(this, 1,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-//        /* Add Big View Specific Configuration */
-//        NotificationCompat.InboxStyle inboxStyle =
-//                new NotificationCompat.InboxStyle();
-//
-//        String[] events = new String[6];
-//        events[0] = new String("This is first line....");
-//        events[1] = new String("This is second line...");
-//        events[2] = new String("This is third line...");
-//        events[3] = new String("This is 4th line...");
-//        events[4] = new String("This is 5th line...");
-//        events[5] = new String("This is 6th line...");
-//
-//        // Sets a title for the Inbox style big view
-//        inboxStyle.setBigContentTitle("Big Title Details:");
-//        // Moves events into the big view
-//        for (int i=0; i < events.length; i++) {
-//
-//            inboxStyle.addLine(events[i]);
-//        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_02);
+
+         //bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_02);
         //取得要發送的圖片
 
-        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
-        bigPictureStyle.bigPicture(bitmap);
+//
+//        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+//        bigPictureStyle.bigPicture(bitmap);
+//        NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+//        bigPictureStyle.setBigContentTitle("Title");
+//        bigPictureStyle.setSummaryText("SummaryText");
+//        Bitmap bigPicture = BitmapFactory.decodeResource(getResources(),R.drawable.history_face_icon_02);
+//        bigPictureStyle.bigPicture(bigPicture);
+        //builder.setStyle(bigPictureStyle);
+
+
         //創建一個BigPictureStyle物件，並設定要傳送的圖片
         return new Notification.Builder(getApplicationContext(), CHANNEL_ONE_ID)
-                .setContentTitle(title)
+                 .setContentTitle(title)
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
@@ -145,6 +135,19 @@ public class NotificationHelper extends ContextWrapper {
                 //.setBadgeIconType(R.drawable.background_chart) //your app icon
                 .setContentIntent(pi)
                 .setStyle(new Notification.BigTextStyle().bigText(body));
+
+
+        //***********************************************************************************************************
+       /* NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
+        //return NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle()
+        bigPictureStyle.setBigContentTitle("Title");
+        bigPictureStyle.setSummaryText("SummaryText");
+        Bitmap bigPicture = BitmapFactory.decodeResource(getResources(),R.drawable.android);
+        bigPictureStyle.bigPicture(bigPicture);
+        builder.setStyle(bigPictureStyle);
+        */
+        //***********************************************************************************************************
+
     }
 
 
@@ -181,7 +184,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_03);
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_03);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -192,8 +195,6 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
@@ -237,7 +238,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_04);
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_04);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -248,8 +249,6 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
@@ -293,7 +292,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_05);
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_05);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -304,8 +303,6 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
@@ -349,7 +346,7 @@ public class NotificationHelper extends ContextWrapper {
 //
 //            inboxStyle.addLine(events[i]);
 //        }
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_06);
+        //Bitmap bitmap = BitmapFactory.decodeResource(getResources() , R.drawable.history_face_icon_06);
         //取得要發送的圖片
 
         NotificationCompat.BigPictureStyle bigPictureStyle = new NotificationCompat.BigPictureStyle();
@@ -360,8 +357,6 @@ public class NotificationHelper extends ContextWrapper {
                 .setContentText(body)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setAutoCancel(true)
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                //.setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.app_android_icon_light))
                 //.setColor(Color.RED)
                 .setColorized(true)
                 .setLargeIcon(bitmap)
@@ -390,7 +385,18 @@ public class NotificationHelper extends ContextWrapper {
         return notifManager;
     }
 
-    //protected Notification getNotification() {
-    //    return builder.build();
-   // }
+    public void set_TCOC_Value (Integer value) {
+        Integer Value=value;
+       if(Value >= 220 && Value < 660) {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02);
+       }else if (Value >= 660 && Value < 2200){
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_03);
+       }else if (Value >= 2200 && Value < 5500) {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_04);
+       }else if (Value >= 5500 && Value < 20000) {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_05);
+       }else {
+           bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_06);
+       }
+    }
 }
