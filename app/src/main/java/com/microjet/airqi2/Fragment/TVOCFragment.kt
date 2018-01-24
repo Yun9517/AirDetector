@@ -94,6 +94,9 @@ class TVOCFragment : Fragment() {
     //試Realm拉資料
     private var arrTime3 = ArrayList<String>()
     private var arrTvoc3 = ArrayList<String>()
+    //20180122
+    private var AVGTvoc3 = Int
+
 
     private var animationCount = 0
     private var downloadingData = false
@@ -147,6 +150,11 @@ class TVOCFragment : Fragment() {
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
         mChart = this.view!!.findViewById(R.id.chart_line)
+
+        //20180124
+        show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
+        show_Today = this.view!!.findViewById(R.id.show_Today)
+
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -299,12 +307,13 @@ class TVOCFragment : Fragment() {
                         + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y - 1)
-
+/*
                 getToAndYesterdayAvgData()
                 result_Today!!.text = arrTvoc3[1] + " ppb"        //arrTvoc3[1].toString()+" ppb"
                 result_Yesterday!!.text = arrTvoc3[0] + " ppb"
                 Log.e("兩天資料:", arrTvoc3.toString())
                 Log.e("兩天時數:", arrTime3.toString())
+                */
             }
             1 -> {
                 getRealmWeek()
@@ -553,20 +562,69 @@ class TVOCFragment : Fragment() {
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
+        var sumTvoc = 0
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
             arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
         }
+        var aveTvoc=0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
                 arrTvoc3[count] = asmDataModel.tvocValue.toString()
+                //20180122
+                sumTvoc += arrTvoc3[count].toInt()
                 //Log.v("hilightCount:", count.toString())
             }
             Log.d("getRealmDay", result1.last().toString())
+            //20180122
+             aveTvoc = (sumTvoc / result1.size)
         }
+
+
+        //arrTvoc3.add(aveTvoc.toString())
+
+        //前一天的０點起
+        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
+        // Show Date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+
+        show_Today!!.text = dateFormat.format(startTime)
+        show_Yesterday!!.text =  dateFormat.format(startTime - TimeUnit.DAYS.toMillis((1).toLong()))
+
+
+        //Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+       // for (y in 0..1) {
+            //第一筆為日 00:00
+            val sqlStartDate = sqlWeekBase//+TimeUnit.DAYS.toMillis()
+            //結束點為日 23:59
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            //val realm= Realm.getDefaultInstance()
+            val query1 = realm.where(AsmDataModel::class.java)
+        //20180122
+            var AVGTvoc3 :Float= 0F
+            Log.d("getRealmWeek", sqlStartDate.toString())
+            Log.d("getRealmWeek", sqlEndDate.toString())
+            query1.between("Created_time", sqlStartDate, sqlEndDate)
+            val result2 = query1.findAll()
+            Log.d("getRealmWeek", result2.size.toString())
+            if (result2.size != 0) {
+                var sumTvocYesterday = 0F
+                for (i in result2) {
+                    sumTvocYesterday += i.tvocValue.toInt()
+                }
+                 AVGTvoc3 = (sumTvocYesterday / result2.size)
+            } else {
+                AVGTvoc3=0F
+            }
+
+        //}
+        result_Today!!.text = aveTvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+        result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
     }
 
     private fun getRealmWeek() {
@@ -975,9 +1033,11 @@ class TVOCFragment : Fragment() {
         }
         arrTvoc3.reverse()
         arrTime3.reverse()
-
     }*/
 
+
+/*
+>>>>>>> Stashed changes
     @SuppressLint("SetTextI18n")
     private fun getToAndYesterdayAvgData(){
         arrTime3.clear()
@@ -1025,6 +1085,7 @@ class TVOCFragment : Fragment() {
 
         }
     }
+    */
 }
 
 

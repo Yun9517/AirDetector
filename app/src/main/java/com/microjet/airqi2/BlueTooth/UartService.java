@@ -144,6 +144,8 @@ public class UartService extends Service {
     private boolean downloadComplete = false;
     private int dataNotSaved = 0;
     private ArrayList<HashMap> arrB6 = new ArrayList();
+
+    private NotificationManager notificationManager=null;
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -350,6 +352,9 @@ public class UartService extends Service {
 
 
         registerReceiver(mBluetoothStateBroadcastReceiver, new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED));
+
+        //20180124
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
 
@@ -1335,6 +1340,8 @@ public class UartService extends Service {
         }
     }
 
+
+
     //20180102   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE1(ArrayList<String> BEBERString) {
@@ -1396,8 +1403,8 @@ public class UartService extends Service {
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setAutoCancel(true) // 點擊完notification自動消失
                             .build();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    assert notificationManager != null;
+                    //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    //assert notificationManager != null;
                     //20180103   Andy
                     // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                     Intent intent = new Intent(this, MainActivity.class);
@@ -1485,8 +1492,8 @@ public class UartService extends Service {
                             .setPriority(Notification.PRIORITY_DEFAULT)
                             .setAutoCancel(true) // 點擊完notification自動消失
                             .build();
-                    NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    assert notificationManager != null;
+                    //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                    //assert notificationManager != null;
 
                     //20180103   Andy
                     // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
@@ -1508,7 +1515,7 @@ public class UartService extends Service {
                         notificationHelper.notify(REQUEST_CODE, NB);
                     }else{
                         //送到手機的通知欄
-                        notificationManager.notify(2, notification);
+                        notificationManager.notify(1, notification);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1584,8 +1591,8 @@ public class UartService extends Service {
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null;
+                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        //assert notificationManager != null;
                         //20180103   Andy
                         // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                         Intent intent = new Intent(this, MainActivity.class);
@@ -1674,8 +1681,8 @@ public class UartService extends Service {
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null;
+                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        //assert notificationManager != null;
                         //20180103   Andy
                         // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                         Intent intent = new Intent(this, MainActivity.class);
@@ -1763,8 +1770,8 @@ public class UartService extends Service {
                                 .setPriority(Notification.PRIORITY_DEFAULT)
                                 .setAutoCancel(true) // 點擊完notification自動消失
                                 .build();
-                        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        assert notificationManager != null;
+                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                        //assert notificationManager != null;
                         //20180103   Andy
                         // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
                         Intent intent = new Intent(this, MainActivity.class);
@@ -1780,7 +1787,7 @@ public class UartService extends Service {
                             notificationHelper.notify(REQUEST_CODE, NB);
                         }else{
                             //送到手機的通知欄
-                            notificationManager.notify(5, notification);
+                            notificationManager.notify(1, notification);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
