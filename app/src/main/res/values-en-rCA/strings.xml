@@ -93,6 +93,10 @@
     <string name="warning_title_Purple">Emergency!!!</string>
     <string name="warning_title_Brown">Emergency!!!</string>
 
+    <!-- Add Calendar String -->
+    <string name="week_First_Word">week</string>
+    <string name="week_Last_Word"> </string>
+
     <string name="Medium_warning">Leave the place as quick as you can!!!</string>
 
     <!-- Add Unit for use

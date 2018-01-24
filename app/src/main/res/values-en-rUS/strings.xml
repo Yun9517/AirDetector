@@ -95,6 +95,10 @@
 
     <string name="Medium_warning">Leave the place as quick as you can!!!</string>
 
+    <!-- Add Calendar String -->
+    <string name="week_First_Word">week</string>
+    <string name="week_Last_Word"> </string>
+
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
     <string name="frg_tvocRadioButtonHour">時</string>

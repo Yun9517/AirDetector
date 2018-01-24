@@ -266,7 +266,7 @@ class TVOCFragment : Fragment() {
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
-                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + "第" + calObject.get(Calendar.WEEK_OF_YEAR).toString() + "週"
+                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + " " + getString(R.string.week_First_Word) + calObject.get(Calendar.WEEK_OF_YEAR).toString() + getString(R.string.week_Last_Word)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM")

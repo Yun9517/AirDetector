@@ -263,7 +263,7 @@ class ECO2Fragment : Fragment() {
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
-                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + "第" + calObject.get(Calendar.WEEK_OF_YEAR).toString() + "週"
+                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + " " + getString(R.string.week_First_Word) + calObject.get(Calendar.WEEK_OF_YEAR).toString() + getString(R.string.week_Last_Word)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
@@ -657,7 +657,7 @@ class ECO2Fragment : Fragment() {
         val chartLabels = ArrayList<String>()
         when (positionID) {
             0 -> {
-                val dateFormat = SimpleDateFormat("MM/dd HH:mm")
+                val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
@@ -674,7 +674,7 @@ class ECO2Fragment : Fragment() {
                 Log.e("兩天時數:", arrTime3.toString())
             }
             1 -> {
-                val dateFormat = SimpleDateFormat("MM/dd EEEE")
+                val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {

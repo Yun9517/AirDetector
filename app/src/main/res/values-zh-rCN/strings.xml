@@ -95,6 +95,10 @@
 
     <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
 
+    <!-- Add Calendar String -->
+    <string name="week_First_Word">第</string>
+    <string name="week_Last_Word">周</string>
+
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
     <string name="frg_tvocRadioButtonHour">時</string>
