@@ -1,43 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/PrimaryPanel"
-        android:layout_width="450dp"
-        android:layout_height="450dp"
-        android:layout_centerHorizontal="true">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
             android:id="@+id/tvocBar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             app:bg_arc_color="@color/whiteTransparentColor_80"
-            app:bg_arc_width="23dp"
+            app:bg_arc_width="20dp"
             app:front_color1="@color/progressBarStartColor"
             app:front_color2="@color/progressBarMidColor"
             app:front_color3="@color/progressBarEndColor"
-            app:front_width="18dp"
+            app:front_width="15dp"
             app:is_need_content="false"
             app:is_need_title="false"
             app:is_need_unit="false"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:max_value="100"
             app:string_title="TVOC"
             app:string_unit=""
             app:sweep_angle="270" />
 
         <RelativeLayout
-            android:layout_width="350dp"
-            android:layout_height="350dp"
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_centerInParent="true"
+            android:layout_marginBottom="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="35dp"
             android:background="@drawable/circle_transparent"
-            android:id="@+id/relativeLayout">
+            app:layout_constraintBottom_toBottomOf="@+id/tvocBar"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -51,17 +71,19 @@
                     android:id="@+id/inCircleTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/tvRange2"
+                    android:layout_centerHorizontal="true"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="20dp"
                     android:gravity="center"
                     android:text="@string/text_label_tvoc_detect"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="24sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="14sp" />
 
                 <TextView
                     android:id="@+id/inCircleValue"
-                    android:layout_width="170dp"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="5dp"
@@ -69,22 +91,22 @@
                     android:background="@android:color/transparent"
                     android:gravity="center"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="34sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/inCircleState"
-                    android:layout_width="150dp"
+                    android:layout_width="140dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="5dp"
                     android:background="@android:color/transparent"
                     android:gravity="center"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="14sp" />
             </LinearLayout>
         </RelativeLayout>
 
@@ -94,58 +116,69 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignTop="@+id/relativeLayout"
-            android:layout_marginStart="20dp"
-            android:layout_marginTop="-10dp"
+            android:layout_marginStart="13dp"
+            android:layout_marginTop="50dp"
             android:text="@string/text_tvoc_meter_220ppb"
             android:textColor="@color/whiteColor"
-            android:textSize="18sp" />
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvRange2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/relativeLayout"
-            android:layout_marginEnd="20dp"
-            android:layout_marginTop="-10dp"
+            android:layout_alignParentEnd="false"
+            android:layout_marginEnd="13dp"
+            android:layout_marginTop="50dp"
             android:text="@string/text_tvoc_meter_660ppb"
             android:textColor="@color/whiteColor"
-            android:textSize="18sp" />
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <LinearLayout
-        android:layout_width="375dp"
-        android:layout_height="190dp"
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="85dp"
         android:layout_above="@+id/bottom_panel"
-        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
+        app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/PrimaryPanel">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imgLight"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:scaleType="fitXY"
-            android:src="@drawable/ic_msgbox" />
+            android:src="@drawable/app_android_icon_light" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/tvNotify"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="0.7"
                 android:textSize="12sp" />
+
             <TextView
                 android:id="@+id/tvLastDetectTime"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="end"
                 android:layout_weight="0.3"
+                android:textAlignment="textEnd"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -164,23 +197,24 @@
     <LinearLayout
         android:id="@+id/bottom_panel"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         android:layout_alignParentBottom="true"
         android:background="#80000000"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/show_TVOC"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/show_TVOC"
                 android:orientation="vertical">
 
                 <TextView
@@ -190,9 +224,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -202,24 +236,24 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imgDivider1"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
+                android:id="@+id/show_PM"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:id="@+id/show_PM"
                 android:orientation="vertical">
 
                 <TextView
@@ -229,9 +263,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_pm25"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -241,9 +275,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -252,15 +286,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <LinearLayout
+                android:id="@+id/show_eCO2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/show_eCO2"
                 android:orientation="vertical">
 
                 <TextView
@@ -270,9 +304,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_co2"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -282,9 +316,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -292,15 +326,15 @@
                 android:id="@+id/imgDivider2"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
+                android:id="@+id/show_Temp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/show_Temp"
                 android:orientation="vertical">
 
                 <TextView
@@ -310,9 +344,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_temperature"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -322,9 +356,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -332,15 +366,15 @@
                 android:id="@+id/imgDivider3"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"
+                android:layout_marginLeft="2dp"
+                android:layout_marginRight="2dp"
                 app:srcCompat="@drawable/ui_panel_divider" />
 
             <LinearLayout
+                android:id="@+id/show_RH"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:id="@+id/show_RH"
                 android:orientation="vertical">
 
                 <TextView
@@ -350,9 +384,9 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_label_humidity"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="20sp"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -362,11 +396,11 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:text="@string/text_default_value"
-                    android:textColor="@color/whiteColor"
                     android:textAlignment="center"
-                    android:textSize="18sp" />
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/background_chart">
 
     <LinearLayout
+        android:id="@+id/linearLayout4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/whiteTransparentColor_80"
@@ -24,7 +27,7 @@
             android:layout_width="1dp"
             android:layout_height="45dp"
             android:background="@color/grayColor"
-            android:orientation="horizontal"/>
+            android:orientation="horizontal" />
 
         <Spinner
             android:id="@+id/sprECO2"
@@ -36,13 +39,13 @@
             <!--android:foreground="@drawable/message_block_background"-->
             <!--android:popupBackground="@drawable/message_block_background"-->
         </Spinner>
+
         <LinearLayout
             android:id="@+id/panel"
             android:layout_width="2dp"
             android:layout_height="match_parent"
             android:background="@color/grayColor"
-            android:orientation="horizontal">
-        </LinearLayout>
+            android:orientation="horizontal"></LinearLayout>
 
         <RadioGroup
             android:id="@+id/frg_radioGroup"
@@ -55,51 +58,50 @@
                 android:id="@+id/radioButton_Hour"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
-                android:gravity="center"
                 android:checked="true"
-                android:text="@string/frg_tvocRadioButtonHour" />
+                android:gravity="center"
+                android:text="@string/frg_tvocRadioButtonHour"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Day"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonDay" />
+                android:text="@string/frg_tvocRadioButtonDay"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Week"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonWeek" />
+                android:text="@string/frg_tvocRadioButtonWeek"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
             <RadioButton
                 android:id="@+id/radioButton_Month"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/radiobackground"
-                android:textColor="@color/whiteColor"
-                android:textSize="24sp"
                 android:layout_weight="1"
+                android:background="@drawable/radiobackground"
                 android:button="@null"
                 android:gravity="center"
-                android:text="@string/frg_tvocRadioButtonMonth" />
-
+                android:text="@string/frg_tvocRadioButtonMonth"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
 
         </RadioGroup>
@@ -149,12 +151,15 @@
         android:text="@string/text_default_value"
         android:textAlignment="center"
         android:textSize="26sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
 
     <RelativeLayout
+        android:id="@+id/datePanel"
         android:layout_width="wrap_content"
         android:layout_height="28dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/chartDataLoading">
 
         <TextView
             android:id="@+id/tvSelectDetectionTime"
@@ -179,9 +184,12 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/valuePanel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/datePanel">
+
         <TextView
             android:id="@+id/tvSelectDetectionValue"
             android:layout_width="match_parent"
@@ -190,32 +198,36 @@
             android:gravity="center_vertical|fill_vertical"
             android:text="@string/text_default_value"
             android:textAlignment="center"
-            android:textSize="16sp"
             android:textColor="@color/whiteColor"
+            android:textSize="16sp"
             android:textStyle="normal" />
 
         <TextView
             android:id="@+id/ECO2tvChartLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:text="@string/text_label_co2"
-            android:textColor="@color/whiteColor"
-            android:background="@drawable/chart_subtitle"
+            android:layout_alignRight="@+id/tvSelectDetectionValue"
+            android:layout_gravity="end"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="2dp"
-            android:layout_alignRight="@+id/tvSelectDetectionValue"
+            android:background="@drawable/chart_subtitle"
+            android:gravity="end"
+            android:text="@string/text_label_co2"
+            android:textAlignment="gravity"
+            android:textColor="@color/whiteColor"
             android:textSize="12sp"
-            android:textStyle="normal"
-            android:layout_gravity="end"
-            android:textAlignment="gravity" />
+            android:textStyle="normal" />
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="282dp"
-        android:layout_margin="10dp"
-        android:orientation="horizontal">
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/frg_eco2_bot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/valuePanel">
 
         <RelativeLayout
             android:layout_width="45dp"
@@ -298,8 +310,10 @@
     <LinearLayout
         android:id="@+id/frg_eco2_bot"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
         <ImageView
             android:id="@+id/faceBar"
             android:layout_width="match_parent"
@@ -311,16 +325,16 @@
             android:layout_width="310dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
             android:layout_marginBottom="1dp"
-            android:background="@color/blackTransparentColor_80">
+            android:layout_marginTop="8dp"
+            android:background="@color/blackTransparentColor_80"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight=".39"
                 android:layout_marginStart="0dp"
+                android:layout_weight=".39"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="@string/averageExposure"
                 android:textColor="@color/whiteColor" />
@@ -338,8 +352,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAlignment="center"
                     android:text="@string/text_default_value"
+                    android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
                 <TextView
@@ -347,8 +361,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAlignment="center"
                     android:text="@string/text_default_value"
+                    android:textAlignment="center"
                     android:textColor="@color/blackColor" />
 
             </LinearLayout>
@@ -364,8 +378,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAlignment="center"
                     android:text="@string/text_default_value"
+                    android:textAlignment="center"
                     android:textColor="@color/whiteColor" />
 
                 <TextView
@@ -373,12 +387,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textAlignment="center"
                     android:text="@string/text_default_value"
+                    android:textAlignment="center"
                     android:textColor="@color/whiteColor" />
             </LinearLayout>
 
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
