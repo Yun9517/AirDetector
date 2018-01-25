@@ -2,25 +2,27 @@ package com.microjet.airqi2.Fragment
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import kotlinx.android.synthetic.main.frg_main.*
-import com.microjet.airqi2.CustomAPI.ColorArcProgressBar
-import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.R
-import java.text.SimpleDateFormat
-import java.util.*
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.util.TypedValue
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.R
+import kotlinx.android.synthetic.main.frg_main.*
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainFragment : Fragment() {
 
@@ -32,15 +34,7 @@ class MainFragment : Fragment() {
     }
 
     private var mContext: Context? = null
-    private var bar1: ColorArcProgressBar? = null
-    private var tvThreadHold1: TextView? = null
-    private var tvThreadHold2: TextView? = null
-    private var tvInCycleTitle: TextView? = null
-    private var tvInCycleValue: TextView? = null
-    private var tvInCycleState: TextView? = null
-    private var tvNotify: TextView? = null
 
-    private var tvLastDetecteTime:TextView? = null
     //private var pressed="TVOC"//0=temperature 1=humidity 2=TVOC 3=CO2
 
     private var tvocDataFloat = 0f
@@ -73,14 +67,6 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
-        bar1 = this.view!!.findViewById(R.id.tvocBar)
-        tvThreadHold1 = this.view!!.findViewById(R.id.tvRange1)
-        tvThreadHold2 = this.view!!.findViewById(R.id.tvRange2)
-        tvInCycleTitle = this.view!!.findViewById(R.id.inCircleTitle)
-        tvInCycleValue = this.view!!.findViewById(R.id.inCircleValue)
-        tvInCycleState = this.view!!.findViewById(R.id.inCircleState)
-        tvNotify = this.view!!.findViewById(R.id.tvNotify)
-        tvLastDetecteTime = this.view!!.findViewById(R.id.tvLastDetectTime)
 
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
@@ -99,6 +85,9 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.Humi
             checkUIState()
         }
+
+        // 初始化inCircleTitle文字大小
+        fixInCircleTextSize()
     }
 
     override fun onStart() {
@@ -134,26 +123,44 @@ class MainFragment : Fragment() {
         super.onDetach()
     }
 
+    private fun fixInCircleTextSize() {
+        val dm = resources.displayMetrics
+        when(dm.densityDpi) {
+            240 -> {   // HDPI
+                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            }
+            480 -> {   // XXHDPI
+                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            }
+            640 -> {   // XXXHDPI
+                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            }
+        }
+    }
+
     private fun setThresholdValue(dataForState: DetectionData){
-        tvThreadHold1!!.text = dataForState.range1.toString()
-        tvThreadHold2!!.text = dataForState.range2.toString()
+        tvRange1.text = dataForState.range1.toString()
+        tvRange2.text = dataForState.range2.toString()
     }
 
     private fun setBarMaxValue(state: DetectionData){
-        bar1?.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
+        inCircleBar.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
         when (state){
 
             DetectionData.TVOC ->{
-                bar1?.setMaxValues(1000f)
+                inCircleBar.setMaxValues(1000f)
             }
             DetectionData.CO2 ->{
-                bar1?.setMaxValues(5000f)
+                inCircleBar.setMaxValues(5000f)
             }
             DetectionData.Temp ->{
-                bar1?.setMaxValues(100f)
+                inCircleBar.setMaxValues(100f)
             }
             DetectionData.Humi ->{
-                bar1?.setMaxValues(100f)
+                inCircleBar.setMaxValues(100f)
             }
         }
     }
@@ -173,50 +180,50 @@ class MainFragment : Fragment() {
         when(currentValue) {
             in 0..219 -> {
                 tvNotify?.text = getString(R.string.text_message_air_good)
-                tvInCycleState?.text = getString(R.string.text_label_status_good)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_good)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
             in 220..659 -> {
                 tvNotify?.text = getString(R.string.text_message_air_mid)
-                tvInCycleState?.text = getString(R.string.text_label_status_mid)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_mid)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
             }
             in 660..2199 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
-                tvInCycleState?.text = getString(R.string.text_label_status_medium_Orange)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_medium_Orange)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
             }
             in 2200..5499 -> {
                 tvNotify?.text = getString(R.string.text_message_air_bad)
-                tvInCycleState?.text = getString(R.string.text_label_status_bad)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_bad)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
             }
             in 5500..19999 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
-                tvInCycleState?.text = getString(R.string.text_label_status_Serious_Purple)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_Serious_Purple)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
-                tvInCycleState?.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
             }
         }
@@ -226,50 +233,50 @@ class MainFragment : Fragment() {
         when(currentValue) {
             in 0..699 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Green)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Green)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Green)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
             in 700..999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Yellow)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Yellow)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Yellow)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
             }
             in 1000..1499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Orange)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Orange)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Orange)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
             }
             in 1500..2499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Red)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Red)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Red)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
             }
             in 2500..4999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Purple)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Purple)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Purple)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
             }
             else -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Brown)
-                tvInCycleState?.text = getString(R.string.label_eCO2_Brown)
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = getString(R.string.label_eCO2_Brown)
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
             }
         }
@@ -279,26 +286,26 @@ class MainFragment : Fragment() {
         when(currentValue) {
             in 0..18 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
             in 19..27 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMidColor))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMidColor))
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarEndColor))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarEndColor))
             }
         }
@@ -308,27 +315,27 @@ class MainFragment : Fragment() {
         when(currentValue) {
             in 0..40 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
             in 41..60 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarStartColor))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarStartColor))
             }
             else -> {
 
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                tvInCycleState?.text = " "
-                tvInCycleValue?.setTextColor(
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarEndColor))
-                tvInCycleState?.setTextColor(
+                inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarEndColor))
             }
         }
@@ -353,73 +360,73 @@ class MainFragment : Fragment() {
             //setBarMaxValue(dataForState)
             when (dataForState) {
                 DetectionData.TVOC -> {
-                    tvInCycleTitle!!.text = getString(R.string.text_label_tvoc_detect)
+                    inCircleTitle.text = getString(R.string.text_label_tvoc_detect)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    //bar1?.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
-                    //bar1?.setCurrentValues(tvocDataFloat)
-                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
+                    //inCircleBar.setCurrentValues(tvocDataFloat)
+                    inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                     //數值不等比顯示
                     when(tvocDataFloat) {
-                        in 0..660 -> bar1?.setCurrentValues(tvocDataFloat)
-                        in 661..2200 -> bar1?.setCurrentValues((tvocDataFloat / 60) + 700)
-                        in 2201..5500 -> bar1?.setCurrentValues((tvocDataFloat / 60) + 770)
-                        in 5501..20000 -> bar1?.setCurrentValues((tvocDataFloat / 180) + 830)
-                        else -> bar1?.setCurrentValues((tvocDataFloat / 360) + 890)
+                        in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
+                        in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
+                        in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
+                        in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
+                        else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
                     }
-                    //bar1?.setCurrentValues(1000f)
+                    //inCircleBar.setCurrentValues(1000f)
                     tvocStatusTextShow(tvocDataFloat)
                     val temp = tvocDataFloat.toInt().toString() + " ppb "
                     textSpannable(temp)
                 }
                 DetectionData.CO2 -> {
-                    tvInCycleTitle!!.text = getString(R.string.text_label_co2)
+                    inCircleTitle.text = getString(R.string.text_label_co2)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                     //數值不等比顯示
                     when(co2DataFloat) {
-                        in 0..700 -> bar1?.setCurrentValues(co2DataFloat)
-                        in 701..1000 -> bar1?.setCurrentValues((co2DataFloat / 60) + 700)
-                        in 1001..1500 -> bar1?.setCurrentValues((co2DataFloat / 60) + 770)
-                        in 1501..2500 -> bar1?.setCurrentValues((co2DataFloat / 180) + 830)
-                        else -> bar1?.setCurrentValues((co2DataFloat / 360) + 890)
+                        in 0..700 -> inCircleBar.setCurrentValues(co2DataFloat)
+                        in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
+                        in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 770)
+                        in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 830)
+                        else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)
                     }
-                    bar1?.setCurrentValues(co2DataFloat)
-                    //bar1?.setCurrentValues(60000f)
+                    inCircleBar.setCurrentValues(co2DataFloat)
+                    //inCircleBar.setCurrentValues(60000f)
                     eco2StatusTextShow(co2DataFloat)
                     val temp = co2DataFloat.toInt().toString() + " ppm "
                     textSpannable(temp)
                 }
                 DetectionData.Temp -> {
-                    tvInCycleTitle!!.text = getString(R.string.text_label_temperature)
+                    inCircleTitle.text = getString(R.string.text_label_temperature)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setColor(Colors.tempColors, Colors.tempAngles)
+                    inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
                     //Modify Progress Bar
                     when(tempDataFloat) {
-                        in -10..18 -> bar1?.setCurrentValues(tempDataFloat)
-                        else -> bar1?.setCurrentValues((tempDataFloat / 60) + 700)
+                        in -10..18 -> inCircleBar.setCurrentValues(tempDataFloat)
+                        else -> inCircleBar.setCurrentValues((tempDataFloat / 60) + 700)
                     }
-                    bar1?.setCurrentValues(tempDataFloat)
-                    //bar1?.setCurrentValues(18f)
+                    inCircleBar.setCurrentValues(tempDataFloat)
+                    //inCircleBar.setCurrentValues(18f)
                     tempStatusTextShow(tempDataFloat)
                     val temp = tempDataFloat.toInt().toString() + " ℃"
                     textSpannable(temp)
                 }
 
                 DetectionData.Humi -> {
-                    tvInCycleTitle!!.text = getString(R.string.text_label_humidity)
+                    inCircleTitle.text = getString(R.string.text_label_humidity)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
-                    bar1?.setColor(Colors.humiColors, Colors.humiAngles)
+                    inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
                     //Modify Progress Bar
                     when(humiDataFloat) {
-                        in 0..40 -> bar1?.setCurrentValues(humiDataFloat)
-                        else -> bar1?.setCurrentValues((humiDataFloat / 60) + 700)
+                        in 0..40 -> inCircleBar.setCurrentValues(humiDataFloat)
+                        else -> inCircleBar.setCurrentValues((humiDataFloat / 60) + 700)
                     }
-                    bar1?.setCurrentValues(humiDataFloat)
-                    //bar1?.setCurrentValues(40f)
+                    inCircleBar.setCurrentValues(humiDataFloat)
+                    //inCircleBar.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " % "
                     textSpannable(temp)
@@ -429,28 +436,51 @@ class MainFragment : Fragment() {
             setBtmCurrentValue()
             val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
             val date = Date()
-            tvLastDetecteTime?.text = dateFormat.format(date).toString()
+            tvLastDetectTime.text = dateFormat.format(date).toString()
             //20171228 ANDY增加
         } else {
-            tvInCycleValue?.text = " "
-            tvInCycleState?.text = " "
+            inCircleValue.text = " "
+            inCircleState.text = " "
             tvBtmTVOCValue.text= "---"
             tvBtmPM25Value.text= "---"
             tvBtmCO2Value?.text= "---"
             tvBtmTEMPValue.text= "---"/*currentValue[0] + " ℃"*/
             tvBtmHUMIValue.text= "---"/*currentValue[1] + " %"*/
             tvNotify?.text = " "
-            tvLastDetecteTime?.text = " "
-            bar1?.setCurrentValues(0f)
+            tvLastDetectTime.text = " "
+            inCircleBar.setCurrentValues(0f)
         }
     }
 
     private fun textSpannable(temp : String) {
+        val dm = resources.displayMetrics
         val textSpan = SpannableStringBuilder(temp)
-        textSpan.setSpan( 30,0,temp.indexOf(" ") +1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        textSpan.setSpan(AbsoluteSizeSpan(50), temp.indexOf(" ") + 1, temp.length - 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        textSpan.setSpan(30,temp.indexOf(" ") - 1,temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        tvInCycleValue!!.text = textSpan
+        val text1Size  = when(dm.densityDpi) {
+            160 -> convertSpToPx(36f)   // MDPI
+            240 -> convertSpToPx(28f)   // HDPI
+            480 -> convertSpToPx(30f)   // XXHDPI
+            640 -> convertSpToPx(30f)   // XXXHDPI
+            else -> 50
+        }
+        val text2Size  = when(dm.densityDpi) {
+            160 -> convertSpToPx(20f)   // MDPI
+            240 -> convertSpToPx(14f)   // HDPI
+            480 -> convertSpToPx(18f)   // XXHDPI
+            640 -> convertSpToPx(18f)   // XXXHDPI
+            else -> 30
+        }
+
+        textSpan.setSpan(AbsoluteSizeSpan(text1Size),
+                0,temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(AbsoluteSizeSpan(text2Size),
+                temp.indexOf(" ") + 1, temp.length - 1,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        //textSpan.setSpan(AbsoluteSizeSpan(text1Size),temp.indexOf(" ") - 1, temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        inCircleValue.text = textSpan
+    }
+
+    private fun convertSpToPx(input: Float): Int {
+        return (input * resources.displayMetrics.scaledDensity).toInt()
     }
 
     private val myBroadcastReceiver = object: BroadcastReceiver() {
@@ -460,7 +490,7 @@ class MainFragment : Fragment() {
             when (action) {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     mConnState = false
-                    //setBar1CurrentValue("0","0","0","0","0")
+                    //setinCircleBarCurrentValue("0","0","0","0","0")
                 }
 
                 BroadcastActions.ACTION_GATT_CONNECTED -> {

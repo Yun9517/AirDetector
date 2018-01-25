@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
-            android:id="@+id/tvocBar"
+            android:id="@+id/inCircleBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
@@ -32,7 +32,7 @@
             app:front_color1="@color/progressBarStartColor"
             app:front_color2="@color/progressBarMidColor"
             app:front_color3="@color/progressBarEndColor"
-            app:front_width="35dp"
+            app:front_width="30dp"
             app:is_need_content="false"
             app:is_need_title="false"
             app:is_need_unit="false"
@@ -54,7 +54,7 @@
             android:layout_marginStart="60dp"
             android:layout_marginTop="60dp"
             android:background="@drawable/circle_transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/tvocBar"
+            app:layout_constraintBottom_toBottomOf="@+id/inCircleBar"
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
