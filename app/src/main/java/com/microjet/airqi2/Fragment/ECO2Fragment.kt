@@ -141,16 +141,11 @@ class ECO2Fragment : Fragment() {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
-        mChart = this.view!!.findViewById(R.id.chart_line)
         show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
         show_Today = this.view!!.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
-
-        //20180124
-        show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
-        show_Today = this.view!!.findViewById(R.id.show_Today)
-
+        mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -176,6 +171,7 @@ class ECO2Fragment : Fragment() {
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
+                view.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)

@@ -36,7 +36,6 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
-import kotlinx.android.synthetic.main.frg_tvoc.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -150,11 +149,6 @@ class TVOCFragment : Fragment() {
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
         mChart = this.view!!.findViewById(R.id.chart_line)
-
-        //20180124
-        show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
-        show_Today = this.view!!.findViewById(R.id.show_Today)
-
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -180,6 +174,7 @@ class TVOCFragment : Fragment() {
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
+                view.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
