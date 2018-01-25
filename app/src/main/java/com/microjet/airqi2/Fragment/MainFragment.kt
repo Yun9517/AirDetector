@@ -29,8 +29,8 @@ class MainFragment : Fragment() {
     enum class DetectionData(val range1: Long,val range2: Long) {
         TVOC(220,660),
         CO2(700,1000),
-        Temp(18,27),
-        Humi(40,60)
+        Temp(18,25),
+        Humi(45,65)
     }
 
     private var mContext: Context? = null
@@ -157,7 +157,7 @@ class MainFragment : Fragment() {
                 inCircleBar.setMaxValues(5000f)
             }
             DetectionData.Temp ->{
-                inCircleBar.setMaxValues(100f)
+                inCircleBar.setMaxValues(50f)
             }
             DetectionData.Humi ->{
                 inCircleBar.setMaxValues(100f)
@@ -292,28 +292,28 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
-            in 19..27 -> {
+            in 19..25 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMidColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMidColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
             }
         }
     }
 
     private fun humiStatusTextShow(currentValue:Float){
         when(currentValue) {
-            in 0..40 -> {
+            in 0..44 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -321,22 +321,22 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
-            in 41..60 -> {
+            in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarStartColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarStartColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
             else -> {
 
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarEndColor))
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
             }
         }
     }
@@ -388,8 +388,8 @@ class MainFragment : Fragment() {
                     when(co2DataFloat) {
                         in 0..700 -> inCircleBar.setCurrentValues(co2DataFloat)
                         in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
-                        in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 770)
-                        in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 830)
+                        in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)
+                        in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 590)
                         else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)
                     }
                     inCircleBar.setCurrentValues(co2DataFloat)

@@ -20,13 +20,13 @@ object Colors {
     private val tvocOldColor2 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Moderate)
     private val tvocOldColor3 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Bad)
 
-    private val tempColor1 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarDarkBlue)
-    private val tempColor2 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarMidColor)
-    private val tempColor3 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarEndColor)
+    private val tempColor1 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Blue)
+    private val tempColor2 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Good)
+    private val tempColor3 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Bad)
 
-    private val humiColor1 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarDarkBlue)
-    private val humiColor2 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarStartColor)
-    private val humiColor3 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.progressBarEndColor)
+    private val humiColor1 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Blue)
+    private val humiColor2 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Good)
+    private val humiColor3 = ContextCompat.getColor(MyApplication.applicationContext(), R.color.Main_textResult_Bad)
 
     // 公用顏色陣列
     val tvocCO2Colors = intArrayOf(tvocColor1, tvocColor2, tvocColor3, tvocColor4, tvocColor5, tvocColor6)

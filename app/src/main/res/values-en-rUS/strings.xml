@@ -16,7 +16,7 @@
     <string name="label_eCO2_Yellow">Moderate</string>
     <string name="label_eCO2_Orange">High</string>
     <string name="label_eCO2_Red">Unhealthy</string>
-    <string name="label_eCO2_Purple">Very Healthy</string>
+    <string name="label_eCO2_Purple">Very Unhealthy</string>
     <string name="label_eCO2_Brown">Hazardous</string>
     <string name="message_eCO2_Green">The air quality is normal.</string>
     <string name="message_eCO2_Yellow">The air quality is moderate. You may feel uncomfortable. Improved ventilation is recommended.</string>
