@@ -147,7 +147,7 @@ class MainFragment : Fragment() {
                 bar1?.setMaxValues(1000f)
             }
             DetectionData.CO2 ->{
-                bar1?.setMaxValues(2000f)
+                bar1?.setMaxValues(5000f)
             }
             DetectionData.Temp ->{
                 bar1?.setMaxValues(100f)

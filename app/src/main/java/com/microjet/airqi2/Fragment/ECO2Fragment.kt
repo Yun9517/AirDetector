@@ -82,6 +82,7 @@ class ECO2Fragment : Fragment() {
     //UI元件
 
 
+
     //TestValue Start chungyen
     //private val tvocArray = ArrayList<String>()
     //private val timeArray = ArrayList<String>()
@@ -109,7 +110,9 @@ class ECO2Fragment : Fragment() {
     var counter = 0
     var TVOCAVG = 0
 
+
     private var labelArray = ArrayList<String>()
+
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -138,12 +141,11 @@ class ECO2Fragment : Fragment() {
         tvChartTitleTop = this.view?.findViewById(R.id.tvChartTitleTop)
         tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         tvChartTitleBottom = this.view?.findViewById(R.id.tvChartTitleBottom)
-        mChart = this.view!!.findViewById(R.id.chart_line)
         show_Yesterday = this.view!!.findViewById(R.id.show_Yesterday)
         show_Today = this.view!!.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
-
+        mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
                 // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -169,6 +171,7 @@ class ECO2Fragment : Fragment() {
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
+                view.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
@@ -557,6 +560,48 @@ class ECO2Fragment : Fragment() {
             }
             Log.d("getRealmDay", result1.last().toString())
         }
+
+
+        //20180124
+        //前一天的０點起
+        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
+        // Show Date
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+
+
+        show_Today!!.text = dateFormat.format(startTime)
+        show_Yesterday!!.text =  dateFormat.format(startTime - TimeUnit.DAYS.toMillis((1).toLong()))
+
+
+        //Log.d("getRealmWeek", sqlWeekBase.toString())
+        //跑七筆BarChart
+        // for (y in 0..1) {
+        //第一筆為日 00:00
+        val sqlStartDate = sqlWeekBase//+TimeUnit.DAYS.toMillis()
+        //結束點為日 23:59
+        val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        //val realm= Realm.getDefaultInstance()
+        val query1 = realm.where(AsmDataModel::class.java)
+        //20180122
+        var AVGCo2 :Float= 0F
+        Log.d("getRealmWeek", sqlStartDate.toString())
+        Log.d("getRealmWeek", sqlEndDate.toString())
+        query1.between("Created_time", sqlStartDate, sqlEndDate)
+        val result2 = query1.findAll()
+        Log.d("getRealmWeek", result2.size.toString())
+        if (result2.size != 0) {
+            var sumCO2Yesterday = 0F
+            for (i in result2) {
+                sumCO2Yesterday += i.tvocValue.toInt()
+            }
+            AVGCo2 = (sumCO2Yesterday / result2.size)
+        } else {
+            AVGCo2=0F
+        }
+
+        //}
+        result_Today!!.text = AVGCo2.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+        result_Yesterday!!.text = AVGCo2.toInt().toString()+ " ppb"
     }
 
     private fun getRealmWeek() {
