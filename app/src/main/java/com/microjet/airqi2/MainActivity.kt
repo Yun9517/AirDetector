@@ -142,8 +142,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //            ContextCompat.startForegroundService(this, serviceIntent)
 //            //startForegroundService(serviceIntent)
 //        } else {
-            val serviceIntent: Intent? = Intent(this, UartService::class.java)
-            startService(serviceIntent)
+
         //}
 
 
@@ -169,6 +168,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.i(TAG, "call onStart")
+        val serviceIntent: Intent? = Intent(this, UartService::class.java)
+        startService(serviceIntent)
 
         checkUIState()
         requestPermissionsForBluetooth()

@@ -299,10 +299,12 @@ public class UartService extends Service {
                 return false;
             }
         }
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
         if (mBluetoothAdapter == null) {
-            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-            return false;
+            mBluetoothAdapter = mBluetoothManager.getAdapter();
+            if (mBluetoothAdapter == null) {
+                Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
+                return false;
+            }
         }
         return true;
     }
@@ -1056,8 +1058,8 @@ public class UartService extends Service {
                 case (byte) 0xB5:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
-
-
+                    
+                    Handler mHandler = new Handler();
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
                         //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
                         //   long yy= getSampleRateTime()*counter*60*1000;
@@ -1085,6 +1087,7 @@ public class UartService extends Service {
                             asmData.setECO2Value(RString.get(4));
                             asmData.setPM25Value(RString.get(5));
                             asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
+                            Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
@@ -1103,14 +1106,15 @@ public class UartService extends Service {
                             data.putParcelableArrayList("resultSet", myDeviceData);
                             mainIntent.putExtra("result", data);
                             sendBroadcast(mainIntent);
+                            mHandler.removeCallbacks(runnable);
                         } else {
                             NowItem++;
                             counter++;
-                            Handler mHandler = new Handler();
+                            //Handler mHandler = new Handler();
                             mHandler.post(runnable);
                         }
                     } else {//重送
-                        Handler mHandler = new Handler();
+                        //Handler mHandler = new Handler();
                         mHandler.post(runnable);
                     }
                     break;
@@ -1162,6 +1166,7 @@ public class UartService extends Service {
                                 asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
                                 asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
                                 asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                Log.d("RealmTimeB6", arrB6.toString());
                                 Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
                             realm.close();
@@ -1205,7 +1210,7 @@ public class UartService extends Service {
 
     final Runnable runnable = new Runnable() {
         public void run() {
-            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
             // TODO Auto-generated method stub
             // 需要背景作的事
         }
