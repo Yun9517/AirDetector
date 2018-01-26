@@ -398,6 +398,7 @@ object CallingTranslate {
         return ReturnValue
     }
 
+    //0xB5
     fun ParserGetHistorySampleItem(bytes: ByteArray): ArrayList<String> {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
@@ -624,6 +625,7 @@ object CallingTranslate {
 
         return ReturnValue
     }
+    //0xB6
     fun ParserGetAutoSendData(bytes: ByteArray): ArrayList<String> {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
@@ -649,7 +651,7 @@ object CallingTranslate {
                             stringHex = ""
                         }
                         2-> {//Humidity
-                            ReturnValue.add(Integer.toString(value))
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
                         4-> {//TVOC
@@ -661,7 +663,7 @@ object CallingTranslate {
                             value = 0
                         }
                         8->{//PM25
-                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
                         9->{//battery life
@@ -709,7 +711,7 @@ object CallingTranslate {
                             stringHex = ""
                         }
                         2-> {//Humidity
-                            ReturnValue.add(Integer.toString(value))
+                            ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
                         4-> {//TVOC
@@ -721,7 +723,7 @@ object CallingTranslate {
                             value = 0
                         }
                         8->{//PM25
-                            ReturnValue.add(bytes[i].toPositiveInt().toString())
+                            ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
                         9->{//battery life
