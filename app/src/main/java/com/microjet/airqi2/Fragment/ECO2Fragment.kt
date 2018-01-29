@@ -613,6 +613,8 @@ class ECO2Fragment : Fragment() {
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        var thisWeekAVECO2 : Int= 0
+        var aveLastWeekCO2=0
         Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..6) {
@@ -628,12 +630,12 @@ class ECO2Fragment : Fragment() {
             val result1 = query.findAll()
             Log.d("getRealmWeek", result1.size.toString())
             if (result1.size != 0) {
-                var sumTvoc = 0
+                var sumThisAndLastWeek = 0
                 for (i in result1) {
-                    sumTvoc += i.ecO2Value.toInt()
+                    sumThisAndLastWeek += i.ecO2Value.toInt()
                 }
-                val aveTvoc = (sumTvoc / result1.size)
-                arrTvoc3.add(aveTvoc.toString())
+                thisWeekAVECO2 = (sumThisAndLastWeek / result1.size)
+                arrTvoc3.add(thisWeekAVECO2.toString())
                 //依序加入時間
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmWeek", result1.last().toString())
@@ -641,6 +643,50 @@ class ECO2Fragment : Fragment() {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
+            //******************************************************************************************************************************************************************************************************************************************
+            //
+            //上周日的00:00
+            val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+            Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
+            show_Today!!.text = dateFormat.format(sqlWeekBase)
+            show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
+
+
+            //跑七筆BarChart
+            for (y in 0..6) {
+                //第一筆為日 00:00
+                val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
+                //結束點為日 23:59
+                val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+                val realm = Realm.getDefaultInstance()
+                val query1 = realm.where(AsmDataModel::class.java)
+                Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
+                Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
+                query1.between("Created_time", sqlStartDate, sqlEndDate)
+                val lastWeekresult1 = query1.findAll()
+                //Log.d("getRealmWeek", result1.size.toString())
+                if (lastWeekresult1.size != 0) {
+                    var lastWeeksumTvoc = 0
+                    for (i in lastWeekresult1) {
+                        lastWeeksumTvoc += i.ecO2Value.toInt()
+                    }
+                    aveLastWeekCO2 = (lastWeeksumTvoc / lastWeekresult1.size)
+                    //arrTvoc3.add(aveTvoc.toString())
+                    //依序加入時間
+                    //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                    //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
+                } else {
+                    arrTvoc3.add("0")
+                    //result_Yesterday!!.text = "0 ppb"
+                    //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
+                }
+            }
+            result_Today!!.text = thisWeekAVECO2.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+            result_Yesterday!!.text = aveLastWeekCO2.toInt().toString()+ " ppb"
+
+            //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+            //******************************************************************************************************************************************************************************************************************************************
         }
     }
     private fun getRealmMonth() {
