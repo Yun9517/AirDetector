@@ -80,7 +80,7 @@ class ECO2Fragment : Fragment() {
     private var result_Yesterday : TextView? = null
     private var result_Today : TextView? = null
     //UI元件
-
+    private var showAvg_ByTime : TextView? = null
 
 
     //TestValue Start chungyen
@@ -145,6 +145,7 @@ class ECO2Fragment : Fragment() {
         show_Today = this.view!!.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
+        showAvg_ByTime=this.view?.findViewById(R.id.averageExposureByTime)
         mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -171,9 +172,23 @@ class ECO2Fragment : Fragment() {
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
+
                 view.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 btnTextChanged(spinnerPositon)
+
+                when(spinnerPositon) {
+                    0 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    1 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Week)
+                    }
+                    2 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Month)
+                    }
+                }
+
                 drawChart(spinnerPositon)
 
                 val selectedItem = parent.getItemAtPosition(position).toString()

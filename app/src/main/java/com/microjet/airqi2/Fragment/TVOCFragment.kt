@@ -80,6 +80,8 @@ class TVOCFragment : Fragment() {
     private var result_Yesterday : TextView? = null
     private var result_Today : TextView? = null
     //UI元件
+    private var showAvg_ByTime : TextView? = null
+
 
 
     //TestValue Start chungyen
@@ -148,6 +150,7 @@ class TVOCFragment : Fragment() {
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
+        showAvg_ByTime=this.view?.findViewById(R.id.averageExposureByTime)
         mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -174,8 +177,21 @@ class TVOCFragment : Fragment() {
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
             {
+
                 view.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
+                when(spinnerPositon) {
+                    0 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    1 ->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Week)
+                    }
+                    2->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Month)
+                    }
+
+                }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
 
@@ -189,7 +205,6 @@ class TVOCFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>) {
             }
         }
-
         btnCallDatePicker = this.view?.findViewById(R.id.btnCallDatePicker)
         val dateFormat = SimpleDateFormat("yyyy/MM/dd")
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
