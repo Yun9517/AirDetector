@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -125,7 +126,10 @@ class MainFragment : Fragment() {
 
     private fun fixInCircleTextSize() {
         val dm = resources.displayMetrics
-        when(dm.densityDpi) {
+        val dpi = dm.densityDpi
+        Log.i("DPI", "目前解析度為: $dpi")
+
+        when(dpi) {
             240 -> {   // HDPI
                 inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
@@ -133,10 +137,20 @@ class MainFragment : Fragment() {
             480 -> {   // XXHDPI
                 inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+            }
+            560 -> {   // Samsung S8+
+                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
             640 -> {   // XXXHDPI
                 inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
         }
     }
@@ -459,6 +473,7 @@ class MainFragment : Fragment() {
             160 -> convertSpToPx(36f)   // MDPI
             240 -> convertSpToPx(28f)   // HDPI
             480 -> convertSpToPx(30f)   // XXHDPI
+            560 -> convertSpToPx(30f)   // XXHDPI
             640 -> convertSpToPx(30f)   // XXXHDPI
             else -> 50
         }
@@ -466,6 +481,7 @@ class MainFragment : Fragment() {
             160 -> convertSpToPx(20f)   // MDPI
             240 -> convertSpToPx(14f)   // HDPI
             480 -> convertSpToPx(18f)   // XXHDPI
+            560 -> convertSpToPx(18f)   // XXHDPI
             640 -> convertSpToPx(18f)   // XXXHDPI
             else -> 30
         }
