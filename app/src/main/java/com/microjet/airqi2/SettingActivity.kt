@@ -45,9 +45,11 @@ class SettingActivity : AppCompatActivity() {
     var swSoundVal: Boolean = false
     var swRunInBgVal: Boolean = false
     var swTotalNotifyVal: Boolean = false
+
     //20180130
     var swPump: SwitchCompat? = null
     var text_pump_stat: TextView? = null
+    var swPumpVal: Boolean = false
 
 
 
@@ -92,6 +94,8 @@ class SettingActivity : AppCompatActivity() {
         swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
         swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
         swTotalNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY, false)
+        //20180130
+        swPumpVal = mPreference!!.getBoolean(SavePreferences.SETTING_PUMP_MUNUAL, false)
 
         spCycle!!.setSelection(spCycleVal)
 
@@ -100,6 +104,8 @@ class SettingActivity : AppCompatActivity() {
         swSound!!.isChecked = swSoundVal
         swRunInBg!!.isChecked = swRunInBgVal
         swTotalNotify!!.isChecked = swTotalNotifyVal
+        //20180130
+        swPump!!.isChecked = swPumpVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -217,9 +223,7 @@ class SettingActivity : AppCompatActivity() {
         swPump!!.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 text_pump_stat!!.text = getString(R.string.text_setting_on)
-//                //20180130
-                mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
-                        isChecked).apply()
+                //20180130
                 //************************************************************************************************************************************
                 val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
@@ -233,6 +237,8 @@ class SettingActivity : AppCompatActivity() {
                 sendBroadcast(intent)
                 //************************************************************************************************************************************
             }
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
+                    isChecked).apply()
         }
     }
 
