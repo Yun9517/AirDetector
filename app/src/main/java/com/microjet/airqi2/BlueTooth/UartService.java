@@ -666,10 +666,12 @@ public class UartService extends Service {
                 case DEVICE_DOES_NOT_SUPPORT_UART:
                     showMessage("Device Does Not support UART. Disconnecting");
                     break;
-
+                //20180130
+                case BroadcastActions.INTENT_KEY_PUMP_ON:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(1500));
+                    break;
             }
         }
-
     }
 
 //    private static IntentFilter makeGattUpdateIntentFilter() {

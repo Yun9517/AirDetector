@@ -75,4 +75,6 @@ object BroadcastActions {
     const val INTENT_KEY_GET_HISTORY_COUNT = "airqi2.intent.GetHistoryCount"
     const val INTENT_KEY_LOADING_DATA = "airqi2.intent.NOWPROGRESSITEM"
     const val ACTION_SAVE_INSTANT_DATA = "airqi2.intent.SAVE_INSTANT_DATA"
+    //20180130
+    const val INTENT_KEY_PUMP_ON="airqi2.intent.PUMP_ON"
 }

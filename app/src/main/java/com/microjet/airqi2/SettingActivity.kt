@@ -16,6 +16,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import android.widget.AdapterView
 import com.microjet.airqi2.Definition.BroadcastIntents
 import android.view.MotionEvent
+import com.microjet.airqi2.Definition.BroadcastActions
 
 /**
  * Created by B00174 on 2017/11/29.
@@ -44,6 +45,11 @@ class SettingActivity : AppCompatActivity() {
     var swSoundVal: Boolean = false
     var swRunInBgVal: Boolean = false
     var swTotalNotifyVal: Boolean = false
+    //20180130
+    var swPump: SwitchCompat? = null
+    var text_pump_stat: TextView? = null
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -130,6 +136,11 @@ class SettingActivity : AppCompatActivity() {
 
         btn_clean = findViewById(R.id.btn_clean)
         btn_export = findViewById(R.id.btn_export)
+
+        //20180130
+        swPump = findViewById(R.id.swPump)
+        text_pump_stat = findViewById(R.id.text_pump_stat)
+
     }
 
     private fun uiSetListener() {
@@ -150,7 +161,7 @@ class SettingActivity : AppCompatActivity() {
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
-                Log.d("message","messageSETTING")
+                Log.d("message", "messageSETTING")
             } else {
                 text_msg_stat!!.text = getString(R.string.text_setting_off)
             }
@@ -202,7 +213,25 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
                     isChecked).apply()
         }
+        //20180129
+        swPump!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                text_pump_stat!!.text = getString(R.string.text_setting_on)
+//                //20180130
+                mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
+                        isChecked).apply()
+                //************************************************************************************************************************************
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
+                sendBroadcast(intent)
+                //************************************************************************************************************************************
+            } else {
+                text_pump_stat!!.text = getString(R.string.text_setting_off)
+            }
+        }
     }
+
+
 
 
     override fun finish() {

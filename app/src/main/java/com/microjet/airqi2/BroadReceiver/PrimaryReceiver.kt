@@ -27,21 +27,21 @@ class PrimaryReceiver : BroadcastReceiver() {
             -> {
                 val bundle = Bundle()
                 broadcastUpdate(context, BroadcastActions.ACTION_GATT_DISCONNECTED, bundle)
-             //   var mainIntent = Intent("mainActivity")
-             //   mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
-             //   context.sendBroadcast(mainIntent)
+                //   var mainIntent = Intent("mainActivity")
+                //   mainIntent.putExtra("status", "ACTION_GATT_DISCONNECTED")
+                //   context.sendBroadcast(mainIntent)
             }
             BroadcastActions.ACTION_GATT_CONNECTED,
             BroadcastActions.ACTION_GATT_CONNECTING
             -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_DEVICE_ADDR, intent.getStringExtra("macAddress"))
-                broadcastUpdate(context,BroadcastActions.ACTION_GATT_CONNECTED, bundle)
-            //    var mainIntent = Intent("mainActivity")
-            //    mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
+                broadcastUpdate(context, BroadcastActions.ACTION_GATT_CONNECTED, bundle)
+                //    var mainIntent = Intent("mainActivity")
+                //    mainIntent.putExtra("status", "ACTION_GATT_CONNECTED")
                 // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
-            //    mainIntent.putExtra("macAddress", intent.getStringExtra("macAddress"))
-            //    context.sendBroadcast(mainIntent)
+                //    mainIntent.putExtra("macAddress", intent.getStringExtra("macAddress"))
+                //    context.sendBroadcast(mainIntent)
             }
             "disconnect" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
@@ -55,18 +55,18 @@ class PrimaryReceiver : BroadcastReceiver() {
                 var intent = Intent(BroadcastIntents.UART_SERVICE)
                 intent.putExtra("status", "connect")
                 val bundle = Bundle()
-                bundle.putString("mac",macAddress.toString())
+                bundle.putString("mac", macAddress.toString())
                 intent!!.putExtras(bundle)
                 //intent.putExtra("mac",macAddress)
                 context.sendBroadcast(intent)
-                Log.d("MAINRECEIVER","CONNECT: $macAddress")
+                Log.d("MAINRECEIVER", "CONNECT: $macAddress")
             }
             "close" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "close")
                 context.sendBroadcast(mainIntent)
             }
-            "B6"->{
+            "B6" -> {
 //                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
 //                mainIntent.putExtra("status","B6")
 //
@@ -86,19 +86,19 @@ class PrimaryReceiver : BroadcastReceiver() {
 //                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE, intent.getStringExtra("eCO2Value"))
 //                bundle.putLong(BroadcastActions.INTENT_KEY_CREATED_TIME, intent.getLongExtra(BroadcastActions.INTENT_KEY_CREATED_TIME,0))
 //                //   Bundle[{status=MAXPROGRESSITEM, MAXPROGRESSITEM=1440}]
-                broadcastUpdate(context,BroadcastActions.ACTION_SAVE_INSTANT_DATA, bundle)
+                broadcastUpdate(context, BroadcastActions.ACTION_SAVE_INSTANT_DATA, bundle)
 
             }
-            "B0"->{
+            "B0" -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_TEMP_VALUE, intent.getStringExtra("TEMPValue"))
                 bundle.putString(BroadcastActions.INTENT_KEY_HUMI_VALUE, intent.getStringExtra("HUMIValue"))
                 bundle.putString(BroadcastActions.INTENT_KEY_TVOC_VALUE, intent.getStringExtra("TVOCValue"))
-                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE,intent.getStringExtra("ECO2Value"))
+                bundle.putString(BroadcastActions.INTENT_KEY_CO2_VALUE, intent.getStringExtra("ECO2Value"))
                 bundle.putString(BroadcastActions.INTENT_KEY_PM25_VALUE, intent.getStringExtra("PM25Value"))
                 bundle.putString(BroadcastActions.INTENT_KEY_BATTERY_LIFE, intent.getStringExtra("BatteryLife"))
                 bundle.putString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT, intent.getStringExtra("PreheatCountDown"))
-                broadcastUpdate(context,BroadcastActions.ACTION_GET_NEW_DATA, bundle)
+                broadcastUpdate(context, BroadcastActions.ACTION_GET_NEW_DATA, bundle)
                 /*
                 var mainIntent = Intent("mainActivity")
                 mainIntent.putExtra("status","B0")
@@ -111,21 +111,21 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
                 */
             }
-            "B5"->{
+            "B5" -> {
                 var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
-                mainIntent.putExtra("status","B5")
+                mainIntent.putExtra("status", "B5")
                 mainIntent.putExtras(intent)
                 context.sendBroadcast(mainIntent)
-               // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
-              //  var mydata=bundle.getParcelableArrayExtra("resultSet")
-              //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
-              //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+                // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
+                //  var mydata=bundle.getParcelableArrayExtra("resultSet")
+                //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+                //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
             }
             "message" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "message")
                 context.sendBroadcast(mainIntent)
-                Log.d("message","messageMAIN")
+                Log.d("message", "messageMAIN")
             }
             "callItems" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
@@ -176,7 +176,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 var char = intent.getByteArrayExtra("txValue")
                 mainIntent.putExtra("status", "ACTION_DATA_AVAILABLE")
-                mainIntent.putExtra("EXTRA_DATA",char)
+                mainIntent.putExtra("EXTRA_DATA", char)
                 context.sendBroadcast(mainIntent)
             }
             "DEVICE_DOES_NOT_SUPPORT_UART" -> {
@@ -184,31 +184,41 @@ class PrimaryReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }
-            "NOWPROGRESSITEM"->{
+            "NOWPROGRESSITEM" -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_LOADING_DATA, intent.getStringExtra("NOWPROGRESSITEM"))
-                broadcastUpdate(context,BroadcastActions.ACTION_LOADING_DATA, bundle)
+                broadcastUpdate(context, BroadcastActions.ACTION_LOADING_DATA, bundle)
             }
-            "MAXPROGRESSITEM"->{
+            "MAXPROGRESSITEM" -> {
                 val bundle = Bundle()
                 //   Bundle[{status=MAXPROGRESSITEM, MAXPROGRESSITEM=1440}]
                 bundle.putString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, intent.getStringExtra("MAXPROGRESSITEM"))
-                broadcastUpdate(context,BroadcastActions.ACTION_GET_HISTORY_COUNT, bundle)
-            }/*
-            "NOWPROGRESSITEM"->{
-            var mainIntent = Intent("mainActivity")
-            mainIntent.putExtra("status", "NOWPROGRESSITEM")
-            mainIntent.putExtra("NOWPROGRESSITEM",intent.getIntExtra("NOWPROGRESSITEM",0))
-            context.sendBroadcast(mainIntent)
+                broadcastUpdate(context, BroadcastActions.ACTION_GET_HISTORY_COUNT, bundle)
             }
-            "MAXPROGRESSITEM"->{
-                var mainIntent = Intent("mainActivity")
-                mainIntent.putExtra("status", "MAXPROGRESSITEM")
-                mainIntent.putExtra("MAXPROGRESSITEM",intent.getIntExtra("MAXPROGRESSITEM",0))
-                context.sendBroadcast(mainIntent)
-            }*/
+            BroadcastActions.INTENT_KEY_PUMP_ON -> {
+                /*val bundle = Bundle()
+            bundle.putString("status", intent.getStringExtra( BroadcastActions.INTENT_KEY_PUMP_ON))
+            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*/
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
+                context.sendBroadcast(intent)
+            }
+
+        /*
+              "NOWPROGRESSITEM"->{
+              var mainIntent = Intent("mainActivity")
+              mainIntent.putExtra("status", "NOWPROGRESSITEM")
+              mainIntent.putExtra("NOWPROGRESSITEM",intent.getIntExtra("NOWPROGRESSITEM",0))
+              context.sendBroadcast(mainIntent)
+              }
+              "MAXPROGRESSITEM"->{
+                  var mainIntent = Intent("mainActivity")
+                  mainIntent.putExtra("status", "MAXPROGRESSITEM")
+                  mainIntent.putExtra("MAXPROGRESSITEM",intent.getIntExtra("MAXPROGRESSITEM",0))
+                  context.sendBroadcast(mainIntent)
+              }*/
             else -> {
-                Log.d("MAINRECIVER","ERROR")
+                Log.d("MAINRECIVER", "ERROR")
             }
         }
     }
