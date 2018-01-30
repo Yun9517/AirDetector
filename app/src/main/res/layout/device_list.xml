@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:transitionGroup="false"
     android:nestedScrollingEnabled="false"
+    android:id="@+id/dialogBackground"
     android:gravity="center_vertical|center_horizontal">
 
     <LinearLayout
-        android:layout_width="350dp"
+        android:layout_width="320dp"
         android:layout_height="500dp"
         android:background="@android:color/white"
         android:orientation="vertical">
@@ -37,21 +38,21 @@
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerInParent="true"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
                 android:visibility="visible" />
 
 
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <RelativeLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="2">
 
@@ -64,10 +65,9 @@
 
                 <ListView
                     android:id="@+id/new_devices"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:stackFromBottom="false"
-                    tools:ignore="InefficientWeight" />
+                    android:stackFromBottom="false" />
             </RelativeLayout>
 
             <Button

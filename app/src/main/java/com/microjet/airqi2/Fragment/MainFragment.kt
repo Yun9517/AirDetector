@@ -140,8 +140,8 @@ class MainFragment : Fragment() {
             480 -> {   // XXHDPI
                 inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
+                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             }
             560 -> {   // Samsung S8+
                 inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
