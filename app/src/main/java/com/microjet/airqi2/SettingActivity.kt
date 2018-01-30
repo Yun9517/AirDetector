@@ -227,6 +227,11 @@ class SettingActivity : AppCompatActivity() {
                 //************************************************************************************************************************************
             } else {
                 text_pump_stat!!.text = getString(R.string.text_setting_off)
+                //************************************************************************************************************************************
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                sendBroadcast(intent)
+                //************************************************************************************************************************************
             }
         }
     }

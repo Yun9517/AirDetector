@@ -203,6 +203,14 @@ class PrimaryReceiver : BroadcastReceiver() {
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
                 context.sendBroadcast(intent)
             }
+            BroadcastActions.INTENT_KEY_PUMP_OFF -> {
+                /*val bundle = Bundle()
+            bundle.putString("status", intent.getStringExtra( BroadcastActions.INTENT_KEY_PUMP_ON))
+            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*/
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                context.sendBroadcast(intent)
+            }
 
         /*
               "NOWPROGRESSITEM"->{
