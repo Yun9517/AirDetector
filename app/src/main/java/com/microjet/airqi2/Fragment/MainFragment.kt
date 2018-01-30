@@ -86,6 +86,9 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.Humi
             checkUIState()
         }
+        imgLight?.setOnClickListener {
+
+        }
 
         // 初始化inCircleTitle文字大小
         fixInCircleTextSize()
