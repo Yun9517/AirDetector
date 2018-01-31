@@ -633,8 +633,9 @@ class TVOCFragment : Fragment() {
             }
 
         //}
-        result_Today!!.text = aveTvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+        result_Today!!.text = aveTvoc.toInt().toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -647,9 +648,9 @@ class TVOCFragment : Fragment() {
         //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek -1).toLong())
-        var thisWeekAVETvoc : Int= 0
-        var aveLastWeekTvoc=0
+        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        var thisWeekAVETvoc: Int = 0
+        var aveLastWeekTvoc = 0
         Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..6) {
@@ -678,54 +679,55 @@ class TVOCFragment : Fragment() {
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
+                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
-
-        //******************************************************************************************************************************************************************************************************************************************
-        //
-        //上周日的00:00
-        val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
-        show_Today!!.text = dateFormat.format(sqlWeekBase)
-        show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
-
-
-        //跑七筆BarChart
-        for (y in 0..6) {
-            //第一筆為日 00:00
-            val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
-            //結束點為日 23:59
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            val realm = Realm.getDefaultInstance()
-            val query1 = realm.where(AsmDataModel::class.java)
-            Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
-            Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
-            query1.between("Created_time", sqlStartDate, sqlEndDate)
-            val lastWeekresult1 = query1.findAll()
-            //Log.d("getRealmWeek", result1.size.toString())
-            if (lastWeekresult1.size != 0) {
-                var lastWeeksumTvoc = 0
-                for (i in lastWeekresult1) {
-                    lastWeeksumTvoc += i.tvocValue.toInt()
-                }
-                aveLastWeekTvoc = (lastWeeksumTvoc / lastWeekresult1.size)
-                //arrTvoc3.add(aveTvoc.toString())
-                //依序加入時間
-                //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-                //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
-            } else {
-                arrTvoc3.add("0")
-                //result_Yesterday!!.text = "0 ppb"
-                //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
-            }
-        }
-        result_Today!!.text = thisWeekAVETvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
-
-        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
-            //******************************************************************************************************************************************************************************************************************************************
+///*
+//        //******************************************************************************************************************************************************************************************************************************************
+//        //
+//        //上周日的00:00
+//        val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+//        Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
+//        show_Today!!.text = dateFormat.format(sqlWeekBase)
+//        show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
+//
+//
+//        //跑七筆BarChart
+//        for (y in 0..6) {
+//            //第一筆為日 00:00
+//            val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
+//            //結束點為日 23:59
+//            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+//            val realm = Realm.getDefaultInstance()
+//            val query1 = realm.where(AsmDataModel::class.java)
+//            Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
+//            Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
+//            query1.between("Created_time", sqlStartDate, sqlEndDate)
+//            val lastWeekresult1 = query1.findAll()
+//            //Log.d("getRealmWeek", result1.size.toString())
+//            if (lastWeekresult1.size != 0) {
+//                var lastWeeksumTvoc = 0
+//                for (i in lastWeekresult1) {
+//                    lastWeeksumTvoc += i.tvocValue.toInt()
+//                }
+//                aveLastWeekTvoc = (lastWeeksumTvoc / lastWeekresult1.size)
+//                //arrTvoc3.add(aveTvoc.toString())
+//                //依序加入時間
+//                //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+//                //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
+//            } else {
+//                arrTvoc3.add("0")
+//                //result_Yesterday!!.text = "0 ppb"
+//                //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
+//            }
+//        }
+//        result_Today!!.text = thisWeekAVETvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+//        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//
+//        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//            //******************************************************************************************************************************************************************************************************************************************
+//        */
     }
     private fun getRealmMonth() {
         arrTime3.clear()
@@ -811,6 +813,10 @@ class TVOCFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -822,6 +828,10 @@ class TVOCFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())

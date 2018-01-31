@@ -562,18 +562,25 @@ class ECO2Fragment : Fragment() {
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
+        var sumTvoc = 0
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
             arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
         }
+        var aveTvoc=0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
-                arrTvoc3[count] = asmDataModel.ecO2Value.toString()
+                arrTvoc3[count] = asmDataModel.tvocValue.toString()
+                //20180122
+                sumTvoc += arrTvoc3[count].toInt()
+                //Log.v("hilightCount:", count.toString())
             }
             Log.d("getRealmDay", result1.last().toString())
+            //20180122
+            aveTvoc = (sumTvoc / result1.size)
         }
 
 
@@ -615,7 +622,7 @@ class ECO2Fragment : Fragment() {
         }
 
         //}
-        result_Today!!.text = AVGCo2.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+        result_Today!!.text = aveTvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = AVGCo2.toInt().toString()+ " ppb"
     }
 
@@ -793,6 +800,10 @@ class ECO2Fragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -804,6 +815,10 @@ class ECO2Fragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())
