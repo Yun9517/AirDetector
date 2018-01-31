@@ -167,6 +167,7 @@ class SettingActivity : AppCompatActivity() {
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
+
                 Log.d("message", "messageSETTING")
             } else {
                 text_msg_stat!!.text = getString(R.string.text_setting_off)

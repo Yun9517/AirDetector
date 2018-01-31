@@ -156,10 +156,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PrimaryPanel">
 
-        <ImageView
+        <ImageButton
             android:id="@+id/imgLight"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
             android:scaleType="fitXY"
             android:src="@drawable/app_android_icon_light" />
 

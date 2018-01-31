@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ContextWrapper
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -24,6 +25,11 @@ import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+import android.view.MotionEvent
+import android.widget.Toast
+import com.microjet.airqi2.Definition.BroadcastIntents
+import com.microjet.airqi2.MainActivity
+
 
 class MainFragment : Fragment() {
 
@@ -43,6 +49,7 @@ class MainFragment : Fragment() {
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
     private var preHeat = "0"
+
 
     private var dataForState = DetectionData.TVOC
     private var mConnState = false
@@ -69,6 +76,7 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?){
         super.onActivityCreated(savedInstanceState)
 
+
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
             checkUIState()
@@ -86,13 +94,60 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.Humi
             checkUIState()
         }
-        imgLight?.setOnClickListener {
-
+        val touchDown = 0f
+        var mScroll = false
+        val isLongClick = false
+        imgLight.setOnTouchListener { _, motionEvent ->
+            //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+            if(motionEvent.action == MotionEvent.ACTION_DOWN) {//.ACTION_BUTTON_PRESS
+                Log.i("幹我按下了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                    //20180131
+                    //************************************************************************************************************************************
+                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
+                    mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
+                    //************************************************************************************************************************************
+            } else if(motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
+                Log.i("幹我不按了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                    //************************************************************************************************************************************
+                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                    mContext!!.sendBroadcast(intent)
+                    //************************************************************************************************************************************
+            }else if(motionEvent.action == MotionEvent.ACTION_MOVE) {//ACTION_BUTTON_RELEASE
+                Log.i("幹我按中了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+            } else{
+                Log.i("幹我取消了了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                //************************************************************************************************************************************
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //************************************************************************************************************************************
+            }
+            true
         }
+
 
         // 初始化inCircleTitle文字大小
         fixInCircleTextSize()
     }
+
+    private fun actionToSring(action: Int): String {
+        when (action) {
+            MotionEvent.ACTION_DOWN -> return "Down"
+            MotionEvent.ACTION_MOVE -> return "Move"
+            MotionEvent.ACTION_POINTER_DOWN -> return "Pointer down"
+            MotionEvent.ACTION_UP -> return "UP"
+            MotionEvent.ACTION_POINTER_UP -> return "Pointer up"
+            MotionEvent.ACTION_OUTSIDE -> return "Outside"
+            MotionEvent.ACTION_CANCEL -> return "Cancel"
+        }
+        return ""
+    }
+
 
     override fun onStart() {
         super.onStart()
