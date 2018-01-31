@@ -138,6 +138,7 @@ public class UartService extends Service {
     private final int NOTIFICATION_ID = 0xa01;
     private final int REQUEST_CODE = 0xb01;
 
+
     public static Activity nowActivity=null;
 
     private boolean downloading = false;
@@ -942,6 +943,7 @@ public class UartService extends Service {
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
+
 
                     if (  Integer.valueOf(RString.get(2)) < 221){
                         //20180122  Andy
