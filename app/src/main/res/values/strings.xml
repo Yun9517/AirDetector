@@ -120,6 +120,9 @@
     <string name="averageExposure_Week">週平均曝露濃度</string>
     <string name="averageExposure_Month">月平均曝露濃度</string>
 
+    <string name="averageTemperature_Daily">平均溫度</string>
+    <string name="averageHumidity_Daily">平均濕度</string>
+
     <string name="text_setting_test_cycle">測試週期選擇</string>
     <string name="text_setting_allow_notification">允許通知</string>
     <string name="text_setting_notify_message">訊息</string>

@@ -260,7 +260,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_01)
+                imgLight.setImageResource(R.drawable.face_icon_01green_press)
             }
             in 220..659 -> {
                 tvNotify?.text = getString(R.string.text_message_air_mid)
@@ -270,7 +270,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_02)
+                imgLight.setImageResource(R.drawable.face_icon_02yellow_press)
             }
             in 660..2199 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
@@ -280,7 +280,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_03)
+                imgLight.setImageResource(R.drawable.face_icon_03orange_press)
             }
             in 2200..5499 -> {
                 tvNotify?.text = getString(R.string.text_message_air_bad)
@@ -290,7 +290,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_04)
+                imgLight.setImageResource(R.drawable.face_icon_04red_press)
             }
             in 5500..19999 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
@@ -300,7 +300,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_05)
+                imgLight.setImageResource(R.drawable.face_icon_05purple_press)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
@@ -310,7 +310,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_06)
+                imgLight.setImageResource(R.drawable.face_icon_06brown_press)
             }
         }
     }
@@ -325,7 +325,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_01)
+                imgLight.setImageResource(R.drawable.face_icon_01green_press)
             }
             in 700..999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Yellow)
@@ -335,7 +335,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_02)
+                imgLight.setImageResource(R.drawable.face_icon_02yellow_press)
             }
             in 1000..1499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Orange)
@@ -345,7 +345,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_03)
+                imgLight.setImageResource(R.drawable.face_icon_03orange_press)
             }
             in 1500..2499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Red)
@@ -355,7 +355,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_04)
+                imgLight.setImageResource(R.drawable.face_icon_04red_press)
             }
             in 2500..4999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Purple)
@@ -365,7 +365,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_05)
+                imgLight.setImageResource(R.drawable.face_icon_05purple_press)
             }
             else -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Brown)
@@ -375,20 +375,22 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 //20180131
-                imgLight.setImageResource(R.drawable.history_face_icon_06)
+                imgLight.setImageResource(R.drawable.face_icon_06brown_press)
             }
         }
     }
 
     private fun tempStatusTextShow(currentValue:Float){
         when(currentValue) {
-            in 19..25 -> {
+            in 18..25 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
             in 26..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -397,6 +399,8 @@ class MainFragment : Fragment() {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -405,6 +409,8 @@ class MainFragment : Fragment() {
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
         }
     }
@@ -418,6 +424,8 @@ class MainFragment : Fragment() {
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -426,6 +434,8 @@ class MainFragment : Fragment() {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
             else -> {
 
@@ -435,6 +445,8 @@ class MainFragment : Fragment() {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                //20180131
+                imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
         }
     }

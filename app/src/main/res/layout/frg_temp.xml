@@ -425,7 +425,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_weight=".39"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="@string/averageExposure"
+                android:text="@string/averageTemperature_Daily"
                 android:textColor="@color/whiteColor" />
 
             <LinearLayout

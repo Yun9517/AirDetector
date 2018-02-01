@@ -157,10 +157,11 @@
 
         <ImageButton
             android:id="@+id/imgLight"
-            android:layout_width="60dp"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="fitXY"
-            android:src="@drawable/app_android_icon_light" />
+            android:background="@null"
+             />
 
         <LinearLayout
             android:layout_width="wrap_content"

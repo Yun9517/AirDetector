@@ -119,6 +119,9 @@
     <string name="averageExposure_Week">Average Exposure Level</string>
     <string name="averageExposure_Month">Average Exposure Level</string>
 
+    <string name="averageTemperature_Daily">Average Temperature</string>
+    <string name="averageHumidity_Daily">Average Humidity</string>
+
     <string name="text_setting_test_cycle">Choose a detect cycle</string>
     <string name="text_setting_allow_notification">Allow Notification</string>
     <string name="text_setting_notify_message">Info</string>
