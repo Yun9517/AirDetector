@@ -214,8 +214,10 @@ class MainFragment : Fragment() {
     }
 
     private fun setThresholdValue(dataForState: DetectionData){
-        tvRange1.text = dataForState.range1.toString()
-        tvRange2.text = dataForState.range2.toString()
+        //tvRange1.text = dataForState.range1.toString()
+        //tvRange2.text = dataForState.range2.toString()
+        tvRange1.visibility = View.INVISIBLE
+        tvRange2.visibility = View.INVISIBLE
     }
 
     private fun setBarMaxValue(state: DetectionData){

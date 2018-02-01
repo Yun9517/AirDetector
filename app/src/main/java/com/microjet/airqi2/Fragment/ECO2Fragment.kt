@@ -296,7 +296,7 @@ class ECO2Fragment : Fragment() {
         when (position) {
             0 -> {
                 val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60+Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
-                val l = p / 30
+                val l = p / 60
                 if (l <= 2) {
                     calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
@@ -304,13 +304,12 @@ class ECO2Fragment : Fragment() {
                 getRealmDay()
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRange(5.0f, 40.0f)
+                mChart?.setVisibleXRange(14.0f, 14.0f)
                 //mChart?.setVisibleXRangeMinimum(20.0f)
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                mChart?.centerViewToAnimated(l.toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
+                //mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y-1)
                 //Log.v("Highligh:",l.toString())
@@ -328,7 +327,8 @@ class ECO2Fragment : Fragment() {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                mChart?.setVisibleXRange(35.0f, 35.0f)
+                mChart?.setVisibleXRange(14.0f, 14.0f)
+                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
 
             }
         }
@@ -557,7 +557,7 @@ class ECO2Fragment : Fragment() {
         val endTime = endDayLast
         val startTime = endDay
         //一天共有2880筆
-        val dataCount = (endTime - startTime) / (30 * 1000)
+        val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
@@ -566,14 +566,14 @@ class ECO2Fragment : Fragment() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
-            arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
+            arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
-                val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
-                arrTvoc3[count] = asmDataModel.tvocValue.toString()
+                val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
+                arrTvoc3[count] = asmDataModel.ecO2Value.toString()
                 //20180122
                 sumTvoc += arrTvoc3[count].toInt()
                 //Log.v("hilightCount:", count.toString())
@@ -614,7 +614,7 @@ class ECO2Fragment : Fragment() {
         if (result2.size != 0) {
             var sumCO2Yesterday = 0F
             for (i in result2) {
-                sumCO2Yesterday += i.tvocValue.toInt()
+                sumCO2Yesterday += i.ecO2Value.toInt()
             }
             AVGCo2 = (sumCO2Yesterday / result2.size)
         } else {
@@ -632,11 +632,12 @@ class ECO2Fragment : Fragment() {
         //拿到現在是星期幾的Int
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
         val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
-        var thisWeekAVECO2 : Int= 0
-        var aveLastWeekCO2=0
+        var thisWeekAVETvoc: Int = 0
+        var aveLastWeekTvoc = 0
         Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..6) {
@@ -646,8 +647,8 @@ class ECO2Fragment : Fragment() {
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            Log.d("getRealmWeek", sqlStartDate.toString())
-            Log.d("getRealmWeek", sqlEndDate.toString())
+            Log.e("thisGetRealmWeekStart", sqlStartDate.toString())
+            Log.e("thisGetRealmWeekEnd", sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
             val result1 = query.findAll()
             Log.d("getRealmWeek", result1.size.toString())
@@ -656,60 +657,64 @@ class ECO2Fragment : Fragment() {
                 for (i in result1) {
                     sumThisAndLastWeek += i.ecO2Value.toInt()
                 }
-                thisWeekAVECO2 = (sumThisAndLastWeek / result1.size)
-                arrTvoc3.add(thisWeekAVECO2.toString())
+                thisWeekAVETvoc = (sumThisAndLastWeek / result1.size)
+                arrTvoc3.add(thisWeekAVETvoc.toString())
                 //依序加入時間
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-                Log.d("getRealmWeek", result1.last().toString())
+                //result_Today!!.text = "$thisWeekAVETvoc ppb"        //arrTvoc3[1].toString()+" ppb"
+                //Log.e("thisGetRealmWeekAVG", lastWeekAVETvoc.toString())
             } else {
+                //result_Today!!.text = "$lastWeekAVETvoc ppb"
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
-            //******************************************************************************************************************************************************************************************************************************************
-            //
-            //上周日的00:00
-            val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
-            val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-            Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
-            show_Today!!.text = dateFormat.format(sqlWeekBase)
-            show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
-
-
-            //跑七筆BarChart
-            for (y in 0..6) {
-                //第一筆為日 00:00
-                val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
-                //結束點為日 23:59
-                val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-                val realm = Realm.getDefaultInstance()
-                val query1 = realm.where(AsmDataModel::class.java)
-                Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
-                Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
-                query1.between("Created_time", sqlStartDate, sqlEndDate)
-                val lastWeekresult1 = query1.findAll()
-                //Log.d("getRealmWeek", result1.size.toString())
-                if (lastWeekresult1.size != 0) {
-                    var lastWeeksumTvoc = 0
-                    for (i in lastWeekresult1) {
-                        lastWeeksumTvoc += i.ecO2Value.toInt()
-                    }
-                    aveLastWeekCO2 = (lastWeeksumTvoc / lastWeekresult1.size)
-                    //arrTvoc3.add(aveTvoc.toString())
-                    //依序加入時間
-                    //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-                    //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
-                } else {
-                    arrTvoc3.add("0")
-                    //result_Yesterday!!.text = "0 ppb"
-                    //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
-                }
-            }
-            result_Today!!.text = thisWeekAVECO2.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-            result_Yesterday!!.text = aveLastWeekCO2.toInt().toString()+ " ppb"
-
-            //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
-            //******************************************************************************************************************************************************************************************************************************************
         }
+///*
+//        //******************************************************************************************************************************************************************************************************************************************
+//        //
+//        //上周日的00:00
+//        val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
+//        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+//        Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
+//        show_Today!!.text = dateFormat.format(sqlWeekBase)
+//        show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
+//
+//
+//        //跑七筆BarChart
+//        for (y in 0..6) {
+//            //第一筆為日 00:00
+//            val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
+//            //結束點為日 23:59
+//            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+//            val realm = Realm.getDefaultInstance()
+//            val query1 = realm.where(AsmDataModel::class.java)
+//            Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
+//            Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
+//            query1.between("Created_time", sqlStartDate, sqlEndDate)
+//            val lastWeekresult1 = query1.findAll()
+//            //Log.d("getRealmWeek", result1.size.toString())
+//            if (lastWeekresult1.size != 0) {
+//                var lastWeeksumTvoc = 0
+//                for (i in lastWeekresult1) {
+//                    lastWeeksumTvoc += i.tvocValue.toInt()
+//                }
+//                aveLastWeekTvoc = (lastWeeksumTvoc / lastWeekresult1.size)
+//                //arrTvoc3.add(aveTvoc.toString())
+//                //依序加入時間
+//                //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+//                //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
+//            } else {
+//                arrTvoc3.add("0")
+//                //result_Yesterday!!.text = "0 ppb"
+//                //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
+//            }
+//        }
+//        result_Today!!.text = thisWeekAVETvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
+//        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//
+//        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//            //******************************************************************************************************************************************************************************************************************************************
+//        */
     }
     private fun getRealmMonth() {
         arrTime3.clear()
@@ -730,7 +735,7 @@ class ECO2Fragment : Fragment() {
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            val dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
+            val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
             Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
             Log.d("getRealmMonth", sqlStartDate.toString())
             Log.d("getRealmMonth", sqlEndDate.toString())
