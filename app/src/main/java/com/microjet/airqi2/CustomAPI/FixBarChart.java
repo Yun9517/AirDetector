@@ -73,6 +73,7 @@ public class FixBarChart extends BarChart {
                 if (deltaX < deltaY) {// 上下滑動不攔截
                     return false;
                 }
+                break;
         }
         return super.onInterceptTouchEvent(event);
         //return this.isPagingEnabled && super.onInterceptTouchEvent(event);

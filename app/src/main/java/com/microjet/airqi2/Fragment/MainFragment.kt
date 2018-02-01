@@ -243,9 +243,9 @@ class MainFragment : Fragment() {
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
-        tvBtmPM25Value.text = "Coming soon"
+        tvBtmPM25Value.text = "Not Support"
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue.text = tempDataFloat.toInt().toString() + " ℃"/*currentValue[0] + " ℃"*/
+        tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
     }
 
@@ -382,14 +382,6 @@ class MainFragment : Fragment() {
 
     private fun tempStatusTextShow(currentValue:Float){
         when(currentValue) {
-            in 0..18 -> {
-                tvNotify?.text = getString(R.string.text_message_temperature)
-                inCircleState.text = " "
-                inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
-                inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
-            }
             in 19..25 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
@@ -398,13 +390,21 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
             }
-            else -> {
+            in 26..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.text_message_temperature)
+                inCircleState.text = " "
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
             }
         }
     }
@@ -509,7 +509,7 @@ class MainFragment : Fragment() {
                     inCircleBar.setCurrentValues(tempDataFloat)
                     //inCircleBar.setCurrentValues(18f)
                     tempStatusTextShow(tempDataFloat)
-                    val temp = tempDataFloat.toInt().toString() + " ℃"
+                    val temp = tempDataFloat.toString() + " ℃"
                     textSpannable(temp)
                 }
 
@@ -520,7 +520,7 @@ class MainFragment : Fragment() {
                     inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
                     //Modify Progress Bar
                     when(humiDataFloat) {
-                        in 0..40 -> inCircleBar.setCurrentValues(humiDataFloat)
+                        in 0..45 -> inCircleBar.setCurrentValues(humiDataFloat)
                         else -> inCircleBar.setCurrentValues((humiDataFloat / 60) + 700)
                     }
                     inCircleBar.setCurrentValues(humiDataFloat)

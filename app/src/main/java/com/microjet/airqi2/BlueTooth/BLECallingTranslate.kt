@@ -374,9 +374,10 @@ object CallingTranslate {
                     value = value shl 8
                     value = value + (bytes[i] and 0xFF.toByte())
                     if (j == 1) {//Temperature
-                        value = -45 + 175 * value / 65535
+                        var Tempvalue = -45 + 175.0f * value / 65535
+                        val newTemp = "%.1f".format(Tempvalue)
                         //value -= 6
-                        ReturnValue.add(Integer.toString(value))
+                        ReturnValue.add(newTemp.toString())
                         value = 0
                     } else if (j >= 3 && j % 2 == 1) {
                         ReturnValue.add(Integer.toString(value))
@@ -422,11 +423,12 @@ object CallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        3//Temp
+                        3//Temperature
                         -> {
-                            value = -45 + 175 * value / 65535
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
                             //value -= 6
-                            ReturnValue.add(Integer.toString(value))
+                            ReturnValue.add(newTemp.toString())
                             value = 0
                         }
                         4//Humi
@@ -644,9 +646,10 @@ object CallingTranslate {
                     value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
                         1-> {//Temperature
-                            value = -45 + 175 * value / 65535
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
                             //value -= 6
-                            ReturnValue.add(Integer.toString(value))
+                            ReturnValue.add(newTemp.toString())
                             value = 0
                             stringHex = ""
                         }
@@ -692,6 +695,7 @@ object CallingTranslate {
         var stringHex = ""
         var i = 0
         var value = 0
+
         while (i < bytes.size) {
             if (bytes[i] == Command_List.StopCmd) {
                 i = i + 1//point to DataLength
@@ -704,9 +708,10 @@ object CallingTranslate {
                     value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
                         1-> {//Temperature
-                            value = -45 + 175 * value / 65535
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
                             //value -= 6
-                            ReturnValue.add(Integer.toString(value))
+                            ReturnValue.add(newTemp.toString())
                             value = 0
                             stringHex = ""
                         }

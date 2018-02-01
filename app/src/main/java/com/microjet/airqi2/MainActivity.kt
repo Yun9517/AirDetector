@@ -48,9 +48,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
-import com.microjet.airqi2.Fragment.ECO2Fragment
-import com.microjet.airqi2.Fragment.MainFragment
-import com.microjet.airqi2.Fragment.TVOCFragment
+import com.microjet.airqi2.Fragment.*
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -302,7 +300,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun uiFindViewById() {
         mPageVp = this.findViewById(R.id.id_page_vp)
-        mPageVp!!.offscreenPageLimit = 3
+        mPageVp!!.offscreenPageLimit = 5
         mDrawerLayout = this.findViewById(R.id.drawer_layout)
         nvDrawerNavigation = this.findViewById(R.id.navigation)
         nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
@@ -318,10 +316,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mMainFg = MainFragment()
         val mTvocFg = TVOCFragment()
         val mEco2Fg = ECO2Fragment()
+        //val mTempFg = TempFragment()
+        val mHumiFg = HumidiytFragment()
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
         mFragmentList.add(mEco2Fg)
+        //mFragmentList.add(mTempFg)
+        mFragmentList.add(mHumiFg)
 
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
