@@ -220,27 +220,30 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
                     isChecked).apply()
         }
-        //20180129
-        swPump!!.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_pump_stat!!.text = getString(R.string.text_setting_on)
-                //20180130
-                //************************************************************************************************************************************
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
-                sendBroadcast(intent)
-                //************************************************************************************************************************************
-            } else {
-                text_pump_stat!!.text = getString(R.string.text_setting_off)
-                //************************************************************************************************************************************
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                sendBroadcast(intent)
-                //************************************************************************************************************************************
-            }
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
-                    isChecked).apply()
-        }
+       //20180129
+//        swPump!!.setOnCheckedChangeListener { _, isChecked ->
+//            if (isChecked) {
+//                text_pump_stat!!.text = getString(R.string.text_setting_on)
+//                //20180130
+//                //************************************************************************************************************************************
+//                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+//                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
+//                sendBroadcast(intent)
+//                Log.i("幹我按下了!!",text_pump_stat!!.text.toString())
+//                //************************************************************************************************************************************
+//            } else {
+//                text_pump_stat!!.text = getString(R.string.text_setting_off)
+//                //************************************************************************************************************************************
+//                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+//                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+//                sendBroadcast(intent)
+//                Log.i("幹我不按了!!",text_pump_stat!!.text.toString())
+//                //************************************************************************************************************************************
+//            }
+//
+//            mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
+//                    isChecked).apply()
+//        }
     }
 
 

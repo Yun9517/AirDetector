@@ -185,10 +185,10 @@ class TVOCFragment : Fragment() {
                         showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
                     }
                     1 ->{
-                        showAvg_ByTime?.text = getString(R.string.averageExposure_Week)
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
                     }
                     2->{
-                        showAvg_ByTime?.text = getString(R.string.averageExposure_Month)
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
                     }
 
                 }
