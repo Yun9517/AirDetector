@@ -316,6 +316,7 @@ class TempFragment : Fragment() {
                     Log.d("drawChart",calObject.toString())
                 }
                 getRealmDay()
+                mChart!!.setDrawValueAboveBar(true)
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRange(5.0f, 40.0f)
@@ -337,6 +338,7 @@ class TempFragment : Fragment() {
             }
             1 -> {
                 getRealmWeek()
+                mChart!!.setDrawValueAboveBar(true)
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
@@ -344,6 +346,7 @@ class TempFragment : Fragment() {
             }
             2 -> {
                 getRealmMonth()
+                mChart!!.setDrawValueAboveBar(true)
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
@@ -354,33 +357,33 @@ class TempFragment : Fragment() {
     }
     private fun setImageBarSize(){
         mChart!!.data = getBarData()
-        val line1 = mChart!!.getBarBounds(BarEntry(0f, 1)) //-10
-        val line2 = mChart!!.getBarBounds(BarEntry(5f, 2)) //-5
-        val line3 = mChart!!.getBarBounds(BarEntry(10f, 3)) //0
-        val line4 = mChart!!.getBarBounds(BarEntry(15f, 4)) //5
-        val line5 = mChart!!.getBarBounds(BarEntry(20f, 5)) //10
-        val line6 = mChart!!.getBarBounds(BarEntry(25f, 6)) //15
-        val line7 = mChart!!.getBarBounds(BarEntry(30f, 7)) //20
-        val line8 = mChart!!.getBarBounds(BarEntry(35f, 8)) //25
-        val line9 = mChart!!.getBarBounds(BarEntry(40f, 9)) //30
-        val line10 = mChart!!.getBarBounds(BarEntry(45f, 10)) //35
-        val line11 = mChart!!.getBarBounds(BarEntry(50f, 11)) //40
-        val line12 = mChart!!.getBarBounds(BarEntry(55f, 12)) //45
+        val line1 = mChart!!.getBarBounds(BarEntry(-10f, 1)) //-10
+        val line2 = mChart!!.getBarBounds(BarEntry(-5f, 2)) //-5
+        val line3 = mChart!!.getBarBounds(BarEntry(0f, 3)) //0
+        val line4 = mChart!!.getBarBounds(BarEntry(5f, 4)) //5
+        val line5 = mChart!!.getBarBounds(BarEntry(10f, 5)) //10
+        val line6 = mChart!!.getBarBounds(BarEntry(15f, 6)) //15
+        val line7 = mChart!!.getBarBounds(BarEntry(20f, 7)) //20
+        val line8 = mChart!!.getBarBounds(BarEntry(25f, 8)) //25
+        val line9 = mChart!!.getBarBounds(BarEntry(30f, 9)) //30
+        val line10 = mChart!!.getBarBounds(BarEntry(35f, 10)) //35
+        val line11 = mChart!!.getBarBounds(BarEntry(40f, 11)) //40
+        val line12 = mChart!!.getBarBounds(BarEntry(45f, 12)) //45
      //   val line13 = mChart!!.getBarBounds(BarEntry(60f, 13)) //50
         //val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
     //    tempChartTitle13?.y = line13.top - (tempChartTitle13!!.height / 2)-(tempChartTitle13!!.height/2)   //50 position
-        tempChartTitle12?.y = line12.top - (tempChartTitle12!!.height / 2)   //45 position
-        tempChartTitle11?.y = line11.top - (tempChartTitle11!!.height / 2.45f)  //40 position
-        tempChartTitle10?.y = line10.top - (tempChartTitle10!!.height / 3.35f)   //35 position
-        tempChartTitle9?.y = line9.top - (tempChartTitle9!!.height / 3.95f)    //30 position
-        tempChartTitle8?.y = line8.top - (tempChartTitle8!!.height / 3.95f)    //25 position
-        tempChartTitle7?.y = line7.top - (tempChartTitle7!!.height / 3.8f)     //20 position
-        tempChartTitle6?.y = line6.top - (tempChartTitle6!!.height / 3.8f)     //15 position
-        tempChartTitle5?.y = line5.top - (tempChartTitle5!!.height / 3.8f)     //10 position
-        tempChartTitle4?.y = line4.top - (tempChartTitle4!!.height / 3.0f)     //5 position
-        tempChartTitle3?.y = line3.top - (tempChartTitle3!!.height / 3.0f)     //0 position
-        tempChartTitle2?.y = line2.top - (tempChartTitle2!!.height / 3.0f)     //-5 position
-        tempChartTitleBottom?.y = line1.top - (tempChartTitleBottom!!.height / 1.48f )//-10 position
+        tempChartTitle12?.y = line12.top - (tempChartTitle12!!.height / 2.7f) - (tempChartTitle2!!.height / 2.5f)  //45 position
+        tempChartTitle11?.y = line11.top - (tempChartTitle11!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f) //40 position
+        tempChartTitle10?.y = line10.top - (tempChartTitle10!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f)  //35 position
+        tempChartTitle9?.y = line9.top - (tempChartTitle9!!.height / 2.5f) - (tempChartTitle2!!.height / 2.0f)   //30 position
+        tempChartTitle8?.y = line8.top - (tempChartTitle8!!.height / 2.5f) - (tempChartTitle2!!.height / 2.0f)   //25 position
+        tempChartTitle7?.y = line7.top - (tempChartTitle7!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f)    //20 position
+        tempChartTitle6?.y = line6.top - (tempChartTitle6!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f)    //15 position
+        tempChartTitle5?.y = line5.top - (tempChartTitle5!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f)    //10 position
+        tempChartTitle4?.y = line4.top - (tempChartTitle4!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f)    //5 position
+        tempChartTitle3?.y = line3.top - (tempChartTitle3!!.height / 2.7f) - (tempChartTitle2!!.height / 2.5f)    //0 position
+        tempChartTitle2?.y = line2.top - (tempChartTitle2!!.height / 2.7f) - (tempChartTitle2!!.height / 2.5f)     //-5 position
+        tempChartTitleBottom?.y = line1.top - (tempChartTitleBottom!!.height / 2.5f) - (tempChartTitle2!!.height / 2.5f) //-10 position
         //imgBarRed?.y = line1000.top//red
         //imgBarYellow?.y = line660.top//yellow
         //imgBarGreen?.y = line220.top//green
@@ -544,9 +547,10 @@ class TempFragment : Fragment() {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-        leftAxis.setLabelCount(12,true)
-        leftAxis.setAxisMaxValue(60f) // the axis maximum is 1500 equ (50)
-        leftAxis.setAxisMinValue(0f) // start at zero  equ (-10)
+        mChart!!.setDrawValueAboveBar(false)
+        leftAxis.setLabelCount(13,true)
+        leftAxis.setAxisMaxValue(50f) // the axis maximum is 1500 equ (50)
+        leftAxis.setAxisMinValue(-10f) // start at zero  equ (-10)
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
@@ -556,8 +560,8 @@ class TempFragment : Fragment() {
 
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
-        var i=0;
-        for (i in 0..60 step 5)
+
+        for (i in -5..45 step 5)
         {
             nums.add(i.toFloat())
 
@@ -611,7 +615,7 @@ class TempFragment : Fragment() {
         var sumTvoc = 0.0f
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
-            arrTvoc3.add("0")
+            arrTvoc3.add("-10")
             arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0.0f
@@ -665,7 +669,7 @@ class TempFragment : Fragment() {
             }
             AVGTvoc3 = (sumTvocYesterday / result2.size)
         } else {
-            AVGTvoc3 = 0.0f
+            AVGTvoc3 = -10.0f
         }
 
         //}
@@ -713,7 +717,7 @@ class TempFragment : Fragment() {
                 //Log.e("thisGetRealmWeekAVG", lastWeekAVETvoc.toString())
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
-                arrTvoc3.add("0")
+                arrTvoc3.add("-10")
                 arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
             }
         }
@@ -752,7 +756,7 @@ class TempFragment : Fragment() {
                 //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
             } else {
-                arrTvoc3.add("0")
+                arrTvoc3.add("-10")
                 //result_Yesterday!!.text = "0 ppb"
                 //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
             }
@@ -790,9 +794,9 @@ class TempFragment : Fragment() {
             val result1 = query.findAll()
             Log.d("getRealmMonth", result1.size.toString())
             if (result1.size != 0) {
-                var sumTvoc = 0
+                var sumTvoc = 0f
                 for (i in result1) {
-                    sumTvoc += i.tempValue.toInt()
+                    sumTvoc += i.tempValue.toFloat()
                 }
                 val aveTvoc = (sumTvoc / result1.size)
                 arrTvoc3.add(aveTvoc.toString())
@@ -800,7 +804,7 @@ class TempFragment : Fragment() {
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmMonth", result1.last().toString())
             } else {
-                arrTvoc3.add("0")
+                arrTvoc3.add("-10")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
@@ -1058,19 +1062,19 @@ class TempFragment : Fragment() {
         // mDataCount
         val chartData = ArrayList<BarEntry>()
         // for (i in 1 until mDataCount) {
-        chartData.add(BarEntry((0).toFloat(), 1))   //-10
-        chartData.add(BarEntry((5).toFloat(), 2))   //-5
-        chartData.add(BarEntry((10).toFloat(), 3))  //0
-        chartData.add(BarEntry((15).toFloat(), 4))  //5
-        chartData.add(BarEntry((20).toFloat(), 5))  //10
-        chartData.add(BarEntry((25).toFloat(), 6))  //15
-        chartData.add(BarEntry((30).toFloat(), 7))  //20
-        chartData.add(BarEntry((35).toFloat(), 8))  //25
-        chartData.add(BarEntry((40).toFloat(), 9))  //30
-        chartData.add(BarEntry((45).toFloat(), 10)) //35
-        chartData.add(BarEntry((50).toFloat(), 11)) //40
-        chartData.add(BarEntry((55).toFloat(), 12)) //45
-        chartData.add(BarEntry((60).toFloat(), 13)) //50
+        chartData.add(BarEntry((-10).toFloat(), 1))   //-10
+        chartData.add(BarEntry((-5).toFloat(), 2))   //-5
+        chartData.add(BarEntry((0).toFloat(), 3))  //0
+        chartData.add(BarEntry((5).toFloat(), 4))  //5
+        chartData.add(BarEntry((10).toFloat(), 5))  //10
+        chartData.add(BarEntry((15).toFloat(), 6))  //15
+        chartData.add(BarEntry((20).toFloat(), 7))  //20
+        chartData.add(BarEntry((25).toFloat(), 8))  //25
+        chartData.add(BarEntry((30).toFloat(), 9))  //30
+        chartData.add(BarEntry((35).toFloat(), 10)) //35
+        chartData.add(BarEntry((40).toFloat(), 11)) //40
+        chartData.add(BarEntry((45).toFloat(), 12)) //45
+        chartData.add(BarEntry((50).toFloat(), 13)) //50
         // }
         return chartData
     }

@@ -38,14 +38,14 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
             "Temp" -> {
                 return when (getEntryForXIndex(index).`val`) {
                     in 18..25 -> mColors[1]         //Green
-                    in 26..100 -> mColors[2]        //Red
+                    in 26..200 -> mColors[2]        //Red
                     else -> mColors[0]              //Blue
                 }
             }
             "Humi" -> {
                 return when(getEntryForXIndex(index).`val`) {
-                    in 0..45 -> mColors[0]         //Blue
-                    in 46..65 -> mColors[1]       //Green
+                    in 0..44 -> mColors[0]         //Blue
+                    in 45..65 -> mColors[1]       //Green
                     else -> mColors[2]             //Red
                 }
             }

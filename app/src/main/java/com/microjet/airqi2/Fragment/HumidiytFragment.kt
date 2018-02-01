@@ -348,11 +348,11 @@ class HumidiytFragment : Fragment() {
         val line5 = mChart!!.getBarBounds(BarEntry(80f, 5))
         //val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
         //tvChartTitleMiddle?.y = line1000.top - (tvChartTitleMiddle!!.height / 2)-(tvChartTitleMiddle!!.height/2)    //Text100 position
-        humiChartTitle5?.y = line5.top - (humiChartTitle5!!.height / 3.0f)                //Text80 position
-        humiChartTitle4?.y = line4.top - (humiChartTitle4!!.height / 3.0f)                //Text60 position
-        humiChartTitle3?.y = line3.top - (humiChartTitle3!!.height / 3.0f)                //Text40 position
-        humiChartTitle2?.y = line2.top - (humiChartTitle2!!.height / 3.0f)                //Text20 position
-        humiChartTitleBottom?.y = line1.top - (humiChartTitleBottom!!.height / 1.48f )    //Text0 position
+        humiChartTitle5?.y = line5.top - (humiChartTitle5!!.height / 3.0f) - (humiChartTitle5!!.height / 3.0f)               //Text80 position
+        humiChartTitle4?.y = line4.top - (humiChartTitle4!!.height / 3.0f) - (humiChartTitle4!!.height / 3.0f)               //Text60 position
+        humiChartTitle3?.y = line3.top - (humiChartTitle3!!.height / 3.0f) - (humiChartTitle3!!.height / 3.0f)               //Text40 position
+        humiChartTitle2?.y = line2.top - (humiChartTitle2!!.height / 3.0f) - (humiChartTitle2!!.height / 3.0f)                //Text20 position
+        humiChartTitleBottom?.y = line1.top - (humiChartTitleBottom!!.height / 1.48f ) - (humiChartTitleBottom!!.height / 2)    //Text0 position
         //imgBarRed?.y = line1000.top//red
         //imgBarYellow?.y = line660.top//yellow
         //imgBarGreen?.y = line220.top//green
@@ -516,7 +516,7 @@ class HumidiytFragment : Fragment() {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-        leftAxis.setLabelCount(5,true)
+        leftAxis.setLabelCount(6,true)
         leftAxis.setAxisMaxValue(100f) // the axis maximum is 1500
         leftAxis.setAxisMinValue(0f) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
@@ -529,7 +529,7 @@ class HumidiytFragment : Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
         var i=0;
-        for (i in 0..100 step 20)
+        for (i in 20..80 step 20)
         {
             nums.add(i.toFloat())
 
