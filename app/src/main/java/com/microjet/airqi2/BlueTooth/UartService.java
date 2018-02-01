@@ -984,30 +984,33 @@ public class UartService extends Service {
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
                     break;
                 case (byte) 0xB2:
+                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     SharedPreferences share = getSharedPreferences("ASMSetting", MODE_PRIVATE);
-                    String setting0 = share.getString("sample_rate", "1");
-                    String setting1 = share.getString("sensor_on_time_range", "30");
+                    String setting0 = share.getString("sample_rate", "2");
+                    String setting1 = share.getString("sensor_on_time_range", "60");
                     String setting2 = share.getString("sensor_to_get_sample", "2");
                     String setting3 = share.getString("pump_on_time", "1");
                     String setting4 = share.getString("pumping_time_range", "2");
-
-                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
-                    Log.d("0xB2Compare",setting0 + ":" + RString.get(0) +" "+ setting1 + ":" + RString.get(1) + " " +setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4));
-                    if (setting0.equals(RString.get(0))
-                            && setting1.equals(RString.get(1))
-                            && setting2.equals(RString.get(2))
-                            && setting3.equals(RString.get(3))
-                            && setting4.equals(RString.get(4)))
-                    {
-                        Log.d("0xB2","True");
-                    } else {
-                        share.edit().putString("sample_rate","1").putString("sensor_on_time_range","30").putString("sensor_to_get_sample","2").putString("pump_on_time","1").putString("pumping_time_range","2").apply();
-                        int[] param = {1, 1*30, 2, 1, 2, 0, 0};
-                        Log.d(TAG, "setSampleRate");
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                    share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
+                    //當寫入完畢時會回吐B2 ok的CMD所作的處理
+                    if (RString.size() >= 5) {
+                        Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4));
+                        if (setting0.equals(RString.get(0))
+                                && setting1.equals(RString.get(1))
+                                && setting2.equals(RString.get(2))
+                                && setting3.equals(RString.get(3))
+                                && setting4.equals(RString.get(4)))
+                        {
+                            Log.d("0xB2", "True");
+                        } else {
+                            share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
+                            int[] param = {2, 2*30, 2, 1, 2, 0, 0};
+                            Log.d(TAG, "setSampleRate");
+                            writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                        }
+                        setSampleRateTime(Integer.parseInt(RString.get(0)));
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                     }
-                    setSampleRateTime(Integer.parseInt(RString.get(0)));
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
                     break;
                 case (byte) 0xB4:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
