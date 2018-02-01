@@ -221,12 +221,12 @@ class ECO2Fragment : Fragment() {
         mImageViewDataUpdate = this.view?.findViewById(R.id.chart_Refresh)
         mImageViewDataUpdate?.visibility = View.INVISIBLE
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
-        mImageViewDataUpdate?.setOnClickListener {
-            if (!isFastDoubleClick){
-                getDeviceData()
-                Log.d("ECO2","TOAST_ON")
-            }
-        }
+//        mImageViewDataUpdate?.setOnClickListener {
+//            if (!isFastDoubleClick){
+//                //getDeviceData()
+//                Log.d("ECO2","TOAST_ON")
+//            }
+//        }
 //        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
 //            mChart?.clear()
 //            when (i) {
@@ -422,14 +422,14 @@ class ECO2Fragment : Fragment() {
 //        }
 //    }
 
-    private fun getDeviceData() {
-        if (mConnectStatus && !downloadingData) {
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
-            context.sendBroadcast(intent)
-            Log.d("TVOC","getDeviceData")
-        }
-    }
+//    private fun getDeviceData() {
+//        if (mConnectStatus && !downloadingData) {
+//            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+//            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
+//            context.sendBroadcast(intent)
+//            Log.d("TVOC","getDeviceData")
+//        }
+//    }
 
     private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
@@ -952,10 +952,10 @@ class ECO2Fragment : Fragment() {
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    if (!downloadingData && !downloadComplete) {
-                        getDeviceData()
-                        downloadingData = true
-                    }
+//                    if (!downloadingData && !downloadComplete) {
+//                        getDeviceData()
+//                        downloadingData = true
+//                    }
                     val bundle = intent.extras
                     //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                     //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)

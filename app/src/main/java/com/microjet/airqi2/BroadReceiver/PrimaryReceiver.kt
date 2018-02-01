@@ -111,16 +111,16 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
                 */
             }
-            "B5" -> {
-                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
-                mainIntent.putExtra("status", "B5")
-                mainIntent.putExtras(intent)
-                context.sendBroadcast(mainIntent)
+            //"B5" -> {
+                //var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
+                //mainIntent.putExtra("status", "B5")
+                //mainIntent.putExtras(intent)
+                //context.sendBroadcast(mainIntent)
                 // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
                 //  var mydata=bundle.getParcelableArrayExtra("resultSet")
                 //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
                 //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
-            }
+            //}
             "message" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "message")
@@ -184,15 +184,15 @@ class PrimaryReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }
-            "NOWPROGRESSITEM" -> {
+            BroadcastActions.INTENT_KEY_LOADING_DATA->{
                 val bundle = Bundle()
-                bundle.putString(BroadcastActions.INTENT_KEY_LOADING_DATA, intent.getStringExtra("NOWPROGRESSITEM"))
+                bundle.putString(BroadcastActions.INTENT_KEY_LOADING_DATA, intent.getStringExtra(BroadcastActions.INTENT_KEY_LOADING_DATA))
                 broadcastUpdate(context, BroadcastActions.ACTION_LOADING_DATA, bundle)
             }
-            "MAXPROGRESSITEM" -> {
+            BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT->{
                 val bundle = Bundle()
                 //   Bundle[{status=MAXPROGRESSITEM, MAXPROGRESSITEM=1440}]
-                bundle.putString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, intent.getStringExtra("MAXPROGRESSITEM"))
+                bundle.putString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, intent.getStringExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT))
                 broadcastUpdate(context, BroadcastActions.ACTION_GET_HISTORY_COUNT, bundle)
             }
             BroadcastActions.INTENT_KEY_PUMP_ON -> {

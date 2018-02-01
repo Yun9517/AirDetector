@@ -164,6 +164,8 @@ public class UartService extends Service {
                     sendBroadcast(mainIntent);
                     mBluetoothAdapter = mBluetoothManager.getAdapter();
                     mConnectionState = STATE_DISCONNECTED;
+                    dataNotSaved = 0;
+                    arrB6.clear();
                     if (!mBluetoothAdapter.isEnabled())
                     {
                         close();
@@ -615,14 +617,14 @@ public class UartService extends Service {
                     break;
                 case "message":
                     break;
-                case "checkItems":
-                    Log.d(TAG, "checkItems");
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
-                    break;
-                case "callItems":
-                    Log.d(TAG, "callItems");
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
-                    break;
+//                case "checkItems":
+//                    Log.d(TAG, "checkItems");
+//                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+//                    break;
+//                case "callItems":
+//                    Log.d(TAG, "callItems");
+//                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+//                    break;
                 case "setSampleRate":
 //                    int SampleTime = intent.getIntExtra("SampleTime", 1);
 //                        /*  設定 0xB6的設定
@@ -636,7 +638,7 @@ public class UartService extends Service {
 //                    int[] param = {SampleTime, SampleTime*30, /*SampleTime*30-*/2, /*SampleTime*30-*/1, 2, 0, 0};
 //                    Log.d(TAG, "setSampleRate");
 //                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
-//                    break;
+                    break;
                 case BroadcastActions.ACTION_GET_SAMPLE_RATE:   //"getSampleRate":
                     Log.d(TAG, BroadcastActions.ACTION_GET_SAMPLE_RATE);
 //                    if (intent.getStringExtra("callFromConnect").equals("yes"))
@@ -1010,6 +1012,7 @@ public class UartService extends Service {
                 case (byte) 0xB4:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                     myDeviceData.clear();
+                    //取得裝置目前B5的Index
                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
                     //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料(中文) *************************//
                     //Toast.makeText(getApplicationContext(),"共有資料"+Integer.toString(getMaxItems())+"筆",Toast.LENGTH_LONG).show();
@@ -1022,17 +1025,19 @@ public class UartService extends Service {
                     // setGetDataTime(time);
                     Log.d("UART", "total item "+Integer.toString(getMaxItems()));
                     // Log.d("UART", "getItem 1");
-                    if (getMaxItems() != 0) {
+                    //如果目前Index大於0
+                    if (getMaxItems() > 0) {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
                         Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
                         Log.d("UART", "getItem 1");
-                        NowItem = 0;
+                        NowItem = 1;
                         counter = 0;
                         //將時間秒數寫入設定為 00  或  30
                         timeSetNowToThirty();
                         //Realm 資料庫
+                        //將資料庫最大時間與現在時間換算成Count
                         Realm realm = Realm.getDefaultInstance();
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
                         if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
@@ -1050,30 +1055,24 @@ public class UartService extends Service {
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
                         if (countForItem > 0){
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+                            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
                         }
-                        mainIntent.putExtra("status", "MAXPROGRESSITEM");
-                        mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(countForItem));
+                        mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
+                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
                         sendBroadcast(mainIntent);
 
                     } else if (getMaxItems() == 0) {
                         timeSetNowToThirty();
                         downloadComplete = true;
                     }
-                    //   setCorrectTime(Integer.parseInt(RString.get(j)));
                     break;
                 case (byte) 0xB5:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
-                    
-                    Handler mHandler = new Handler();
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
-                        //   long tt= getMyDate().getTime();//-getSampleRateTime()*counter*60*1000-getCorrectTime()*60*1000;
-                        //   long yy= getSampleRateTime()*counter*60*1000;
-                        //   long zz=getCorrectTime()*60*1000;
-                        mainIntent.putExtra("status", "NOWPROGRESSITEM");
-                        mainIntent.putExtra("NOWPROGRESSITEM",Integer.toString(NowItem));
+                        mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA);
+                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA,Integer.toString(NowItem));
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
@@ -1101,28 +1100,27 @@ public class UartService extends Service {
                         realm.close();
 
                         //if (NowItem >= getMaxItems()) {
-                        if (NowItem >= countForItem || NowItem >= getMaxItems()) {
-                            NowItem = 0;
+                        if (NowItem > countForItem || NowItem > getMaxItems()) {
+                            NowItem = 1;
                             downloading = false;
                             downloadComplete = true;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
                             Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
-                            mainIntent.putExtra("status", "B5");
-                            Bundle data = new Bundle();
-                            data.putParcelableArrayList("resultSet", myDeviceData);
-                            mainIntent.putExtra("result", data);
-                            sendBroadcast(mainIntent);
-                            mHandler.removeCallbacks(runnable);
+//                            mainIntent.putExtra("status", "B5");
+//                            Bundle data = new Bundle();
+//                            data.putParcelableArrayList("resultSet", myDeviceData);
+//                            mainIntent.putExtra("result", data);
+//                            sendBroadcast(mainIntent);
                         } else {
                             NowItem++;
                             counter++;
-                            //Handler mHandler = new Handler();
+                            Handler mHandler = new Handler();
                             mHandler.post(runnable);
                         }
                     } else {//重送
-                        //Handler mHandler = new Handler();
+                        Handler mHandler = new Handler();
                         mHandler.post(runnable);
                     }
                     break;
@@ -1218,7 +1216,7 @@ public class UartService extends Service {
 
     final Runnable runnable = new Runnable() {
         public void run() {
-            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(++NowItem));
+            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
             // TODO Auto-generated method stub
             // 需要背景作的事
         }
