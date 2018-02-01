@@ -136,7 +136,7 @@ public class BarChart extends BarLineChartBase<BarData> implements BarDataProvid
 		else{
 			top = (float)(220*mAxisLeft.getAxisMaximum()/3/220+(top-220)*49.64);
 		}*/
-        top=countTop(top);
+     //   top=countTop(top);
 		RectF bounds = new RectF(left, top, right, bottom);
 
 		getTransformer(set.getAxisDependency()).rectValueToPixel(bounds);

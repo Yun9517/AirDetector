@@ -238,7 +238,7 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/imgBarRed"
-                    android:text="(ppb)" />
+                    android:text="(ppm)" />
 
                 <TextView
                     android:id="@+id/tvChartTitleMiddle"
@@ -311,6 +311,7 @@
             android:id="@+id/faceBar"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/face_bar_eco2" />
 
         <LinearLayout

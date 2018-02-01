@@ -63,6 +63,7 @@ public class CustomViewPager  extends VerticalViewPager {
                         }
                     }
                 }
+                break;
         }
 
         return super.onInterceptTouchEvent(event);

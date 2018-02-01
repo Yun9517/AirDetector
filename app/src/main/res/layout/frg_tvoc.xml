@@ -318,6 +318,7 @@
             android:id="@+id/faceBar"
             android:layout_width="match_parent"
             android:layout_height="55dp"
+            android:layout_marginStart="10dp"
             android:src="@drawable/face_bar_tvoc" />
 
         <LinearLayout

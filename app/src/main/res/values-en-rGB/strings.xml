@@ -3,7 +3,7 @@
     <string name="app_name_air_map">空氣地圖</string>
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
-    <string name="text_message_air_good">Air quality is normal, please keep it fresh.\nTVOC is low, no irritation or discomfort risk.</string>
+    <string name="text_message_air_good">Air quality is normal, please keep it fresh. TVOC is low, no irritation or discomfort risk.</string>
     <string name="text_message_air_mid">The air quality is slightly polluted. Avoid staying in this situation too long (12 months). Improved ventilation is recommended.</string>
     <string name="text_message_air_Medium_Orange">The air quality is poor. Avoid staying in this situation too long (1 month). Intensified ventilation is recommended.</string>
     <string name="text_message_air_bad">The air quality is unhealthy. Avoid staying in this situation too long (Within hours). Intensified ventilation is necessary.</string>

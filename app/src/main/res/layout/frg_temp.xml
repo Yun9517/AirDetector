@@ -29,7 +29,7 @@
             android:orientation="horizontal" />
 
         <Spinner
-            android:id="@+id/sprTVOC"
+            android:id="@+id/sprTemp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
@@ -209,7 +209,7 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/chart_subtitle"
             android:gravity="end"
-            android:text="@string/text_label_tvoc"
+            android:text="@string/text_label_temperature"
             android:textAlignment="gravity"
             android:textColor="@color/whiteColor"
             android:textSize="12sp"
@@ -243,23 +243,112 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
                     android:layout_alignTop="@+id/imgBarRed"
-                    android:text="(ppb)" />
+                    android:text="( ℃)" />
 
                 <TextView
-                    android:id="@+id/tvChartTitleMiddle"
+                    android:id="@+id/tempChartTitle13"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
-                    android:text="1000" />
+                    android:text="50"
+                    android:visibility="invisible" />
 
                 <TextView
-                    android:id="@+id/tvChartTitleBottom"
+                    android:id="@+id/tempChartTitle12"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
-                    android:text="500" />
+                    android:text="45" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="40" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="35" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="30" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="25" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="20" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="15" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="10" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="5" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="0" />
+
+                <TextView
+                    android:id="@+id/tempChartTitle2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="-5" />
+
+                <TextView
+                    android:id="@+id/tempChartTitleBottom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="false"
+                    android:layout_alignParentStart="true"
+                    android:text="-10" />
                 <!--
                                               <ImageView
                                                   android:id="@+id/imgBarRed"
@@ -318,8 +407,7 @@
             android:id="@+id/faceBar"
             android:layout_width="match_parent"
             android:layout_height="55dp"
-            android:layout_marginStart="10dp"
-            android:src="@drawable/face_bar_tvoc" />
+            android:src="@drawable/face_bar_temp" />
 
         <LinearLayout
             android:id="@+id/averageExposure"
