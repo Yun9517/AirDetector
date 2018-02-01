@@ -337,7 +337,7 @@ class HumidiytFragment : Fragment() {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                mChart?.setVisibleXRange(35.0f, 35.0f)
+                mChart?.setVisibleXRange(14.0f, 14.0f)
 
             }
         }
