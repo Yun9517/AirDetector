@@ -571,16 +571,14 @@ class MainFragment : Fragment() {
             160 -> convertSpToPx(36f)   // MDPI
             240 -> convertSpToPx(28f)   // HDPI
             480 -> convertSpToPx(30f)   // XXHDPI
-            560 -> convertSpToPx(30f)   // XXHDPI
-            640 -> convertSpToPx(30f)   // XXXHDPI
+            in 560 .. 640 -> convertSpToPx(36f)   // XXXHDPI
             else -> 50
         }
         val text2Size  = when(dm.densityDpi) {
             160 -> convertSpToPx(20f)   // MDPI
             240 -> convertSpToPx(14f)   // HDPI
             480 -> convertSpToPx(18f)   // XXHDPI
-            560 -> convertSpToPx(18f)   // XXHDPI
-            640 -> convertSpToPx(18f)   // XXXHDPI
+            in 560 .. 640 -> convertSpToPx(22f)   // XXXHDPI
             else -> 30
         }
 
