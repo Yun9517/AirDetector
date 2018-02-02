@@ -1065,7 +1065,7 @@ public class UartService extends Service {
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
                         sendBroadcast(mainIntent);
 
-                    } else if (getMaxItems() == 0) {
+                    } else if (getMaxItems() <= 0) {
                         timeSetNowToThirty();
                         downloadComplete = true;
                     }
@@ -1073,6 +1073,7 @@ public class UartService extends Service {
                 case (byte) 0xB5:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
+                    Log.d("0xB5Index",RString.get(0));
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA);
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA,Integer.toString(NowItem));
@@ -1101,9 +1102,11 @@ public class UartService extends Service {
                             Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
+                        NowItem++;
+                        counter++;
 
                         //if (NowItem >= getMaxItems()) {
-                        if (NowItem > countForItem || NowItem > getMaxItems()) {
+                        if (NowItem > countForItem) {
                             NowItem = 1;
                             downloading = false;
                             downloadComplete = true;
@@ -1117,8 +1120,8 @@ public class UartService extends Service {
 //                            mainIntent.putExtra("result", data);
 //                            sendBroadcast(mainIntent);
                         } else {
-                            NowItem++;
-                            counter++;
+                            //NowItem++;
+                            //counter++;
                             Handler mHandler = new Handler();
                             mHandler.post(runnable);
                         }
