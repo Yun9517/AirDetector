@@ -3,6 +3,7 @@ package com.microjet.airqi2.Fragment
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -209,6 +210,7 @@ class ECO2Fragment : Fragment() {
                     Log.d("ECO2btncall", calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
+                    timePickerShow()
                 },calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
@@ -1141,6 +1143,21 @@ class ECO2Fragment : Fragment() {
                 arrTime3.add((sqlStartDate.toString()))
             }
 
+        }
+    }
+
+    private fun timePickerShow(){
+        if (spinnerPositon == 0) {
+            val tpd = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+                val p = hourOfDay * 60 + minute
+                mChart?.centerViewToAnimated(p.toFloat(), 0F, YAxis.AxisDependency.LEFT, 1000)
+                //mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                val y = mChart!!.data!!.dataSetCount
+                mChart?.highlightValue(p, y - 1)
+            }, calObject.get(Calendar.HOUR_OF_DAY), calObject.get(Calendar.MINUTE), false)
+            tpd.setMessage("請選擇時間")
+            tpd.show()
         }
     }
 }
