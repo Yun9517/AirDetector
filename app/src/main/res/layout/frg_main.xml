@@ -144,7 +144,7 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="256dp"
-        android:layout_height="85dp"
+        android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_panel"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
