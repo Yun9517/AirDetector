@@ -143,26 +143,20 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
+        android:layout_width="256dp"
         android:layout_height="85dp"
         android:layout_above="@+id/bottom_panel"
-        android:layout_marginBottom="10dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PrimaryPanel">
+        tools:layout_editor_absoluteX="32dp"
+        tools:layout_editor_absoluteY="198dp">
 
         <ImageButton
             android:id="@+id/imgLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
             android:background="@null"
-            />
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="wrap_content"

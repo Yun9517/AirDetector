@@ -23,7 +23,7 @@
 
         <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
             android:id="@+id/inCircleBar"
-            android:layout_width="0dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             app:bg_arc_color="@color/whiteTransparentColor_80"
@@ -35,9 +35,6 @@
             app:is_need_content="false"
             app:is_need_title="false"
             app:is_need_unit="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:max_value="100"
             app:string_title="TVOC"
             app:string_unit=""
