@@ -175,10 +175,9 @@ class TVOCFragment : Fragment() {
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long)
             {
-
-                view.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 when(spinnerPositon) {
                     0 -> {

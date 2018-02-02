@@ -43,8 +43,4 @@ class MyApplication : Application() {
         this.registerReceiver(mPrimaryReceiver, filter)
     }
 
-    override fun onTerminate() {
-        super.onTerminate()
-        unregisterReceiver(mPrimaryReceiver)
-    }
 }
