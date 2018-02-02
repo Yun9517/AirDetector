@@ -236,10 +236,10 @@ class TempFragment : Fragment() {
         mImageViewDataUpdate?.visibility = View.INVISIBLE
         mImageViewDataUpdate?.background = resources.getDrawable(R.drawable.chart_update_icon_bg)
         mImageViewDataUpdate?.setOnClickListener {
-            if (!Utils.isFastDoubleClick){
-                getDeviceData()
-                Log.d("Temp","TOAST_ON")
-            }
+//            if (!Utils.isFastDoubleClick){
+//                getDeviceData()
+//                Log.d("Temp","TOAST_ON")
+//            }
         }
 //        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
 //            mChart?.clear()
@@ -467,14 +467,14 @@ class TempFragment : Fragment() {
 //        }
 //    }
 
-    private fun getDeviceData() {
-        if (mConnectStatus && !downloadingData) {
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
-            context.sendBroadcast(intent)
-            Log.d("Temp","getDeviceData")
-        }
-    }
+//    private fun getDeviceData() {
+//        if (mConnectStatus && !downloadingData) {
+//            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+//            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
+//            context.sendBroadcast(intent)
+//            Log.d("Temp","getDeviceData")
+//        }
+//    }
 
     private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
@@ -993,10 +993,10 @@ class TempFragment : Fragment() {
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    if (!downloadingData && !downloadComplete) {
-                        getDeviceData()
-                        downloadingData = true
-                    }
+//                    if (!downloadingData && !downloadComplete) {
+//                        getDeviceData()
+//                        downloadingData = true
+//                    }
                     val bundle = intent.extras
                     val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                     //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
