@@ -60,55 +60,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/inCircleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/inCircleValue"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="55dp"
+                android:gravity="center"
+                android:text="@string/text_label_tvoc_detect"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="36sp"
+                app:autoSizeTextType="uniform" />
+
+            <TextView
+                android:id="@+id/inCircleValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:orientation="vertical">
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:background="@android:color/transparent"
+                android:text="@string/text_default_value"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="60sp" />
 
 
-                <TextView
-                    android:id="@+id/inCircleTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvRange2"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="26dp"
-                    android:gravity="center"
-                    android:text="@string/text_label_tvoc_detect"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="36sp" />
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/inCircleState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/inCircleValue"
+                android:layout_gravity="center"
+                android:layout_marginBottom="100dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="@string/text_default_value"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp"
+                app:autoSizeMaxTextSize="26sp"
+                app:autoSizeMinTextSize="18sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/inCircleValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:text="@string/text_default_value"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="60sp" />
-
-                <TextView
-                    android:id="@+id/inCircleState"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:text="@string/text_default_value"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="28sp" />
-            </LinearLayout>
         </RelativeLayout>
 
         <TextView
@@ -145,12 +148,11 @@
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="85dp"
         android:layout_above="@+id/bottom_panel"
         android:layout_marginBottom="10dp"
-        android:layout_marginEnd="35dp"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="32dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
@@ -164,23 +166,25 @@
             android:layout_height="wrap_content"
             android:scaleType="fitXY"
             android:background="@null"
-             />
+            />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tvNotify"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.7"
                 android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tvLastDetectTime"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.3"
                 android:textAlignment="textEnd"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -218,16 +222,15 @@
             <LinearLayout
                 android:id="@+id/show_TVOC"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvBtmTVOCTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -236,20 +239,19 @@
 
                 <TextView
                     android:id="@+id/tvBtmTVOCValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imgDivider1"
                 android:layout_width="2dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
@@ -265,10 +267,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmPMTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_pm25"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -277,14 +278,13 @@
 
                 <TextView
                     android:id="@+id/tvBtmPM25Value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
@@ -300,16 +300,15 @@
             <LinearLayout
                 android:id="@+id/show_eCO2"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvBtmCarbonTitle"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvBtmCO2Title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_co2"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -318,21 +317,20 @@
 
                 <TextView
                     android:id="@+id/tvBtmCO2Value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imgDivider2"
                 android:layout_width="2dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
@@ -342,16 +340,15 @@
             <LinearLayout
                 android:id="@+id/show_Temp"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvBtmTEMPTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_temperature"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -360,21 +357,20 @@
 
                 <TextView
                     android:id="@+id/tvBtmTEMPValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
 
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/imgDivider3"
                 android:layout_width="2dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="5dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
@@ -384,16 +380,15 @@
             <LinearLayout
                 android:id="@+id/show_RH"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tvBtmHUMITitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_humidity"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -402,14 +397,13 @@
 
                 <TextView
                     android:id="@+id/tvBtmHUMIValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
-                    android:textSize="20sp" />
+                    android:textSize="18sp" />
             </LinearLayout>
 
         </LinearLayout>

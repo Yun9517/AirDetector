@@ -189,23 +189,23 @@ class MainFragment : Fragment() {
         Log.i("DPI", "目前解析度為: $dpi")
         when(dpi) {
             240 -> {   // HDPI
-                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
             }
             480 -> {   // XXHDPI
-                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             }
             560 -> {   // Samsung S8+
-                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
             640 -> {   // XXXHDPI
-                inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
@@ -486,7 +486,7 @@ class MainFragment : Fragment() {
                     }
                     //inCircleBar.setCurrentValues(1000f)
                     tvocStatusTextShow(tvocDataFloat)
-                    val temp = tvocDataFloat.toInt().toString() + " ppb "
+                    val temp = tvocDataFloat.toInt().toString() + " ppb"
                     textSpannable(temp)
                 }
                 DetectionData.CO2 -> {
@@ -505,7 +505,7 @@ class MainFragment : Fragment() {
                     inCircleBar.setCurrentValues(co2DataFloat)
                     //inCircleBar.setCurrentValues(60000f)
                     eco2StatusTextShow(co2DataFloat)
-                    val temp = co2DataFloat.toInt().toString() + " ppm "
+                    val temp = co2DataFloat.toInt().toString() + " ppm"
                     textSpannable(temp)
                 }
                 DetectionData.Temp -> {
@@ -538,7 +538,7 @@ class MainFragment : Fragment() {
                     inCircleBar.setCurrentValues(humiDataFloat)
                     //inCircleBar.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
-                    val temp = humiDataFloat.toInt().toString() + " % "
+                    val temp = humiDataFloat.toInt().toString() + " %"
                     textSpannable(temp)
                 }
             }
@@ -585,7 +585,7 @@ class MainFragment : Fragment() {
         textSpan.setSpan(AbsoluteSizeSpan(text1Size),
                 0,temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         textSpan.setSpan(AbsoluteSizeSpan(text2Size),
-                temp.indexOf(" ") + 1, temp.length - 1,
+                temp.indexOf(" ") + 1, temp.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         //textSpan.setSpan(AbsoluteSizeSpan(text1Size),temp.indexOf(" ") - 1, temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         inCircleValue.text = textSpan

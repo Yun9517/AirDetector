@@ -59,54 +59,55 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/inCircleTitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/inCircleValue"
                 android:layout_centerHorizontal="true"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="25dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="20dp"
+                android:gravity="bottom|center"
+                android:maxLines="2"
+                android:text="@string/text_label_tvoc_detect"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="14sp"
+                app:autoSizeTextType="uniform" />
+
+            <TextView
+                android:id="@+id/inCircleValue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:orientation="vertical">
+                android:background="@android:color/transparent"
+                android:text="@string/text_default_value"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="24sp" />
 
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/inCircleState"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/inCircleValue"
+                android:layout_gravity="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:background="@android:color/transparent"
+                android:gravity="top|center"
+                android:text="@string/text_default_value"
+                android:textAlignment="center"
+                android:textColor="@color/whiteColor"
+                android:textSize="14sp"
+                app:autoSizeMaxTextSize="18sp"
+                app:autoSizeMinTextSize="12sp"
+                app:autoSizeTextType="uniform" />
 
-                <TextView
-                    android:id="@+id/inCircleTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/tvRange2"
-                    android:layout_centerHorizontal="true"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:text="@string/text_label_tvoc_detect"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/inCircleValue"
-                    android:layout_width="160dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="5dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:text="@string/text_default_value"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="24sp" />
-
-                <TextView
-                    android:id="@+id/inCircleState"
-                    android:layout_width="140dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="5dp"
-                    android:background="@android:color/transparent"
-                    android:gravity="center"
-                    android:text="@string/text_default_value"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="14sp" />
-            </LinearLayout>
         </RelativeLayout>
 
         <TextView
@@ -223,10 +224,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmTVOCTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_tvoc"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -235,10 +235,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmTVOCValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -264,10 +263,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmPMTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_pm25"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -276,10 +274,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmPM25Value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -304,11 +301,10 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tvBtmCarbonTitle"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvBtmCO2Title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_co2"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -317,10 +313,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmCO2Value"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -347,10 +342,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmTEMPTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_temperature"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -359,10 +353,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmTEMPValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -389,10 +382,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmHUMITitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_label_humidity"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
@@ -401,10 +393,9 @@
 
                 <TextView
                     android:id="@+id/tvBtmHUMIValue"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:text="@string/text_default_value"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
