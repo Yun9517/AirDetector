@@ -86,7 +86,7 @@ class HumidiytFragment : Fragment() {
     private var result_Yesterday : TextView? = null
     private var result_Today : TextView? = null
     //UI元件
-
+    private var showAvg_ByTime : TextView? = null
 
     //TestValue Start chungyen
     //private val tvocArray = ArrayList<String>()
@@ -160,6 +160,7 @@ class HumidiytFragment : Fragment() {
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
+        showAvg_ByTime=this.view?.findViewById(R.id.averageExposureByTime)
         mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -188,6 +189,17 @@ class HumidiytFragment : Fragment() {
             {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
+                when(spinnerPositon) {
+                    0 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    1 ->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    2->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
 
@@ -696,6 +708,7 @@ class HumidiytFragment : Fragment() {
         //******************************************************************************************************************************************************************************************************************************************
         //
         //上周日的00:00
+        /*
         val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
@@ -734,6 +747,7 @@ class HumidiytFragment : Fragment() {
         }
         result_Today!!.text = thisWeekAVETvoc.toString() + " %"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " %"
+        */
 
         //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
         //******************************************************************************************************************************************************************************************************************************************
@@ -819,6 +833,10 @@ class HumidiytFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -830,6 +848,10 @@ class HumidiytFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())

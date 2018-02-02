@@ -124,10 +124,12 @@ class TempFragment : Fragment() {
     var counter = 0
     var TVOCAVG = 0.0f
 
+
     //Andy
     //private val arrayAvgData = ArrayList<String>()
 
     private var labelArray = ArrayList<String>()
+    private var showAvg_ByTime : TextView? = null
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -173,6 +175,7 @@ class TempFragment : Fragment() {
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
+        showAvg_ByTime=this.view?.findViewById(R.id.averageExposureByTime)
         mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -185,8 +188,13 @@ class TempFragment : Fragment() {
                 //mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
                 val temp: Float? = e?.`val`
-                val temp1: Float? = (temp!! - 10.1f)
-                mTextViewValue!!.text = temp1?.toString() + " ℃"
+                val temp1: Float? = (temp!! - 10.0f)
+                if (temp1!! <= -10.0f) {
+                    mTextViewValue!!.text = "---" + " ℃"
+                }else{
+                    val newTemp = "%.1f".format(temp1)
+                    mTextViewValue!!.text = newTemp + " ℃"
+                }
             }
         })
         //imgBarRed = this.view?.findViewById(R.id.imgBarRed)
@@ -198,10 +206,21 @@ class TempFragment : Fragment() {
         val cycleList = ArrayAdapter.createFromResource(context, R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long)
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long)
             {
-                view.textAlignment = View.TEXT_ALIGNMENT_CENTER
+                view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
+                when(spinnerPositon) {
+                    0 -> {
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    1 ->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                    2->{
+                        showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
+                    }
+                }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
 
@@ -311,7 +330,7 @@ class TempFragment : Fragment() {
         when (position) {
             0 -> {
                 val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
-                val l = p / 30
+                val l = p / 60
                 if (l <= 2) {
                     calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
@@ -320,13 +339,12 @@ class TempFragment : Fragment() {
                 mChart!!.setDrawValueAboveBar(true)
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
-                mChart?.setVisibleXRange(5.0f, 40.0f)
+                mChart?.setVisibleXRange(14.0f, 14.0f)
                 //mChart?.setVisibleXRangeMinimum(20.0f)
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
+                mChart?.centerViewToAnimated(l.toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
+                //mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+                        //+ Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y - 1)
 /*
@@ -351,7 +369,8 @@ class TempFragment : Fragment() {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                mChart?.setVisibleXRange(35.0f, 35.0f)
+                mChart?.setVisibleXRange(14.0f, 14.0f)
+                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
 
             }
         }
@@ -608,7 +627,7 @@ class TempFragment : Fragment() {
         val endTime = endDayLast
         val startTime = endDay
         //一天共有2880筆
-        val dataCount = (endTime - startTime) / (30 * 1000)
+        val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
@@ -617,21 +636,21 @@ class TempFragment : Fragment() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
-            arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
+            arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0.0f
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
-                val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
-                arrTvoc3[count] = (asmDataModel.tempValue.toFloat()+10.1f).toString()
+                val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
+                arrTvoc3[count] = (asmDataModel.tempValue.toFloat()+10.0f).toString()
                 //20180122
                 sumTvoc += arrTvoc3[count].toFloat()
                 //Log.v("hilightCount:", count.toString())
             }
             Log.d("getRealmDay", result1.last().toString())
             //20180122
-            aveTvoc = (sumTvoc / result1.size)
+            aveTvoc = (sumTvoc / result1.size) - 10.0f
         }
 
 
@@ -674,8 +693,10 @@ class TempFragment : Fragment() {
         }
 
         //}
-        result_Today!!.text = aveTvoc.toString() + " ℃"        //arrTvoc3[1].toString()+" ppb"
-        result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ℃"
+        val newTemp = "%.1f".format(aveTvoc)
+        val newTemp1 = "%.1f".format(AVGTvoc3)
+        result_Today!!.text = newTemp + " ℃"        //arrTvoc3[1].toString()+" ppb"
+        result_Yesterday!!.text = newTemp1 + " ℃"
     }
 
     @SuppressLint("SetTextI18n")
@@ -711,14 +732,14 @@ class TempFragment : Fragment() {
                     sumThisAndLastWeek += i.tempValue.toFloat()
                 }
                 thisWeekAVETvoc = (sumThisAndLastWeek / result1.size)
-                arrTvoc3.add(thisWeekAVETvoc.toString())
+                arrTvoc3.add((thisWeekAVETvoc + 10.0f).toString())
                 //依序加入時間
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 //result_Today!!.text = "$thisWeekAVETvoc ppb"        //arrTvoc3[1].toString()+" ppb"
                 //Log.e("thisGetRealmWeekAVG", lastWeekAVETvoc.toString())
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
-                arrTvoc3.add("-10")
+                arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
             }
         }
@@ -726,6 +747,7 @@ class TempFragment : Fragment() {
         //******************************************************************************************************************************************************************************************************************************************
         //
         //上周日的00:00
+        /*
         val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
@@ -757,7 +779,7 @@ class TempFragment : Fragment() {
                 //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
             } else {
-                arrTvoc3.add("-10")
+                arrTvoc3.add("0")
                 //result_Yesterday!!.text = "0 ppb"
                 //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
             }
@@ -766,6 +788,7 @@ class TempFragment : Fragment() {
         result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ℃"
 
         //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+        */
         //******************************************************************************************************************************************************************************************************************************************
     }
     private fun getRealmMonth() {
@@ -787,7 +810,7 @@ class TempFragment : Fragment() {
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            val dataCount = (sqlEndDate - sqlStartDate) / (30 * 1000)
+            val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
             Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
             Log.d("getRealmMonth", sqlStartDate.toString())
             Log.d("getRealmMonth", sqlEndDate.toString())
@@ -799,13 +822,13 @@ class TempFragment : Fragment() {
                 for (i in result1) {
                     sumTvoc += i.tempValue.toFloat()
                 }
-                val aveTvoc = (sumTvoc / result1.size)
+                val aveTvoc = (sumTvoc / result1.size) + 10.0f
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmMonth", result1.last().toString())
             } else {
-                arrTvoc3.add("-10")
+                arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
@@ -849,6 +872,10 @@ class TempFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -860,6 +887,10 @@ class TempFragment : Fragment() {
                     chartLabels.add(date)
                     labelArray.add(dateLabel)
                 }
+                result_Today!!.text = getString(R.string.text_default_value)
+                result_Yesterday!!.text = getString(R.string.text_default_value)
+                show_Today!!.text=getString(R.string.text_default_value)
+                show_Yesterday!!.text=getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())

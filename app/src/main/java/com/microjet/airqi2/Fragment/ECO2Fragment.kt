@@ -786,11 +786,11 @@ class ECO2Fragment : Fragment() {
                     labelArray.add(dateLabel)
                 }
 
-                getCO2ToAndYesterdayAvgData()
-                result_Today!!.text = arrTvoc3[1] + " ppm"        //arrTvoc3[1].toString()+" ppb"
-                result_Yesterday!!.text = arrTvoc3[0] + " ppm"
-                Log.e("兩天資料:", arrTvoc3.toString())
-                Log.e("兩天時數:", arrTime3.toString())
+//                getCO2ToAndYesterdayAvgData()
+//                result_Today!!.text = arrTvoc3[1] + " ppm"        //arrTvoc3[1].toString()+" ppb"
+//                result_Yesterday!!.text = arrTvoc3[0] + " ppm"
+//                Log.e("兩天資料:", arrTvoc3.toString())
+//                Log.e("兩天時數:", arrTime3.toString())
             }
             1 -> {
                 val dateFormat = SimpleDateFormat("EEEE")
