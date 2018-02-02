@@ -201,6 +201,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
+
+    //20180202
+     override fun onBackPressed() {
+        //實現模擬home鍵功能
+        //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
+        var intent: Intent = Intent(Intent.ACTION_MAIN)
+         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+         intent.addCategory(Intent.CATEGORY_HOME);
+        startActivity(intent)
+    }
+
+
+
+
     override fun onDestroy() {
         super.onDestroy()
         Log.i(TAG, "call onDestroy")
