@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.ContextWrapper
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
@@ -17,19 +16,16 @@ import android.text.style.AbsoluteSizeSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
-import android.view.MotionEvent
-import android.widget.Toast
-import com.microjet.airqi2.BlueTooth.UartService
-import com.microjet.airqi2.Definition.BroadcastIntents
-import com.microjet.airqi2.MainActivity
 
 
 class MainFragment : Fragment() {
@@ -83,25 +79,27 @@ class MainFragment : Fragment() {
             checkUIState()
 
         }
+
         show_eCO2?.setOnClickListener {
             dataForState = DetectionData.CO2
             checkUIState()
         }
+
         show_Temp?.setOnClickListener{
             dataForState = DetectionData.Temp
             checkUIState()
         }
+
         show_RH?.setOnClickListener {
             dataForState = DetectionData.Humi
             checkUIState()
         }
-        val touchDown = 0f
-        var mScroll = false
-        val isLongClick = false
+
         imgLight.setOnTouchListener { _, motionEvent ->
             //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-            if(motionEvent.action == MotionEvent.ACTION_DOWN ) {//.ACTION_BUTTON_PRESS
-                Log.i("幹我按下了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+            when {
+                motionEvent.action == MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
+                    Log.i("幹我按下了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
                     //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
                     //20180131
                     //************************************************************************************************************************************
@@ -109,24 +107,26 @@ class MainFragment : Fragment() {
                     intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
                     mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
                     //************************************************************************************************************************************
-            } else if(motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
-                Log.i("幹我不按了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                }
+                motionEvent.action == MotionEvent.ACTION_UP -> {//ACTION_BUTTON_RELEASE
+                    Log.i("幹我不按了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
                     //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
                     //************************************************************************************************************************************
                     val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
                     mContext!!.sendBroadcast(intent)
                     //************************************************************************************************************************************
-            }else if(motionEvent.action == MotionEvent.ACTION_MOVE) {//ACTION_BUTTON_RELEASE
-                Log.i("幹我按中了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-            } else{
-                Log.i("幹我取消了了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-                //************************************************************************************************************************************
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                mContext!!.sendBroadcast(intent)
-                //************************************************************************************************************************************
+                }
+                motionEvent.action == MotionEvent.ACTION_MOVE -> //ACTION_BUTTON_RELEASE
+                    Log.i("幹我按中了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                else -> {
+                    Log.i("幹我取消了了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
+                    //************************************************************************************************************************************
+                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                    mContext!!.sendBroadcast(intent)
+                    //************************************************************************************************************************************
+                }
             }
             true
         }
@@ -150,24 +150,9 @@ class MainFragment : Fragment() {
     }
 
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onResume() {
         super.onResume()
         checkUIState()
-    }
-    override fun onPause() {
-        super.onPause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
     }
 
     override fun onDestroy() {
@@ -179,11 +164,6 @@ class MainFragment : Fragment() {
         }
     }
 
-
-
-    override fun onDetach() {
-        super.onDetach()
-    }
 
     private fun fixInCircleTextSize() {
         val dm = resources.displayMetrics
@@ -451,10 +431,6 @@ class MainFragment : Fragment() {
                 imgLight.setImageResource(R.drawable.app_android_icon_light)
             }
         }
-    }
-
-    private fun isInitVibratorNotify(): Boolean {
-        return true
     }
 
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
