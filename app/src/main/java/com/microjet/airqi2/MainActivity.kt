@@ -316,13 +316,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mMainFg = MainFragment()
         val mTvocFg = TVOCFragment()
         val mEco2Fg = ECO2Fragment()
-        //val mTempFg = TempFragment()
+        val mTempFg = TempFragment()
         val mHumiFg = HumidiytFragment()
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
         mFragmentList.add(mEco2Fg)
-        //mFragmentList.add(mTempFg)
+        mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
 
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)

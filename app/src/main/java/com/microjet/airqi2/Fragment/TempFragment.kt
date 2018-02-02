@@ -184,8 +184,9 @@ class TempFragment : Fragment() {
                 mTextViewTimeRange!!.text = labelArray[h!!.xIndex]//listString[h.xIndex]
                 //mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
-                val temp = e?.`val`
-                mTextViewValue!!.text = temp?.toString() + " ℃"
+                val temp: Float? = e?.`val`
+                val temp1: Float? = (temp!! - 10.1f)
+                mTextViewValue!!.text = temp1?.toString() + " ℃"
             }
         })
         //imgBarRed = this.view?.findViewById(R.id.imgBarRed)
@@ -357,18 +358,18 @@ class TempFragment : Fragment() {
     }
     private fun setImageBarSize(){
         mChart!!.data = getBarData()
-        val line1 = mChart!!.getBarBounds(BarEntry(-10f, 1)) //-10
-        val line2 = mChart!!.getBarBounds(BarEntry(-5f, 2)) //-5
-        val line3 = mChart!!.getBarBounds(BarEntry(0f, 3)) //0
-        val line4 = mChart!!.getBarBounds(BarEntry(5f, 4)) //5
-        val line5 = mChart!!.getBarBounds(BarEntry(10f, 5)) //10
-        val line6 = mChart!!.getBarBounds(BarEntry(15f, 6)) //15
-        val line7 = mChart!!.getBarBounds(BarEntry(20f, 7)) //20
-        val line8 = mChart!!.getBarBounds(BarEntry(25f, 8)) //25
-        val line9 = mChart!!.getBarBounds(BarEntry(30f, 9)) //30
-        val line10 = mChart!!.getBarBounds(BarEntry(35f, 10)) //35
-        val line11 = mChart!!.getBarBounds(BarEntry(40f, 11)) //40
-        val line12 = mChart!!.getBarBounds(BarEntry(45f, 12)) //45
+        val line1 = mChart!!.getBarBounds(BarEntry(0f, 1)) //-10
+        val line2 = mChart!!.getBarBounds(BarEntry(5f, 2)) //-5
+        val line3 = mChart!!.getBarBounds(BarEntry(10f, 3)) //0
+        val line4 = mChart!!.getBarBounds(BarEntry(15f, 4)) //5
+        val line5 = mChart!!.getBarBounds(BarEntry(20f, 5)) //10
+        val line6 = mChart!!.getBarBounds(BarEntry(25f, 6)) //15
+        val line7 = mChart!!.getBarBounds(BarEntry(30f, 7)) //20
+        val line8 = mChart!!.getBarBounds(BarEntry(35f, 8)) //25
+        val line9 = mChart!!.getBarBounds(BarEntry(40f, 9)) //30
+        val line10 = mChart!!.getBarBounds(BarEntry(45f, 10)) //35
+        val line11 = mChart!!.getBarBounds(BarEntry(50f, 11)) //40
+        val line12 = mChart!!.getBarBounds(BarEntry(55f, 12)) //45
      //   val line13 = mChart!!.getBarBounds(BarEntry(60f, 13)) //50
         //val line20000 = mChart!!.getBarBounds(BarEntry(20000f, 3))
     //    tempChartTitle13?.y = line13.top - (tempChartTitle13!!.height / 2)-(tempChartTitle13!!.height/2)   //50 position
@@ -549,8 +550,8 @@ class TempFragment : Fragment() {
         mChart!!.isScaleYEnabled = false
         mChart!!.setDrawValueAboveBar(false)
         leftAxis.setLabelCount(13,true)
-        leftAxis.setAxisMaxValue(50f) // the axis maximum is 1500 equ (50)
-        leftAxis.setAxisMinValue(-10f) // start at zero  equ (-10)
+        leftAxis.setAxisMaxValue(60f) // the axis maximum is 1500 equ (50)
+        leftAxis.setAxisMinValue(0f) // start at zero  equ (-10)
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
         leftAxis.setDrawGridLines(true) // no grid lines
@@ -561,7 +562,7 @@ class TempFragment : Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
 
-        for (i in -5..45 step 5)
+        for (i in 5..55 step 5)
         {
             nums.add(i.toFloat())
 
@@ -615,7 +616,7 @@ class TempFragment : Fragment() {
         var sumTvoc = 0.0f
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
-            arrTvoc3.add("-10")
+            arrTvoc3.add("0")
             arrTime3.add(((startTime + y * 30000) - calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0.0f
@@ -623,7 +624,7 @@ class TempFragment : Fragment() {
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (30 * 1000)).toInt()
-                arrTvoc3[count] = asmDataModel.tempValue.toString()
+                arrTvoc3[count] = (asmDataModel.tempValue.toFloat()+10.1f).toString()
                 //20180122
                 sumTvoc += arrTvoc3[count].toFloat()
                 //Log.v("hilightCount:", count.toString())
@@ -1062,19 +1063,19 @@ class TempFragment : Fragment() {
         // mDataCount
         val chartData = ArrayList<BarEntry>()
         // for (i in 1 until mDataCount) {
-        chartData.add(BarEntry((-10).toFloat(), 1))   //-10
-        chartData.add(BarEntry((-5).toFloat(), 2))   //-5
-        chartData.add(BarEntry((0).toFloat(), 3))  //0
-        chartData.add(BarEntry((5).toFloat(), 4))  //5
-        chartData.add(BarEntry((10).toFloat(), 5))  //10
-        chartData.add(BarEntry((15).toFloat(), 6))  //15
-        chartData.add(BarEntry((20).toFloat(), 7))  //20
-        chartData.add(BarEntry((25).toFloat(), 8))  //25
-        chartData.add(BarEntry((30).toFloat(), 9))  //30
-        chartData.add(BarEntry((35).toFloat(), 10)) //35
-        chartData.add(BarEntry((40).toFloat(), 11)) //40
-        chartData.add(BarEntry((45).toFloat(), 12)) //45
-        chartData.add(BarEntry((50).toFloat(), 13)) //50
+        chartData.add(BarEntry((0).toFloat(), 1))   //-10
+        chartData.add(BarEntry((5).toFloat(), 2))   //-5
+        chartData.add(BarEntry((10).toFloat(), 3))  //0
+        chartData.add(BarEntry((15).toFloat(), 4))  //5
+        chartData.add(BarEntry((20).toFloat(), 5))  //10
+        chartData.add(BarEntry((25).toFloat(), 6))  //15
+        chartData.add(BarEntry((30).toFloat(), 7))  //20
+        chartData.add(BarEntry((35).toFloat(), 8))  //25
+        chartData.add(BarEntry((40).toFloat(), 9))  //30
+        chartData.add(BarEntry((45).toFloat(), 10)) //35
+        chartData.add(BarEntry((50).toFloat(), 11)) //40
+        chartData.add(BarEntry((55).toFloat(), 12)) //45
+        chartData.add(BarEntry((60).toFloat(), 13)) //50
         // }
         return chartData
     }
