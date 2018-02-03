@@ -251,7 +251,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
-                    android:text="50" />
+                    android:text="50"
+                    android:visibility="invisible" />
 
                 <TextView
                     android:id="@+id/tempChartTitle12"
@@ -348,15 +349,6 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentStart="true"
                     android:text="-10" />
-
-                <com.microjet.airqi2.CustomAPI.FixBarChart
-                    android:id="@+id/chart_line"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
-                    android:layout_alignParentTop="true">
-
-                </com.microjet.airqi2.CustomAPI.FixBarChart>
                 <!--
                                               <ImageView
                                                   android:id="@+id/imgBarRed"
@@ -394,6 +386,12 @@
 
         </RelativeLayout>
 
+        <com.microjet.airqi2.CustomAPI.FixBarChart
+            android:id="@+id/chart_line"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </com.microjet.airqi2.CustomAPI.FixBarChart>
     </LinearLayout>
 
     <LinearLayout
