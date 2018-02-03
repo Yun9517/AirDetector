@@ -209,7 +209,7 @@
             android:layout_marginTop="5dp"
             android:background="@drawable/chart_subtitle"
             android:gravity="end"
-            android:text="@string/text_label_temperature"
+            android:text="@string/text_label_temperature_full"
             android:textAlignment="gravity"
             android:textColor="@color/whiteColor"
             android:textSize="12sp"

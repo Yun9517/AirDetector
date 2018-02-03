@@ -30,6 +30,8 @@
     <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">溫度</string>
     <string name="text_label_humidity">濕度</string>
+    <string name="text_label_temperature_full">溫度</string>
+    <string name="text_label_humidity_full">濕度</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_status_good">正常</string>

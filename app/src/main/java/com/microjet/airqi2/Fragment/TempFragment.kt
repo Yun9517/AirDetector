@@ -696,7 +696,7 @@ class TempFragment : Fragment() {
 
         //}
         val newTemp = "%.1f".format(aveTvoc)
-        val newTemp1 = "%.1f".format(AVGTvoc3)
+        val newTemp1 = "%.1f".format(AVGTvoc3 + 10)
         result_Today!!.text = newTemp + " ℃"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = newTemp1 + " ℃"
     }
