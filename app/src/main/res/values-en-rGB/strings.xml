@@ -30,8 +30,7 @@
     <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">Temp.</string>
     <string name="text_label_humidity">RH</string>
-    <string name="text_label_temperature_full">Temperature</string>
-    <string name="text_label_humidity_full">Humidity</string>
+
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_status_good">Normal</string>
@@ -66,7 +65,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">Contact Us</string>
     <string name="Contact_mail">Service Mail</string>
-    <string name="show_app_version">Version   %s</string>
+    <string name="show_app_version">TVOC NOSE Version   %s</string>
     <string name="Blue_Tooth">Blue Tooth</string>
     <string name="Broadcast">Broadcast Notification</string>
     <string name="Auto_measure">Auto Detect</string>
