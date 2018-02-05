@@ -691,28 +691,13 @@ class TempFragment : Fragment() {
             }
             AVGTvoc3 = (sumTvocYesterday / result2.size)
         } else {
-            AVGTvoc3 = -10.0f
-            //val newTemp1 = "%.1f".format(AVGTvoc3 + 10)
-            //result_Yesterday!!.text = newTemp1 + " ℃"
+            AVGTvoc3 = 0.0f
         }
 
-        if(AVGTvoc3 == -10f) {
-            val newTemp = "%.1f".format(aveTvoc)
-            val newTemp1 = "%.1f".format(AVGTvoc3 + 10)
-            result_Today!!.text = newTemp + " ℃"
-            result_Yesterday!!.text = newTemp1 + " ℃"
-        } else {
-            val newTemp = "%.1f".format(aveTvoc)
-            val newTemp1 = "%.1f".format(AVGTvoc3)
-            result_Today!!.text = newTemp + " ℃"
-            result_Yesterday!!.text = newTemp1 + " ℃"
-        }
-
-        //}
-//        val newTemp = "%.1f".format(aveTvoc)
-//        val newTemp1 = "%.1f".format(AVGTvoc3 + 10)
-//        result_Today!!.text = newTemp + " ℃"        //arrTvoc3[1].toString()+" ppb"
-//        result_Yesterday!!.text = newTemp1 + " ℃"
+        val newTemp = "%.1f".format(aveTvoc)
+        val newTemp1 = "%.1f".format(AVGTvoc3)
+        result_Today!!.text = newTemp + " ℃"        //arrTvoc3[1].toString()+" ppb"
+        result_Yesterday!!.text = newTemp1 + " ℃"
     }
 
     @SuppressLint("SetTextI18n")
