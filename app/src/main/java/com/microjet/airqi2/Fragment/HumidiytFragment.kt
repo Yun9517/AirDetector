@@ -343,7 +343,7 @@ class HumidiytFragment : Fragment() {
                 mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
-                mChart?.setVisibleXRange(14.0f, 14.0f)
+                mChart?.setVisibleXRange(7.0f, 7.0f)
                 mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
             }
             2 -> {
