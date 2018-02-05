@@ -42,7 +42,7 @@
             app:string_unit=""
             app:sweep_angle="270" />
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -60,15 +60,15 @@
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/inCircleTitle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
                 android:layout_above="@+id/inCircleValue"
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_marginEnd="25dp"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginEnd="26dp"
+                android:layout_marginStart="26dp"
+                android:layout_marginTop="32dp"
                 android:gravity="bottom|center"
                 android:maxLines="2"
                 android:text="@string/text_label_tvoc_detect"
@@ -77,28 +77,38 @@
                 android:textSize="14sp"
                 app:autoSizeMaxTextSize="50sp"
                 app:autoSizeMinTextSize="14sp"
-                app:autoSizeTextType="uniform" />
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@+id/inCircleValue"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/inCircleValue"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
                 android:background="@android:color/transparent"
                 android:text="@string/text_default_value"
                 android:textAlignment="center"
                 android:textColor="@color/whiteColor"
-                android:textSize="24sp" />
+                android:textSize="30sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/inCircleState"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/inCircleValue"
                 android:layout_gravity="center"
-                android:layout_marginEnd="10dp"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
                 android:background="@android:color/transparent"
                 android:gravity="top|center"
                 android:text="@string/text_default_value"
@@ -107,9 +117,12 @@
                 android:textSize="14sp"
                 app:autoSizeMaxTextSize="18sp"
                 app:autoSizeMinTextSize="12sp"
-                app:autoSizeTextType="uniform" />
+                app:autoSizeTextType="uniform"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/inCircleValue" />
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <TextView
             android:id="@+id/tvRange1"

@@ -511,7 +511,7 @@ class MainFragment : Fragment() {
                     inCircleBar.setCurrentValues(tempDataFloat)
                     //inCircleBar.setCurrentValues(18f)
                     tempStatusTextShow(tempDataFloat)
-                    val temp = tempDataFloat.toString() + " ℃"
+                    val temp = tempDataFloat.toString() + " °C"
                     textSpannable(temp)
                 }
 
@@ -556,14 +556,14 @@ class MainFragment : Fragment() {
         val dm = resources.displayMetrics
         val textSpan = SpannableStringBuilder(temp)
         val text1Size  = when(dm.densityDpi) {
-            160 -> convertSpToPx(36f)   // MDPI
+            160 -> convertSpToPx(50f)   // MDPI
             240 -> convertSpToPx(28f)   // HDPI
             480 -> convertSpToPx(30f)   // XXHDPI
             in 560 .. 640 -> convertSpToPx(36f)   // XXXHDPI
             else -> 50
         }
         val text2Size  = when(dm.densityDpi) {
-            160 -> convertSpToPx(20f)   // MDPI
+            160 -> convertSpToPx(30f)   // MDPI
             240 -> convertSpToPx(14f)   // HDPI
             480 -> convertSpToPx(18f)   // XXHDPI
             in 560 .. 640 -> convertSpToPx(22f)   // XXXHDPI
