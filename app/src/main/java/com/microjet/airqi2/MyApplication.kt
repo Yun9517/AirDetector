@@ -12,6 +12,7 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 /**
  * Created by chang on 2017/12/9.
  */
+//新增研發線
 class MyApplication : Application() {
 
     var mPrimaryReceiver: PrimaryReceiver? = null
