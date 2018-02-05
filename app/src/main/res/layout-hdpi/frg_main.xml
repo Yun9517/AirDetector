@@ -12,10 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +21,8 @@
 
         <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
             android:id="@+id/inCircleBar"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:layout_centerInParent="true"
             app:bg_arc_color="@color/whiteTransparentColor_80"
             app:bg_arc_width="20dp"
@@ -35,6 +33,10 @@
             app:is_need_content="false"
             app:is_need_title="false"
             app:is_need_unit="false"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:max_value="100"
             app:string_title="TVOC"
             app:string_unit=""
@@ -73,6 +75,8 @@
                 android:textAlignment="center"
                 android:textColor="@color/whiteColor"
                 android:textSize="14sp"
+                app:autoSizeMaxTextSize="50sp"
+                app:autoSizeMinTextSize="14sp"
                 app:autoSizeTextType="uniform" />
 
             <TextView
