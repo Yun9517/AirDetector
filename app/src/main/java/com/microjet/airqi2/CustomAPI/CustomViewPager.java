@@ -26,9 +26,9 @@ public class CustomViewPager  extends ViewPager {
     }
 
     private void init() {
-        // The majority of the magic happens here
+        // 設定ViewPager 頁面轉換
         setPageTransformer(true, new VerticalPageTransformer());
-        // The easiest way to get rid of the overscroll drawing that happens on the left and right
+        // 先把回彈效果關掉，等找到解法在恢復
         setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
@@ -38,28 +38,28 @@ public class CustomViewPager  extends ViewPager {
         public void transformPage(View view, float position) {
 
             if (position < -1) { // [-Infinity,-1)
-                // This page is way off-screen to the left.
+                // 這個頁面在螢幕左邊
                 view.setAlpha(0);
 
             } else if (position <= 1) { // [-1,1]
                 view.setAlpha(1);
 
-                // Counteract the default slide transition
+                // 抵銷預設的轉換頁面效果
                 view.setTranslationX(view.getWidth() * -position);
 
-                //set Y position to swipe in from top
+                // 設定Y的位置從頂部滑入
                 float yPosition = position * view.getHeight();
                 view.setTranslationY(yPosition);
 
             } else { // (1,+Infinity]
-                // This page is way off-screen to the right.
+                // 這個頁面在螢幕右邊
                 view.setAlpha(0);
             }
         }
     }
 
     /**
-     * Swaps the X and Y coordinates of your touch event.
+     * 交換觸控事件的 X＆Y 坐標
      */
     private MotionEvent swapXY(MotionEvent ev) {
         float width = getWidth();
@@ -104,10 +104,10 @@ public class CustomViewPager  extends ViewPager {
                 final float deltaX = Math.abs(x - mDownPosX);
                 final float deltaY = Math.abs(y - mDownPosY);
                 Log.e("Gesture CustomViewPager", "deltaX: " + deltaX + "  deltaY: " + deltaY);
-                // 这里是否拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
+                // 這裡是否攔截的判斷依據是左右滑動，讀者可根據自己的邏輯進行是否攔截
 
                 if(mDownPosY > 230) {
-                    // 左右滑动不拦截
+                    // 左右滑動不攔截
                     Log.e("Gesture CustomViewPager", "is Intercept: " + (deltaX < deltaY));
                     return deltaX < deltaY;
                 }
