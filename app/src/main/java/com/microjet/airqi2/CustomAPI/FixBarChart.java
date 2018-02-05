@@ -6,8 +6,10 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.widget.ScrollView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.microjet.airqi2.Fragment.TVOCFragment;
 
 /**
  * Created by ray650128 on 2017/11/30.
@@ -29,7 +31,7 @@ public class FixBarChart extends BarChart {
         super(context, attrs, defStyle);
     }
 
-    /*@SuppressLint("ClickableViewAccessibility")
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent evt) {
         switch (evt.getAction()) {
@@ -38,16 +40,16 @@ public class FixBarChart extends BarChart {
                 downPoint.y = evt.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.i("getScrollX ", getScrollX() + "" );
+                Log.i("Gesture getScrollX ", getScrollX() + "" );
                 if (getScaleX() > 1 && Math.abs(evt.getX() - downPoint.x) > 5) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 break;
         }
         return super.onTouchEvent(evt);
-    }*/
+    }
 
-    private float mDownPosX = 0;
+    /*private float mDownPosX = 0;
     private float mDownPosY = 0;
 
     @Override
@@ -56,26 +58,24 @@ public class FixBarChart extends BarChart {
         final float y = event.getY();
 
         final int action = event.getAction();
-        Log.e("FixBarChart", String.valueOf(action));
+        Log.e("Gesture FixBarChart", String.valueOf(action));
 
         switch (action) {
             case MotionEvent.ACTION_DOWN:
                 mDownPosX = x;
                 mDownPosY = y;
-                Log.e("FixBarChart", "mDownPosX: " + x + "  mDownPosY: " + y);
+                Log.e("Gesture FixBarChart", "mDownPosX: " + x + "  mDownPosY: " + y);
                 break;
             case MotionEvent.ACTION_MOVE:
                 final float deltaX = Math.abs(x - mDownPosX);
                 final float deltaY = Math.abs(y - mDownPosY);
-                Log.e("FixBarChart", "deltaX: " + deltaX + "  deltaY: " + deltaY);
+                Log.e("Gesture FixBarChart", "deltaX: " + deltaX + "  deltaY: " + deltaY);
                 // 这里是否拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
 
-                if (deltaX < deltaY) {// 上下滑動不攔截
-                    return false;
-                }
-                break;
+                return !(deltaX < deltaY);
+                //break;
         }
         return super.onInterceptTouchEvent(event);
         //return this.isPagingEnabled && super.onInterceptTouchEvent(event);
-    }
+    }*/
 }
