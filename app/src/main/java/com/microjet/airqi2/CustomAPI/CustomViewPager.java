@@ -10,7 +10,7 @@ import android.view.View;
 
 /**
  * Created by ray650128 on 2017/12/8.
- *
+ * 
  */
 
 public class CustomViewPager  extends ViewPager {
