@@ -16,6 +16,8 @@ import android.database.sqlite.SQLiteDatabase
 import android.graphics.BitmapFactory
 import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
+import android.media.AudioManager
+import android.media.SoundPool
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -48,6 +50,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
+import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.*
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -120,6 +123,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var topMenu: Menu? = null
 
+    //20180122
+    private var soundPool: SoundPool? = null
+    private var alertId = 0
+    private var lowPowerCont:Int=0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -161,6 +169,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         UartService.nowActivity=this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
+        //20180206
+        soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
+        alertId = soundPool!!.load(this, R.raw.low_power, 1)
     }
 
     override fun onStart() {
@@ -208,7 +219,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
         var intent: Intent = Intent(Intent.ACTION_MAIN)
          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-         intent.addCategory(Intent.CATEGORY_HOME);
+         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
 
@@ -671,42 +682,42 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     in 198..200 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_6)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(icon.isRunning) {
+                        if (icon.isRunning) {
                             icon.stop()
                         }
                     }
                     in 180..198 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_5)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(!icon.isRunning) {
+                        if (!icon.isRunning) {
                             icon.start()
                         }
                     }
                     in 160..180 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_4)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(!icon.isRunning) {
+                        if (!icon.isRunning) {
                             icon.start()
                         }
                     }
                     in 140..160 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_3)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(!icon.isRunning) {
+                        if (!icon.isRunning) {
                             icon.start()
                         }
                     }
                     in 120..140 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_2)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(!icon.isRunning) {
+                        if (!icon.isRunning) {
                             icon.start()
                         }
                     }
                     in 101..120 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_1)
                         icon = battreyIcon?.icon as AnimationDrawable
-                        if(!icon.isRunning) {
+                        if (!icon.isRunning) {
                             icon.start()
                         }
                     }
@@ -717,7 +728,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 /*if(icon.isRunning) {
                     icon.stop()
                 }*/
-                when(batValue) {
+                when (batValue) {
                     in 96..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
                     in 76..95 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
                     in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
@@ -727,7 +738,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
         // Exception
-            else -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
+            else -> {
+                battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
+
+                //20180206
+                val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+                //20180206
+                lowPowerCont++
+                if (mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false) && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
+                {
+                    lowPowerCont=0
+                    soundPool!!.play(alertId,1F , 1F, 0, 0, 1F)
+                }
+            }
         }
     }
 
