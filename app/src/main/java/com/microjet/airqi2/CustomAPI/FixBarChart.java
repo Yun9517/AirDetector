@@ -70,7 +70,7 @@ public class FixBarChart extends BarChart {
                 final float deltaX = Math.abs(x - mDownPosX);
                 final float deltaY = Math.abs(y - mDownPosY);
                 Log.e("Gesture FixBarChart", "deltaX: " + deltaX + "  deltaY: " + deltaY);
-                // 这里是否拦截的判断依据是左右滑动，读者可根据自己的逻辑进行是否拦截
+                // 這裡是否攔截的判斷依據是左右滑動，讀者可根據自己的邏輯進行是否攔截
 
                 return !(deltaX < deltaY);
                 //break;

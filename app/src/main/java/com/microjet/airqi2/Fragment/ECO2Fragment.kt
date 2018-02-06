@@ -157,7 +157,7 @@ class ECO2Fragment : Fragment() {
                 //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 mTextViewTimeRange!!.text = labelArray[h!!.xIndex]//listString[h.xIndex]
                 //mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
-                //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
+                //mTextViewValue!!.text = h!!.value.toString()+ "ppm"
                 val temp = e?.`val`
                 mTextViewValue!!.text = temp?.toInt().toString()+" ppm"
             }
@@ -621,8 +621,8 @@ class ECO2Fragment : Fragment() {
         }
 
         //}
-        result_Today!!.text = aveTvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-        result_Yesterday!!.text = AVGCo2.toInt().toString()+ " ppb"
+        result_Today!!.text = aveTvoc.toString() + " ppm"        //arrTvoc3[1].toString()+" ppm"
+        result_Yesterday!!.text = AVGCo2.toInt().toString()+ " ppm"
     }
 
     private fun getRealmWeek() {
@@ -660,10 +660,10 @@ class ECO2Fragment : Fragment() {
                 arrTvoc3.add(thisWeekAVETvoc.toString())
                 //依序加入時間
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-                //result_Today!!.text = "$thisWeekAVETvoc ppb"        //arrTvoc3[1].toString()+" ppb"
+                //result_Today!!.text = "$thisWeekAVETvoc ppm"        //arrTvoc3[1].toString()+" ppm"
                 //Log.e("thisGetRealmWeekAVG", lastWeekAVETvoc.toString())
             } else {
-                //result_Today!!.text = "$lastWeekAVETvoc ppb"
+                //result_Today!!.text = "$lastWeekAVETvoc ppm"
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
@@ -704,14 +704,14 @@ class ECO2Fragment : Fragment() {
 //                //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
 //            } else {
 //                arrTvoc3.add("0")
-//                //result_Yesterday!!.text = "0 ppb"
+//                //result_Yesterday!!.text = "0 ppm"
 //                //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
 //            }
 //        }
-//        result_Today!!.text = thisWeekAVETvoc.toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-//        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//        result_Today!!.text = thisWeekAVETvoc.toString() + " ppm"        //arrTvoc3[1].toString()+" ppm"
+//        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppm"
 //
-//        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppb"
+//        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppm"
 //            //******************************************************************************************************************************************************************************************************************************************
 //        */
     }
@@ -789,7 +789,7 @@ class ECO2Fragment : Fragment() {
                 }
 
 //                getCO2ToAndYesterdayAvgData()
-//                result_Today!!.text = arrTvoc3[1] + " ppm"        //arrTvoc3[1].toString()+" ppb"
+//                result_Today!!.text = arrTvoc3[1] + " ppm"        //arrTvoc3[1].toString()+" ppm"
 //                result_Yesterday!!.text = arrTvoc3[0] + " ppm"
 //                Log.e("兩天資料:", arrTvoc3.toString())
 //                Log.e("兩天時數:", arrTime3.toString())
