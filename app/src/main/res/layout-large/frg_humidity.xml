@@ -241,7 +241,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:layout_alignTop="@+id/imgBarRed"
                     android:text="( %)" />
 
@@ -250,7 +251,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:text="80" />
 
                 <TextView
@@ -258,7 +260,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:text="60" />
 
                 <TextView
@@ -266,7 +269,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:text="40" />
 
                 <TextView
@@ -274,7 +278,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false"
                     android:text="20" />
 
                 <TextView
@@ -282,8 +287,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="false"
-                    android:layout_alignParentStart="true"
-                     />
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentStart="false" />
                 <!--
                                               <ImageView
                                                   android:id="@+id/imgBarRed"
