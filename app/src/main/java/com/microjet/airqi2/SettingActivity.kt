@@ -29,6 +29,9 @@ class SettingActivity : AppCompatActivity() {
     var swSound: SwitchCompat? = null
     var swRunInBg: SwitchCompat? = null
     var swTotalNotify: SwitchCompat? = null
+    //20180206
+    var swBattary: SwitchCompat? = null
+
     var text_msg_stat: TextView? = null
     var text_vibe_stat: TextView? = null
     var text_sound_stat: TextView? = null
@@ -45,11 +48,19 @@ class SettingActivity : AppCompatActivity() {
     var swSoundVal: Boolean = false
     var swRunInBgVal: Boolean = false
     var swTotalNotifyVal: Boolean = false
+    //20180130
+    var swBattaryVal: Boolean = false
 
     //20180130
-    var swPump: SwitchCompat? = null
+   // var swPump: SwitchCompat? = null
     var text_pump_stat: TextView? = null
     var swPumpVal: Boolean = false
+
+    //20180206
+    var text_bat_stat:TextView? = null
+
+
+
 
 
 
@@ -95,7 +106,9 @@ class SettingActivity : AppCompatActivity() {
         swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
         swTotalNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY, false)
         //20180130
-        swPumpVal = mPreference!!.getBoolean(SavePreferences.SETTING_PUMP_MUNUAL, false)
+        //swPumpVal = mPreference!!.getBoolean(SavePreferences.SETTING_PUMP_MUNUAL, false)
+        //20180206
+        swBattaryVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
 
         spCycle!!.setSelection(spCycleVal)
 
@@ -105,7 +118,9 @@ class SettingActivity : AppCompatActivity() {
         swRunInBg!!.isChecked = swRunInBgVal
         swTotalNotify!!.isChecked = swTotalNotifyVal
         //20180130
-        swPump!!.isChecked = swPumpVal
+        //swPump!!.isChecked = swPumpVal
+        //20180206
+        swBattary!!.isChecked=swBattaryVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -144,8 +159,11 @@ class SettingActivity : AppCompatActivity() {
         btn_export = findViewById(R.id.btn_export)
 
         //20180130
-        swPump = findViewById(R.id.swPump)
+        //swPump = findViewById(R.id.swPump)
         text_pump_stat = findViewById(R.id.text_pump_stat)
+        //20180206
+        swBattary = findViewById(R.id.batSound)
+        text_bat_stat = findViewById(R.id.text_bat_stat)
 
     }
 
@@ -244,6 +262,16 @@ class SettingActivity : AppCompatActivity() {
 //            mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
 //                    isChecked).apply()
 //        }
+        //20180206
+        swBattary!!.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                text_bat_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                text_bat_stat!!.text = getString(R.string.text_setting_off)
+            }
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
+                    isChecked).apply()
+        }
     }
 
 

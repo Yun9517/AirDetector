@@ -19,5 +19,8 @@ object SavePreferences {
     const val SETTING_TOTAL_POLLUTION_NOTIFY = "airqi2.settings.SETTING_TOTAL_POLLUTION_NOTIFY"
     //20180129
     const val SETTING_PUMP_MUNUAL = "airqi2.settings.SETTING_PUMP_MUNUAL"
+    //20180206
+    //20180129
+    const val SETTING_BATTERY_SOUND = "airqi2.settings.SETTING_BATTERY_SOUND"
 
 }
