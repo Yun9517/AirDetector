@@ -42,6 +42,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import java.util.*
@@ -77,14 +78,11 @@ class DeviceListActivity : Activity() {
 
         scanLeDevice(false)
 
-
-        //先拿掉該判斷，如有問題再補回來,原本mConnectionState初始化無值不給connect
-        //if (UartService.mConnectionState == 0) {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", "connect")
+            intent!!.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
             //Use Bundle Save Address
             val bundle: Bundle? = Bundle()
-            bundle!!.putString("mac", device.address)
+            bundle!!.putString("mac", device.address.toString())
             //put bundle into intent
             intent!!.putExtras(bundle)
             //intent!!.putExtra("mac", device.address)

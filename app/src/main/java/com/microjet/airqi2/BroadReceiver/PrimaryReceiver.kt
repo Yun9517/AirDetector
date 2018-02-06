@@ -48,14 +48,13 @@ class PrimaryReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "disconnect")
                 context.sendBroadcast(mainIntent)
             }
-            "connect" -> {
+            BroadcastActions.ACTION_CONNECT_DEVICE -> {
                 //get Address
                 var macAddress = intent.getStringExtra("mac")
-
                 var intent = Intent(BroadcastIntents.UART_SERVICE)
-                intent.putExtra("status", "connect")
+                intent.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
                 val bundle = Bundle()
-                bundle.putString("mac", macAddress.toString())
+                bundle.putString("mac", macAddress)
                 intent!!.putExtras(bundle)
                 //intent.putExtra("mac",macAddress)
                 context.sendBroadcast(intent)
@@ -162,11 +161,11 @@ class PrimaryReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "callDeviceStartSample")
                 context.sendBroadcast(mainIntent)
             }
-            "ACTION_GATT_SERVICES_DISCOVERED" -> {
-                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
-                mainIntent.putExtra("status", "ACTION_GATT_SERVICES_DISCOVERED")
-                context.sendBroadcast(mainIntent)
-            }
+//            "ACTION_GATT_SERVICES_DISCOVERED" -> {
+//                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
+//                mainIntent.putExtra("status", "ACTION_GATT_SERVICES_DISCOVERED")
+//                context.sendBroadcast(mainIntent)
+//            }
             "EXTRA_DATA" -> {
                 //var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 //mainIntent.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)

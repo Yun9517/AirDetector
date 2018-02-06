@@ -78,8 +78,8 @@ public class UartService extends Service {
     private static final int STATE_CONNECTED = 2;
     private static final int STATE_DISCONNECTING = 3;
 
-    public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            "ACTION_GATT_SERVICES_DISCOVERED";
+    //public final static String ACTION_GATT_SERVICES_DISCOVERED =
+            //"ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
@@ -213,8 +213,9 @@ public class UartService extends Service {
         public void onServicesDiscovered(BluetoothGatt gatt, int status) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 Log.w(TAG, "mBluetoothGatt = " + mBluetoothGatt);
+                enableTXNotification();
                 //broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED);
-                sendToMainBroadcast(ACTION_GATT_SERVICES_DISCOVERED);
+                //sendToMainBroadcast(ACTION_GATT_SERVICES_DISCOVERED);
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status);
             }
@@ -373,8 +374,9 @@ public class UartService extends Service {
      * callback.
      */
     public boolean connect(final String address) {
-        mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
-        mBluetoothAdapter = mBluetoothManager.getAdapter();
+        //mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
+        //mBluetoothAdapter = mBluetoothManager.getAdapter();
+        initailze();
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
@@ -608,7 +610,7 @@ public class UartService extends Service {
                 case "disconnect":
                     disconnect();
                     break;
-                case "connect":
+                case BroadcastActions.ACTION_CONNECT_DEVICE:
                     connect(intent.getStringExtra("mac"));
                     break;
                 case "close":
@@ -660,9 +662,9 @@ public class UartService extends Service {
                     Log.d(TAG, "callDeviceStartSample");
                     writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
-                case ACTION_GATT_SERVICES_DISCOVERED:
-                    enableTXNotification();
-                    break;
+//                case ACTION_GATT_SERVICES_DISCOVERED:
+//                    enableTXNotification();
+//                    break;
                 case ACTION_DATA_AVAILABLE:
                     dataAvaliable(intent);
                     break;
@@ -1051,7 +1053,7 @@ public class UartService extends Service {
                             Log.d("0xB4countLast",  new Date(maxCreatedTime.longValue()).toString());
                             Log.d("0xB4countNow",  new Date(nowTime).toString());
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
-                            countForItem = Math.min((int)(countForItemTime / (30L * 1000L)),getMaxItems());
+                            countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
                             //這行應該用不到
                             //if (countForItem > 1440) { countForItem = 1440; }
                             Log.d("0xB4countItem", Long.toString(countForItem));

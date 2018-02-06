@@ -940,7 +940,7 @@ class ECO2Fragment : Fragment() {
                         animationCount = 0
                         downloadingData = true
                     }
-                    Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
