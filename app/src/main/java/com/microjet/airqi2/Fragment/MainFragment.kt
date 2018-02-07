@@ -31,11 +31,11 @@ import java.util.*
 
 class MainFragment : Fragment() {
 
-    enum class DetectionData(val range1: Long,val range2: Long) {
-        TVOC(220,660),
-        CO2(700,1000),
-        Temp(18,25),
-        Humi(45,65)
+    enum class DetectionData(val range1: Long, val range2: Long) {
+        TVOC(220, 660),
+        CO2(700, 1000),
+        Temp(18, 25),
+        Humi(45, 65)
     }
 
     private var mContext: Context? = null
@@ -48,7 +48,7 @@ class MainFragment : Fragment() {
     private var co2DataFloat = 0f
     private var preHeat = "0"
     //20180207
-    private  var isPumpOn = false
+    private var isPumpOn = false
 
 
     private var dataForState = DetectionData.TVOC
@@ -69,7 +69,7 @@ class MainFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?,
                               container: ViewGroup?,
-                              savedInstanceState: Bundle?): View?{
+                              savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.frg_main, container, false)
     }
 
@@ -80,74 +80,30 @@ class MainFragment : Fragment() {
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
             checkUIState()
-            if (isPumpOn) {
-                //************************************************************************************************************************************
-                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                mContext!!.sendBroadcast(intent)
-                //20180202
-                imgLight.isPressed = false
-                //20180207
-                isPumpOn=false
-                //************************************************************************************************************************************
-            }
+            //20180207
+            pumpOnStatus()
         }
 
         show_eCO2?.setOnClickListener {
             dataForState = DetectionData.CO2
             checkUIState()
-            if (isPumpOn) {
-                //************************************************************************************************************************************
-                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                mContext!!.sendBroadcast(intent)
-                //20180202
-                imgLight.isPressed = false
-                //20180207
-                isPumpOn=false
-                //************************************************************************************************************************************
-            }
+            //20180207
+            pumpOnStatus()
         }
 
 
-        show_Temp?.setOnClickListener{
+        show_Temp?.setOnClickListener {
             dataForState = DetectionData.Temp
             checkUIState()
-            if (isPumpOn) {
-                //************************************************************************************************************************************
-                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                mContext!!.sendBroadcast(intent)
-                //20180202
-                imgLight.isPressed = false
-                //20180207
-                isPumpOn=false
-                //************************************************************************************************************************************
-            }
+            //20180207
+            pumpOnStatus()
         }
 
         show_RH?.setOnClickListener {
             dataForState = DetectionData.Humi
             checkUIState()
-            if (isPumpOn) {
-                //************************************************************************************************************************************
-                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                mContext!!.sendBroadcast(intent)
-                //20180202
-                imgLight.isPressed = false
-                //20180207
-                isPumpOn=false
-                //************************************************************************************************************************************
-            }
+            //20180207
+            pumpOnStatus()
         }
 
 
@@ -164,7 +120,7 @@ class MainFragment : Fragment() {
                     mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
                     //20180202
                     view.isPressed = true
-                    isPumpOn=true
+                    isPumpOn = true
                     //************************************************************************************************************************************
                 } else if (motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
                     //************************************************************************************************************************************
@@ -188,14 +144,12 @@ class MainFragment : Fragment() {
                     //************************************************************************************************************************************
                     //20180202
                     view.isPressed = false
-                    isPumpOn=false
+                    isPumpOn = false
                     //************************************************************************************************************************************
                 }
             }
             true
         }
-
-
 
 
         // 初始化inCircleTitle文字大小
@@ -235,7 +189,7 @@ class MainFragment : Fragment() {
         val dm = resources.displayMetrics
         val dpi = dm.densityDpi
         Log.i("DPI", "目前解析度為: $dpi")
-        when(dpi) {
+        when (dpi) {
             240 -> {   // HDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
@@ -261,27 +215,27 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun setThresholdValue(dataForState: DetectionData){
+    private fun setThresholdValue(dataForState: DetectionData) {
         //tvRange1.text = dataForState.range1.toString()
         //tvRange2.text = dataForState.range2.toString()
         tvRange1.visibility = View.INVISIBLE
         tvRange2.visibility = View.INVISIBLE
     }
 
-    private fun setBarMaxValue(state: DetectionData){
+    private fun setBarMaxValue(state: DetectionData) {
         inCircleBar.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
-        when (state){
+        when (state) {
 
-            DetectionData.TVOC ->{
+            DetectionData.TVOC -> {
                 inCircleBar.setMaxValues(1000f)
             }
-            DetectionData.CO2 ->{
+            DetectionData.CO2 -> {
                 inCircleBar.setMaxValues(5000f)
             }
-            DetectionData.Temp ->{
+            DetectionData.Temp -> {
                 inCircleBar.setMaxValues(50f)
             }
-            DetectionData.Humi ->{
+            DetectionData.Humi -> {
                 inCircleBar.setMaxValues(100f)
             }
         }
@@ -299,7 +253,7 @@ class MainFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun tvocStatusTextShow(currentValue: Float) {
-        when(currentValue) {
+        when (currentValue) {
             in 0..219 -> {
                 tvNotify?.text = getString(R.string.text_message_air_good)
                 inCircleState.text = getString(R.string.text_label_status_good)
@@ -363,8 +317,8 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun eco2StatusTextShow(currentValue:Float){
-        when(currentValue) {
+    private fun eco2StatusTextShow(currentValue: Float) {
+        when (currentValue) {
             in 0..699 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Green)
                 inCircleState.text = getString(R.string.label_eCO2_Green)
@@ -428,8 +382,8 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun tempStatusTextShow(currentValue:Float){
-        when(currentValue) {
+    private fun tempStatusTextShow(currentValue: Float) {
+        when (currentValue) {
             in 18..25 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
@@ -463,8 +417,8 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun humiStatusTextShow(currentValue:Float){
-        when(currentValue) {
+    private fun humiStatusTextShow(currentValue: Float) {
+        when (currentValue) {
             in 0..44 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
@@ -521,7 +475,7 @@ class MainFragment : Fragment() {
                     //inCircleBar.setCurrentValues(tvocDataFloat)
                     inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                     //數值不等比顯示
-                    when(tvocDataFloat) {
+                    when (tvocDataFloat) {
                         in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
                         in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
                         in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
@@ -539,7 +493,7 @@ class MainFragment : Fragment() {
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                     //數值不等比顯示
-                    when(co2DataFloat) {
+                    when (co2DataFloat) {
                         in 0..700 -> inCircleBar.setCurrentValues(co2DataFloat)
                         in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
                         in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)
@@ -558,7 +512,7 @@ class MainFragment : Fragment() {
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
                     //Modify Progress Bar
-                    when(tempDataFloat) {
+                    when (tempDataFloat) {
                         in -10..18 -> inCircleBar.setCurrentValues(tempDataFloat)
                         else -> inCircleBar.setCurrentValues((tempDataFloat / 60) + 700)
                     }
@@ -575,7 +529,7 @@ class MainFragment : Fragment() {
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
                     //Modify Progress Bar
-                    when(humiDataFloat) {
+                    when (humiDataFloat) {
                         in 0..45 -> inCircleBar.setCurrentValues(humiDataFloat)
                         else -> inCircleBar.setCurrentValues((humiDataFloat / 60) + 700)
                     }
@@ -595,37 +549,37 @@ class MainFragment : Fragment() {
         } else {
             inCircleValue.text = " "
             inCircleState.text = " "
-            tvBtmTVOCValue.text= "---"
-            tvBtmPM25Value.text= "---"
-            tvBtmCO2Value?.text= "---"
-            tvBtmTEMPValue.text= "---"/*currentValue[0] + " ℃"*/
-            tvBtmHUMIValue.text= "---"/*currentValue[1] + " %"*/
+            tvBtmTVOCValue.text = "---"
+            tvBtmPM25Value.text = "---"
+            tvBtmCO2Value?.text = "---"
+            tvBtmTEMPValue.text = "---"/*currentValue[0] + " ℃"*/
+            tvBtmHUMIValue.text = "---"/*currentValue[1] + " %"*/
             tvNotify?.text = " "
             tvLastDetectTime.text = " "
             inCircleBar.setCurrentValues(0f)
         }
     }
 
-    private fun textSpannable(temp : String) {
+    private fun textSpannable(temp: String) {
         val dm = resources.displayMetrics
         val textSpan = SpannableStringBuilder(temp)
-        val text1Size  = when(dm.densityDpi) {
+        val text1Size = when (dm.densityDpi) {
             160 -> convertSpToPx(50f)   // MDPI
             240 -> convertSpToPx(28f)   // HDPI
             480 -> convertSpToPx(30f)   // XXHDPI
-            in 560 .. 640 -> convertSpToPx(36f)   // XXXHDPI
+            in 560..640 -> convertSpToPx(36f)   // XXXHDPI
             else -> 50
         }
-        val text2Size  = when(dm.densityDpi) {
+        val text2Size = when (dm.densityDpi) {
             160 -> convertSpToPx(30f)   // MDPI
             240 -> convertSpToPx(14f)   // HDPI
             480 -> convertSpToPx(18f)   // XXHDPI
-            in 560 .. 640 -> convertSpToPx(22f)   // XXXHDPI
+            in 560..640 -> convertSpToPx(22f)   // XXXHDPI
             else -> 30
         }
 
         textSpan.setSpan(AbsoluteSizeSpan(text1Size),
-                0,temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+                0, temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         textSpan.setSpan(AbsoluteSizeSpan(text2Size),
                 temp.indexOf(" ") + 1, temp.length,
                 Spannable.SPAN_INCLUSIVE_INCLUSIVE)
@@ -637,7 +591,7 @@ class MainFragment : Fragment() {
         return (input * resources.displayMetrics.scaledDensity).toInt()
     }
 
-    private val myBroadcastReceiver = object: BroadcastReceiver() {
+    private val myBroadcastReceiver = object : BroadcastReceiver() {
         @SuppressLint("SimpleDateFormat", "SetTextI18n")
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
@@ -663,5 +617,23 @@ class MainFragment : Fragment() {
             checkUIState()
         }
     }
+    //20180207
+    private fun pumpOnStatus() {
+        if (isPumpOn) {
+            //************************************************************************************************************************************
+            //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+            //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+            mContext!!.sendBroadcast(intent)
+            //20180202
+            imgLight.isPressed = false
+            //20180207
+            isPumpOn = false
+            //************************************************************************************************************************************
+        }
+    }
 }
+
+
 
