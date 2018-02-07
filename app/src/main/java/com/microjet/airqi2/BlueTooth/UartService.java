@@ -1306,7 +1306,7 @@ public class UartService extends Service {
         //將時間秒數寫入設定為 00  或  30
         //Long dateSecMil = new Date().getTime();
         Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset();
-        Long dateSecChange = (dateSecMil / 1000)/30 * (1000*30);
+        Long dateSecChange = (dateSecMil / 1000)/60 * (1000*60);
         //Log.d("0xB4",dateSecChange.toString());
         Date date = new Date(dateSecChange);
         Log.d("timeSetNowToThirty",date.toString());
