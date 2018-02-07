@@ -1063,6 +1063,7 @@ public class UartService extends Service {
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
                         if (countForItem > 0){
+                            NowItem = countForItem;
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
                         }
@@ -1080,8 +1081,11 @@ public class UartService extends Service {
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                     Log.d("0xB5Index",RString.get(0));
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
+                        int nowItemReverse = countForItem - NowItem + 1;
+                        Log.d("0XB5",Integer.toString(nowItemReverse));
+                        Log.d("0XB5",Integer.toString(NowItem));
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA);
-                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA,Integer.toString(NowItem));
+                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA,Integer.toString(nowItemReverse));
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
@@ -1102,16 +1106,16 @@ public class UartService extends Service {
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
                             asmData.setPM25Value(RString.get(5));
-                            asmData.setCreated_time(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000);
+                            asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counter * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             Log.d("RealmTimeB5", RString.toString());
-                            Log.d("RealmTimeB5", new Date(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000).toString());
+                            Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counter * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
-                        NowItem++;
+                        NowItem--;
                         counter++;
 
                         //if (NowItem >= getMaxItems()) {
-                        if (NowItem > countForItem) {
+                        if (NowItem < 1) {
                             NowItem = 1;
                             downloading = false;
                             downloadComplete = true;
@@ -1182,9 +1186,9 @@ public class UartService extends Service {
                                 asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
                                 asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
                                 asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
-                                asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", arrB6.toString());
-                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count+1) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
+                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
                             realm.close();
                         }
