@@ -376,7 +376,7 @@ public class UartService extends Service {
     public boolean connect(final String address) {
         //mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
         //mBluetoothAdapter = mBluetoothManager.getAdapter();
-        initailze();
+        //initailze();
         if (mBluetoothAdapter == null || address == null) {
             Log.w(TAG, "BluetoothAdapter not initialized or unspecified address.");
             return false;
@@ -611,7 +611,10 @@ public class UartService extends Service {
                     disconnect();
                     break;
                 case BroadcastActions.ACTION_CONNECT_DEVICE:
-                    connect(intent.getStringExtra("mac"));
+                    if (!connect(intent.getStringExtra("mac"))) {
+                        initailze();
+                        connect(intent.getStringExtra("mac"));
+                    }
                     break;
                 case "close":
                     disconnect();
