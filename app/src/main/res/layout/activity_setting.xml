@@ -58,7 +58,7 @@
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="75dp"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -91,7 +91,7 @@
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="75dp"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -124,7 +124,7 @@
 
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="75dp"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -157,12 +157,12 @@
 
         <TextView
             android:id="@+id/textView14"
-            android:layout_width="75dp"
+            android:layout_width="105dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
             android:text="@string/bat_switch"
-            android:textSize="13sp" />
+            android:textSize="18sp" />
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/batSound"
