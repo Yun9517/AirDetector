@@ -1162,6 +1162,9 @@ public class UartService extends Service {
                         dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
+                        if (dataNotSaved == 1) {
+                            timeSetNowToThirty();
+                        }
                         Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6",arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
@@ -1195,7 +1198,7 @@ public class UartService extends Service {
                         //寫入完畢後將未寫入筆數設為0
                         dataNotSaved = 0;
                         arrB6.clear();
-                        timeSetNowToThirty();
+                        //timeSetNowToThirty();
                     }
                     break;
             }
