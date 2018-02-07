@@ -47,6 +47,8 @@ class MainFragment : Fragment() {
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
     private var preHeat = "0"
+    //20180207
+    private  var isPumpOn = false
 
 
     private var dataForState = DetectionData.TVOC
@@ -78,24 +80,74 @@ class MainFragment : Fragment() {
         show_TVOC?.setOnClickListener {
             dataForState = DetectionData.TVOC
             checkUIState()
-
+            if (isPumpOn) {
+                //************************************************************************************************************************************
+                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //20180202
+                imgLight.isPressed = false
+                //20180207
+                isPumpOn=false
+                //************************************************************************************************************************************
+            }
         }
 
         show_eCO2?.setOnClickListener {
             dataForState = DetectionData.CO2
             checkUIState()
+            if (isPumpOn) {
+                //************************************************************************************************************************************
+                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //20180202
+                imgLight.isPressed = false
+                //20180207
+                isPumpOn=false
+                //************************************************************************************************************************************
+            }
         }
 
 
         show_Temp?.setOnClickListener{
-
             dataForState = DetectionData.Temp
             checkUIState()
+            if (isPumpOn) {
+                //************************************************************************************************************************************
+                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //20180202
+                imgLight.isPressed = false
+                //20180207
+                isPumpOn=false
+                //************************************************************************************************************************************
+            }
         }
 
         show_RH?.setOnClickListener {
             dataForState = DetectionData.Humi
             checkUIState()
+            if (isPumpOn) {
+                //************************************************************************************************************************************
+                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //20180202
+                imgLight.isPressed = false
+                //20180207
+                isPumpOn=false
+                //************************************************************************************************************************************
+            }
         }
 
 
@@ -112,6 +164,7 @@ class MainFragment : Fragment() {
                     mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
                     //20180202
                     view.isPressed = true
+                    isPumpOn=true
                     //************************************************************************************************************************************
                 } else if (motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
                     //************************************************************************************************************************************
@@ -135,6 +188,7 @@ class MainFragment : Fragment() {
                     //************************************************************************************************************************************
                     //20180202
                     view.isPressed = false
+                    isPumpOn=false
                     //************************************************************************************************************************************
                 }
             }
