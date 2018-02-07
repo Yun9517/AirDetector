@@ -81,14 +81,18 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.TVOC
             checkUIState()
             //20180207
-            pumpOnStatus()
+            if( dataForState != DetectionData.TVOC) {
+                pumpOnStatus()
+            }
         }
 
         show_eCO2?.setOnClickListener {
             dataForState = DetectionData.CO2
             checkUIState()
             //20180207
-            pumpOnStatus()
+            if( dataForState != DetectionData.CO2) {
+                pumpOnStatus()
+            }
         }
 
 
@@ -96,14 +100,18 @@ class MainFragment : Fragment() {
             dataForState = DetectionData.Temp
             checkUIState()
             //20180207
-            pumpOnStatus()
+            if( dataForState != DetectionData.Temp) {
+                pumpOnStatus()
+            }
         }
 
         show_RH?.setOnClickListener {
             dataForState = DetectionData.Humi
             checkUIState()
             //20180207
-            pumpOnStatus()
+            if( dataForState != DetectionData.Humi) {
+                pumpOnStatus()
+            }
         }
 
 
