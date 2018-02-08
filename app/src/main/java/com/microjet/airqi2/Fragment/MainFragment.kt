@@ -78,43 +78,31 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         show_TVOC?.setOnClickListener {
-            //20180208
-            if (dataForState.name!=DetectionData.TVOC.name) {
-                //20180207
-                pumpOnStatus()
-            }
+            val beforeState = dataForState
             dataForState = DetectionData.TVOC
+            pumpOnStatus(beforeState,dataForState)
             checkUIState()
         }
 
         show_eCO2?.setOnClickListener {
-            //20180208
-            if (dataForState.name!=DetectionData.CO2.name){
-                //20180207
-                pumpOnStatus()
-            }
+            val beforeState = dataForState
             dataForState = DetectionData.CO2
+            pumpOnStatus(beforeState,dataForState)
             checkUIState()
         }
 
 
         show_Temp?.setOnClickListener {
-            //20180208
-            if (dataForState.name!=DetectionData.Temp.name) {
-                //20180207
-                pumpOnStatus()
-            }
+            val beforeState = dataForState
             dataForState = DetectionData.Temp
+            pumpOnStatus(beforeState,dataForState)
             checkUIState()
         }
 
         show_RH?.setOnClickListener {
-            //20180208
-            if(dataForState.name!=DetectionData.Humi.name){
-                //20180207
-                pumpOnStatus()
-            }
+            val beforeState = dataForState
             dataForState = DetectionData.Humi
+            pumpOnStatus(beforeState,dataForState)
             checkUIState()
         }
 
@@ -629,19 +617,21 @@ class MainFragment : Fragment() {
         }
     }
     //20180207
-    private fun pumpOnStatus() {
-        if (isPumpOn) {
-            //************************************************************************************************************************************
-            //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-            //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-            mContext!!.sendBroadcast(intent)
-            //20180202
-            imgLight.isPressed = false
-            //20180207
-            isPumpOn = false
-            //************************************************************************************************************************************
+    private fun pumpOnStatus(beforeState: DetectionData, dataState: DetectionData) {
+        if (beforeState != dataState) {
+            if (isPumpOn) {
+                //************************************************************************************************************************************
+                //Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
+                mContext!!.sendBroadcast(intent)
+                //20180202
+                imgLight.isPressed = false
+                //20180207
+                isPumpOn = false
+                //************************************************************************************************************************************
+            }
         }
     }
 }
