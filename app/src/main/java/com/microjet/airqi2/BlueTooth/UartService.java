@@ -879,6 +879,19 @@ public class UartService extends Service {
     @SuppressLint("NewApi")
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
+        switch (txValue[0]) {
+            case (byte) 0xEA:
+                //當要印ByteArray的時候可以用
+                break;
+            default:
+                //當要印ByteArray的時候可以用
+                ArrayList dataArray = new ArrayList();
+                for (int index = 0; index < txValue.length; index++){
+                    dataArray.add(txValue[index]);
+                }
+                Log.d("UARTDATAAVA",dataArray.toString());
+                //Log.d("UARTDATAAVA",new String(txValue, StandardCharsets.UTF_8));
+        }
         switch (txValue[2]) {
             case (byte) 0xE0:
                 Log.d("UART feeback", "ok");
