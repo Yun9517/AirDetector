@@ -49,6 +49,8 @@ class MainFragment : Fragment() {
     private var preHeat = "0"
     //20180207
     private var isPumpOn = false
+    //20180207
+    //private  var fun:Int =0
 
 
     private var dataForState = DetectionData.TVOC
@@ -75,45 +77,46 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
-
         show_TVOC?.setOnClickListener {
-            dataForState = DetectionData.TVOC
-            checkUIState()
-            //20180207
-            if( dataForState != DetectionData.TVOC) {
+            //20180208
+            if (dataForState.name!=DetectionData.TVOC.name) {
+                //20180207
                 pumpOnStatus()
             }
+            dataForState = DetectionData.TVOC
+            checkUIState()
         }
 
         show_eCO2?.setOnClickListener {
-            dataForState = DetectionData.CO2
-            checkUIState()
-            //20180207
-            if( dataForState != DetectionData.CO2) {
+            //20180208
+            if (dataForState.name!=DetectionData.CO2.name){
+                //20180207
                 pumpOnStatus()
             }
+            dataForState = DetectionData.CO2
+            checkUIState()
         }
 
 
         show_Temp?.setOnClickListener {
-            dataForState = DetectionData.Temp
-            checkUIState()
-            //20180207
-            if( dataForState != DetectionData.Temp) {
+            //20180208
+            if (dataForState.name!=DetectionData.Temp.name) {
+                //20180207
                 pumpOnStatus()
             }
+            dataForState = DetectionData.Temp
+            checkUIState()
         }
 
         show_RH?.setOnClickListener {
-            dataForState = DetectionData.Humi
-            checkUIState()
-            //20180207
-            if( dataForState != DetectionData.Humi) {
+            //20180208
+            if(dataForState.name!=DetectionData.Humi.name){
+                //20180207
                 pumpOnStatus()
             }
+            dataForState = DetectionData.Humi
+            checkUIState()
         }
-
 
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
