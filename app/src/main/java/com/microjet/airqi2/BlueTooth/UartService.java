@@ -680,7 +680,7 @@ public class UartService extends Service {
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(0));
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(1));
                     break;
             }
         }
