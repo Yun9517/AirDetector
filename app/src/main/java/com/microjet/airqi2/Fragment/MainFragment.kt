@@ -189,25 +189,25 @@ class MainFragment : Fragment() {
         val dpi = dm.densityDpi
         Log.i("DPI", "目前解析度為: $dpi")
         when (dpi) {
-            240 -> {   // HDPI
+            /*240 -> {   // HDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            }
+            }*/
             480 -> {   // XXHDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             }
             560 -> {   // Samsung S8+
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
             640 -> {   // XXXHDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+                //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
