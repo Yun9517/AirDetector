@@ -260,13 +260,12 @@ class ECO2Fragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
                 }
-                mChart?.data = getBarData3(TvocNoseData.arrEco2Day, TvocNoseData.arrEco2Day, position)
+                mChart?.data = getBarData3(TvocNoseData.arrEco2Day, TvocNoseData.arrTimeDay, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
                 mChart?.centerViewToAnimated(l.toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y-1)
-
             }
             1 -> {
                 getRealmWeek()
@@ -504,7 +503,7 @@ class ECO2Fragment : Fragment() {
 
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "ECO2")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC, positionID), "ECO2")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
                 ContextCompat.getColor(context, R.color.Main_textResult_Orange),
@@ -574,12 +573,24 @@ class ECO2Fragment : Fragment() {
         return chartLabels
     }
 
-    private fun getChartData3(input: ArrayList<String>): List<BarEntry> {
-
-
+    private fun getChartData3(input: ArrayList<String>, position: Int?): List<BarEntry> {
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until TvocNoseData.arrEco2Day.size) {
-            chartData.add(BarEntry(input[i].toFloat(), i))
+        when (position) {
+            0 -> {
+                for (i in 0 until TvocNoseData.arrEco2Day.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
+            1 -> {
+                for (i in 0 until arrTime3.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
+            2 -> {
+                for (i in 0 until arrTime3.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
         }
         return chartData
     }

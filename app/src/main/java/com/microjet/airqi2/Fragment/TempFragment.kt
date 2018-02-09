@@ -836,7 +836,7 @@ class TempFragment : Fragment() {
 
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "Temp")
+        val dataSetA = MyBarDataSet(getChartData3(inputTVOC, positionID), "Temp")
         dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
                 ContextCompat.getColor(context, R.color.Main_textResult_Good),
                 ContextCompat.getColor(context, R.color.Main_textResult_Bad)))
@@ -898,12 +898,24 @@ class TempFragment : Fragment() {
         return chartLabels
     }
 
-    private fun getChartData3(input: ArrayList<String>): List<BarEntry> {
-
-
+    private fun getChartData3(input: ArrayList<String>, position: Int?): List<BarEntry> {
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until TvocNoseData.arrTempDay.size) {
-            chartData.add(BarEntry(input[i].toFloat(), i))
+        when (position) {
+            0 -> {
+                for (i in 0 until TvocNoseData.arrTempDay.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
+            1 -> {
+                for (i in 0 until arrTime3.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
+            2 -> {
+                for (i in 0 until arrTime3.size) {
+                    chartData.add(BarEntry(input[i].toFloat(), i))
+                }
+            }
         }
         return chartData
     }
