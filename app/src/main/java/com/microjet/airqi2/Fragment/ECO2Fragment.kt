@@ -35,6 +35,7 @@ import com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import io.realm.Sort
 import java.text.SimpleDateFormat
@@ -74,7 +75,6 @@ class ECO2Fragment : Fragment() {
     //private var imgBarYellow : ImageView? = null
     //private var imgBarGreen : ImageView? = null
     //private var imgBarBase : ImageView? = null
-    private var sprTVOC : Spinner? = null
     private var btnCallDatePicker : Button? = null
     private var show_Yesterday : TextView? = null
     private var show_Today : TextView? = null
@@ -103,16 +103,17 @@ class ECO2Fragment : Fragment() {
     private var getDataCycle = 15
 
     private val calObject = Calendar.getInstance()
-    private var spinnerPositon = 0
+    //private var spinnerPositon = 0
     private var datepickerHandler = Handler()
     //private var chartHandler = Handler()
     private var downloadComplete = false
 
-    var counter = 0
-    var TVOCAVG = 0
+    private var counter = 0
+    private var TVOCAVG = 0
 
 
     private var labelArray = ArrayList<String>()
+    var sprTVOC : Spinner? = null
 
 
     @Suppress("OverridingDeprecatedMember")
@@ -170,12 +171,13 @@ class ECO2Fragment : Fragment() {
         sprTVOC = this.view?.findViewById(R.id.sprECO2)
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
         sprTVOC!!.adapter = cycleList
+        sprTVOC!!.setSelection(TvocNoseData.spinnerPosition)
         sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long)
             {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
-                spinnerPositon = position
-                when(spinnerPositon) {
+                TvocNoseData.spinnerPosition = position
+                when(TvocNoseData.spinnerPosition) {
                     0 -> {
                         showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
                     }
@@ -186,8 +188,8 @@ class ECO2Fragment : Fragment() {
                         showAvg_ByTime?.text = getString(R.string.averageExposure_Daily)
                     }
                 }
-                btnTextChanged(spinnerPositon)
-                drawChart(spinnerPositon)
+                btnTextChanged(TvocNoseData.spinnerPosition)
+                drawChart(TvocNoseData.spinnerPosition)
 
                 val selectedItem = parent.getItemAtPosition(position).toString()
 //                if (selectedItem == "Add new category") {
@@ -208,8 +210,8 @@ class ECO2Fragment : Fragment() {
                 val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                     calObject.set(year, month, dayOfMonth)
                     Log.d("ECO2btncall", calObject.get(Calendar.DAY_OF_MONTH).toString())
-                    btnTextChanged(spinnerPositon)
-                    drawChart(spinnerPositon)
+                    btnTextChanged(TvocNoseData.spinnerPosition)
+                    drawChart(TvocNoseData.spinnerPosition)
                     timePickerShow()
                 },calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
@@ -372,8 +374,8 @@ class ECO2Fragment : Fragment() {
         super.onResume()
         //視Radio id畫圖
         //dependRadioIDDrawChart(radioButtonID)
-        btnTextChanged(spinnerPositon)
-        drawChart(spinnerPositon)
+        btnTextChanged(TvocNoseData.spinnerPosition)
+        drawChart(TvocNoseData.spinnerPosition)
     }
 
     override fun onPause() {
@@ -951,8 +953,8 @@ class ECO2Fragment : Fragment() {
                         //stopUpdateDataAnimation()
                         downloadComplete = true
                         //mRadioGroup?.check(R.id.radioButton_Hour)
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
+                        btnTextChanged(TvocNoseData.spinnerPosition)
+                        drawChart(TvocNoseData.spinnerPosition)
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
@@ -996,9 +998,9 @@ class ECO2Fragment : Fragment() {
 //                    mChart?.data = getBarData3(arrTvoc3, arrTime3, 0)
 //                    mChart?.data?.setDrawValues(false)
 //                    mChart?.setVisibleXRange(5.0f, 40.0f)
-                    if (spinnerPositon == 0) {
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
+                    if (TvocNoseData.spinnerPosition == 0) {
+                        btnTextChanged(TvocNoseData.spinnerPosition)
+                        drawChart(TvocNoseData.spinnerPosition)
                     }
                 }
             }
@@ -1147,7 +1149,7 @@ class ECO2Fragment : Fragment() {
     }
 
     private fun timePickerShow(){
-        if (spinnerPositon == 0) {
+        if (TvocNoseData.spinnerPosition == 0) {
             val tpd = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                 val p = hourOfDay * 60 + minute
                 mChart?.centerViewToAnimated(p.toFloat(), 0F, YAxis.AxisDependency.LEFT, 1000)

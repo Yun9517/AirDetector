@@ -4,6 +4,7 @@ package com.microjet.airqi2
  * Created by B00175 on 2018/1/29.
  */
 object TvocNoseData {
+    var spinnerPosition: Int = 2
     val arrTvoc3: ArrayList<String> = arrayListOf()
     val arrTime3: ArrayList<String> = arrayListOf()
     val arrChartLabels: ArrayList<String> = arrayListOf()
