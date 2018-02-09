@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase
 
 import android.graphics.BitmapFactory
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //電量icon
     private var battreyIcon: MenuItem? = null
     private var menuItem: MenuItem? = null
-
+    private var lightIcon: ImageView? = null
 
     private var connState = false
 /*
@@ -410,6 +411,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         battreyIcon = menu.findItem(R.id.batStatus)
         bleIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         battreyIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        lightIcon = findViewById(R.id.imgLight)
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -820,6 +823,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+            lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
     }
 
