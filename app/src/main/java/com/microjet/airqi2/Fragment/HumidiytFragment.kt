@@ -241,48 +241,7 @@ class HumidiytFragment : Fragment() {
 //                Log.d("TVOC","TOAST_ON")
 //            }
         }
-//        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
-//            mChart?.clear()
-//            when (i) {
-//                R.id.radioButton_Hour -> {
-//                    mChart?.data = getBarData2(tvocArray, timeArray)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRangeMinimum(5.0f)
-//                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-//                    mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-//                }
-//                R.id.radioButton_Day -> {
-//                    getRealmDay()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(5.0f,40.0f)
-//                    //mChart?.setVisibleXRangeMinimum(20.0f)
-//                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-//                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-//                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
-//                }
-//                R.id.radioButton_Week -> {
-//                    getRealmWeek()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(7.0f,7.0f)
-//                }
-//                R.id.radioButton_Month -> {
-//                    getRealmMonth()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(35.0f,35.0f)
-//
-//                }
-//            }
-//            radioButtonID = mRadioGroup?.checkedRadioButtonId
-//            //mChart?.setVisibleXRangeMinimum(5.0f)
-//            //mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-//            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-//        })
 
-        //mHour!!.isChecked = true
-        //radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
         //mChart!!.setOnChartValueSelectedListener(this)
     }
@@ -316,8 +275,8 @@ class HumidiytFragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
                 }
-                getRealmDay()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                //getRealmDay()
+                mChart?.data = getBarData3(TvocNoseData.arrHumiDay, TvocNoseData.arrTimeDay, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
                 //mChart?.setVisibleXRangeMinimum(20.0f)
@@ -344,7 +303,6 @@ class HumidiytFragment : Fragment() {
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(7.0f, 7.0f)
-                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
             }
             2 -> {
                 getRealmMonth()
@@ -352,7 +310,7 @@ class HumidiytFragment : Fragment() {
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
-
+                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
             }
         }
     }
@@ -817,7 +775,7 @@ class HumidiytFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrHumiDay.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -864,7 +822,7 @@ class HumidiytFragment : Fragment() {
 
 
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until arrTime3.size) {
+        for (i in 0 until TvocNoseData.arrHumiDay.size) {
             chartData.add(BarEntry(input[i].toFloat(), i))
         }
         return chartData

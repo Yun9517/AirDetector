@@ -228,50 +228,8 @@ class ECO2Fragment : Fragment() {
 //                Log.d("ECO2","TOAST_ON")
 //            }
 //        }
-//        mRadioGroup?.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { radioGroup, i ->
-//            mChart?.clear()
-//            when (i) {
-//                R.id.radioButton_Hour -> {
-//                    mChart?.data = getBarData2(tvocArray, timeArray)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRangeMinimum(5.0f)
-//                    mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-//                    mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-//                }
-//                R.id.radioButton_Day -> {
-//                    getRealmDay()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(5.0f,40.0f)
-//                    //mChart?.setVisibleXRangeMinimum(20.0f)
-//                    //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-//                    mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-//                            + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 119F) //移動視圖by x index
-//                }
-//                R.id.radioButton_Week -> {
-//                    getRealmWeek()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(7.0f,7.0f)
-//                }
-//                R.id.radioButton_Month -> {
-//                    getRealmMonth()
-//                    mChart?.data = getBarData3(arrTvoc3, arrTime3,i)
-//                    mChart?.data?.setDrawValues(false)
-//                    mChart?.setVisibleXRange(35.0f,35.0f)
-//
-//                }
-//            }
-//            radioButtonID = mRadioGroup?.checkedRadioButtonId
-//            //mChart?.setVisibleXRangeMinimum(5.0f)
-//            //mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-//            //mChart?.moveViewToX((100).toFloat())//移動視圖by x index
-//        })
 
-        //mHour!!.isChecked = true
-        //radioButtonID = mRadioGroup?.checkedRadioButtonId
         configChartView()
-        //mChart!!.setOnChartValueSelectedListener(this)
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -302,18 +260,12 @@ class ECO2Fragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
                 }
-                getRealmDay()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data = getBarData3(TvocNoseData.arrEco2Day, TvocNoseData.arrEco2Day, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
-                //mChart?.setVisibleXRangeMinimum(20.0f)
-                //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 mChart?.centerViewToAnimated(l.toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
-                //mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(l, y-1)
-                //Log.v("Highligh:",l.toString())
 
             }
             1 -> {
@@ -348,20 +300,6 @@ class ECO2Fragment : Fragment() {
 
         //視Radio id畫圖
         mChart!!.clear()
-//        when (radioButtonID) {
-//            0 -> {
-//                mChart?.data = getBarData2(tvocArray, timeArray)
-//                mChart?.data?.setDrawValues(false)
-//                mChart?.setVisibleXRangeMinimum(5.0f)
-//                mChart?.setVisibleXRangeMaximum(5.0f)
-//            }
-//            1, 2, 3 -> {
-//                mChart?.data = getBarData3(arrTvoc3, arrTime3)
-//                mChart?.data?.setDrawValues(false)
-//                mChart?.setVisibleXRangeMinimum(5.0f)
-//                mChart?.setVisibleXRangeMaximum(5.0f)
-//            }
-//        }
         //dependRadioIDDrawChart(radioButtonID)
         //chartHandler.post { drawChart(spinnerPositon) }
     }
@@ -413,25 +351,6 @@ class ECO2Fragment : Fragment() {
         }
     }
 
-//    private fun setCurrentConnectStatusIcon() {
-//        if (mConnectStatus) {
-//            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_connect)
-//            mImageViewDataUpdate?.isEnabled = true
-//        } else {
-//            mImageViewDataUpdate?.setImageResource(R.drawable.chart_update_icon_disconnect)
-//            mImageViewDataUpdate?.isEnabled = false
-//        }
-//    }
-
-//    private fun getDeviceData() {
-//        if (mConnectStatus && !downloadingData) {
-//            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-//            intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
-//            context.sendBroadcast(intent)
-//            Log.d("TVOC","getDeviceData")
-//        }
-//    }
-
     private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
         mProgressBar?.max = input
@@ -449,52 +368,6 @@ class ECO2Fragment : Fragment() {
         mTextViewValue?.text = ""
         mTextViewTimeRange?.text = ""
     }
-
-    /*private fun getBarData2(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>): BarData {
-        val dataSetA = MyBarDataSet(getChartData2(inputTVOC), "ECO2")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
-
-        val dataSets = ArrayList<IBarDataSet>()
-        dataSets.add(dataSetA) // add the datasets
-        cleanTextViewInTVOC()
-        return BarData(getLabels2(inputTime), dataSets)
-    }
-
-    private fun getChartData2(input: ArrayList<String>): List<BarEntry> {
-        // val mDataCount = 5
-        // mDataCount
-        val chartData = ArrayList<BarEntry>()
-        if (input.size < mDataCount - 1) {
-            for (i in 0 until input.size) {
-                chartData.add(BarEntry(input[i].toFloat(), i))
-            }
-        } else {
-            for (i in 0 until mDataCount - 1) {
-                chartData.add(BarEntry(input[i].toFloat(), i))
-            }
-        }
-        return chartData
-    }
-
-    private fun getLabels2(input: ArrayList<String>): List<String> {
-        val chartLabels = ArrayList<String>()
-
-        if (input.size < mDataCount - 1) {
-            for (i in 0 until input.size) {
-                chartLabels.add(input[i])
-            }
-        } else {
-            for (i in 0 until mDataCount - 1) {
-                chartLabels.add(input[i])
-            }
-        }
-        return chartLabels
-    }*/
 
     // 20171128 Added by Raymond
     private fun configChartView() {
@@ -542,91 +415,6 @@ class ECO2Fragment : Fragment() {
         mChart?.setDescription("")// clear default string
     }
 
-    private fun getRealmDay() {
-        arrTime3.clear()
-        arrTvoc3.clear()
-        //現在時間實體毫秒
-        //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("ECO2btncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
-        //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
-        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-        //設定時間區間
-        val endTime = endDayLast
-        val startTime = endDay
-        //一天共有2880筆
-        val dataCount = (endTime - startTime) / (60 * 1000)
-        Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
-        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
-        val result1 = query.findAll()
-        Log.d("getRealmDay", result1.size.toString())
-        var sumTvoc = 0
-        //先生出2880筆值為0的陣列
-        for (y in 0..dataCount) {
-            arrTvoc3.add("0")
-            arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
-        }
-        var aveTvoc=0
-        //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
-        if (result1.size != 0) {
-            result1.forEachIndexed { index, asmDataModel ->
-                val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
-                arrTvoc3[count] = asmDataModel.ecO2Value.toString()
-                //20180122
-                sumTvoc += arrTvoc3[count].toInt()
-                //Log.v("hilightCount:", count.toString())
-            }
-            Log.d("getRealmDay", result1.last().toString())
-            //20180122
-            aveTvoc = (sumTvoc / result1.size)
-        }
-
-
-        //20180124
-        //前一天的０點起
-        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
-        // Show Date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-
-        show_Today!!.text = dateFormat.format(startTime)
-        show_Yesterday!!.text =  dateFormat.format(startTime - TimeUnit.DAYS.toMillis((1).toLong()))
-
-
-        //Log.d("getRealmWeek", sqlWeekBase.toString())
-        //跑七筆BarChart
-        // for (y in 0..1) {
-        //第一筆為日 00:00
-        val sqlStartDate = sqlWeekBase//+TimeUnit.DAYS.toMillis()
-        //結束點為日 23:59
-        val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        //val realm= Realm.getDefaultInstance()
-        val query1 = realm.where(AsmDataModel::class.java)
-        //20180122
-        var AVGCo2 :Float= 0F
-        Log.d("getRealmWeek", sqlStartDate.toString())
-        Log.d("getRealmWeek", sqlEndDate.toString())
-        query1.between("Created_time", sqlStartDate, sqlEndDate)
-        val result2 = query1.findAll()
-        Log.d("getRealmWeek", result2.size.toString())
-        if (result2.size != 0) {
-            var sumCO2Yesterday = 0F
-            for (i in result2) {
-                sumCO2Yesterday += i.ecO2Value.toInt()
-            }
-            AVGCo2 = (sumCO2Yesterday / result2.size)
-        } else {
-            AVGCo2=0F
-        }
-
-        //}
-        result_Today!!.text = aveTvoc.toString() + " ppm"        //arrTvoc3[1].toString()+" ppm"
-        result_Yesterday!!.text = AVGCo2.toInt().toString()+ " ppm"
-    }
-
     private fun getRealmWeek() {
         arrTime3.clear()
         arrTvoc3.clear()
@@ -670,53 +458,8 @@ class ECO2Fragment : Fragment() {
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
-///*
-//        //******************************************************************************************************************************************************************************************************************************************
-//        //
-//        //上周日的00:00
-//        val lastWeeksqlBase = sqlWeekBase - TimeUnit.DAYS.toMillis((7).toLong())
-//        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-//        Log.e("上個禮拜日：", dateFormat.format(lastWeeksqlBase))
-//        show_Today!!.text = dateFormat.format(sqlWeekBase)
-//        show_Yesterday!!.text =  dateFormat.format(lastWeeksqlBase)
-//
-//
-//        //跑七筆BarChart
-//        for (y in 0..6) {
-//            //第一筆為日 00:00
-//            val sqlStartDate = lastWeeksqlBase + TimeUnit.DAYS.toMillis(y.toLong())
-//            //結束點為日 23:59
-//            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-//            val realm = Realm.getDefaultInstance()
-//            val query1 = realm.where(AsmDataModel::class.java)
-//            Log.d("lastGetRealmWeekStart", sqlStartDate.toString())
-//            Log.d("lastGetRealmWeekEnd", sqlEndDate.toString())
-//            query1.between("Created_time", sqlStartDate, sqlEndDate)
-//            val lastWeekresult1 = query1.findAll()
-//            //Log.d("getRealmWeek", result1.size.toString())
-//            if (lastWeekresult1.size != 0) {
-//                var lastWeeksumTvoc = 0
-//                for (i in lastWeekresult1) {
-//                    lastWeeksumTvoc += i.tvocValue.toInt()
-//                }
-//                aveLastWeekTvoc = (lastWeeksumTvoc / lastWeekresult1.size)
-//                //arrTvoc3.add(aveTvoc.toString())
-//                //依序加入時間
-//                //arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-//                //Log.e("lastGetRealmWeekAVG", aveLastWeekTvoc.toString())
-//            } else {
-//                arrTvoc3.add("0")
-//                //result_Yesterday!!.text = "0 ppm"
-//                //arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString().toString())
-//            }
-//        }
-//        result_Today!!.text = thisWeekAVETvoc.toString() + " ppm"        //arrTvoc3[1].toString()+" ppm"
-//        result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppm"
-//
-//        //result_Yesterday!!.text = aveLastWeekTvoc.toInt().toString()+ " ppm"
-//            //******************************************************************************************************************************************************************************************************************************************
-//        */
     }
+
     private fun getRealmMonth() {
         arrTime3.clear()
         arrTvoc3.clear()
@@ -783,7 +526,7 @@ class ECO2Fragment : Fragment() {
                 val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTimeDay.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -835,76 +578,12 @@ class ECO2Fragment : Fragment() {
 
 
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until arrTime3.size) {
+        for (i in 0 until TvocNoseData.arrEco2Day.size) {
             chartData.add(BarEntry(input[i].toFloat(), i))
         }
         return chartData
     }
 
-    /*private fun startUpdateDataAnimation() {
-        val operatingAnim: Animation = AnimationUtils.loadAnimation(mContext, R.anim.tip)
-        val lin = LinearInterpolator()
-        operatingAnim.interpolator = lin
-        mImageViewDataUpdate?.startAnimation(operatingAnim)
-        mImageViewDataUpdate?.isEnabled = false
-        animationCount = 0
-        downloadingData = true
-    }
-
-    private fun stopUpdateDataAnimation() {
-        mImageViewDataUpdate?.clearAnimation()
-        mImageViewDataUpdate?.isEnabled = true
-        downloadingData = false
-    }*/
-
-//    private fun startDataAnimationCount() {
-//        animationCount = 0
-//    }
-
-    /*private fun setRealTimeBarData(Tvoc: String, Battery: String) {
-        val sdFormat = SimpleDateFormat("MM/dd HH:mm:ss", Locale.TAIWAN)
-        val date = Date()
-        sdFormat.format(date)
-
-        timeArray.add(sdFormat.format(date))
-        tvocArray.add(Tvoc)
-        //    tvocArray.add("20")
-        batteryArray.add(Battery)
-
-        while (tvocArray.size > mDataCount) {
-            tvocArray.removeAt(0)
-            timeArray.removeAt(0)
-        }
-        if (radioButtonID == R.id.radioButton_Hour) {
-//            mChart?.clear()
-//            mChart?.data = getBarData2(tvocArray, timeArray)
-//            mChart?.data?.setDrawValues(false)
-//            mChart?.setVisibleXRangeMinimum(5.0f)
-//            mChart?.setVisibleXRangeMaximum(5.0f)//需要在设置数据源后生效
-            //mRadioGroup?.check(radioButtonID!!)
-            dependRadioIDDrawChart(radioButtonID!!)
-            mChart?.moveViewToX(tvocArray.size.toFloat())//移動視圖by x index
-        }
-    }
-
-    private fun dependRadioIDDrawChart(radioID:Int?) {
-        when (radioID) {
-            R.id.radioButton_Hour -> {
-                //mChart?.data = getBarData2(tvocArray, timeArray)
-                //mChart?.data?.setDrawValues(false)
-                //mChart?.setVisibleXRangeMinimum(5.0f)
-                //mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-            R.id.radioButton_Day,
-            R.id.radioButton_Week,
-            R.id.radioButton_Month -> {
-                //mChart?.data = getBarData3(arrTvoc3, arrTime3,radioID)
-                //mChart?.data?.setDrawValues(false)
-                //mChart?.setVisibleXRangeMinimum(5.0f)
-                //mChart?.setVisibleXRangeMaximum(5.0f)
-            }
-        }
-    }*/
 
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
@@ -958,10 +637,6 @@ class ECO2Fragment : Fragment() {
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
-//                    if (!downloadingData && !downloadComplete) {
-//                        getDeviceData()
-//                        downloadingData = true
-//                    }
                     val bundle = intent.extras
                     //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                     //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
@@ -1042,63 +717,6 @@ class ECO2Fragment : Fragment() {
         }
         return chartLabels
     }
-
-    /*private fun nothing() {
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-        for (y in 10 downTo 1) {
-            val countTime = Date().time - 60 * 60 * 1000 * (y)
-            query.lessThan("Created_time", countTime)//.greaterThan("Created_time",countTime)
-            val result1 = query.findAll()
-            var sumTvoc = 0
-            var sumTime: Long = 0
-            for (i in result1) {
-                sumTvoc += i.ecO2Value.toInt()
-                sumTime += i.created_time.toLong()
-                if (result1.size != 0) {
-                    arrTvoc3.add((sumTvoc / result1.size).toString())
-                }
-            }
-        }
-    }*/
-
-    /*private fun getRealmDay123() {
-        arrTime3.clear()
-        arrTvoc3.clear()
-        val touchTime = calObject.timeInMillis
-        val endDay = touchTime / 3600000 / 24 * 3600000 * 24 + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        for (y in 1..1440) {
-            val realm = Realm.getDefaultInstance()
-            val query = realm.where(AsmDataModel::class.java)
-            //設定時間區間
-
-            val endTime = endDay - (y - 1) * 30000 - 3600000*8
-            val startTime = endTime - 30000
-            Log.d("TimePeriod", ((endTime - startTime) / 1000).toString() + "Second")
-
-            query.between("Created_time", startTime, endTime)
-
-            val result1 = query.findAll()
-            Log.d("getRealmFour", result1.size.toString())
-            if (result1.size != 0) {
-                //var vvoc = 0
-                //for (i in result1) {
-                //    sumTvoc += i.tvocValue.toInt()
-                //}
-                //var aveTvoc = (sumTvoc / result1.size)
-                Log.d("getRealmFour", result1.last().toString())
-                arrTvoc3.add(result1.first()?.ecO2Value.toString())
-                arrTime3.add(endTime.toString())
-            } else {
-                arrTvoc3.add("0")
-                arrTime3.add(endTime.toString())
-            }
-
-        }
-        arrTvoc3.reverse()
-        arrTime3.reverse()
-
-    }*/
 
     @SuppressLint("SetTextI18n")
     private fun getCO2ToAndYesterdayAvgData() {

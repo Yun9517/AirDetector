@@ -337,9 +337,9 @@ class TempFragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart",calObject.toString())
                 }
-                getRealmDay()
+                //getRealmDay()
                 mChart!!.setDrawValueAboveBar(true)
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data = getBarData3(TvocNoseData.arrTempDay, TvocNoseData.arrTimeDay, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
                 //mChart?.setVisibleXRangeMinimum(20.0f)
@@ -855,7 +855,7 @@ class TempFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTimeDay.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -902,7 +902,7 @@ class TempFragment : Fragment() {
 
 
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until arrTime3.size) {
+        for (i in 0 until TvocNoseData.arrTempDay.size) {
             chartData.add(BarEntry(input[i].toFloat(), i))
         }
         return chartData
