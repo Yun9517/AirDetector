@@ -583,9 +583,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mWaitLayout!!.bringToFront()
         }
 
-        preheatCountDownInt = (120 - preheatCountDownString.toInt())
-        Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
-        mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+        if (preheatCountDownString != "255") {
+            preheatCountDownInt = (120 - preheatCountDownString.toInt())
+            Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
+            mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+            //if (mWaitLayout!!.visibility == View.VISIBLE) {
+            //    heatingPanelHide()
+            //}
+            //mWaitLayout!!.bringToFront()
+        }
         //120秒預熱畫面消失
         if (preheatCountDownString == "255") {
             if (mWaitLayout!!.visibility == View.VISIBLE) {
