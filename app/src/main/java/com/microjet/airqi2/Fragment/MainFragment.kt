@@ -78,73 +78,62 @@ class MainFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         show_TVOC?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.TVOC
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
         show_eCO2?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.CO2
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
 
         show_Temp?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.Temp
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
         show_RH?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.Humi
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-                if (motionEvent.action == MotionEvent.ACTION_DOWN) {//.ACTION_BUTTON_PRESS
-                    Log.i("幹我按下了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                    //20180131
-                    //************************************************************************************************************************************
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
-                    mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
-                    //20180202
-                    view.isPressed = true
-                    isPumpOn = true
-                    //************************************************************************************************************************************
-                } else if (motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
-                    //************************************************************************************************************************************
-                    Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                    mContext!!.sendBroadcast(intent)
-                    //20180202
-                    view.isPressed = false
-                    //************************************************************************************************************************************
-                } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {//ACTION_BUTTON_RELEASE
-                    Log.i("幹我按中了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.i("幹我取消了了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //************************************************************************************************************************************
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                    mContext!!.sendBroadcast(intent)
-                    //************************************************************************************************************************************
-                    //20180202
-                    view.isPressed = false
-                    isPumpOn = false
-                    //************************************************************************************************************************************
+                when(motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
+                        view.parent.requestDisallowInterceptTouchEvent(true)
+                        Log.i("幹我按下了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                        //20180131
+                        //************************************************************************************************************************************
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_ON)
+                        //20180202
+                        view.isPressed = true
+                        isPumpOn = true
+                        //************************************************************************************************************************************
+                    }
+                    MotionEvent.ACTION_UP -> {//ACTION_BUTTON_RELEASE
+                        Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_OFF)
+                        //20180202
+                        //************************************************************************************************************************************
+                        view.isPressed = false
+                        isPumpOn = false
+                        //************************************************************************************************************************************
+                    }
                 }
             }
             true
@@ -153,6 +142,12 @@ class MainFragment : Fragment() {
 
         // 初始化inCircleTitle文字大小
         fixInCircleTextSize()
+    }
+
+    private fun sendPumpCommand(command: String) {
+        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+        intent!!.putExtra("status", command)
+        mContext!!.sendBroadcast(intent)
     }
 
     private fun actionToSring(action: Int): String {
@@ -189,10 +184,10 @@ class MainFragment : Fragment() {
         val dpi = dm.densityDpi
         Log.i("DPI", "目前解析度為: $dpi")
         when (dpi) {
-            /*240 -> {   // HDPI
-                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            }*/
+        /*240 -> {   // HDPI
+            //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+        }*/
             480 -> {   // XXHDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
@@ -635,6 +630,3 @@ class MainFragment : Fragment() {
         }
     }
 }
-
-
-
