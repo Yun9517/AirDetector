@@ -815,7 +815,7 @@ class HumidiytFragment : Fragment() {
         when (positionID) {
             0 -> {
                 val dateFormat = SimpleDateFormat("HH:mm")
-                val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
+                val dateLabelFormat = SimpleDateFormat("HH:mm")
                 labelArray.clear()
                 for (i in 0 until arrTime3.size) {
                     val date = dateFormat.format(input[i].toLong())

@@ -448,7 +448,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_02)
+                imgLight.setImageResource(R.drawable.face_icon_temp_02)
             }
             in 26..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -458,7 +458,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_03)
+                imgLight.setImageResource(R.drawable.face_icon_temp_03)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -468,7 +468,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_01)
+                imgLight.setImageResource(R.drawable.face_icon_temp_01)
             }
         }
     }
@@ -483,7 +483,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_01)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_01)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -493,7 +493,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_02)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_02)
             }
             else -> {
 
@@ -504,7 +504,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_03)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_03)
             }
         }
     }
@@ -563,7 +563,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     textSpannable(temp)
                 }
                 DetectionData.Temp -> {
-                    inCircleTitle.text = getString(R.string.text_label_temperature)
+                    inCircleTitle.text = getString(R.string.text_label_temperature_full)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
@@ -580,7 +580,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 }
 
                 DetectionData.Humi -> {
-                    inCircleTitle.text = getString(R.string.text_label_humidity)
+                    inCircleTitle.text = getString(R.string.text_label_humidity_full)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
