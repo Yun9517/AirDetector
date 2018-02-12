@@ -1067,7 +1067,7 @@ public class UartService extends Service {
                             //.findAll().first().getCreated_time().longValue();
                             Long nowTime = getMyDate().getTime();
                             Log.d("0xB4countLast",  new Date(maxCreatedTime.longValue()).toString());
-                            Log.d("0xB4countNow",  new Date(nowTime).toString());
+                            Log.d("0xB4countLast",  new Date(nowTime).toString());
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
                             countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
                             //這行應該用不到

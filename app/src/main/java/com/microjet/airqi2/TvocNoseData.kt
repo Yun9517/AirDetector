@@ -73,7 +73,7 @@ object TvocNoseData {
                 val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
                 arrTvocDay[count] = asmDataModel.tvocValue.toString()
                 arrEco2Day[count] = asmDataModel.ecO2Value.toString()
-                arrTempDay[count] = asmDataModel.tempValue.toString()
+                arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
                 arrHumiDay[count] = asmDataModel.humiValue.toString()
                 //20180122
                 sumTvoc += arrTvocDay[count].toInt()
@@ -154,34 +154,34 @@ object TvocNoseData {
             if (result1.size != 0) {
                 var sumTvoc = 0
                 var sumEco2 = 0
-                var sumTemp = 0
+                var sumTemp = 0f
                 var sumHumi = 0
                 var thisWeekAVGTvoc: Int = 0
                 var thisWeekAVGEco2: Int = 0
-                var thisWeekAVGTemp: Int = 0
+                var thisWeekAVGTemp: Float = 0f
                 var thisWeekAVGHumi: Int = 0
                 for (i in result1) {
                     sumTvoc += i.tvocValue.toInt()
                     sumEco2 += i.ecO2Value.toInt()
-                    sumTemp += i.tempValue.toInt()
+                    sumTemp += i.tempValue.toFloat()
                     sumHumi += i.humiValue.toInt()
                 }
                 thisWeekAVGTvoc = (sumTvoc / result1.size)
-                thisWeekAVGEco2 = (sumTvoc / result1.size)
-                thisWeekAVGTemp = (sumTvoc / result1.size)
-                thisWeekAVGHumi = (sumTvoc / result1.size)
+                thisWeekAVGEco2 = (sumEco2 / result1.size)
+                thisWeekAVGTemp = (sumTemp / result1.size)
+                thisWeekAVGHumi = (sumHumi / result1.size)
                 arrTvocWeek.add(thisWeekAVGTvoc.toString())
                 arrEco2Week.add(thisWeekAVGEco2.toString())
-                arrTempWeek.add(thisWeekAVGTemp.toString())
+                arrTempWeek.add((thisWeekAVGTemp + 10.0f).toString())
                 arrHumiWeek.add(thisWeekAVGHumi.toString())
                 //依序加入時間
                 arrTimeWeek.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
             } else {
                 arrTvocWeek.add("0")
-                arrTvocWeek.add("0")
                 arrEco2Week.add("0")
                 arrTempWeek.add("0")
-                arrHumiWeek.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
+                arrHumiWeek.add("0")
+                arrTimeWeek.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
             }
         }
     }

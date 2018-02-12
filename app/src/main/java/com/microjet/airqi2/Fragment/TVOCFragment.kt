@@ -328,8 +328,9 @@ class TVOCFragment : Fragment() {
                 */
             }
             1 -> {
-                getRealmWeek()
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                //getRealmWeek()
+                TvocNoseData.getRealmWeek()
+                mChart?.data = getBarData3(TvocNoseData.arrTvocWeek, TvocNoseData.arrTimeWeek, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(7.0f, 7.0f)
@@ -809,7 +810,7 @@ class TVOCFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTvocWeek.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -849,7 +850,7 @@ class TVOCFragment : Fragment() {
                 }
             }
             1 -> {
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTvocWeek.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }

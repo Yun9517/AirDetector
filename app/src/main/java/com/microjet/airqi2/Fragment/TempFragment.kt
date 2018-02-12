@@ -358,9 +358,9 @@ class TempFragment : Fragment() {
                 */
             }
             1 -> {
-                getRealmWeek()
+                TvocNoseData.getRealmWeek()
                 mChart!!.setDrawValueAboveBar(true)
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data = getBarData3(TvocNoseData.arrTempWeek, TvocNoseData.arrTimeWeek, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(7.0f, 7.0f)
@@ -645,7 +645,7 @@ class TempFragment : Fragment() {
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
-                arrTvoc3[count] = (asmDataModel.tempValue.toFloat()+10.0f).toString()
+                arrTvoc3[count] = (asmDataModel.tempValue.toFloat() + 10.0f).toString()
                 //20180122
                 sumTvoc += arrTvoc3[count].toFloat()
                 //Log.v("hilightCount:", count.toString())
@@ -867,7 +867,7 @@ class TempFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTimeWeek.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -907,7 +907,7 @@ class TempFragment : Fragment() {
                 }
             }
             1 -> {
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTempWeek.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }
