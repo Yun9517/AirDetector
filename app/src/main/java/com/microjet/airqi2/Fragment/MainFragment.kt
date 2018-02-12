@@ -249,15 +249,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
         val textSpan = SpannableStringBuilder(temp)
         val text1Size = when (dm.densityDpi) {
             160 -> convertSpToPx(50f)   // MDPI
-            240 -> convertSpToPx(28f)   // HDPI
-            in 420..480 -> convertSpToPx(30f)   // XXHDPI
+            240 -> convertSpToPx(30f)   // HDPI
+            in 420..480 -> convertSpToPx(34f)   // XXHDPI
             in 560..640 -> convertSpToPx(36f)   // XXXHDPI
             else -> 50
         }
         val text2Size = when (dm.densityDpi) {
             160 -> convertSpToPx(30f)   // MDPI
-            240 -> convertSpToPx(14f)   // HDPI
-            480 -> convertSpToPx(18f)   // XXHDPI
+            240 -> convertSpToPx(18f)   // HDPI
+            in 420..480 -> convertSpToPx(20f)   // XXHDPI
             in 560..640 -> convertSpToPx(22f)   // XXXHDPI
             else -> 30
         }
