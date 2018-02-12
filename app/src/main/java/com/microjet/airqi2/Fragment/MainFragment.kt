@@ -14,6 +14,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -219,23 +220,17 @@ class MainFragment : Fragment(), View.OnTouchListener {
         val dpi = dm.densityDpi
         Log.i("DPI", "目前解析度為: $dpi")
         when (dpi) {
-        /*240 -> {   // HDPI
+        /*DisplayMetrics.DENSITY_HIGH -> {   // HDPI
             //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
             inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
         }*/
-            in 420..480 -> {   // XXHDPI
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> {   // XXHDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             }
-            560 -> {   // Samsung S8+
-                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            }
-            640 -> {   // XXXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> {
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
@@ -248,18 +243,18 @@ class MainFragment : Fragment(), View.OnTouchListener {
         val dm = resources.displayMetrics
         val textSpan = SpannableStringBuilder(temp)
         val text1Size = when (dm.densityDpi) {
-            160 -> convertSpToPx(50f)   // MDPI
-            240 -> convertSpToPx(30f)   // HDPI
-            in 420..480 -> convertSpToPx(34f)   // XXHDPI
-            in 560..640 -> convertSpToPx(36f)   // XXXHDPI
-            else -> 50
+            DisplayMetrics.DENSITY_DEFAULT -> convertSpToPx(50f)   // MDPI
+            DisplayMetrics.DENSITY_HIGH -> convertSpToPx(30f)   // HDPI
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(34f)   // XXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> convertSpToPx(36f)   // XXXHDPI
+            else -> convertSpToPx(30f)
         }
         val text2Size = when (dm.densityDpi) {
-            160 -> convertSpToPx(30f)   // MDPI
-            240 -> convertSpToPx(18f)   // HDPI
-            in 420..480 -> convertSpToPx(20f)   // XXHDPI
-            in 560..640 -> convertSpToPx(22f)   // XXXHDPI
-            else -> 30
+            DisplayMetrics.DENSITY_DEFAULT -> convertSpToPx(30f)   // MDPI
+            DisplayMetrics.DENSITY_HIGH -> convertSpToPx(18f)   // HDPI
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(20f)   // XXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> convertSpToPx(22f)   // XXXHDPI
+            else -> convertSpToPx(18f)
         }
 
         textSpan.setSpan(AbsoluteSizeSpan(text1Size),
