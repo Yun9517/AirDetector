@@ -330,7 +330,7 @@ class TVOCFragment : Fragment() {
             1 -> {
                 //getRealmWeek()
                 TvocNoseData.getRealmWeek()
-                mChart?.data = getBarData3(TvocNoseData.arrTvocWeek, TvocNoseData.arrTimeDay, position)
+                mChart?.data = getBarData3(TvocNoseData.arrTvocWeek, TvocNoseData.arrTimeWeek, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(7.0f, 7.0f)
@@ -798,7 +798,7 @@ class TVOCFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("HH:mm")
                 labelArray.clear()
-                for (i in 0 until TvocNoseData.arrTvocDay.size) {
+                for (i in 0 until TvocNoseData.arrTimeDay.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -810,7 +810,7 @@ class TVOCFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
-                for (i in 0 until TvocNoseData.arrTvocWeek.size) {
+                for (i in 0 until TvocNoseData.arrTimeWeek.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -825,7 +825,7 @@ class TVOCFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("MM/dd")
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
                 labelArray.clear()
-                for (i in 0 until TvocNoseData.arrTvocMonth.size) {
+                for (i in 0 until TvocNoseData.arrTimeMonth.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -850,12 +850,12 @@ class TVOCFragment : Fragment() {
                 }
             }
             1 -> {
-                for (i in 0 until TvocNoseData.arrTimeWeek.size) {
+                for (i in 0 until TvocNoseData.arrTvocWeek.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }
             2 -> {
-                for (i in 0 until TvocNoseData.arrTimeMonth.size) {
+                for (i in 0 until TvocNoseData.arrTvocMonth.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }

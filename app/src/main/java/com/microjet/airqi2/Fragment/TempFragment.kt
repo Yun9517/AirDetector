@@ -911,7 +911,7 @@ class TempFragment : Fragment() {
                 }
             }
             2 -> {
-                for (i in 0 until TvocNoseData.arrTimeMonth.size) {
+                for (i in 0 until TvocNoseData.arrTempMonth.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }
