@@ -37,6 +37,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -147,6 +148,7 @@ public class UartService extends Service {
     private ArrayList<HashMap> arrB6 = new ArrayList();
 
     private NotificationManager notificationManager=null;
+    private int counterB5 = 1;
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -1041,6 +1043,8 @@ public class UartService extends Service {
                     //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
+                    Log.d("0xB4",RString.toString());
+                    String b4correctTime = RString.get(3);
                     //取得當前時間
                     // String time=getDateTime();
                     // setGetDataTime(time);
@@ -1056,7 +1060,7 @@ public class UartService extends Service {
                         NowItem = 1;
                         counter = 0;
                         //將時間秒數寫入設定為 00  或  30
-                        timeSetNowToThirty();
+                        timeSetNowToThirty(b4correctTime);
                         //Realm 資料庫
                         //將資料庫最大時間與現在時間換算成Count
                         Realm realm = Realm.getDefaultInstance();
@@ -1069,13 +1073,14 @@ public class UartService extends Service {
                             Log.d("0xB4countLast",  new Date(maxCreatedTime.longValue()).toString());
                             Log.d("0xB4countLast",  new Date(nowTime).toString());
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
+                            Log.d("0xB4", countForItemTime.toString());
                             countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
                             //這行應該用不到
                             //if (countForItem > 1440) { countForItem = 1440; }
                             Log.d("0xB4countItem", Long.toString(countForItem));
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
-                        if (countForItem > 0){
+                        if (countForItem >= 1){
                             NowItem = countForItem;
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
@@ -1085,7 +1090,7 @@ public class UartService extends Service {
                         sendBroadcast(mainIntent);
 
                     } else if (getMaxItems() <= 0) {
-                        timeSetNowToThirty();
+                        //timeSetNowToThirty();
                         downloadComplete = true;
                     }
                     break;
@@ -1102,7 +1107,6 @@ public class UartService extends Service {
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
-
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         Number num = realm.where(AsmDataModel.class).max("id");
@@ -1119,16 +1123,16 @@ public class UartService extends Service {
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
                             asmData.setPM25Value(RString.get(5));
-                            asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counter * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                            asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             Log.d("RealmTimeB5", RString.toString());
-                            Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counter * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
+                            Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
                         realm.close();
                         NowItem--;
-                        counter++;
+                        counterB5++;
 
                         //if (NowItem >= getMaxItems()) {
-                        if (NowItem < 1) {
+                        if (NowItem <= 0) {
                             NowItem = 1;
                             downloading = false;
                             downloadComplete = true;
@@ -1170,13 +1174,14 @@ public class UartService extends Service {
                         hashMapInB6.put("ECO2Value",RString.get(3));
                         hashMapInB6.put("PM25Value",RString.get(4));
                         hashMapInB6.put("BatteryLife",RString.get(5));
+                        hashMapInB6.put("CreatedTime",timeSetForB6());
                         arrB6.add(hashMapInB6);
                         //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                         dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
                         if (dataNotSaved == 1) {
-                            timeSetNowToThirty();
+                            //timeSetNowToThirty("0");
                         }
                         Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6",arrB6.toString());
@@ -1202,9 +1207,12 @@ public class UartService extends Service {
                                 asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
                                 asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
                                 asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
-                                asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
+                                asmData.setCreated_time(time);
+                                //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", arrB6.toString());
-                                Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
+                                Log.d("RealmTimeB6", time.toString());
+                                //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
                             realm.close();
                         }
@@ -1317,16 +1325,24 @@ public class UartService extends Service {
         return sdFormat.format(date);
     }
 
-    private void timeSetNowToThirty() {
+    private void timeSetNowToThirty(String afterB6Sec) {
         //取得當前時間
         //將時間秒數寫入設定為 00  或  30
         //Long dateSecMil = new Date().getTime();
-        Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset();
+        Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset() - Long.parseLong(afterB6Sec) * 1000;
         Long dateSecChange = (dateSecMil / 1000)/60 * (1000*60);
         //Log.d("0xB4",dateSecChange.toString());
         Date date = new Date(dateSecChange);
         Log.d("timeSetNowToThirty",date.toString());
         setMyDate(date);
+    }
+
+    private Long timeSetForB6() {
+        Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset();
+        Long dateSecChange = (dateSecMil / 1000)/60 * (1000 * 60);
+        Date date = new Date(dateSecChange);
+        Log.d("timeSetForB6",date.toString());
+        return dateSecChange;
     }
 
 
