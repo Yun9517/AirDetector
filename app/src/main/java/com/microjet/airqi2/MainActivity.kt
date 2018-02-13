@@ -61,7 +61,10 @@ import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
-
+    private val DEFINE_FRAGMENT_TVOC = 1
+    private val DEFINE_FRAGMENT_CO2 = 2
+    private val DEFINE_FRAGMENT_TEMPERATURE = 3
+    private val DEFINE_FRAGMENT_HUMIDITY = 4
     public val mContext = this@MainActivity
 
     // Fragment 容器
@@ -338,18 +341,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     @Suppress("DEPRECATION")
     private fun viewPagerInit() {
         // 加入 Fragment 成員
-        val mMainFg = MainFragment()
-        val mTvocFg = TVOCFragment()
-        val mEco2Fg = ECO2Fragment()
-        val mTempFg = TempFragment()
-        val mHumiFg = HumidiytFragment()
-
-        mFragmentList.add(mMainFg)
-        mFragmentList.add(mTvocFg)
-        mFragmentList.add(mEco2Fg)
-        mFragmentList.add(mTempFg)
-        mFragmentList.add(mHumiFg)
-
+      //  val mMainFg = MainFragment()
+      //  val mTvocFg = TVOCFragment()
+      //  val mEco2Fg = ECO2Fragment()
+      //  val mTempFg = TempFragment()
+      //  val mHumiFg = HumidiytFragment()
+        val mChartFrg=ChartFragment()
+        mChartFrg.ConfigFragment(DEFINE_FRAGMENT_HUMIDITY)
+      //  mFragmentList.add(mMainFg)
+      //  mFragmentList.add(mTvocFg)
+      //  mFragmentList.add(mEco2Fg)
+      //  mFragmentList.add(mTempFg)
+      //  mFragmentList.add(mHumiFg)
+        mFragmentList.add(mChartFrg)
         val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
         mPageVp!!.currentItem = 0
