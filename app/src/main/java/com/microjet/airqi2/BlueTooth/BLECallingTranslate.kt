@@ -501,6 +501,16 @@ object CallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
+                        5//最後週期離現在多久 last data sec
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        6//samepleRate
+                        -> {
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
                         else -> {
                         }
                     }

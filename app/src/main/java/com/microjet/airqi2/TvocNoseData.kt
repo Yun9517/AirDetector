@@ -26,6 +26,12 @@ object TvocNoseData {
     var arrHumiWeek: ArrayList<String> = arrayListOf()
     var arrTimeWeek: ArrayList<String> = arrayListOf()
 
+    var arrTvocMonth: ArrayList<String> = arrayListOf()
+    var arrEco2Month: ArrayList<String> = arrayListOf()
+    var arrTempMonth: ArrayList<String> = arrayListOf()
+    var arrHumiMonth: ArrayList<String> = arrayListOf()
+    var arrTimeMonth: ArrayList<String> = arrayListOf()
+
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()
     //val arrTime3: ArrayList<String> = arrayListOf()
@@ -41,8 +47,8 @@ object TvocNoseData {
 
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = TvocNoseData.calObject.timeInMillis + TvocNoseData.calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm",TvocNoseData.calObject.get(Calendar.DAY_OF_MONTH).toString())
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -64,7 +70,7 @@ object TvocNoseData {
             arrEco2Day.add("0")
             arrTempDay.add("0")
             arrHumiDay.add("0")
-            arrTimeDay.add(((startTime + y * 60 * 1000) - TvocNoseData.calObject.timeZone.rawOffset).toString())
+            arrTimeDay.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
@@ -130,8 +136,8 @@ object TvocNoseData {
         arrTimeWeek.clear()
 
         //拿到現在是星期幾的Int
-        val dayOfWeek = TvocNoseData.calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = TvocNoseData.calObject.timeInMillis + TvocNoseData.calObject.timeZone.rawOffset
+        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
         //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
@@ -156,34 +162,96 @@ object TvocNoseData {
                 var sumEco2 = 0
                 var sumTemp = 0f
                 var sumHumi = 0
-                var thisWeekAVGTvoc: Int = 0
-                var thisWeekAVGEco2: Int = 0
-                var thisWeekAVGTemp: Float = 0f
-                var thisWeekAVGHumi: Int = 0
+                //var thisWeekAVGTvoc: Int = 0
+                //var thisWeekAVGEco2: Int = 0
+                //var thisWeekAVGTemp: Float = 0f
+                //var thisWeekAVGHumi: Int = 0
                 for (i in result1) {
                     sumTvoc += i.tvocValue.toInt()
                     sumEco2 += i.ecO2Value.toInt()
                     sumTemp += i.tempValue.toFloat()
                     sumHumi += i.humiValue.toInt()
                 }
-                thisWeekAVGTvoc = (sumTvoc / result1.size)
-                thisWeekAVGEco2 = (sumEco2 / result1.size)
-                thisWeekAVGTemp = (sumTemp / result1.size)
-                thisWeekAVGHumi = (sumHumi / result1.size)
+                val thisWeekAVGTvoc = (sumTvoc / result1.size)
+                val thisWeekAVGEco2 = (sumEco2 / result1.size)
+                val thisWeekAVGTemp = (sumTemp / result1.size)
+                val thisWeekAVGHumi = (sumHumi / result1.size)
                 arrTvocWeek.add(thisWeekAVGTvoc.toString())
                 arrEco2Week.add(thisWeekAVGEco2.toString())
                 arrTempWeek.add((thisWeekAVGTemp + 10.0f).toString())
                 arrHumiWeek.add(thisWeekAVGHumi.toString())
                 //依序加入時間
-                arrTimeWeek.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
+                arrTimeWeek.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             } else {
                 arrTvocWeek.add("0")
                 arrEco2Week.add("0")
                 arrTempWeek.add("0")
                 arrHumiWeek.add("0")
-                arrTimeWeek.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
+                arrTimeWeek.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
+    }
+
+    fun getRealmMonth() {
+        arrTvocMonth.clear()
+        arrEco2Month.clear()
+        arrTempMonth.clear()
+        arrHumiMonth.clear()
+        arrTimeMonth.clear()
+        //拿到現在是星期幾的Int
+        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
+        val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        //將星期幾退回到星期日為第一時間點
+        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        Log.d("getRealmMonth", sqlMonthBase.toString())
+        //跑七筆BarChart
+        for (y in 0..(monthCount-1)) {
+            //第一筆為日 00:00
+            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
+            //結束點為日 23:59
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
+            Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
+            Log.d("getRealmMonth", sqlStartDate.toString())
+            Log.d("getRealmMonth", sqlEndDate.toString())
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmMonth", result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                var sumEco2 = 0
+                var sumTemp = 0f
+                var sumHumi = 0
+                for (i in result1) {
+                    sumTvoc += i.tvocValue.toInt()
+                    sumEco2 += i.ecO2Value.toInt()
+                    sumTemp += i.tempValue.toFloat()
+                    sumHumi += i.humiValue.toInt()
+                }
+                val thisMonthAVGTvoc = (sumTvoc / result1.size)
+                val thisMonthAVGEco2 = (sumEco2 / result1.size)
+                val thisMonthAVGTemp = (sumTemp / result1.size)
+                val thisMonthAVGHumi = (sumHumi / result1.size)
+                arrTvocMonth.add(thisMonthAVGTvoc.toString())
+                arrEco2Month.add(thisMonthAVGEco2.toString())
+                arrTempMonth.add((thisMonthAVGTemp + 10.0f).toString())
+                arrHumiMonth.add(thisMonthAVGHumi.toString())
+                //依序加入時間
+                arrTimeMonth.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                Log.d("getRealmMonth", result1.last().toString())
+            } else {
+                arrTvocMonth.add("0")
+                arrEco2Month.add("0")
+                arrTempMonth.add("0")
+                arrHumiMonth.add("0")
+                arrTimeMonth.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+            }
+        }
+
     }
 
     //var Index: Int = 0

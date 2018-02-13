@@ -379,18 +379,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         1 -> {
                             val nowFragment = mFragmentAdapter.getItem(currentIndex) as TVOCFragment
                             nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
                         }
                         2 -> {
                             val nowFragment = mFragmentAdapter.getItem(currentIndex) as ECO2Fragment
                             nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
                         }
                         3 -> {
                             val nowFragment = mFragmentAdapter.getItem(currentIndex) as TempFragment
                             nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
                         }
                         4 -> {
                             val nowFragment = mFragmentAdapter.getItem(currentIndex) as HumidiytFragment
                             nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
                         }
                     }
                     //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter

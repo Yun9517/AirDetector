@@ -114,7 +114,7 @@ class TempFragment : Fragment() {
     private var preHeat = "0"
     private var getDataCycle = 15
 
-    private val calObject = Calendar.getInstance()
+    //private val calObject = Calendar.getInstance()
     //private var spinnerPosition = 0
     private var datepickerHandler = Handler()
     //private var chartHandler = Handler()
@@ -238,16 +238,16 @@ class TempFragment : Fragment() {
 
         btnCallDatePicker = this.view?.findViewById(R.id.btnCallDatePicker)
         val dateFormat = SimpleDateFormat("yyyy/MM/dd")
-        btnCallDatePicker?.text = dateFormat.format(calObject.time)
+        btnCallDatePicker?.text = dateFormat.format(TvocNoseData.calObject.time)
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
-                    calObject.set(year,month,dayOfMonth)
-                    Log.d("TVOCbtncall",calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    TvocNoseData.calObject.set(year,month,dayOfMonth)
+                    Log.d("TVOCbtncall",TvocNoseData.calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(TvocNoseData.spinnerPosition)
                     drawChart(TvocNoseData.spinnerPosition)
                     timePickerShow()
-                },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
+                },TvocNoseData.calObject.get(Calendar.YEAR),TvocNoseData.calObject.get(Calendar.MONTH),TvocNoseData.calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
             }
@@ -309,21 +309,20 @@ class TempFragment : Fragment() {
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
-    private fun btnTextChanged(position: Int?) {
+    fun btnTextChanged(position: Int?) {
         when(position) {
             0 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd")
-                btnCallDatePicker?.text = dateFormat.format(calObject.time)
+                btnCallDatePicker?.text = dateFormat.format(TvocNoseData.calObject.time)
             }
             1 -> {
-                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + " " + getString(R.string.week_First_Word) + calObject.get(Calendar.WEEK_OF_YEAR).toString() + getString(R.string.week_Last_Word)
+                btnCallDatePicker?.text = TvocNoseData.calObject.get(Calendar.YEAR).toString() + " " + getString(R.string.week_First_Word) + TvocNoseData.calObject.get(Calendar.WEEK_OF_YEAR).toString() + getString(R.string.week_Last_Word)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
-                btnCallDatePicker?.text = dateFormat.format(calObject.time)
+                btnCallDatePicker?.text = dateFormat.format(TvocNoseData.calObject.time)
             }
         }
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -334,10 +333,10 @@ class TempFragment : Fragment() {
                 val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
                 val l = p / 60
                 if (l <= 2) {
-                    calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-                    Log.d("drawChart",calObject.toString())
+                    TvocNoseData.calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+                    Log.d("drawChart",TvocNoseData.calObject.toString())
                 }
-                //getRealmDay()
+                TvocNoseData.getRealmDay()
                 mChart!!.setDrawValueAboveBar(true)
                 mChart?.data = getBarData3(TvocNoseData.arrTempDay, TvocNoseData.arrTimeDay, position)
                 mChart?.data?.setDrawValues(false)
@@ -366,9 +365,9 @@ class TempFragment : Fragment() {
                 mChart?.setVisibleXRange(7.0f, 7.0f)
             }
             2 -> {
-                getRealmMonth()
+                TvocNoseData.getRealmMonth()
                 mChart!!.setDrawValueAboveBar(true)
-                mChart?.data = getBarData3(arrTvoc3, arrTime3, position)
+                mChart?.data = getBarData3(TvocNoseData.arrTempMonth, TvocNoseData.arrTimeMonth, position)
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(14.0f, 14.0f)
@@ -618,8 +617,8 @@ class TempFragment : Fragment() {
         arrTvoc3.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
+        val touchTime = TvocNoseData.calObject.timeInMillis + TvocNoseData.calObject.timeZone.rawOffset
+        Log.d("TVOCbtncallRealm",TvocNoseData.calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -638,7 +637,7 @@ class TempFragment : Fragment() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
-            arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
+            arrTime3.add(((startTime + y * 60 * 1000) - TvocNoseData.calObject.timeZone.rawOffset).toString())
         }
         var aveTvoc=0.0f
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
@@ -705,8 +704,8 @@ class TempFragment : Fragment() {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val dayOfWeek = TvocNoseData.calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = TvocNoseData.calObject.timeInMillis + TvocNoseData.calObject.timeZone.rawOffset
         //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
@@ -735,13 +734,13 @@ class TempFragment : Fragment() {
                 thisWeekAVETvoc = (sumThisAndLastWeek / result1.size)
                 arrTvoc3.add((thisWeekAVETvoc + 10.0f).toString())
                 //依序加入時間
-                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime3.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
                 //result_Today!!.text = "$thisWeekAVETvoc ppb"        //arrTvoc3[1].toString()+" ppb"
                 //Log.e("thisGetRealmWeekAVG", lastWeekAVETvoc.toString())
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
+                arrTime3.add((sqlStartDate -TvocNoseData.calObject.timeZone.rawOffset).toString())
             }
         }
 
@@ -796,9 +795,9 @@ class TempFragment : Fragment() {
         arrTime3.clear()
         arrTvoc3.clear()
         //拿到現在是星期幾的Int
-        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
-        val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val dayOfMonth = TvocNoseData.calObject.get(Calendar.DAY_OF_MONTH)
+        val monthCount = TvocNoseData.calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val touchTime = TvocNoseData.calObject.timeInMillis + TvocNoseData.calObject.timeZone.rawOffset
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
@@ -826,11 +825,11 @@ class TempFragment : Fragment() {
                 val aveTvoc = (sumTvoc / result1.size) + 10.0f
                 arrTvoc3.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime3.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmMonth", result1.last().toString())
             } else {
                 arrTvoc3.add("0")
-                arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime3.add((sqlStartDate - TvocNoseData.calObject.timeZone.rawOffset).toString())
             }
         }
 
@@ -882,7 +881,7 @@ class TempFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("MM/dd")
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
                 labelArray.clear()
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTimeMonth.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -912,7 +911,7 @@ class TempFragment : Fragment() {
                 }
             }
             2 -> {
-                for (i in 0 until arrTime3.size) {
+                for (i in 0 until TvocNoseData.arrTimeMonth.size) {
                     chartData.add(BarEntry(input[i].toFloat(), i))
                 }
             }
@@ -1248,7 +1247,7 @@ class TempFragment : Fragment() {
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(p, y - 1)
-            }, calObject.get(Calendar.HOUR_OF_DAY), calObject.get(Calendar.MINUTE), false)
+            }, TvocNoseData.calObject.get(Calendar.HOUR_OF_DAY), TvocNoseData.calObject.get(Calendar.MINUTE), false)
             tpd.setMessage("請選擇時間")
             tpd.show()
         }
