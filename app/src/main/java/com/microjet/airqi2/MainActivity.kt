@@ -173,6 +173,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180206
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
         alertId = soundPool!!.load(this, R.raw.low_power, 1)
+
+
+        //20180209
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
     }
 
     override fun onStart() {

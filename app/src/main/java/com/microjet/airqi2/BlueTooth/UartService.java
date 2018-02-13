@@ -31,6 +31,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
@@ -1464,6 +1465,18 @@ public class UartService extends Service {
                     } else {
                         //送到手機的通知欄
                         notificationManager.notify(1, notification);
+
+                        //20180209
+                        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                        //獲取電源管理器對象
+                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                        //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+                        wl.acquire(2*1000L);
+                        //點亮屏幕
+                        wl.release();
+                        Log.e("休眠狀態下","喚醒螢幕");
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1558,6 +1571,18 @@ public class UartService extends Service {
                     }else{
                         //送到手機的通知欄
                         notificationManager.notify(1, notification);
+
+                        //20180209
+                        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                        //獲取電源管理器對象
+                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                        //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+                        wl.acquire(2*1000L);
+                        //點亮屏幕
+                        wl.release();
+                        Log.e("休眠狀態下","喚醒螢幕");
+
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -1651,6 +1676,18 @@ public class UartService extends Service {
                         }else{
                             //送到手機的通知欄
                             notificationManager.notify(1, notification);
+
+                            //20180209
+                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                            //獲取電源管理器對象
+                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+                            wl.acquire(2*1000L);
+                            //點亮屏幕
+                            wl.release();
+                            Log.e("休眠狀態下","喚醒螢幕");
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1741,6 +1778,18 @@ public class UartService extends Service {
                         }else{
                             //送到手機的通知欄
                             notificationManager.notify(1, notification);
+
+                            //20180209
+                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                            //獲取電源管理器對象
+                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+                            wl.acquire(2*1000L);
+                            //點亮屏幕
+                            wl.release();
+                            Log.e("休眠狀態下","喚醒螢幕");
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1830,6 +1879,18 @@ public class UartService extends Service {
                         }else{
                             //送到手機的通知欄
                             notificationManager.notify(1, notification);
+
+                            //20180209
+                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+                            //獲取電源管理器對象
+                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+                            wl.acquire(2*1000L);
+                            //點亮屏幕
+                            wl.release();
+                            Log.e("休眠狀態下","喚醒螢幕");
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
