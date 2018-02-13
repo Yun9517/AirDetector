@@ -265,7 +265,7 @@ class HumidiytFragment : Fragment() {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun drawChart(position: Int?) {
+    fun drawChart(position: Int?) {
         setImageBarSize()
         when (position) {
             0 -> {
