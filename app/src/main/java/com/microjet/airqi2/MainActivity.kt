@@ -15,6 +15,7 @@ import android.database.sqlite.SQLiteDatabase
 
 import android.graphics.BitmapFactory
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
@@ -87,7 +88,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //電量icon
     private var battreyIcon: MenuItem? = null
     private var menuItem: MenuItem? = null
-
+    private var lightIcon: ImageView? = null
 
     private var connState = false
 /*
@@ -438,6 +439,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         bleIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         battreyIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
+        lightIcon = findViewById(R.id.imgLight)
+
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -610,9 +613,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mWaitLayout!!.bringToFront()
         }
 
-        preheatCountDownInt = (120 - preheatCountDownString.toInt())
-        Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
-        mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+        if (preheatCountDownString != "255") {
+            preheatCountDownInt = (120 - preheatCountDownString.toInt())
+            Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
+            mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+            //if (mWaitLayout!!.visibility == View.VISIBLE) {
+            //    heatingPanelHide()
+            //}
+            //mWaitLayout!!.bringToFront()
+        }
         //120秒預熱畫面消失
         if (preheatCountDownString == "255") {
             if (mWaitLayout!!.visibility == View.VISIBLE) {
@@ -841,6 +850,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
+            lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
     }
 

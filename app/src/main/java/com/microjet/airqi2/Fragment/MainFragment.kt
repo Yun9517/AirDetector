@@ -14,6 +14,7 @@ import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
+import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -29,7 +30,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(), View.OnTouchListener {
 
     enum class DetectionData(val range1: Long, val range2: Long) {
         TVOC(220, 660),
@@ -77,82 +78,112 @@ class MainFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        show_TVOC?.setOnClickListener {
+
+        show_TVOC.setOnTouchListener(this)
+        show_eCO2.setOnTouchListener(this)
+        show_Temp.setOnTouchListener(this)
+        show_RH.setOnTouchListener(this)
+
+        /*show_TVOC?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.TVOC
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
         show_eCO2?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.CO2
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
 
         show_Temp?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.Temp
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }
 
         show_RH?.setOnClickListener {
+            it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.Humi
-            pumpOnStatus(beforeState,dataForState)
+            pumpOnStatus(beforeState, dataForState)
             checkUIState()
-        }
+        }*/
 
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-                if (motionEvent.action == MotionEvent.ACTION_DOWN) {//.ACTION_BUTTON_PRESS
-                    Log.i("幹我按下了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                    //20180131
-                    //************************************************************************************************************************************
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
-                    mContext!!.sendBroadcast(intent) ///sendBroadcast(intent)
-                    //20180202
-                    view.isPressed = true
-                    isPumpOn = true
-                    //************************************************************************************************************************************
-                } else if (motionEvent.action == MotionEvent.ACTION_UP) {//ACTION_BUTTON_RELEASE
-                    //************************************************************************************************************************************
-                    Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                    mContext!!.sendBroadcast(intent)
-                    //20180202
-                    view.isPressed = false
-                    //************************************************************************************************************************************
-                } else if (motionEvent.action == MotionEvent.ACTION_MOVE) {//ACTION_BUTTON_RELEASE
-                    Log.i("幹我按中了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //Toast.makeText(mContext,actionToSring(motionEvent.action).toString(),Toast.LENGTH_SHORT).show()
-                } else {
-                    Log.i("幹我取消了了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
-                    //************************************************************************************************************************************
-                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-                    mContext!!.sendBroadcast(intent)
-                    //************************************************************************************************************************************
-                    //20180202
-                    view.isPressed = false
-                    isPumpOn = false
-                    //************************************************************************************************************************************
+                when(motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
+                        view.parent.requestDisallowInterceptTouchEvent(true)
+                        Log.i("幹我按下了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                        //20180131
+                        //************************************************************************************************************************************
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_ON)
+                        //20180202
+                        view.isPressed = true
+                        isPumpOn = true
+                        //************************************************************************************************************************************
+                    }
+                    MotionEvent.ACTION_UP -> {//ACTION_BUTTON_RELEASE
+                        Log.i("幹我不按了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_OFF)
+                        //20180202
+                        //************************************************************************************************************************************
+                        view.isPressed = false
+                        isPumpOn = false
+                        //************************************************************************************************************************************
+                    }
                 }
             }
             true
         }
 
-
         // 初始化inCircleTitle文字大小
         fixInCircleTextSize()
+    }
+
+
+    override fun onTouch(v: View?, event: MotionEvent?): Boolean {
+        when(event!!.action) {
+            MotionEvent.ACTION_DOWN -> {
+                v!!.parent.requestDisallowInterceptTouchEvent(true)
+
+                val beforeState = dataForState
+
+                when (v.id) {
+                    R.id.show_TVOC -> {
+                        dataForState = DetectionData.TVOC
+                    }
+                    R.id.show_eCO2 -> {
+                        dataForState = DetectionData.CO2
+                    }
+                    R.id.show_Temp -> {
+                        dataForState = DetectionData.Temp
+                    }
+                    R.id.show_RH -> {
+                        dataForState = DetectionData.Humi
+                    }
+                }
+                pumpOnStatus(beforeState, dataForState)
+                checkUIState()
+            }
+        }
+        return true
+    }
+
+
+    private fun sendPumpCommand(command: String) {
+        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+        intent!!.putExtra("status", command)
+        mContext!!.sendBroadcast(intent)
     }
 
     private fun actionToSring(action: Int): String {
@@ -189,29 +220,50 @@ class MainFragment : Fragment() {
         val dpi = dm.densityDpi
         Log.i("DPI", "目前解析度為: $dpi")
         when (dpi) {
-            /*240 -> {   // HDPI
-                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
-            }*/
-            480 -> {   // XXHDPI
+        /*DisplayMetrics.DENSITY_HIGH -> {   // HDPI
+            //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
+            inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+        }*/
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> {   // XXHDPI
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
             }
-            560 -> {   // Samsung S8+
-                //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
-                //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
-                tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-                tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
-            }
-            640 -> {   // XXXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> {
                 //inCircleTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
                 //inCircleState.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20f)
                 tvNotify.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
                 tvLastDetectTime.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16f)
             }
         }
+    }
+
+    private fun textSpannable(temp: String) {
+        val dm = resources.displayMetrics
+        val textSpan = SpannableStringBuilder(temp)
+        val text1Size = when (dm.densityDpi) {
+            DisplayMetrics.DENSITY_DEFAULT -> convertSpToPx(50f)   // MDPI
+            DisplayMetrics.DENSITY_HIGH -> convertSpToPx(30f)   // HDPI
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(34f)   // XXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> convertSpToPx(36f)   // XXXHDPI
+            else -> convertSpToPx(30f)
+        }
+        val text2Size = when (dm.densityDpi) {
+            DisplayMetrics.DENSITY_DEFAULT -> convertSpToPx(30f)   // MDPI
+            DisplayMetrics.DENSITY_HIGH -> convertSpToPx(18f)   // HDPI
+            in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(20f)   // XXHDPI
+            in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> convertSpToPx(22f)   // XXXHDPI
+            else -> convertSpToPx(18f)
+        }
+
+        textSpan.setSpan(AbsoluteSizeSpan(text1Size),
+                0, temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(AbsoluteSizeSpan(text2Size),
+                temp.indexOf(" ") + 1, temp.length,
+                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        //textSpan.setSpan(AbsoluteSizeSpan(text1Size),temp.indexOf(" ") - 1, temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        inCircleValue.text = textSpan
     }
 
     private fun setThresholdValue(dataForState: DetectionData) {
@@ -391,7 +443,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_02)
+                imgLight.setImageResource(R.drawable.face_icon_temp_02)
             }
             in 26..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -401,7 +453,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_03)
+                imgLight.setImageResource(R.drawable.face_icon_temp_03)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -411,7 +463,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_temp_01)
+                imgLight.setImageResource(R.drawable.face_icon_temp_01)
             }
         }
     }
@@ -426,7 +478,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_01)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_01)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -436,7 +488,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_02)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_02)
             }
             else -> {
 
@@ -447,7 +499,7 @@ class MainFragment : Fragment() {
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
-                imgLight.setImageResource(R.drawable.face_ion_hmi_03)
+                imgLight.setImageResource(R.drawable.face_icon_hmi_03)
             }
         }
     }
@@ -506,7 +558,7 @@ class MainFragment : Fragment() {
                     textSpannable(temp)
                 }
                 DetectionData.Temp -> {
-                    inCircleTitle.text = getString(R.string.text_label_temperature)
+                    inCircleTitle.text = getString(R.string.text_label_temperature_full)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
@@ -523,7 +575,7 @@ class MainFragment : Fragment() {
                 }
 
                 DetectionData.Humi -> {
-                    inCircleTitle.text = getString(R.string.text_label_humidity)
+                    inCircleTitle.text = getString(R.string.text_label_humidity_full)
                     setThresholdValue(dataForState)
                     setBarMaxValue(dataForState)
                     inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
@@ -557,33 +609,6 @@ class MainFragment : Fragment() {
             tvLastDetectTime.text = " "
             inCircleBar.setCurrentValues(0f)
         }
-    }
-
-    private fun textSpannable(temp: String) {
-        val dm = resources.displayMetrics
-        val textSpan = SpannableStringBuilder(temp)
-        val text1Size = when (dm.densityDpi) {
-            160 -> convertSpToPx(50f)   // MDPI
-            240 -> convertSpToPx(28f)   // HDPI
-            480 -> convertSpToPx(30f)   // XXHDPI
-            in 560..640 -> convertSpToPx(36f)   // XXXHDPI
-            else -> 50
-        }
-        val text2Size = when (dm.densityDpi) {
-            160 -> convertSpToPx(30f)   // MDPI
-            240 -> convertSpToPx(14f)   // HDPI
-            480 -> convertSpToPx(18f)   // XXHDPI
-            in 560..640 -> convertSpToPx(22f)   // XXXHDPI
-            else -> 30
-        }
-
-        textSpan.setSpan(AbsoluteSizeSpan(text1Size),
-                0, temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        textSpan.setSpan(AbsoluteSizeSpan(text2Size),
-                temp.indexOf(" ") + 1, temp.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        //textSpan.setSpan(AbsoluteSizeSpan(text1Size),temp.indexOf(" ") - 1, temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        inCircleValue.text = textSpan
     }
 
     private fun convertSpToPx(input: Float): Int {
@@ -635,6 +660,3 @@ class MainFragment : Fragment() {
         }
     }
 }
-
-
-

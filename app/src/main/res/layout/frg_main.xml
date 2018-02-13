@@ -66,8 +66,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"
-                android:layout_marginEnd="26dp"
-                android:layout_marginStart="26dp"
+                android:layout_marginEnd="38dp"
+                android:layout_marginStart="38dp"
                 android:layout_marginTop="32dp"
                 android:gravity="bottom|center"
                 android:maxLines="2"
@@ -75,7 +75,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/whiteColor"
                 android:textSize="14sp"
-                app:autoSizeMaxTextSize="50sp"
+                app:autoSizeMaxTextSize="40sp"
                 app:autoSizeMinTextSize="14sp"
                 app:autoSizeTextType="uniform"
                 app:layout_constraintBottom_toTopOf="@+id/inCircleValue"
@@ -161,12 +161,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_panel"
-        android:layout_marginBottom="10dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/PrimaryPanel">
@@ -175,9 +174,9 @@
             android:id="@+id/imgLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
+            android:layout_marginEnd="5dp"
             android:background="@null"
-            />
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="wrap_content"
