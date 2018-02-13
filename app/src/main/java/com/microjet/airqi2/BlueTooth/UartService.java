@@ -1476,7 +1476,6 @@ public class UartService extends Service {
                         //點亮屏幕
                         wl.release();
                         Log.e("休眠狀態下","喚醒螢幕");
-
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
