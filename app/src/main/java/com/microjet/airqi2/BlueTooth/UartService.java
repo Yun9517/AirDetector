@@ -1084,6 +1084,10 @@ public class UartService extends Service {
                             NowItem = countForItem;
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
+                        } else {
+                            downloading = false;
+                            downloadComplete = true;
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
@@ -1180,9 +1184,6 @@ public class UartService extends Service {
                         dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        if (dataNotSaved == 1) {
-                            //timeSetNowToThirty("0");
-                        }
                         Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6",arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
@@ -1211,7 +1212,7 @@ public class UartService extends Service {
                                 asmData.setCreated_time(time);
                                 //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", arrB6.toString());
-                                Log.d("RealmTimeB6", time.toString());
+                                Log.d("RealmTimeB6", new Date(time).toString());
                                 //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                             });
                             realm.close();
@@ -1339,7 +1340,7 @@ public class UartService extends Service {
 
     private Long timeSetForB6() {
         Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset();
-        Long dateSecChange = (dateSecMil / 1000)/60 * (1000 * 60);
+        Long dateSecChange = (dateSecMil / 1000) / 60 * (1000 * 60);
         Date date = new Date(dateSecChange);
         Log.d("timeSetForB6",date.toString());
         return dateSecChange;
