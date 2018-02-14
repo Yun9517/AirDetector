@@ -1141,6 +1141,7 @@ public class UartService extends Service {
                             NowItem = 1;
                             downloading = false;
                             downloadComplete = true;
+                            counterB5 = 1;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//

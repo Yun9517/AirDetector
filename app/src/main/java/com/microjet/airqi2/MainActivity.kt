@@ -380,38 +380,38 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageSelected(position: Int) {
                 Log.d("PageSelected", position.toString())
                 currentIndex = position
-                if (currentIndex >= 1) {
-                    when (currentIndex) {
-                        1 -> {
-                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TVOCFragment
-                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-                        }
-                        2 -> {
-                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as ECO2Fragment
-                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-                        }
-                        3 -> {
-                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TempFragment
-                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-                        }
-                        4 -> {
-                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as HumidiytFragment
-                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-                        }
-                    }
-                    //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-                //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
-                    //先測試下載功能是否OK
-                    //(mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
-                }
+//                if (currentIndex >= 1) {
+//                    when (currentIndex) {
+//                        1 -> {
+//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TVOCFragment
+//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
+//                        }
+//                        2 -> {
+//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as ECO2Fragment
+//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
+//                        }
+//                        3 -> {
+//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TempFragment
+//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
+//                        }
+//                        4 -> {
+//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as HumidiytFragment
+//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
+//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
+//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
+//                        }
+//                    }
+//                    //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
+//                //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
+//                    //先測試下載功能是否OK
+//                    //(mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
+//                }
             }
         })
     }
