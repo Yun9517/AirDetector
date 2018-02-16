@@ -1095,7 +1095,8 @@ public class UartService extends Service {
                         sendBroadcast(mainIntent);
 
                     } else if (getMaxItems() <= 0) {
-                        //timeSetNowToThirty();
+                        //0xB6裡的Log會用到
+                        timeSetNowToThirty(b4correctTime);
                         downloadComplete = true;
                     }
                     break;
