@@ -118,8 +118,10 @@ class DeviceListActivity : Activity() {
         }*/
 
         private fun addBluetoothDevice(device: BluetoothDevice, rssi: Int) {
-            mLeDeviceListAdapter!!.addDevice(device, rssi)
-            mLeDeviceListAdapter!!.notifyDataSetChanged()
+            if (device.bondState == 10) {
+                mLeDeviceListAdapter!!.addDevice(device, rssi)
+                mLeDeviceListAdapter!!.notifyDataSetChanged()
+            }
             //Log.v(TAG, "Found Device, Name: " + device.name + " RSSI: " + rssi)
         }
     }

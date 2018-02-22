@@ -1076,8 +1076,8 @@ public class UartService extends Service {
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
                             Log.d("0xB4", countForItemTime.toString());
                             countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
-                            //這行應該用不到
-                            //if (countForItem > 1440) { countForItem = 1440; }
+                            //當小於0的時候讓它等於0
+                            if (countForItem < 0) { countForItem = 0; }
                             Log.d("0xB4countItem", Long.toString(countForItem));
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
