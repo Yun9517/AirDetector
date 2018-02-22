@@ -6,6 +6,7 @@ import kotlin.experimental.and
 
 /**
  * Created by B00055 on 2017/11/29.
+ *
  */
 object CallingTranslate {
 
@@ -209,6 +210,7 @@ object CallingTranslate {
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate, checkSum)
     }
 
+    // Device led control
     fun SetLedOn(value: Boolean): ByteArray {
         val setVal = if(value) {
             Command_List.LedOn

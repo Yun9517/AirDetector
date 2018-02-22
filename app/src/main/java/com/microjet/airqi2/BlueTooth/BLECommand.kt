@@ -2,6 +2,7 @@ package com.microjet.airqi2.BlueTooth
 
 /**
  * Created by B00055 on 2017/11/29.
+ *
  */
 object Command_List{
     val ReadCmd: Byte = 0xE0.toByte()
@@ -44,6 +45,7 @@ object Command_List{
     val CallDeviceStartingGetSample: Byte = 0xB3.toByte()
     val GetHistorySampleItems: Byte = 0xB4.toByte()
     val GetHistorySample: Byte = 0xB5.toByte()
+    // Device led control
     val SetLedOnOff: Byte = 0xB9.toByte()
     val LedOn: Byte = 0x00.toByte()
     val LedOff: Byte = 0x01.toByte()

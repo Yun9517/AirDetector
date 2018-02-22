@@ -110,12 +110,12 @@ public class UartService extends Service {
 
 
     //20180102   Andy
-    private int countsound220=0;
-    private int countsound660=0;
+    private int countsound220 = 0;
+    private int countsound660 = 0;
     //20180122
-    private int countsound2200=0;
-    private int countsound5500=0;
-    private int countsound20000=0;
+    private int countsound2200 = 0;
+    private int countsound5500 = 0;
+    private int countsound20000 = 0;
 
 
     private int countsound800=0;
@@ -169,8 +169,7 @@ public class UartService extends Service {
                     mConnectionState = STATE_DISCONNECTED;
                     dataNotSaved = 0;
                     arrB6.clear();
-                    if (!mBluetoothAdapter.isEnabled())
-                    {
+                    if (!mBluetoothAdapter.isEnabled()) {
                         close();
                     } else {
                         disconnect();
@@ -516,7 +515,7 @@ public class UartService extends Service {
         }
         BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
         if (TxChar == null) {
-            showMessage("Tx charateristic not found!");
+            showMessage("Tx characteristic not found!");
             //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
             return;
@@ -687,11 +686,9 @@ public class UartService extends Service {
                     break;
                 case BroadcastActions.INTENT_KEY_LED_OFF:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(false));
-                    Log.e(TAG, "LED狀態：關閉");
                     break;
                 case BroadcastActions.INTENT_KEY_LED_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
-                    Log.e(TAG, "LED狀態：開啟");
                     break;
             }
         }
