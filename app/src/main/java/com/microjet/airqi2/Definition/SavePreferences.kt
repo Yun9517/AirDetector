@@ -22,5 +22,7 @@ object SavePreferences {
     //20180206
     //20180129
     const val SETTING_BATTERY_SOUND = "airqi2.settings.SETTING_BATTERY_SOUND"
+    //20180222
+    const val SETTING_LED_SWITCH = "airqi2.settings.SETTING_LED_SWITCH"
 
 }

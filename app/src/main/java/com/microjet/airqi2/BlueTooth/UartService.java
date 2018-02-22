@@ -141,7 +141,7 @@ public class UartService extends Service {
     private final int REQUEST_CODE = 0xb01;
 
 
-    public static Activity nowActivity=null;
+    public static Activity nowActivity = null;
 
     private boolean downloading = false;
     private boolean downloadComplete = false;
@@ -684,6 +684,14 @@ public class UartService extends Service {
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_OFF:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(1));
+                    break;
+                case BroadcastActions.INTENT_KEY_LED_OFF:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(false));
+                    Log.e(TAG, "LED狀態：關閉");
+                    break;
+                case BroadcastActions.INTENT_KEY_LED_ON:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
+                    Log.e(TAG, "LED狀態：開啟");
                     break;
             }
         }

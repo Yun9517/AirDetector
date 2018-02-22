@@ -4,77 +4,44 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.SwitchCompat
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.Spinner
-import android.widget.TextView
-import com.microjet.airqi2.Definition.SavePreferences
-import android.widget.AdapterView
-import com.microjet.airqi2.Definition.BroadcastIntents
-import android.view.MotionEvent
+import android.widget.*
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
+import com.microjet.airqi2.Definition.SavePreferences
+import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
  * Created by B00174 on 2017/11/29.
+ * 
  */
 class SettingActivity : AppCompatActivity() {
 
-    var spCycle: Spinner? = null
-    var swMessage: SwitchCompat? = null
-    var swViberate: SwitchCompat? = null
-    var swSound: SwitchCompat? = null
-    var swRunInBg: SwitchCompat? = null
-    var swTotalNotify: SwitchCompat? = null
-    //20180206
-    var swBattary: SwitchCompat? = null
+    private var mPreference: SharedPreferences? = null
 
-    var text_msg_stat: TextView? = null
-    var text_vibe_stat: TextView? = null
-    var text_sound_stat: TextView? = null
-    var text_run_bg_stat: TextView? = null
-    var text_total_notify_stat: TextView? = null
-    var btn_clean: Button? = null
-    var btn_export: Button? = null
-
-    var mPreference: SharedPreferences? = null
-
-    var spCycleVal: Int = 0
-    var swMessageVal: Boolean = false
-    var swViberateVal: Boolean = false
-    var swSoundVal: Boolean = false
-    var swRunInBgVal: Boolean = false
-    var swTotalNotifyVal: Boolean = false
+    private var spCycleVal: Int = 0
+    private var swMessageVal: Boolean = false
+    private var swViberateVal: Boolean = false
+    private var swSoundVal: Boolean = false
+    private var swRunInBgVal: Boolean = false
+    private var swTotalNotifyVal: Boolean = false
     //20180130
-    var swBattaryVal: Boolean = false
-
-    //20180130
-   // var swPump: SwitchCompat? = null
-    var text_pump_stat: TextView? = null
-    var swPumpVal: Boolean = false
-
-    //20180206
-    var text_bat_stat:TextView? = null
-
-
-
-
+    private var batSoundVal: Boolean = false
+    private var swLedPowerVal: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
-        uiFindViewById()
         uiSetListener()
 
         val mCycleAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
                 this, R.array.pickCycle, android.R.layout.simple_spinner_item)
         mCycleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spCycle!!.adapter = mCycleAdapter
+        spCycle.adapter = mCycleAdapter
 
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY,0)
         //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
@@ -108,67 +75,44 @@ class SettingActivity : AppCompatActivity() {
         //20180130
         //swPumpVal = mPreference!!.getBoolean(SavePreferences.SETTING_PUMP_MUNUAL, false)
         //20180206
-        swBattaryVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
+        batSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
 
-        spCycle!!.setSelection(spCycleVal)
+        swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
-        swMessage!!.isChecked = swMessageVal
-        swViberate!!.isChecked = swViberateVal
-        swSound!!.isChecked = swSoundVal
-        swRunInBg!!.isChecked = swRunInBgVal
-        swTotalNotify!!.isChecked = swTotalNotifyVal
+        spCycle.setSelection(spCycleVal)
+
+        swMessage.isChecked = swMessageVal
+        swVibrate.isChecked = swViberateVal
+        swSound.isChecked = swSoundVal
+        swRunInBg.isChecked = swRunInBgVal
+        swTotalNotify.isChecked = swTotalNotifyVal
         //20180130
-        //swPump!!.isChecked = swPumpVal
+        //swPump.isChecked = swPumpVal
         //20180206
-        swBattary!!.isChecked=swBattaryVal
+        batSound.isChecked = batSoundVal
+
+        ledPower.isChecked = swLedPowerVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
         /*swViberate?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
-        if (swViberate!!.isChecked) {
+        if (swViberate.isChecked) {
             text_vibe_stat?.text = getString(R.string.text_setting_on)
         } else {
             text_vibe_stat?.text = getString(R.string.text_setting_off)
         }
 
         swSound?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
-        if (swSound!!.isChecked) {
-            text_sound_stat!!.text = getString(R.string.text_setting_on)
+        if (swSound.isChecked) {
+            text_sound_stat.text = getString(R.string.text_setting_on)
         } else {
-            text_sound_stat!!.text = getString(R.string.text_setting_off)
+            text_sound_stat.text = getString(R.string.text_setting_off)
         }*/
 
     }
 
-    private fun uiFindViewById() {
-        spCycle = findViewById(R.id.spCycle)
-
-        swMessage = findViewById(R.id.swMessage)
-        swViberate = findViewById(R.id.swViberate)
-        swSound = findViewById(R.id.swSound)
-        swRunInBg = findViewById(R.id.swRunInBg)
-        swTotalNotify = findViewById(R.id.swTotalNotify)
-
-        text_msg_stat = findViewById(R.id.text_msg_stat)
-        text_vibe_stat = findViewById(R.id.text_vibe_stat)
-        text_sound_stat = findViewById(R.id.text_sound_stat)
-        text_run_bg_stat = findViewById(R.id.text_run_bg_stat)
-        text_total_notify_stat = findViewById(R.id.text_total_notify_stat)
-
-        btn_clean = findViewById(R.id.btn_clean)
-        btn_export = findViewById(R.id.btn_export)
-
-        //20180130
-        //swPump = findViewById(R.id.swPump)
-        text_pump_stat = findViewById(R.id.text_pump_stat)
-        //20180206
-        swBattary = findViewById(R.id.batSound)
-        text_bat_stat = findViewById(R.id.text_bat_stat)
-
-    }
-
     private fun uiSetListener() {
-        spCycle!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        spCycle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TEST_CYCLE,
                         position).apply()
@@ -179,67 +123,67 @@ class SettingActivity : AppCompatActivity() {
             }
         }
 
-        swMessage!!.setOnCheckedChangeListener { _, isChecked ->
+        swMessage.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                text_msg_stat!!.text = getString(R.string.text_setting_on)
+                text_msg_stat.text = getString(R.string.text_setting_on)
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
 
                 Log.d("message", "messageSETTING")
             } else {
-                text_msg_stat!!.text = getString(R.string.text_setting_off)
+                text_msg_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
                     isChecked).apply()
         }
 
-        swViberate!!.setOnCheckedChangeListener { _, isChecked ->
+        swVibrate.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                text_vibe_stat!!.text = getString(R.string.text_setting_on)
+                text_vibrate_stat.text = getString(R.string.text_setting_on)
             } else {
-                text_vibe_stat!!.text = getString(R.string.text_setting_off)
+                text_vibrate_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
                     isChecked).apply()
         }
 
-        swSound!!.setOnCheckedChangeListener { _, isChecked ->
+        swSound.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                text_sound_stat!!.text = getString(R.string.text_setting_on)
+                text_sound_stat.text = getString(R.string.text_setting_on)
             } else {
-                text_sound_stat!!.text = getString(R.string.text_setting_off)
+                text_sound_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
         }
 
-        swRunInBg!!.setOnCheckedChangeListener { _, isChecked ->
+        swRunInBg.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                text_run_bg_stat!!.text = getString(R.string.text_setting_on)
+                text_run_bg_stat.text = getString(R.string.text_setting_on)
             } else {
-                text_run_bg_stat!!.text = getString(R.string.text_setting_off)
+                text_run_bg_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG,
                     isChecked).apply()
         }
 
-        swTotalNotify!!.setOnCheckedChangeListener { _, isChecked ->
+        swTotalNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                text_total_notify_stat!!.text = getString(R.string.text_setting_on)
+                text_total_notify_stat.text = getString(R.string.text_setting_on)
             } else {
-                text_total_notify_stat!!.text = getString(R.string.text_setting_off)
+                text_total_notify_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
                     isChecked).apply()
         }
        //20180129
-//        swPump!!.setOnCheckedChangeListener { _, isChecked ->
+//        swPump.setOnCheckedChangeListener { _, isChecked ->
 //            if (isChecked) {
 //                text_pump_stat!!.text = getString(R.string.text_setting_on)
 //                //20180130
@@ -263,7 +207,7 @@ class SettingActivity : AppCompatActivity() {
 //                    isChecked).apply()
 //        }
         //20180206
-        swBattary!!.setOnCheckedChangeListener { _, isChecked ->
+        batSound.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 text_bat_stat!!.text = getString(R.string.text_setting_on)
             } else {
@@ -272,16 +216,24 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
                     isChecked).apply()
         }
-    }
 
+        ledPower.setOnCheckedChangeListener { _, isChecked ->
 
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
+            if (isChecked) {
+                text_led_stat!!.text = getString(R.string.text_setting_on)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_ON)
+            } else {
+                text_led_stat.text = getString(R.string.text_setting_off)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_OFF)
+            }
 
-    override fun finish() {
-        //val intent = Intent()
-        //intent.putExtra("choseCycle", mPreference?.getInt(SavePreferences.SETTING_TEST_CYCLE, 0))
-        //setResult(2, intent)
-        super.finish()
+            sendBroadcast(intent)
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                    isChecked).apply()
+        }
     }
 
     private fun initActionBar() {
@@ -290,9 +242,6 @@ class SettingActivity : AppCompatActivity() {
         // 設定顯示左上角的按鈕
         actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
-
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {

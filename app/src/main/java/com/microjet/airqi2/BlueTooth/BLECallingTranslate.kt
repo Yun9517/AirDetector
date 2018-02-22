@@ -209,6 +209,17 @@ object CallingTranslate {
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate, checkSum)
     }
 
+    fun SetLedOn(value: Boolean): ByteArray {
+        val setVal = if(value) {
+            Command_List.LedOn
+        } else {
+            Command_List.LedOff
+        }
+        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteOneByteLens, Command_List.SetLedOnOff, setVal)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteOneByteLens, Command_List.SetLedOnOff, setVal, checkSum)
+    }
+
     /**
      * Return the command include CheckSum
      * REQUEST_DEVICE_STARTING_GETSAMPLE

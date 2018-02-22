@@ -49,7 +49,8 @@
         android:layout_gravity="center_vertical"
         android:paddingLeft="20dp"
         android:text="@string/text_setting_allow_notification"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -58,7 +59,7 @@
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="105dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -91,7 +92,7 @@
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="105dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -99,7 +100,7 @@
             android:textSize="18sp" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swViberate"
+            android:id="@+id/swVibrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -108,7 +109,7 @@
             android:theme="@style/SwitchCompatTheme" />
 
         <TextView
-            android:id="@+id/text_vibe_stat"
+            android:id="@+id/text_vibrate_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -124,7 +125,7 @@
 
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="105dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -157,7 +158,7 @@
 
         <TextView
             android:id="@+id/textView14"
-            android:layout_width="105dp"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -175,6 +176,39 @@
 
         <TextView
             android:id="@+id/text_bat_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:text="LED指示燈"
+            android:textSize="18sp" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/ledPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme" />
+
+        <TextView
+            android:id="@+id/text_led_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
