@@ -91,25 +91,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var lightIcon: ImageView? = null
 
     private var connState = false
-/*
-    //20171124 Andy月曆的方法聆聽者
-    var dateSetListener : DatePickerDialog.OnDateSetListener? = null
-    var cal = Calendar.getInstance()
-*/
-
 
     //Richard 171124
     private var nvDrawerNavigation: NavigationView? = null
-    private var mDevice: BluetoothDevice? = null
-    private var mBluetoothLeService: UartService? = null
+   // private var mDevice: BluetoothDevice? = null
+    //private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
     private val REQUEST_SELECT_SAMPLE = 2
 
     //UArtService實體
-    private var mService: UartService? = null
+    //private var mService: UartService? = null
 
     private var mIsReceiverRegistered: Boolean = false
- //   private var mReceiver: MyBroadcastReceiver? = null
+    //private var mReceiver: MyBroadcastReceiver? = null
     private var isGPSEnabled: Boolean = false
     private var mLocationManager: LocationManager? = null
 
@@ -120,7 +114,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171212 Raymond added Wait screen
     private var mWaitLayout: RelativeLayout? = null
     private var mainLayout: LinearLayout? = null
-    private var mMainReceiver: BroadcastReceiver? = null
+    //private var mMainReceiver: BroadcastReceiver? = null
     private var preheatCountDownInt = 0
 
     private var topMenu: Menu? = null
@@ -129,6 +123,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var soundPool: SoundPool? = null
     private var alertId = 0
     private var lowPowerCont:Int=0
+
+    // Code to manage Service lifecycle.
+    private var mDeviceAddress: String? = null
+    private var mUartService: UartService? = null
+
+    private val mServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
+            mUartService = (service as UartService.LocalBinder).serverInstance
+            if (!mUartService!!.initailze()) {
+                Log.e(TAG, "Unable to initialize Bluetooth")
+                finish()
+            }
+            // Automatically connects to the device upon successful start-up initialization.
+            mUartService!!.connect(mDeviceAddress)
+        }
+
+        override fun onServiceDisconnected(componentName: ComponentName) {
+            mUartService = null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -184,8 +198,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.i(TAG, "call onStart")
-        val serviceIntent: Intent? = Intent(this, UartService::class.java)
-        startService(serviceIntent)
+        //val serviceIntent: Intent? = Intent(this, UartService::class.java)
+        //startService(serviceIntent)
 
         checkUIState()
         requestPermissionsForBluetooth()
@@ -247,8 +261,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         serviceIntent!!.putExtra("status", "disconnect")
         sendBroadcast(serviceIntent)
 
-        val intent: Intent? = Intent(this, UartService::class.java)
-        stopService(intent)
+        //val intent: Intent? = Intent(this, UartService::class.java)
+        //stopService(intent)
+        unbindService(mServiceConnection)
 
     }
 
@@ -477,6 +492,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return super.onOptionsItemSelected(item)
     }
 
+    //選單內容
     private fun dialogShow(title: String, content: String) {
         val i: Intent? = Intent(this, CustomDialogActivity::class.java)
         val bundle: Bundle? = Bundle()
@@ -542,23 +558,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_about ->  aboutShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
-        //R.id.nav_second_fragment -> fragmentClass = SecondFragment::class.java
-            R.id.nav_knowledge -> {
-                knowledgeShow()
-                /*
-               val intent: Intent? = Intent("Main")
-               intent!!.putExtra("status", "getSampleRate")
-               sendBroadcast(intent)*/
-                //  knowledgeShow()
-            }
+            R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
-            R.id.nav_getData -> {
-
-            }
+            R.id.nav_getData -> {            }
             R.id.nav_setting -> settingShow()
-
         }
-
         mDrawerLayout?.closeDrawer(GravityCompat.START)
     }
 
@@ -575,16 +579,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } else if (isGPSEnabled && mBluetoothAdapter.isEnabled) {
             val i: Intent? = Intent(this,
                     DeviceListActivity::class.java)
-            startActivity(i)
+            //startActivity(i)
+            startActivityForResult(i,REQUEST_SELECT_DEVICE)
         }
         //startActivityForResult(i,REQUEST_SELECT_DEVICE)
     }
 
     private fun blueToothDisconnect() {
         if (connState) {
-            val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            serviceIntent!!.putExtra("status", "disconnect")
-            sendBroadcast(serviceIntent)
+            //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            //serviceIntent!!.putExtra("status", "disconnect")
+            //sendBroadcast(serviceIntent)
+            mUartService!!.disconnect()
         }
         //stopService(serviceIntent)
     }
@@ -652,12 +658,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
-            REQUEST_SELECT_DEVICE ->
+            REQUEST_SELECT_DEVICE -> {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
+                    mDeviceAddress = data.extras.getString("MAC")
+                    val gattServiceIntent = Intent(this, UartService::class.java)
+                    bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
                     print("MainActivity")
+                    if (mUartService != null) {
+                        val result = mUartService!!.connect(mDeviceAddress)
+                        Log.d(TAG, "Connect request result=" + result)
+                    }
                 }
+            }
+
             REQUEST_SELECT_SAMPLE -> {
                 if (data != null) {
                     var value = data.getIntExtra("choseCycle", 0)

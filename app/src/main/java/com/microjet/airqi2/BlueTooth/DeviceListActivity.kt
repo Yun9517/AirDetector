@@ -28,10 +28,7 @@ import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
 import android.bluetooth.le.ScanSettings.*
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -42,8 +39,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
-import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import java.util.*
 
@@ -78,23 +73,28 @@ class DeviceListActivity : Activity() {
 
         scanLeDevice(false)
 
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-            intent!!.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
-            //Use Bundle Save Address
-            val bundle: Bundle? = Bundle()
-            bundle!!.putString("mac", device.address.toString())
-            //put bundle into intent
-            intent!!.putExtras(bundle)
-            //intent!!.putExtra("mac", device.address)
-            sendBroadcast(intent)
+//            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+//            intent!!.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
+//            //Use Bundle Save Address
+//            val bundle: Bundle? = Bundle()
+//            bundle!!.putString("mac", device.address.toString())
+//            //put bundle into intent
+//            intent!!.putExtras(bundle)
+//            //intent!!.putExtra("mac", device.address)
+//            sendBroadcast(intent)
         //
-
         /*
         val serviceIntent :Intent? = Intent(this, UartService::class.java)
         serviceIntent?.putExtra(BluetoothDevice.EXTRA_DEVICE, device.address)
         startService(serviceIntent)
         */
         //this@DeviceListActivity.finish()
+
+        val backIntent = Intent()
+        val backBundle = Bundle()
+        backBundle.putString("MAC",device.address)
+        backIntent.putExtras(backBundle)
+        setResult(RESULT_OK,backIntent)
         finish()
     }
 
@@ -342,7 +342,6 @@ class DeviceListActivity : Activity() {
             } else {
                 viewHolder = view.tag as ViewHolder
             }
-
             val device = mLeDevices[i]
             val rssi = mLeDevicesRssi[i]
             val deviceName = device.name
