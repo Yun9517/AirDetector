@@ -47,6 +47,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private var tempDataFloat = 0f
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
+    private var pm25DataFloat = 0f
     private var preHeat = "0"
     //20180207
     private var isPumpOn = false
@@ -296,7 +297,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
-        tvBtmPM25Value.text = "Not Support"
+        tvBtmPM25Value.text = pm25DataFloat.toInt().toString()
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
@@ -635,6 +636,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
                     tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
                     co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
+                    pm25DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toFloat()
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                 }
             }
