@@ -356,8 +356,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mTvocFg=ChartFragment()
         val mEco2Fg=ChartFragment()
         val mTempFg=ChartFragment()
-        mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTvocFg.ConfigFragment(DEFINE_FRAGMENT_TVOC)
+        mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTempFg.ConfigFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.ConfigFragment(DEFINE_FRAGMENT_HUMIDITY)
 
