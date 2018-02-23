@@ -650,7 +650,7 @@ class ChartFragment: Fragment() {
                         sumValueInt += arrData[count].toInt()
                     }
                     DEFINE_FRAGMENT_TEMPERATURE ->{
-                        arrData[count] = asmDataModel.tempValue.toString()
+                        arrData[count] = (asmDataModel.tempValue.toFloat()+10.0F).toString()
                         sumValueFloat += arrData[count].toFloat()
                     }
                     DEFINE_FRAGMENT_HUMIDITY->{
@@ -664,7 +664,7 @@ class ChartFragment: Fragment() {
             //20180122
             when(UseFor) {
                 DEFINE_FRAGMENT_TEMPERATURE->{
-                    avgValueFloat = (sumValueFloat / result1.size)
+                    avgValueFloat = (sumValueFloat / result1.size)-10.0f
                 }
                 else->{
                     avgValueInt = (sumValueInt / result1.size)
@@ -777,7 +777,7 @@ class ChartFragment: Fragment() {
                             sumThisAndLastWeek += i.ecO2Value.toInt()
                         }
                         DEFINE_FRAGMENT_TEMPERATURE ->{
-                            sumThisAndLastWeek += i.tempValue.toFloat()
+                            sumThisAndLastWeek += i.tempValue.toFloat()+10.0f
                         }
                         DEFINE_FRAGMENT_HUMIDITY->{
                             sumThisAndLastWeek += i.humiValue.toInt()
@@ -833,13 +833,12 @@ class ChartFragment: Fragment() {
                             sumMonth += i.ecO2Value.toInt()
                         }
                         DEFINE_FRAGMENT_TEMPERATURE ->{
-                            sumMonth += i.tempValue.toFloat()
+                            sumMonth += i.tempValue.toFloat()+10.0f
                         }
                         DEFINE_FRAGMENT_HUMIDITY->{
                             sumMonth += i.humiValue.toInt()
                         }
                     }
-                    sumMonth += i.humiValue.toInt()
                 }
                 val aveTvoc = (sumMonth / result1.size)
                 arrData.add(aveTvoc.toString())
