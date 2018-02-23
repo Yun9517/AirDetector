@@ -298,7 +298,8 @@
         <com.microjet.airqi2.CustomAPI.FixBarChart
             android:id="@+id/chart_line"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
 
         </com.microjet.airqi2.CustomAPI.FixBarChart>
     </LinearLayout>
@@ -315,6 +316,7 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
             android:src="@drawable/face_bar_eco2" />
 
         <LinearLayout

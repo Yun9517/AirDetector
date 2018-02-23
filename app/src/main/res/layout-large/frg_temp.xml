@@ -403,7 +403,8 @@
         <com.microjet.airqi2.CustomAPI.FixBarChart
             android:id="@+id/chart_line"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="10dp">
 
         </com.microjet.airqi2.CustomAPI.FixBarChart>
     </LinearLayout>
