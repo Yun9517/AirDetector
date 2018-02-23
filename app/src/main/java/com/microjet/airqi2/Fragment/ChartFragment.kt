@@ -237,7 +237,7 @@ class ChartFragment: Fragment() {
         for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep)
         {
             var textView=TextView(this.context)
-            textView.width=80
+            textView.width=200
             textView.textAlignment=View.TEXT_ALIGNMENT_VIEW_END
             labelTextViewArray.add(textView)
             when (i){
