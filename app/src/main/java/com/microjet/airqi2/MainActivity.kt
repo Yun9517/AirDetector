@@ -6,45 +6,33 @@ import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.*
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
-import android.database.Cursor
-import android.database.sqlite.SQLiteDatabase
 
-import android.graphics.BitmapFactory
 import android.graphics.drawable.AnimationDrawable
-import android.graphics.drawable.Drawable
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
-import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBar
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.app.NotificationCompat
 import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
 import io.realm.Realm
-import kotlinx.android.synthetic.main.frg_main.*
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
-import com.microjet.airqi2.BlueTooth.UartService.mConnectionState
 import com.microjet.airqi2.CustomAPI.CustomViewPager
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
 import com.microjet.airqi2.CustomAPI.Utils
@@ -53,12 +41,8 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.*
-import io.fabric.sdk.android.services.settings.IconRequest.build
-import kotlinx.android.synthetic.main.frg_humidity.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import java.text.SimpleDateFormat
-import java.util.*
 import kotlin.collections.ArrayList
 
 
@@ -90,7 +74,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var menuItem: MenuItem? = null
     private var lightIcon: ImageView? = null
 
-    private var connState = false
+    private var connState = BleConnection.DISCONNECTED
 
     //Richard 171124
     private var nvDrawerNavigation: NavigationView? = null
@@ -144,6 +128,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
+    enum class BleConnection {
+        CONNECTING, CONNECTED, DISCONNECTING,DISCONNECTED,
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -173,14 +161,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mIsReceiverRegistered = true
         }
 
-        //Use Realm
-        val realm = Realm.getDefaultInstance() // opens "myrealm.realm"
-        try {
-            // ... Do something ...
-        } finally {
-            realm.close()
-        }
-
         setupDrawerContent(nvDrawerNavigation)
 
         UartService.nowActivity=this
@@ -205,14 +185,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         requestPermissionsForBluetooth()
         //checkBluetooth()
 
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val mBluetoothDeviceAddress = share.getString("mac", "noValue")
 
-        if (mBluetoothDeviceAddress != "noValue" && !connState) {
-            val mainintent = Intent(BroadcastIntents.PRIMARY)
-            mainintent.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
-            mainintent.putExtra("mac", mBluetoothDeviceAddress)
-            sendBroadcast(mainintent)
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
+        mDeviceAddress = share.getString("mac", "noValue")
+        if (mDeviceAddress != "noValue" && connState == BleConnection.DISCONNECTED) {
+            val gattServiceIntent = Intent(this, UartService::class.java)
+            bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+            mUartService?.connect(mDeviceAddress)
         }
     }
 
@@ -239,8 +219,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //實現模擬home鍵功能
         //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
         var intent: Intent = Intent(Intent.ACTION_MAIN)
-         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-         intent.addCategory(Intent.CATEGORY_HOME)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
 
@@ -257,12 +237,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         unregisterReceiver(mBluetoothStateReceiver)
 
-        val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        serviceIntent!!.putExtra("status", "disconnect")
-        sendBroadcast(serviceIntent)
+        //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
+        //serviceIntent!!.putExtra("status", "disconnect")
+        //sendBroadcast(serviceIntent)
 
         //val intent: Intent? = Intent(this, UartService::class.java)
         //stopService(intent)
+        mUartService?.close()
         unbindService(mServiceConnection)
 
     }
@@ -586,13 +567,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothDisconnect() {
-        if (connState) {
+        if (connState == BleConnection.CONNECTED) {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
             mUartService!!.disconnect()
+        } else {
+            Log.d("MAIN","BLEDISCONNTED ERROR")
         }
         //stopService(serviceIntent)
+        checkUIState()
     }
 
     private fun setGPSEnabled() {
@@ -662,13 +646,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    mDeviceAddress = data.extras.getString("MAC")
-                    val gattServiceIntent = Intent(this, UartService::class.java)
-                    bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-                    print("MainActivity")
-                    if (mUartService != null) {
-                        val result = mUartService!!.connect(mDeviceAddress)
-                        Log.d(TAG, "Connect request result=" + result)
+                    if (connState == BleConnection.DISCONNECTED) {
+                        mDeviceAddress = data.extras.getString("MAC")
+                        val gattServiceIntent = Intent(this, UartService::class.java)
+                        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+                        print("MainActivity")
+                        if (mUartService != null) {
+                            val result = mUartService!!.connect(mDeviceAddress)
+                            Log.d(TAG, "Connect request result=" + result)
+                        }
                     }
                 }
             }
@@ -820,15 +806,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = true
+                    connState = BleConnection.CONNECTED
                     val bundle = intent.extras
                     drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
+                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_x3)
                     // drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = false
-                    checkUIState()
+                    connState = BleConnection.DISCONNECTED
+                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
@@ -843,6 +830,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     // 預熱畫面控制
                     heatingPanelControl(preheatCountDownString)
                     displayConnetedBatteryLife()
+                    //bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 }
             }
             Log.d("MainActivity","OnReceive: " + action)
@@ -853,7 +841,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     @Synchronized private fun checkUIState() {
-        if (connState) {
+        if (connState == BleConnection.CONNECTED) {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
@@ -861,13 +849,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
-        }else {
+        } else {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
             bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
-            battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
