@@ -133,7 +133,7 @@ class ChartFragment: Fragment() {
             labelTextViewArray[i].y=lineRectFArray[i].top - (labelTextViewArray[i].height / 2f )
             labelTextViewArray[i].x=mChart!!.x-labelTextViewArray[i].width.toFloat()
         }
-    //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
+        //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
         if (!chartIsShowMinTextView){
             labelTextViewArray[0].visibility=View.INVISIBLE
         }
@@ -289,13 +289,13 @@ class ChartFragment: Fragment() {
             CharRelativeLayoutForLabel?.addView(textView)
         }
         */
-    /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
-        humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
-        humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
-        humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
-        humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
-        */
-       // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
+        /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
+            humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
+            humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
+            humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
+            humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
+            */
+        // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
         show_Yesterday = this.view?.findViewById(R.id.show_Yesterday)
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
@@ -831,10 +831,41 @@ class ChartFragment: Fragment() {
 
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
-        val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "Humi")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
-                ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                ContextCompat.getColor(context, R.color.Main_textResult_Bad)))
+        val dataSetA = when(UseFor) {
+            DEFINE_FRAGMENT_TVOC -> MyBarDataSet(getChartData3(inputTVOC), "TVOC")
+            DEFINE_FRAGMENT_ECO2 -> MyBarDataSet(getChartData3(inputTVOC), "ECO2")
+            DEFINE_FRAGMENT_TEMPERATURE -> MyBarDataSet(getChartData3(inputTVOC), "Temp")
+            else -> MyBarDataSet(getChartData3(inputTVOC), "Humi")
+        }
+
+        when(UseFor) {
+            DEFINE_FRAGMENT_TVOC -> {
+                dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
+            }
+            DEFINE_FRAGMENT_ECO2 -> {
+                dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
+            }
+            DEFINE_FRAGMENT_TEMPERATURE -> {
+                dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Bad)))
+            }
+            DEFINE_FRAGMENT_HUMIDITY -> {
+                dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Bad)))
+            }
+        }
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
@@ -977,7 +1008,7 @@ class ChartFragment: Fragment() {
                         }
                     }
 
-                //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     if(preHeat == "255") {
                         //新增AnimationCount
