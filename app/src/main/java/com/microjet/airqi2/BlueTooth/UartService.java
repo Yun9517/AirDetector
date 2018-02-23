@@ -150,6 +150,7 @@ public class UartService extends Service {
 
     private NotificationManager notificationManager=null;
     private int counterB5 = 1;
+    private int callbackErrorTimes = 0;
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -157,56 +158,76 @@ public class UartService extends Service {
     private final BluetoothGattCallback mGattCallback = new BluetoothGattCallback() {
         @Override
         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-            switch (newState) {
-                case BluetoothProfile.STATE_DISCONNECTED: {
-                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
-                    Log.i(TAG, "Disconnected from GATT server.");
-                    //broadcastUpdate(intentAction);
-                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                    mainIntent.putExtra("status", intentAction);
-                    sendBroadcast(mainIntent);
-                    mBluetoothAdapter = mBluetoothManager.getAdapter();
-                    mConnectionState = STATE_DISCONNECTED;
-                    dataNotSaved = 0;
-                    arrB6.clear();
-                    if (!mBluetoothAdapter.isEnabled()) {
-                        close();
-                    } else {
-                        disconnect();
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                switch (newState) {
+                    case BluetoothProfile.STATE_DISCONNECTED: {
+                        intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                        Log.i(TAG, "Disconnected from GATT server.");
+                        //broadcastUpdate(intentAction);
+                        Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                        mainIntent.putExtra("status", intentAction);
+                        sendBroadcast(mainIntent);
+                        mBluetoothAdapter = mBluetoothManager.getAdapter();
+                        mConnectionState = STATE_DISCONNECTED;
+                        dataNotSaved = 0;
+                        arrB6.clear();
+                        if (!mBluetoothAdapter.isEnabled()) {
+                            close();
+                        } else {
+                            disconnect();
+                            close();
+                        }
+                        break;
                     }
-                    break;
-                }
-                case BluetoothProfile.STATE_CONNECTING: {
-                    intentAction = BroadcastActions.ACTION_GATT_CONNECTING;
-                    mConnectionState = STATE_CONNECTING;
-                    Log.i(TAG, "Disconnected from GATT server.");
-                    //broadcastUpdate(intentAction);
-                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                    mainIntent.putExtra("status", intentAction);
-                    sendBroadcast(mainIntent);
-                    break;
-                }
-                case BluetoothProfile.STATE_CONNECTED: {
-                    intentAction = BroadcastActions.ACTION_GATT_CONNECTED;
-                    mConnectionState = STATE_CONNECTED;
-                    //broadcastUpdate(intentAction);
-                    Log.i(TAG, "Connected to GATT server.");
-                    Log.i(TAG, "Attempting to start service discovery:" +
-                            mBluetoothGatt.discoverServices());
+                    case BluetoothProfile.STATE_CONNECTING: {
+                        intentAction = BroadcastActions.ACTION_GATT_CONNECTING;
+                        mConnectionState = STATE_CONNECTING;
+                        Log.i(TAG, "Disconnected from GATT server.");
+                        //broadcastUpdate(intentAction);
+                        Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                        mainIntent.putExtra("status", intentAction);
+                        sendBroadcast(mainIntent);
+                        break;
+                    }
+                    case BluetoothProfile.STATE_CONNECTED: {
+                        intentAction = BroadcastActions.ACTION_GATT_CONNECTED;
+                        mConnectionState = STATE_CONNECTED;
+                        //broadcastUpdate(intentAction);
+                        Log.i(TAG, "Connected to GATT server.");
+                        Log.i(TAG, "Attempting to start service discovery:" +
+                                mBluetoothGatt.discoverServices());
 
-                    Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                    mainIntent.putExtra("status", intentAction);
-                    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
-                    mainIntent.putExtra("macAddress", mBluetoothDeviceAddress);
-                    sendBroadcast(mainIntent);
-                    break;
+                        Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                        mainIntent.putExtra("status", intentAction);
+                        // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+                        mainIntent.putExtra("macAddress", mBluetoothDeviceAddress);
+                        sendBroadcast(mainIntent);
+                        callbackErrorTimes = 0;
+                        break;
+                    }
+                    case BluetoothProfile.STATE_DISCONNECTING: {
+                        intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
+                        mConnectionState = STATE_DISCONNECTING;
+                        Log.i(TAG, "Disconnected from GATT server.");
+                        //broadcastUpdate(intentAction);
+                        break;
+                    }
                 }
-                case BluetoothProfile.STATE_DISCONNECTING: {
-                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
-                    mConnectionState = STATE_DISCONNECTING;
-                    Log.i(TAG, "Disconnected from GATT server.");
-                    //broadcastUpdate(intentAction);
-                    break;
+            } else {
+                //重連機制
+                callbackErrorTimes++;
+                Log.d(TAG, "onConnectionStateChange received: " + status);
+                //intentAction = "GATT_STATUS_133";
+                mConnectionState = STATE_DISCONNECTED;
+                close(); // 防止出现status 133
+                //Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                //mainIntent.putExtra("status", intentAction);
+                //sendBroadcast(mainIntent);
+                SharedPreferences share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE);
+                //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
+                mBluetoothDeviceAddress = share.getString("mac", "noValue");
+                if (!mBluetoothDeviceAddress.equals("noValue") && callbackErrorTimes < 5) {
+                    connect(mBluetoothDeviceAddress);
                 }
             }
         }
@@ -454,8 +475,8 @@ public class UartService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        mBluetoothGatt.disconnect();
         disableTXNotification();
+        mBluetoothGatt.disconnect();
     }
 
     /**
@@ -511,6 +532,7 @@ public class UartService extends Service {
             showMessage("Rx service not found!");
             //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+            callbackErrorTimes++;
             return;
         }
         BluetoothGattCharacteristic TxChar = RxService.getCharacteristic(TX_CHAR_UUID);
@@ -518,12 +540,14 @@ public class UartService extends Service {
             showMessage("Tx characteristic not found!");
             //broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
             sendToMainBroadcast(DEVICE_DOES_NOT_SUPPORT_UART);
+            callbackErrorTimes++;
             return;
         }
         mBluetoothGatt.setCharacteristicNotification(TxChar, true);
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
+        callbackErrorTimes = 0;
 
     }
 
@@ -675,6 +699,7 @@ public class UartService extends Service {
                     break;
                 case DEVICE_DOES_NOT_SUPPORT_UART:
                     showMessage("Device Does Not support UART. Disconnecting");
+                    if (callbackErrorTimes < 5) { enableTXNotification(); }
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_ON:
@@ -1081,8 +1106,8 @@ public class UartService extends Service {
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
                             Log.d("0xB4", countForItemTime.toString());
                             countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
-                            //這行應該用不到
-                            //if (countForItem > 1440) { countForItem = 1440; }
+                            //當小於0的時候讓它等於0
+                            if (countForItem < 0) { countForItem = 0; }
                             Log.d("0xB4countItem", Long.toString(countForItem));
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
