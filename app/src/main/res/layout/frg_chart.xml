@@ -292,16 +292,6 @@
 -->
             </RelativeLayout>
 
-            <ImageView
-                android:id="@+id/imgBarBase"
-                android:layout_width="10dp"
-                android:layout_height="15dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_weight="1"
-                android:src="@android:color/white"
-                android:visibility="invisible" />
-
         </RelativeLayout>
 
         <com.microjet.airqi2.CustomAPI.FixBarChart

@@ -33,6 +33,7 @@ import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.FixBarChart
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
@@ -104,7 +105,8 @@ class ChartFragment: Fragment() {
 
 
     var counter = 0
-    var TVOCAVG = 0
+    var valueIntAVG=0
+    var valueFloatAVG=0.0
     //Andy
     //private val arrayAvgData = ArrayList<String>()
     var UseFor=0
@@ -131,7 +133,7 @@ class ChartFragment: Fragment() {
             labelTextViewArray[i].y=lineRectFArray[i].top - (labelTextViewArray[i].height / 2f )
             labelTextViewArray[i].x=mChart!!.x-labelTextViewArray[i].width.toFloat()
         }
-        labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/1.28f  //放置最底層的標籤
+    //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
         if (!chartIsShowMinTextView){
             labelTextViewArray[0].visibility=View.INVISIBLE
         }
@@ -546,6 +548,22 @@ class ChartFragment: Fragment() {
         }
     }
 
+    private fun getDeviceData() {
+        when (UseFor) {
+            DEFINE_FRAGMENT_TVOC->{
+                if (mConnectStatus && !downloadingData) {
+                    val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                    intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
+                    context.sendBroadcast(intent)
+                    Log.d("Fragment"+UseFor.toString(),"getDeviceData")
+                }
+            }
+            else->{
+            }
+        }
+
+    }
+
     private fun setProgressBarMax(input: Int) {
         mProgressBar?.progress = 0
         mProgressBar?.max = input
@@ -584,40 +602,51 @@ class ChartFragment: Fragment() {
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay"+UseFor.toString(), result1.size.toString())
-        var sumTvoc = 0
+        var avgValueFloat=0.0f
+        var avgValueInt=0
+        var sumValueFloat=0.0f
+        var sumValueInt=0
+
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrData.add("0")
             arrTime.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
-        var aveTvoc=0
+
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
-                when(UseFor)
-                {
+                when(UseFor) {
                     DEFINE_FRAGMENT_TVOC ->{
                         arrData[count] = asmDataModel.tvocValue.toString()
+                        sumValueInt += arrData[count].toInt()
                     }
                     DEFINE_FRAGMENT_ECO2 ->{
                         arrData[count] = asmDataModel.ecO2Value.toString()
+                        sumValueInt += arrData[count].toInt()
                     }
                     DEFINE_FRAGMENT_TEMPERATURE ->{
                         arrData[count] = asmDataModel.tempValue.toString()
+                        sumValueFloat += arrData[count].toFloat()
                     }
                     DEFINE_FRAGMENT_HUMIDITY->{
                         arrData[count] = asmDataModel.humiValue.toString()
+                        sumValueInt += arrData[count].toInt()
                     }
                 }
-
-                //20180122
-                sumTvoc += arrData[count].toInt()
                 //Log.v("hilightCount:", count.toString())
             }
             Log.d("getRealmDay"+UseFor.toString(), result1.last().toString())
             //20180122
-            aveTvoc = (sumTvoc / result1.size)
+            when(UseFor) {
+                DEFINE_FRAGMENT_TEMPERATURE->{
+                    avgValueFloat = (sumValueFloat / result1.size)
+                }
+                else->{
+                    avgValueInt = (sumValueInt / result1.size)
+                }
+            }
         }
         //前一天的0點起
         val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
@@ -635,14 +664,14 @@ class ChartFragment: Fragment() {
         //val realm= Realm.getDefaultInstance()
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
-        var AVGTvoc3 :Float= 0F
+        var AVGTvoc3 = 0.0F
         Log.d("getRealmWeek"+UseFor.toString(), sqlStartDate.toString())
         Log.d("getRealmWeek"+UseFor.toString(), sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
         val result2 = query1.findAll()
         Log.d("getRealmWeek"+UseFor.toString(), result2.size.toString())
         if (result2.size != 0) {
-            var sumYesterday = 0F
+            var sumYesterday = 0.0F
             for (i in result2) {
                 when(UseFor)
                 {
@@ -664,24 +693,23 @@ class ChartFragment: Fragment() {
         } else {
             AVGTvoc3=0.0F
         }
-
         //}
         when(UseFor)
         {
             DEFINE_FRAGMENT_TVOC ->{
-                result_Today!!.text = aveTvoc.toString() + " ppb"
+                result_Today!!.text = avgValueInt.toString() + " ppb"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
             }
             DEFINE_FRAGMENT_ECO2 ->{
-                result_Today!!.text = aveTvoc.toString() + " ppm"
+                result_Today!!.text = avgValueInt.toString() + " ppm"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppm"
             }
             DEFINE_FRAGMENT_TEMPERATURE ->{
-                result_Today!!.text = aveTvoc.toFloat().toString() + " ℃"
-                result_Yesterday!!.text = AVGTvoc3.toString()+ " ℃"
+                result_Today!!.text = "%.1f".format(avgValueFloat) + " ℃"
+                result_Yesterday!!.text = "%.1f".format(AVGTvoc3)+ " ℃"
             }
             DEFINE_FRAGMENT_HUMIDITY->{
-                result_Today!!.text = aveTvoc.toString() + " %"
+                result_Today!!.text = avgValueInt.toString() + " %"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " %"
             }
         }
@@ -925,19 +953,64 @@ class ChartFragment: Fragment() {
                     }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    if (!downloadingData && !downloadComplete) {
+                        getDeviceData()
+                        downloadingData = true
+                    }
                     val bundle = intent.extras
+                    var tvocVal="0"
+                    var eco2Val="0"
+                    var tempVal="0"
+                    var humiVal="0"
+                    when (UseFor){
+                        DEFINE_FRAGMENT_TVOC ->{
+                            tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                        }
+                        DEFINE_FRAGMENT_ECO2 ->{
+                            eco2Val = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                        }
+                        DEFINE_FRAGMENT_TEMPERATURE ->{
+                            tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                        }
+                        DEFINE_FRAGMENT_HUMIDITY->{
+                            humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                        }
+                    }
 
-                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     if(preHeat == "255") {
                         //新增AnimationCount
                         animationCount++
                         counter++
-                        TVOCAVG += humiVal.toInt()
+                        when (UseFor){
+                            DEFINE_FRAGMENT_TVOC ->{
+                                valueIntAVG += tvocVal.toInt()
+                            }
+                            DEFINE_FRAGMENT_ECO2 ->{
+                                valueIntAVG += eco2Val.toInt()
+                            }
+                            DEFINE_FRAGMENT_TEMPERATURE ->{
+                                valueFloatAVG += tempVal.toFloat()
+                            }
+                            DEFINE_FRAGMENT_HUMIDITY->{
+                                valueIntAVG += humiVal.toInt()
+                            }
+                        }
+
                         if (counter % getDataCycle == 0) {
                             counter = 0
-                            TVOCAVG /= getDataCycle
-                            TVOCAVG = 0
+                            when (UseFor){
+                                DEFINE_FRAGMENT_TEMPERATURE->{
+                                    valueFloatAVG /= getDataCycle
+                                    valueFloatAVG = 0.0
+                                }
+                                else ->{
+                                    valueIntAVG /= getDataCycle
+                                    valueIntAVG = 0
+                                }
+                            }
+
                         }
                     }
                 }
