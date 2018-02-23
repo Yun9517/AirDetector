@@ -151,6 +151,7 @@ public class UartService extends Service {
     private NotificationManager notificationManager=null;
     private int counterB5 = 1;
     private int callbackErrorTimes = 0;
+    private Handler errHandler = new Handler();
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -213,6 +214,33 @@ public class UartService extends Service {
                         break;
                     }
                 }
+            } else if (status == BluetoothGatt.GATT_CONNECTION_CONGESTED) {
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Log.i(TAG, "Disconnected from GATT server.");
+                //broadcastUpdate(intentAction);
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                mConnectionState = STATE_DISCONNECTED;
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();
+            } else if (status == 19){
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Log.i(TAG, "Disconnected from GATT server.");
+                //broadcastUpdate(intentAction);
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                mConnectionState = STATE_DISCONNECTED;
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();
+                Log.d("UART","裝置斷線");
             } else {
                 //重連機制
                 callbackErrorTimes++;
@@ -227,9 +255,16 @@ public class UartService extends Service {
                 //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
                 mBluetoothDeviceAddress = share.getString("mac", "noValue");
                 if (!mBluetoothDeviceAddress.equals("noValue") && callbackErrorTimes < 5) {
-                    connect(mBluetoothDeviceAddress);
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            connect(mBluetoothDeviceAddress);
+                        }
+                    };
+                    errHandler.postDelayed(runnable,1000);
                 }
             }
+            Log.d("UARTCallBackStatus",Integer.toString(status));
         }
 
         @Override
@@ -699,7 +734,7 @@ public class UartService extends Service {
                     break;
                 case DEVICE_DOES_NOT_SUPPORT_UART:
                     showMessage("Device Does Not support UART. Disconnecting");
-                    if (callbackErrorTimes < 5) { enableTXNotification(); }
+                    //if (callbackErrorTimes < 5) { enableTXNotification(); }
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_ON:
