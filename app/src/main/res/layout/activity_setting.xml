@@ -195,7 +195,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
-            android:text="LED指示燈"
+            android:text="@string/led_light"
             android:textSize="18sp" />
 
         <android.support.v7.widget.SwitchCompat

@@ -154,6 +154,7 @@
 
     //20180206
     <string name="bat_switch">低电警告</string>
+    <string name="led_light">LED指示灯</string>
 
 </resources>
 

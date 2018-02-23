@@ -153,5 +153,6 @@
 
     //20180206
     <string name="bat_switch">L-Battery</string>
+    <string name="led_light">LED</string>
 
 </resources>
