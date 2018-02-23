@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 finish()
             }
             // Automatically connects to the device upon successful start-up initialization.
-            mUartService!!.connect(mDeviceAddress)
+            mUartService?.connect(mDeviceAddress)
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
@@ -571,7 +571,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
-            mUartService!!.disconnect()
+            mUartService?.disconnect()
         } else {
             Log.d("MAIN","BLEDISCONNTED ERROR")
         }
@@ -651,10 +651,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
                         print("MainActivity")
-                        if (mUartService != null) {
-                            val result = mUartService!!.connect(mDeviceAddress)
-                            Log.d(TAG, "Connect request result=" + result)
-                        }
+                        val result = mUartService?.connect(mDeviceAddress)
+                        Log.d(TAG, "Connect request result=" + result)
                     }
                 }
             }
@@ -859,6 +857,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
+        Log.d("MAINcheckUIState",connState.toString())
     }
 
 
