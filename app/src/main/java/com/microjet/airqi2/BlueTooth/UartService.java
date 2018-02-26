@@ -28,7 +28,6 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -38,7 +37,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -152,6 +150,11 @@ public class UartService extends Service {
     private int counterB5 = 1;
     private int callbackErrorTimes = 0;
     private Handler errHandler = new Handler();
+
+
+    // 20180226 add
+    private Boolean isFirstB0 = true;
+
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -172,6 +175,9 @@ public class UartService extends Service {
                         mConnectionState = STATE_DISCONNECTED;
                         dataNotSaved = 0;
                         arrB6.clear();
+
+                        isFirstB0 = true;
+
                         if (!mBluetoothAdapter.isEnabled()) {
                             close();
                         } else {
@@ -209,6 +215,7 @@ public class UartService extends Service {
                     case BluetoothProfile.STATE_DISCONNECTING: {
                         intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
                         mConnectionState = STATE_DISCONNECTING;
+
                         Log.i(TAG, "Disconnected from GATT server.");
                         //broadcastUpdate(intentAction);
                         break;
@@ -947,6 +954,9 @@ public class UartService extends Service {
     @SuppressLint("NewApi")
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
+
+        Log.e(TAG, "Get command response:" + Byte.toString(txValue[0]));
+
         switch (txValue[0]) {
             case (byte) 0xEA:
                 //當要印ByteArray的時候可以用
@@ -1005,6 +1015,9 @@ public class UartService extends Service {
             case (byte) 0xB5:
                 Log.d(TAG, "cmd:0xB5 feedback");
                 break;
+            case (byte) 0xB9:
+                Log.d(TAG, "cmd:0xB9 feedback");
+                break;
         }
 
         if (getErrorTime() >= 3) {
@@ -1032,14 +1045,21 @@ public class UartService extends Service {
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
 
+                    // 20180226 add
+                    if(isFirstB0) {
+                        isFirstB0 = false;
 
-                    if (  Integer.valueOf(RString.get(2)) < 221){
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+                    }
+
+
+                    if (Integer.valueOf(RString.get(2)) < 221){
                         //20180122  Andy
-                            countsound220=0;
-                            countsound660=0;
-                            countsound2200=0;
-                            countsound5500=0;
-                            countsound20000=0;
+                            countsound220 = 0;
+                            countsound660 = 0;
+                            countsound2200 = 0;
+                            countsound5500 = 0;
+                            countsound20000 = 0;
 
                             //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
                             //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
@@ -1290,6 +1310,20 @@ public class UartService extends Service {
                         arrB6.clear();
                         //timeSetNowToThirty();
                     }
+                    break;
+
+                case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
+                    int ledState = txValue[3];
+
+                    if(ledState == 1) {
+                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                false).apply();
+                    } else {
+                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                true).apply();
+                    }
+
+                    Log.e(TAG, "LED Status: " + ledState);
                     break;
             }
         }

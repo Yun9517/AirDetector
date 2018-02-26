@@ -211,6 +211,13 @@ object CallingTranslate {
     }
 
     // Device led control
+    fun GetLedStateCMD(): ByteArray {
+        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff, checkSum)
+    }
+
+    // Device led control
     fun SetLedOn(value: Boolean): ByteArray {
         val setVal = if(value) {
             Command_List.LedOn
