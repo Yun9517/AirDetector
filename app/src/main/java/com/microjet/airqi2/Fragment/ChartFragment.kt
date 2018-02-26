@@ -223,7 +223,20 @@ class ChartFragment: Fragment() {
         rightAxis.isEnabled = false
         mChart?.setDescription("")// clear default string
     }
+    override fun onSaveInstanceState(outState: Bundle?) {
 
+        outState?.putInt("UseFor", UseFor)
+        outState?.putInt("chartIntervalStep", chartIntervalStep)
+        outState?.putFloat("chartMin", chartMin)
+        outState?.putFloat("chartMax", chartMax)
+        outState?.putInt("chartIntervalStart", chartIntervalStart)
+        outState?.putInt("chartIntervalEnd", chartIntervalEnd)
+        outState?.putInt("chartLabelYCount", chartLabelYCount)
+        outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
+        outState?.putString("chartLabelUnit", chartLabelUnit)
+        outState?.putString("chartLabel", chartLabel)
+        super.onSaveInstanceState(outState)
+    }
 
     @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -238,6 +251,23 @@ class ChartFragment: Fragment() {
         faceBar=this.view?.findViewById(R.id.faceBar)
         //tvChartTitleMiddle = this.view?.findViewById(R.id.tvChartTitleMiddle)
         CharRelativeLayoutForLabel=this.view?.findViewById(R.id.RelativeLayoutForLabelTextView)
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            UseFor = savedInstanceState.getInt("UseFor")
+            chartIntervalStep= savedInstanceState.getInt("chartIntervalStep")
+            chartMin=savedInstanceState.getFloat("chartMin")
+            chartMax=savedInstanceState.getFloat("chartMax")
+            chartIntervalStart=savedInstanceState.getInt("chartIntervalStart")
+            chartIntervalEnd=savedInstanceState.getInt("chartIntervalEnd")
+            chartLabelYCount=savedInstanceState.getInt("chartLabelYCount")
+            chartIsShowMinTextView=savedInstanceState.getBoolean("chartIsShowMinTextView")
+            chartLabelUnit=savedInstanceState.getString("chartLabelUnit")
+            chartLabel=savedInstanceState.getString("chartLabel")
+
+        } else {
+            // Probably initialize members with default values for a new instance
+        }
+
         var j=0
         for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep)
         {
