@@ -146,7 +146,7 @@ class ECO2Fragment : Fragment() {
         show_Today = this.view!!.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
         result_Today = this.view?.findViewById(R.id.result_Today)
-        showAvg_ByTime=this.view?.findViewById(R.id.averageExposureByTime)
+        showAvg_ByTime = this.view?.findViewById(R.id.averageExposureByTime)
         mChart = this.view!!.findViewById(R.id.chart_line)
         mChart!!.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
@@ -396,7 +396,7 @@ class ECO2Fragment : Fragment() {
         nums.add(1000f)
 
         mChart!!.legend.isEnabled = false
-        mChart!!.yChartInterval=nums
+        mChart!!.yChartInterval = nums
 
         //   leftAxis.setDrawValues(false)
         //    leftAxis.setDraw
@@ -446,7 +446,7 @@ class ECO2Fragment : Fragment() {
             arrTvoc3.add("0")
             arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
-        var aveTvoc=0
+        var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
@@ -496,7 +496,7 @@ class ECO2Fragment : Fragment() {
             }
             AVGCo2 = (sumCO2Yesterday / result2.size)
         } else {
-            AVGCo2=0F
+            AVGCo2 = 0F
         }
 
         //}
@@ -685,8 +685,8 @@ class ECO2Fragment : Fragment() {
                 }
                 result_Today!!.text = getString(R.string.text_default_value)
                 result_Yesterday!!.text = getString(R.string.text_default_value)
-                show_Today!!.text=getString(R.string.text_default_value)
-                show_Yesterday!!.text=getString(R.string.text_default_value)
+                show_Today!!.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -700,8 +700,8 @@ class ECO2Fragment : Fragment() {
                 }
                 result_Today!!.text = getString(R.string.text_default_value)
                 result_Yesterday!!.text = getString(R.string.text_default_value)
-                show_Today!!.text=getString(R.string.text_default_value)
-                show_Yesterday!!.text=getString(R.string.text_default_value)
+                show_Today!!.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3", chartLabels.lastIndex.toString())
@@ -784,7 +784,7 @@ class ECO2Fragment : Fragment() {
                         //新增AnimationCount
                         animationCount++
 
-                        counter++
+                        counter ++
                         TVOCAVG += tvocVal.toInt()
                         if (counter % getDataCycle == 0) {
                             counter = 0
