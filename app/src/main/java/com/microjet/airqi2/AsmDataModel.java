@@ -16,6 +16,9 @@ public class AsmDataModel extends RealmObject {
     private String ECO2Value;
     private String PM25Value;
     private Long Created_time;
+    private String UpLoaded = "N";
+
+    public AsmDataModel(){}
 
     public Integer getDataId() {
         return id;
@@ -71,6 +74,14 @@ public class AsmDataModel extends RealmObject {
 
     public void setCreated_time(Long Created_time) {
         this.Created_time = Created_time;
+    }
+
+    public String getUpLoaded() {
+        return UpLoaded;
+    }
+
+    public void setUpLoaded(String UpLoaded) {
+        this.UpLoaded = UpLoaded;
     }
 
 }

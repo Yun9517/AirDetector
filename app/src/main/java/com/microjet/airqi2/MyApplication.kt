@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
+import android.util.Log
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import com.microjet.airqi2.BroadReceiver.PrimaryReceiver
@@ -36,7 +37,12 @@ class MyApplication : Application() {
         // The default Realm file is "default.realm" in Context.getFilesDir();
         // we'll change it to "myrealm.realm"
         Realm.init(this)
-        val config = RealmConfiguration.Builder().name("myrealm.realm").build()
+        //val config = RealmConfiguration.Builder().name("myrealm.realm").build()
+        val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(1).migration(RealmMigrations()).build()
+        Log.d("REALM",config.schemaVersion.toString())
+        Log.d("REALM",RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
+        Log.d("REALM",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
+
         Realm.setDefaultConfiguration(config)
 
         mPrimaryReceiver = PrimaryReceiver()

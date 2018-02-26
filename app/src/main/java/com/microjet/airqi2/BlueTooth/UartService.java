@@ -409,7 +409,7 @@ public class UartService extends Service {
         }
         realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
         try {
-            // ... Do something ...
+            Log.d("REALMUART",String.valueOf(realm.getConfiguration().getSchemaVersion()));
         } finally {
             realm.close();
         }
