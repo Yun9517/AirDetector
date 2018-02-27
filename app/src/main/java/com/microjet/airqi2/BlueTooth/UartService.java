@@ -1154,12 +1154,12 @@ public class UartService extends Service {
                         Realm realm = Realm.getDefaultInstance();
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
 
-                        RealmQuery query2 = realm.where(AsmDataModel.class);
-                        Object lastCreated = query2.findAll().sort("Created_time").last();
-                        Log.d("getRealmcount",lastCreated.toString());
-
                         if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                         if (maxCreatedTime != null) {
+                            RealmQuery query2 = realm.where(AsmDataModel.class);
+                            Object lastData = query2.findAll().sort("Created_time").last();
+                            Log.d("getRealmcount",lastData.toString());
+
                             //Long lastRowSaveTime = realm.where(AsmDataModel.class).equalTo("Created_time", maxCreatedTime.longValue())
                             //.findAll().first().getCreated_time().longValue();
                             Long nowTime = getMyDate().getTime();
