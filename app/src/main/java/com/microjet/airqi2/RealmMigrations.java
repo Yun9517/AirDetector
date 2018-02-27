@@ -24,7 +24,8 @@ public class RealmMigrations implements RealmMigration {
             userSchema.transform(new RealmObjectSchema.Function() {
                 @Override
                 public void apply(DynamicRealmObject obj) {
-                    obj.set("UpLoaded", "N");
+                    Log.d("REALMIGRA",obj.toString());
+                    obj.set("UpLoaded", "0");
                 }
             });
             oldVersion++;

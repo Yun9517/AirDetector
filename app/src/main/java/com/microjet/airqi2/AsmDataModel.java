@@ -16,7 +16,7 @@ public class AsmDataModel extends RealmObject {
     private String ECO2Value;
     private String PM25Value;
     private Long Created_time;
-    private String UpLoaded = "N";
+    private String UpLoaded = "0";
 
     public AsmDataModel(){}
 
