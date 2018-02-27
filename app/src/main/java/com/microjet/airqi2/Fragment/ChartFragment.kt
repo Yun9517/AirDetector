@@ -635,6 +635,13 @@ class ChartFragment: Fragment() {
         mTextViewTimeRange?.text = ""
     }
     private fun getRealmDay() {
+        //計算有幾筆未上傳
+        val realm2 = Realm.getDefaultInstance()
+        val query2 = realm2.where(AsmDataModel::class.java)
+        query2.equalTo("UpLoaded","N")
+        val upload = query2.findAll()
+        Log.d("getRealmcount",upload.size.toString())
+
         arrTime.clear()
         arrData.clear()
         //現在時間實體毫秒

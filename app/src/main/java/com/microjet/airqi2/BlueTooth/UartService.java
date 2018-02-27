@@ -48,6 +48,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
+
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
@@ -416,7 +418,7 @@ public class UartService extends Service {
         }
         realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
         try {
-            // ... Do something ...
+            Log.d("REALMUART",String.valueOf(realm.getConfiguration().getSchemaVersion()));
         } finally {
             realm.close();
         }
@@ -1151,6 +1153,11 @@ public class UartService extends Service {
                         //將資料庫最大時間與現在時間換算成Count
                         Realm realm = Realm.getDefaultInstance();
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
+
+                        RealmQuery query2 = realm.where(AsmDataModel.class);
+                        Object lastCreated = query2.findAll().sort("Created_time").last();
+                        Log.d("getRealmcount",lastCreated.toString());
+
                         if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                         if (maxCreatedTime != null) {
                             //Long lastRowSaveTime = realm.where(AsmDataModel.class).equalTo("Created_time", maxCreatedTime.longValue())
