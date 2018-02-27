@@ -106,7 +106,7 @@ public class CustomViewPager  extends ViewPager {
                 Log.e("Gesture CustomViewPager", "deltaX: " + deltaX + "  deltaY: " + deltaY);
                 // 這裡是否攔截的判斷依據是左右滑動，讀者可根據自己的邏輯進行是否攔截
 
-                if(mDownPosY > 230) {
+                if(mDownPosY > 230 && deltaX > 4) {
                     // 左右滑動不攔截
                     Log.e("Gesture CustomViewPager", "is Intercept: " + (deltaX < deltaY));
                     return deltaX < deltaY;
