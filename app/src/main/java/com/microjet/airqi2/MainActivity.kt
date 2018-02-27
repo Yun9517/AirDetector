@@ -385,7 +385,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageScrolled(position: Int, offset: Float,
                                         offsetPixels: Int) {
 
-                Log.e("offset:", offset.toString() + "")
+                //Log.e("offset:", offset.toString() + "")
             }
 
             override fun onPageSelected(position: Int) {
