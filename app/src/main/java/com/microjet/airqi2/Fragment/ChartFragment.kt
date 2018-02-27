@@ -350,16 +350,24 @@ class ChartFragment: Fragment() {
                 when (UseFor){
                     DEFINE_FRAGMENT_TVOC ->{
                         val temp = e?.`val`
-                        mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
+                        if (temp == 65538f) {
+                            mTextViewValue!!.text = "沒有偵測"
+                        } else {
+                            mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
+                        }
                     }
                     DEFINE_FRAGMENT_ECO2 ->{
                         val temp = e?.`val`
-                        mTextViewValue!!.text = temp?.toInt().toString()+" ppm"
+                        if (temp == 65538f) {
+                            mTextViewValue!!.text = "沒有偵測"
+                        } else {
+                            mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
+                        }
                     }
                     DEFINE_FRAGMENT_TEMPERATURE ->{
                         val temp: Float? = e?.`val`
                         val temp1: Float? = (temp!! - 10.0f)
-                        if (temp1!! <= -10.0f) {
+                        if (temp1!! == 65528f) {
                             mTextViewValue!!.text = "---" + " ℃"
                         }else{
                             val newTemp = "%.1f".format(temp1)
@@ -368,7 +376,12 @@ class ChartFragment: Fragment() {
                     }
                     DEFINE_FRAGMENT_HUMIDITY->{
                         val temp = e?.`val`
-                        mTextViewValue!!.text = temp?.toInt().toString() + " %"
+                        if (temp == 65538f) {
+                            mTextViewValue!!.text = "沒有偵測"
+                        } else {
+                            mTextViewValue!!.text = temp?.toInt().toString() + " %"
+                        }
+
                     }
                 }
 
@@ -669,7 +682,7 @@ class ChartFragment: Fragment() {
 
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
-            arrData.add("0")
+            arrData.add("65538")
             arrTime.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
 
@@ -827,7 +840,7 @@ class ChartFragment: Fragment() {
                 arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
-                arrData.add("0")
+                arrData.add("65538")
                 arrTime.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
             }
         }
@@ -883,7 +896,7 @@ class ChartFragment: Fragment() {
                 arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
                 Log.d("getRealmMonth"+UseFor.toString(), result1.last().toString())
             } else {
-                arrData.add("0")
+                arrData.add("65538")
                 arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
