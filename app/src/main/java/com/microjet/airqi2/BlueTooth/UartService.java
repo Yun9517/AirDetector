@@ -1281,6 +1281,17 @@ public class UartService extends Service {
                         hashMapInB6.put("PM25Value",RString.get(4));
                         hashMapInB6.put("BatteryLife",RString.get(5));
                         hashMapInB6.put("CreatedTime",timeSetForB6());
+
+                        realm = Realm.getDefaultInstance();
+                        Number maxCreatedTime1 = realm.where(AsmDataModel.class).max("Created_time");
+
+                        if (maxCreatedTime1!= null) {
+                            Long maxTime = maxCreatedTime1.longValue();
+                            if (hashMapInB6.get("CreatedTime") == maxTime) {
+                                hashMapInB6.clear();
+                                return;
+                            }
+                        }
                         arrB6.add(hashMapInB6);
                         //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                         dataNotSaved++;
