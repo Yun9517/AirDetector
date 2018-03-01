@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 finish()
             }
             // Automatically connects to the device upon successful start-up initialization.
-            mUartService!!.connect(mDeviceAddress)
+            mUartService?.connect(mDeviceAddress)
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
@@ -356,8 +356,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mTvocFg=ChartFragment()
         val mEco2Fg=ChartFragment()
         val mTempFg=ChartFragment()
-        mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTvocFg.ConfigFragment(DEFINE_FRAGMENT_TVOC)
+        mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTempFg.ConfigFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.ConfigFragment(DEFINE_FRAGMENT_HUMIDITY)
 
@@ -385,7 +385,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageScrolled(position: Int, offset: Float,
                                         offsetPixels: Int) {
 
-                Log.e("offset:", offset.toString() + "")
+                //Log.e("offset:", offset.toString() + "")
             }
 
             override fun onPageSelected(position: Int) {
@@ -586,7 +586,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
-            mUartService!!.disconnect()
+            mUartService?.disconnect()
         } else {
             Log.d("MAIN","BLEDISCONNTED ERROR")
         }
@@ -666,10 +666,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
                         print("MainActivity")
-                        if (mUartService != null) {
-                            val result = mUartService!!.connect(mDeviceAddress)
-                            Log.d(TAG, "Connect request result=" + result)
-                        }
+                        val result = mUartService?.connect(mDeviceAddress)
+                        Log.d(TAG, "Connect request result=" + result)
                     }
                 }
             }
@@ -831,6 +829,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
                     battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
+                    heatingPanelHide()
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
@@ -874,6 +873,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
+        Log.d("MAINcheckUIState",connState.toString())
     }
 
 

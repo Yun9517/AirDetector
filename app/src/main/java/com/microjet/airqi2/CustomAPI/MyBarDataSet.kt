@@ -1,5 +1,6 @@
 package com.microjet.airqi2.CustomAPI
 
+import android.graphics.Color
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 
@@ -22,6 +23,8 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                     in 661..2200 -> mColors[2]      //O
                     in 2201..5500 -> mColors[3]     //R
                     in 5501..20000 -> mColors[4]    //P
+                    //20180227未偵測值
+                    in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[5]              //B
                 }
             }
@@ -32,6 +35,7 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                     in 1001..1500 -> mColors[2]      //O
                     in 1501..2500 -> mColors[3]     //R
                     in 2501..5000 -> mColors[4]     //P
+                    in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[5]              //B
                 }
             }
@@ -39,6 +43,7 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                 return when (getEntryForXIndex(index).`val`) {
                     in 28..34 -> mColors[1]         //Green
                     in 35..200 -> mColors[2]        //Red
+                    in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[0]              //Blue
                 }
             }
@@ -46,6 +51,7 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                 return when(getEntryForXIndex(index).`val`) {
                     in 0..44 -> mColors[0]         //Blue
                     in 45..65 -> mColors[1]       //Green
+                    in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[2]             //Red
                 }
             }

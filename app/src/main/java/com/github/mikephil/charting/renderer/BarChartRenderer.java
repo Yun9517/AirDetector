@@ -439,9 +439,11 @@ public class BarChartRenderer extends DataRenderer {
                         y1 = e.getVal();
                         y2 = 0.f;
                     }
-
                     prepareBarHighlight(x, y1, y2, barspaceHalf, trans);
-
+                    //20180227未偵測值無法偵測不會讓可點
+                    if (y1 == 65538f) {
+                        continue;
+                    }
                     c.drawRect(mBarRect, mHighlightPaint);
 
                     if (mChart.isDrawHighlightArrowEnabled()) {

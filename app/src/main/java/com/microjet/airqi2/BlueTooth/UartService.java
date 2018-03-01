@@ -28,7 +28,6 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -38,7 +37,6 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -50,6 +48,9 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
@@ -118,8 +119,8 @@ public class UartService extends Service {
     private int countsound20000 = 0;
 
 
-    private int countsound800=0;
-    private int countsound1500=0;
+    private int countsound800 = 0;
+    private int countsound1500 = 0;
     //20180122
     private SoundPool soundPool= null;
     private Vibrator mVibrator = null;
@@ -148,9 +149,15 @@ public class UartService extends Service {
     private int dataNotSaved = 0;
     private ArrayList<HashMap> arrB6 = new ArrayList();
 
-    private NotificationManager notificationManager=null;
+    private NotificationManager notificationManager = null;
     private int counterB5 = 1;
     private int callbackErrorTimes = 0;
+    private Handler errHandler = new Handler();
+
+
+    // 20180226 add
+    private Boolean isFirstB0 = true;
+
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -171,6 +178,9 @@ public class UartService extends Service {
                         mConnectionState = STATE_DISCONNECTED;
                         dataNotSaved = 0;
                         arrB6.clear();
+
+                        isFirstB0 = true;
+
                         if (!mBluetoothAdapter.isEnabled()) {
                             close();
                         } else {
@@ -208,28 +218,68 @@ public class UartService extends Service {
                     case BluetoothProfile.STATE_DISCONNECTING: {
                         intentAction = BroadcastActions.ACTION_GATT_DISCONNECTING;
                         mConnectionState = STATE_DISCONNECTING;
+
                         Log.i(TAG, "Disconnected from GATT server.");
                         //broadcastUpdate(intentAction);
                         break;
                     }
                 }
+            } else if (status == BluetoothGatt.GATT_CONNECTION_CONGESTED) {
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Log.i(TAG, "Disconnected from GATT server.");
+                //broadcastUpdate(intentAction);
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                mConnectionState = STATE_DISCONNECTED;
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();
+            } else if (status == 19){
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Log.i(TAG, "Disconnected from GATT server.");
+                //broadcastUpdate(intentAction);
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                mConnectionState = STATE_DISCONNECTED;
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();
+                Log.d("UART","裝置斷線");
             } else {
                 //重連機制
                 callbackErrorTimes++;
                 Log.d(TAG, "onConnectionStateChange received: " + status);
                 //intentAction = "GATT_STATUS_133";
                 mConnectionState = STATE_DISCONNECTED;
-                close(); // 防止出现status 133
-                //Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                //mainIntent.putExtra("status", intentAction);
-                //sendBroadcast(mainIntent);
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();// 防止出现status 133
                 SharedPreferences share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE);
                 //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
                 mBluetoothDeviceAddress = share.getString("mac", "noValue");
                 if (!mBluetoothDeviceAddress.equals("noValue") && callbackErrorTimes < 5) {
-                    connect(mBluetoothDeviceAddress);
+                    Runnable runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            connect(mBluetoothDeviceAddress);
+                        }
+                    };
+                    errHandler.postDelayed(runnable,1000);
                 }
             }
+            Log.d("UARTCallBackStatus",Integer.toString(status));
         }
 
         @Override
@@ -374,7 +424,7 @@ public class UartService extends Service {
         }
         realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
         try {
-            // ... Do something ...
+            Log.d("REALMUART",String.valueOf(realm.getConfiguration().getSchemaVersion()));
         } finally {
             realm.close();
         }
@@ -699,7 +749,7 @@ public class UartService extends Service {
                     break;
                 case DEVICE_DOES_NOT_SUPPORT_UART:
                     showMessage("Device Does Not support UART. Disconnecting");
-                    if (callbackErrorTimes < 5) { enableTXNotification(); }
+                    //if (callbackErrorTimes < 5) { enableTXNotification(); }
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_ON:
@@ -912,6 +962,9 @@ public class UartService extends Service {
     @SuppressLint("NewApi")
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
+
+        Log.e(TAG, "Get command response:" + Byte.toString(txValue[0]));
+
         switch (txValue[0]) {
             case (byte) 0xEA:
                 //當要印ByteArray的時候可以用
@@ -970,6 +1023,9 @@ public class UartService extends Service {
             case (byte) 0xB5:
                 Log.d(TAG, "cmd:0xB5 feedback");
                 break;
+            case (byte) 0xB9:
+                Log.d(TAG, "cmd:0xB9 feedback");
+                break;
         }
 
         if (getErrorTime() >= 3) {
@@ -997,14 +1053,21 @@ public class UartService extends Service {
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
 
+                    // 20180226 add
+                    if(isFirstB0) {
+                        isFirstB0 = false;
 
-                    if (  Integer.valueOf(RString.get(2)) < 221){
+                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+                    }
+
+
+                    if (Integer.valueOf(RString.get(2)) < 221){
                         //20180122  Andy
-                            countsound220=0;
-                            countsound660=0;
-                            countsound2200=0;
-                            countsound5500=0;
-                            countsound20000=0;
+                            countsound220 = 0;
+                            countsound660 = 0;
+                            countsound2200 = 0;
+                            countsound5500 = 0;
+                            countsound20000 = 0;
 
                             //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
                             //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
@@ -1093,8 +1156,14 @@ public class UartService extends Service {
                         //將時間秒數寫入設定為 00  或  30
                         timeSetNowToThirty(b4correctTime);
                         //Realm 資料庫
-                        //將資料庫最大時間與現在時間換算成Count
                         Realm realm = Realm.getDefaultInstance();
+                        //計算有幾筆未上傳
+                        RealmQuery condition = realm.where(AsmDataModel.class).equalTo("UpLoaded","0");
+                        RealmResults notupload = condition.findAll();
+                        if (notupload != null) {
+                            Log.d("NOTUPLOAD",String.valueOf(notupload.size()));
+                        }
+                        //將資料庫最大時間與現在時間換算成Count
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
                         if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                         if (maxCreatedTime != null) {
@@ -1255,6 +1324,20 @@ public class UartService extends Service {
                         arrB6.clear();
                         //timeSetNowToThirty();
                     }
+                    break;
+
+                case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
+                    int ledState = txValue[3];
+
+                    if(ledState == 1) {
+                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                false).apply();
+                    } else {
+                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                true).apply();
+                    }
+
+                    Log.e(TAG, "LED Status: " + ledState);
                     break;
             }
         }
@@ -1438,23 +1521,21 @@ public class UartService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE1(ArrayList<String> BEBERString) {
         //20180124
-        ArrayList<String> bebe1RString=BEBERString;
+        ArrayList<String> bebe1RString = BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound220 == 5 || countsound220 == 0)) {
             //20180102   Andy叫叫ABC
             //mp = MediaPlayer.create (this, R.raw.pixiedust);
             //20171226  Andy
-            countsound660=0;
-            countsound2200=0;
-            countsound5500=0;
-            countsound20000=0;
-            Log.e("更新TVOC660計數變數:", Integer.toString(countsound660));
-            Log.e("更新TVOC2200計數變數:", Integer.toString(countsound2200));
-            Log.e("更新TVOC5500計數變數:", Integer.toString(countsound5500));
-            Log.e("更新TVOC20000計數變數:", Integer.toString(countsound20000));
+            countsound660 = 0;
+            countsound2200 = 0;
+            countsound5500 = 0;
+            countsound20000 = 0;
+            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
+                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
+                    "20000:" + Integer.toString(countsound20000));
 
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
                 //20171220   Andy
                 try {
@@ -1467,65 +1548,23 @@ public class UartService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)) {
                 //if ((countsound800 == 5 || countsound800 == 0)) {
-                if (mVibrator == null) {
-                } else {
+                if (mVibrator != null) {
                     // 震动 1s
                     mVibrator.vibrate(1000);
                 }
                 //}
 
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
 
-                if (isAppIsInBackground(nowActivity)) try {
-                    NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                    bigStyle.bigText(getString((R.string.text_message_air_mid)));
-                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02))
-                            .setContentTitle(getString(R.string.warning_title_Yellow))
-                            //.setColor(Color.RED)
-                            //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                            //.setContentText(getString(R.string.text_message_air_bad))
-                            .setStyle(bigStyle)
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setAutoCancel(true) // 點擊完notification自動消失
-                            .build();
-                    //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    //assert notificationManager != null;
-                    //20180103   Andy
-                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                    Intent intent = new Intent(this, MainActivity.class);
-                    //當使用者點擊通知Bar時，切換回MainActivity
-                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    notification.contentIntent = pi;
-                    //20180109   Andy
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notificationHelper = new NotificationHelper(this);
-                        //20180123
-                        notificationHelper.set_TCOC_Value(Integer.parseInt(bebe1RString.get(2)));//RString.get(2)));
-                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Yellow), getString(R.string.text_message_air_mid));
-                        notificationHelper.notify(REQUEST_CODE, NB);
-                    } else {
-                        //送到手機的通知欄
-                        notificationManager.notify(1, notification);
-
-                        //20180209
-                        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                        //獲取電源管理器對象
-                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                        //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
-
-                        wl.acquire(2*1000L);
-                        //點亮屏幕
-                        wl.release();
-                        Log.e("休眠狀態下","喚醒螢幕");
-                    }
+                if (isAppIsInBackground(nowActivity))
+                    try {
+                        makeNotificationShow(R.drawable.history_face_icon_02,
+                                getString(R.string.warning_title_Yellow),
+                                getString(R.string.text_message_air_mid),
+                                bebe1RString.get(2));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1545,18 +1584,16 @@ public class UartService extends Service {
         SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound660 == 5 || countsound660 == 0)) {
 
-            countsound220=0;
-            countsound2200=0;
-            countsound5500=0;
-            countsound20000=0;
-            Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
-            Log.e("更新TVOC2200計數變數:", Integer.toString(countsound2200));
-            Log.e("更新TVOC5500計數變數:", Integer.toString(countsound5500));
-            Log.e("更新TVOC20000計數變數:", Integer.toString(countsound20000));
+            countsound220 = 0;
+            countsound2200 = 0;
+            countsound5500 = 0;
+            countsound20000 = 0;
+            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
+                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
+                    "20000:" + Integer.toString(countsound20000));
 
 
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&&(countsound220==5||countsound220==0))
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //20171219   Andy
                 //mp.start();
                 //20171220   Andy
@@ -1570,68 +1607,19 @@ public class UartService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if (mVibrator == null) {
-                } else {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)) {
+                if (mVibrator != null) {
                     // 震动 2s
                     mVibrator.vibrate(2000);
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-            {
-                if (isAppIsInBackground(nowActivity)) try {
-                    NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                    bigStyle.bigText(getString(R.string.text_message_air_Medium_Orange));
-                    @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                            .setPriority(NotificationCompat.PRIORITY_MAX)
-                            .setSmallIcon(R.mipmap.ic_launcher)
-                            .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_03))
-                            //.setColor(Color.BLUE)
-                            .setContentTitle(getString(R.string.warning_title_Orange))
-                            //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                            .setStyle(bigStyle)
-                            //.setTicker("通知首次出现在通知栏，带上升动画效果的")
-                            .setPriority(Notification.PRIORITY_DEFAULT)
-                            .setAutoCancel(true) // 點擊完notification自動消失
-                            .build();
-                    //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                    //assert notificationManager != null;
-
-                    //20180103   Andy
-                    // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                    Intent intent = new Intent(this, MainActivity.class);
-
-                    // 通知的時間
-                    notification.when = System.currentTimeMillis();
-
-                    //當使用者點擊通知Bar時，切換回MainActivity
-                    PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                            intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                    notification.contentIntent = pi;
-
-                    //20180109   Andy
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        notificationHelper = new NotificationHelper(this);
-                        notificationHelper.set_TCOC_Value(Integer.parseInt(bebe2RString.get(2)));//RString.get(2)));
-                        Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Orange), getString(R.string.text_message_air_Medium_Orange));
-                        notificationHelper.notify(REQUEST_CODE, NB);
-                    }else{
-                        //送到手機的通知欄
-                        notificationManager.notify(1, notification);
-
-                        //20180209
-                        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                        //獲取電源管理器對象
-                        PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                        //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
-
-                        wl.acquire(2*1000L);
-                        //點亮屏幕
-                        wl.release();
-                        Log.e("休眠狀態下","喚醒螢幕");
-
-                    }
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
+                if (isAppIsInBackground(nowActivity))
+                    try {
+                        makeNotificationShow(R.drawable.history_face_icon_03,
+                                getString(R.string.warning_title_Orange),
+                                getString(R.string.text_message_air_Medium_Orange),
+                                bebe2RString.get(2));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -1651,21 +1639,19 @@ public class UartService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE3(ArrayList<String> BEBERString) {
         //20180124
-        ArrayList<String> bebe3RString=BEBERString;
+        ArrayList<String> bebe3RString = BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound2200 == 5 || countsound2200 == 0)) {
 
-            countsound220=0;
-            countsound660=0;
-            countsound5500=0;
-            countsound20000=0;
-            Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
-            Log.e("更新TVOC660計數變數:", Integer.toString(countsound660));
-            Log.e("更新TVOC5500計數變數:", Integer.toString(countsound5500));
-            Log.e("更新TVOC20000計數變數:", Integer.toString(countsound20000));
+            countsound220 = 0;
+            countsound660 = 0;
+            countsound5500 = 0;
+            countsound20000 = 0;
+            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
+                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
+                    "20000:" + Integer.toString(countsound20000));
 
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
                 //20171220   Andy
                 try {
@@ -1677,8 +1663,8 @@ public class UartService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
+
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)) {
                 //if ((countsound800 == 5 || countsound800 == 0)) {
                 if (mVibrator == null) {
                 } else {
@@ -1688,55 +1674,15 @@ public class UartService extends Service {
                 //}
 
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-            {
+
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
 
                 if (isAppIsInBackground(nowActivity)) {
                     try {
-                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                        bigStyle.bigText(getString(R.string.text_message_air_bad));
-                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_04))
-                                .setContentTitle(getString(R.string.warning_title_Red))
-                                //.setColor(Color.RED)
-                                //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                                //.setContentText(getString(R.string.text_message_air_bad))
-                                .setStyle(bigStyle)
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
-                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        //assert notificationManager != null;
-                        //20180103   Andy
-                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                        Intent intent = new Intent(this, MainActivity.class);
-                        //當使用者點擊通知Bar時，切換回MainActivity
-                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        notification.contentIntent = pi;
-                        //20180109   Andy
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationHelper = new NotificationHelper(this);
-                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe3RString.get(2)));//RString.get(2)));
-                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Red),getString(R.string.text_message_air_bad));
-                            notificationHelper.notify(REQUEST_CODE, NB);
-                        }else{
-                            //送到手機的通知欄
-                            notificationManager.notify(1, notification);
-
-                            //20180209
-                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                            //獲取電源管理器對象
-                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
-
-                            wl.acquire(2*1000L);
-                            //點亮屏幕
-                            wl.release();
-                            Log.e("休眠狀態下","喚醒螢幕");
-
-                        }
+                        makeNotificationShow(R.drawable.history_face_icon_04,
+                                getString(R.string.warning_title_Red),
+                                getString(R.string.text_message_air_bad),
+                                bebe3RString.get(2));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1757,17 +1703,15 @@ public class UartService extends Service {
         ArrayList<String> bebe4RString=BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound5500 == 5 || countsound5500 == 0)) {
-            countsound220=0;
-            countsound660=0;
-            countsound2200=0;
-            countsound20000=0;
-            Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
-            Log.e("更新TVOC660計數變數:", Integer.toString(countsound660));
-            Log.e("更新TVOC2200計數變數:", Integer.toString(countsound2200));
-            Log.e("更新TVOC20000計數變數:", Integer.toString(countsound20000));
+            countsound220 = 0;
+            countsound660 = 0;
+            countsound2200 = 0;
+            countsound20000 = 0;
+            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
+                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
+                    "20000:" + Integer.toString(countsound20000));
 
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
                 //20171220   Andy
                 try {
@@ -1779,66 +1723,23 @@ public class UartService extends Service {
                     e.printStackTrace();
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)) {
                 //if ((countsound800 == 5 || countsound800 == 0)) {
-                if (mVibrator == null) {
-                } else {
+                if (mVibrator != null) {
                     // 震动 1s
                     mVibrator.vibrate(4000);
                 }
                 //}
 
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
 
                 if (isAppIsInBackground(nowActivity)) {
                     try {
-                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                        bigStyle.bigText(getString(R.string.text_message_air_Serious_Purple));
-                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_05))
-                                .setContentTitle(getString(R.string.warning_title_Purple))
-                                //.setColor(Color.RED)
-                                //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                                //.setContentText(getString(R.string.text_message_air_bad))
-                                .setStyle(bigStyle)
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
-                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        //assert notificationManager != null;
-                        //20180103   Andy
-                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                        Intent intent = new Intent(this, MainActivity.class);
-                        //當使用者點擊通知Bar時，切換回MainActivity
-                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        notification.contentIntent = pi;
-                        //20180109   Andy
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationHelper = new NotificationHelper(this);
-                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe4RString.get(2)));//RString.get(2)));
-                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Purple),getString(R.string.text_message_air_Serious_Purple));
-                            notificationHelper.notify(REQUEST_CODE, NB);
-                        }else{
-                            //送到手機的通知欄
-                            notificationManager.notify(1, notification);
-
-                            //20180209
-                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                            //獲取電源管理器對象
-                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
-
-                            wl.acquire(2*1000L);
-                            //點亮屏幕
-                            wl.release();
-                            Log.e("休眠狀態下","喚醒螢幕");
-
-                        }
+                        makeNotificationShow(R.drawable.history_face_icon_05,
+                            getString(R.string.warning_title_Purple),
+                            getString(R.string.text_message_air_Serious_Purple),
+                                bebe4RString.get(2));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1856,90 +1757,43 @@ public class UartService extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE5(ArrayList<String> BEBERString) {
         //20180124
-        ArrayList<String> bebe5RString=BEBERString;
+        ArrayList<String> bebe5RString = BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound20000 == 5 || countsound20000 == 0)) {
-            countsound220=0;
-            countsound660=0;
-            countsound2200=0;
-            countsound5500=0;
-            Log.e("更新TVOC220計數變數:", Integer.toString(countsound220));
-            Log.e("更新TVOC660計數變數:", Integer.toString(countsound660));
-            Log.e("更新TVOC2200計數變數:", Integer.toString(countsound2200));
-            Log.e("更新TVOC20000計數變數:", Integer.toString(countsound20000));
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            countsound220 = 0;
+            countsound660 = 0;
+            countsound2200 = 0;
+            countsound5500 = 0;
+            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
+                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
+                    "20000:" + Integer.toString(countsound20000));
+
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
                 //20171220   Andy
                 try {
-                    //alertId = soundPool.load(this, R.raw.babuchimam, 1);
-                    //Thread.sleep(150);
-                    //soundPool.play(alertId, 1F, 1F, 0, 0, 1.0f);
                     playSound(SOUND5, 1.0f);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)) {
                 //if ((countsound800 == 5 || countsound800 == 0)) {
-                if (mVibrator == null) {
-                } else {
+                if (mVibrator != null) {
                     // 震动 1s
                     mVibrator.vibrate(5000);
                 }
                 //}
 
             }
-            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false))//&& (countsound660==5||countsound660==0)) {
-            {
+            if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
 
                 if (isAppIsInBackground(nowActivity)) {
                     try {
-                        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
-                        bigStyle.bigText(getString(R.string.text_message_air_Extreme_Dark_Purple));
-                        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
-                                .setSmallIcon(R.mipmap.ic_launcher)
-                                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_06))
-                                .setContentTitle(getString(R.string.warning_title_Brown))
-                                //.setColor(Color.RED)
-                                //.setBadgeIconType(R.drawable.app_android_icon_logo)
-                                //.setContentText(getString(R.string.text_message_air_bad))
-                                .setStyle(bigStyle)
-                                .setPriority(Notification.PRIORITY_DEFAULT)
-                                .setAutoCancel(true) // 點擊完notification自動消失
-                                .build();
-                        //NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        //assert notificationManager != null;
-                        //20180103   Andy
-                        // 需要注意的是，作为選項，此處可以设置MainActivity的啟動模式為singleTop，避免APP從開與重新產生onCreate()
-                        Intent intent = new Intent(this, MainActivity.class);
-                        //當使用者點擊通知Bar時，切換回MainActivity
-                        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
-                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                        notification.contentIntent = pi;
-                        //20180109   Andy
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            notificationHelper = new NotificationHelper(this);
-                            notificationHelper.set_TCOC_Value(Integer.parseInt(bebe5RString.get(2)));//RString.get(2)));
-                            Notification.Builder NB = notificationHelper.getNotification1(getString(R.string.warning_title_Brown),getString(R.string.text_message_air_Extreme_Dark_Purple));
-                            notificationHelper.notify(REQUEST_CODE, NB);
-                        }else{
-                            //送到手機的通知欄
-                            notificationManager.notify(1, notification);
-
-                            //20180209
-                            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                            //獲取電源管理器對象
-                            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
-                            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
-
-                            wl.acquire(2*1000L);
-                            //點亮屏幕
-                            wl.release();
-                            Log.e("休眠狀態下","喚醒螢幕");
-
-                        }
+                        makeNotificationShow(R.drawable.history_face_icon_06,
+                                getString(R.string.warning_title_Brown),
+                                getString(R.string.text_message_air_Extreme_Dark_Purple),
+                                bebe5RString.get(2));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -1954,7 +1808,47 @@ public class UartService extends Service {
         Log.e("TVOC20000計數變數:", Integer.toString(countsound20000));
     }
 
-    public NotificationHelper notificationHelper=null;
+    private void makeNotificationShow(int iconID, String title, String text, String value) {
+        NotificationCompat.BigTextStyle bigStyle = new NotificationCompat.BigTextStyle();
+        bigStyle.bigText(getString(R.string.text_message_air_Extreme_Dark_Purple));
+        @SuppressLint("ResourceAsColor") Notification notification = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), iconID))
+                .setContentTitle(title)
+                .setStyle(bigStyle)
+                .setPriority(Notification.PRIORITY_DEFAULT)
+                .setAutoCancel(true) // 點擊完notification自動消失
+                .build();
+        Intent intent = new Intent(this, MainActivity.class);
+        //當使用者點擊通知Bar時，切換回MainActivity
+        PendingIntent pi = PendingIntent.getActivity(this, REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.contentIntent = pi;
+        //20180109   Andy
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notificationHelper = new NotificationHelper(this);
+            notificationHelper.set_TCOC_Value(Integer.parseInt(value));//RString.get(2)));
+            Notification.Builder NB = notificationHelper.getNotification1(title, text);
+            notificationHelper.notify(REQUEST_CODE, NB);
+        } else {
+            //送到手機的通知欄
+            notificationManager.notify(1, notification);
+
+            //20180209
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            //獲取電源管理器對象
+            PowerManager.WakeLock wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP | PowerManager.SCREEN_DIM_WAKE_LOCK, "bright");
+            //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
+
+            wl.acquire(2 * 1000L);
+            //點亮屏幕
+            wl.release();
+            Log.e("休眠狀態下","喚醒螢幕");
+
+        }
+    }
+
+    public NotificationHelper notificationHelper = null;
 
     public void playSound(int sound, float fSpeed) {
         AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
@@ -1966,6 +1860,7 @@ public class UartService extends Service {
 
         soundPool.play(soundsMap.get(sound), volume, volume, 1, 0, fSpeed);
     }
+
     private final BroadcastReceiver mBluetoothStateBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(final Context context, final Intent intent) {
@@ -1977,11 +1872,6 @@ public class UartService extends Service {
             switch (state) {
                 case BluetoothAdapter.STATE_TURNING_OFF:
                 case BluetoothAdapter.STATE_OFF:
-                    //if (mConnected && previousState != BluetoothAdapter.STATE_TURNING_OFF && previousState != BluetoothAdapter.STATE_OFF) {
-                        // The connection is killed by the system, no need to gently disconnect
-                        //mGattCallback.notifyDeviceDisconnected(mBluetoothDevice);
-                    //}
-                    // Calling close() will prevent the STATE_OFF event from being logged (this receiver will be unregistered). But it doesn't matter.
                     disconnect();
                     break;
             }
