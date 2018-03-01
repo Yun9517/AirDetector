@@ -20,7 +20,12 @@ public class RealmMigrations implements RealmMigration {
         if (oldVersion < 1L) {
             RealmObjectSchema userSchema = schema.get("AsmDataModel");
             userSchema.addField("UpLoaded", String.class);
-            //userSchema.transform(obj -> obj.set("UpLoaded", "N"));
+            userSchema.addField("Longitude", Float.class);
+            userSchema.addField("Latitude", Float.class);
+            userSchema.transform(obj -> obj.set("UpLoaded", "0"));
+            userSchema.transform(obj -> obj.set("Longitude", 121.421151f));
+            userSchema.transform(obj -> obj.set("Latitude", 24.959817f));
+            /*
             userSchema.transform(new RealmObjectSchema.Function() {
                 @Override
                 public void apply(DynamicRealmObject obj) {
@@ -28,6 +33,7 @@ public class RealmMigrations implements RealmMigration {
                     obj.set("UpLoaded", "0");
                 }
             });
+            */
             oldVersion++;
         }
     }
