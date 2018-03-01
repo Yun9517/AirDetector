@@ -10,7 +10,6 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.AbsoluteSizeSpan
@@ -116,7 +115,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
             pumpOnStatus(beforeState, dataForState)
             checkUIState()
         }*/
-
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
@@ -314,6 +312,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             in 220..659 -> {
                 tvNotify?.text = getString(R.string.text_message_air_mid)
@@ -324,6 +324,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
             in 660..2199 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
@@ -334,6 +336,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
             in 2200..5499 -> {
                 tvNotify?.text = getString(R.string.text_message_air_bad)
@@ -344,6 +348,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             in 5500..19999 -> {
                 tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
@@ -354,6 +360,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_05)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
@@ -364,6 +372,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_06)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
         }
     }
@@ -379,6 +389,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             in 700..999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Yellow)
@@ -389,6 +401,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
             in 1000..1499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Orange)
@@ -399,6 +413,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
             in 1500..2499 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Red)
@@ -409,6 +425,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             in 2500..4999 -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Purple)
@@ -419,6 +437,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_05)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             else -> {
                 tvNotify?.text = getString(R.string.message_eCO2_Brown)
@@ -429,6 +449,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_06)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
         }
     }
@@ -444,6 +466,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             in 26..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -454,6 +478,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -464,6 +490,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
         }
     }
@@ -479,6 +507,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -489,6 +519,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
             else -> {
 
@@ -500,6 +532,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
         }
     }

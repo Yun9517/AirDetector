@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@drawable/background_chart">
+    android:background="@drawable/app_bg_cloud_green">
 
     <LinearLayout
         android:id="@+id/linearLayout4"
@@ -25,7 +25,7 @@
 
         <LinearLayout
             android:layout_width="1dp"
-            android:layout_height="45dp"
+            android:layout_height="48dp"
             android:background="@color/grayColor"
             android:orientation="horizontal" />
 
