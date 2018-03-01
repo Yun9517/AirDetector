@@ -38,7 +38,7 @@ class MyApplication : Application() {
         // we'll change it to "myrealm.realm"
         Realm.init(this)
         //val config = RealmConfiguration.Builder().name("myrealm.realm").build()
-        val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(1).migration(RealmMigrations()).build()
+        val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(2).migration(RealmMigrations()).build()
         Log.d("REALMAPP",config.schemaVersion.toString())
         Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
         Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
