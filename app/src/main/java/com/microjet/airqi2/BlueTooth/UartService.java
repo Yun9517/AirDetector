@@ -257,10 +257,15 @@ public class UartService extends Service {
                 Log.d(TAG, "onConnectionStateChange received: " + status);
                 //intentAction = "GATT_STATUS_133";
                 mConnectionState = STATE_DISCONNECTED;
-                close(); // 防止出现status 133
-                //Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                //mainIntent.putExtra("status", intentAction);
-                //sendBroadcast(mainIntent);
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();// 防止出现status 133
                 SharedPreferences share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE);
                 //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
                 mBluetoothDeviceAddress = share.getString("mac", "noValue");
