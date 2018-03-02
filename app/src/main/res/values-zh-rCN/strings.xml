@@ -156,6 +156,10 @@
     <string name="bat_switch">低电警告</string>
     <string name="led_light">LED指示灯</string>
 
+    //2018/03/02
+    <string name="auto_sync">自動同步雲端</string>
+    <string name="allow_3G">允許行動網路</string>
+
 </resources>
 
 

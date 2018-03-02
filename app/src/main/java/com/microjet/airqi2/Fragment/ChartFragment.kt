@@ -37,6 +37,8 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
+import kotlinx.android.synthetic.main.frg_chart.*
+import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -355,6 +357,8 @@ class ChartFragment: Fragment() {
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
                         }
+
+                        changeBackground(temp!!.toInt())
                     }
                     DEFINE_FRAGMENT_ECO2 ->{
                         val temp = e?.`val`
@@ -363,6 +367,8 @@ class ChartFragment: Fragment() {
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
                         }
+
+                        changeBackground(temp!!.toInt())
                     }
                     DEFINE_FRAGMENT_TEMPERATURE ->{
                         val temp: Float? = e?.`val`
@@ -373,6 +379,8 @@ class ChartFragment: Fragment() {
                             val newTemp = "%.1f".format(temp1)
                             mTextViewValue!!.text = newTemp + " ℃"
                         }
+
+                        changeBackground(temp!!.toInt())
                     }
                     DEFINE_FRAGMENT_HUMIDITY->{
                         val temp = e?.`val`
@@ -382,9 +390,9 @@ class ChartFragment: Fragment() {
                             mTextViewValue!!.text = temp?.toInt().toString() + " %"
                         }
 
+                        changeBackground(temp!!.toInt())
                     }
                 }
-
             }
         })
 
@@ -448,7 +456,7 @@ class ChartFragment: Fragment() {
 //                Log.d("TVOC","TOAST_ON")
 //            }
         }
-        when(UseFor){
+        when(UseFor) {
             DEFINE_FRAGMENT_TVOC ->{
                 CharLabel?.text = getString(R.string.text_label_tvoc)
                 faceBar?.setImageResource(R.drawable.face_bar_tvoc)
@@ -490,6 +498,66 @@ class ChartFragment: Fragment() {
     }
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_chart, container, false)
+
+    private fun changeBackground(input: Int) {
+        when(UseFor) {
+            DEFINE_FRAGMENT_TVOC -> {
+                when(input) {
+                    in 0..220 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    in 220..2199 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+                    }
+                    else -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                    }
+                }
+            }
+
+            DEFINE_FRAGMENT_ECO2 -> {
+                when(input) {
+                    in 0..699 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    in 700..1499 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+                    }
+                    else -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                    }
+                }
+            }
+
+            DEFINE_FRAGMENT_TEMPERATURE -> {
+                when(input) {
+                    in 18..25 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    in 26..200 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                    }
+                    else -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                }
+            }
+
+            DEFINE_FRAGMENT_HUMIDITY -> {
+                when(input) {
+                    in 45..65 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    in 66..100 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                    }
+                    else -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                }
+            }
+        }
+    }
 
     @Suppress("OverridingDeprecatedMember")
     override fun onAttach(activity: Activity?) {
@@ -1125,7 +1193,7 @@ class ChartFragment: Fragment() {
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(p, y - 1)
-            }, calObject.get(Calendar.HOUR_OF_DAY), calObject.get(Calendar.MINUTE), false)
+            }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
             tpd.setMessage("請選擇時間")
             tpd.show()
         }
