@@ -1,5 +1,6 @@
 package com.microjet.airqi2;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import io.realm.DynamicRealm;
@@ -27,8 +28,10 @@ public class RealmMigrations implements RealmMigration {
             RealmObjectSchema userSchema = schema.get("AsmDataModel");
             userSchema.addField("Longitude", Float.class);
             userSchema.addField("Latitude", Float.class);
+            userSchema.addField("MACAddress", String.class);
             userSchema.transform(obj -> obj.set("Longitude", 121.421151f));
             userSchema.transform(obj -> obj.set("Latitude", 24.959817f));
+            userSchema.transform(obj -> obj.set("MACAddress", "11:22:33:44:55:66"));
             oldVersion++;
         }
     }
