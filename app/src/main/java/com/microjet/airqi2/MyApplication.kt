@@ -74,6 +74,11 @@ class MyApplication : Application() {
             // Finally, combine the values we have found by using the UUID class to create a unique identifier
             return UUID(m_szDevIDShort.hashCode().toLong(), serial!!.hashCode().toLong()).toString()
         }
+
+        fun getSharePreferenceMAC(): String {
+            val share = applicationContext().getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+            return share.getString("mac", "11:22:33:44:55:66")
+        }
     }
 
     override fun onCreate() {
@@ -84,10 +89,10 @@ class MyApplication : Application() {
         // we'll change it to "myrealm.realm"
         Realm.init(this)
         //val config = RealmConfiguration.Builder().name("myrealm.realm").build()
-        val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(1).migration(RealmMigrations()).build()
-        Log.d("REALM",config.schemaVersion.toString())
-        Log.d("REALM",RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
-        Log.d("REALM",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
+        val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(2).migration(RealmMigrations()).build()
+        Log.d("REALMAPP",config.schemaVersion.toString())
+        Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
+        Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
 
         Realm.setDefaultConfiguration(config)
 
@@ -95,6 +100,4 @@ class MyApplication : Application() {
         val filter = IntentFilter(BroadcastIntents.PRIMARY)
         this.registerReceiver(mPrimaryReceiver, filter)
     }
-
-
 }
