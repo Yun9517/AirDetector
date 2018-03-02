@@ -11,6 +11,7 @@ import android.widget.*
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
@@ -234,6 +235,17 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                     isChecked).apply()
         }
+
+        swCloud.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                uploadCloud()
+                //text_bat_stat!!.text = getString(R.string.text_setting_on)
+            } else {
+                //text_bat_stat!!.text = getString(R.string.text_setting_off)
+            }
+            //mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
+                    //isChecked).apply()
+        }
     }
 
     private fun initActionBar() {
@@ -254,6 +266,13 @@ class SettingActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun uploadCloud() {
+        val realm = Realm.getDefaultInstance()
+        val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
+        Log.d("SETTCLOUD",result.toString())
+        
     }
 
 }
