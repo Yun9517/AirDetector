@@ -14,6 +14,9 @@ import io.realm.RealmSchema;
  */
 
 public class RealmMigrations implements RealmMigration {
+
+    private String MACADDR = MyApplication.Companion.getSharePreferenceMAC();
+
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
         RealmSchema schema = realm.getSchema();
@@ -31,7 +34,7 @@ public class RealmMigrations implements RealmMigration {
             userSchema.addField("MACAddress", String.class);
             userSchema.transform(obj -> obj.set("Longitude", 121.421151f));
             userSchema.transform(obj -> obj.set("Latitude", 24.959817f));
-            userSchema.transform(obj -> obj.set("MACAddress", "11:22:33:44:55:66"));
+            userSchema.transform(obj -> obj.set("MACAddress", MACADDR));
             oldVersion++;
         }
     }
