@@ -1193,7 +1193,7 @@ class ChartFragment: Fragment() {
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
                 mChart?.highlightValue(p, y - 1)
-            }, calObject.get(Calendar.HOUR_OF_DAY), calObject.get(Calendar.MINUTE), false)
+            }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
             tpd.setMessage("請選擇時間")
             tpd.show()
         }
