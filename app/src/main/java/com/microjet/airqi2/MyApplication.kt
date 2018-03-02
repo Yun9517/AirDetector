@@ -8,6 +8,9 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import com.microjet.airqi2.BroadReceiver.PrimaryReceiver
 import com.microjet.airqi2.Definition.BroadcastIntents
+import android.net.ConnectivityManager
+
+
 
 
 /**
@@ -25,8 +28,19 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
 
-        fun applicationContext() : Context {
+        fun applicationContext(): Context {
             return instance!!.applicationContext
+        }
+
+        fun getConnectStatus(): String {
+            val CM = instance!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+            val netInfo = CM!!.activeNetworkInfo
+
+            return if (netInfo != null && netInfo.isConnected) {
+                netInfo.typeName
+            } else {
+                "DISCONNECT"
+            }
         }
     }
 
