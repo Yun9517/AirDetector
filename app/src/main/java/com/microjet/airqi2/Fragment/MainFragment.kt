@@ -479,7 +479,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_03)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -533,7 +533,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_03)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
         }
     }
