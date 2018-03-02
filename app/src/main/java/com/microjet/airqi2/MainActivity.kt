@@ -176,6 +176,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180209
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        Log.d("MAINACUUID",MyApplication.getPsuedoUniqueID())
+
     }
 
     override fun onStart() {
