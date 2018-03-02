@@ -59,7 +59,7 @@
 
         <TextView
             android:id="@+id/textView8"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -92,7 +92,7 @@
 
         <TextView
             android:id="@+id/textView10"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -125,7 +125,7 @@
 
         <TextView
             android:id="@+id/textView12"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -158,7 +158,7 @@
 
         <TextView
             android:id="@+id/textView14"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -191,7 +191,7 @@
 
         <TextView
             android:id="@+id/textView15"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -217,26 +217,31 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"></LinearLayout>
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="visible"
+        android:background="#484848" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/textView13"
-            android:layout_width="75dp"
+            android:id="@+id/auto_sync"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
-            android:text="@string/bat_switch"
+            android:text="@string/auto_sync"
             android:textSize="18sp" />
 
         <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swPump"
+            android:id="@+id/swCloud"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
@@ -245,7 +250,7 @@
             android:theme="@style/SwitchCompatTheme" />
 
         <TextView
-            android:id="@+id/text_pump_stat"
+            android:id="@+id/text_cloud_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -254,6 +259,43 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+    <TextView
+        android:id="@+id/allow_3G"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:text="@string/allow_3G"
+        android:textSize="18sp" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/sw3G"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme" />
+
+    <TextView
+        android:id="@+id/text_3G_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"></LinearLayout>
 
     <TextView
         android:id="@+id/textView24"

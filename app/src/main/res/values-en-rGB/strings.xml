@@ -155,4 +155,8 @@
     <string name="bat_switch">L-Battery</string>
     <string name="led_light">LED</string>
 
+    //2018/03/02
+    <string name="auto_sync">Enable auto-sync</string>
+    <string name="allow_3G">Cellular Data</string>
+
 </resources>
