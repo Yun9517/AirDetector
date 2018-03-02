@@ -17,6 +17,9 @@ public class AsmDataModel extends RealmObject {
     private String PM25Value;
     private Long Created_time;
     private String UpLoaded = "0";
+    private Float Longitude = 121.421151f;
+    private Float Latitude = 24.959817f;
+    private String MACAddress = "11:22:33:44:55:66";
 
     public AsmDataModel(){}
 
@@ -76,12 +79,32 @@ public class AsmDataModel extends RealmObject {
         this.Created_time = Created_time;
     }
 
-    public String getUpLoaded() {
-        return UpLoaded;
+    public String getUpLoaded() { return UpLoaded; }
+
+    public void setUpLoaded(String UpLoaded) { this.UpLoaded = UpLoaded; }
+
+    public Float getLongitude() {
+        return Longitude;
     }
 
-    public void setUpLoaded(String UpLoaded) {
-        this.UpLoaded = UpLoaded;
+    public void setLongitude(Float Longitude) {
+        this.Longitude = Longitude;
+    }
+
+    public Float getLatitude() {
+        return Latitude;
+    }
+
+    public void setLatitude(Float Latitude) {
+        this.Latitude = Latitude;
+    }
+
+    public String getMACAddress() {
+        return MACAddress;
+    }
+
+    public void setMACAddress(String MACAddress) {
+        this.MACAddress = MACAddress;
     }
 
 }

@@ -158,6 +158,8 @@ public class UartService extends Service {
     // 20180226 add
     private Boolean isFirstB0 = true;
 
+    private String macAddressForDB = "11:22:33:44:55:77";
+
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -212,6 +214,7 @@ public class UartService extends Service {
                         // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
                         mainIntent.putExtra("macAddress", mBluetoothDeviceAddress);
                         sendBroadcast(mainIntent);
+                        macAddressForDB = mBluetoothDeviceAddress;
                         callbackErrorTimes = 0;
                         break;
                     }
@@ -257,10 +260,15 @@ public class UartService extends Service {
                 Log.d(TAG, "onConnectionStateChange received: " + status);
                 //intentAction = "GATT_STATUS_133";
                 mConnectionState = STATE_DISCONNECTED;
-                close(); // 防止出现status 133
-                //Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
-                //mainIntent.putExtra("status", intentAction);
-                //sendBroadcast(mainIntent);
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
+                Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
+                mainIntent.putExtra("status", intentAction);
+                sendBroadcast(mainIntent);
+                mBluetoothAdapter = mBluetoothManager.getAdapter();
+                dataNotSaved = 0;
+                arrB6.clear();
+                disconnect();
+                close();// 防止出现status 133
                 SharedPreferences share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE);
                 //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
                 mBluetoothDeviceAddress = share.getString("mac", "noValue");
@@ -1207,6 +1215,7 @@ public class UartService extends Service {
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
                         myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
+
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         Number num = realm.where(AsmDataModel.class).max("id");
@@ -1224,6 +1233,7 @@ public class UartService extends Service {
                             asmData.setECO2Value(RString.get(4));
                             asmData.setPM25Value(RString.get(5));
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                            asmData.setMACAddress(macAddressForDB);
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1276,6 +1286,18 @@ public class UartService extends Service {
                         hashMapInB6.put("PM25Value",RString.get(4));
                         hashMapInB6.put("BatteryLife",RString.get(5));
                         hashMapInB6.put("CreatedTime",timeSetForB6());
+                        hashMapInB6.put("MACADDRESS",macAddressForDB);
+
+                        realm = Realm.getDefaultInstance();
+                        Number maxCreatedTime1 = realm.where(AsmDataModel.class).max("Created_time");
+
+                        if (maxCreatedTime1!= null) {
+                            Long maxTime = maxCreatedTime1.longValue();
+                            if (hashMapInB6.get("CreatedTime") == maxTime) {
+                                hashMapInB6.clear();
+                                return;
+                            }
+                        }
                         arrB6.add(hashMapInB6);
                         //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                         dataNotSaved++;
@@ -1307,6 +1329,7 @@ public class UartService extends Service {
                                 asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
                                 Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
                                 asmData.setCreated_time(time);
+                                asmData.setMACAddress(macAddressForDB);
                                 //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", arrB6.toString());
                                 Log.d("RealmTimeB6", new Date(time).toString());

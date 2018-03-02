@@ -176,6 +176,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180209
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
+        Log.d("MAINACUUID",MyApplication.getPsuedoUniqueID())
+
     }
 
     override fun onStart() {
@@ -829,6 +831,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
                     battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
+                    heatingPanelHide()
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
