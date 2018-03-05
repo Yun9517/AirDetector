@@ -2046,12 +2046,6 @@ public class UartService extends Service {
         //RealmResults<AsmDataModel> result55 = query55.equalTo("Created_time", Long.valueOf("1520274600000")).findAll();
 
 
-
-
-
-
-
-
         //MyApplication getUUID=new MyApplication();
         String UUID = MyApplication.Companion.getPsuedoUniqueID();
         //製造RequestBody的地方
@@ -2066,7 +2060,7 @@ public class UartService extends Service {
         try {
             for (int i = 0; i < result1.size(); i++) {
                 //toltoSize++;
-                if (i == 10) {
+                if (i == 200) {
                     break;
                 }
 
@@ -2085,7 +2079,7 @@ public class UartService extends Service {
                 json_arr.put(json_obj_weather);
 
             }
-            json_obj.put("uuid",  "ttt５" );
+            json_obj.put("uuid",  UUID );
             json_obj.put("mac_address", DeviceAddress);
             json_obj.put("registration_id", "qooo123457");
             //再來將JSON陣列設定key丟進JSON物件
