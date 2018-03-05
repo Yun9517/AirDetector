@@ -79,12 +79,12 @@ class ChartFragment: Fragment() {
     private var show_Today : TextView? = null
     private var result_Yesterday : TextView? = null
     private var result_Today : TextView? = null
-    private var faceBar :   ImageView? = null
-    private var CharRelativeLayoutForLabel:RelativeLayout? = null
+    private var faceBar : ImageView? = null
+    private var CharRelativeLayoutForLabel : RelativeLayout? = null
     //UI元件
     private var showAvg_ByTime : TextView? = null
 
-    private var mConnectStatus: Boolean = false
+    private var mConnectStatus : Boolean = false
 
     //試Realm拉資料
     private var arrTime = ArrayList<String>()
@@ -122,8 +122,8 @@ class ChartFragment: Fragment() {
     private var chartLabelUnit = ""
     private var labelTextViewArray = ArrayList<TextView>()
     private var labelArray = ArrayList<String>()
-    private var intArray :IntArray?=null
-    private var chartLabel:String=""
+    private var intArray : IntArray?=null
+    private var chartLabel : String=""
     private fun setImageBarPosition(){
         mChart!!.data = getBarData()
         mChart!!.yChartInterval.size
@@ -279,12 +279,12 @@ class ChartFragment: Fragment() {
             labelTextViewArray.add(textView)
             when (i){
                 chartMax.toInt()->{textView.text = chartLabelUnit}
-                else->{
+                else -> {
                     when (UseFor){
                         DEFINE_FRAGMENT_TEMPERATURE->{
                             textView.text = (chartMin-10+(j)*chartIntervalStep).toInt().toString()
                         }
-                        else-> {
+                        else -> {
                             textView.text = (chartMin+(j)*chartIntervalStep).toInt().toString()
                         }
                     }
@@ -350,7 +350,7 @@ class ChartFragment: Fragment() {
                 //mTextViewTimeRange!!.text = mChart?.xAxis?.values?.get(h!!.xIndex)//listString[h.xIndex]
                 //mTextViewValue!!.text = h!!.value.toString()+ "ppb"
                 when (UseFor){
-                    DEFINE_FRAGMENT_TVOC ->{
+                    DEFINE_FRAGMENT_TVOC -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
                             mTextViewValue!!.text = "沒有偵測"
@@ -360,7 +360,7 @@ class ChartFragment: Fragment() {
 
                         changeBackground(temp!!.toInt())
                     }
-                    DEFINE_FRAGMENT_ECO2 ->{
+                    DEFINE_FRAGMENT_ECO2 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
                             mTextViewValue!!.text = "沒有偵測"
@@ -370,7 +370,7 @@ class ChartFragment: Fragment() {
 
                         changeBackground(temp!!.toInt())
                     }
-                    DEFINE_FRAGMENT_TEMPERATURE ->{
+                    DEFINE_FRAGMENT_TEMPERATURE -> {
                         val temp: Float? = e?.`val`
                         val temp1: Float? = (temp!! - 10.0f)
                         if (temp1!! == 65528f) {
@@ -382,7 +382,7 @@ class ChartFragment: Fragment() {
 
                         changeBackground(temp!!.toInt())
                     }
-                    DEFINE_FRAGMENT_HUMIDITY->{
+                    DEFINE_FRAGMENT_HUMIDITY -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
                             mTextViewValue!!.text = "沒有偵測"
@@ -457,7 +457,7 @@ class ChartFragment: Fragment() {
 //            }
         }
         when(UseFor) {
-            DEFINE_FRAGMENT_TVOC ->{
+            DEFINE_FRAGMENT_TVOC -> {
                 CharLabel?.text = getString(R.string.text_label_tvoc)
                 faceBar?.setImageResource(R.drawable.face_bar_tvoc)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
@@ -467,7 +467,7 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Purple),
                         ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
             }
-            DEFINE_FRAGMENT_ECO2 ->{
+            DEFINE_FRAGMENT_ECO2 -> {
                 CharLabel?.text = getString(R.string.text_label_co2)
                 faceBar?.setImageResource(R.drawable.face_bar_eco2)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
@@ -477,14 +477,14 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Purple),
                         ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
             }
-            DEFINE_FRAGMENT_TEMPERATURE ->{
+            DEFINE_FRAGMENT_TEMPERATURE -> {
                 CharLabel?.text = getString(R.string.text_label_temperature_full)
                 faceBar?.setImageResource(R.drawable.face_bar_temp)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Blue),
                         ContextCompat.getColor(context, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context, R.color.Main_textResult_Bad))
             }
-            DEFINE_FRAGMENT_HUMIDITY->{
+            DEFINE_FRAGMENT_HUMIDITY -> {
                 CharLabel?.text = getString(R.string.text_label_humidity)
                 faceBar?.setImageResource(R.drawable.face_bar_humidity)
                 intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
@@ -690,7 +690,7 @@ class ChartFragment: Fragment() {
 
     private fun getDeviceData() {
         when (UseFor) {
-            DEFINE_FRAGMENT_TVOC->{
+            DEFINE_FRAGMENT_TVOC -> {
                 if (mConnectStatus && !downloadingData) {
                     val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
@@ -698,7 +698,7 @@ class ChartFragment: Fragment() {
                     Log.d("Fragment"+UseFor.toString(),"getDeviceData")
                 }
             }
-            else->{
+            else -> {
             }
         }
 
@@ -777,13 +777,13 @@ class ChartFragment: Fragment() {
                 }
                 //Log.v("hilightCount:", count.toString())
             }
-            Log.d("getRealmDay"+UseFor.toString(), result1.last().toString())
+            Log.d("getRealmDay" + UseFor.toString(), result1.last().toString())
             //20180122
             when(UseFor) {
-                DEFINE_FRAGMENT_TEMPERATURE->{
-                    avgValueFloat = (sumValueFloat / result1.size)-10.0f
+                DEFINE_FRAGMENT_TEMPERATURE -> {
+                    avgValueFloat = (sumValueFloat / result1.size) - 10.0f
                 }
-                else->{
+                else -> {
                     avgValueInt = (sumValueInt / result1.size)
                 }
             }
@@ -805,26 +805,26 @@ class ChartFragment: Fragment() {
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
         var AVGTvoc3 = 0.0F
-        Log.d("getRealmWeek"+UseFor.toString(), sqlStartDate.toString())
-        Log.d("getRealmWeek"+UseFor.toString(), sqlEndDate.toString())
+        Log.d("getRealmWeek" + UseFor.toString(), sqlStartDate.toString())
+        Log.d("getRealmWeek" + UseFor.toString(), sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
         val result2 = query1.findAll()
-        Log.d("getRealmWeek"+UseFor.toString(), result2.size.toString())
+        Log.d("getRealmWeek" + UseFor.toString(), result2.size.toString())
         if (result2.size != 0) {
             var sumYesterday = 0.0F
             for (i in result2) {
                 when(UseFor)
                 {
-                    DEFINE_FRAGMENT_TVOC ->{
+                    DEFINE_FRAGMENT_TVOC -> {
                         sumYesterday += i.tvocValue.toInt()
                     }
-                    DEFINE_FRAGMENT_ECO2 ->{
+                    DEFINE_FRAGMENT_ECO2 -> {
                         sumYesterday += i.ecO2Value.toInt()
                     }
-                    DEFINE_FRAGMENT_TEMPERATURE ->{
+                    DEFINE_FRAGMENT_TEMPERATURE -> {
                         sumYesterday += i.tempValue.toFloat()
                     }
-                    DEFINE_FRAGMENT_HUMIDITY->{
+                    DEFINE_FRAGMENT_HUMIDITY -> {
                         sumYesterday += i.humiValue.toInt()
                     }
                 }
@@ -836,19 +836,19 @@ class ChartFragment: Fragment() {
         //}
         when(UseFor)
         {
-            DEFINE_FRAGMENT_TVOC ->{
+            DEFINE_FRAGMENT_TVOC -> {
                 result_Today!!.text = avgValueInt.toString() + " ppb"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
             }
-            DEFINE_FRAGMENT_ECO2 ->{
+            DEFINE_FRAGMENT_ECO2 -> {
                 result_Today!!.text = avgValueInt.toString() + " ppm"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppm"
             }
-            DEFINE_FRAGMENT_TEMPERATURE ->{
+            DEFINE_FRAGMENT_TEMPERATURE -> {
                 result_Today!!.text = "%.1f".format(avgValueFloat) + " ℃"
                 result_Yesterday!!.text = "%.1f".format(AVGTvoc3)+ " ℃"
             }
-            DEFINE_FRAGMENT_HUMIDITY->{
+            DEFINE_FRAGMENT_HUMIDITY-> {
                 result_Today!!.text = avgValueInt.toString() + " %"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " %"
             }
@@ -877,26 +877,26 @@ class ChartFragment: Fragment() {
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
-            Log.e("thisGetRealmWeekStart"+UseFor.toString(), sqlStartDate.toString())
-            Log.e("thisGetRealmWeekEnd"+UseFor.toString(), sqlEndDate.toString())
+            Log.e("thisGetRealmWeekStart" + UseFor.toString(), sqlStartDate.toString())
+            Log.e("thisGetRealmWeekEnd" + UseFor.toString(), sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
             val result1 = query.findAll()
-            Log.d("getRealmWeek"+UseFor.toString(), result1.size.toString())
+            Log.d("getRealmWeek" + UseFor.toString(), result1.size.toString())
             if (result1.size != 0) {
                 var sumThisAndLastWeek = 0f
                 for (i in result1) {
                     when(UseFor)
                     {
-                        DEFINE_FRAGMENT_TVOC ->{
+                        DEFINE_FRAGMENT_TVOC -> {
                             sumThisAndLastWeek += i.tvocValue.toInt()
                         }
-                        DEFINE_FRAGMENT_ECO2 ->{
+                        DEFINE_FRAGMENT_ECO2 -> {
                             sumThisAndLastWeek += i.ecO2Value.toInt()
                         }
-                        DEFINE_FRAGMENT_TEMPERATURE ->{
-                            sumThisAndLastWeek += i.tempValue.toFloat()+10.0f
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
+                            sumThisAndLastWeek += i.tempValue.toFloat() + 10.0f
                         }
-                        DEFINE_FRAGMENT_HUMIDITY->{
+                        DEFINE_FRAGMENT_HUMIDITY -> {
                             sumThisAndLastWeek += i.humiValue.toInt()
                         }
                     }
@@ -908,7 +908,7 @@ class ChartFragment: Fragment() {
             } else {
                 //result_Today!!.text = "$lastWeekAVETvoc ppb"
                 arrData.add("65538")
-                arrTime.add((sqlStartDate -calObject.timeZone.rawOffset).toString())
+                arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
         }
     }
@@ -922,7 +922,7 @@ class ChartFragment: Fragment() {
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
-        Log.d("getRealmMonth"+UseFor.toString(), sqlMonthBase.toString())
+        Log.d("getRealmMonth" + UseFor.toString(), sqlMonthBase.toString())
         //跑七筆BarChart
         for (y in 0..(monthCount-1)) {
             //第一筆為日 00:00
@@ -932,12 +932,12 @@ class ChartFragment: Fragment() {
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
-            Log.d("TimePeriod"+UseFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
-            Log.d("getRealmMonth"+UseFor.toString(), sqlStartDate.toString())
-            Log.d("getRealmMonth"+UseFor.toString(), sqlEndDate.toString())
+            Log.d("TimePeriod" + UseFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
+            Log.d("getRealmMonth" + UseFor.toString(), sqlStartDate.toString())
+            Log.d("getRealmMonth" + UseFor.toString(), sqlEndDate.toString())
             query.between("Created_time", sqlStartDate, sqlEndDate)
             val result1 = query.findAll()
-            Log.d("getRealmMonth"+UseFor.toString(), result1.size.toString())
+            Log.d("getRealmMonth" + UseFor.toString(), result1.size.toString())
             if (result1.size != 0) {
                 var sumMonth = 0f
                 for (i in result1) {
@@ -961,7 +961,7 @@ class ChartFragment: Fragment() {
                 arrData.add(aveTvoc.toString())
                 //依序加入時間
                 arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
-                Log.d("getRealmMonth"+UseFor.toString(), result1.last().toString())
+                Log.d("getRealmMonth" + UseFor.toString(), result1.last().toString())
             } else {
                 arrData.add("65538")
                 arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
@@ -1007,8 +1007,8 @@ class ChartFragment: Fragment() {
                 }
                 result_Today!!.text = getString(R.string.text_default_value)
                 result_Yesterday!!.text = getString(R.string.text_default_value)
-                show_Today!!.text=getString(R.string.text_default_value)
-                show_Yesterday!!.text=getString(R.string.text_default_value)
+                show_Today!!.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
@@ -1022,8 +1022,8 @@ class ChartFragment: Fragment() {
                 }
                 result_Today!!.text = getString(R.string.text_default_value)
                 result_Yesterday!!.text = getString(R.string.text_default_value)
-                show_Today!!.text=getString(R.string.text_default_value)
-                show_Yesterday!!.text=getString(R.string.text_default_value)
+                show_Today!!.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
             }
         }
         Log.d("TVOCGETLABEL3" + UseFor.toString(), chartLabels.lastIndex.toString())
@@ -1065,7 +1065,7 @@ class ChartFragment: Fragment() {
                     mConnectStatus = true
                     downloadComplete = false
                 }
-                BroadcastActions.ACTION_GET_HISTORY_COUNT ->{
+                BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
                     if (totalData.toInt() != 0) {
@@ -1100,16 +1100,16 @@ class ChartFragment: Fragment() {
                     var tempVal = "0"
                     var humiVal = "0"
                     when (UseFor){
-                        DEFINE_FRAGMENT_TVOC ->{
+                        DEFINE_FRAGMENT_TVOC -> {
                             tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                         }
-                        DEFINE_FRAGMENT_ECO2 ->{
+                        DEFINE_FRAGMENT_ECO2 -> {
                             eco2Val = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                         }
-                        DEFINE_FRAGMENT_TEMPERATURE ->{
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
                             tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
                         }
-                        DEFINE_FRAGMENT_HUMIDITY->{
+                        DEFINE_FRAGMENT_HUMIDITY -> {
                             humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                         }
                     }
@@ -1121,16 +1121,16 @@ class ChartFragment: Fragment() {
                         animationCount++
                         counter++
                         when (UseFor){
-                            DEFINE_FRAGMENT_TVOC ->{
+                            DEFINE_FRAGMENT_TVOC -> {
                                 valueIntAVG += tvocVal.toInt()
                             }
-                            DEFINE_FRAGMENT_ECO2 ->{
+                            DEFINE_FRAGMENT_ECO2 -> {
                                 valueIntAVG += eco2Val.toInt()
                             }
-                            DEFINE_FRAGMENT_TEMPERATURE ->{
+                            DEFINE_FRAGMENT_TEMPERATURE -> {
                                 valueFloatAVG += tempVal.toFloat()
                             }
-                            DEFINE_FRAGMENT_HUMIDITY->{
+                            DEFINE_FRAGMENT_HUMIDITY -> {
                                 valueIntAVG += humiVal.toInt()
                             }
                         }
@@ -1138,7 +1138,7 @@ class ChartFragment: Fragment() {
                         if (counter % getDataCycle == 0) {
                             counter = 0
                             when (UseFor){
-                                DEFINE_FRAGMENT_TEMPERATURE->{
+                                DEFINE_FRAGMENT_TEMPERATURE -> {
                                     valueFloatAVG /= getDataCycle
                                     valueFloatAVG = 0.0
                                 }
