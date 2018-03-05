@@ -167,7 +167,7 @@ class ChartFragment: Fragment() {
                 chartIntervalStart = 500
                 chartIntervalEnd = 1000
                 chartLabelYCount = 16
-                chartIsShowMinTextView=false
+                chartIsShowMinTextView = false
                 chartLabelUnit = "(ppm)"
             }
             DEFINE_FRAGMENT_TEMPERATURE->{
@@ -509,6 +509,9 @@ class ChartFragment: Fragment() {
                     in 220..2199 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
                     else -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
                     }
@@ -523,6 +526,9 @@ class ChartFragment: Fragment() {
                     in 700..1499 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
                     else -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
                     }
@@ -531,10 +537,10 @@ class ChartFragment: Fragment() {
 
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 when(input) {
-                    in 18..25 -> {
+                    in 28..35 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
-                    in 26..200 -> {
+                    in 36..210 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
                     }
                     else -> {
