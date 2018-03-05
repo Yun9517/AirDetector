@@ -1969,11 +1969,7 @@ public class UartService extends Service {
     }
 
 
-    //20170227
-    private JSONObject json_obj = new JSONObject();            //用來當內層被丟進陣列內的JSON物件
-    private JSONArray json_arr = new JSONArray();                //JSON陣列
-    // int toltoSize = 0;
-    // int i = 0;
+
 
 
     //postDataAsyncTasks doupdatddata = new postDataAsyncTasks();
@@ -1984,16 +1980,24 @@ public class UartService extends Service {
         @Override
         protected String doInBackground(String... params) {
             RequestBody return_body = null;
+            boolean getResponeResult = Boolean.parseBoolean(null);
             try {
                 //取得getRequestBody
                 return_body = getRequestBody();
                 //呼叫getResponse取得結果
                 if (return_body.contentLength() > 0) {
-                    getResponse(return_body);
+                    getResponeResult = getResponse(return_body);
                 }
-                //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
-                boolean DBSucess = updateDB_UpLoaded();
-                Log.e("DBSucess", String.valueOf(DBSucess));
+                if (getResponeResult) {
+                    //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                    boolean DBSucess = updateDB_UpLoaded();
+                    if (DBSucess) {
+                        Log.e("幹改進去", String.valueOf(DBSucess));
+                    }
+                    hasBeenUpLoaded.clear();
+                }else {
+                    Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
+                }
             } catch (IOException e) {
                 Log.e("return_body_erro", e.toString());
             } catch (Exception e) {
@@ -2014,61 +2018,92 @@ public class UartService extends Service {
 //        }
         //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
         Realm realm = Realm.getDefaultInstance();
+
+
+        RealmQuery<AsmDataModel> query2 = realm.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result5 = query2.equalTo("UpLoaded", "1").findAll();
+//        realm.executeTransaction((Realm realm1) -> {
+//
+//            for (int i = 0 ; i < result5.size() ; i++) {
+//
+//                result5.get(i).setUpLoaded("0");
+//
+//                Log.e("這個時間", String.valueOf(result5.toString()));
+//            }
+//
+//        });
+
         RealmQuery<AsmDataModel> query = realm.where(AsmDataModel.class);
         RealmResults<AsmDataModel> result1 = query.equalTo("UpLoaded", "0").findAll();
         Log.e("未上傳ID", result1.toString());
-        RealmQuery<AsmDataModel> query2 = realm.where(AsmDataModel.class);
-        RealmResults<AsmDataModel> result5 = query2.equalTo("UpLoaded", "1").findAll();
+
         Log.e("已上ID", result5.toString());
         Log.e("未上傳資料筆數", String.valueOf(result1.size()));
+        Log.e("未上傳資料", String.valueOf(result1.toString()));
         Log.e("已上傳資料筆數", String.valueOf(result5.size()));
+
+        //RealmQuery<AsmDataModel> query55 = realm.where(AsmDataModel.class);
+        //RealmResults<AsmDataModel> result55 = query55.equalTo("Created_time", Long.valueOf("1520274600000")).findAll();
+
+
+
+
+
+
+
 
         //MyApplication getUUID=new MyApplication();
         String UUID = MyApplication.Companion.getPsuedoUniqueID();
         //製造RequestBody的地方
         RequestBody body = null;
-        if (result1.size() > 0) {
-            try {
-                for (int i = 0; i < result1.size(); i++) {
-                    //toltoSize++;
-                    if (i >= 6000) {
-                        break;
-                    }
-                    if (result1.get(i).getUpLoaded().equals("0")) {
-                        hasBeenUpLoaded.add(result1.get(i).getDataId());
-                        Log.i("text", "i=" + i + "\n");
-                        JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
-                        json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
-                        json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
-                        json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
-                        json_obj_weather.put("eco2", result1.get(i).getECO2Value());
-                        json_obj_weather.put("pm25", result1.get(i).getPM25Value());
-                        json_obj_weather.put("longitude", "24.778289");
-                        json_obj_weather.put("latitude", "120.988108");
-                        json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
-                        Log.e("ｐｋ", "PK=" + result1.get(i).getDataId().toString());
-                        json_arr.put(json_obj_weather);
-                    }
+
+        //20170227
+        JSONObject json_obj = new JSONObject();            //用來當內層被丟進陣列內的JSON物件
+        JSONArray json_arr = new JSONArray();                //JSON陣列
+        // int toltoSize = 0;
+        // int i = 0;
+
+        try {
+            for (int i = 0; i < result1.size(); i++) {
+                //toltoSize++;
+                if (i == 10) {
+                    break;
                 }
-                json_obj.put("uuid", UUID);
-                json_obj.put("mac_address", DeviceAddress);
-                json_obj.put("registration_id", "qooo123457");
-                //再來將JSON陣列設定key丟進JSON物件
-                json_obj.put("weather", json_arr);
-                Log.e("全部資料", json_obj.toString());
-                MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
-                body = RequestBody.create(mediaType, "data=" + json_obj.toString());
-            } catch (JSONException e) {
-                e.printStackTrace();
+
+                hasBeenUpLoaded.add(result1.get(i).getDataId());
+                Log.i("text", "i=" + i + "\n");
+                JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
+                json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
+                json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
+                json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
+                json_obj_weather.put("eco2", result1.get(i).getECO2Value());
+                json_obj_weather.put("pm25", result1.get(i).getPM25Value());
+                json_obj_weather.put("longitude", "24.778289");
+                json_obj_weather.put("latitude", "120.988108");
+                json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
+                Log.e("ｐｋ", "PK=" + result1.get(i).getDataId().toString());
+                json_arr.put(json_obj_weather);
+
             }
+            json_obj.put("uuid",  "ttt５" );
+            json_obj.put("mac_address", DeviceAddress);
+            json_obj.put("registration_id", "qooo123457");
+            //再來將JSON陣列設定key丟進JSON物件
+            json_obj.put("weather", json_arr);
+            Log.e("全部資料", json_obj.toString());
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            body = RequestBody.create(mediaType, "data=" + json_obj.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
         return body;
     }
 
     //傳資料
-    private void getResponse(RequestBody body) {
+    private boolean getResponse(RequestBody body) {
         Response response = null;
-
+        boolean resonseReselt= Boolean.parseBoolean(null);
         try {
             if (body.contentLength() > 0) {
                 //丟資料
@@ -2087,19 +2122,12 @@ public class UartService extends Service {
                             .build();
                     //上傳資料
                     response = client.newCall(request).execute();
-                    if (response.isSuccessful()) {
+                    if (response.isSuccessful()) {//正確回來
+                        resonseReselt=true;
                         Log.e("正確回來!!", response.body().string());
-                        try {
-                            boolean waitBD = updateDB_UpLoaded();
-                            if (waitBD) {
-                                Log.e("幹改進去", String.valueOf(waitBD));
-                                hasBeenUpLoaded.clear();
-                            }
-                        } catch (Exception e) {
-                            Log.e("doDB_erro", String.valueOf(updateDB_UpLoaded()));
-                        }
-                    } else {
+                    } else {//錯誤回來
                         Log.e("錯誤回來!!", response.body().string());
+                        resonseReselt=false;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2110,6 +2138,7 @@ public class UartService extends Service {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return resonseReselt;
     }
 
     private boolean updateDB_UpLoaded() {
@@ -2118,7 +2147,7 @@ public class UartService extends Service {
         try {
             realm.executeTransaction((Realm realm1) -> {
                 Log.e("正確回來TRY", String.valueOf(hasBeenUpLoaded.size()));
-                for (int i = 0; i < hasBeenUpLoaded.size(); i++) {
+                for (int i = 0; i < (hasBeenUpLoaded.size()); i++) {
                     //realm.beginTransaction();
                     AsmDataModel aaa = realm1.where(AsmDataModel.class)
                             .equalTo("id", hasBeenUpLoaded.get(i))
