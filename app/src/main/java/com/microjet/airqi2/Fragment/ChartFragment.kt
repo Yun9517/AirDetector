@@ -73,7 +73,7 @@ class ChartFragment: Fragment() {
     //private var imgBarYellow : ImageView? = null
     //private var imgBarGreen : ImageView? = null
     //private var imgBarBase : ImageView? = null
-    private var sprTVOC : Spinner? = null
+    private var sprChart : Spinner? = null
     private var btnCallDatePicker : Button? = null
     private var show_Yesterday : TextView? = null
     private var show_Today : TextView? = null
@@ -137,7 +137,7 @@ class ChartFragment: Fragment() {
             labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f )
             labelTextViewArray[i].x = mChart!!.x-labelTextViewArray[i].width.toFloat()
         }
-    //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
+        //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
         if (!chartIsShowMinTextView){
             labelTextViewArray[0].visibility = View.INVISIBLE
         }
@@ -148,7 +148,7 @@ class ChartFragment: Fragment() {
     fun ConfigFragment(input:Int){
         UseFor = input
         when (input){
-            DEFINE_FRAGMENT_TVOC->{
+            DEFINE_FRAGMENT_TVOC-> {
                 chartLabel = "TVOC"
                 chartMin = 0.0f
                 chartMax = 1500.0f
@@ -159,7 +159,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(ppb)"
             }
-            DEFINE_FRAGMENT_ECO2->{
+            DEFINE_FRAGMENT_ECO2-> {
                 chartLabel = "ECO2"
                 chartMin = 0.0f
                 chartMax = 1500.0f
@@ -170,7 +170,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView=false
                 chartLabelUnit = "(ppm)"
             }
-            DEFINE_FRAGMENT_TEMPERATURE->{
+            DEFINE_FRAGMENT_TEMPERATURE-> {
                 chartLabel = "Temp"
                 chartMin = 0.0f
                 chartMax = 60.0f
@@ -181,7 +181,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView = true
                 chartLabelUnit = "(°C)"
             }
-            DEFINE_FRAGMENT_HUMIDITY->{
+            DEFINE_FRAGMENT_HUMIDITY-> {
                 chartLabel = "Humi"
                 chartMin = 0.0f
                 chartMax = 100.0f
@@ -271,8 +271,7 @@ class ChartFragment: Fragment() {
         }
 
         var j = 0
-        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep)
-        {
+        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {
             var textView = TextView(this.context)
             textView.width = 200
             textView.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
@@ -326,13 +325,13 @@ class ChartFragment: Fragment() {
             CharRelativeLayoutForLabel?.addView(textView)
         }
         */
-    /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
-        humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
-        humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
-        humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
-        humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
-        */
-       // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
+        /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
+            humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
+            humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
+            humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
+            humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
+            */
+        // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
         show_Yesterday = this.view?.findViewById(R.id.show_Yesterday)
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
@@ -397,10 +396,10 @@ class ChartFragment: Fragment() {
         })
 
         //修改上排Spinner及Button
-        sprTVOC = this.view?.findViewById(R.id.sprChart)
+        sprChart = this.view?.findViewById(R.id.sprChart)
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
-        sprTVOC!!.adapter = cycleList
-        sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        sprChart!!.adapter = cycleList
+        sprChart!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long)
             {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
@@ -437,7 +436,7 @@ class ChartFragment: Fragment() {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
                     calObject.set(year,month,dayOfMonth)
-                    Log.d("ChartBtncall"+UseFor.toString(),calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    Log.d("ChartBtncall" + UseFor.toString(),calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
                     timePickerShow()
@@ -457,7 +456,7 @@ class ChartFragment: Fragment() {
 //            }
         }
         when(UseFor) {
-            DEFINE_FRAGMENT_TVOC ->{
+            DEFINE_FRAGMENT_TVOC -> {
                 CharLabel?.text = getString(R.string.text_label_tvoc)
                 faceBar?.setImageResource(R.drawable.face_bar_tvoc)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
@@ -467,7 +466,7 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Purple),
                         ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
             }
-            DEFINE_FRAGMENT_ECO2 ->{
+            DEFINE_FRAGMENT_ECO2 -> {
                 CharLabel?.text = getString(R.string.text_label_co2)
                 faceBar?.setImageResource(R.drawable.face_bar_eco2)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
@@ -477,14 +476,14 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Purple),
                         ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
             }
-            DEFINE_FRAGMENT_TEMPERATURE ->{
+            DEFINE_FRAGMENT_TEMPERATURE -> {
                 CharLabel?.text = getString(R.string.text_label_temperature_full)
                 faceBar?.setImageResource(R.drawable.face_bar_temp)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Blue),
                         ContextCompat.getColor(context, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context, R.color.Main_textResult_Bad))
             }
-            DEFINE_FRAGMENT_HUMIDITY->{
+            DEFINE_FRAGMENT_HUMIDITY -> {
                 CharLabel?.text = getString(R.string.text_label_humidity)
                 faceBar?.setImageResource(R.drawable.face_bar_humidity)
                 intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
@@ -634,9 +633,18 @@ class ChartFragment: Fragment() {
         }
 
     }
+
     override fun onStart() {
         super.onStart()
         checkUIState()
+
+        // 將日期初始化成今天
+        val calendar = Calendar.getInstance()
+
+        calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
+        spinnerPositon = 0
+        btnTextChanged(spinnerPositon)
+        drawChart(spinnerPositon)
     }
 
     override fun onResume() {
@@ -715,6 +723,7 @@ class ChartFragment: Fragment() {
         mTextViewValue?.text = ""
         mTextViewTimeRange?.text = ""
     }
+
     private fun getRealmDay() {
         arrTime.clear()
         arrData.clear()
@@ -906,6 +915,7 @@ class ChartFragment: Fragment() {
             }
         }
     }
+
     private fun getRealmMonth() {
         arrTime.clear()
         arrData.clear()
@@ -963,6 +973,7 @@ class ChartFragment: Fragment() {
         }
 
     }
+
     private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
         dataSetA.setColors(intArray)
@@ -1108,7 +1119,7 @@ class ChartFragment: Fragment() {
                         }
                     }
 
-                //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     if(preHeat == "255") {
                         //新增AnimationCount
@@ -1184,6 +1195,7 @@ class ChartFragment: Fragment() {
         }
         return chartLabels
     }
+
     private fun timePickerShow(){
         if (spinnerPositon == 0) {
             val tpd = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
