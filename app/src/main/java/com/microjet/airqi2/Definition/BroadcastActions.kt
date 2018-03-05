@@ -81,4 +81,8 @@ object BroadcastActions {
     //20180222
     const val INTENT_KEY_LED_OFF = "airqi2.intent.LED_OFF"
     const val INTENT_KEY_LED_ON = "airqi2.intent.LED_ON"
+
+    const val INTENT_KEY_LOCATION_VALUE = "airqi2.intent.LOCATION_VALUE"
+    const val INTENT_KEY_LATITUDE_VALUE = "airqi2.intent.LATITUDE_VALUE"
+    const val INTENT_KEY_LONGITUDE_VALUE = "airqi2.intent.LONGITUDE_VALUE"
 }

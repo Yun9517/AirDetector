@@ -1,8 +1,12 @@
 package com.microjet.airqi2
 
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -240,6 +244,7 @@ class SettingActivity : AppCompatActivity() {
             if (isChecked) {
                 //updateData()
                 //text_bat_stat!!.text = getString(R.string.text_setting_on)
+                //getLocation()
             } else {
                 //text_bat_stat!!.text = getString(R.string.text_setting_off)
             }
@@ -289,6 +294,25 @@ class SettingActivity : AppCompatActivity() {
         val result2 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findAll()
         Log.d("SETTCLOUD",result2.size.toString())
         
+    }
+
+    private fun getLocation() {
+        /*
+        // checkGPSPermisstion()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        //val locationListener = MyLocationListener()
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 5000, 10f, locationListener)
+        }
+        */
+    }
+
+    private fun checkGPSPermisstion() {
+        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        Log.d("UARTPER", permission.toString())
+        val permission1 = PackageManager.PERMISSION_GRANTED
+        Log.d("UARTPER", permission1.toString())
     }
 
 }

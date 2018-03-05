@@ -159,6 +159,8 @@ public class UartService extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
+    private Float lati = 121.4215f;
+    private Float longi = 24.959742f;
 
     //    public UartService() { //建構式
 //    }
@@ -768,6 +770,10 @@ public class UartService extends Service {
                 case BroadcastActions.INTENT_KEY_LED_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
                     break;
+                case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
+                    lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
+                    longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
+                    break;
             }
         }
     }
@@ -1234,6 +1240,8 @@ public class UartService extends Service {
                             asmData.setPM25Value(RString.get(5));
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
+                            asmData.setLatitude(lati);
+                            asmData.setLongitude(longi);
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1330,6 +1338,8 @@ public class UartService extends Service {
                                 Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
                                 asmData.setCreated_time(time);
                                 asmData.setMACAddress(macAddressForDB);
+                                asmData.setLatitude(lati);
+                                asmData.setLongitude(longi);
                                 //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                 Log.d("RealmTimeB6", arrB6.toString());
                                 Log.d("RealmTimeB6", new Date(time).toString());
@@ -1936,5 +1946,28 @@ public class UartService extends Service {
 
         return isInBackground;
     }
+
+    /*
+    private void getLocation() {
+        //checkGPSPermisstion();
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationListener locationListener = new MyLocationListener();
+
+        Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_MEDIUM);
+        criteria.setPowerRequirement(Criteria.POWER_MEDIUM);
+        String provider = locationManager.getBestProvider(criteria,true);
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 5000, 10f, locationListener);
+        }
+    }
+
+    private void checkGPSPermisstion() {
+        int permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION);
+        Log.d("UARTPER",String.valueOf(permission));
+        int permission1 = PackageManager.PERMISSION_GRANTED;
+        Log.d("UARTPER",String.valueOf(permission1));
+    }
+    */
 
 }
