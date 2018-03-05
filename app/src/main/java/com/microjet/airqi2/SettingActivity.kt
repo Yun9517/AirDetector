@@ -238,7 +238,7 @@ class SettingActivity : AppCompatActivity() {
 
         swCloud.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                uploadCloud()
+                //updateData()
                 //text_bat_stat!!.text = getString(R.string.text_setting_on)
             } else {
                 //text_bat_stat!!.text = getString(R.string.text_setting_off)
@@ -268,10 +268,26 @@ class SettingActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun uploadCloud() {
+    private fun updateData() {
+        //拉取資料加上傳搞定
         val realm = Realm.getDefaultInstance()
         val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
         Log.d("SETTCLOUD",result.toString())
+
+        realm.executeTransactionAsync {
+            val realm1 = Realm.getDefaultInstance()
+            for (i in 601..1000) {
+                val dataId = i
+                val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+                user!!.upLoaded = "1"
+            }
+        }
+
+        val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
+        Log.d("SETTCLOUD",result1.toString())
+
+        val result2 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findAll()
+        Log.d("SETTCLOUD",result2.size.toString())
         
     }
 
