@@ -30,6 +30,8 @@ class SettingActivity : AppCompatActivity() {
     //20180130
     private var batSoundVal: Boolean = false
     private var swLedPowerVal: Boolean = true
+    //20180227
+    private var swCloudVal: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -79,6 +81,9 @@ class SettingActivity : AppCompatActivity() {
 
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
+        //20180227
+        swCloudVal=mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+
         spCycle.setSelection(spCycleVal)
 
         swMessage.isChecked = swMessageVal
@@ -92,6 +97,8 @@ class SettingActivity : AppCompatActivity() {
         batSound.isChecked = batSoundVal
 
         ledPower.isChecked = swLedPowerVal
+
+        swClouudFun.isChecked=swCloudVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -172,6 +179,18 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
+        swClouudFun.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                text_cloud_fun.text = getString(R.string.text_setting_on)
+            } else {
+                text_cloud_fun.text = getString(R.string.text_setting_off)
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
+                    isChecked).apply()
+        }
+
+        //20180227
         swTotalNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 text_total_notify_stat.text = getString(R.string.text_setting_on)
@@ -232,6 +251,25 @@ class SettingActivity : AppCompatActivity() {
             sendBroadcast(intent)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                    isChecked).apply()
+        }
+
+        //20180227  CloudFun
+        swClouudFun.setOnCheckedChangeListener { _, isChecked ->
+
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+
+            if (isChecked) {
+                text_led_stat!!.text = getString(R.string.text_setting_on)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
+            } else {
+                text_led_stat.text = getString(R.string.text_setting_off)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
+            }
+
+            sendBroadcast(intent)
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
                     isChecked).apply()
         }
     }
