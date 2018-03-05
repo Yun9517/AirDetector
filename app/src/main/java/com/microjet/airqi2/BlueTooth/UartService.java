@@ -2090,16 +2090,7 @@ public class UartService extends Service {
                     if (response.isSuccessful()) {
                         Log.e("正確回來!!", response.body().string());
                         try {
-                            //boolean doDB = updateDB_UpLoaded();
-                            //Log.e("CallDB",String.valueOf(doDB));
-//                            if (doDB) {
-//                                Log.e("DBUpdate_successful", String.valueOf(updateDB_UpLoaded()));
-//                            } else {
-//                                Log.e("DBUpdate_erro", String.valueOf(updateDB_UpLoaded()));
-//                            }
-
                             boolean waitBD = updateDB_UpLoaded();
-
                             if (waitBD) {
                                 Log.e("幹改進去", String.valueOf(waitBD));
                                 hasBeenUpLoaded.clear();
@@ -2107,26 +2098,22 @@ public class UartService extends Service {
                         } catch (Exception e) {
                             Log.e("doDB_erro", String.valueOf(updateDB_UpLoaded()));
                         }
-
                     } else {
                         Log.e("錯誤回來!!", response.body().string());
-                        //
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("回來處理有錯!", e.toString());
+
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        //return response;
     }
 
     private boolean updateDB_UpLoaded() {
-
         boolean dbSucessOrNot = Boolean.parseBoolean(null);
-
         Realm realm = Realm.getDefaultInstance();
         try {
             realm.executeTransaction((Realm realm1) -> {

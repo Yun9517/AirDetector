@@ -35,7 +35,7 @@ class MyApplication : Application() {
          * Return pseudo unique ID
          * @return ID
          */
-       public fun getPsuedoUniqueID(): String {
+        fun getPsuedoUniqueID(): String {
             // If all else fails, if the user does have lower than API 9 (lower
             // than Gingerbread), has reset their phone or 'Secure.ANDROID_ID'
             // returns 'null', then simply the ID returned will be solely based

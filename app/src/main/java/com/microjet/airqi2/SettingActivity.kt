@@ -260,10 +260,10 @@ class SettingActivity : AppCompatActivity() {
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
             if (isChecked) {
-                text_led_stat!!.text = getString(R.string.text_setting_on)
+                text_clouud_stat!!.text = getString(R.string.text_setting_on)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
             } else {
-                text_led_stat.text = getString(R.string.text_setting_off)
+                text_clouud_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
             }
 
