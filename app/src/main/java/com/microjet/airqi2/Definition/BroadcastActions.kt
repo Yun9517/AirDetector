@@ -81,4 +81,7 @@ object BroadcastActions {
     //20180222
     const val INTENT_KEY_LED_OFF = "airqi2.intent.LED_OFF"
     const val INTENT_KEY_LED_ON = "airqi2.intent.LED_ON"
+    //20180227
+    const val INTENT_KEY_CLOUD_ON = "airqi2.intent.CLOUD_ON"
+    const val INTENT_KEY_CLOUD_OFF = "airqi2.intent.CLOUD_OFF"
 }
