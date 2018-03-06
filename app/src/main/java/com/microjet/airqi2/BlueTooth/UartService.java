@@ -2060,7 +2060,7 @@ public class UartService extends Service {
         try {
             for (int i = 0; i < result1.size(); i++) {
                 //toltoSize++;
-                if (i == 200) {
+                if (i == 6000) {
                     break;
                 }
 
