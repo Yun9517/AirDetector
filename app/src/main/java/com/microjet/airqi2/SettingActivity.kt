@@ -242,7 +242,7 @@ class SettingActivity : AppCompatActivity() {
 
         swCloud.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                //updateData()
+                updateData()
                 //text_bat_stat!!.text = getString(R.string.text_setting_on)
                 //getLocation()
             } else {
@@ -279,20 +279,28 @@ class SettingActivity : AppCompatActivity() {
         val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
         Log.d("SETTCLOUD",result.toString())
 
-        realm.executeTransactionAsync {
-            val realm1 = Realm.getDefaultInstance()
-            for (i in 601..1000) {
-                val dataId = i
-                val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
-                user!!.upLoaded = "1"
-            }
-        }
+//        realm.executeTransactionAsync {
+//            val realm1 = Realm.getDefaultInstance()
+//            for (i in 601..1000) {
+//                val dataId = i
+//                val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+//                user!!.upLoaded = "1"
+//            }
+//        }
+//        realm.executeTransactionAsync {
+//            val realm1 = Realm.getDefaultInstance()
+//            val dataId = 1453
+//            val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+//            user?.deleteFromRealm()
+//        }
 
         val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
         Log.d("SETTCLOUD",result1.toString())
 
-        val result2 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findAll()
-        Log.d("SETTCLOUD",result2.size.toString())
+        //val result2 = realm.where(AsmDataModel::class.java).equalTo("Created_time",1520332440000).findAll()
+        val result2 = realm.where(AsmDataModel::class.java).between("Created_time",1520372760000, 1520372880000).findAll()
+
+        Log.d("SETTCLOUD",result2.toString())
         
     }
 

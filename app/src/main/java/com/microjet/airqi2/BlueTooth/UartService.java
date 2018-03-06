@@ -1242,6 +1242,8 @@ public class UartService extends Service {
                             asmData.setMACAddress(macAddressForDB);
                             asmData.setLatitude(lati);
                             asmData.setLongitude(longi);
+                            Log.d("0xB5count",String.valueOf(countForItem));
+                            Log.d("0xB5count",String .valueOf(counterB5));
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1328,24 +1330,28 @@ public class UartService extends Service {
                             if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
                             Log.d("0xB6DBLastTime",new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
-                            realm.executeTransaction(r -> {
-                                AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
-                                asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
-                                asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
-                                asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
-                                asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
-                                asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
-                                Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
-                                asmData.setCreated_time(time);
-                                asmData.setMACAddress(macAddressForDB);
-                                asmData.setLatitude(lati);
-                                asmData.setLongitude(longi);
-                                //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
-                                Log.d("RealmTimeB6", arrB6.toString());
-                                Log.d("RealmTimeB6", new Date(time).toString());
-                                //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
-                            });
-                            realm.close();
+                            if (!arrB6.get(count).get("CreatedTime").equals(maxCreatedTime)) {
+                                realm.executeTransaction(r -> {
+                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                                    asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
+                                    asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
+                                    asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
+                                    asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
+                                    asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
+                                    Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
+                                    asmData.setCreated_time(time);
+                                    asmData.setMACAddress(macAddressForDB);
+                                    asmData.setLatitude(lati);
+                                    asmData.setLongitude(longi);
+                                    //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                    Log.d("RealmTimeB6", arrB6.toString());
+                                    Log.d("RealmTimeB6", new Date(time).toString());
+                                    //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
+                                });
+                                realm.close();
+                            } else {
+                                Log.d("0xb6CreatedTIME",arrB6.get(count).get("CreatedTime").toString());
+                            }
                         }
                         //寫入完畢後將未寫入筆數設為0
                         dataNotSaved = 0;
