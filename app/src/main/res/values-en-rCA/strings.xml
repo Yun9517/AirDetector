@@ -160,4 +160,9 @@
     <string name="auto_sync">Enable auto-sync</string>
     <string name="allow_3G">Cellular Data</string>
 
+    //20180227
+    <string name="cloud_fun">Cloud</string>
+    //2018/03/06
+    <string name="not_yetDetected">Not yet detected</string>
+
 </resources>
