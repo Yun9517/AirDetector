@@ -148,6 +148,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
 
+        Log.e("Conn", MyApplication.getConnectStatus())
+
         // 電池電量假資料
         //   batValue = 30
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

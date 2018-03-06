@@ -38,7 +38,6 @@ import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
-import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -46,7 +45,9 @@ import kotlin.collections.ArrayList
 
 /**
  * Created by B00055 on 2018/2/9.
+ *
  */
+
 class ChartFragment: Fragment() {
     private val DEFINE_FRAGMENT_TVOC = 1
     private val DEFINE_FRAGMENT_ECO2 = 2
@@ -73,7 +74,7 @@ class ChartFragment: Fragment() {
     //private var imgBarYellow : ImageView? = null
     //private var imgBarGreen : ImageView? = null
     //private var imgBarBase : ImageView? = null
-    private var sprTVOC : Spinner? = null
+    private var sprChart : Spinner? = null
     private var btnCallDatePicker : Button? = null
     private var show_Yesterday : TextView? = null
     private var show_Today : TextView? = null
@@ -105,13 +106,13 @@ class ChartFragment: Fragment() {
     private var downloadComplete = false
 
 
-
     var counter = 0
     var valueIntAVG = 0
     var valueFloatAVG = 0.0
     //Andy
     //private val arrayAvgData = ArrayList<String>()
     var UseFor = 0
+
     private var chartIntervalStep = 0
     private var chartMin = 0f
     private var chartMax = 0f
@@ -122,33 +123,34 @@ class ChartFragment: Fragment() {
     private var chartLabelUnit = ""
     private var labelTextViewArray = ArrayList<TextView>()
     private var labelArray = ArrayList<String>()
-    private var intArray : IntArray?=null
-    private var chartLabel : String=""
-    private fun setImageBarPosition(){
+    private var intArray : IntArray? = null
+    private var chartLabel : String = ""
+
+    private fun setImageBarPosition() {
         mChart!!.data = getBarData()
         mChart!!.yChartInterval.size
         var j = 1
-        var lineRectFArray = ArrayList<RectF>()
-        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep){//取得有標籤的數值位置，從最小值放至最大值
+        val lineRectFArray = ArrayList<RectF>()
+        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {//取得有標籤的數值位置，從最小值放至最大值
             lineRectFArray.add(mChart!!.getBarBounds(BarEntry(i.toFloat(), j)))
             j++
         }
-        for  (  i in lineRectFArray.indices){//放置標籤
-            labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f )
+        for  (i in lineRectFArray.indices) {//放置標籤
+            labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f)
             labelTextViewArray[i].x = mChart!!.x-labelTextViewArray[i].width.toFloat()
         }
-    //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
-        if (!chartIsShowMinTextView){
+        //    labelTextViewArray[0].y=lineRectFArray[0].top - labelTextViewArray[0].height/2f  //放置最底層的標籤
+        if (!chartIsShowMinTextView) {
             labelTextViewArray[0].visibility = View.INVISIBLE
         }
 
         //視Radio id畫圖
         mChart!!.clear()
     }
-    fun ConfigFragment(input:Int){
+    fun ConfigFragment(input:Int) {
         UseFor = input
         when (input){
-            DEFINE_FRAGMENT_TVOC->{
+            DEFINE_FRAGMENT_TVOC -> {
                 chartLabel = "TVOC"
                 chartMin = 0.0f
                 chartMax = 1500.0f
@@ -159,7 +161,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(ppb)"
             }
-            DEFINE_FRAGMENT_ECO2->{
+            DEFINE_FRAGMENT_ECO2 -> {
                 chartLabel = "ECO2"
                 chartMin = 0.0f
                 chartMax = 1500.0f
@@ -170,7 +172,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(ppm)"
             }
-            DEFINE_FRAGMENT_TEMPERATURE->{
+            DEFINE_FRAGMENT_TEMPERATURE -> {
                 chartLabel = "Temp"
                 chartMin = 0.0f
                 chartMax = 60.0f
@@ -181,7 +183,7 @@ class ChartFragment: Fragment() {
                 chartIsShowMinTextView = true
                 chartLabelUnit = "(°C)"
             }
-            DEFINE_FRAGMENT_HUMIDITY->{
+            DEFINE_FRAGMENT_HUMIDITY -> {
                 chartLabel = "Humi"
                 chartMin = 0.0f
                 chartMax = 100.0f
@@ -202,7 +204,7 @@ class ChartFragment: Fragment() {
 
         mChart!!.isScaleXEnabled = false
         mChart!!.isScaleYEnabled = false
-        leftAxis.setLabelCount(chartLabelYCount,true)
+        leftAxis.setLabelCount(chartLabelYCount, true)
         leftAxis.setAxisMaxValue(chartMax) // the axis maximum is 1500
         leftAxis.setAxisMinValue(chartMin) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
@@ -215,8 +217,7 @@ class ChartFragment: Fragment() {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         val nums = ArrayList<Float>()
 
-        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep)
-        {
+        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep) {
             nums.add(i.toFloat())
         }
         mChart!!.legend.isEnabled = false
@@ -271,21 +272,20 @@ class ChartFragment: Fragment() {
         }
 
         var j = 0
-        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep)
-        {
-            var textView = TextView(this.context)
+        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {
+            val textView = TextView(this.context)
             textView.width = 200
             textView.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
             labelTextViewArray.add(textView)
             when (i){
-                chartMax.toInt()->{textView.text = chartLabelUnit}
+                chartMax.toInt() -> {textView.text = chartLabelUnit}
                 else -> {
                     when (UseFor){
-                        DEFINE_FRAGMENT_TEMPERATURE->{
-                            textView.text = (chartMin-10+(j)*chartIntervalStep).toInt().toString()
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
+                            textView.text = (chartMin - 10 + (j) * chartIntervalStep).toInt().toString()
                         }
                         else -> {
-                            textView.text = (chartMin+(j)*chartIntervalStep).toInt().toString()
+                            textView.text = (chartMin + (j) * chartIntervalStep).toInt().toString()
                         }
                     }
                 }
@@ -326,13 +326,13 @@ class ChartFragment: Fragment() {
             CharRelativeLayoutForLabel?.addView(textView)
         }
         */
-    /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
-        humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
-        humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
-        humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
-        humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
-        */
-       // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
+        /*    humiChartTitle5 = this.view?.findViewById(R.id.humiChartTitle5)
+            humiChartTitle4 = this.view?.findViewById(R.id.humiChartTitle4)
+            humiChartTitle3 = this.view?.findViewById(R.id.humiChartTitle3)
+            humiChartTitle2 = this.view?.findViewById(R.id.humiChartTitle2)
+            humiChartTitleBottom = this.view?.findViewById(R.id.humiChartTitleBottom)
+            */
+        // CharRelativeLayoutForLabel?.removeView( humiChartTitle4 )
         show_Yesterday = this.view?.findViewById(R.id.show_Yesterday)
         show_Today = this.view?.findViewById(R.id.show_Today)
         result_Yesterday = this.view?.findViewById(R.id.result_Yesterday)
@@ -353,7 +353,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_TVOC -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
+                            mTextViewValue!!.text = "沒有偵測"
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
                         }
@@ -363,7 +363,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_ECO2 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
+                            mTextViewValue!!.text = "沒有偵測"
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
                         }
@@ -374,19 +374,18 @@ class ChartFragment: Fragment() {
                         val temp: Float? = e?.`val`
                         val temp1: Float? = (temp!! - 10.0f)
                         if (temp1!! == 65528f) {
-                            //mTextViewValue!!.text = "---" + " ℃"
-                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
-                        }else{
+                            mTextViewValue!!.text = "---" + " ℃"
+                        } else {
                             val newTemp = "%.1f".format(temp1)
-                            mTextViewValue!!.text = newTemp + " ℃"
+                            mTextViewValue!!.text = "$newTemp ℃"
                         }
 
-                        changeBackground(temp!!.toInt())
+                        changeBackground(temp.toInt())
                     }
                     DEFINE_FRAGMENT_HUMIDITY -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
+                            mTextViewValue!!.text = "沒有偵測"
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " %"
                         }
@@ -398,12 +397,11 @@ class ChartFragment: Fragment() {
         })
 
         //修改上排Spinner及Button
-        sprTVOC = this.view?.findViewById(R.id.sprChart)
+        sprChart = this.view?.findViewById(R.id.sprChart)
         val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
-        sprTVOC!!.adapter = cycleList
-        sprTVOC!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long)
-            {
+        sprChart!!.adapter = cycleList
+        sprChart!!.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
                 when(spinnerPositon) {
@@ -436,13 +434,13 @@ class ChartFragment: Fragment() {
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
             datepickerHandler.post {
-                val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { view, year, month, dayOfMonth ->
+                val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                     calObject.set(year,month,dayOfMonth)
-                    Log.d("ChartBtncall"+UseFor.toString(),calObject.get(Calendar.DAY_OF_MONTH).toString())
+                    Log.d("ChartBtncall" + UseFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
                     btnTextChanged(spinnerPositon)
                     drawChart(spinnerPositon)
                     timePickerShow()
-                },calObject.get(Calendar.YEAR),calObject.get(Calendar.MONTH),calObject.get(Calendar.DAY_OF_MONTH))
+                }, calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
             }
@@ -566,7 +564,7 @@ class ChartFragment: Fragment() {
         }
     }
 
-    @Suppress("OverridingDeprecatedMember")
+    @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
         mContext = this.context.applicationContext
@@ -574,7 +572,8 @@ class ChartFragment: Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver,
+                makeMainFragmentUpdateIntentFilter())
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -585,7 +584,10 @@ class ChartFragment: Fragment() {
                 btnCallDatePicker?.text = dateFormat.format(calObject.time)
             }
             1 -> {
-                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + " " + getString(R.string.week_First_Word) + calObject.get(Calendar.WEEK_OF_YEAR).toString() + getString(R.string.week_Last_Word)
+                btnCallDatePicker?.text = calObject.get(Calendar.YEAR).toString() + " " +
+                        getString(R.string.week_First_Word) +
+                        calObject.get(Calendar.WEEK_OF_YEAR).toString() +
+                        getString(R.string.week_Last_Word)
             }
             2 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
@@ -601,11 +603,13 @@ class ChartFragment: Fragment() {
 
         when (position) {
             0 -> {
-                val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 + Calendar.getInstance().get(Calendar.MINUTE) * 60 + Calendar.getInstance().get(Calendar.SECOND)
+                val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 +
+                        Calendar.getInstance().get(Calendar.MINUTE) * 60 +
+                        Calendar.getInstance().get(Calendar.SECOND)
                 val l = p / 60
                 if (l <= 2) {
-                    calObject.set(Calendar.DAY_OF_MONTH,Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
-                    Log.d("drawChart"+UseFor.toString(),calObject.toString())
+                    calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+                    Log.d("drawChart" + UseFor.toString(), calObject.toString())
                 }
                 getRealmDay()
                 mChart?.data = getBarData3(arrData, arrTime, position)
@@ -615,7 +619,8 @@ class ChartFragment: Fragment() {
                 //mChart?.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //mChart?.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                mChart?.centerViewToAnimated(l.toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
+                mChart?.centerViewToAnimated(l.toFloat(), 0F,
+                        YAxis.AxisDependency.LEFT, 1000)
                 //mChart?.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = mChart!!.data!!.dataSetCount
@@ -628,7 +633,8 @@ class ChartFragment: Fragment() {
                 mChart?.data?.setDrawValues(false)
                 mChart?.animateY(3000, Easing.EasingOption.EaseOutBack)
                 mChart?.setVisibleXRange(7.0f, 7.0f)
-                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),0F, YAxis.AxisDependency.LEFT,1000)
+                mChart?.centerViewToAnimated(Calendar.getInstance().get(Calendar.DAY_OF_MONTH).toFloat(),
+                        0F, YAxis.AxisDependency.LEFT, 1000)
             }
             2 -> {
                 getRealmMonth()
@@ -641,9 +647,19 @@ class ChartFragment: Fragment() {
         }
 
     }
+
     override fun onStart() {
         super.onStart()
         checkUIState()
+
+        // 將日期初始化成今天
+        val calendar = Calendar.getInstance()
+
+        calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH))
+        spinnerPositon = 0
+        btnTextChanged(spinnerPositon)
+        drawChart(spinnerPositon)
     }
 
     override fun onResume() {
@@ -722,13 +738,15 @@ class ChartFragment: Fragment() {
         mTextViewValue?.text = ""
         mTextViewTimeRange?.text = ""
     }
+
+    @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun getRealmDay() {
         arrTime.clear()
         arrData.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
         val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm"+UseFor.toString(),calObject.get(Calendar.DAY_OF_MONTH).toString())
+        Log.d("TVOCbtncallRealm" + UseFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -739,7 +757,7 @@ class ChartFragment: Fragment() {
         val startTime = endDay
         //一天共有2880筆
         val dataCount = (endTime - startTime) / (60 * 1000)
-        Log.d("TimePeriod"+UseFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
+        Log.d("TimePeriod" + UseFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay"+UseFor.toString(), result1.size.toString())
@@ -756,22 +774,22 @@ class ChartFragment: Fragment() {
 
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
-            result1.forEachIndexed { index, asmDataModel ->
+            result1.forEachIndexed { _, asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
                 when(UseFor) {
-                    DEFINE_FRAGMENT_TVOC ->{
+                    DEFINE_FRAGMENT_TVOC -> {
                         arrData[count] = asmDataModel.tvocValue.toString()
                         sumValueInt += arrData[count].toInt()
                     }
-                    DEFINE_FRAGMENT_ECO2 ->{
+                    DEFINE_FRAGMENT_ECO2 -> {
                         arrData[count] = asmDataModel.ecO2Value.toString()
                         sumValueInt += arrData[count].toInt()
                     }
-                    DEFINE_FRAGMENT_TEMPERATURE ->{
-                        arrData[count] = (asmDataModel.tempValue.toFloat()+10.0F).toString()
+                    DEFINE_FRAGMENT_TEMPERATURE -> {
+                        arrData[count] = (asmDataModel.tempValue.toFloat() + 10.0F).toString()
                         sumValueFloat += arrData[count].toFloat()
                     }
-                    DEFINE_FRAGMENT_HUMIDITY->{
+                    DEFINE_FRAGMENT_HUMIDITY -> {
                         arrData[count] = asmDataModel.humiValue.toString()
                         sumValueInt += arrData[count].toInt()
                     }
@@ -866,10 +884,10 @@ class ChartFragment: Fragment() {
         //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek -1).toLong())
-        var thisWeekAVETvoc = 0f
-        var aveLastWeekTvoc = 0
-        Log.d("getRealmWeek"+UseFor.toString(), sqlWeekBase.toString())
+        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        var thisWeekAVETvoc: Float
+        //var aveLastWeekTvoc = 0
+        Log.d("getRealmWeek" + UseFor.toString(), sqlWeekBase.toString())
         //跑七筆BarChart
         for (y in 0..6) {
             //第一筆為日 00:00
@@ -913,6 +931,7 @@ class ChartFragment: Fragment() {
             }
         }
     }
+
     private fun getRealmMonth() {
         arrTime.clear()
         arrData.clear()
@@ -925,7 +944,7 @@ class ChartFragment: Fragment() {
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth" + UseFor.toString(), sqlMonthBase.toString())
         //跑七筆BarChart
-        for (y in 0..(monthCount-1)) {
+        for (y in 0..(monthCount - 1)) {
             //第一筆為日 00:00
             val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
@@ -944,16 +963,16 @@ class ChartFragment: Fragment() {
                 for (i in result1) {
                     when(UseFor)
                     {
-                        DEFINE_FRAGMENT_TVOC ->{
+                        DEFINE_FRAGMENT_TVOC -> {
                             sumMonth += i.tvocValue.toInt()
                         }
-                        DEFINE_FRAGMENT_ECO2 ->{
+                        DEFINE_FRAGMENT_ECO2 -> {
                             sumMonth += i.ecO2Value.toInt()
                         }
-                        DEFINE_FRAGMENT_TEMPERATURE ->{
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
                             sumMonth += i.tempValue.toFloat()+10.0f
                         }
-                        DEFINE_FRAGMENT_HUMIDITY->{
+                        DEFINE_FRAGMENT_HUMIDITY -> {
                             sumMonth += i.humiValue.toInt()
                         }
                     }
@@ -970,7 +989,8 @@ class ChartFragment: Fragment() {
         }
 
     }
-    private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
+
+    private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
         dataSetA.setColors(intArray)
 
@@ -1115,7 +1135,7 @@ class ChartFragment: Fragment() {
                         }
                     }
 
-                //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     if(preHeat == "255") {
                         //新增AnimationCount
@@ -1187,11 +1207,12 @@ class ChartFragment: Fragment() {
     private fun getLabels(): List<String> {
         val chartLabels = ArrayList<String>()
         for (i in 1 until mDataCount) {
-            chartLabels.add("X" + i)
+            chartLabels.add("X$i")
         }
         return chartLabels
     }
-    private fun timePickerShow(){
+
+    private fun timePickerShow() {
         if (spinnerPositon == 0) {
             val tpd = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                 val p = hourOfDay * 60 + minute

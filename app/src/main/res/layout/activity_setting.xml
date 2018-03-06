@@ -184,39 +184,6 @@
             android:textSize="18sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/led_light"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/ledPower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_led_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="2dp"
@@ -230,7 +197,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/auto_sync"
@@ -264,7 +231,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:visibility="invisible">
+        android:visibility="gone">
     <TextView
         android:id="@+id/allow_3G"
         android:layout_width="135dp"
@@ -300,7 +267,7 @@
 
         <TextView
             android:id="@+id/text_cloud_fun"
-            android:layout_width="120dp"
+            android:layout_width="135dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:paddingLeft="20dp"
@@ -326,9 +293,46 @@
             android:textSize="18sp" />
     </LinearLayout>
 
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="visible"
+        android:background="#484848" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="20dp"
+            android:text="@string/led_light"
+            android:textSize="18sp" />
 
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/ledPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme" />
+
+        <TextView
+            android:id="@+id/text_led_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="10dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
