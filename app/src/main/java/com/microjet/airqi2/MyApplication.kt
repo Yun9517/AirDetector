@@ -97,20 +97,21 @@ class MyApplication : Application() {
         Realm.setDefaultConfiguration(config)
 
         val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java).findAll()
+        val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
         Log.d("REALMAPP",query.toString())
         var createdTime = 0L
         query?.forEachIndexed { index, asmDataModel ->
+            Log.d("REALMAPP",createdTime.toString())
             if (asmDataModel.created_time == createdTime) {
+                val dataTime = asmDataModel.created_time
                 realm.executeTransactionAsync {
                     val realm1 = Realm.getDefaultInstance()
-                    val dataId = asmDataModel.dataId
-                    val query1 = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+                    val query1 = realm1.where(AsmDataModel::class.java).equalTo("Created_time", dataTime).findAll().last()
                     Log.d("REALMAPPDUP",query1.toString())
                     query1?.deleteFromRealm()
                 }
-                createdTime = asmDataModel!!.created_time
             }
+            createdTime = asmDataModel!!.created_time
         }
 
         mPrimaryReceiver = PrimaryReceiver()
