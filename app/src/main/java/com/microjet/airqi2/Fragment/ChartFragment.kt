@@ -198,11 +198,11 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_PM25 -> {
                 chartLabel = "PM2.5"
                 chartMin = 0.0f
-                chartMax = 500.0f
-                chartIntervalStep = 250
-                chartIntervalStart = 250
-                chartIntervalEnd = 500
-                chartLabelYCount = 16
+                chartMax = 100.0f
+                chartIntervalStep = 50
+                chartIntervalStart = 50
+                chartIntervalEnd = 50
+                chartLabelYCount = 6
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(μg/m³)"
             }
@@ -604,7 +604,7 @@ class ChartFragment: Fragment() {
                     in 0..15 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
-                    in 16..65 -> {
+                    in 16..54 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
                     in 65538..65540 -> {

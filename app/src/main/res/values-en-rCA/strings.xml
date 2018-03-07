@@ -25,6 +25,20 @@
     <string name="message_eCO2_Purple">The air quality is very unhealthy. Please leave here. Intensified ventilation is mandatory.</string>
     <string name="message_eCO2_Brown">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
 
+    <!-- pm2.5 message -->
+    <string name="label_pm25_Green">Good</string>
+    <string name="label_pm25_Yellow">Moderate</string>
+    <string name="label_pm25_Orange">High</string>
+    <string name="label_pm25_Red">Unhealthy</string>
+    <string name="label_pm25_Purple">Very Unhealthy</string>
+    <string name="label_pm25_Brown">Hazardous</string>
+    <string name="message_pm25_Green">The air quality is fine.</string>
+    <string name="message_pm25_Yellow">The air quality is moderate.</string>
+    <string name="message_pm25_Orange">The air quality is poor. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
+    <string name="message_pm25_Red">The air quality is unhealthy. Avoid staying in this situation too long.</string>
+    <string name="message_pm25_Purple">The air quality is very unhealthy. Please leave here.</string>
+    <string name="message_pm25_Brown">The air quality is hazardous. Please leave here immediately. Stay too long may affect lung function or causing irregular heartbeat.</string>
+
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>

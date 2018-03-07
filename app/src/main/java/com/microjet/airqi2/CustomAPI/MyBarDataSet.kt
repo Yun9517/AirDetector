@@ -57,11 +57,11 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
             }
             "PM2.5" -> {
                 return when(getEntryForXIndex(index).`val`) {
-                    in 0..220 -> mColors[0]         //G
-                    in 221..660 -> mColors[1]       //Y
-                    in 661..2200 -> mColors[2]      //O
-                    in 2201..5500 -> mColors[3]     //R
-                    in 5501..20000 -> mColors[4]    //P
+                    in 0..15 -> mColors[0]         //G
+                    in 16..34 -> mColors[1]       //Y
+                    in 35..54 -> mColors[2]      //O
+                    in 55..150 -> mColors[3]     //R
+                    in 151..250 -> mColors[4]    //P
                 //20180227未偵測值
                     in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[5]              //B

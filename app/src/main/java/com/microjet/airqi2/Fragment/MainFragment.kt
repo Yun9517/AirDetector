@@ -557,8 +557,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private fun pm25StatusTextShow(currentValue: Float) {
         when (currentValue) {
             in 0..15 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Green)
-                inCircleState.text = getString(R.string.label_eCO2_Green)
+                tvNotify?.text = getString(R.string.message_pm25_Green)
+                inCircleState.text = getString(R.string.label_pm25_Green)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
@@ -569,9 +569,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
 
-            in 16..35 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Yellow)
-                inCircleState.text = getString(R.string.label_eCO2_Yellow)
+            in 16..34 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Yellow)
+                inCircleState.text = getString(R.string.label_pm25_Yellow)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
                 inCircleState.setTextColor(
@@ -581,9 +581,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
-            in 36..65 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Orange)
-                inCircleState.text = getString(R.string.label_eCO2_Orange)
+            in 35..54 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Orange)
+                inCircleState.text = getString(R.string.label_pm25_Orange)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
                 inCircleState.setTextColor(
@@ -593,9 +593,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
-            in 66..150 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Red)
-                inCircleState.text = getString(R.string.label_eCO2_Red)
+            in 55..150 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Red)
+                inCircleState.text = getString(R.string.label_pm25_Red)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
@@ -606,8 +606,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             in 151..250 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Purple)
-                inCircleState.text = getString(R.string.label_eCO2_Purple)
+                tvNotify?.text = getString(R.string.message_pm25_Purple)
+                inCircleState.text = getString(R.string.label_pm25_Purple)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
                 inCircleState.setTextColor(
@@ -618,8 +618,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             else -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Brown)
-                inCircleState.text = getString(R.string.label_eCO2_Brown)
+                tvNotify?.text = getString(R.string.message_pm25_Brown)
+                inCircleState.text = getString(R.string.label_pm25_Brown)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
                 inCircleState.setTextColor(
