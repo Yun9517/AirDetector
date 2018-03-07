@@ -13,6 +13,14 @@
     </group>
 
     <group
+        android:id="@+id/group_9"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_accountManagement"
+            android:title="@string/text_navi_accountManagement" />
+    </group>
+
+    <group
         android:id="@+id/group_2"
         android:checkableBehavior="none">
         <item
@@ -30,19 +38,19 @@
     </group>
 
     <group
-        android:id="@+id/group_4"
-        android:checkableBehavior="none">
-        <item
-            android:id="@+id/nav_about"
-            android:title="@string/text_navi_about" />
-    </group>
-
-    <group
         android:id="@+id/group_5"
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_qanda"
             android:title="@string/text_navi_q_and_a" />
+    </group>
+
+    <group
+        android:id="@+id/group_4"
+        android:checkableBehavior="none">
+        <item
+            android:id="@+id/nav_about"
+            android:title="@string/text_navi_about" />
     </group>
 
     <group

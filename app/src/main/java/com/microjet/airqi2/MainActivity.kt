@@ -586,8 +586,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-
-
+    private fun accountShow() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+        startActivity(i)
+    }
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
@@ -595,7 +597,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         }
     }
-
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
@@ -605,6 +606,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_add_device -> blueToothConnect()
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about ->  aboutShow()
+            R.id.nav_accountManagement -> accountShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()

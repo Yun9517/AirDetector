@@ -536,10 +536,10 @@ class ChartFragment: Fragment() {
 
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 when(input) {
-                    in 28..35 -> {
+                    in 28..34 -> {
                         ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
-                    in 36..210 -> {
+                    in 35..210 -> {
                         ChartBackground.setBackgroundResource(R.drawable.bg_temp_red)
                     }
                     in 65538..65540 -> {

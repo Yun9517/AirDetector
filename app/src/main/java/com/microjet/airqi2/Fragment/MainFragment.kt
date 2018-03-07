@@ -462,7 +462,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun tempStatusTextShow(currentValue: Float) {
         when (currentValue) {
-            in 18..25 -> {
+            in 18..24 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -474,7 +474,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_green)
             }
-            in 26..200 -> {
+            in 25..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
