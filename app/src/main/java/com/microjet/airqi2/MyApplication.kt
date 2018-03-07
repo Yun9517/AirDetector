@@ -96,6 +96,23 @@ class MyApplication : Application() {
 
         Realm.setDefaultConfiguration(config)
 
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java).findAll()
+        Log.d("REALMAPP",query.toString())
+        var createdTime = 0L
+        query?.forEachIndexed { index, asmDataModel ->
+            if (asmDataModel.created_time == createdTime) {
+                realm.executeTransactionAsync {
+                    val realm1 = Realm.getDefaultInstance()
+                    val dataId = asmDataModel.dataId
+                    val query1 = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+                    Log.d("REALMAPPDUP",query1.toString())
+                    query1?.deleteFromRealm()
+                }
+                createdTime = asmDataModel!!.created_time
+            }
+        }
+
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)
         this.registerReceiver(mPrimaryReceiver, filter)
