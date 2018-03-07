@@ -183,6 +183,8 @@ public class UartService extends Service {
     private String DeviceAddress = "";
 
 
+    private String deviceVersion = "";
+
     //    public UartService() { //建構式
 //    }
     // Implements callback methods for GATT events that the app cares about.  For example,
@@ -1118,6 +1120,11 @@ public class UartService extends Service {
                     break;
                 case (byte) 0xB1:
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                    deviceVersion = RString.get(3);
+
+                    MyApplication.Companion.putDeviceVersion(deviceVersion);
+
+                    Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
@@ -1127,10 +1134,18 @@ public class UartService extends Service {
                     String setting2 = share.getString("sensor_to_get_sample", "2");
                     String setting3 = share.getString("pump_on_time", "1");
                     String setting4 = share.getString("pumping_time_range", "2");
-                    share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
+
+                    share.edit()
+                            .putString("sample_rate", "2")
+                            .putString("sensor_on_time_range", "60")
+                            .putString("sensor_to_get_sample", "2")
+                            .putString("pump_on_time", "1")
+                            .putString("pumping_time_range", "2").apply();
+
                     //當寫入完畢時會回吐B2 ok的CMD所作的處理
                     if (RString.size() >= 5) {
                         Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4));
+
                         if (setting0.equals(RString.get(0))
                                 && setting1.equals(RString.get(1))
                                 && setting2.equals(RString.get(2))
@@ -1138,7 +1153,12 @@ public class UartService extends Service {
                                 && setting4.equals(RString.get(4))) {
                             Log.d("0xB2", "True");
                         } else {
-                            share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
+                            share.edit()
+                                    .putString("sample_rate", "2")
+                                    .putString("sensor_on_time_range", "60")
+                                    .putString("sensor_to_get_sample", "2")
+                                    .putString("pump_on_time", "1")
+                                    .putString("pumping_time_range", "2").apply();
                             int[] param = {2, 2 * 30, 2, 1, 2, 0, 0};
                             Log.d(TAG, "setSampleRate");
                             writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
@@ -1236,7 +1256,12 @@ public class UartService extends Service {
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(nowItemReverse));
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
-                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
+                        myDeviceData.add(new myData(
+                                RString.get(1),
+                                RString.get(2),
+                                RString.get(3),
+                                RString.get(4),
+                                getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
 
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
@@ -1384,6 +1409,7 @@ public class UartService extends Service {
                                 true).apply();
                     }
 
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                     Log.e(TAG, "LED Status: " + ledState);
                     break;
             }

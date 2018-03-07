@@ -164,6 +164,8 @@
     <string name="cloud_fun">雲端功能</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
+    <string name="text_label_device_version">侦测器固件版号：</string>
+    <string name="text_label_local_uuid">手机 UUID</string>
 
 </resources>
 

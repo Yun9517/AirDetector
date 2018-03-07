@@ -29,6 +29,7 @@ class MyApplication : Application() {
 
     companion object {
         private var instance: MyApplication? = null
+        private var deviceVer: String = ""
 
         fun applicationContext(): Context {
             return instance!!.applicationContext
@@ -92,6 +93,14 @@ class MyApplication : Application() {
         fun getSharePreferenceMAC(): String {
             val share = applicationContext().getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
             return share.getString("mac", "11:22:33:44:55:66")
+        }
+
+        fun putDeviceVersion(value: String) {
+            deviceVer = value
+        }
+
+        fun getDeviceVersion(): String {
+            return deviceVer
         }
     }
 

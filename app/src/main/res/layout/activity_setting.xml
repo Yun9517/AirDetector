@@ -288,10 +288,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="@string/text_setting_off"
             android:textSize="18sp" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text_label_uuid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:text="@string/text_label_local_uuid"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/text_local_uuid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:text="00000000-0000-0000-0000-000000000000"
+        android:textSize="18sp" />
 
     <ImageView
         android:layout_width="fill_parent"
@@ -300,6 +322,17 @@
         android:layout_marginTop="5dp"
         android:visibility="visible"
         android:background="#484848" />
+
+    <TextView
+        android:id="@+id/text_device_ver"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/text_label_device_version"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -329,7 +362,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
+            android:layout_marginStart="10dp"
             android:text="@string/text_setting_off"
             android:textSize="18sp" />
     </LinearLayout>
@@ -337,7 +370,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"></LinearLayout>
+        android:orientation="vertical" />
 
     <TextView
         android:id="@+id/textView24"

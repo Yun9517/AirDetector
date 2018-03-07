@@ -1,5 +1,6 @@
 package com.microjet.airqi2
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
@@ -62,9 +64,13 @@ class SettingActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         readPreferences()   // 當Activity onResume時載入設定值
+
+        text_local_uuid.text = MyApplication.getPsuedoUniqueID()
+        text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
     }
 
     private fun readPreferences() {
