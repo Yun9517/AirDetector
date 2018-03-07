@@ -11,6 +11,9 @@ import android.content.*
 import android.content.pm.PackageManager
 
 import android.graphics.drawable.AnimationDrawable
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
@@ -21,6 +24,7 @@ import android.os.IBinder
 import android.provider.Settings
 import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
@@ -124,6 +128,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDeviceAddress: String? = null
     private var mUartService: UartService? = null
 
+    private var lati = 121.4215f
+    private var longi = 24.959742f
+    private var locationListener: LocationListener? = null
+
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             mUartService = (service as UartService.LocalBinder).serverInstance
@@ -210,6 +218,37 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             mUartService?.connect(mDeviceAddress)
         }
+
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location?) {
+                Log.d("LocationListener1",location?.longitude.toString())
+                Log.d("LocationListener1",location?.latitude.toString())
+
+                lati = location?.latitude!!.toFloat()
+                longi = location?.longitude!!.toFloat()
+
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent?.putExtra("status", BroadcastActions.INTENT_KEY_LOCATION_VALUE)
+                val bundle: Bundle? = Bundle()
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE,lati)
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE,longi)
+                intent!!.putExtra("TwoValueBundle",bundle)
+                sendBroadcast(intent)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+        getLocation()
     }
 
     override fun onResume() {
@@ -226,7 +265,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
         Log.i(TAG, "call onStop")
-
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager.removeUpdates(locationListener)
     }
 
 
@@ -949,7 +989,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //        return isInBackground;
 //    }
 
-
     //20180307
     private var client: OkHttpClient? = null
     private val hasBeenUpLoaded = java.util.ArrayList<Int>()
@@ -1154,6 +1193,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             dbSucessOrNot = false
         }
         return dbSucessOrNot
+    }
+
+    private fun getLocation() {
+        checkGPSPermisstion()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val criteria = Criteria()
+        criteria.accuracy = Criteria.ACCURACY_MEDIUM
+        criteria.powerRequirement = Criteria.POWER_MEDIUM
+        val provider = locationManager.getBestProvider(criteria, true)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 5000, 10f, locationListener)
+        }
+    }
+
+    private fun checkGPSPermisstion() {
+        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        Log.d("MAINAC", permission.toString())
+        val permission1 = PackageManager.PERMISSION_GRANTED
+        Log.d("MAINAC", permission1.toString())
     }
 }
 
