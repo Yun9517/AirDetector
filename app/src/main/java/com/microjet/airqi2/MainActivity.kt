@@ -304,8 +304,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //val intent: Intent? = Intent(this, UartService::class.java)
         //stopService(intent)
         mUartService?.close()
-        unbindService(mServiceConnection)
-
+        if (mUartService != null) {
+            unbindService(mServiceConnection)
+        }
     }
 
     // 20171130 add by Raymond 增加權限 Request
