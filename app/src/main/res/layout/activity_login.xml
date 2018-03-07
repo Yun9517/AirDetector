@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ChartBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/app_bg_cloud_green">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/createAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_marginStart="75dp"
+            android:text="@string/account_Login"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:orientation="vertical"/>
+
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/enter_Email"
+            android:ems="10"
+            android:inputType="textEmailAddress"
+            android:textSize="20sp"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:hint="@string/enter_Password"
+            android:ems="10"
+            android:inputType="textPassword"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="70dp"
+            android:text="@string/forget_Password"/>
+
+        <ImageView
+            android:layout_width="235dp"
+            android:layout_height="0.5dp"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center"
+            android:visibility="visible"
+            android:background="#484848" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/noAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="00dp"
+                android:text="@string/no_Account"/>
+
+            <TextView
+                android:id="@+id/newAccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="0dp"
+                android:textColorLink="@color/progressBarDarkBlue"
+                android:text="@string/create_New_account"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/nextStep"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="0dp"
+            android:text="@string/login"/>
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>

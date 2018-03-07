@@ -32,7 +32,7 @@
             android:layout_marginStart="50dp"
             android:text="@string/enter_Verification_code"
             android:ems="10"
-            android:inputType="textEmailAddress"
+            android:inputType="textPassword"
             android:textSize="20sp"/>
 
         <TextView
