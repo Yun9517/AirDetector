@@ -400,12 +400,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val name = share.getString("name", "")
 
                 if(name == "TVOC_NOSE") {
-                    if(position == 4) {
-                        //mPageVp!!.currentItem = 4
-                        banDownDraw = true
-                    } else {
-                        banDownDraw = false
-                    }
+                    banDownDraw = position == 4     // 如果 position = 4，banDownDraw = true，反之 banDownDraw = false
                 }
                 //Log.e("offset:", offset.toString() + "")
             }
@@ -419,6 +414,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mFragmentAdapter.notifyDataSetChanged()
     }
 
+    // 如果 banDownDraw = true，封鎖下滑的手勢
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
         // TODO Auto-generated method stub
         if (banDownDraw) {
@@ -851,11 +847,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
                     val name = share.getString("name", "")
 
-                    if(name == "TVOC_NOSE") {
+                    // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
+                    /*if(name == "TVOC_NOSE") {
                         this@MainActivity.supportFragmentManager.beginTransaction().hide(mPM25Fg).commit()
                     } else {
                         this@MainActivity.supportFragmentManager.beginTransaction().show(mPM25Fg).commit()
-                    }
+                    }*/
                     // drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //    updateUI(intent)
                 }
