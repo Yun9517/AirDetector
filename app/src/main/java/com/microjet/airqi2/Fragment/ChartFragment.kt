@@ -353,7 +353,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_TVOC -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
                         }
@@ -363,7 +363,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_ECO2 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
                         }
@@ -374,7 +374,7 @@ class ChartFragment: Fragment() {
                         val temp: Float? = e?.`val`
                         val temp1: Float? = (temp!! - 10.0f)
                         if (temp1!! == 65528f) {
-                            mTextViewValue!!.text = "---" + " ℃"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             val newTemp = "%.1f".format(temp1)
                             mTextViewValue!!.text = "$newTemp ℃"
@@ -385,7 +385,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_HUMIDITY -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " %"
                         }
@@ -536,10 +536,10 @@ class ChartFragment: Fragment() {
 
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 when(input) {
-                    in 28..35 -> {
+                    in 28..34 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
-                    in 36..210 -> {
+                    in 35..210 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
                     }
                     else -> {

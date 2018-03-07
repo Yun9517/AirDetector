@@ -4,6 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 
 class AccountManagementActivity : AppCompatActivity() {
 
@@ -16,6 +19,22 @@ class AccountManagementActivity : AppCompatActivity() {
         mContext = this@AccountManagementActivity.applicationContext
 
         initActionBar()
+
+        // get reference to all views
+        var et_user_name = findViewById(R.id.email) as EditText
+        var et_password = findViewById(R.id.password) as EditText
+        var btn_submit = findViewById(R.id.login) as Button
+        var forgot_password = findViewById(R.id.forgotPassword) as TextView
+        var create_account = findViewById(R.id.newAccount) as TextView
+
+        // set on-click listener
+        btn_submit.setOnClickListener {
+            val user_name = et_user_name.text
+            val password = et_password.text
+        }
+
+        // your code to validate the user_name and password combination
+        // and verify the same
 
     }
 
