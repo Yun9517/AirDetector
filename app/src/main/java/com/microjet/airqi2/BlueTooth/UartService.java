@@ -1992,19 +1992,21 @@ public class UartService extends Service {
                 //呼叫getResponse取得結果
                 if (return_body.contentLength() > 0) {
                     getResponeResult = getResponse(return_body);
-                }
-                if (getResponeResult) {
-                    //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
-                    boolean DBSucess = updateDB_UpLoaded();
-                    if (DBSucess) {
-                        Log.e("幹改進去", String.valueOf(DBSucess));
+
+                    if (getResponeResult) {
+                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                        boolean DBSucess = updateDB_UpLoaded();
+                        if (DBSucess) {
+                            Log.e("幹改進去", String.valueOf(DBSucess));
+                        }
+                        hasBeenUpLoaded.clear();
+                    }else {
+                        Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
                     }
-                    hasBeenUpLoaded.clear();
                 }else {
-                    Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
+                    Log.e("幹太少筆啦!", String.valueOf(return_body.contentLength()));
                 }
-            } catch (IOException e) {
-                Log.e("return_body_erro", e.toString());
+
             } catch (Exception e) {
                 Log.e("return_body_erro", e.toString());
             }
@@ -2070,34 +2072,36 @@ public class UartService extends Service {
 
         Long timestampTEMP=null;
 
-        try {
-            for (int i = 0; i < result1.size()-1; i++) {
+        try {if(result1.size()>0) {
+            for (int i = 0; i < result1.size() ; i++) {
                 //toltoSize++;
-                if (i == 6000 ) {
+                if (i == 6000) {
                     break;
                 }
-                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())){
-                    realm.beginTransaction();
-                    result1.get(i).setUpLoaded("1");
-                    realm.commitTransaction();
-                    Log.e("資料相同時",result1.get(i).getCreated_time().toString()+"下筆資料"+result1.get(i).getCreated_time().toString());
-                }else {
-                    hasBeenUpLoaded.add(result1.get(i).getDataId());
-                    Log.i("text", "i=" + i + "\n");
-                    JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
-                    json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
-                    json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
-                    json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
-                    json_obj_weather.put("eco2", result1.get(i).getECO2Value());
-                    json_obj_weather.put("pm25", result1.get(i).getPM25Value());
-                    json_obj_weather.put("longitude", "24.778289");
-                    json_obj_weather.put("latitude", "120.988108");
-                    json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
-                    Log.e("timestamp", "i="+i+"timestamp=" + result1.get(i).getCreated_time().toString());
-                    json_arr.put(json_obj_weather);
-                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
-                }
+//                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
+//                    realm.beginTransaction();
+//                    result1.get(i).deleteFromRealm();
+//                    realm.commitTransaction();
+//                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
+//                }
+                hasBeenUpLoaded.add(result1.get(i).getDataId());
+                Log.i("text", "i=" + i + "\n");
+                JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
+                json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
+                json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
+                json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
+                json_obj_weather.put("eco2", result1.get(i).getECO2Value());
+                json_obj_weather.put("pm25", result1.get(i).getPM25Value());
+                json_obj_weather.put("longitude", "24.778289");
+                json_obj_weather.put("latitude", "120.988108");
+                json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
+                Log.e("timestamp", "i=" + i + "timestamp=" + result1.get(i).getCreated_time().toString());
+                json_arr.put(json_obj_weather);
+                //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
             }
+        }else {
+            Log.e("未上傳資料筆數", String.valueOf(result1.size()));
+        }
 
             json_obj.put("uuid",  UUID );
             json_obj.put("mac_address", DeviceAddress);
