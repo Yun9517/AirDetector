@@ -211,6 +211,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        Log.e("MainFrg", "onDestroy() called...")
     }
 
 

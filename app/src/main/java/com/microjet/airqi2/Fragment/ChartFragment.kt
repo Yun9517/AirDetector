@@ -53,6 +53,7 @@ class ChartFragment: Fragment() {
     private val DEFINE_FRAGMENT_ECO2 = 2
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
     private val DEFINE_FRAGMENT_HUMIDITY = 4
+    private val DEFINE_FRAGMENT_PM25 = 5
 
     private var mContext: Context? = null
 
@@ -193,6 +194,17 @@ class ChartFragment: Fragment() {
                 chartLabelYCount = 6
                 chartIsShowMinTextView = false
                 chartLabelUnit = "( %)"
+            }
+            DEFINE_FRAGMENT_PM25 -> {
+                chartLabel = "PM2.5"
+                chartMin = 0.0f
+                chartMax = 1500.0f
+                chartIntervalStep = 500
+                chartIntervalStart = 500
+                chartIntervalEnd = 1000
+                chartLabelYCount = 16
+                chartIsShowMinTextView = false
+                chartLabelUnit = "(ppm)"
             }
         }
     }
@@ -392,6 +404,16 @@ class ChartFragment: Fragment() {
 
                         changeBackground(temp!!.toInt())
                     }
+                    DEFINE_FRAGMENT_PM25 -> {
+                        val temp = e?.`val`
+                        if (temp == 65538f) {
+                            mTextViewValue!!.text = "沒有偵測"
+                        } else {
+                            mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
+                        }
+
+                        changeBackground(temp!!.toInt())
+                    }
                 }
             }
         })
@@ -490,6 +512,16 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context, R.color.Main_textResult_Bad))
             }
+            DEFINE_FRAGMENT_PM25 -> {
+                CharLabel?.text = getString(R.string.text_label_pm25)
+                faceBar?.setImageResource(R.drawable.face_bar_tvoc)
+                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+            }
         }
 
         configChartView()
@@ -558,6 +590,22 @@ class ChartFragment: Fragment() {
                     }
                     else -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                }
+            }
+            DEFINE_FRAGMENT_PM25 -> {
+                when(input) {
+                    in 0..220 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    in 220..2199 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+                    }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    }
+                    else -> {
+                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
                     }
                 }
             }
@@ -793,6 +841,10 @@ class ChartFragment: Fragment() {
                         arrData[count] = asmDataModel.humiValue.toString()
                         sumValueInt += arrData[count].toInt()
                     }
+                    DEFINE_FRAGMENT_PM25 -> {
+                        arrData[count] = asmDataModel.pM25Value.toString()
+                        sumValueInt += arrData[count].toInt()
+                    }
                 }
                 //Log.v("hilightCount:", count.toString())
             }
@@ -824,6 +876,7 @@ class ChartFragment: Fragment() {
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
         var AVGTvoc3 = 0.0F
+        var AVGPm25 = 0.0F
         Log.d("getRealmWeek" + UseFor.toString(), sqlStartDate.toString())
         Log.d("getRealmWeek" + UseFor.toString(), sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
@@ -845,6 +898,9 @@ class ChartFragment: Fragment() {
                     }
                     DEFINE_FRAGMENT_HUMIDITY -> {
                         sumYesterday += i.humiValue.toInt()
+                    }
+                    DEFINE_FRAGMENT_PM25 -> {
+                        sumYesterday += i.pM25Value.toInt()
                     }
                 }
             }
@@ -870,6 +926,10 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_HUMIDITY-> {
                 result_Today!!.text = avgValueInt.toString() + " %"
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " %"
+            }
+            DEFINE_FRAGMENT_PM25 -> {
+                result_Today!!.text = avgValueInt.toString() + " ppm"
+                result_Yesterday!!.text = AVGPm25.toInt().toString()+ " ppm"
             }
         }
     }
@@ -917,6 +977,9 @@ class ChartFragment: Fragment() {
                         }
                         DEFINE_FRAGMENT_HUMIDITY -> {
                             sumThisAndLastWeek += i.humiValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_PM25 -> {
+                            sumThisAndLastWeek += i.pM25Value.toInt()
                         }
                     }
                 }
@@ -974,6 +1037,9 @@ class ChartFragment: Fragment() {
                         }
                         DEFINE_FRAGMENT_HUMIDITY -> {
                             sumMonth += i.humiValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_PM25 -> {
+                            sumMonth += i.pM25Value.toInt()
                         }
                     }
                 }
@@ -1120,6 +1186,7 @@ class ChartFragment: Fragment() {
                     var eco2Val = "0"
                     var tempVal = "0"
                     var humiVal = "0"
+                    var pm25Val = "0"
                     when (UseFor){
                         DEFINE_FRAGMENT_TVOC -> {
                             tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
@@ -1133,6 +1200,9 @@ class ChartFragment: Fragment() {
                         DEFINE_FRAGMENT_HUMIDITY -> {
                             humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                         }
+                        DEFINE_FRAGMENT_PM25 -> {
+                            pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE)
+                        }
                     }
 
                     //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
@@ -1141,7 +1211,7 @@ class ChartFragment: Fragment() {
                         //新增AnimationCount
                         animationCount++
                         counter++
-                        when (UseFor){
+                        when (UseFor) {
                             DEFINE_FRAGMENT_TVOC -> {
                                 valueIntAVG += tvocVal.toInt()
                             }
@@ -1153,6 +1223,9 @@ class ChartFragment: Fragment() {
                             }
                             DEFINE_FRAGMENT_HUMIDITY -> {
                                 valueIntAVG += humiVal.toInt()
+                            }
+                            DEFINE_FRAGMENT_PM25 -> {
+                                valueIntAVG += pm25Val.toInt()
                             }
                         }
 

@@ -70,6 +70,7 @@ class DeviceListActivity : Activity() {
 
         val share = getSharedPreferences("MACADDRESS", MODE_PRIVATE)
         share.edit().clear().putString("mac",device.address).apply()
+        share.edit().clear().putString("name",device.name).apply()
 
         scanLeDevice(false)
 

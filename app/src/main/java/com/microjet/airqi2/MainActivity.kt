@@ -4,12 +4,11 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
-
 import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
@@ -24,13 +23,13 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
-import io.realm.Realm
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.CustomViewPager
@@ -40,10 +39,11 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
-import com.microjet.airqi2.Fragment.*
+import com.microjet.airqi2.Fragment.ChartFragment
+import com.microjet.airqi2.Fragment.MainFragment
+import io.realm.Realm
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val DEFINE_FRAGMENT_CO2 = 2
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
     private val DEFINE_FRAGMENT_HUMIDITY = 4
+    private val DEFINE_FRAGMENT_PM25 = 5
     public val mContext = this@MainActivity
 
     // Fragment 容器
@@ -74,7 +75,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
-    private var menuItem: MenuItem? = null
+    //private var menuItem: MenuItem? = null
     private var lightIcon: ImageView? = null
 
     private var connState = BleConnection.DISCONNECTED
@@ -115,6 +116,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDeviceAddress: String? = null
     private var mUartService: UartService? = null
 
+    // FragmentAdapter
+    private lateinit var mFragmentAdapter: FragmentAdapter
+
+    //
+    private val mPM25Fg = ChartFragment()
+    /** 是否禁止右劃標記  */
+    private var banDownDraw: Boolean = false
+    /** 手指在螢幕上的最後x坐標  */
+    private var mLastMotionY: Float = 0.toFloat()
+
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             mUartService = (service as UartService.LocalBinder).serverInstance
@@ -141,7 +152,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.i(TAG, "call onCreate")
 
         uiFindViewById()
+
         viewPagerInit()
+
         initActionBar()
 
         val dm = DisplayMetrics()
@@ -150,17 +163,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         Log.e("Conn", MyApplication.getConnectStatus())
 
-        // 電池電量假資料
-        //   batValue = 30
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val serviceIntent: Intent? = Intent(this, UartService::class.java)
-//            ContextCompat.startForegroundService(this, serviceIntent)
-//            //startForegroundService(serviceIntent)
-//        } else {
-
-        //}
-
-
         if (!mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
             mIsReceiverRegistered = true
@@ -168,7 +170,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         setupDrawerContent(nvDrawerNavigation)
 
-        UartService.nowActivity=this
+        UartService.nowActivity = this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         //20180206
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
@@ -225,8 +227,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
      override fun onBackPressed() {
         //實現模擬home鍵功能
         //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
-        var intent: Intent = Intent(Intent.ACTION_MAIN)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
@@ -270,7 +272,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 .setMessage(R.string.text_message_need_permission)
                 .setCancelable(false)
                 .setPositiveButton(resources.getString(R.string.text_message_yes)
-                ) { dialog, which -> finish() }
+                ) { _, _ -> finish() }
 
         val mADialog = mBuilder.create()
         mADialog.show()
@@ -304,7 +306,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkBluetooth() {
         // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
-        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)
         val mBluetoothAdapter = mBluetoothManager.adapter
 
         // 若手機不支援BLE則離開APP
@@ -324,7 +326,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 //enableBtIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 //mContext.startActivityForResult(enableBtIntent,5)
-                var intentOpenBluetoothSettings = Intent()
+                val intentOpenBluetoothSettings = Intent()
                 intentOpenBluetoothSettings.action = android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
                 startActivity(intentOpenBluetoothSettings)
             }
@@ -356,24 +358,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mHumiFg = HumidiytFragment()
 */
 
-        val mHumiFg=ChartFragment()
-        val mTvocFg=ChartFragment()
-        val mEco2Fg=ChartFragment()
-        val mTempFg=ChartFragment()
+        val mHumiFg = ChartFragment()
+        val mTvocFg = ChartFragment()
+        val mEco2Fg = ChartFragment()
+        val mTempFg = ChartFragment()
+        //mPM25Fg = ChartFragment()
+
         mTvocFg.ConfigFragment(DEFINE_FRAGMENT_TVOC)
         mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTempFg.ConfigFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.ConfigFragment(DEFINE_FRAGMENT_HUMIDITY)
+        mPM25Fg.ConfigFragment(DEFINE_FRAGMENT_PM25)
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
         mFragmentList.add(mEco2Fg)
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
+        mFragmentList.add(mPM25Fg)
 
+        mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 
-        val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
+        mPageVp!!.isScrollable = true
         mPageVp!!.currentItem = 0
         mPageVp!!.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
@@ -389,46 +396,49 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageScrolled(position: Int, offset: Float,
                                         offsetPixels: Int) {
 
+                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                val name = share.getString("name", "")
+
+                if(name == "TVOC_NOSE") {
+                    if(position == 4) {
+                        //mPageVp!!.currentItem = 4
+                        banDownDraw = true
+                    } else {
+                        banDownDraw = false
+                    }
+                }
                 //Log.e("offset:", offset.toString() + "")
             }
 
             override fun onPageSelected(position: Int) {
                 Log.d("PageSelected", position.toString())
                 currentIndex = position
-//                if (currentIndex >= 1) {
-//                    when (currentIndex) {
-//                        1 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TVOCFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        2 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as ECO2Fragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        3 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TempFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        4 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as HumidiytFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                    }
-//                    //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-//                //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
-//                    //先測試下載功能是否OK
-//                    //(mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
-//                }
             }
         })
+
+        mFragmentAdapter.notifyDataSetChanged()
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // TODO Auto-generated method stub
+        if (banDownDraw) {
+            when (ev.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mLastMotionY = ev.y
+                    Log.e(TAG, "EV Y: $mLastMotionY")
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (ev.y - mLastMotionY < 0) {
+                        mPageVp!!.isScrollable = false
+                        Log.e(TAG, "EV Y: ${ev.y - mLastMotionY}")
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    mPageVp!!.isScrollable = true
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private fun initActionBar() {
@@ -448,6 +458,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // 設定 DrawerLayout 監聽事件
         mDrawerLayout!!.addDrawerListener(mDrawerToggle!!)
 
+    }
+
+    private fun checkLastPM25Value(): Boolean {
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        val dbSize = query.findAll().size - 1
+        val lastPM25val = query.findAll()[dbSize]!!.pM25Value
+
+        return lastPM25val != "65535"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -493,7 +512,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     //選單內容
-    private fun dialogShow(title: String, content: String) {
+    /*private fun dialogShow(title: String, content: String) {
         val i: Intent? = Intent(this, CustomDialogActivity::class.java)
         val bundle: Bundle? = Bundle()
         bundle!!.putString("dialogTitle", title)
@@ -501,7 +520,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         i!!.putExtras(bundle)
         startActivity(i)
-    }
+    }*/
 
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
@@ -572,7 +591,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         isGPSEnabled = mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
         // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
-        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)
         val mBluetoothAdapter = mBluetoothManager.adapter
         if (!isGPSEnabled) {
             setGPSEnabled()
@@ -621,6 +640,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         va.start()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun heatingPanelControl(preheatCountDownString : String) {
         if (mWaitLayout!!.visibility == View.INVISIBLE) {
             heatingPanelShow()
@@ -629,7 +649,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         if (preheatCountDownString != "255") {
             preheatCountDownInt = (120 - preheatCountDownString.toInt())
-            Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
+            Log.v(TAG, "Preheat Count Down: $preheatCountDownInt")
             mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
             //if (mWaitLayout!!.visibility == View.VISIBLE) {
             //    heatingPanelHide()
@@ -671,14 +691,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
                         print("MainActivity")
                         val result = mUartService?.connect(mDeviceAddress)
-                        Log.d(TAG, "Connect request result=" + result)
+                        Log.d(TAG, "Connect request result=$result")
                     }
                 }
             }
 
             REQUEST_SELECT_SAMPLE -> {
                 if (data != null) {
-                    var value = data.getIntExtra("choseCycle", 0)
+                    val value = data.getIntExtra("choseCycle", 0)
                     val uuintent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     uuintent!!.putExtra("status", "setSampleRate")
 
@@ -719,7 +739,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun makeGattUpdateIntentFilter(): IntentFilter {
-        var intentFilter = IntentFilter()
+        val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
         intentFilter.addAction(BroadcastActions.EXTRA_DATA)
         //intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
@@ -816,7 +836,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val TAG = MainActivity::class.java.simpleName
     // inner class MyBroadcastReceiver : BroadcastReceiver()
     private val MyBroadcastReceiver = object : BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
             //updateUI(intent)
             checkBluetooth()
@@ -826,32 +846,41 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = BleConnection.CONNECTED
                     val bundle = intent.extras
                     drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
-                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_x3)
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+
+                    val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                    val name = share.getString("name", "")
+
+                    if(name == "TVOC_NOSE") {
+                        this@MainActivity.supportFragmentManager.beginTransaction().hide(mPM25Fg).commit()
+                    } else {
+                        this@MainActivity.supportFragmentManager.beginTransaction().show(mPM25Fg).commit()
+                    }
                     // drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
-                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
                     heatingPanelHide()
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     val bundle = intent.extras
-                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
                     batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
                     val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     Log.v(TAG, "電池電量: $batValue%")
                     // 預熱畫面控制
                     heatingPanelControl(preheatCountDownString)
                     displayConnetedBatteryLife()
-                    //bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 }
             }
-            Log.d("MainActivity","OnReceive: " + action)
+            Log.d("MainActivity", "OnReceive: $action")
             checkUIState()
         }
 
@@ -864,7 +893,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
         } else {
@@ -872,12 +901,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
-        Log.d("MAINcheckUIState",connState.toString())
+        Log.d("MAINcheckUIState", connState.toString())
     }
 
 
@@ -912,7 +941,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    }
                 }
             }
-            Log.v(TAG, "mBluetoothStateReceiver: " + stateStr)
+            Log.v(TAG, "mBluetoothStateReceiver: $stateStr")
         }
     }
 //private boolean isAppIsInBackground(Context context) {

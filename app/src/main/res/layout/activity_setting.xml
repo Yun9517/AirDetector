@@ -38,7 +38,7 @@
         android:layout_height="2dp"
         android:layout_marginBottom="5dp"
         android:layout_marginTop="5dp"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:background="#484848" />
 
 
