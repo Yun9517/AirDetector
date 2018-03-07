@@ -119,7 +119,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             checkUIState()
         }*/
         imgLight.setOnTouchListener { view, motionEvent ->
-            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
+            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2 || dataForState == DetectionData.PM25) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
                 when(motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
@@ -308,7 +308,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             tvBtmPM25Value.text = "Not Support"
             show_PM.isEnabled = false
         } else {
-            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + "μg/m³"
+            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + " μg/m³"
             show_PM.isEnabled = true
         }
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
@@ -554,6 +554,84 @@ class MainFragment : Fragment(), View.OnTouchListener {
         }
     }
 
+    private fun pm25StatusTextShow(currentValue: Float) {
+        when (currentValue) {
+            in 0..15 -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Green)
+                inCircleState.text = getString(R.string.label_eCO2_Green)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+            }
+
+            in 16..35 -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Yellow)
+                inCircleState.text = getString(R.string.label_eCO2_Yellow)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 36..65 -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Orange)
+                inCircleState.text = getString(R.string.label_eCO2_Orange)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 66..150 -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Red)
+                inCircleState.text = getString(R.string.label_eCO2_Red)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_04)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            in 151..250 -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Purple)
+                inCircleState.text = getString(R.string.label_eCO2_Purple)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_05)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.message_eCO2_Brown)
+                inCircleState.text = getString(R.string.label_eCO2_Brown)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_06)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+        }
+    }
+
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
@@ -648,16 +726,16 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     //inCircleBar.setCurrentValues(tvocDataFloat)
                     inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                     //數值不等比顯示
-                    when (tvocDataFloat) {
-                        in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
-                        in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
-                        in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
-                        in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
-                        else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
+                    when (pm25DataFloat) {
+                        in 0..15 -> inCircleBar.setCurrentValues(pm25DataFloat)
+                        in 16..35 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 700)
+                        in 36..65 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 770)
+                        in 66..150 -> inCircleBar.setCurrentValues((pm25DataFloat / 180) + 830)
+                        else -> inCircleBar.setCurrentValues((pm25DataFloat / 360) + 890)
                     }
                     //inCircleBar.setCurrentValues(1000f)
-                    tvocStatusTextShow(tvocDataFloat)
-                    val temp = tvocDataFloat.toInt().toString() + " μg/m³"
+                    pm25StatusTextShow(pm25DataFloat)
+                    val temp = pm25DataFloat.toInt().toString() + " μg/m³"
                     textSpannable(temp)
                 }
             }

@@ -198,10 +198,10 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_PM25 -> {
                 chartLabel = "PM2.5"
                 chartMin = 0.0f
-                chartMax = 1500.0f
-                chartIntervalStep = 500
-                chartIntervalStart = 500
-                chartIntervalEnd = 1000
+                chartMax = 500.0f
+                chartIntervalStep = 250
+                chartIntervalStart = 250
+                chartIntervalEnd = 500
                 chartLabelYCount = 16
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(μg/m³)"
@@ -407,7 +407,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_PM25 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " μg/m³"
                         }
@@ -601,10 +601,10 @@ class ChartFragment: Fragment() {
             }
             DEFINE_FRAGMENT_PM25 -> {
                 when(input) {
-                    in 0..220 -> {
+                    in 0..15 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
-                    in 220..2199 -> {
+                    in 16..65 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
                     in 65538..65540 -> {
