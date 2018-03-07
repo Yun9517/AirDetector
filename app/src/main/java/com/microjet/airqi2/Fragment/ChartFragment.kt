@@ -484,7 +484,7 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_HUMIDITY -> {
-                CharLabel?.text = getString(R.string.text_label_humidity)
+                CharLabel?.text = getString(R.string.text_label_humidity_full)
                 faceBar?.setImageResource(R.drawable.face_bar_humidity)
                 intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
                         ContextCompat.getColor(context, R.color.Main_textResult_Good),

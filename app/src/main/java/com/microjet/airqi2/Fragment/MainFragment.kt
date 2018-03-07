@@ -298,7 +298,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
         } else {
-            tvBtmPM25Value.text = pm25DataFloat.toInt().toString()
+            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + "μg/m³"
         }
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
