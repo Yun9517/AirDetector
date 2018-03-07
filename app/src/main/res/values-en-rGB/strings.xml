@@ -51,6 +51,8 @@
     <string name="text_navi_getData">Read Data From Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
+    <string name="text_navi_accountManagement">Account</string>
+
     <string name="ble_not_supported">Bluetooth not support.</string>
     <string name="select_device">Select device</string>
     <string name="scanning">Scanning...</string>
@@ -151,11 +153,11 @@
     <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
     <string name="permission_required_toast">Location permission is required for this demo.</string>
 
-    //20180206
+    <!-- 2018/02/06 -->
     <string name="bat_switch">L-Battery</string>
     <string name="led_light">LED</string>
 
-    //2018/03/02
+    <!-- 2018/03/02 -->
     <string name="auto_sync">Enable auto-sync</string>
     <string name="allow_3G">Cellular Data</string>
 
@@ -165,5 +167,22 @@
     <string name="not_yetDetected">Not yet detected</string>
     <string name="text_label_device_version">Device Firmware Version: </string>
     <string name="text_label_local_uuid">Cellphone UUID</string>
+
+    <!-- 2018/03/02 Register & Cloud String-->
+    <string name="account_Login">Sign In</string>
+    <string name="login">Sign in</string>
+    <string name="enter_Password">Password</string>
+    <string name="forget_Password">Forgot password?</string>
+    <string name="no_Account">No account? </string>
+    <string name="create_New_account">Create a new account</string>
+    <string name="create_Account">Create Account</string>
+    <string name="enter_Email">Please enter your e-mail</string>
+    <string name="next_Step">Next</string>
+    <string name="enter_Verification_code">Enter Verification Code</string>
+    <string name="cannot_Receive_mail">Did not get mail?</string>
+    <string name="resend_Mail">Resend</string>
+    <string name="confirm">Confirm</string>
+    <string name="active">Active</string>
+    <string name="logout">Sign out</string>
 
 </resources>

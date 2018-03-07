@@ -177,6 +177,8 @@ public class UartService extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
+    private Float lati = 121.4215f;
+    private Float longi = 24.959742f;
 
     //20180227
     private OkHttpClient client = null;
@@ -794,6 +796,10 @@ public class UartService extends Service {
                 case BroadcastActions.INTENT_KEY_LED_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
                     break;
+                case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
+                    lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
+                    longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
+                    break;
             }
         }
     }
@@ -1281,6 +1287,10 @@ public class UartService extends Service {
                             asmData.setPM25Value(RString.get(5));
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
+                            asmData.setLatitude(lati);
+                            asmData.setLongitude(longi);
+                            Log.d("0xB5count",String.valueOf(countForItem));
+                            Log.d("0xB5count",String .valueOf(counterB5));
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1370,7 +1380,6 @@ public class UartService extends Service {
                             Log.d("0xB6DBLastTime", new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
                             if (!arrB6.get(count).get("CreatedTime").equals(maxCreatedTime)) {
-
                                 realm.executeTransaction(r -> {
                                     AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
                                     asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
@@ -1381,13 +1390,15 @@ public class UartService extends Service {
                                     Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
                                     asmData.setCreated_time(time);
                                     asmData.setMACAddress(macAddressForDB);
+                                    asmData.setLatitude(lati);
+                                    asmData.setLongitude(longi);
                                     //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
                                     Log.d("RealmTimeB6", arrB6.toString());
                                     Log.d("RealmTimeB6", new Date(time).toString());
                                     //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                                 });
                                 realm.close();
-                            }else {
+                            } else {
                                 Log.d("0xb6CreatedTIME",arrB6.get(count).get("CreatedTime").toString());
                             }
                         }
@@ -1397,7 +1408,7 @@ public class UartService extends Service {
                         //timeSetNowToThirty();
                         //20160227
                         if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, false)) {
-                            new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upWeather");
+                            new postDataAsyncTasks().execute("https://api.mjairql.com/api/v1/upUserData");
                         }
 
                     }
@@ -2018,19 +2029,21 @@ public class UartService extends Service {
                 //呼叫getResponse取得結果
                 if (return_body.contentLength() > 0) {
                     getResponeResult = getResponse(return_body);
-                }
-                if (getResponeResult) {
-                    //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
-                    boolean DBSucess = updateDB_UpLoaded();
-                    if (DBSucess) {
-                        Log.e("幹改進去", String.valueOf(DBSucess));
+
+                    if (getResponeResult) {
+                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                        boolean DBSucess = updateDB_UpLoaded();
+                        if (DBSucess) {
+                            Log.e("幹改進去", String.valueOf(DBSucess));
+                        }
+                        hasBeenUpLoaded.clear();
+                    }else {
+                        Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
                     }
-                    hasBeenUpLoaded.clear();
                 }else {
-                    Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
+                    Log.e("幹太少筆啦!", String.valueOf(return_body.contentLength()));
                 }
-            } catch (IOException e) {
-                Log.e("return_body_erro", e.toString());
+
             } catch (Exception e) {
                 Log.e("return_body_erro", e.toString());
             }
@@ -2096,34 +2109,36 @@ public class UartService extends Service {
 
         Long timestampTEMP=null;
 
-        try {
-            for (int i = 0; i < result1.size()-1; i++) {
+        try {if(result1.size()>0) {
+            for (int i = 0; i < result1.size() ; i++) {
                 //toltoSize++;
-                if (i == 6000 ) {
+                if (i == 6000) {
                     break;
                 }
-                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())){
-                    realm.beginTransaction();
-                    result1.get(i).setUpLoaded("1");
-                    realm.commitTransaction();
-                    Log.e("資料相同時",result1.get(i).getCreated_time().toString()+"下筆資料"+result1.get(i).getCreated_time().toString());
-                }else {
-                    hasBeenUpLoaded.add(result1.get(i).getDataId());
-                    Log.i("text", "i=" + i + "\n");
-                    JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
-                    json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
-                    json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
-                    json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
-                    json_obj_weather.put("eco2", result1.get(i).getECO2Value());
-                    json_obj_weather.put("pm25", result1.get(i).getPM25Value());
-                    json_obj_weather.put("longitude", "24.778289");
-                    json_obj_weather.put("latitude", "120.988108");
-                    json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
-                    Log.e("timestamp", "i="+i+"timestamp=" + result1.get(i).getCreated_time().toString());
-                    json_arr.put(json_obj_weather);
-                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
-                }
+//                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
+//                    realm.beginTransaction();
+//                    result1.get(i).deleteFromRealm();
+//                    realm.commitTransaction();
+//                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
+//                }
+                hasBeenUpLoaded.add(result1.get(i).getDataId());
+                Log.i("text", "i=" + i + "\n");
+                JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
+                json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
+                json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
+                json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
+                json_obj_weather.put("eco2", result1.get(i).getECO2Value());
+                json_obj_weather.put("pm25", result1.get(i).getPM25Value());
+                json_obj_weather.put("longitude", result1.get(i).getLongitude().toString());
+                json_obj_weather.put("latitude", result1.get(i).getLatitude().toString());
+                json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
+                Log.e("timestamp", "i=" + i + "timestamp=" + result1.get(i).getCreated_time().toString());
+                json_arr.put(json_obj_weather);
+                //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
             }
+        }else {
+            Log.e("未上傳資料筆數", String.valueOf(result1.size()));
+        }
 
             json_obj.put("uuid",  UUID );
             json_obj.put("mac_address", DeviceAddress);

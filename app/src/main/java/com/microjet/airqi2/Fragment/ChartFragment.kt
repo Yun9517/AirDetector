@@ -365,7 +365,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_TVOC -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppb"
                         }
@@ -375,7 +375,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_ECO2 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
                         }
@@ -386,7 +386,7 @@ class ChartFragment: Fragment() {
                         val temp: Float? = e?.`val`
                         val temp1: Float? = (temp!! - 10.0f)
                         if (temp1!! == 65528f) {
-                            mTextViewValue!!.text = "---" + " ℃"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             val newTemp = "%.1f".format(temp1)
                             mTextViewValue!!.text = "$newTemp ℃"
@@ -397,7 +397,7 @@ class ChartFragment: Fragment() {
                     DEFINE_FRAGMENT_HUMIDITY -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
-                            mTextViewValue!!.text = "沒有偵測"
+                            mTextViewValue!!.text = getString(R.string.not_yetDetected)
                         } else {
                             mTextViewValue!!.text = temp?.toInt().toString() + " %"
                         }
@@ -506,7 +506,7 @@ class ChartFragment: Fragment() {
                         ContextCompat.getColor(context, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_HUMIDITY -> {
-                CharLabel?.text = getString(R.string.text_label_humidity)
+                CharLabel?.text = getString(R.string.text_label_humidity_full)
                 faceBar?.setImageResource(R.drawable.face_bar_humidity)
                 intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
                         ContextCompat.getColor(context, R.color.Main_textResult_Good),
@@ -568,14 +568,17 @@ class ChartFragment: Fragment() {
 
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 when(input) {
-                    in 28..35 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                    in 28..34 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
-                    in 36..210 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                    in 35..210 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_red)
+                    }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
                     else -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_blue)
                     }
                 }
             }
@@ -583,13 +586,16 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_HUMIDITY -> {
                 when(input) {
                     in 45..65 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_green)
                     }
                     in 66..100 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_red)
+                    }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_green)
                     }
                     else -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_blue)
                     }
                 }
             }

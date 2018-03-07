@@ -299,7 +299,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
         } else {
-            tvBtmPM25Value.text = pm25DataFloat.toInt().toString()
+            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + "μg/m³"
         }
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
@@ -463,7 +463,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun tempStatusTextShow(currentValue: Float) {
         when (currentValue) {
-            in 18..25 -> {
+            in 18..24 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -473,9 +473,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_02)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_green)
             }
-            in 26..200 -> {
+            in 25..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -485,7 +485,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_03)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_red)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -497,7 +497,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_01)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_blue)
             }
         }
     }
@@ -514,7 +514,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_01)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_blue)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -526,7 +526,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_02)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_green)
             }
             else -> {
 
@@ -539,7 +539,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_03)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_red)
             }
         }
     }

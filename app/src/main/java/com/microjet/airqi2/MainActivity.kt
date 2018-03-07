@@ -10,13 +10,20 @@ import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
@@ -39,11 +46,19 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.Fragment.*
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import io.realm.Realm
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.IOException
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -115,6 +130,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // Code to manage Service lifecycle.
     private var mDeviceAddress: String? = null
     private var mUartService: UartService? = null
+
+    private var lati = 121.4215f
+    private var longi = 24.959742f
+    private var locationListener: LocationListener? = null
 
     // FragmentAdapter
     private lateinit var mFragmentAdapter: FragmentAdapter
@@ -203,6 +222,37 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             mUartService?.connect(mDeviceAddress)
         }
+
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location?) {
+                Log.d("LocationListener1",location?.longitude.toString())
+                Log.d("LocationListener1",location?.latitude.toString())
+
+                lati = location?.latitude!!.toFloat()
+                longi = location?.longitude!!.toFloat()
+
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent?.putExtra("status", BroadcastActions.INTENT_KEY_LOCATION_VALUE)
+                val bundle: Bundle? = Bundle()
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE,lati)
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE,longi)
+                intent!!.putExtra("TwoValueBundle",bundle)
+                sendBroadcast(intent)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+        getLocation()
     }
 
     override fun onResume() {
@@ -219,7 +269,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
         Log.i(TAG, "call onStop")
-
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager.removeUpdates(locationListener)
     }
 
 
@@ -552,8 +603,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-
-
+    private fun accountShow() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+        startActivity(i)
+    }
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
@@ -561,7 +614,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         }
     }
-
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
@@ -571,6 +623,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_add_device -> blueToothConnect()
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about ->  aboutShow()
+            R.id.nav_accountManagement -> accountShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
@@ -965,6 +1018,231 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //
 //        return isInBackground;
 //    }
+
+    //20180307
+    private var client: OkHttpClient? = null
+    private val hasBeenUpLoaded = java.util.ArrayList<Int>()
+    private inner class postDataAsyncTasks : AsyncTask<String, Void, String>() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        override fun doInBackground(vararg params: String): String? {
+            var return_body: RequestBody? = null
+            var getResponeResult = java.lang.Boolean.parseBoolean(null)
+            try {
+                //取得getRequestBody
+                return_body = getRequestBody()
+                //呼叫getResponse取得結果
+                if (return_body!!.contentLength() > 0) {
+                    getResponeResult = getResponse(return_body)
+
+                    if (getResponeResult) {
+                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                        val DBSucess = updateDB_UpLoaded()
+                        if (DBSucess) {
+                            Log.e("幹改進去", DBSucess.toString())
+                        }
+                        hasBeenUpLoaded.clear()
+                    } else {
+                        Log.e("幹改失敗拉!!", getResponeResult.toString())
+                    }
+                } else {
+                    Log.e("幹太少筆啦!", return_body.contentLength().toString())
+                }
+
+            } catch (e: Exception) {
+                Log.e("return_body_erro", e.toString())
+            }
+
+            return null
+        }
+    }
+    //20180307
+    private fun getRequestBody(): RequestBody? {
+        //很重要同區域才可以叫到同一個東西
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val DeviceAddress = share.getString("mac", "noValue")
+        //        String serial = "";
+        //        //確認唯一識別碼(https://blog.mosil.biz/2014/05/android-device-id-uuid/)
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+        //            serial = Build.SERIAL;
+        //        }
+        //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
+        val realm = Realm.getDefaultInstance()
+
+
+        val query2 = realm.where(AsmDataModel::class.java)
+        val result5 = query2.equalTo("UpLoaded", "1").findAll()
+        //        realm.executeTransaction((Realm realm1) -> {
+        //
+        //            for (int i = 0 ; i < result5.size() ; i++) {
+        //
+        //                result5.get(i).setUpLoaded("0");
+        //
+        //                Log.e("這個時間", String.valueOf(result5.toString()));
+        //            }
+        //
+        //        });
+
+        val query = realm.where(AsmDataModel::class.java)
+        val result1 = query.equalTo("UpLoaded", "0").findAll()
+
+        /*
+        RealmQuery<AsmDataModel> query9 = realm.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result7 =query9.distinct("Created_time");
+        Log.e("幹",String.valueOf(result7.size()));
+        Log.e("幹蝦小",String.valueOf(result1.size()));
+*/
+
+        Log.e("未上傳ID", result1.toString())
+        Log.e("已上ID", result5.toString())
+        Log.e("未上傳資料筆數", result1.size.toString())
+        Log.e("未上傳資料", result1.toString().toString())
+        Log.e("已上傳資料筆數", result5.size.toString())
+
+
+        //MyApplication getUUID=new MyApplication();
+        val UUID = MyApplication.getPsuedoUniqueID()
+        //製造RequestBody的地方
+        var body: RequestBody? = null
+
+        //20170227
+        val json_obj = JSONObject()            //用來當內層被丟進陣列內的JSON物件
+        val json_arr = JSONArray()                //JSON陣列
+
+        try {
+            if (result1.size > 0) {
+                for (i in result1.indices) {
+                    //toltoSize++;
+                    if (i == 6000) {
+                        break
+                    }
+                    //                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
+                    //                    realm.beginTransaction();
+                    //                    result1.get(i).deleteFromRealm();
+                    //                    realm.commitTransaction();
+                    //                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
+                    //                }
+                    hasBeenUpLoaded.add(result1[i]!!.dataId)
+                    Log.i("text", "i=" + i + "\n")
+                    val json_obj_weather = JSONObject()            //單筆weather資料
+                    json_obj_weather.put("temperature", result1[i]!!.tempValue)
+                    json_obj_weather.put("humidity", result1[i]!!.humiValue)
+                    json_obj_weather.put("tvoc", result1[i]!!.tvocValue)
+                    json_obj_weather.put("eco2", result1[i]!!.ecO2Value)
+                    json_obj_weather.put("pm25", result1[i]!!.pM25Value)
+                    json_obj_weather.put("longitude", "24.778289")
+                    json_obj_weather.put("latitude", "120.988108")
+                    json_obj_weather.put("timestamp", result1[i]!!.created_time)
+                    Log.e("timestamp", "i=" + i + "timestamp=" + result1[i]!!.created_time!!.toString())
+                    json_arr.put(json_obj_weather)
+                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+                }
+            } else {
+                Log.e("未上傳資料筆數", result1.size.toString())
+            }
+
+            json_obj.put("uuid", UUID)
+            json_obj.put("mac_address", DeviceAddress)
+            json_obj.put("registration_id", "qooo123457")
+            //再來將JSON陣列設定key丟進JSON物件
+            json_obj.put("weather", json_arr)
+            Log.e("全部資料", json_obj.toString())
+            val mediaType = MediaType.parse("application/x-www-form-urlencoded")
+            body = RequestBody.create(mediaType, "data=" + json_obj.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        return body
+    }
+
+    //傳資料
+    private fun getResponse(body: RequestBody): Boolean {
+        var response: Response? = null
+        var resonseReselt = java.lang.Boolean.parseBoolean(null)
+        try {
+            if (body.contentLength() > 0) {
+                //丟資料
+                val request = Request.Builder()
+                        .url("https://mjairql.com/api/v1/upWeather")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .addHeader("postman-token", "a2fa2822-765d-209a-ec8c-82170c5171c0")
+                        .build()
+                try {
+                    client = OkHttpClient.Builder()
+                            .connectTimeout(0, TimeUnit.SECONDS)
+                            .writeTimeout(0, TimeUnit.SECONDS)
+                            .readTimeout(0, TimeUnit.SECONDS)
+                            .build()
+                    //上傳資料
+                    response = client?.newCall(request)?.execute()
+                    if (response!!.isSuccessful) {//正確回來
+                        resonseReselt = true
+                        Log.e("正確回來!!", response!!.body()!!.string())
+                    } else {//錯誤回來
+                        Log.e("錯誤回來!!", response!!.body()!!.string())
+                        resonseReselt = false
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("回來處理有錯!", e.toString())
+
+                }
+
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return resonseReselt
+    }
+
+    private fun updateDB_UpLoaded(): Boolean {
+        var dbSucessOrNot = java.lang.Boolean.parseBoolean(null)
+        val realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction { realm1: Realm ->
+                Log.e("正確回來TRY", hasBeenUpLoaded.size.toString())
+                for (i in 0 until hasBeenUpLoaded.size) {
+                    //realm.beginTransaction();
+                    val aaa = realm1.where(AsmDataModel::class.java)
+                            .equalTo("id", hasBeenUpLoaded.get(i))
+                            .findFirst()
+                    aaa!!.setUpLoaded("1")
+                    Log.e("回來更新", aaa!!.getDataId()!!.toString() + "更新?" + aaa!!.getUpLoaded())
+                }
+                val query3 = realm.where(AsmDataModel::class.java)
+                val result3 = query3.equalTo("UpLoaded", "1").findAll()
+                Log.e("正確更改", result3.size.toString())
+                Log.e("正確更改內容", result3.toString())
+            }
+            dbSucessOrNot = true
+        } catch (e: Exception) {
+            Log.e("dbSucessOrNot", e.toString())
+            dbSucessOrNot = false
+        }
+        return dbSucessOrNot
+    }
+
+    private fun getLocation() {
+        checkGPSPermisstion()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val criteria = Criteria()
+        criteria.accuracy = Criteria.ACCURACY_MEDIUM
+        criteria.powerRequirement = Criteria.POWER_MEDIUM
+        val provider = locationManager.getBestProvider(criteria, true)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 5000, 10f, locationListener)
+        }
+    }
+
+    private fun checkGPSPermisstion() {
+        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        Log.d("MAINAC", permission.toString())
+        val permission1 = PackageManager.PERMISSION_GRANTED
+        Log.d("MAINAC", permission1.toString())
+    }
 }
 
 

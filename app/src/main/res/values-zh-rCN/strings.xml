@@ -52,6 +52,8 @@
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">知识库</string>
     <string name="text_navi_getData">读取装置资料</string>
+    <string name="text_navi_accountManagement">账号管理</string>
+
     <string name="ble_not_supported">蓝牙未支援</string>
     <string name="select_device">选择装置</string>
     <string name="scanning">扫描中</string>
@@ -152,11 +154,11 @@
     <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
     <string name="permission_required_toast">Location permission is required for this demo.</string>
 
-    //20180206
+    <!-- 2018/02/06 -->
     <string name="bat_switch">低电警告</string>
     <string name="led_light">LED指示灯</string>
 
-    //2018/03/02
+    <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
     <string name="allow_3G">允許行動網路</string>
 
@@ -166,6 +168,23 @@
     <string name="not_yetDetected">尚未偵測</string>
     <string name="text_label_device_version">侦测器固件版号：</string>
     <string name="text_label_local_uuid">手机 UUID</string>
+
+    <!-- 2018/03/02 Register & Cloud String-->
+    <string name="account_Login">账号登入</string>
+    <string name="login">登入</string>
+    <string name="enter_Password">请输入密码</string>
+    <string name="forget_Password">忘记密码？</string>
+    <string name="no_Account">我还没有注册账号 我想</string>
+    <string name="create_New_account">建立新账号</string>
+    <string name="create_Account">建立账号</string>
+    <string name="enter_Email">请输入电子邮件</string>
+    <string name="next_Step">下一步</string>
+    <string name="enter_Verification_code">请输入验证码</string>
+    <string name="cannot_Receive_mail">没收到认证信？</string>
+    <string name="resend_Mail">补发认证信</string>
+    <string name="confirm">确认</string>
+    <string name="active">账号已启用</string>
+    <string name="logout">注销</string>
 
 </resources>
 
