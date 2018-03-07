@@ -537,13 +537,16 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 when(input) {
                     in 28..35 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
                     in 36..210 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_red)
+                    }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
                     else -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_temp_blue)
                     }
                 }
             }
@@ -551,13 +554,16 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_HUMIDITY -> {
                 when(input) {
                     in 45..65 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_green)
                     }
                     in 66..100 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_red)
+                    }
+                    in 65538..65540 -> {
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_green)
                     }
                     else -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                        ChartBackground.setBackgroundResource(R.drawable.bg_rh_blue)
                     }
                 }
             }
