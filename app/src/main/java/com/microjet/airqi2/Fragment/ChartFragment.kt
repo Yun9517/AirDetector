@@ -204,7 +204,7 @@ class ChartFragment: Fragment() {
                 chartIntervalEnd = 1000
                 chartLabelYCount = 16
                 chartIsShowMinTextView = false
-                chartLabelUnit = "(ppm)"
+                chartLabelUnit = "(μg/m³)"
             }
         }
     }
@@ -409,7 +409,7 @@ class ChartFragment: Fragment() {
                         if (temp == 65538f) {
                             mTextViewValue!!.text = "沒有偵測"
                         } else {
-                            mTextViewValue!!.text = temp?.toInt().toString() + " ppm"
+                            mTextViewValue!!.text = temp?.toInt().toString() + " μg/m³"
                         }
 
                         changeBackground(temp!!.toInt())
@@ -934,8 +934,8 @@ class ChartFragment: Fragment() {
                 result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " %"
             }
             DEFINE_FRAGMENT_PM25 -> {
-                result_Today!!.text = avgValueInt.toString() + " ppm"
-                result_Yesterday!!.text = AVGPm25.toInt().toString()+ " ppm"
+                result_Today!!.text = avgValueInt.toString() + " μg/m³"
+                result_Yesterday!!.text = AVGPm25.toInt().toString()+ " μg/m³"
             }
         }
     }
