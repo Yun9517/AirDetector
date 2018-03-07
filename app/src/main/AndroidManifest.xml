@@ -53,6 +53,13 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
         <activity
+            android:name=".AccountManagementActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+        <activity
             android:name=".KnowledgeActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"

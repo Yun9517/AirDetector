@@ -52,6 +52,8 @@
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">知识库</string>
     <string name="text_navi_getData">读取装置资料</string>
+    <string name="text_navi_accountManagement">账号管理</string>
+
     <string name="ble_not_supported">蓝牙未支援</string>
     <string name="select_device">选择装置</string>
     <string name="scanning">扫描中</string>
@@ -173,6 +175,8 @@
     <string name="cannot_Receive_mail">没收到认证信？</string>
     <string name="resend_Mail">补发认证信</string>
     <string name="confirm">确认</string>
+    <string name="active">账号已启用</string>
+    <string name="logout">注销</string>
 
 </resources>
 

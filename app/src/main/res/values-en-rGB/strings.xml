@@ -51,6 +51,8 @@
     <string name="text_navi_getData">Read Data From Device</string>
     <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_knowledge">Knowledge</string>
+    <string name="text_navi_accountManagement">Account</string>
+
     <string name="ble_not_supported">Bluetooth not support.</string>
     <string name="select_device">Select device</string>
     <string name="scanning">Scanning...</string>
@@ -172,5 +174,7 @@
     <string name="cannot_Receive_mail">Did not get mail?</string>
     <string name="resend_Mail">Resend</string>
     <string name="confirm">Confirm</string>
+    <string name="active">Active</string>
+    <string name="logout">Sign out</string>
 
 </resources>
