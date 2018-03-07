@@ -1408,7 +1408,7 @@ public class UartService extends Service {
                         //timeSetNowToThirty();
                         //20160227
                         if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, false)) {
-                            new postDataAsyncTasks().execute("https://api.mjairql.com/api/v1/upUserData");
+                            new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
                         }
 
                     }
@@ -2163,8 +2163,9 @@ public class UartService extends Service {
             if (body.contentLength() > 0) {
                 //丟資料
                 Request request = new Request.Builder()
-                        .url("https://mjairql.com/api/v1/upWeather")
+                        .url("https://mjairql.com/api/v1/upUserData")
                         .post(body)
+                        .addHeader("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijg2OTQ1NmQ1YjE0ZDc1MjgxYjE3NWIwZWE4Y2MwYjgyNDZhNWQ1ZTYzYjhlMmY5MzkwZTI2MTdjZGYxNWIzZTZmNTNiZGMwNzhiYzVkMWU1In0.eyJhdWQiOiIxIiwianRpIjoiODY5NDU2ZDViMTRkNzUyODFiMTc1YjBlYThjYzBiODI0NmE1ZDVlNjNiOGUyZjkzOTBlMjYxN2NkZjE1YjNlNmY1M2JkYzA3OGJjNWQxZTUiLCJpYXQiOjE1MjA0MDE4NDQsIm5iZiI6MTUyMDQwMTg0NCwiZXhwIjoxNTUxOTM3ODQ0LCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.LnT7lU6TYclrOFa7YXLnc6s41U2FrzljwqA0RL3Cu2Ufg_sMPFR7Ql4el8C3MAa2Kai9njpb55khjURk16yj81By2UV4cK6ZVw6oB-js0j7piPJo6NE5cXewCOFsBU29chde3nJWYJ0oInnemsBV3AMcWTp9rfWzAySwP7PzWQ29ij_eNqgec0DUM4s-adkVhoKXW32rZ3Y3Z2mmhL87Qxcjns_l8-Vjw0UNFJx6vA5AnZwZezw4YzitqueO4U3QD5M3dPr3GObaXz2rcqXYOnSbF0hC1exId2BSChhp9HVUKIVz83ZNYyN8mP-3LLurXFvATtkWWwjgRQupx-pcugpHB_ozezeIe-XFtDYNd3P0tMWDCBwjCDNzaha6HuJ4LBvoWR0KDbcTkO8kduDwkFpW2oENEhz5hcZQNLxLM3E1a93msZNiuAIlsy7Hc7KuaKxlk7pymaqsPdSdDl6gSmUlLxljFclhsWSAxjnJRmfsVgpm7pXpe_QhGxeAtVUmySvdT4xDiez8HcVBSZK5yhVfc78ou4lqYugaWGeFbJDghAkxOSn8G6Im8c0ysoAmOsbyL22gMl-Q7_kkFDmCcu48xLJ_fzBIOWGpB4LEkzJxJepp6_xyp77HvWjwjZqJAcYitxMWhTdxI5tci475LlZZ4viBT29bhRhKXP2Uu4I")
                         .addHeader("content-type", "application/x-www-form-urlencoded")
                         .addHeader("cache-control", "no-cache")
                         .addHeader("postman-token", "a2fa2822-765d-209a-ec8c-82170c5171c0")

@@ -190,17 +190,6 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
-        swClouudFun.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_cloud_fun.text = getString(R.string.text_setting_on)
-            } else {
-                text_cloud_fun.text = getString(R.string.text_setting_off)
-            }
-
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
-                    isChecked).apply()
-        }
-
         //20180227
         swTotalNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -273,6 +262,9 @@ class SettingActivity : AppCompatActivity() {
             if (isChecked) {
                 text_clouud_stat!!.text = getString(R.string.text_setting_on)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
+                //updateData()
+                //text_bat_stat!!.text = getString(R.string.text_setting_on)
+                //getLocation()
             } else {
                 text_clouud_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
@@ -283,17 +275,6 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
                     isChecked).apply()
 
-            swCloud.setOnCheckedChangeListener { _, isChecked ->
-                if (isChecked) {
-                    //updateData()
-                    //text_bat_stat!!.text = getString(R.string.text_setting_on)
-                    //getLocation()
-                } else {
-                    //text_bat_stat!!.text = getString(R.string.text_setting_off)
-                }
-                //mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
-                //isChecked).apply()
-            }
         }
     }
 
