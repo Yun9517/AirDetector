@@ -35,7 +35,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
         TVOC(220, 660),
         CO2(700, 1000),
         Temp(18, 25),
-        Humi(45, 65)
+        Humi(45, 65),
+        PM25(220, 660)
     }
 
     private var mContext: Context? = null
@@ -83,6 +84,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_eCO2.setOnTouchListener(this)
         show_Temp.setOnTouchListener(this)
         show_RH.setOnTouchListener(this)
+        show_PM.setOnTouchListener(this)
 
         /*show_TVOC?.setOnClickListener {
             it.parent.requestDisallowInterceptTouchEvent(true)
@@ -169,6 +171,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     }
                     R.id.show_RH -> {
                         dataForState = DetectionData.Humi
+                    }
+                    R.id.show_PM -> {
+                        dataForState = DetectionData.PM25
                     }
                 }
                 pumpOnStatus(beforeState, dataForState)
@@ -289,6 +294,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
             DetectionData.Humi -> {
                 inCircleBar.setMaxValues(100f)
             }
+            DetectionData.PM25 -> {
+                inCircleBar.setMaxValues(1000f)
+            }
         }
     }
 
@@ -298,8 +306,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
         if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
+            show_PM.isEnabled = false
         } else {
             tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + "μg/m³"
+            show_PM.isEnabled = true
         }
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
@@ -628,6 +638,26 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     //inCircleBar.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " %"
+                    textSpannable(temp)
+                }
+                DetectionData.PM25 -> {
+                    inCircleTitle.text = getString(R.string.text_label_pm25)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
+                    //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
+                    //inCircleBar.setCurrentValues(tvocDataFloat)
+                    inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //數值不等比顯示
+                    when (tvocDataFloat) {
+                        in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
+                        in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
+                        in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
+                        in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
+                        else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
+                    }
+                    //inCircleBar.setCurrentValues(1000f)
+                    tvocStatusTextShow(tvocDataFloat)
+                    val temp = tvocDataFloat.toInt().toString() + " μg/m³"
                     textSpannable(temp)
                 }
             }
