@@ -99,7 +99,7 @@
     <string name="warning_title_Brown">非常嚴重危險警告通知!!!</string>
 
     <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
-    
+
     <!-- Add Calendar String -->
     <string name="week_First_Word">第</string>
     <string name="week_Last_Word">週</string>
@@ -164,7 +164,7 @@
     <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
     <string name="allow_3G">允許行動網路</string>
-    
+
     //20180227
     <string name="cloud_fun">雲端功能</string>
     //2018/03/06
@@ -188,4 +188,8 @@
     <string name="confirm">確認</string>
     <string name="active">帳號已啟用</string>
     <string name="logout">登出</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>
