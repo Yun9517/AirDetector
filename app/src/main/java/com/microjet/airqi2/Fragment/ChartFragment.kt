@@ -514,7 +514,7 @@ class ChartFragment: Fragment() {
             }
             DEFINE_FRAGMENT_PM25 -> {
                 CharLabel?.text = getString(R.string.text_label_pm25)
-                faceBar?.setImageResource(R.drawable.face_bar_tvoc)
+                faceBar?.setImageResource(R.drawable.face_bar_pm25)
                 intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
                         ContextCompat.getColor(context, R.color.Main_textResult_Orange),
