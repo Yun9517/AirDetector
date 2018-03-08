@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
@@ -304,7 +305,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
-        if (pm25DataFloat == 65535f) {
+        if (MyApplication.isPM25 == "000000000000") {
+        //if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
             show_PM.isEnabled = false
         } else {
