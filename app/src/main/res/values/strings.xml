@@ -202,6 +202,8 @@
     <string name="confirm">確認</string>
     <string name="active">帳號已啟用</string>
     <string name="logout">登出</string>
+    <string name="account_Activation">帳號已啟用</string>
+    <string name="account_Deactivation">帳號尚未啟用</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>

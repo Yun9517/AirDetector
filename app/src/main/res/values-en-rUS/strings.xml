@@ -199,5 +199,7 @@
     <string name="confirm">Confirm</string>
     <string name="active">Active</string>
     <string name="logout">Sign out</string>
+    <string name="account_Activation">Activation</string>
+    <string name="account_Deactivation">Deactivation</string>
 
 </resources>
