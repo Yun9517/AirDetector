@@ -801,6 +801,13 @@ public class UartService extends Service {
                     lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
                     longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
                     break;
+                case BroadcastActions.INTENT_KEY_SET_PM25_ON:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(5));
+                    break;
+                case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(15));
+                    break;
+
             }
         }
     }
@@ -1174,6 +1181,9 @@ public class UartService extends Service {
                         }
                         setSampleRateTime(Integer.parseInt(RString.get(0)));
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                        //SetPM25 180308
+                        intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON);
+                        sendBroadcast(intent);
                     }
                     break;
                 case (byte) 0xB4:
@@ -1418,7 +1428,7 @@ public class UartService extends Service {
                         arrB6.clear();
                         //timeSetNowToThirty();
                         //20160227
-                        if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, false)) {
+                        if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)) {
                             new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
                         }
 
@@ -1439,6 +1449,10 @@ public class UartService extends Service {
                     writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                     Log.e(TAG, "LED Status: " + ledState);
                     break;
+                case  (byte) 0xE0:
+                    Log.d("0xE0", txValue.toString());
+                    break;
+
             }
         }
     }

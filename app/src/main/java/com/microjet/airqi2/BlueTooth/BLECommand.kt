@@ -49,4 +49,5 @@ object Command_List{
     val SetLedOnOff: Byte = 0xB9.toByte()
     val LedOn: Byte = 0x00.toByte()
     val LedOff: Byte = 0x01.toByte()
+    val GetSetPM25: Byte = 0xE0.toByte()
 }
