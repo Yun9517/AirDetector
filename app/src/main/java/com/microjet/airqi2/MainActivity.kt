@@ -424,10 +424,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
+        mFragmentList.add(mPM25Fg)
         mFragmentList.add(mEco2Fg)
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
-        mFragmentList.add(mPM25Fg)
 
         mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 

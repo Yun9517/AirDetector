@@ -191,7 +191,7 @@ class ChartFragment: Fragment() {
                 chartIntervalStep = 20
                 chartIntervalStart = 20
                 chartIntervalEnd = 80
-                chartLabelYCount = 6
+                chartLabelYCount = 11
                 chartIsShowMinTextView = false
                 chartLabelUnit = "( %)"
             }
@@ -199,10 +199,10 @@ class ChartFragment: Fragment() {
                 chartLabel = "PM2.5"
                 chartMin = 0.0f
                 chartMax = 100.0f
-                chartIntervalStep = 50
-                chartIntervalStart = 50
-                chartIntervalEnd = 50
-                chartLabelYCount = 6
+                chartIntervalStep = 20
+                chartIntervalStart = 20
+                chartIntervalEnd = 80
+                chartLabelYCount = 11
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(μg/m³)"
             }
