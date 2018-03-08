@@ -197,8 +197,10 @@
     <string name="cannot_Receive_mail">没收到认证信？</string>
     <string name="resend_Mail">补发认证信</string>
     <string name="confirm">确认</string>
-    <string name="active">账号已启用</string>
+    <string name="active">账号已激活</string>
     <string name="logout">注销</string>
+    <string name="account_Activation">账号已激活</string>
+    <string name="account_Deactivation">账号未激活</string>
 
 </resources>
 
