@@ -1261,6 +1261,7 @@ public class UartService extends Service {
                         //0xB6裡的Log會用到
                         timeSetNowToThirty(b4correctTime);
                         downloadComplete = true;
+                        downloading = false;
                     }
                     break;
                 case (byte) 0xB5:
