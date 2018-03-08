@@ -25,6 +25,20 @@
     <string name="message_eCO2_Purple">空气质量非常不健康，请离开并务必加强通风</string>
     <string name="message_eCO2_Brown">空气质量极度危害健康，请立即离开并务必加强通风</string>
 
+    <!-- pm2.5 message -->
+    <string name="label_pm25_Green">正常</string>
+    <string name="label_pm25_Yellow">浓度中等</string>
+    <string name="label_pm25_Orange">浓度过高</string>
+    <string name="label_pm25_Red">有害健康</string>
+    <string name="label_pm25_Purple">非常有害健康</string>
+    <string name="label_pm25_Brown">极度危害健康</string>
+    <string name="message_pm25_Green">空气质量正常。</string>
+    <string name="message_pm25_Yellow">空气质量中等。</string>
+    <string name="message_pm25_Orange">空气质量不佳，避免长时间待在此环境。体质敏感者可能感到不适。</string>
+    <string name="message_pm25_Red">空气质量不健康，避免长时间待在此环境。</string>
+    <string name="message_pm25_Purple">空气质量非常不健康，请离开此地。</string>
+    <string name="message_pm25_Brown">空气质量极度危害健康，请立即离开。停留过久恐影响肺功能或心律不整。</string>
+
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
