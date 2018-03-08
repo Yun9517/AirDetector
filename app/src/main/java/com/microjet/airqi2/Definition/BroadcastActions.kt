@@ -88,4 +88,7 @@ object BroadcastActions {
     const val INTENT_KEY_LOCATION_VALUE = "airqi2.intent.LOCATION_VALUE"
     const val INTENT_KEY_LATITUDE_VALUE = "airqi2.intent.LATITUDE_VALUE"
     const val INTENT_KEY_LONGITUDE_VALUE = "airqi2.intent.LONGITUDE_VALUE"
+    //20180308
+    const val INTENT_KEY_SET_PM25_ON = "airqi2.intent.SET_PM25_ON"
+    const val INTENT_KEY_SET_PM25_OFF = "airqi2.intent.SET_PM25_OFF"
 }

@@ -139,7 +139,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private lateinit var mFragmentAdapter: FragmentAdapter
 
     //
-    private val mPM25Fg = ChartFragment()
+    //private val mPM25Fg = ChartFragment()
     /** 是否禁止右劃標記  */
     private var banDownDraw: Boolean = false
     /** 手指在螢幕上的最後x坐標  */
@@ -414,7 +414,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mTvocFg = ChartFragment()
         val mEco2Fg = ChartFragment()
         val mTempFg = ChartFragment()
-        //mPM25Fg = ChartFragment()
+        val mPM25Fg = ChartFragment()
 
         mTvocFg.ConfigFragment(DEFINE_FRAGMENT_TVOC)
         mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)

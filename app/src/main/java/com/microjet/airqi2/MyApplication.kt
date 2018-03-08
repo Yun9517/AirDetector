@@ -12,6 +12,7 @@ import android.net.ConnectivityManager
 
 
 import android.os.Build
+import android.os.Handler
 import java.util.*
 
 
@@ -30,6 +31,7 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
+        var isPM25: String = ""
 
         fun applicationContext(): Context {
             return instance!!.applicationContext
@@ -102,6 +104,7 @@ class MyApplication : Application() {
         fun getDeviceVersion(): String {
             return deviceVer
         }
+
     }
 
     override fun onCreate() {
@@ -119,23 +122,27 @@ class MyApplication : Application() {
 
         Realm.setDefaultConfiguration(config)
 
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
-        Log.d("REALMAPP",query.toString())
-        var createdTime = 0L
-        query?.forEachIndexed { index, asmDataModel ->
-            Log.d("REALMAPP",createdTime.toString())
-            if (asmDataModel.created_time == createdTime) {
-                val dataTime = asmDataModel.created_time
-                realm.executeTransactionAsync {
-                    val realm1 = Realm.getDefaultInstance()
-                    val query1 = realm1.where(AsmDataModel::class.java).equalTo("Created_time", dataTime).findAll().last()
-                    Log.d("REALMAPPDUP",query1.toString())
-                    query1?.deleteFromRealm()
+        val handler = Handler()
+        handler.post {
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
+            Log.d("REALMAPP",query.toString())
+            var createdTime = 0L
+            query?.forEachIndexed { index, asmDataModel ->
+                Log.d("REALMAPP",createdTime.toString())
+                if (asmDataModel.created_time == createdTime) {
+                    val dataTime = asmDataModel.created_time
+                    realm.executeTransactionAsync {
+                        val realm1 = Realm.getDefaultInstance()
+                        val query1 = realm1.where(AsmDataModel::class.java).equalTo("Created_time", dataTime).findAll().last()
+                        Log.d("REALMAPPDUP",query1.toString())
+                        query1?.deleteFromRealm()
+                    }
                 }
+                createdTime = asmDataModel!!.created_time
             }
-            createdTime = asmDataModel!!.created_time
         }
+
 
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)

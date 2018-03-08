@@ -229,6 +229,17 @@ class PrimaryReceiver : BroadcastReceiver() {
                 intent?.putExtra("TwoValueBundle",getBundle)
                 context.sendBroadcast(intent)
             }
+            BroadcastActions.INTENT_KEY_SET_PM25_ON -> {
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
+                context.sendBroadcast(intent)
+            }
+            BroadcastActions.INTENT_KEY_SET_PM25_OFF -> {
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_OFF)
+                context.sendBroadcast(intent)
+            }
+
 
         /*
               "NOWPROGRESSITEM"->{
