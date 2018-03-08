@@ -2061,11 +2061,9 @@ public class UartService extends Service {
 //            serial = Build.SERIAL;
 //        }
         //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
-        Realm realm = Realm.getDefaultInstance();
-
-
-        RealmQuery<AsmDataModel> query2 = realm.where(AsmDataModel.class);
-        RealmResults<AsmDataModel> result5 = query2.equalTo("UpLoaded", "1").findAll();
+        Realm realm2 = Realm.getDefaultInstance();
+        RealmQuery<AsmDataModel> query2 = realm2.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result2 = query2.equalTo("UpLoaded", "1").findAll();
 //        realm.executeTransaction((Realm realm1) -> {
 //
 //            for (int i = 0 ; i < result5.size() ; i++) {
@@ -2076,9 +2074,9 @@ public class UartService extends Service {
 //            }
 //
 //        });
-
-        RealmQuery<AsmDataModel> query = realm.where(AsmDataModel.class);
-        RealmResults<AsmDataModel> result1 = query.equalTo("UpLoaded", "0").findAll();
+        Realm realm1 = Realm.getDefaultInstance();
+        RealmQuery<AsmDataModel> query1 = realm1.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result1 = query1.equalTo("UpLoaded", "0").findAll();
 
 /*
         RealmQuery<AsmDataModel> query9 = realm.where(AsmDataModel.class);
@@ -2088,10 +2086,11 @@ public class UartService extends Service {
 */
 
         Log.e("未上傳ID", result1.toString());
-        Log.e("已上ID", result5.toString());
+        Log.e("已上ID", result2.toString());
         Log.e("未上傳資料筆數", String.valueOf(result1.size()));
         Log.e("未上傳資料", String.valueOf(result1.toString()));
-        Log.e("已上傳資料筆數", String.valueOf(result5.size()));
+        Log.e("已上傳資料筆數", String.valueOf(result2.size()));
+
 
 
 
@@ -2151,7 +2150,8 @@ public class UartService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
+        realm1.close();
+        realm2.close();
         return body;
     }
 
@@ -2199,19 +2199,19 @@ public class UartService extends Service {
 
     private boolean updateDB_UpLoaded() {
         boolean dbSucessOrNot = Boolean.parseBoolean(null);
-        Realm realm = Realm.getDefaultInstance();
+        Realm realm3 = Realm.getDefaultInstance();
         try {
-            realm.executeTransaction((Realm realm1) -> {
+            realm3.executeTransaction((Realm realm1) -> {
                 Log.e("正確回來TRY", String.valueOf(hasBeenUpLoaded.size()));
                 for (int i = 0; i < (hasBeenUpLoaded.size()); i++) {
                     //realm.beginTransaction();
-                    AsmDataModel aaa = realm1.where(AsmDataModel.class)
+                    AsmDataModel aaa = realm3.where(AsmDataModel.class)
                             .equalTo("id", hasBeenUpLoaded.get(i))
                             .findFirst();
                     aaa.setUpLoaded("1");
                     Log.e("回來更新", aaa.getDataId().toString() + "更新?" + aaa.getUpLoaded());
                 }
-                RealmQuery<AsmDataModel> query3 = realm.where(AsmDataModel.class);
+                RealmQuery<AsmDataModel> query3 = realm3.where(AsmDataModel.class);
                 RealmResults<AsmDataModel> result3 = query3.equalTo("UpLoaded", "1").findAll();
                 Log.e("正確更改", String.valueOf(result3.size()));
                 Log.e("正確更改內容", String.valueOf(result3));
@@ -2221,6 +2221,7 @@ public class UartService extends Service {
             Log.e("dbSucessOrNot", e.toString());
             dbSucessOrNot = false;
         }
+        realm3.close();
         return dbSucessOrNot;
     }
 }
