@@ -122,26 +122,27 @@ class MyApplication : Application() {
 
         Realm.setDefaultConfiguration(config)
 
-        val handler = Handler()
-        handler.post {
-            val realm = Realm.getDefaultInstance()
-            val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
-            Log.d("REALMAPP",query.toString())
-            var createdTime = 0L
-            query?.forEachIndexed { index, asmDataModel ->
-                Log.d("REALMAPP",createdTime.toString())
-                if (asmDataModel.created_time == createdTime) {
-                    val dataTime = asmDataModel.created_time
-                    realm.executeTransactionAsync {
-                        val realm1 = Realm.getDefaultInstance()
-                        val query1 = realm1.where(AsmDataModel::class.java).equalTo("Created_time", dataTime).findAll().last()
-                        Log.d("REALMAPPDUP",query1.toString())
-                        query1?.deleteFromRealm()
-                    }
-                }
-                createdTime = asmDataModel!!.created_time
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
+        Log.d("REALMAPP",query.toString())
+        var createdTime = 0L
+        val idArr = arrayListOf<Int>()
+        query?.forEachIndexed { index, asmDataModel ->
+            Log.d("REALMAPP",index.toString())
+            if (asmDataModel.created_time == createdTime) {
+                idArr.add(asmDataModel.dataId)
+            }
+            createdTime = asmDataModel!!.created_time
+        }
+        for (i in idArr) {
+            val realm1 = Realm.getDefaultInstance()
+            val query1 = realm1.where(AsmDataModel::class.java).equalTo("id", i).findAll()
+            Log.d("REALMAPPDUP",query1.toString())
+            realm1.executeTransaction {
+                query1.deleteAllFromRealm()
             }
         }
+        realm.close()
 
 
         mPrimaryReceiver = PrimaryReceiver()
