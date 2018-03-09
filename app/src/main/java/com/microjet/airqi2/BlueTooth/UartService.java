@@ -66,6 +66,7 @@ import okhttp3.Response;
 
 import com.crashlytics.android.Crashlytics;
 import com.microjet.airqi2.AsmDataModel;
+import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
@@ -1241,7 +1242,8 @@ public class UartService extends Service {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
-                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+                        Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
                         Log.d("UART", "getItem 1");
                         NowItem = 1;
                         counter = 0;
@@ -1283,7 +1285,8 @@ public class UartService extends Service {
                         } else {
                             downloading = false;
                             downloadComplete = true;
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
@@ -1357,7 +1360,8 @@ public class UartService extends Service {
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
 //                            mainIntent.putExtra("status", "B5");
 //                            Bundle data = new Bundle();
 //                            data.putParcelableArrayList("resultSet", myDeviceData);
