@@ -12,36 +12,44 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <TextView
             android:id="@+id/createAccount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="50dp"
-            android:layout_marginStart="50dp"
+            android:orientation="vertical"
             android:text="@string/create_Account"
-            android:textSize="26sp"
-            android:textStyle="bold"
-            android:orientation="vertical"/>
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/email"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:hint="@string/enter_Email"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_input"
             android:ems="10"
+            android:hint="@string/enter_Email"
             android:inputType="textEmailAddress"
-            android:textSize="20sp"/>
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/nextStep"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:layout_marginEnd="50dp"
-            android:text="@string/next_Step"/>
+            android:layout_marginEnd="40dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_login_button"
+            android:text="@string/next_Step"
+            android:textColor="@color/whiteColor" />
     </LinearLayout>
 
 
