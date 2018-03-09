@@ -173,16 +173,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
                     login_Result = "登入失敗"
-                    val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
-                    //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                    Dialog.setTitle("提示")
-                    Dialog.setMessage(login_Result.toString())
-                    Dialog.setCancelable(false)//讓返回鍵與空白無效
-                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                    { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    Dialog.show()
+
                 }
                 //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
@@ -207,9 +198,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 //{ dialog, _ ->
                     //dialog.dismiss()
 
-                    val intent = Intent()
-                    intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
-                    startActivity(intent)
+
                 //}
                 /*    Dialog.setOnDismissListener(DialogInterface.OnDismissListener {
                 val intent = Intent()
@@ -217,6 +206,22 @@ class AccountManagementActivity : AppCompatActivity() {
                 startActivity(intent)
             })
             */
+                val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
+                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+                Dialog.setTitle("提示")
+                Dialog.setMessage(result.toString())
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                { dialog, _ ->
+                    dialog.dismiss()
+
+                    val intent = Intent()
+                    intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
+                    startActivity(intent)
+                }
+                Dialog.show()
+
+
                 finish()
                 //Dialog.show()
 
@@ -231,7 +236,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
                 Dialog.show()
-                finish()
+                //finish()
             }
         }
     }
