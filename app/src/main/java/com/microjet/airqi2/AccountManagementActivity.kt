@@ -54,7 +54,7 @@ class AccountManagementActivity : AppCompatActivity() {
             userEmail = bundle.getString("email", "")
             userPassword = bundle.getString("pwd", "")
             et_user_name?.setText(userEmail)
-            et_password?.setText(userPassword)
+            //et_password?.setText(userPassword)
             Log.e("ㄍㄋㄋAndy", userEmail + userPassword)
         }
 
