@@ -552,6 +552,21 @@ public class UartService extends Service {
 
         //return super.onStartCommand(intent, flags, startId);
         return START_STICKY;
+
+        /*
+        START_NOT_STICKY
+        如果系統在 onStartCommand() 回傳後終止服務，除非有待決的意圖要傳送，否則請「不要」建立服務。
+        在非必要時與應用程式可以簡單地重新啟動任何未完成的工作時，這是避免執行服務的最安全方式。
+
+        START_STICKY
+        如果系統在 onStartCommand() 回傳後終止服務，請重新建立服務並呼叫 onStartCommand()，但「不要」重新傳送最後的意圖。
+        相反地，除非有待決的意圖要啟動服務傳送，否則系統會使用 null 意圖呼叫 onStartCommand()，如果有待決的意圖要啟動服務，
+        則會傳送那些意圖。 這適用於媒體播放程式 (或類似服務) 這類不執行命令，但可以無次數限制執行與等待工作的服務。
+
+        START_REDELIVER_INTENT
+        如果系統在 onStartCommand() 回傳後終止服務，請重新建立服務並使用傳送至服務的最後意圖呼叫 onStartCommand()。
+        任何待決的意圖會反過來由後往前傳送。這適用的服務為主動執行如下載檔案等應該立即繼續的工作。
+        */
     }
 
     /**
