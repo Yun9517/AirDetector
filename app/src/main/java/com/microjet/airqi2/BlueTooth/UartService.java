@@ -64,6 +64,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import com.crashlytics.android.Crashlytics;
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
@@ -388,6 +389,11 @@ public class UartService extends Service {
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
         close();
+
+        Log.e(TAG, "onUnbind() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
+
         return super.onUnbind(intent);
     }
 
@@ -465,6 +471,8 @@ public class UartService extends Service {
 
         //20180124
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Log.e(TAG, "onCreate() called....");
     }
 
 
@@ -520,7 +528,7 @@ public class UartService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("UART ", "onStartCommand");
+        Log.e(TAG, "onStartCommand(), startId = " + startId);
         //StartService後執行連線
         initailze();
         //mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
@@ -542,7 +550,8 @@ public class UartService extends Service {
         //Intent mainIntent = new Intent("Main");
         //sendBroadcast(mainIntent);
 
-        return super.onStartCommand(intent, flags, startId);
+        //return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     /**
@@ -556,7 +565,7 @@ public class UartService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        disableTXNotification();
+        //disableTXNotification();
         mBluetoothGatt.disconnect();
     }
 
@@ -706,6 +715,14 @@ public class UartService extends Service {
         unregisterReceiver(mBluetoothStateBroadcastReceiver);
         close();
         realm.close();
+
+        Crashlytics.log("onDestroy() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
+
+        Log.e(TAG, "onDestroy() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
         super.onDestroy();
     }
 
@@ -1645,9 +1662,9 @@ public class UartService extends Service {
             countsound2200 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1703,9 +1720,9 @@ public class UartService extends Service {
             countsound2200 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
@@ -1762,9 +1779,9 @@ public class UartService extends Service {
             countsound660 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1823,9 +1840,9 @@ public class UartService extends Service {
             countsound660 = 0;
             countsound2200 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1881,9 +1898,9 @@ public class UartService extends Service {
             countsound660 = 0;
             countsound2200 = 0;
             countsound5500 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();

@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     //Richard 171124
     private var nvDrawerNavigation: NavigationView? = null
-   // private var mDevice: BluetoothDevice? = null
+    // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
     private val REQUEST_SELECT_SAMPLE = 2
@@ -168,7 +168,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.i(TAG, "call onCreate")
+        Log.e(TAG, "call onCreate")
 
         uiFindViewById()
 
@@ -199,13 +199,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180209
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Log.d("MAINACUUID",MyApplication.getPsuedoUniqueID())
+        Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
 
     }
 
     override fun onStart() {
         super.onStart()
-        Log.i(TAG, "call onStart")
+        Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
 
@@ -257,25 +257,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "call onResume")
+        Log.e(TAG, "call onResume")
 
+        if (mUartService == null) {
+            connState = BleConnection.DISCONNECTED
+            checkUIState()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i(TAG, "call onPause")
+        Log.e(TAG, "call onPause")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.i(TAG, "call onStop")
+        Log.e(TAG, "call onStop")
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationManager.removeUpdates(locationListener)
     }
 
 
     //20180202
-     override fun onBackPressed() {
+    override fun onBackPressed() {
         //實現模擬home鍵功能
         //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
         val intent = Intent(Intent.ACTION_MAIN)
@@ -289,7 +293,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "call onDestroy")
+        Log.e(TAG, "call onDestroy")
         if (mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
             mIsReceiverRegistered = false
@@ -533,7 +537,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            //電池點選顯示對話方塊先關掉
+        //電池點選顯示對話方塊先關掉
 //            R.id.batStatus -> {
 //                if(connState) {
 //                    when (batValue) {
