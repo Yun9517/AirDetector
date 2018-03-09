@@ -4,33 +4,39 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.*
+import android.app.Activity
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
-
 import android.graphics.drawable.AnimationDrawable
+import android.location.Criteria
+import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
+import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
-import io.realm.Realm
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.CustomViewPager
@@ -41,8 +47,17 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.*
+import okhttp3.*
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
+import com.microjet.airqi2.Fragment.ChartFragment
+import com.microjet.airqi2.Fragment.MainFragment
+import io.realm.Realm
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.IOException
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -51,6 +66,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val DEFINE_FRAGMENT_CO2 = 2
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
     private val DEFINE_FRAGMENT_HUMIDITY = 4
+    private val DEFINE_FRAGMENT_PM25 = 5
     public val mContext = this@MainActivity
 
     // Fragment 容器
@@ -74,14 +90,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
-    private var menuItem: MenuItem? = null
+    //private var menuItem: MenuItem? = null
     private var lightIcon: ImageView? = null
 
     private var connState = BleConnection.DISCONNECTED
 
     //Richard 171124
     private var nvDrawerNavigation: NavigationView? = null
-   // private var mDevice: BluetoothDevice? = null
+    // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
     private val REQUEST_SELECT_DEVICE = 1
     private val REQUEST_SELECT_SAMPLE = 2
@@ -115,6 +131,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDeviceAddress: String? = null
     private var mUartService: UartService? = null
 
+    private var lati = 121.4215f
+    private var longi = 24.959742f
+    private var locationListener: LocationListener? = null
+
+    // FragmentAdapter
+    private lateinit var mFragmentAdapter: FragmentAdapter
+
+    //
+    //private val mPM25Fg = ChartFragment()
+    /** 是否禁止右劃標記  */
+    private var banDownDraw: Boolean = false
+    /** 手指在螢幕上的最後x坐標  */
+    private var mLastMotionY: Float = 0.toFloat()
+
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             mUartService = (service as UartService.LocalBinder).serverInstance
@@ -138,26 +168,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        Log.i(TAG, "call onCreate")
+        Log.e(TAG, "call onCreate")
 
         uiFindViewById()
+
         viewPagerInit()
+
         initActionBar()
 
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
 
-        // 電池電量假資料
-        //   batValue = 30
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val serviceIntent: Intent? = Intent(this, UartService::class.java)
-//            ContextCompat.startForegroundService(this, serviceIntent)
-//            //startForegroundService(serviceIntent)
-//        } else {
-
-        //}
-
+        Log.e("Conn", MyApplication.getConnectStatus())
 
         if (!mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
@@ -166,7 +189,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         setupDrawerContent(nvDrawerNavigation)
 
-        UartService.nowActivity=this
+        UartService.nowActivity = this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         //20180206
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
@@ -176,13 +199,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180209
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        Log.d("MAINACUUID",MyApplication.getPsuedoUniqueID())
+        Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
 
     }
 
     override fun onStart() {
         super.onStart()
-        Log.i(TAG, "call onStart")
+        Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
 
@@ -199,32 +222,68 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             mUartService?.connect(mDeviceAddress)
         }
+
+        locationListener = object : LocationListener {
+            override fun onLocationChanged(location: Location?) {
+                Log.d("LocationListener1",location?.longitude.toString())
+                Log.d("LocationListener1",location?.latitude.toString())
+
+                lati = location?.latitude!!.toFloat()
+                longi = location?.longitude!!.toFloat()
+
+                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                intent?.putExtra("status", BroadcastActions.INTENT_KEY_LOCATION_VALUE)
+                val bundle: Bundle? = Bundle()
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE,lati)
+                bundle?.putFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE,longi)
+                intent!!.putExtra("TwoValueBundle",bundle)
+                sendBroadcast(intent)
+            }
+
+            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderEnabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onProviderDisabled(provider: String?) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        }
+        getLocation()
     }
 
     override fun onResume() {
         super.onResume()
-        Log.i(TAG, "call onResume")
+        Log.e(TAG, "call onResume")
 
+        if (mUartService == null) {
+            connState = BleConnection.DISCONNECTED
+            checkUIState()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        Log.i(TAG, "call onPause")
+        Log.e(TAG, "call onPause")
     }
 
     override fun onStop() {
         super.onStop()
-        Log.i(TAG, "call onStop")
-
+        Log.e(TAG, "call onStop")
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        locationManager.removeUpdates(locationListener)
     }
 
 
     //20180202
-     override fun onBackPressed() {
+    override fun onBackPressed() {
         //實現模擬home鍵功能
         //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
-        var intent: Intent = Intent(Intent.ACTION_MAIN)
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
         intent.addCategory(Intent.CATEGORY_HOME)
         startActivity(intent)
     }
@@ -234,7 +293,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.i(TAG, "call onDestroy")
+        Log.e(TAG, "call onDestroy")
         if (mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
             mIsReceiverRegistered = false
@@ -249,8 +308,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //val intent: Intent? = Intent(this, UartService::class.java)
         //stopService(intent)
         mUartService?.close()
-        unbindService(mServiceConnection)
-
+        if (mUartService != null) {
+            unbindService(mServiceConnection)
+        }
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -268,7 +328,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 .setMessage(R.string.text_message_need_permission)
                 .setCancelable(false)
                 .setPositiveButton(resources.getString(R.string.text_message_yes)
-                ) { dialog, which -> finish() }
+                ) { _, _ -> finish() }
 
         val mADialog = mBuilder.create()
         mADialog.show()
@@ -302,7 +362,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkBluetooth() {
         // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
-        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)
         val mBluetoothAdapter = mBluetoothManager.adapter
 
         // 若手機不支援BLE則離開APP
@@ -322,7 +382,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
                 //enableBtIntent.flags = Intent.FLAG_ACTIVITY_SINGLE_TOP
                 //mContext.startActivityForResult(enableBtIntent,5)
-                var intentOpenBluetoothSettings = Intent()
+                val intentOpenBluetoothSettings = Intent()
                 intentOpenBluetoothSettings.action = android.provider.Settings.ACTION_BLUETOOTH_SETTINGS
                 startActivity(intentOpenBluetoothSettings)
             }
@@ -354,24 +414,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mHumiFg = HumidiytFragment()
 */
 
-        val mHumiFg=ChartFragment()
-        val mTvocFg=ChartFragment()
-        val mEco2Fg=ChartFragment()
-        val mTempFg=ChartFragment()
+        val mHumiFg = ChartFragment()
+        val mTvocFg = ChartFragment()
+        val mEco2Fg = ChartFragment()
+        val mTempFg = ChartFragment()
+        val mPM25Fg = ChartFragment()
+
         mTvocFg.ConfigFragment(DEFINE_FRAGMENT_TVOC)
         mEco2Fg.ConfigFragment(DEFINE_FRAGMENT_CO2)
         mTempFg.ConfigFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.ConfigFragment(DEFINE_FRAGMENT_HUMIDITY)
+        mPM25Fg.ConfigFragment(DEFINE_FRAGMENT_PM25)
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
         mFragmentList.add(mEco2Fg)
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
+        mFragmentList.add(mPM25Fg)
 
+        mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 
-        val mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
         mPageVp!!.adapter = mFragmentAdapter
+        mPageVp!!.isScrollable = true
         mPageVp!!.currentItem = 0
         mPageVp!!.setOnPageChangeListener(object : ViewPager.OnPageChangeListener {
 
@@ -387,46 +452,45 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageScrolled(position: Int, offset: Float,
                                         offsetPixels: Int) {
 
+                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                val name = share.getString("name", "")
+
+                if(name == "TVOC_NOSE") {
+                    banDownDraw = position == 4     // 如果 position = 4，banDownDraw = true，反之 banDownDraw = false
+                }
                 //Log.e("offset:", offset.toString() + "")
             }
 
             override fun onPageSelected(position: Int) {
                 Log.d("PageSelected", position.toString())
                 currentIndex = position
-//                if (currentIndex >= 1) {
-//                    when (currentIndex) {
-//                        1 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TVOCFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        2 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as ECO2Fragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        3 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as TempFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                        4 -> {
-//                            val nowFragment = mFragmentAdapter.getItem(currentIndex) as HumidiytFragment
-//                            nowFragment.sprTVOC?.setSelection(TvocNoseData.spinnerPosition)
-//                            nowFragment.btnTextChanged(TvocNoseData.spinnerPosition)
-//                            nowFragment.drawChart(TvocNoseData.spinnerPosition)
-//                        }
-//                    }
-//                    //val mFragmentAdapter: FragmentAdapter = mPageVp?.adapter as FragmentAdapter
-//                //(mFragmentAdapter.getItem(1) as TVOCFragment).setImageBarSize()
-//                    //先測試下載功能是否OK
-//                    //(mFragmentAdapter.getItem(1) as TVOCFragment).getDeviceData()
-//                }
             }
         })
+
+        mFragmentAdapter.notifyDataSetChanged()
+    }
+
+    // 如果 banDownDraw = true，封鎖下滑的手勢
+    override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
+        // TODO Auto-generated method stub
+        if (banDownDraw) {
+            when (ev.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    mLastMotionY = ev.y
+                    Log.e(TAG, "EV Y: $mLastMotionY")
+                }
+                MotionEvent.ACTION_MOVE -> {
+                    if (ev.y - mLastMotionY < 0) {
+                        mPageVp!!.isScrollable = false
+                        Log.e(TAG, "EV Y: ${ev.y - mLastMotionY}")
+                    }
+                }
+                MotionEvent.ACTION_UP -> {
+                    mPageVp!!.isScrollable = true
+                }
+            }
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     private fun initActionBar() {
@@ -448,6 +512,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
+    private fun checkLastPM25Value(): Boolean {
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        val dbSize = query.findAll().size - 1
+        val lastPM25val = query.findAll()[dbSize]!!.pM25Value
+
+        return lastPM25val != "65535"
+    }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
@@ -464,7 +537,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
-            //電池點選顯示對話方塊先關掉
+        //電池點選顯示對話方塊先關掉
 //            R.id.batStatus -> {
 //                if(connState) {
 //                    when (batValue) {
@@ -491,7 +564,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     //選單內容
-    private fun dialogShow(title: String, content: String) {
+    /*private fun dialogShow(title: String, content: String) {
         val i: Intent? = Intent(this, CustomDialogActivity::class.java)
         val bundle: Bundle? = Bundle()
         bundle!!.putString("dialogTitle", title)
@@ -499,7 +572,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         i!!.putExtras(bundle)
         startActivity(i)
-    }
+    }*/
 
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
@@ -535,8 +608,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-
-
+    private fun accountShow() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+        startActivity(i)
+    }
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
@@ -544,7 +619,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         }
     }
-
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
@@ -554,6 +628,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_add_device -> blueToothConnect()
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about ->  aboutShow()
+            R.id.nav_accountManagement -> accountShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
@@ -570,7 +645,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         isGPSEnabled = mLocationManager!!.isProviderEnabled(LocationManager.GPS_PROVIDER)
         // 偵測手機是否內建藍芽·若有則偵測藍芽是否開啟
-        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)!!
+        val mBluetoothManager = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager)
         val mBluetoothAdapter = mBluetoothManager.adapter
         if (!isGPSEnabled) {
             setGPSEnabled()
@@ -619,6 +694,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         va.start()
     }
 
+    @SuppressLint("SetTextI18n")
     private fun heatingPanelControl(preheatCountDownString : String) {
         if (mWaitLayout!!.visibility == View.INVISIBLE) {
             heatingPanelShow()
@@ -627,7 +703,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         if (preheatCountDownString != "255") {
             preheatCountDownInt = (120 - preheatCountDownString.toInt())
-            Log.v(TAG, "Preheat Count Down: " + preheatCountDownInt)
+            Log.v(TAG, "Preheat Count Down: $preheatCountDownInt")
             mWaitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
             //if (mWaitLayout!!.visibility == View.VISIBLE) {
             //    heatingPanelHide()
@@ -669,14 +745,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
                         print("MainActivity")
                         val result = mUartService?.connect(mDeviceAddress)
-                        Log.d(TAG, "Connect request result=" + result)
+                        Log.d(TAG, "Connect request result=$result")
                     }
                 }
             }
 
             REQUEST_SELECT_SAMPLE -> {
                 if (data != null) {
-                    var value = data.getIntExtra("choseCycle", 0)
+                    val value = data.getIntExtra("choseCycle", 0)
                     val uuintent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     uuintent!!.putExtra("status", "setSampleRate")
 
@@ -717,7 +793,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun makeGattUpdateIntentFilter(): IntentFilter {
-        var intentFilter = IntentFilter()
+        val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
         intentFilter.addAction(BroadcastActions.EXTRA_DATA)
         //intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
@@ -814,7 +890,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val TAG = MainActivity::class.java.simpleName
     // inner class MyBroadcastReceiver : BroadcastReceiver()
     private val MyBroadcastReceiver = object : BroadcastReceiver() {
-        @SuppressLint("SetTextI18n")
+        @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
             //updateUI(intent)
             checkBluetooth()
@@ -824,32 +900,42 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = BleConnection.CONNECTED
                     val bundle = intent.extras
                     drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
-                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_x3)
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+
+                    val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                    val name = share.getString("name", "")
+
+                    // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
+                    /*if(name == "TVOC_NOSE") {
+                        this@MainActivity.supportFragmentManager.beginTransaction().hide(mPM25Fg).commit()
+                    } else {
+                        this@MainActivity.supportFragmentManager.beginTransaction().show(mPM25Fg).commit()
+                    }*/
                     // drawerDeviceAddress = intent.getStringExtra("macAddress")
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
-                    battreyIcon?.icon = resources.getDrawable(R.drawable.icon_battery_disconnect)
+                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
                     heatingPanelHide()
                     //    updateUI(intent)
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     val bundle = intent.extras
-                    val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                    //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
                     batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
                     val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                     Log.v(TAG, "電池電量: $batValue%")
                     // 預熱畫面控制
                     heatingPanelControl(preheatCountDownString)
                     displayConnetedBatteryLife()
-                    //bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
                 }
             }
-            Log.d("MainActivity","OnReceive: " + action)
+            Log.d("MainActivity", "OnReceive: $action")
             checkUIState()
         }
 
@@ -862,7 +948,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_connect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
         } else {
@@ -870,12 +956,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-            bleIcon?.icon = resources.getDrawable(R.drawable.bluetooth_disconnect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_getData)?.isVisible = false
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
-        Log.d("MAINcheckUIState",connState.toString())
+        Log.d("MAINcheckUIState", connState.toString())
     }
 
 
@@ -910,7 +996,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    }
                 }
             }
-            Log.v(TAG, "mBluetoothStateReceiver: " + stateStr)
+            Log.v(TAG, "mBluetoothStateReceiver: $stateStr")
         }
     }
 //private boolean isAppIsInBackground(Context context) {
@@ -937,6 +1023,230 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //
 //        return isInBackground;
 //    }
+
+    //20180307
+    private var client: OkHttpClient? = null
+    private val hasBeenUpLoaded = java.util.ArrayList<Int>()
+    private inner class postDataAsyncTasks : AsyncTask<String, Void, String>() {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        override fun doInBackground(vararg params: String): String? {
+            var return_body: RequestBody? = null
+            var getResponeResult = java.lang.Boolean.parseBoolean(null)
+            try {
+                //取得getRequestBody
+                return_body = getRequestBody()
+                //呼叫getResponse取得結果
+                if (return_body!!.contentLength() > 0) {
+                    getResponeResult = getResponse(return_body)
+
+                    if (getResponeResult) {
+                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                        val DBSucess = updateDB_UpLoaded()
+                        if (DBSucess) {
+                            Log.e("幹改進去", DBSucess.toString())
+                        }
+                        hasBeenUpLoaded.clear()
+                    } else {
+                        Log.e("幹改失敗拉!!", getResponeResult.toString())
+                    }
+                } else {
+                    Log.e("幹太少筆啦!", return_body.contentLength().toString())
+                }
+
+            } catch (e: Exception) {
+                Log.e("return_body_erro", e.toString())
+            }
+            return null
+        }
+    }
+    //20180307
+    private fun getRequestBody(): RequestBody? {
+        //很重要同區域才可以叫到同一個東西
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val DeviceAddress = share.getString("mac", "noValue")
+        //        String serial = "";
+        //        //確認唯一識別碼(https://blog.mosil.biz/2014/05/android-device-id-uuid/)
+        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+        //            serial = Build.SERIAL;
+        //        }
+        //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
+        val realm = Realm.getDefaultInstance()
+
+
+        val query2 = realm.where(AsmDataModel::class.java)
+        val result5 = query2.equalTo("UpLoaded", "1").findAll()
+        //        realm.executeTransaction((Realm realm1) -> {
+        //
+        //            for (int i = 0 ; i < result5.size() ; i++) {
+        //
+        //                result5.get(i).setUpLoaded("0");
+        //
+        //                Log.e("這個時間", String.valueOf(result5.toString()));
+        //            }
+        //
+        //        });
+
+        val query = realm.where(AsmDataModel::class.java)
+        val result1 = query.equalTo("UpLoaded", "0").findAll()
+
+        /*
+        RealmQuery<AsmDataModel> query9 = realm.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result7 =query9.distinct("Created_time");
+        Log.e("幹",String.valueOf(result7.size()));
+        Log.e("幹蝦小",String.valueOf(result1.size()));
+*/
+
+        Log.e("未上傳ID", result1.toString())
+        Log.e("已上ID", result5.toString())
+        Log.e("未上傳資料筆數", result1.size.toString())
+        Log.e("未上傳資料", result1.toString().toString())
+        Log.e("已上傳資料筆數", result5.size.toString())
+
+
+        //MyApplication getUUID=new MyApplication();
+        val UUID = MyApplication.getPsuedoUniqueID()
+        //製造RequestBody的地方
+        var body: RequestBody? = null
+
+        //20170227
+        val json_obj = JSONObject()            //用來當內層被丟進陣列內的JSON物件
+        val json_arr = JSONArray()                //JSON陣列
+
+        try {
+            if (result1.size > 0) {
+                for (i in result1.indices) {
+                    //toltoSize++;
+                    if (i == 6000) {
+                        break
+                    }
+                    //                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
+                    //                    realm.beginTransaction();
+                    //                    result1.get(i).deleteFromRealm();
+                    //                    realm.commitTransaction();
+                    //                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
+                    //                }
+                    hasBeenUpLoaded.add(result1[i]!!.dataId)
+                    Log.i("text", "i=" + i + "\n")
+                    val json_obj_weather = JSONObject()            //單筆weather資料
+                    json_obj_weather.put("temperature", result1[i]!!.tempValue)
+                    json_obj_weather.put("humidity", result1[i]!!.humiValue)
+                    json_obj_weather.put("tvoc", result1[i]!!.tvocValue)
+                    json_obj_weather.put("eco2", result1[i]!!.ecO2Value)
+                    json_obj_weather.put("pm25", result1[i]!!.pM25Value)
+                    json_obj_weather.put("longitude", "24.778289")
+                    json_obj_weather.put("latitude", "120.988108")
+                    json_obj_weather.put("timestamp", result1[i]!!.created_time)
+                    Log.e("timestamp", "i=" + i + "timestamp=" + result1[i]!!.created_time!!.toString())
+                    json_arr.put(json_obj_weather)
+                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+                }
+            } else {
+                Log.e("未上傳資料筆數", result1.size.toString())
+            }
+
+            json_obj.put("uuid", UUID)
+            json_obj.put("mac_address", DeviceAddress)
+            json_obj.put("registration_id", "qooo123457")
+            //再來將JSON陣列設定key丟進JSON物件
+            json_obj.put("weather", json_arr)
+            Log.e("全部資料", json_obj.toString())
+            val mediaType = MediaType.parse("application/x-www-form-urlencoded")
+            body = RequestBody.create(mediaType, "data=" + json_obj.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        return body
+    }
+
+    //傳資料
+    private fun getResponse(body: RequestBody): Boolean {
+        var response: Response? = null
+        var resonseReselt = java.lang.Boolean.parseBoolean(null)
+        try {
+            if (body.contentLength() > 0) {
+                //丟資料
+                val request = Request.Builder()
+                        .url("https://mjairql.com/api/v1/upWeather")
+                        .post(body)
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .addHeader("postman-token", "a2fa2822-765d-209a-ec8c-82170c5171c0")
+                        .build()
+                try {
+                    client = OkHttpClient.Builder()
+                            .connectTimeout(0, TimeUnit.SECONDS)
+                            .writeTimeout(0, TimeUnit.SECONDS)
+                            .readTimeout(0, TimeUnit.SECONDS)
+                            .build()
+                    //上傳資料
+                    response = client?.newCall(request)?.execute()
+                    if (response!!.isSuccessful) {//正確回來
+                        resonseReselt = true
+                        Log.e("正確回來!!", response!!.body()!!.string())
+                    } else {//錯誤回來
+                        Log.e("錯誤回來!!", response!!.body()!!.string())
+                        resonseReselt = false
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Log.e("回來處理有錯!", e.toString())
+
+                }
+
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return resonseReselt
+    }
+
+    private fun updateDB_UpLoaded(): Boolean {
+        var dbSucessOrNot = java.lang.Boolean.parseBoolean(null)
+        val realm = Realm.getDefaultInstance()
+        try {
+            realm.executeTransaction { realm1: Realm ->
+                Log.e("正確回來TRY", hasBeenUpLoaded.size.toString())
+                for (i in 0 until hasBeenUpLoaded.size) {
+                    //realm.beginTransaction();
+                    val aaa = realm1.where(AsmDataModel::class.java)
+                            .equalTo("id", hasBeenUpLoaded.get(i))
+                            .findFirst()
+                    aaa!!.setUpLoaded("1")
+                    Log.e("回來更新", aaa!!.getDataId()!!.toString() + "更新?" + aaa!!.getUpLoaded())
+                }
+                val query3 = realm.where(AsmDataModel::class.java)
+                val result3 = query3.equalTo("UpLoaded", "1").findAll()
+                Log.e("正確更改", result3.size.toString())
+                Log.e("正確更改內容", result3.toString())
+            }
+            dbSucessOrNot = true
+        } catch (e: Exception) {
+            Log.e("dbSucessOrNot", e.toString())
+            dbSucessOrNot = false
+        }
+        return dbSucessOrNot
+    }
+
+    private fun getLocation() {
+        checkGPSPermisstion()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val criteria = Criteria()
+        criteria.accuracy = Criteria.ACCURACY_MEDIUM
+        criteria.powerRequirement = Criteria.POWER_MEDIUM
+        val provider = locationManager.getBestProvider(criteria, true)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(provider, 5000, 10f, locationListener)
+        }
+    }
+
+    private fun checkGPSPermisstion() {
+        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        Log.d("MAINAC", permission.toString())
+        val permission1 = PackageManager.PERMISSION_GRANTED
+        Log.d("MAINAC", permission1.toString())
+    }
 }
 
 

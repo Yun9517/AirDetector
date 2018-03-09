@@ -24,6 +24,20 @@
     <string name="message_eCO2_Purple">空氣品質非常不健康，請離開並務必加強通風</string>
     <string name="message_eCO2_Brown">空氣品質極度危害健康，請立即離開並務必加強通風</string>
 
+    <!-- pm2.5 message -->
+    <string name="label_pm25_Green">正常</string>
+    <string name="label_pm25_Yellow">濃度中等</string>
+    <string name="label_pm25_Orange">濃度過高</string>
+    <string name="label_pm25_Red">有害健康</string>
+    <string name="label_pm25_Purple">非常有害健康</string>
+    <string name="label_pm25_Brown">極度危害健康</string>
+    <string name="message_pm25_Green">空氣品質正常。</string>
+    <string name="message_pm25_Yellow">空氣品質中等。</string>
+    <string name="message_pm25_Orange">空氣品質不佳，避免長時間待在此環境。體質敏感者可能感到不適。</string>
+    <string name="message_pm25_Red">空氣品質不健康，避免長時間待在此環境。</string>
+    <string name="message_pm25_Purple">空氣品質非常不健康，請離開此地。</string>
+    <string name="message_pm25_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
+
     <string name="text_message_temperature">一般來說，人體在室內感覺最舒適的溫度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
@@ -53,6 +67,8 @@
     <string name="text_navi_air_map">空氣地圖</string>
     <string name="text_navi_add_device">新增裝置</string>
     <string name="text_navi_getData">讀取裝置資料</string>
+    <string name="text_navi_accountManagement">帳號管理</string>
+
     <string name="ble_not_supported">藍牙未支援</string>
     <string name="select_device">選擇裝置</string>
     <string name="scanning">掃描中</string>
@@ -97,7 +113,7 @@
     <string name="warning_title_Brown">非常嚴重危險警告通知!!!</string>
 
     <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
-    
+
     <!-- Add Calendar String -->
     <string name="week_First_Word">第</string>
     <string name="week_Last_Word">週</string>
@@ -155,12 +171,40 @@
     <string name="location_permission_denied">This sample requires location permission to enable the \'my location\' layer. Please try again and grant access to use the location.\nIf the permission has been permanently denied, it can be enabled from the System Settings &gt; Apps &gt; \'Google Maps API Demos\'.</string>
     <string name="permission_required_toast">Location permission is required for this demo.</string>
 
-    //20180206
+    <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
     <string name="led_light">LED指示燈</string>
 
-    //2018/03/02
+    <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
     <string name="allow_3G">允許行動網路</string>
 
+    //20180227
+    <string name="cloud_fun">雲端功能</string>
+    //2018/03/06
+    <string name="not_yetDetected">尚未偵測</string>
+    <string name="text_label_device_version">偵測器韌體版本：</string>
+    <string name="text_label_local_uuid">手機 UUID</string>
+
+    <!-- 2018/03/02 Register & Cloud String-->
+    <string name="account_Login">帳號登入</string>
+    <string name="login">登入</string>
+    <string name="enter_Password">請輸入密碼</string>
+    <string name="forget_Password">忘記密碼？</string>
+    <string name="no_Account">我還沒有註冊帳號  我想</string>
+    <string name="create_New_account">建立新帳號</string>
+    <string name="create_Account">建立帳號</string>
+    <string name="enter_Email">請輸入電子郵件</string>
+    <string name="next_Step">下一步</string>
+    <string name="enter_Verification_code">請輸入驗證碼</string>
+    <string name="cannot_Receive_mail">沒收到認證信？</string>
+    <string name="resend_Mail">補發認證信</string>
+    <string name="confirm">確認</string>
+    <string name="active">帳號已啟用</string>
+    <string name="logout">登出</string>
+    <string name="account_Activation">帳號已啟用</string>
+    <string name="account_Deactivation">帳號尚未啟用</string>
+
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
 </resources>

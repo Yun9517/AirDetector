@@ -1,21 +1,28 @@
 package com.microjet.airqi2
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
+import android.location.LocationManager
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_setting.*
 
 /**
  * Created by B00174 on 2017/11/29.
- * 
+ *
  */
 class SettingActivity : AppCompatActivity() {
 
@@ -30,6 +37,8 @@ class SettingActivity : AppCompatActivity() {
     //20180130
     private var batSoundVal: Boolean = false
     private var swLedPowerVal: Boolean = true
+    //20180227
+    private var swCloudVal: Boolean = true
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,9 +69,13 @@ class SettingActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
         readPreferences()   // 當Activity onResume時載入設定值
+
+        text_local_uuid.text = MyApplication.getPsuedoUniqueID()
+        text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
     }
 
     private fun readPreferences() {
@@ -79,6 +92,9 @@ class SettingActivity : AppCompatActivity() {
 
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
+        //20180227
+        swCloudVal=mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+
         spCycle.setSelection(spCycleVal)
 
         swMessage.isChecked = swMessageVal
@@ -92,6 +108,8 @@ class SettingActivity : AppCompatActivity() {
         batSound.isChecked = batSoundVal
 
         ledPower.isChecked = swLedPowerVal
+
+        swClouudFun.isChecked=swCloudVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -172,6 +190,7 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
+        //20180227
         swTotalNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 text_total_notify_stat.text = getString(R.string.text_setting_on)
@@ -182,7 +201,7 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
                     isChecked).apply()
         }
-       //20180129
+        //20180129
 //        swPump.setOnCheckedChangeListener { _, isChecked ->
 //            if (isChecked) {
 //                text_pump_stat!!.text = getString(R.string.text_setting_on)
@@ -234,6 +253,29 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                     isChecked).apply()
         }
+
+        //20180227  CloudFun
+        swClouudFun.setOnCheckedChangeListener { _, isChecked ->
+
+            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+
+            if (isChecked) {
+                text_clouud_stat!!.text = getString(R.string.text_setting_on)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
+                //updateData()
+                //text_bat_stat!!.text = getString(R.string.text_setting_on)
+                //getLocation()
+            } else {
+                text_clouud_stat.text = getString(R.string.text_setting_off)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
+            }
+
+            sendBroadcast(intent)
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
+                    isChecked).apply()
+
+        }
     }
 
     private fun initActionBar() {
@@ -254,6 +296,78 @@ class SettingActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun updateData() {
+        //拉取資料加上傳搞定
+        val realm = Realm.getDefaultInstance()
+        val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
+        Log.d("SETTCLOUD",result.toString())
+
+        //對資料庫做操作的方法
+        /*
+        realm.executeTransactionAsync {
+            val realm1 = Realm.getDefaultInstance()
+            for (i in 601..1000) {
+                val dataId = i
+                val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+                user!!.upLoaded = "1"
+            }
+        }
+        realm.executeTransactionAsync {
+            val realm1 = Realm.getDefaultInstance()
+            val dataId = 1453
+            val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
+            user?.deleteFromRealm()
+        }
+        realm.executeTransactionAsync {
+            val realm1 = Realm.getDefaultInstance()
+            val num = realm1.where(AsmDataModel::class.java).max("id")
+            val nextID: Int
+            if (num == null) {
+                nextID = 1
+            } else {
+                nextID = num.toInt() + 1
+            }
+            Log.d("REALMAPPID",nextID.toString())
+            val user = realm1.createObject(AsmDataModel::class.java,nextID)
+            user.tempValue = "400"
+            user.humiValue = "400"
+            user.tvocValue = "800"
+            user.ecO2Value = "400"
+            user.pM25Value = "400"
+            user.created_time = 1520429700000
+        }
+        */
+
+
+        val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
+        Log.d("SETTCLOUD",result1.toString())
+
+        //val result2 = realm.where(AsmDataModel::class.java).equalTo("Created_time",1520332440000).findAll()
+        val result2 = realm.where(AsmDataModel::class.java).between("Created_time",1520424060000, 1520424060000).findAll()
+
+        Log.d("SETTCLOUD",result2.toString())
+
+    }
+
+    private fun getLocation() {
+        /*
+        // checkGPSPermisstion()
+        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        //val locationListener = MyLocationListener()
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(
+                    LocationManager.GPS_PROVIDER, 5000, 10f, locationListener)
+        }
+        */
+    }
+
+    private fun checkGPSPermisstion() {
+        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        Log.d("UARTPER", permission.toString())
+        val permission1 = PackageManager.PERMISSION_GRANTED
+        Log.d("UARTPER", permission1.toString())
     }
 
 }

@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
@@ -35,7 +36,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
         TVOC(220, 660),
         CO2(700, 1000),
         Temp(18, 25),
-        Humi(45, 65)
+        Humi(45, 65),
+        PM25(220, 660)
     }
 
     private var mContext: Context? = null
@@ -83,6 +85,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_eCO2.setOnTouchListener(this)
         show_Temp.setOnTouchListener(this)
         show_RH.setOnTouchListener(this)
+        show_PM.setOnTouchListener(this)
 
         /*show_TVOC?.setOnClickListener {
             it.parent.requestDisallowInterceptTouchEvent(true)
@@ -117,7 +120,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             checkUIState()
         }*/
         imgLight.setOnTouchListener { view, motionEvent ->
-            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
+            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2 || dataForState == DetectionData.PM25) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
                 when(motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
@@ -170,6 +173,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     R.id.show_RH -> {
                         dataForState = DetectionData.Humi
                     }
+                    R.id.show_PM -> {
+                        dataForState = DetectionData.PM25
+                    }
                 }
                 pumpOnStatus(beforeState, dataForState)
                 checkUIState()
@@ -211,6 +217,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        Log.e("MainFrg", "onDestroy() called...")
     }
 
 
@@ -288,6 +295,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
             DetectionData.Humi -> {
                 inCircleBar.setMaxValues(100f)
             }
+            DetectionData.PM25 -> {
+                inCircleBar.setMaxValues(1000f)
+            }
         }
     }
 
@@ -295,10 +305,13 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
-        if (pm25DataFloat == 65535f) {
+        if (MyApplication.isPM25 == "000000000000") {
+        //if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
+            show_PM.isEnabled = false
         } else {
-            tvBtmPM25Value.text = pm25DataFloat.toInt().toString()
+            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + " μg/m³"
+            show_PM.isEnabled = true
         }
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
@@ -462,7 +475,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun tempStatusTextShow(currentValue: Float) {
         when (currentValue) {
-            in 18..25 -> {
+            in 18..24 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -472,9 +485,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_02)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_green)
             }
-            in 26..200 -> {
+            in 25..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
@@ -484,7 +497,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_03)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_red)
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
@@ -496,7 +509,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_01)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_temp_blue)
             }
         }
     }
@@ -513,7 +526,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_01)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_blue)
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
@@ -525,7 +538,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_02)
                 //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_green)
             }
             else -> {
 
@@ -537,6 +550,84 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.bg_rh_red)
+            }
+        }
+    }
+
+    private fun pm25StatusTextShow(currentValue: Float) {
+        when (currentValue) {
+            in 0..15 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Green)
+                inCircleState.text = getString(R.string.label_pm25_Green)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+            }
+
+            in 16..34 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Yellow)
+                inCircleState.text = getString(R.string.label_pm25_Yellow)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 35..54 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Orange)
+                inCircleState.text = getString(R.string.label_pm25_Orange)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 55..150 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Red)
+                inCircleState.text = getString(R.string.label_pm25_Red)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_04)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            in 151..250 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Purple)
+                inCircleState.text = getString(R.string.label_pm25_Purple)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_05)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.message_pm25_Brown)
+                inCircleState.text = getString(R.string.label_pm25_Brown)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_06)
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
@@ -627,6 +718,26 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     //inCircleBar.setCurrentValues(40f)
                     humiStatusTextShow(humiDataFloat)
                     val temp = humiDataFloat.toInt().toString() + " %"
+                    textSpannable(temp)
+                }
+                DetectionData.PM25 -> {
+                    inCircleTitle.text = getString(R.string.text_label_pm25)
+                    setThresholdValue(dataForState)
+                    setBarMaxValue(dataForState)
+                    //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
+                    //inCircleBar.setCurrentValues(tvocDataFloat)
+                    inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //數值不等比顯示
+                    when (pm25DataFloat) {
+                        in 0..15 -> inCircleBar.setCurrentValues(pm25DataFloat)
+                        in 16..35 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 700)
+                        in 36..65 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 770)
+                        in 66..150 -> inCircleBar.setCurrentValues((pm25DataFloat / 180) + 830)
+                        else -> inCircleBar.setCurrentValues((pm25DataFloat / 360) + 890)
+                    }
+                    //inCircleBar.setCurrentValues(1000f)
+                    pm25StatusTextShow(pm25DataFloat)
+                    val temp = pm25DataFloat.toInt().toString() + " μg/m³"
                     textSpannable(temp)
                 }
             }

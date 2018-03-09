@@ -8,7 +8,11 @@ import io.realm.Realm
 import io.realm.RealmConfiguration
 import com.microjet.airqi2.BroadReceiver.PrimaryReceiver
 import com.microjet.airqi2.Definition.BroadcastIntents
+import android.net.ConnectivityManager
+
+
 import android.os.Build
+import android.os.Handler
 import java.util.*
 
 
@@ -26,9 +30,22 @@ class MyApplication : Application() {
 
     companion object {
         private var instance: MyApplication? = null
+        private var deviceVer: String = ""
+        var isPM25: String = ""
 
-        fun applicationContext() : Context {
+        fun applicationContext(): Context {
             return instance!!.applicationContext
+        }
+
+        fun getConnectStatus(): String {
+            val CM = instance!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+            val netInfo = CM!!.activeNetworkInfo
+
+            return if (netInfo != null && netInfo.isConnected) {
+                netInfo.typeName
+            } else {
+                "DISCONNECT"
+            }
         }
 
         /**
@@ -79,6 +96,15 @@ class MyApplication : Application() {
             val share = applicationContext().getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
             return share.getString("mac", "11:22:33:44:55:66")
         }
+
+        fun putDeviceVersion(value: String) {
+            deviceVer = value
+        }
+
+        fun getDeviceVersion(): String {
+            return deviceVer
+        }
+
     }
 
     override fun onCreate() {
@@ -95,6 +121,29 @@ class MyApplication : Application() {
         Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
 
         Realm.setDefaultConfiguration(config)
+
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
+        Log.d("REALMAPP",query.toString())
+        var createdTime = 0L
+        val idArr = arrayListOf<Int>()
+        query?.forEachIndexed { index, asmDataModel ->
+            Log.d("REALMAPP",index.toString())
+            if (asmDataModel.created_time == createdTime) {
+                idArr.add(asmDataModel.dataId)
+            }
+            createdTime = asmDataModel!!.created_time
+        }
+        for (i in idArr) {
+            val realm1 = Realm.getDefaultInstance()
+            val query1 = realm1.where(AsmDataModel::class.java).equalTo("id", i).findAll()
+            Log.d("REALMAPPDUP",query1.toString())
+            realm1.executeTransaction {
+                query1.deleteAllFromRealm()
+            }
+        }
+        realm.close()
+
 
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)

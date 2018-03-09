@@ -37,7 +37,11 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.net.HttpCookie;
 import java.text.SimpleDateFormat;
+import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -48,17 +52,33 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
+import io.realm.RealmAsyncTask;
+import io.realm.RealmList;
+import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
+import com.crashlytics.android.Crashlytics;
 import com.microjet.airqi2.AsmDataModel;
+import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.MainActivity;
+import com.microjet.airqi2.MyApplication;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 import com.microjet.airqi2.NotificationHelper;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -82,7 +102,7 @@ public class UartService extends Service {
     private static final int STATE_DISCONNECTING = 3;
 
     //public final static String ACTION_GATT_SERVICES_DISCOVERED =
-            //"ACTION_GATT_SERVICES_DISCOVERED";
+    //"ACTION_GATT_SERVICES_DISCOVERED";
     public final static String ACTION_DATA_AVAILABLE =
             "ACTION_DATA_AVAILABLE";
     public final static String EXTRA_DATA =
@@ -122,7 +142,7 @@ public class UartService extends Service {
     private int countsound800 = 0;
     private int countsound1500 = 0;
     //20180122
-    private SoundPool soundPool= null;
+    private SoundPool soundPool = null;
     private Vibrator mVibrator = null;
     private int alertId = 0;
     private int alertId2 = 0;
@@ -159,6 +179,16 @@ public class UartService extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
+    private Float lati = 121.4215f;
+    private Float longi = 24.959742f;
+
+    //20180227
+    private OkHttpClient client = null;
+    private String DeviceAddress = "";
+
+
+    private String deviceVersion = "";
+    private String isPM25 = "";
 
     //    public UartService() { //建構式
 //    }
@@ -240,7 +270,7 @@ public class UartService extends Service {
                 arrB6.clear();
                 disconnect();
                 close();
-            } else if (status == 19){
+            } else if (status == 19) {
                 intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED;
                 Log.i(TAG, "Disconnected from GATT server.");
                 //broadcastUpdate(intentAction);
@@ -253,7 +283,7 @@ public class UartService extends Service {
                 arrB6.clear();
                 disconnect();
                 close();
-                Log.d("UART","裝置斷線");
+                Log.d("UART", "裝置斷線");
             } else {
                 //重連機制
                 callbackErrorTimes++;
@@ -279,10 +309,10 @@ public class UartService extends Service {
                             connect(mBluetoothDeviceAddress);
                         }
                     };
-                    errHandler.postDelayed(runnable,1000);
+                    errHandler.postDelayed(runnable, 1000);
                 }
             }
-            Log.d("UARTCallBackStatus",Integer.toString(status));
+            Log.d("UARTCallBackStatus", Integer.toString(status));
         }
 
         @Override
@@ -360,6 +390,11 @@ public class UartService extends Service {
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
         close();
+
+        Log.e(TAG, "onUnbind() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
+
         return super.onUnbind(intent);
     }
 
@@ -427,7 +462,7 @@ public class UartService extends Service {
         }
         realm = Realm.getDefaultInstance(); // opens "myrealm.realm"
         try {
-            Log.d("REALMUART",String.valueOf(realm.getConfiguration().getSchemaVersion()));
+            Log.d("REALMUART", String.valueOf(realm.getConfiguration().getSchemaVersion()));
         } finally {
             realm.close();
         }
@@ -437,6 +472,8 @@ public class UartService extends Service {
 
         //20180124
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        Log.e(TAG, "onCreate() called....");
     }
 
 
@@ -492,7 +529,7 @@ public class UartService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("UART ", "onStartCommand");
+        Log.e(TAG, "onStartCommand(), startId = " + startId);
         //StartService後執行連線
         initailze();
         //mBluetoothManager = (BluetoothManager) getSystemService(this.BLUETOOTH_SERVICE);
@@ -514,7 +551,23 @@ public class UartService extends Service {
         //Intent mainIntent = new Intent("Main");
         //sendBroadcast(mainIntent);
 
-        return super.onStartCommand(intent, flags, startId);
+        //return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+
+        /*
+        START_NOT_STICKY
+        如果系統在 onStartCommand() 回傳後終止服務，除非有待決的意圖要傳送，否則請「不要」建立服務。
+        在非必要時與應用程式可以簡單地重新啟動任何未完成的工作時，這是避免執行服務的最安全方式。
+
+        START_STICKY
+        如果系統在 onStartCommand() 回傳後終止服務，請重新建立服務並呼叫 onStartCommand()，但「不要」重新傳送最後的意圖。
+        相反地，除非有待決的意圖要啟動服務傳送，否則系統會使用 null 意圖呼叫 onStartCommand()，如果有待決的意圖要啟動服務，
+        則會傳送那些意圖。 這適用於媒體播放程式 (或類似服務) 這類不執行命令，但可以無次數限制執行與等待工作的服務。
+
+        START_REDELIVER_INTENT
+        如果系統在 onStartCommand() 回傳後終止服務，請重新建立服務並使用傳送至服務的最後意圖呼叫 onStartCommand()。
+        任何待決的意圖會反過來由後往前傳送。這適用的服務為主動執行如下載檔案等應該立即繼續的工作。
+        */
     }
 
     /**
@@ -528,7 +581,7 @@ public class UartService extends Service {
             Log.w(TAG, "BluetoothAdapter not initialized");
             return;
         }
-        disableTXNotification();
+        //disableTXNotification();
         mBluetoothGatt.disconnect();
     }
 
@@ -678,10 +731,19 @@ public class UartService extends Service {
         unregisterReceiver(mBluetoothStateBroadcastReceiver);
         close();
         realm.close();
+
+        Crashlytics.log("onDestroy() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
+
+        Log.e(TAG, "onDestroy() called...\nModel: " + android.os.Build.MODEL +
+                ", \nBrand: " + android.os.Build.BRAND +
+                ", \nSystem Version: " + android.os.Build.VERSION.RELEASE);
         super.onDestroy();
     }
 
-    boolean CallFromConnect =false;
+    boolean CallFromConnect = false;
+
     private class MyBroadcastReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -768,6 +830,17 @@ public class UartService extends Service {
                 case BroadcastActions.INTENT_KEY_LED_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
                     break;
+                case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
+                    lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
+                    longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
+                    break;
+                case BroadcastActions.INTENT_KEY_SET_PM25_ON:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(5));
+                    break;
+                case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(15));
+                    break;
+
             }
         }
     }
@@ -948,20 +1021,20 @@ public class UartService extends Service {
 //        }
 //    }
 
-    public boolean CompareDufaultValue(ArrayList<String> RString){
-        int sampleRate,sensorOntime,timeToGetSample,pumpOnTime,pumpingTime;
-        sampleRate=Integer.parseInt(RString.get(0));
-        sensorOntime=Integer.parseInt(RString.get(1));
-        timeToGetSample=Integer.parseInt(RString.get(2));
-        pumpOnTime=Integer.parseInt(RString.get(3));
-        pumpingTime=Integer.parseInt(RString.get(4));
-        if ( (sampleRate!=1&& sampleRate!=30&&sampleRate!=40&&sampleRate!=60)|| sensorOntime!=30||timeToGetSample!=29|| pumpOnTime!=28||pumpingTime!=1) {//設定新參數設為預設值
+    public boolean CompareDufaultValue(ArrayList<String> RString) {
+        int sampleRate, sensorOntime, timeToGetSample, pumpOnTime, pumpingTime;
+        sampleRate = Integer.parseInt(RString.get(0));
+        sensorOntime = Integer.parseInt(RString.get(1));
+        timeToGetSample = Integer.parseInt(RString.get(2));
+        pumpOnTime = Integer.parseInt(RString.get(3));
+        pumpingTime = Integer.parseInt(RString.get(4));
+        if ((sampleRate != 1 && sampleRate != 30 && sampleRate != 40 && sampleRate != 60) || sensorOntime != 30 || timeToGetSample != 29 || pumpOnTime != 28 || pumpingTime != 1) {//設定新參數設為預設值
             return true;//參數不正確須重置
-        }
-        else {
+        } else {
             return false;
         }
     }
+
     @SuppressLint("NewApi")
     public void dataAvaliable(Intent intent) {
         final byte[] txValue = intent.getByteArrayExtra(EXTRA_DATA);
@@ -975,10 +1048,10 @@ public class UartService extends Service {
             default:
                 //當要印ByteArray的時候可以用
                 ArrayList dataArray = new ArrayList();
-                for (int index = 0; index < txValue.length; index++){
+                for (int index = 0; index < txValue.length; index++) {
                     dataArray.add(txValue[index]);
                 }
-                Log.d("UARTDATAAVA",dataArray.toString());
+                Log.d("UARTDATAAVA", dataArray.toString());
                 //Log.d("UARTDATAAVA",new String(txValue, StandardCharsets.UTF_8));
         }
         switch (txValue[2]) {
@@ -1002,8 +1075,8 @@ public class UartService extends Service {
                     //************** 2017/12/04 "尊重原創 留原始文字 方便搜尋" 更改成從String撈文字資料 *****************************//
                     //Toast.makeText(getApplicationContext(),"讀取第"+Integer.toString(NowItem)+"筆失敗",Toast.LENGTH_LONG).show();
                     //Toast.makeText(getApplicationContext(), getText(R.string.Number_of_data) + Integer.toString(NowItem) + getText(R.string.Loading_fail), Toast.LENGTH_LONG).show();
-                //***************************************************************************************************************//
-                Log.d("UART feedback", "Invalid value");
+                    //***************************************************************************************************************//
+                    Log.d("UART feedback", "Invalid value");
                 return;
             case (byte) 0xE6:
                 Log.d("UART feedback", "Unknown command");
@@ -1057,41 +1130,36 @@ public class UartService extends Service {
                     sendBroadcast(mainIntent);
 
                     // 20180226 add
-                    if(isFirstB0) {
+                    if (isFirstB0) {
                         isFirstB0 = false;
 
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
                     }
 
 
-                    if (Integer.valueOf(RString.get(2)) < 221){
+                    if (Integer.valueOf(RString.get(2)) < 221) {
                         //20180122  Andy
-                            countsound220 = 0;
-                            countsound660 = 0;
-                            countsound2200 = 0;
-                            countsound5500 = 0;
-                            countsound20000 = 0;
+                        countsound220 = 0;
+                        countsound660 = 0;
+                        countsound2200 = 0;
+                        countsound5500 = 0;
+                        countsound20000 = 0;
 
-                            //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
-                            //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
-                    }
-                    else if ( Integer.valueOf(RString.get(2))  >= 220 && (Integer.valueOf(RString.get(2))  < 660)) {
+                        //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
+                        //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
+                    } else if (Integer.valueOf(RString.get(2)) >= 220 && (Integer.valueOf(RString.get(2)) < 660)) {
                         //20180122  Andy
                         BEBEBEBE1(RString);
-                    }
-                    else if ( (Integer.valueOf(RString.get(2))  >= 660) && (Integer.valueOf(RString.get(2))  < 2200)) {
+                    } else if ((Integer.valueOf(RString.get(2)) >= 660) && (Integer.valueOf(RString.get(2)) < 2200)) {
                         //20180122  Andy
                         BEBEBEBE2(RString);
-                    }
-                    else if ( (Integer.valueOf(RString.get(2))  >= 2200) && (Integer.valueOf(RString.get(2))  < 5500)) {
+                    } else if ((Integer.valueOf(RString.get(2)) >= 2200) && (Integer.valueOf(RString.get(2)) < 5500)) {
                         //20180122  Andy
                         BEBEBEBE3(RString);
-                    }
-                    else if ( (Integer.valueOf(RString.get(2))  >= 5500) && (Integer.valueOf(RString.get(2))  < 20000)) {
+                    } else if ((Integer.valueOf(RString.get(2)) >= 5500) && (Integer.valueOf(RString.get(2)) < 20000)) {
                         //20180122  Andy
                         BEBEBEBE4(RString);
-                    }
-                    else {
+                    } else {
                         //20180122  Andy
                         BEBEBEBE5(RString);
                     }
@@ -1099,6 +1167,13 @@ public class UartService extends Service {
                     break;
                 case (byte) 0xB1:
                     RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                    isPM25 = RString.get(0);
+                    deviceVersion = RString.get(3);
+
+                    MyApplication.Companion.setPM25(isPM25);
+                    MyApplication.Companion.putDeviceVersion(deviceVersion);
+
+                    Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
                     RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
@@ -1108,25 +1183,40 @@ public class UartService extends Service {
                     String setting2 = share.getString("sensor_to_get_sample", "2");
                     String setting3 = share.getString("pump_on_time", "1");
                     String setting4 = share.getString("pumping_time_range", "2");
-                    share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
+
+                    share.edit()
+                            .putString("sample_rate", "2")
+                            .putString("sensor_on_time_range", "60")
+                            .putString("sensor_to_get_sample", "2")
+                            .putString("pump_on_time", "1")
+                            .putString("pumping_time_range", "2").apply();
+
                     //當寫入完畢時會回吐B2 ok的CMD所作的處理
                     if (RString.size() >= 5) {
                         Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4));
+
                         if (setting0.equals(RString.get(0))
                                 && setting1.equals(RString.get(1))
                                 && setting2.equals(RString.get(2))
                                 && setting3.equals(RString.get(3))
-                                && setting4.equals(RString.get(4)))
-                        {
+                                && setting4.equals(RString.get(4))) {
                             Log.d("0xB2", "True");
                         } else {
-                            share.edit().putString("sample_rate", "2").putString("sensor_on_time_range", "60").putString("sensor_to_get_sample", "2").putString("pump_on_time", "1").putString("pumping_time_range", "2").apply();
-                            int[] param = {2, 2*30, 2, 1, 2, 0, 0};
+                            share.edit()
+                                    .putString("sample_rate", "2")
+                                    .putString("sensor_on_time_range", "60")
+                                    .putString("sensor_to_get_sample", "2")
+                                    .putString("pump_on_time", "1")
+                                    .putString("pumping_time_range", "2").apply();
+                            int[] param = {2, 2 * 30, 2, 1, 2, 0, 0};
                             Log.d(TAG, "setSampleRate");
                             writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
                         }
                         setSampleRateTime(Integer.parseInt(RString.get(0)));
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                        //SetPM25 180308
+                        intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON);
+                        sendBroadcast(intent);
                     }
                     break;
                 case (byte) 0xB4:
@@ -1140,19 +1230,20 @@ public class UartService extends Service {
                     //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Integer.toString(getMaxItems()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                     //setCorrectTime(Integer.parseInt(RString.get(8)));
                     setCorrectTime(0);
-                    Log.d("0xB4",RString.toString());
+                    Log.d("0xB4", RString.toString());
                     String b4correctTime = RString.get(3);
                     //取得當前時間
                     // String time=getDateTime();
                     // setGetDataTime(time);
-                    Log.d("UART", "total item "+Integer.toString(getMaxItems()));
+                    Log.d("UART", "total item " + Integer.toString(getMaxItems()));
                     // Log.d("UART", "getItem 1");
                     //如果目前Index大於0
                     if (getMaxItems() > 0) {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
-                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
+                        Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
                         Log.d("UART", "getItem 1");
                         NowItem = 1;
                         counter = 0;
@@ -1161,36 +1252,41 @@ public class UartService extends Service {
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         //計算有幾筆未上傳
-                        RealmQuery condition = realm.where(AsmDataModel.class).equalTo("UpLoaded","0");
+                        RealmQuery condition = realm.where(AsmDataModel.class).equalTo("UpLoaded", "0");
                         RealmResults notupload = condition.findAll();
                         if (notupload != null) {
-                            Log.d("NOTUPLOAD",String.valueOf(notupload.size()));
+                            Log.d("NOTUPLOAD", String.valueOf(notupload.size()));
                         }
                         //將資料庫最大時間與現在時間換算成Count
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
-                        if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
+                        if (maxCreatedTime == null) {
+                            maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2);
+                        }
                         if (maxCreatedTime != null) {
                             //Long lastRowSaveTime = realm.where(AsmDataModel.class).equalTo("Created_time", maxCreatedTime.longValue())
                             //.findAll().first().getCreated_time().longValue();
                             Long nowTime = getMyDate().getTime();
-                            Log.d("0xB4countLast",  new Date(maxCreatedTime.longValue()).toString());
-                            Log.d("0xB4countLast",  new Date(nowTime).toString());
+                            Log.d("0xB4countLast", new Date(maxCreatedTime.longValue()).toString());
+                            Log.d("0xB4countLast", new Date(nowTime).toString());
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
                             Log.d("0xB4", countForItemTime.toString());
-                            countForItem = Math.min((int)(countForItemTime / (60L * 1000L)),getMaxItems());
+                            countForItem = Math.min((int) (countForItemTime / (60L * 1000L)), getMaxItems());
                             //當小於0的時候讓它等於0
-                            if (countForItem < 0) { countForItem = 0; }
+                            if (countForItem < 0) {
+                                countForItem = 0;
+                            }
                             Log.d("0xB4countItem", Long.toString(countForItem));
                             //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
                         }
-                        if (countForItem >= 1){
+                        if (countForItem >= 1) {
                             NowItem = countForItem;
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
                         } else {
                             downloading = false;
                             downloadComplete = true;
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
@@ -1200,40 +1296,54 @@ public class UartService extends Service {
                         //0xB6裡的Log會用到
                         timeSetNowToThirty(b4correctTime);
                         downloadComplete = true;
+                        downloading = false;
                     }
                     break;
                 case (byte) 0xB5:
                     RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
-                    Log.d("0xB5Index",RString.get(0));
+                    Log.d("0xB5Index", RString.get(0));
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
                         int nowItemReverse = countForItem - NowItem + 1;
-                        Log.d("0XB5",Integer.toString(nowItemReverse));
-                        Log.d("0XB5",Integer.toString(NowItem));
+                        Log.d("0XB5", Integer.toString(nowItemReverse));
+                        Log.d("0XB5", Integer.toString(NowItem));
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA);
-                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA,Integer.toString(nowItemReverse));
+                        mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(nowItemReverse));
                         sendBroadcast(mainIntent);
                         Log.d("UART:ITEM ", Integer.toString(NowItem));
-                        myDeviceData.add(new myData(RString.get(1), RString.get(2), RString.get(3), RString.get(4), getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
+                        myDeviceData.add(new myData(
+                                RString.get(1),
+                                RString.get(2),
+                                RString.get(3),
+                                RString.get(4),
+                                getDateTime(getMyDate().getTime() - getSampleRateUnit() * counter * 30 * 1000 - getCorrectTime() * 30 * 1000)));
 
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
                         Number num = realm.where(AsmDataModel.class).max("id");
                         int nextID;
-                        if(num == null) {
+                        if (num == null) {
                             nextID = 1;
                         } else {
                             nextID = num.intValue() + 1;
                         }
                         realm.executeTransaction(r -> {
-                            AsmDataModel asmData = r.createObject(AsmDataModel.class,nextID);
+                            AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
                             asmData.setTEMPValue(RString.get(1));
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
-                            asmData.setPM25Value(RString.get(5));
+                            if (MyApplication.Companion.isPM25() == "000000000000") {
+                                asmData.setPM25Value("0");
+                            } else {
+                                asmData.setPM25Value(RString.get(5));
+                            }
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
+                            asmData.setLatitude(lati);
+                            asmData.setLongitude(longi);
+                            Log.d("0xB5count",String.valueOf(countForItem));
+                            Log.d("0xB5count",String .valueOf(counterB5));
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1250,7 +1360,8 @@ public class UartService extends Service {
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
+                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
 //                            mainIntent.putExtra("status", "B5");
 //                            Bundle data = new Bundle();
 //                            data.putParcelableArrayList("resultSet", myDeviceData);
@@ -1268,8 +1379,8 @@ public class UartService extends Service {
                     }
                     break;
                 case (byte) 0xB6:
-                        RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
-                        mainIntent.putExtra("status", "B6");
+                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                    mainIntent.putExtra("status", "B6");
 //                        mainIntent.putExtra("TEMPValue", RString.get(0));
 //                        mainIntent.putExtra("HUMIValue", RString.get(1));
 //                        mainIntent.putExtra("TVOCValue", RString.get(2));
@@ -1277,34 +1388,38 @@ public class UartService extends Service {
 //                        //mainIntent.putExtra("PM25", RString.get(4));
 //                        mainIntent.putExtra("BatteryLife", RString.get(5));
 //                        mainIntent.putExtra("flag",RString.get(6));
-                        sendBroadcast(mainIntent);
-                        HashMap hashMapInB6 = new HashMap();
-                        hashMapInB6.put("TEMPValue",RString.get(0));
-                        hashMapInB6.put("HUMIValue",RString.get(1));
-                        hashMapInB6.put("TVOCValue",RString.get(2));
-                        hashMapInB6.put("ECO2Value",RString.get(3));
-                        hashMapInB6.put("PM25Value",RString.get(4));
-                        hashMapInB6.put("BatteryLife",RString.get(5));
-                        hashMapInB6.put("CreatedTime",timeSetForB6());
-                        hashMapInB6.put("MACADDRESS",macAddressForDB);
+                    sendBroadcast(mainIntent);
+                    HashMap hashMapInB6 = new HashMap();
+                    hashMapInB6.put("TEMPValue", RString.get(0));
+                    hashMapInB6.put("HUMIValue", RString.get(1));
+                    hashMapInB6.put("TVOCValue", RString.get(2));
+                    hashMapInB6.put("ECO2Value", RString.get(3));
+                    if (MyApplication.Companion.isPM25().equals("000000000000")) {
+                        hashMapInB6.put(("PM25Value"), "0");
+                    } else {
+                        hashMapInB6.put(("PM25Value"), RString.get(4));
+                    }
+                    hashMapInB6.put("BatteryLife", RString.get(5));
+                    hashMapInB6.put("CreatedTime", timeSetForB6());
+                    hashMapInB6.put("MACADDRESS", macAddressForDB);
 
-                        realm = Realm.getDefaultInstance();
-                        Number maxCreatedTime1 = realm.where(AsmDataModel.class).max("Created_time");
+                    realm = Realm.getDefaultInstance();
+                    Number maxCreatedTime1 = realm.where(AsmDataModel.class).max("Created_time");
 
-                        if (maxCreatedTime1!= null) {
-                            Long maxTime = maxCreatedTime1.longValue();
-                            if (hashMapInB6.get("CreatedTime") == maxTime) {
-                                hashMapInB6.clear();
-                                return;
-                            }
+                    if (maxCreatedTime1 != null) {
+                        Long maxTime = maxCreatedTime1.longValue();
+                        if (hashMapInB6.get("CreatedTime") == maxTime) {
+                            hashMapInB6.clear();
+                            return;
                         }
-                        arrB6.add(hashMapInB6);
-                        //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
-                        dataNotSaved++;
+                    }
+                    arrB6.add(hashMapInB6);
+                    //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
+                    dataNotSaved++;
                     if (!downloading && dataNotSaved != 0 && downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        Log.d("0xB6OldTime",new Date(getMyDate().getTime()).toString());
-                        Log.d("0xB6",arrB6.toString());
+                        Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
+                        Log.d("0xB6", arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
                         for (int i = 0; i < arrB6.size(); i++) {
                             //Realm 資料庫
@@ -1317,37 +1432,51 @@ public class UartService extends Service {
                                 nextID = num.intValue() + 1;
                             }
                             Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
-                            if (maxCreatedTime == null) { maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2); }
-                            Log.d("0xB6DBLastTime",new Date(maxCreatedTime.longValue()).toString());
+                            if (maxCreatedTime == null) {
+                                maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2);
+                            }
+                            Log.d("0xB6DBLastTime", new Date(maxCreatedTime.longValue()).toString());
                             int count = i;
-                            realm.executeTransaction(r -> {
-                                AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
-                                asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
-                                asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
-                                asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
-                                asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
-                                asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
-                                Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
-                                asmData.setCreated_time(time);
-                                asmData.setMACAddress(macAddressForDB);
-                                //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
-                                Log.d("RealmTimeB6", arrB6.toString());
-                                Log.d("RealmTimeB6", new Date(time).toString());
-                                //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
-                            });
-                            realm.close();
+                            if (!arrB6.get(count).get("CreatedTime").equals(maxCreatedTime)) {
+                                realm.executeTransaction(r -> {
+                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                                    asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
+                                    asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
+                                    asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
+                                    asmData.setECO2Value(arrB6.get(count).get("ECO2Value").toString());
+                                    asmData.setPM25Value(arrB6.get(count).get("PM25Value").toString());
+                                    Long time = Long.parseLong(arrB6.get(count).get("CreatedTime").toString());
+                                    asmData.setCreated_time(time);
+                                    asmData.setMACAddress(macAddressForDB);
+                                    asmData.setLatitude(lati);
+                                    asmData.setLongitude(longi);
+                                    //asmData.setCreated_time(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000);
+                                    Log.d("RealmTimeB6", arrB6.toString());
+                                    Log.d("RealmTimeB6", new Date(time).toString());
+                                    //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
+                                });
+                                realm.close();
+                            } else {
+                                Log.d("0xb6CreatedTIME",arrB6.get(count).get("CreatedTime").toString());
+                            }
                         }
                         //寫入完畢後將未寫入筆數設為0
                         dataNotSaved = 0;
                         arrB6.clear();
                         //timeSetNowToThirty();
+                        //20160227
+
+                        if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)) {
+
+                            new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
+                        }
                     }
                     break;
 
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
                     int ledState = txValue[3];
 
-                    if(ledState == 1) {
+                    if (ledState == 1) {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 false).apply();
                     } else {
@@ -1355,8 +1484,13 @@ public class UartService extends Service {
                                 true).apply();
                     }
 
+                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                     Log.e(TAG, "LED Status: " + ledState);
                     break;
+                case  (byte) 0xE0:
+                    Log.d("0xE0", txValue.toString());
+                    break;
+
             }
         }
     }
@@ -1465,10 +1599,10 @@ public class UartService extends Service {
         //將時間秒數寫入設定為 00  或  30
         //Long dateSecMil = new Date().getTime();
         Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset() - Long.parseLong(afterB6Sec) * 1000;
-        Long dateSecChange = (dateSecMil / 1000)/60 * (1000*60);
+        Long dateSecChange = (dateSecMil / 1000) / 60 * (1000 * 60);
         //Log.d("0xB4",dateSecChange.toString());
         Date date = new Date(dateSecChange);
-        Log.d("timeSetNowToThirty",date.toString());
+        Log.d("timeSetNowToThirty", date.toString());
         setMyDate(date);
     }
 
@@ -1476,10 +1610,9 @@ public class UartService extends Service {
         Long dateSecMil = Calendar.getInstance().getTimeInMillis() + Calendar.getInstance().getTimeZone().getRawOffset();
         Long dateSecChange = (dateSecMil / 1000) / 60 * (1000 * 60);
         Date date = new Date(dateSecChange);
-        Log.d("timeSetForB6",date.toString());
+        Log.d("timeSetForB6", date.toString());
         return dateSecChange;
     }
-
 
 
     private String DataTime;
@@ -1497,6 +1630,7 @@ public class UartService extends Service {
             CO2_Data = CO2;
             time = Time;
         }
+
         String Temperatur_Data;
         String Humidy_Data;
         String TVOC_Data;
@@ -1534,7 +1668,6 @@ public class UartService extends Service {
     }
 
 
-
     //20180102   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE1(ArrayList<String> BEBERString) {
@@ -1549,9 +1682,9 @@ public class UartService extends Service {
             countsound2200 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1583,9 +1716,9 @@ public class UartService extends Service {
                                 getString(R.string.warning_title_Yellow),
                                 getString(R.string.text_message_air_mid),
                                 bebe1RString.get(2));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
 
@@ -1595,20 +1728,21 @@ public class UartService extends Service {
         countsound220 = countsound220 + 1;
         Log.e("TVOC220計數變數:", Integer.toString(countsound220));
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void BEBEBEBE2(ArrayList<String> BEBERString){
+    private void BEBEBEBE2(ArrayList<String> BEBERString) {
         //20180124
-        ArrayList<String> bebe2RString=BEBERString;
-        SharedPreferences mPreference=this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
+        ArrayList<String> bebe2RString = BEBERString;
+        SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound660 == 5 || countsound660 == 0)) {
 
             countsound220 = 0;
             countsound2200 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
@@ -1638,9 +1772,9 @@ public class UartService extends Service {
                                 getString(R.string.warning_title_Orange),
                                 getString(R.string.text_message_air_Medium_Orange),
                                 bebe2RString.get(2));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
             }
         }
 
@@ -1649,7 +1783,7 @@ public class UartService extends Service {
             countsound660 = 0;
         }
         countsound660 = countsound660 + 1;
-        Log.e("TVOC660計數變數:",Integer.toString(countsound660));
+        Log.e("TVOC660計數變數:", Integer.toString(countsound660));
 
     }
 
@@ -1665,9 +1799,9 @@ public class UartService extends Service {
             countsound660 = 0;
             countsound5500 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1714,20 +1848,21 @@ public class UartService extends Service {
         countsound2200 = countsound2200 + 1;
         Log.e("TVOC2200計數變數:", Integer.toString(countsound2200));
     }
+
     //20180122   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE4(ArrayList<String> BEBERString) {
         //20180124
-        ArrayList<String> bebe4RString=BEBERString;
+        ArrayList<String> bebe4RString = BEBERString;
         SharedPreferences mPreference = this.getApplication().getSharedPreferences(SavePreferences.SETTING_KEY, 0);
         if ((countsound5500 == 5 || countsound5500 == 0)) {
             countsound220 = 0;
             countsound660 = 0;
             countsound2200 = 0;
             countsound20000 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1755,8 +1890,8 @@ public class UartService extends Service {
                 if (isAppIsInBackground(nowActivity)) {
                     try {
                         makeNotificationShow(R.drawable.history_face_icon_05,
-                            getString(R.string.warning_title_Purple),
-                            getString(R.string.text_message_air_Serious_Purple),
+                                getString(R.string.warning_title_Purple),
+                                getString(R.string.text_message_air_Serious_Purple),
                                 bebe4RString.get(2));
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1771,6 +1906,7 @@ public class UartService extends Service {
         countsound5500 = countsound5500 + 1;
         Log.e("TVOC5500計數變數:", Integer.toString(countsound5500));
     }
+
     //20180122   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void BEBEBEBE5(ArrayList<String> BEBERString) {
@@ -1782,9 +1918,9 @@ public class UartService extends Service {
             countsound660 = 0;
             countsound2200 = 0;
             countsound5500 = 0;
-            Log.e("更新TVOC計數變數: 220:", Integer.toString(countsound220) +
-                    "660:" + Integer.toString(countsound660) + "2200:" + Integer.toString(countsound2200) +
-                    "20000:" + Integer.toString(countsound20000));
+            Log.e("更新TVOC計數變數", "220:" + Integer.toString(countsound220) +
+                    "  660:" + Integer.toString(countsound660) + "  2200:" + Integer.toString(countsound2200) +
+                    "  20000:" + Integer.toString(countsound20000));
 
             if (mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
                 //mp.start();
@@ -1861,7 +1997,7 @@ public class UartService extends Service {
             wl.acquire(2 * 1000L);
             //點亮屏幕
             wl.release();
-            Log.e("休眠狀態下","喚醒螢幕");
+            Log.e("休眠狀態下", "喚醒螢幕");
 
         }
     }
@@ -1869,7 +2005,7 @@ public class UartService extends Service {
     public NotificationHelper notificationHelper = null;
 
     public void playSound(int sound, float fSpeed) {
-        AudioManager mgr = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+        AudioManager mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         assert mgr != null;
         float streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
         float streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -1893,7 +2029,7 @@ public class UartService extends Service {
                     disconnect();
                     break;
             }
-            Log.d("UARTSERVICE",stateString);
+            Log.d("UARTSERVICE", stateString);
         }
 
         private String state2String(final int state) {
@@ -1937,4 +2073,226 @@ public class UartService extends Service {
         return isInBackground;
     }
 
+
+
+
+
+    //postDataAsyncTasks doupdatddata = new postDataAsyncTasks();
+    private ArrayList<Integer> hasBeenUpLoaded = new ArrayList<>();
+
+    private class postDataAsyncTasks extends AsyncTask<String, Void, String> {
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected String doInBackground(String... params) {
+            RequestBody return_body = null;
+            boolean getResponeResult = Boolean.parseBoolean(null);
+            try {
+                //取得getRequestBody
+                return_body = getRequestBody();
+                //呼叫getResponse取得結果
+                if (return_body.contentLength() > 0) {
+                    getResponeResult = getResponse(return_body);
+
+                    if (getResponeResult) {
+                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+                        boolean DBSucess = updateDB_UpLoaded();
+                        if (DBSucess) {
+                            Log.e("幹改進去", String.valueOf(DBSucess));
+                        }
+                        hasBeenUpLoaded.clear();
+                    }else {
+                        Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
+                    }
+                }else {
+                    Log.e("幹太少筆啦!", String.valueOf(return_body.contentLength()));
+                }
+
+            } catch (Exception e) {
+                Log.e("return_body_erro", e.toString());
+            }
+            return null;
+        }
+    }
+
+    private RequestBody getRequestBody() {
+        //很重要同區域才可以叫到同一個東西
+        SharedPreferences share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE);
+        DeviceAddress = share.getString("mac", "noValue");
+//        String serial = "";
+//        //確認唯一識別碼(https://blog.mosil.biz/2014/05/android-device-id-uuid/)
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+//            serial = Build.SERIAL;
+//        }
+        //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
+        Realm realm2 = Realm.getDefaultInstance();
+        RealmQuery<AsmDataModel> query2 = realm2.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result2 = query2.equalTo("UpLoaded", "1").findAll();
+//        realm.executeTransaction((Realm realm1) -> {
+//
+//            for (int i = 0 ; i < result5.size() ; i++) {
+//
+//                result5.get(i).setUpLoaded("0");
+//
+//                Log.e("這個時間", String.valueOf(result5.toString()));
+//            }
+//
+//        });
+        Realm realm1 = Realm.getDefaultInstance();
+        RealmQuery<AsmDataModel> query1 = realm1.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result1 = query1.equalTo("UpLoaded", "0").findAll();
+
+/*
+        RealmQuery<AsmDataModel> query9 = realm.where(AsmDataModel.class);
+        RealmResults<AsmDataModel> result7 =query9.distinct("Created_time");
+        Log.e("幹",String.valueOf(result7.size()));
+        Log.e("幹蝦小",String.valueOf(result1.size()));
+*/
+
+        Log.e("未上傳ID", result1.toString());
+        Log.e("已上ID", result2.toString());
+        Log.e("未上傳資料筆數", String.valueOf(result1.size()));
+        Log.e("未上傳資料", String.valueOf(result1.toString()));
+        Log.e("已上傳資料筆數", String.valueOf(result2.size()));
+
+
+        //MyApplication getUUID=new MyApplication();
+        String UUID = MyApplication.Companion.getPsuedoUniqueID();
+        //製造RequestBody的地方
+        RequestBody body = null;
+
+        //20170227
+        JSONObject json_obj = new JSONObject();            //用來當內層被丟進陣列內的JSON物件
+        JSONArray json_arr = new JSONArray();                //JSON陣列
+        // int toltoSize = 0;
+        // int i = 0;
+
+        Long timestampTEMP = null;
+
+        try {
+            if (result1.size() > 0) {
+                for (int i = 0; i < result1.size(); i++) {
+                    //toltoSize++;
+                    if (i == 6000) {
+                        break;
+                    }
+//                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
+//                    realm.beginTransaction();
+//                    result1.get(i).deleteFromRealm();
+//                    realm.commitTransaction();
+//                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
+//                }
+                    hasBeenUpLoaded.add(result1.get(i).getDataId());
+                    Log.i("text", "i=" + i + "\n");
+                    JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
+                    json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
+                    json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
+                    json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
+                    json_obj_weather.put("eco2", result1.get(i).getECO2Value());
+                    json_obj_weather.put("pm25", result1.get(i).getPM25Value());
+                    json_obj_weather.put("longitude", result1.get(i).getLongitude().toString());
+                    json_obj_weather.put("latitude", result1.get(i).getLatitude().toString());
+                    json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
+                    Log.e("timestamp", "i=" + i + "timestamp=" + result1.get(i).getCreated_time().toString());
+                    json_arr.put(json_obj_weather);
+                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+                }
+            } else {
+                Log.e("未上傳資料筆數", String.valueOf(result1.size()));
+            }
+
+            json_obj.put("uuid", UUID);
+            json_obj.put("mac_address", DeviceAddress);
+            json_obj.put("registration_id", "qooo123457");
+            //再來將JSON陣列設定key丟進JSON物件
+            json_obj.put("weather", json_arr);
+            Log.e("全部資料", json_obj.toString());
+            MediaType mediaType = MediaType.parse("application/x-www-form-urlencoded");
+            body = RequestBody.create(mediaType, "data=" + json_obj.toString());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        realm1.close();
+        realm2.close();
+        return body;
+    }
+
+    //傳資料
+    private boolean getResponse(RequestBody body) {
+        Response response = null;
+        boolean resonseReselt= Boolean.parseBoolean(null);
+        try {
+            if (body.contentLength() > 0) {
+                //丟資料
+                Request request = new Request.Builder()
+                        .url("https://mjairql.com/api/v1/upUserData")
+                        .post(body)
+                        .addHeader("authorization", "Bearer " + "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijg2OTQ1NmQ1YjE0ZDc1MjgxYjE3NWIwZWE4Y2MwYjgyNDZhNWQ1ZTYzYjhlMmY5MzkwZTI2MTdjZGYxNWIzZTZmNTNiZGMwNzhiYzVkMWU1In0.eyJhdWQiOiIxIiwianRpIjoiODY5NDU2ZDViMTRkNzUyODFiMTc1YjBlYThjYzBiODI0NmE1ZDVlNjNiOGUyZjkzOTBlMjYxN2NkZjE1YjNlNmY1M2JkYzA3OGJjNWQxZTUiLCJpYXQiOjE1MjA0MDE4NDQsIm5iZiI6MTUyMDQwMTg0NCwiZXhwIjoxNTUxOTM3ODQ0LCJzdWIiOiI1Iiwic2NvcGVzIjpbXX0.LnT7lU6TYclrOFa7YXLnc6s41U2FrzljwqA0RL3Cu2Ufg_sMPFR7Ql4el8C3MAa2Kai9njpb55khjURk16yj81By2UV4cK6ZVw6oB-js0j7piPJo6NE5cXewCOFsBU29chde3nJWYJ0oInnemsBV3AMcWTp9rfWzAySwP7PzWQ29ij_eNqgec0DUM4s-adkVhoKXW32rZ3Y3Z2mmhL87Qxcjns_l8-Vjw0UNFJx6vA5AnZwZezw4YzitqueO4U3QD5M3dPr3GObaXz2rcqXYOnSbF0hC1exId2BSChhp9HVUKIVz83ZNYyN8mP-3LLurXFvATtkWWwjgRQupx-pcugpHB_ozezeIe-XFtDYNd3P0tMWDCBwjCDNzaha6HuJ4LBvoWR0KDbcTkO8kduDwkFpW2oENEhz5hcZQNLxLM3E1a93msZNiuAIlsy7Hc7KuaKxlk7pymaqsPdSdDl6gSmUlLxljFclhsWSAxjnJRmfsVgpm7pXpe_QhGxeAtVUmySvdT4xDiez8HcVBSZK5yhVfc78ou4lqYugaWGeFbJDghAkxOSn8G6Im8c0ysoAmOsbyL22gMl-Q7_kkFDmCcu48xLJ_fzBIOWGpB4LEkzJxJepp6_xyp77HvWjwjZqJAcYitxMWhTdxI5tci475LlZZ4viBT29bhRhKXP2Uu4I")
+                        .addHeader("content-type", "application/x-www-form-urlencoded")
+                        .addHeader("cache-control", "no-cache")
+                        .addHeader("postman-token", "a2fa2822-765d-209a-ec8c-82170c5171c0")
+                        .build();
+                try {
+                    client = new OkHttpClient.Builder()
+                            .connectTimeout(0, TimeUnit.SECONDS)
+                            .writeTimeout(0, TimeUnit.SECONDS)
+                            .readTimeout(0, TimeUnit.SECONDS)
+                            .build();
+                    //上傳資料
+                    response = client.newCall(request).execute();
+                    if (response.isSuccessful()) {//正確回來
+                        resonseReselt=true;
+                        Log.e("正確回來!!", response.body().string());
+                    } else {//錯誤回來
+                        Log.e("錯誤回來!!", response.body().string());
+                        resonseReselt=false;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Log.e("回來處理有錯!", e.toString());
+
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return resonseReselt;
+    }
+
+    private boolean updateDB_UpLoaded() {
+        boolean dbSucessOrNot = Boolean.parseBoolean(null);
+        Realm realm3 = Realm.getDefaultInstance();
+        try {
+            realm3.executeTransaction((Realm realm1) -> {
+                Log.e("正確回來TRY", String.valueOf(hasBeenUpLoaded.size()));
+                for (int i = 0; i < (hasBeenUpLoaded.size()); i++) {
+                    //realm.beginTransaction();
+                    AsmDataModel aaa = realm3.where(AsmDataModel.class)
+                            .equalTo("id", hasBeenUpLoaded.get(i))
+                            .findFirst();
+                    aaa.setUpLoaded("1");
+                    Log.e("回來更新", aaa.getDataId().toString() + "更新?" + aaa.getUpLoaded());
+                }
+                RealmQuery<AsmDataModel> query3 = realm3.where(AsmDataModel.class);
+                RealmResults<AsmDataModel> result3 = query3.equalTo("UpLoaded", "1").findAll();
+                Log.e("正確更改", String.valueOf(result3.size()));
+                Log.e("正確更改內容", String.valueOf(result3));
+            });
+            dbSucessOrNot = true;
+        } catch (Exception e) {
+            Log.e("dbSucessOrNot", e.toString());
+            dbSucessOrNot = false;
+        }
+
+        realm3.close();
+
+        realm.close();
+
+        return dbSucessOrNot;
+    }
+
 }
+
+
+
+

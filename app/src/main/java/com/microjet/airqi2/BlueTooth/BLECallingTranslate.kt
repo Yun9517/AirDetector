@@ -782,6 +782,22 @@ object CallingTranslate {
         return ReturnValue
     }
 
+    fun GetPM25(): ByteArray {
+        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25, checkSum)
+    }
+
+    fun SetPM25(inPut: Int): ByteArray {
+        var input1 = inPut.toByte()
+        var input2 = 0.toByte()
+        var input3 = 30.toByte()
+        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteThreeBytesLens, Command_List.GetSetPM25, input1, input2, input3)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteThreeBytesLens, Command_List.GetSetPM25, input1, input2, input3, checkSum)
+    }
+
+
 
     fun Byte.toPositiveInt() = toInt() and 0xFF
 }

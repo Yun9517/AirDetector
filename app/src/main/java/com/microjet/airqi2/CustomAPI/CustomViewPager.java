@@ -15,6 +15,17 @@ import android.view.View;
 
 public class CustomViewPager  extends ViewPager {
 
+    /** ViewPager是否可以滑動 */
+    private boolean isScrollable;
+
+    public boolean isScrollable() {
+        return isScrollable;
+    }
+
+    public void setScrollable(boolean isScrollable) {
+        this.isScrollable = isScrollable;
+    }
+
     public CustomViewPager(Context context) {
         super(context);
         init();
@@ -84,6 +95,9 @@ public class CustomViewPager  extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
+        if (!isScrollable) {
+            return false;
+        }
         boolean intercept = super.onInterceptTouchEvent(swapXY(event));
         swapXY(event);
 
@@ -106,7 +120,7 @@ public class CustomViewPager  extends ViewPager {
                 Log.e("Gesture CustomViewPager", "deltaX: " + deltaX + "  deltaY: " + deltaY);
                 // 這裡是否攔截的判斷依據是左右滑動，讀者可根據自己的邏輯進行是否攔截
 
-                if(mDownPosY > 230 && deltaY > 10) {
+                if (mDownPosY > 230 && deltaY > 10) {
                     // 左右滑動不攔截
                     Log.e("Gesture CustomViewPager", "is Intercept: " + (deltaX < deltaY));
                     return deltaX < deltaY;

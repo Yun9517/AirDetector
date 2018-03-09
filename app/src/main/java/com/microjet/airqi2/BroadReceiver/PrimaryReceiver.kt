@@ -220,6 +220,26 @@ class PrimaryReceiver : BroadcastReceiver() {
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_ON)
                 context.sendBroadcast(intent)
             }
+            BroadcastActions.INTENT_KEY_LOCATION_VALUE -> {
+                //val getLati = intent.getFloatExtra(BroadcastActions.INTENT_KEY_LATITUDE_VALUE)
+                //val getLongi = intent.getFloatExtra(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE)
+                val getBundle = intent.getBundleExtra("TwoValueBundle")
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent?.putExtra("status",BroadcastActions.INTENT_KEY_LOCATION_VALUE)
+                intent?.putExtra("TwoValueBundle",getBundle)
+                context.sendBroadcast(intent)
+            }
+            BroadcastActions.INTENT_KEY_SET_PM25_ON -> {
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
+                context.sendBroadcast(intent)
+            }
+            BroadcastActions.INTENT_KEY_SET_PM25_OFF -> {
+                val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_OFF)
+                context.sendBroadcast(intent)
+            }
+
 
         /*
               "NOWPROGRESSITEM"->{
