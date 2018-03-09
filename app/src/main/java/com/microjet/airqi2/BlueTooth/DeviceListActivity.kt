@@ -72,6 +72,7 @@ class DeviceListActivity : Activity() {
         share.edit().clear().putString("mac", device.address).apply()
         share.edit().putString("name", device.name).apply()
 
+
         scanLeDevice(false)
 
 //            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)

@@ -1446,10 +1446,11 @@ public class UartService extends Service {
                         arrB6.clear();
                         //timeSetNowToThirty();
                         //20160227
+
                         if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)) {
+
                             new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
                         }
-
                     }
                     break;
 
@@ -2135,9 +2136,6 @@ public class UartService extends Service {
         Log.e("已上傳資料筆數", String.valueOf(result2.size()));
 
 
-
-
-
         //MyApplication getUUID=new MyApplication();
         String UUID = MyApplication.Companion.getPsuedoUniqueID();
         //製造RequestBody的地方
@@ -2149,40 +2147,41 @@ public class UartService extends Service {
         // int toltoSize = 0;
         // int i = 0;
 
-        Long timestampTEMP=null;
+        Long timestampTEMP = null;
 
-        try {if(result1.size()>0) {
-            for (int i = 0; i < result1.size() ; i++) {
-                //toltoSize++;
-                if (i == 6000) {
-                    break;
-                }
+        try {
+            if (result1.size() > 0) {
+                for (int i = 0; i < result1.size(); i++) {
+                    //toltoSize++;
+                    if (i == 6000) {
+                        break;
+                    }
 //                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
 //                    realm.beginTransaction();
 //                    result1.get(i).deleteFromRealm();
 //                    realm.commitTransaction();
 //                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
 //                }
-                hasBeenUpLoaded.add(result1.get(i).getDataId());
-                Log.i("text", "i=" + i + "\n");
-                JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
-                json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
-                json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
-                json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
-                json_obj_weather.put("eco2", result1.get(i).getECO2Value());
-                json_obj_weather.put("pm25", result1.get(i).getPM25Value());
-                json_obj_weather.put("longitude", result1.get(i).getLongitude().toString());
-                json_obj_weather.put("latitude", result1.get(i).getLatitude().toString());
-                json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
-                Log.e("timestamp", "i=" + i + "timestamp=" + result1.get(i).getCreated_time().toString());
-                json_arr.put(json_obj_weather);
-                //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+                    hasBeenUpLoaded.add(result1.get(i).getDataId());
+                    Log.i("text", "i=" + i + "\n");
+                    JSONObject json_obj_weather = new JSONObject();            //單筆weather資料
+                    json_obj_weather.put("temperature", result1.get(i).getTEMPValue());
+                    json_obj_weather.put("humidity", result1.get(i).getHUMIValue());
+                    json_obj_weather.put("tvoc", result1.get(i).getTVOCValue());
+                    json_obj_weather.put("eco2", result1.get(i).getECO2Value());
+                    json_obj_weather.put("pm25", result1.get(i).getPM25Value());
+                    json_obj_weather.put("longitude", result1.get(i).getLongitude().toString());
+                    json_obj_weather.put("latitude", result1.get(i).getLatitude().toString());
+                    json_obj_weather.put("timestamp", result1.get(i).getCreated_time());
+                    Log.e("timestamp", "i=" + i + "timestamp=" + result1.get(i).getCreated_time().toString());
+                    json_arr.put(json_obj_weather);
+                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+                }
+            } else {
+                Log.e("未上傳資料筆數", String.valueOf(result1.size()));
             }
-        }else {
-            Log.e("未上傳資料筆數", String.valueOf(result1.size()));
-        }
 
-            json_obj.put("uuid",  UUID );
+            json_obj.put("uuid", UUID);
             json_obj.put("mac_address", DeviceAddress);
             json_obj.put("registration_id", "qooo123457");
             //再來將JSON陣列設定key丟進JSON物件
@@ -2193,6 +2192,7 @@ public class UartService extends Service {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
         realm1.close();
         realm2.close();
         return body;
@@ -2264,9 +2264,14 @@ public class UartService extends Service {
             Log.e("dbSucessOrNot", e.toString());
             dbSucessOrNot = false;
         }
+
         realm3.close();
+
+        realm.close();
+
         return dbSucessOrNot;
     }
+
 }
 
 

@@ -1056,7 +1056,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             } catch (e: Exception) {
                 Log.e("return_body_erro", e.toString())
             }
-
             return null
         }
     }

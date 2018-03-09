@@ -738,6 +738,7 @@ class HumidiytFragment : Fragment() {
             query.between("Created_time", sqlStartDate, sqlEndDate)
             val result1 = query.findAll()
             Log.d("getRealmMonth", result1.size.toString())
+
             if (result1.size != 0) {
                 var sumTvoc = 0
                 for (i in result1) {
