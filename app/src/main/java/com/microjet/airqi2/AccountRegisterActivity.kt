@@ -65,10 +65,9 @@ class AccountRegisterActivity : AppCompatActivity() {
                         dialog, _->dialog.dismiss()
                     }
                     Dialog1.show()
-
+                    Dialog1.dismiss()
                 }
                 MotionEvent.ACTION_UP -> {//ACTION_BUTTON_RELEASE
-
                 }
             }
 
@@ -80,6 +79,7 @@ class AccountRegisterActivity : AppCompatActivity() {
 
     var email=""
     var password=""
+    var name=""
     private inner class goRegisterAsyncTasks : AsyncTask<String, Void, String>() {
         override fun doInBackground(vararg params: String): String? {
             try {
@@ -106,12 +106,11 @@ class AccountRegisterActivity : AppCompatActivity() {
                         val responseContent = JSONObject(tempBody)
                         email = responseContent.getJSONObject("success").getString("email").toString()
                         password = responseContent.getString("pwd").toString()
+                        name=responseContent.getString("name").toString()
                         Log.e("註冊正確回來11", password)
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-
-
                     register_mail_Result = "密碼已經寄送，請至登入頁面輸入密碼。"
                 } else {
                     Log.e("註冊錯誤回來", response.body()!!.string())
@@ -129,11 +128,11 @@ class AccountRegisterActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (register_mail_Result == "密碼已經寄送，請至登入頁面輸入密碼。") {
+            if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 Dialog.setTitle("提示")
-                Dialog.setMessage(register_mail_Result.toString())
+                Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
                 { dialog, _ ->
@@ -144,8 +143,14 @@ class AccountRegisterActivity : AppCompatActivity() {
                     Log.e("ㄍㄋㄋAndy", password)
                     bundle.putString("email", email)
                     bundle.putString("pwd", password)
+                    bundle.putString("name",name)
+
                     intent.putExtras(bundle)
                     intent.setClass(this@AccountRegisterActivity.mContext, AccountManagementActivity::class.java)
+
+                    //setResult(1,intent)
+
+
                     startActivity(intent)
                     finish()
                 }
@@ -162,7 +167,6 @@ class AccountRegisterActivity : AppCompatActivity() {
                     //finish()
                 }
                 Dialog.show()
-
             }
         }
     }

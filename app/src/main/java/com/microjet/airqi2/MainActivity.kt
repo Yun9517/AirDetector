@@ -53,6 +53,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.R.id.text_Account_status
 import io.realm.Realm
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -605,8 +606,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun accountShow() {
-        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
-        startActivity(i)
+
+        val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+       val MyToKen = shareToKen.getString("token", "")
+
+        if(MyToKen=="") {
+            val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+            startActivity(i)
+        }else{
+            val i: Intent? = Intent(this, AccountActive::class.java)
+            text_Account_status
+            startActivity(i)
+        }
+
+
     }
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
