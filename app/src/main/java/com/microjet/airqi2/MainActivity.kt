@@ -55,6 +55,7 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.R.id.text_Account_status
 import io.realm.Realm
+import kotlinx.android.synthetic.main.drawer_header.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.IOException
@@ -553,6 +554,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //點選ActionBAR會返回
             android.R.id.home -> {
                 checkUIState()
+                checkLoginState()
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
 
@@ -606,16 +608,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun accountShow() {
-
         val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-       val MyToKen = shareToKen.getString("token", "")
+        val MyToKen = shareToKen.getString("token", "")
 
         if(MyToKen=="") {
             val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+            //text_Account_status.setText(R.string.account_Deactivation)
             startActivity(i)
         }else{
             val i: Intent? = Intent(this, AccountActive::class.java)
-            text_Account_status
+            //text_Account_status.setText(R.string.account_Activation)
             startActivity(i)
         }
 
@@ -1255,6 +1257,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("MAINAC", permission.toString())
         val permission1 = PackageManager.PERMISSION_GRANTED
         Log.d("MAINAC", permission1.toString())
+    }
+
+    private fun checkLoginState() {
+        val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val MyToKen = shareToKen.getString("token", "")
+        if(MyToKen=="") {
+            text_Account_status.setText(R.string.account_Deactivation)
+        }else{
+            text_Account_status.setText(R.string.account_Activation)
+        }
     }
 }
 
