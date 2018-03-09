@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.microjet.airqi2.R.id.text_Account_status
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -25,13 +26,12 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private var mContext: Context? = null
 
-    var et_user_name : EditText? = null
-    var et_password : EditText? = null
+    var et_user_name: EditText? = null
+    var et_password: EditText? = null
     var userEmail = ""
     var userPassword = ""
-    private var login_Result: String ? = null
-   // private var loginl_Result: String ? = null
-
+    private var login_Result: String? = null
+    // private var loginl_Result: String ? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,12 +50,12 @@ class AccountManagementActivity : AppCompatActivity() {
         var create_account = findViewById(R.id.newAccount) as TextView
 
         val bundle = intent.extras
-        if(bundle != null) {
+        if (bundle != null) {
             userEmail = bundle.getString("email", "")
             userPassword = bundle.getString("pwd", "")
             et_user_name?.setText(userEmail)
             et_password?.setText(userPassword)
-            Log.e("ㄍㄋㄋAndy", userEmail+userPassword)
+            Log.e("ㄍㄋㄋAndy", userEmail + userPassword)
         }
 
         create_account.setOnClickListener(object : View.OnClickListener {
@@ -63,13 +63,17 @@ class AccountManagementActivity : AppCompatActivity() {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val intent = Intent()
                 intent.setClass(this@AccountManagementActivity.mContext, AccountRegisterActivity::class.java)
+                //startActivityForResult(intent,1)
+
                 startActivity(intent)
-                finish()
+
+
+                //finish()
             }
         })
 
 
-        btn_submit.setOnClickListener{
+        btn_submit.setOnClickListener {
 
             userEmail = et_user_name!!.text.toString()
             userPassword = et_password!!.text.toString()
@@ -123,12 +127,12 @@ class AccountManagementActivity : AppCompatActivity() {
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
 
-                val ccc = "email="+userEmail+"&password="+userPassword
+                val ccc = "email=" + userEmail + "&password=" + userPassword
 
-                Log.e("內容",ccc)
+                Log.e("內容", ccc)
 
-                val body = RequestBody.create(mediaType,ccc )// )
-                Log.e("登入內容","")
+                val body = RequestBody.create(mediaType, ccc)// )
+                Log.e("登入內容", "")
                 val request = Request.Builder()
                         .url("https://mjairql.com/api/v1/login")
                         .post(body)
@@ -138,44 +142,45 @@ class AccountManagementActivity : AppCompatActivity() {
 
                 //上傳資料
                 response = client.newCall(request).execute()
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     try {
                         val tempBody: String = response.body()!!.string().toString()
                         Log.e("登入正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         val token = responseContent.getJSONObject("success").getString("token").toString()
                         Log.e("登入正確回來拿token", token)
-                        login_Result="成功登入"
+                        login_Result = "成功登入"
 
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                        share.edit().clear().putString("token",token).apply()
-                        val share_token = share.getString("token","")
-                        Log.e("偷肯:",share_token)
+                        share.edit().clear().putString("token", token).apply()
+                        //val share_token = share.getString("token","")
+                        // Log.e("偷肯:",share_token)
 
-                        login_Result="登入正確"
+//                        text_Account_status.toString(R.string.active)
+//                        login_Result = "登入正確"
 
 
-                        val intent = Intent()
-                        intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
-                        startActivity(intent)
-                        finish()
+//                        val intent = Intent()
+//                        intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
+//                        startActivity(intent)
+//                        finish()
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-                }else{
+                } else {
                     Log.e("登入錯誤回來", response.body()!!.string())
 
 
-                    login_Result="登入失敗"
+                    login_Result = "登入失敗"
                     val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                     //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                     Dialog.setTitle("提示")
                     Dialog.setMessage(login_Result.toString())
                     Dialog.setCancelable(false)//讓返回鍵與空白無效
-                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE,"确定")
-                    {
-                        dialog, _->dialog.dismiss()
+                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                    { dialog, _ ->
+                        dialog.dismiss()
                     }
                     Dialog.show()
                 }
@@ -185,28 +190,57 @@ class AccountManagementActivity : AppCompatActivity() {
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
-            return null
+            return login_Result
         }
+
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
+            if (result== "成功登入") {
+                /*
+                val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
+                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+                Dialog.setTitle("提示")
+                Dialog.setMessage(result.toString())
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                */
+                //{ dialog, _ ->
+                    //dialog.dismiss()
 
-            val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
-            //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-            Dialog.setTitle("提示")
-            Dialog.setMessage(login_Result.toString())
-            Dialog.setCancelable(false)//讓返回鍵與空白無效
-            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE,"确定")
-            {
-                dialog, _->dialog.dismiss()
-
+                    val intent = Intent()
+                    intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
+                    startActivity(intent)
+                //}
+                /*    Dialog.setOnDismissListener(DialogInterface.OnDismissListener {
                 val intent = Intent()
                 intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
                 startActivity(intent)
+            })
+            */
+                finish()
+                //Dialog.show()
+
+            }else{
+                val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
+                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+                Dialog.setTitle("提示")
+                Dialog.setMessage(result.toString())
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                { dialog, _ ->
+                    dialog.dismiss()
+                }
+                Dialog.show()
                 finish()
             }
-            Dialog.show()
-
         }
     }
 
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        Log.e("完成活動回來",requestCode.toString()+"幹"+resultCode.toString()+"幹"+data.toString())
+
+
+    }
 }

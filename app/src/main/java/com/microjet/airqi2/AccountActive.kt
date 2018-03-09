@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import kotlinx.android.synthetic.main.activity_account_active.*
 
 /**
  * Created by B00170 on 2018/3/8.
@@ -15,7 +16,11 @@ class AccountActive : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
         mContext = this@AccountActive.applicationContext
-
+        logout.setOnClickListener {
+            val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+            shareToKen.edit().clear().apply()
+            finish()
+        }
 
         initActionBar()
     }
