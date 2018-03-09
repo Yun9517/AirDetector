@@ -31,7 +31,7 @@
             android:text="@string/active"/>
 
         <Button
-            android:id="@+id/nextStep"
+            android:id="@+id/logout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
