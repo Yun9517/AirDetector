@@ -18,7 +18,7 @@ class AccountActive : AppCompatActivity() {
         mContext = this@AccountActive.applicationContext
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            shareToKen.edit().clear().putString("token", "").apply()
+            shareToKen.edit().clear().apply()
             finish()
         }
 
