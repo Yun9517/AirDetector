@@ -22,6 +22,9 @@ import android.content.DialogInterface
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.text.Editable
+import android.widget.Button
+import com.microjet.airqi2.CustomAPI.GetNetWork
+import com.microjet.airqi2.CustomAPI.Utils
 import org.json.JSONObject
 import java.util.regex.Pattern
 
@@ -34,41 +37,51 @@ class AccountRegisterActivity : AppCompatActivity() {
     private var register_mail_Result: String ? = null
     //private var register_mail_Faile: String ? = null
 
+    var mything:mything?=null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        var mything: mything? = null
+
         mContext = this@AccountRegisterActivity.applicationContext
-
         initActionBar()
-
-
         //20180307
         // set on-click listener
         user_register_mail = this.findViewById(R.id.email)
         //var btn_next_step = this.findViewById<Button>(R.id.nextStep)
-
-
         //var registerMail = null
+
+
+        mything = mything(nextStep, false, "https://mjairql.com/api/v1/register")
+
         nextStep.setOnClickListener {
-            if (isEmail(user_register_mail?.text) && user_register_mail?.text.toString()!="") {
-                if (Utils.isFastDoubleClick) {
-                    showDialog("按慢一點太快了")
-                } else {
-                    goRegisterAsyncTasks().execute("https://mjairql.com/api/v1/register")
+            if (GetNetWork.isFastGetNet) {
+                if (isEmail(user_register_mail?.text) && user_register_mail?.text.toString() != "") {
+                    if (Utils.isFastDoubleClick) {
+                        showDialog("按慢一點太快了")
+                    } else {
+                        goRegisterAsyncTasks().execute(mything)
                     }
-            }else {
-                showDialog("請輸入正確的E-mail地址")
+                } else {
+                    showDialog("請輸入正確的E-mail地址")
                 }
-                }
+            }else{
+                showDialog("請連接網路")
             }
+        }
+    }
 
     var email=""
     var password=""
     var name=""
+
+
+
     @SuppressLint("StaticFieldLeak")
-    private inner class goRegisterAsyncTasks : AsyncTask<String, Void, String>() {
-        override fun doInBackground(vararg params: String): String? {
+    private inner class goRegisterAsyncTasks : AsyncTask<mything, Void, String>() {
+        override fun doInBackground(vararg params: mything): String? {
             try {
                 var response: okhttp3.Response? = null
                 val registerMail = user_register_mail?.text
@@ -84,9 +97,12 @@ class AccountRegisterActivity : AppCompatActivity() {
 
                 //上傳資料
                 response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    //Log.e("註冊正確回來", response.body()!!.string())
-
+                response = client.newCall(request).execute()
+                val any = if (response.isSuccessful) {
+                    runOnUiThread(java.lang.Runnable {
+                        params[0].button.isEnabled = true
+                    })
+                    params[0].myBlean = false
                     try {
                         val tempBody: String = response.body()!!.string().toString()
                         Log.e("註冊正確回來", tempBody)
@@ -107,6 +123,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     }
                     register_mail_Result = "密碼已經寄送，請至登入頁面輸入密碼。"
                 } else {
+                    params[0].myBlean = false
                     Log.e("註冊錯誤回來", response.body()!!.string())
                     register_mail_Result = "此信箱已經被申請，請更改信箱再註冊謝謝。"
 
@@ -238,27 +255,27 @@ class AccountRegisterActivity : AppCompatActivity() {
         Dialog.show()
     }
 
-    //20180312
-    private fun getNetWork (): Boolean  {
-        var result = false
-        try {
-            val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
-
-
-            //判斷是否有網路
-            //net = networkInfo.isConnected
-            if (networkInfo == null || !networkInfo.isConnected()) {
-                result = false
-            } else {
-                result = networkInfo.isAvailable()
-            }
-
-        }catch (E: Exception) {
-            Log.e("網路", E.toString())
-        }
-        return result
-    }
+//    //20180312
+//    private fun getNetWork (): Boolean  {
+//        var result = false
+//        try {
+//            val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+//            val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
+//
+//
+//            //判斷是否有網路
+//            //net = networkInfo.isConnected
+//            if (networkInfo == null || !networkInfo.isConnected()) {
+//                result = false
+//            } else {
+//                result = networkInfo.isAvailable()
+//            }
+//
+//        }catch (E: Exception) {
+//            Log.e("網路", E.toString())
+//        }
+//        return result
+//    }
 
     //20180307
     // set on-click listener
@@ -287,20 +304,5 @@ class AccountRegisterActivity : AppCompatActivity() {
 
 }
 
-//20180311
-object Utils {
-    private var lastClickTime: Long = 0
 
-    val isFastDoubleClick: Boolean
-        get() {
-            val time = System.currentTimeMillis()
-            val timeD = time - lastClickTime
-            if (0 < timeD && timeD < 1000) {
-                return true
-            }else {
-                lastClickTime = time
-                return false
-            }
-        }
-}
 
