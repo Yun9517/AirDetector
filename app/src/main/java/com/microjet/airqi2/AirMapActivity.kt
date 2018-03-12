@@ -11,11 +11,15 @@ import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.OnCompleteListener
 
 
 /**
@@ -40,10 +44,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             requestPermissions(this, perms, REQUEST_LOCATION)
         } else {
             mMap.isMyLocationEnabled = true
+            mMap.uiSettings.isZoomControlsEnabled = true
+
+            initLocation()
         }
     }
 
-    private lateinit var mLocationManager: LocationManager
     private lateinit var mMap: GoogleMap
 
     private val REQUEST_LOCATION = 2
@@ -55,6 +61,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         initActionBar()
         initGoogleMapFragment()
+
+        createLocationRequest()
     }
 
     private fun initActionBar() {
@@ -62,6 +70,20 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val actionBar = supportActionBar
         // 設定顯示左上角的按鈕
         actionBar!!.setDisplayHomeAsUpEnabled(true)
+
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun initGoogleMapFragment() {
@@ -71,23 +93,24 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     @SuppressLint("MissingPermission")
     private fun initLocation() {
-        mLocationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val client = LocationServices.getFusedLocationProviderClient(this)
 
-        val criteria = Criteria()
-        criteria.accuracy = Criteria.ACCURACY_FINE
+        client.lastLocation.addOnCompleteListener(this, {
+            if(it.isSuccessful) {
+                val location = it.result
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                        LatLng(location.latitude, location.longitude), 15f))
+            }
 
-        val provider = mLocationManager.getBestProvider(criteria, true)
+            Log.i("LOCATION", "Location Task is Successful: ${it.isSuccessful}")
+        })
+    }
 
-        val location = mLocationManager.getLastKnownLocation(provider)
-
-        if(location != null) {
-            Log.i("LOCATION", "${location.latitude}, ${location.longitude}")
-
-            mMap.animateCamera(
-                    CameraUpdateFactory.newLatLngZoom(
-                            LatLng(location.latitude, location.longitude), 15f)
-            )
-        }
+    private fun createLocationRequest() {
+        val locationRequest = LocationRequest()
+        locationRequest.interval = 5000
+        locationRequest.fastestInterval = 2000
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
     @SuppressLint("MissingPermission")
