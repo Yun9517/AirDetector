@@ -85,6 +85,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         (result[result.size - 1]!!.longitude).toDouble()))
                 .title("TVOC: ${result[result.size - 1]!!.tvocValue}")
         )
+        
+        realm.close()
     }
 
     // 初始化ActionBar
