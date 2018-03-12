@@ -80,11 +80,15 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val result = query.findAll()
         Log.d("DATE", "Today total count: ${result.size}")
 
-        mMap.addMarker(MarkerOptions()
-                .position(LatLng((result[result.size - 1]!!.latitude).toDouble(),
-                        (result[result.size - 1]!!.longitude).toDouble()))
-                .title("TVOC: ${result[result.size - 1]!!.tvocValue}")
-        )
+        if(result.size > 0) {
+            for (i in 0 until result.size) {
+                mMap.addMarker(MarkerOptions()
+                        .position(LatLng((result[i]!!.latitude).toDouble(),
+                                (result[i]!!.longitude).toDouble()))
+                        .title("TVOC: ${result[i]!!.tvocValue}")
+                )
+            }
+        }
         
         realm.close()
     }
