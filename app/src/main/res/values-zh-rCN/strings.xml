@@ -188,6 +188,7 @@
     <string name="login">登入</string>
     <string name="enter_Password">请输入密码</string>
     <string name="forget_Password">忘记密码？</string>
+    <string name="change_Password">修改密码？</string>
     <string name="no_Account">我还没有注册账号 我想</string>
     <string name="create_New_account">建立新账号</string>
     <string name="create_Account">建立账号</string>
