@@ -3,6 +3,8 @@ package com.microjet.airqi2
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -20,6 +22,7 @@ import okhttp3.RequestBody
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
+import java.util.regex.Pattern
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -48,6 +51,7 @@ class AccountManagementActivity : AppCompatActivity() {
         var btn_submit = findViewById(R.id.login) as Button
         var forgot_password = findViewById(R.id.forgotPassword) as TextView
         var create_account = findViewById(R.id.newAccount) as TextView
+        var register_mail_Result: String?
 
         val bundle = intent.extras
         if (bundle != null) {
@@ -60,43 +64,54 @@ class AccountManagementActivity : AppCompatActivity() {
 
         create_account.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
+              //  if (!Utils.isFastDoubleClick) {
+                    // if (user_register_mail?.text == null) {
+                    // if (!isEmail(et_user_name?.text)) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
                 val intent = Intent()
                 intent.setClass(this@AccountManagementActivity.mContext, AccountRegisterActivity::class.java)
                 //startActivityForResult(intent,1)
-
                 startActivity(intent)
-
-
                 //finish()
+//                    }else {
+//                        register_mail_Result = "請輸入正確的E-mail地址"
+//                        showDialog(register_mail_Result!!)
+//                    }
+               // }
             }
         })
 
 
         btn_submit.setOnClickListener {
-
-            userEmail = et_user_name!!.text.toString()
-            userPassword = et_password!!.text.toString()
-
+            if (isEmail(et_user_name?.text.toString())&&et_user_name?.text.toString()!="") {
+                if(Utils.isFastDoubleClick){
+                    showDialog("按慢一點太快了")
+                }else {
             goLoginAsyncTasks().execute("https://mjairql.com/api/v1/login")
+                }
+            } else{
+                showDialog("請輸入正確的E-mail地址與密碼")
+            }
+        }
+    }
 
-//            val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
-            //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-//            Dialog.setTitle("提示")
-//            Dialog.setMessage("登入中請稍後")
-//            Dialog.setCancelable(false)//讓返回鍵與空白無效
-//            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE,"确定")
-//            {
-//                dialog, _->dialog.dismiss()
-//            }
-//            Dialog.show()
 
+    override fun onStart() {
+        super.onStart()
         }
 
-        // your code to validate the user_name and password combination
-        // and verify the same
-
+    override fun onStop() {
+        super.onStop()
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+    }
+
 
     private fun initActionBar() {
         // 取得 actionBar
@@ -126,7 +141,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
-
+                userEmail = et_user_name!!.text.toString()
+                userPassword = et_password!!.text.toString()
                 val ccc = "email=" + userEmail + "&password=" + userPassword
 
                 Log.e("內容", ccc)
@@ -150,11 +166,12 @@ class AccountManagementActivity : AppCompatActivity() {
                         val token = responseContent.getJSONObject("success").getString("token").toString()
                         Log.e("登入正確回來拿token", token)
                         login_Result = "成功登入"
-
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                        share.edit().clear().putString("token", token).apply()
-                        //val share_token = share.getString("token","")
-                        // Log.e("偷肯:",share_token)
+                        share.edit().putString("token", token).apply()
+
+                        //val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+                        val _token = share.getString("token","")
+                         Log.e("偷肯:",_token)
 
 //                        text_Account_status.toString(R.string.active)
 //                        login_Result = "登入正確"
@@ -170,19 +187,17 @@ class AccountManagementActivity : AppCompatActivity() {
                     }
                 } else {
                     Log.e("登入錯誤回來", response.body()!!.string())
-
-
                     login_Result = "登入失敗"
-                    val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
-                    //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                    Dialog.setTitle("提示")
-                    Dialog.setMessage(login_Result.toString())
-                    Dialog.setCancelable(false)//讓返回鍵與空白無效
-                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                    { dialog, _ ->
-                        dialog.dismiss()
-                    }
-                    Dialog.show()
+//                    val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
+//                    //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+//                    Dialog.setTitle("提示")
+//                    Dialog.setMessage(login_Result.toString())
+//                    Dialog.setCancelable(false)//讓返回鍵與空白無效
+//                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+//                    { dialog, _ ->
+//                        dialog.dismiss()
+//                    }
+//                    Dialog.show()
                 }
                 //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
@@ -206,6 +221,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 */
                 //{ dialog, _ ->
                     //dialog.dismiss()
+
+
 
                     val intent = Intent()
                     intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
@@ -231,7 +248,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     dialog.dismiss()
                 }
                 Dialog.show()
-                finish()
+                //finish()
             }
         }
     }
@@ -243,4 +260,66 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
     }
+
+    //20180311
+    fun isEmail(strEmail: String?): Boolean {
+        val strPattern = ("\\w+@\\w+\\.\\w+")
+        val p = Pattern.compile(strPattern)
+        val m = p.matcher(strEmail)
+        return m.matches()
 }
+
+
+    //20180312
+    fun showDialog(msg:String){
+        val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        Dialog.setTitle("提示")
+        Dialog.setMessage(msg.toString())
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
+        }
+        Dialog.show()
+    }
+}
+
+private fun getNetWork (): Boolean  {
+    var result = false
+    try {
+        val connManager: ConnectivityManager? = MyApplication.applicationContext().getSystemService(AppCompatActivity.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
+
+
+        //判斷是否有網路
+        //net = networkInfo.isConnected
+        if (networkInfo == null || !networkInfo.isConnected()) {
+            result = false
+        } else {
+            result = networkInfo.isAvailable()
+        }
+
+    }catch (E: Exception) {
+        Log.e("網路", E.toString())
+    }
+    return result
+}
+
+
+////20180312
+//object ClickUtils {
+//    private var lastClickTime: Long = 0
+//
+//    val isFastDoubleClick: Boolean
+//        get() {
+//            val time = System.currentTimeMillis()
+//            val timeD = time - lastClickTime
+//            if (0 < timeD && timeD < 1000) {
+//                return true
+//            }
+//            lastClickTime = time
+//            return false
+//        }
+//}

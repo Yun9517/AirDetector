@@ -2091,7 +2091,7 @@ public class UartService extends Service {
     private ArrayList<Integer> hasBeenUpLoaded = new ArrayList<>();
 
     private class postDataAsyncTasks extends AsyncTask<String, Void, String> {
-        @RequiresApi(api = Build.VERSION_CODES.N)
+        //@RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected String doInBackground(String... params) {
             RequestBody return_body = null;

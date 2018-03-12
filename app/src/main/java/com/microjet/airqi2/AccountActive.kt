@@ -3,8 +3,10 @@ package com.microjet.airqi2
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.activity_account_active.*
+import kotlinx.android.synthetic.main.drawer_header.*
 
 /**
  * Created by B00170 on 2018/3/8.
@@ -18,11 +20,20 @@ class AccountActive : AppCompatActivity() {
         mContext = this@AccountActive.applicationContext
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            shareToKen.edit().clear().apply()
+            shareToKen.edit().putString("token","") .apply()
             finish()
         }
-
+        text_Account_status
         initActionBar()
+
+        //20180310
+        val shareMSG = getSharedPreferences("registerMSG", Context.MODE_PRIVATE)
+
+        val myName = shareMSG.getString("name", "")
+        val myEmail= shareMSG.getString("email","")
+        val myPassword= shareMSG.getString("password","")
+        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
+        cannot_Receive_mail.setText("登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
     }
     private fun initActionBar() {
         // 取得 actionBar
@@ -43,5 +54,27 @@ class AccountActive : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        val _token = share_token.getString("token","")
+        Log.e("登入後onStart偷肯:",_token)
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        val _token = share_token.getString("token","")
+        Log.e("登出後onDestroy偷肯:",_token)
     }
 }
