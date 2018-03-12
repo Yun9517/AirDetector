@@ -195,20 +195,22 @@ class AccountManagementActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result== "登入正確") {
+            if (result== "成功登入") {
+                /*
                 val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 Dialog.setTitle("提示")
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                { dialog, _ ->
-                    dialog.dismiss()
+                */
+                //{ dialog, _ ->
+                    //dialog.dismiss()
 
                     val intent = Intent()
                     intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
                     startActivity(intent)
-                }
+                //}
                 /*    Dialog.setOnDismissListener(DialogInterface.OnDismissListener {
                 val intent = Intent()
                 intent.setClass(this@AccountManagementActivity.mContext, AccountActive::class.java)
