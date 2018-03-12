@@ -59,7 +59,8 @@
             android:layout_gravity="end"
             android:layout_marginEnd="40dp"
             android:layout_marginTop="8dp"
-            android:text="@string/forget_Password" />
+            android:text="@string/forget_Password"
+            android:textColor="@color/progressBarDarkBlue"/>
 
         <ImageView
             android:layout_width="match_parent"
@@ -94,7 +95,8 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="0dp"
                 android:text="@string/create_New_account"
-                android:textColorLink="@color/progressBarDarkBlue" />
+                android:textStyle="normal"
+                android:textColor="@color/progressBarDarkBlue" />
         </LinearLayout>
 
         <Button

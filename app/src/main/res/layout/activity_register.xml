@@ -27,6 +27,15 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/create_Description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginEnd="40dp"
+            android:text="@string/create_Description"/>
+
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
@@ -44,10 +53,10 @@
         <Button
             android:id="@+id/nextStep"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_gravity="end"
             android:layout_marginEnd="40dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/style_login_button"
             android:text="@string/next_Step"
             android:textColor="@color/whiteColor" />
