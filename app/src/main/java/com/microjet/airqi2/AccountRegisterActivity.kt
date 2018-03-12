@@ -26,9 +26,9 @@ import org.json.JSONObject
 class AccountRegisterActivity : AppCompatActivity() {
     private var mContext: Context? = null
 
-    private var user_register_mail: EditText ? = null
-    private var register_mail_Result: String ? = null
-    //private var register_mail_Faile: String ? = null
+    private var user_register_mail : EditText ? = null
+    private var register_mail_Result : String ? = null
+    //private var register_mail_Faile : String ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -143,7 +143,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     Log.e("ㄍㄋㄋAndy", password)
                     bundle.putString("email", email)
                     bundle.putString("pwd", password)
-                    bundle.putString("name",name)
+                    bundle.putString("name", name)
 
                     intent.putExtras(bundle)
                     intent.setClass(this@AccountRegisterActivity.mContext, AccountManagementActivity::class.java)

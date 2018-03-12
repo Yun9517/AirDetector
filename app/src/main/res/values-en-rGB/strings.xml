@@ -187,7 +187,13 @@
     <string name="login">Sign in</string>
     <string name="enter_Password">Password</string>
     <string name="forget_Password">Forgot password?</string>
+    <string name="forget_Password_Title">Forgot password</string>
+    <string name="forget_Check_Password_Title">Forgot-Change password</string>
+    <string name="forget_Password_Description">Check your mail and click the Verification Link, you will be able to change your password.</string>
     <string name="change_Password">Change password?</string>
+    <string name="change_Password_Title">Change password</string>
+    <string name="check_Password">Enter new password</string>
+    <string name="double_check_Password">Confirm your password</string>
     <string name="no_Account">No account? </string>
     <string name="create_New_account">Create a new account</string>
     <string name="create_Account">Create Account</string>

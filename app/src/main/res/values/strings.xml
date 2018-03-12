@@ -191,7 +191,13 @@
     <string name="login">登入</string>
     <string name="enter_Password">請輸入密碼</string>
     <string name="forget_Password">忘記密碼？</string>
+    <string name="forget_Password_Title">忘記密碼</string>
+    <string name="forget_Check_Password_Title">忘記密碼 - 變更密碼</string>
+    <string name="forget_Password_Description">我們將寄送驗證信至您的電子郵件，點入信中的驗證連結網址後，即可更便您的密碼。</string>
     <string name="change_Password">修改密碼？</string>
+    <string name="change_Password_Title">修改密碼</string>
+    <string name="check_Password">請輸入新密碼</string>
+    <string name="double_check_Password">再次確認新密碼</string>
     <string name="no_Account">我還沒有註冊帳號  我想</string>
     <string name="create_New_account">建立新帳號</string>
     <string name="create_Account">建立帳號</string>

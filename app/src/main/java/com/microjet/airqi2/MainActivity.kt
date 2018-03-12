@@ -112,11 +112,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var isGPSEnabled : Boolean = false
     private var mLocationManager : LocationManager? = null
 
-    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
+    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************* //
     private var drawerDeviceAddress : String? = null
 
-    // ***** 2018/03/12 Drawer Show Device Name ****************************** //
+    // ***** 2018/03/12 Drawer Show Device Name ******************************* //
     private var drawerDeviceName : String? = null
+
+    // ***** 2018/03/12 Drawer Show Account Name ****************************** //
+    private var drawerAccountName : String? = null
 
 
     // 20171212 Raymond added Wait screen
@@ -918,7 +921,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = BleConnection.CONNECTED
                     val bundle = intent.extras
                     drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
-                    //drawerDeviceName = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_NAME)
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
 
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
