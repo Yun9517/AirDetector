@@ -4,9 +4,13 @@ import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.EditText
 
 class AccountResetPassword : AppCompatActivity() {
-    private var mContext: Context? = null
+    private var mContext : Context? = null
+    // 03/12
+    private var enterPassword : EditText? = null
+    private var checkPassword : EditText? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,6 +19,9 @@ class AccountResetPassword : AppCompatActivity() {
         mContext = this@AccountResetPassword.applicationContext
 
         initActionBar()
+
+        // 03/12
+        //goResetAsyncTasks().execute("https://mjairql.com/api/v1/editUserData")
     }
 
     private fun initActionBar() {
@@ -36,4 +43,8 @@ class AccountResetPassword : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    //    private inner class goResetAsyncTasks : AsyncTask<String, Void, String>() {
+    //
+    //    }
 }

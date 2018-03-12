@@ -1,9 +1,11 @@
 package com.microjet.airqi2
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
+import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_account_active.*
 
 /**
@@ -23,6 +25,18 @@ class AccountActive : AppCompatActivity() {
         }
 
         initActionBar()
+
+        // get reference to all views
+        var change_password = findViewById<TextView>(R.id.change_password)
+
+        change_password.setOnClickListener {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val intent = Intent()
+            intent.setClass(this@AccountActive.mContext, AccountResetPassword::class.java)
+            //startActivityForResult(intent,1)
+            startActivity(intent)
+            //finish()
+        }
     }
     private fun initActionBar() {
         // 取得 actionBar
