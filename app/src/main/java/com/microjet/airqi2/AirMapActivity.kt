@@ -7,7 +7,9 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.content.res.AppCompatResources
 import android.util.Log
 import android.view.MenuItem
 import com.google.android.gms.location.LocationRequest
@@ -84,7 +86,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
             val rectOptions = PolylineOptions()
                     .color(Color.RED)
-                    .width(10F)
+                    .width(20F)
 
             for (i in 0 until result.size) {
                 val latLng = LatLng((result[i]!!.latitude).toDouble(), (result[i]!!.longitude).toDouble())
@@ -94,6 +96,32 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 val marker = MarkerOptions()
                 marker.position(latLng)
                 marker.title("TVOC: ${result[i]!!.tvocValue}")
+
+                /*when(result[i]!!.tvocValue.toInt()) {
+                    in 0..219 -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(),R.color.Main_textResult_Good))
+                            .add(latLng)
+
+                    in 220..659 -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(), R.color.Main_textResult_Moderate))
+                            .add(latLng)
+
+                    in 660..2199 -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(), R.color.Main_textResult_Orange))
+                            .add(latLng)
+
+                    in 2200..5499 -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(), R.color.Main_textResult_Bad))
+                            .add(latLng)
+
+                    in 5500..19999 -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(), R.color.Main_textResult_Purple))
+                            .add(latLng)
+
+                    else -> rectOptions.color(ContextCompat.getColor(
+                            MyApplication.applicationContext(), R.color.Main_textResult_Unhealthy))
+                            .add(latLng)
+                }*/
 
                 /*when(result[i]!!.tvocValue.toInt()) {
                     in 0..219 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active))
