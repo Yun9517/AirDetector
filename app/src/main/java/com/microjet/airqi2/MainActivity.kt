@@ -924,8 +924,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
 
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-                    val name = share.getString("name", "")
-                    drawerDeviceName = name
+                    val deviceName = share.getString("name", "")
+                    val accountName = share.getString("name","")
+                    drawerDeviceName = deviceName
+                    drawerAccountName = accountName
 
                     // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
                     /*if(name == "TVOC_NOSE") {
@@ -970,6 +972,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.text_Account_status)?.text = drawerAccountName
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
