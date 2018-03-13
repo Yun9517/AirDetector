@@ -33,12 +33,13 @@ class AccountManagementActivity : AppCompatActivity() {
 
     var et_user_name: EditText? = null
     var et_password: EditText? = null
+
     var userEmail = ""
     var userPassword = ""
     private var login_Result: String? = null
     // private var loginl_Result: String ? = null
     var mything:mything?=null
-
+    var btn_submit:Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -50,7 +51,7 @@ class AccountManagementActivity : AppCompatActivity() {
         // get reference to all views
         et_user_name = findViewById(R.id.email) as EditText
         et_password = findViewById(R.id.password) as EditText
-        var btn_submit = findViewById(R.id.login) as Button
+        btn_submit = findViewById(R.id.login) as Button
         var forgot_password = findViewById(R.id.forgotPassword) as TextView
         var create_account = findViewById(R.id.newAccount) as TextView
         var register_mail_Result: String?
@@ -61,10 +62,11 @@ class AccountManagementActivity : AppCompatActivity() {
             userPassword = bundle.getString("pwd", "")
             et_user_name?.setText(userEmail)
             et_password?.setText(userPassword)
+
             Log.e("ㄍㄋㄋAndy", userEmail + userPassword)
         }
 
-        create_account.setOnClickListener(object : View.OnClickListener {
+        create_account?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 //  if (!Utils.isFastDoubleClick) {
                 // if (user_register_mail?.text == null) {
@@ -83,14 +85,15 @@ class AccountManagementActivity : AppCompatActivity() {
             }
         })
 
-        mything = mything(btn_submit, false, "https://mjairql.com/api/v1/login")
+        mything = mything(btn_submit!!, false, "https://mjairql.com/api/v1/login")
 
-        btn_submit.setOnClickListener {
+        btn_submit?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
                 if (isEmail(et_user_name?.text.toString()) && et_user_name?.text.toString() != "") {
                     if (com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick) {
                         showDialog("按慢一點太快了")
                     } else {
+                        btn_submit?.isEnabled=false
                         goLoginAsyncTasks().execute(mything)
                     }
                 } else {
@@ -167,7 +170,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 response = client.newCall(request).execute()
                 val any = if (response.isSuccessful) {
                     runOnUiThread(java.lang.Runnable {
-                        params[0].button.isEnabled = true
+                        params[0].button!!.isEnabled = true
                     })
                     params[0].myBlean = false
                     try {
@@ -198,7 +201,8 @@ class AccountManagementActivity : AppCompatActivity() {
                     }
                 } else {
                     runOnUiThread(java.lang.Runnable {
-                        params[0].button.isEnabled = true
+                        params[0].button!!.isEnabled = true
+                        btn_submit?.isEnabled=true
                     })
 
                     params[0].myBlean = false
@@ -323,7 +327,7 @@ class AccountManagementActivity : AppCompatActivity() {
 //    }
 //    return result
 //}
-class mything ( btn:Button,blean:Boolean,myString :String){
+class mything ( btn:Button?,blean:Boolean?,myString :String?){
     var button=btn
     var myBlean=blean
     var myAddress=myString

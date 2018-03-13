@@ -38,13 +38,16 @@ class AccountRegisterActivity : AppCompatActivity() {
     //private var register_mail_Faile: String ? = null
 
     var mything:mything?=null
+    //20180313
+     var nextStep: Button? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        var mything: mything? = null
 
+        nextStep = this.findViewById(R.id.nextStep)
         mContext = this@AccountRegisterActivity.applicationContext
         initActionBar()
         //20180307
@@ -54,14 +57,16 @@ class AccountRegisterActivity : AppCompatActivity() {
         //var registerMail = null
 
 
-        mything = mything(nextStep, false, "https://mjairql.com/api/v1/register")
+        mything = mything(nextStep!!, false, "https://mjairql.com/api/v1/register")
 
-        nextStep.setOnClickListener {
+
+        nextStep?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
                 if (isEmail(user_register_mail?.text) && user_register_mail?.text.toString() != "") {
                     if (Utils.isFastDoubleClick) {
                         showDialog("按慢一點太快了")
                     } else {
+                        nextStep?.isEnabled=false
                         goRegisterAsyncTasks().execute(mything)
                     }
                 } else {
@@ -99,24 +104,22 @@ class AccountRegisterActivity : AppCompatActivity() {
                 response = client.newCall(request).execute()
                 response = client.newCall(request).execute()
                 val any = if (response.isSuccessful) {
-                    runOnUiThread(java.lang.Runnable {
-                        params[0].button.isEnabled = true
-                    })
+
                     params[0].myBlean = false
                     try {
                         val tempBody: String = response.body()!!.string().toString()
                         Log.e("註冊正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         email = responseContent.getJSONObject("success").getString("email").toString()
-                        password = responseContent.getString("pwd").toString()
+                        //password = responseContent.getString("pwd").toString()
                         name = responseContent.getJSONObject("success").getString("name").toString()
-                        Log.e("註冊正確回來11", password+"名字:"+name)
+                        Log.e("註冊正確回來11", "名字:"+name)
 
                         val share = getSharedPreferences("registerMSG", MODE_PRIVATE)
                         share.edit().putString("email", email).apply()
-                        share.edit().putString("password", password).apply()
+                        //share.edit().putString("password", password).apply()
                         share.edit().putString("name", name).apply()
-                        Log.e("我的名字:", name)
+                        Log.e("我的名字:", name+"and"+password)
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -126,6 +129,10 @@ class AccountRegisterActivity : AppCompatActivity() {
                     params[0].myBlean = false
                     Log.e("註冊錯誤回來", response.body()!!.string())
                     register_mail_Result = "此信箱已經被申請，請更改信箱再註冊謝謝。"
+                   runOnUiThread(java.lang.Runnable {
+                        params[0].button!!.isEnabled = true
+                        nextStep?.isEnabled=true
+                    })
 
                 }
                 //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
