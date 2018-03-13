@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
@@ -15,8 +16,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.*
 import io.realm.Realm
 import io.realm.Sort
 import java.text.SimpleDateFormat
@@ -81,14 +81,34 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
+
+            val rectOptions = PolylineOptions()
+                    .color(Color.RED)
+                    .width(10F)
+
             for (i in 0 until result.size) {
-                mMap.addMarker(MarkerOptions()
-                        .position(LatLng((result[i]!!.latitude).toDouble(),
-                                (result[i]!!.longitude).toDouble()))
-                        .title("TVOC: ${result[i]!!.tvocValue}")
-                )
+                val latLng = LatLng((result[i]!!.latitude).toDouble(), (result[i]!!.longitude).toDouble())
+
+                rectOptions.add(latLng)
+
+                val marker = MarkerOptions()
+                marker.position(latLng)
+                marker.title("TVOC: ${result[i]!!.tvocValue}")
+
+                /*when(result[i]!!.tvocValue.toInt()) {
+                    in 0..219 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active))
+                    in 220..659 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_02yellow_active))
+                    in 660..2199 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_03orange_active))
+                    in 2200..5499 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_04red_active))
+                    in 5500..19999 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_05purple_active))
+                    else -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_06brown_active))
+                }*/
+                mMap.addMarker(marker)
             }
+
+            mMap.addPolyline(rectOptions)
         }
+
         
         realm.close()
     }
@@ -165,11 +185,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(p0: GoogleMap?) {
         mMap = p0!!
 
-        /*val howBonBon = LatLng(25.029639, 121.544416)
+        // 彩蛋，好棒棒座標（拜託不要刪XD）
+        val howBonBon = LatLng(25.029639, 121.544416)
         mMap.addMarker(MarkerOptions()
                 .position(howBonBon)
                 .title("好棒棒！"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))*/
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))
 
         if(checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
