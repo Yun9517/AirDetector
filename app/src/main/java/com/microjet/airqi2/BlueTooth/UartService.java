@@ -1138,6 +1138,15 @@ public class UartService extends Service {
                         isFirstB0 = false;
 
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+
+
+                        Handler hh = new Handler();
+                        hh.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
+                            }
+                        },1000);
                     }
 
 
@@ -1177,6 +1186,7 @@ public class UartService extends Service {
                     MyApplication.Companion.setPM25(isPM25);
                     MyApplication.Companion.putDeviceVersion(deviceVersion);
 
+                    Log.d("PARSERB1", "isPM25: " + isPM25);
                     Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
@@ -1337,7 +1347,7 @@ public class UartService extends Service {
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
-                            if (MyApplication.Companion.isPM25() == "000000000000") {
+                            if (MyApplication.Companion.isPM25().equals("000000000000")) {
                                 asmData.setPM25Value("0");
                             } else {
                                 asmData.setPM25Value(RString.get(5));
@@ -1494,7 +1504,6 @@ public class UartService extends Service {
                                 true).apply();
                     }
 
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                     Log.e(TAG, "LED Status: " + ledState);
                     break;
                 case  (byte) 0xE0:
