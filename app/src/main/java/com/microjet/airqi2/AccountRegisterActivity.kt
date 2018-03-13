@@ -1,5 +1,6 @@
 package com.microjet.airqi2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
@@ -18,8 +19,14 @@ import okhttp3.*
 import org.json.JSONException
 import java.io.IOException
 import android.content.DialogInterface
-import org.json.JSONArray
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.text.Editable
+import android.widget.Button
+import com.microjet.airqi2.CustomAPI.GetNetWork
+import com.microjet.airqi2.CustomAPI.Utils
 import org.json.JSONObject
+import java.util.regex.Pattern
 
 
 @Suppress("UNREACHABLE_CODE")
@@ -30,58 +37,56 @@ class AccountRegisterActivity : AppCompatActivity() {
     private var register_mail_Result : String ? = null
     //private var register_mail_Faile : String ? = null
 
+    var mything:mything?=null
+    //20180313
+     var nextStep: Button? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+
+        nextStep = this.findViewById(R.id.nextStep)
         mContext = this@AccountRegisterActivity.applicationContext
-
         initActionBar()
-
-
         //20180307
-
-
         // set on-click listener
         user_register_mail = this.findViewById(R.id.email)
         //var btn_next_step = this.findViewById<Button>(R.id.nextStep)
+        //var registerMail = null
 
-        nextStep.setOnTouchListener { view, motionEvent ->
 
-            when (motionEvent.action) {
-                MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
-                    view.parent.requestDisallowInterceptTouchEvent(true)
+        mything = mything(nextStep!!, false, "https://mjairql.com/api/v1/register")
 
-                    goRegisterAsyncTasks().execute("https://mjairql.com/api/v1/register")
 
-                    register_mail_Result="註冊已送出等待回應！"
-                    val Dialog1 = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
-                    //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                    Dialog1.setTitle("提示")
-                    Dialog1.setMessage(register_mail_Result.toString())
-                    Dialog1.setCancelable(false)//讓返回鍵與空白無效
-                    Dialog1.setButton(DialogInterface.BUTTON_NEGATIVE,"确定")
-                    {
-                        dialog, _->dialog.dismiss()
+        nextStep?.setOnClickListener {
+            if (GetNetWork.isFastGetNet) {
+                if (isEmail(user_register_mail?.text) && user_register_mail?.text.toString() != "") {
+                    if (Utils.isFastDoubleClick) {
+                        showDialog("按慢一點太快了")
+                    } else {
+                        nextStep?.isEnabled=false
+                        goRegisterAsyncTasks().execute(mything)
                     }
-                    Dialog1.show()
-                    Dialog1.dismiss()
+                } else {
+                    showDialog("請輸入正確的E-mail地址")
                 }
-                MotionEvent.ACTION_UP -> {//ACTION_BUTTON_RELEASE
-                }
+            }else{
+                showDialog("請連接網路")
             }
-
-            true
         }
     }
-
-
 
     var email=""
     var password=""
     var name=""
-    private inner class goRegisterAsyncTasks : AsyncTask<String, Void, String>() {
-        override fun doInBackground(vararg params: String): String? {
+
+
+
+    @SuppressLint("StaticFieldLeak")
+    private inner class goRegisterAsyncTasks : AsyncTask<mything, Void, String>() {
+        override fun doInBackground(vararg params: mything): String? {
             try {
                 var response: okhttp3.Response? = null
                 val registerMail = user_register_mail?.text
@@ -97,24 +102,37 @@ class AccountRegisterActivity : AppCompatActivity() {
 
                 //上傳資料
                 response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    //Log.e("註冊正確回來", response.body()!!.string())
+                response = client.newCall(request).execute()
+                val any = if (response.isSuccessful) {
 
+                    params[0].myBlean = false
                     try {
                         val tempBody: String = response.body()!!.string().toString()
                         Log.e("註冊正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         email = responseContent.getJSONObject("success").getString("email").toString()
-                        password = responseContent.getString("pwd").toString()
-                        name=responseContent.getString("name").toString()
-                        Log.e("註冊正確回來11", password)
+                        //password = responseContent.getString("pwd").toString()
+                        name = responseContent.getJSONObject("success").getString("name").toString()
+                        Log.e("註冊正確回來11", "名字:"+name)
+
+                        val share = getSharedPreferences("registerMSG", MODE_PRIVATE)
+                        share.edit().putString("email", email).apply()
+                        //share.edit().putString("password", password).apply()
+                        share.edit().putString("name", name).apply()
+                        Log.e("我的名字:", name+"and"+password)
+
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
                     register_mail_Result = "密碼已經寄送，請至登入頁面輸入密碼。"
                 } else {
+                    params[0].myBlean = false
                     Log.e("註冊錯誤回來", response.body()!!.string())
                     register_mail_Result = "此信箱已經被申請，請更改信箱再註冊謝謝。"
+                   runOnUiThread(java.lang.Runnable {
+                        params[0].button!!.isEnabled = true
+                        nextStep?.isEnabled=true
+                    })
 
                 }
                 //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
@@ -156,17 +174,19 @@ class AccountRegisterActivity : AppCompatActivity() {
                 }
                 Dialog.show()
             } else {
-                val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
-                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                Dialog.setTitle("提示")
-                Dialog.setMessage(register_mail_Result.toString())
-                Dialog.setCancelable(false)//讓返回鍵與空白無效
-                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                { dialog, _ ->
-                    dialog.dismiss()
-                    //finish()
-                }
-                Dialog.show()
+
+                showDialog(result!!)
+//                val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
+//                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+//                Dialog.setTitle("提示")
+//                Dialog.setMessage(register_mail_Result.toString())
+//                Dialog.setCancelable(false)//讓返回鍵與空白無效
+//                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+//                { dialog, _ ->
+//                    dialog.dismiss()
+//                    //finish()
+//                }
+//                Dialog.show()
             }
         }
     }
@@ -196,6 +216,77 @@ class AccountRegisterActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+    //20180311
+//    private fun setListener() {
+//        user_register_mail?.setOnKeyListener(object : View.OnKeyListener {
+//            override fun onKey(v: View, keyCode: Int, event: KeyEvent): Boolean {
+//                when (event.getAction()) {
+//                //獲得操作動作
+//                    KeyEvent.ACTION_DOWN//按下時
+//                    -> {
+//                        val inputString = user_register_mail.toString()//獲得user_register_mail輸入的內容
+//                        if (inputString.matches("\\w+@\\w+\\.\\w+".toRegex())) {
+//                            //                            驗證通過
+//
+//                        } else {
+//
+//                        }
+//                    }
+//                    KeyEvent.ACTION_UP//放開時
+//                    -> {
+//                    }
+//                }
+//                return false
+//            }
+//        })
+//    }
+
+    //20180311
+    fun isEmail(strEmail: Editable?): Boolean {
+        val strPattern = ("\\w+@\\w+\\.\\w+")
+        val p = Pattern.compile(strPattern)
+        val m = p.matcher(strEmail)
+        return m.matches()
+    }
+
+    //20180311
+    fun showDialog(msg:String){
+        val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        Dialog.setTitle("提示")
+        Dialog.setMessage(msg.toString())
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
+        }
+        Dialog.show()
+    }
+
+//    //20180312
+//    private fun getNetWork (): Boolean  {
+//        var result = false
+//        try {
+//            val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+//            val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
+//
+//
+//            //判斷是否有網路
+//            //net = networkInfo.isConnected
+//            if (networkInfo == null || !networkInfo.isConnected()) {
+//                result = false
+//            } else {
+//                result = networkInfo.isAvailable()
+//            }
+//
+//        }catch (E: Exception) {
+//            Log.e("網路", E.toString())
+//        }
+//        return result
+//    }
+
     //20180307
     // set on-click listener
 //fun click(view: TextView){
@@ -222,4 +313,6 @@ class AccountRegisterActivity : AppCompatActivity() {
 //    }
 
 }
+
+
 
