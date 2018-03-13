@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="@string/active"/>
+            android:text="@string/active"
+            android:textColor="@color/whiteColor"/>
 
         <Button
             android:id="@+id/logout"
@@ -36,7 +37,18 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="@string/logout"/>
+            android:text="@string/logout"
+            android:textColor="@color/whiteColor"/>
+
+        <TextView
+            android:id="@+id/change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:text="@string/change_Password"
+            android:textColor="@color/hype_Link_Blue"/>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -48,12 +48,11 @@ class AccountManagementActivity : AppCompatActivity() {
         initActionBar()
 
         // get reference to all views
-        et_user_name = findViewById(R.id.email) as EditText
-        et_password = findViewById(R.id.password) as EditText
-        var btn_submit = findViewById(R.id.login) as Button
-        var forgot_password = findViewById(R.id.forgotPassword) as TextView
-        var create_account = findViewById(R.id.newAccount) as TextView
-        var register_mail_Result: String?
+        et_user_name = findViewById<EditText>(R.id.email)
+        et_password = findViewById<EditText>(R.id.password)
+        var btn_submit = findViewById<Button>(R.id.login)
+        var forgot_password = findViewById<TextView>(R.id.forgotPassword)
+        var create_account = findViewById<TextView>(R.id.newAccount)
 
         val bundle = intent.extras
         if (bundle != null) {
@@ -64,24 +63,28 @@ class AccountManagementActivity : AppCompatActivity() {
             Log.e("ㄍㄋㄋAndy", userEmail + userPassword)
         }
 
-        create_account.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                //  if (!Utils.isFastDoubleClick) {
-                // if (user_register_mail?.text == null) {
-                // if (!isEmail(et_user_name?.text)) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                val intent = Intent()
-                intent.setClass(this@AccountManagementActivity.mContext, AccountRegisterActivity::class.java)
-                //startActivityForResult(intent,1)
-                startActivity(intent)
-                //finish()
-//                    }else {
+        create_account.setOnClickListener {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val intent = Intent()
+            intent.setClass(this@AccountManagementActivity.mContext, AccountRegisterActivity::class.java)
+            //startActivityForResult(intent,1)
+            startActivity(intent)
+            //finish()
+            //                    }else {
 //                        register_mail_Result = "請輸入正確的E-mail地址"
 //                        showDialog(register_mail_Result!!)
 //                    }
-                // }
-            }
-        })
+            // }
+        }
+
+        forgot_password.setOnClickListener {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val intent = Intent()
+            intent.setClass(this@AccountManagementActivity.mContext, AccountForgetPassword::class.java)
+            //startActivityForResult(intent,1)
+            startActivity(intent)
+            //finish()
+        }
 
         mything = mything(btn_submit, false, "https://mjairql.com/api/v1/login")
 

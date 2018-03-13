@@ -1,151 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:weightSum="1.5">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+
+    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:map="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_weight="0.1"
-        android:orientation="horizontal"
-        android:background="@color/titleBarColor">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0.1"
-            android:orientation="vertical"
-            android:weightSum="1">
-
-        <TextView
-            android:id="@+id/Device_PushID"
-            android:layout_width="133dp"
-            android:layout_height="wrap_content"
-            android:background="@color/titleBarColor"
-            android:gravity="center_vertical"
-            android:textStyle="bold"
-            android:text="My Device: "
-            android:textColor="@color/whiteColor"
-            android:layout_weight="0.89" />
-        </LinearLayout>
-        <Button
-            android:id="@+id/button_Refresh"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="208dp"
-            android:layout_weight="0.00015"
-            android:textColor="@color/whiteColor"
-            android:textStyle="bold"
-            android:text="Re" />
-    </LinearLayout>
-
-    <!--<RadioGroup-->
-    <!--android:id="@+id/FirstFragmentRadioGroup_selector"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="40dp"-->
-    <!--android:background="#80000000"-->
-    <!--android:orientation="horizontal"-->
-    <!--android:padding="4dp">-->
-
-    <!--<View-->
-    <!--android:id="@+id/VerticalLine3"-->
-    <!--android:layout_width="1dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#aaa" />-->
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/MapFragmentRadioButtonVOC"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="#a7fff6"-->
-    <!--android:gravity="center_horizontal|center_vertical"-->
-    <!--android:text="@string/MapFragmentRadioButtonVOC" />-->
-    <!--<View-->
-    <!--android:id="@+id/VerticalLine2"-->
-    <!--android:layout_width="1dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#aaa" />-->
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/MapFragmentRadioButtonCo2"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="#a7fff6"-->
-    <!--android:gravity="center_horizontal|center_vertical"-->
-    <!--android:text="@string/MapFragmentRadioButtonCo2" />-->
-    <!--&lt;!&ndash;  android:text="@string/Category"-->
-
-    <!--android:background="@drawable/shape_radiobutton2"-->
-    <!--android:textColor="@color/textcolor_radiobutton" &ndash;&gt;-->
-    <!--<View-->
-    <!--android:id="@+id/VerticalLine"-->
-    <!--android:layout_width="1dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#a7fff6" />-->
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/MapFragmentRadioButtonTemperature"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="#a7fff6"-->
-    <!--android:gravity="center_horizontal|center_vertical"-->
-    <!--android:text="@string/MapFragmentRadioButtonTemperature" />-->
-    <!--&lt;!&ndash;  android:background="@drawable/shape_radiobutton"-->
-    <!--android:textColor="@color/textcolor_radiobutton" &ndash;&gt;-->
-    <!--<View-->
-    <!--android:id="@+id/VerticalLine1"-->
-    <!--android:layout_width="1dip"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="#aaa" />-->
-
-    <!--<RadioButton-->
-    <!--android:id="@+id/MapFragmentRadioButtonHumidity"-->
-    <!--android:layout_width="0dp"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"-->
-    <!--android:background="#a7fff6"-->
-    <!--android:gravity="center_horizontal|center_vertical"-->
-    <!--android:text="@string/MapFragmentRadioButtonHumidity" />-->
-    <!--&lt;!&ndash;   android:text="@string/AZ"-->
-
-    <!--android:background="@drawable/shape_radiobutton2"-->
-    <!--android:textColor="@color/textcolor_radiobutton" &ndash;&gt;-->
-
-
-    <!--&lt;!&ndash;   android:text="@string/NearBy"-->
-
-    <!--android:background="@drawable/shape_radiobutton3"-->
-    <!--android:textColor="@color/textcolor_radiobutton" &ndash;&gt;-->
-    <!--</RadioGroup>-->
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="0.1"
-        android:orientation="horizontal">
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-            <!--    android:layout_marginBottom="51dp">
-     -->
-
-            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:map="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/map"
-                android:name="com.google.android.gms.maps.SupportMapFragment"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:context="com.microjet.airqi2.AirMapActivity1" />
-
-        </FrameLayout>
-    </LinearLayout>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:context="com.microjet.airqi2.AirMapActivity" />
 
 </LinearLayout>

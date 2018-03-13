@@ -25,7 +25,7 @@
         android:checkableBehavior="none">
         <item
             android:id="@+id/nav_air_map"
-            android:visible="false"
+            android:visible="true"
             android:title="@string/text_navi_air_map" />
     </group>
 
