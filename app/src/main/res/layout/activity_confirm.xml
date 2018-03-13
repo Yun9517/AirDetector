@@ -50,7 +50,7 @@
             android:id="@+id/nextStep"
             android:background="@drawable/style_login_button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_gravity="center"
             android:text="@string/resend_Mail"
             android:textColor="@color/whiteColor"/>

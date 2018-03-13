@@ -209,6 +209,9 @@
     <string name="account_Activation">账号已激活</string>
     <string name="account_Deactivation">账号未激活</string>
     <string name="create_Description">系统将会寄送默认密码至您的信箱，首次请以默认密码登入，登入后可自行变更密码。</string>
+    <string name="nick_Name">昵称 : </string>
+    <string name="email">信箱 : </string>
+    <string name="edit">编辑</string>
 
 </resources>
 

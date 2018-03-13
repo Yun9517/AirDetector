@@ -209,5 +209,8 @@
     <string name="account_Activation">Activation</string>
     <string name="account_Deactivation">Deactivation</string>
     <string name="create_Description">You will receive a password for the first time sign in, you can change the password anytime.</string>
+    <string name="nick_Name">ID : </string>
+    <string name="email">Email : </string>
+    <string name="edit">Edit</string>
 
 </resources>
