@@ -42,7 +42,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
         <activity
@@ -74,6 +74,23 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".AccountForgetPassword"
+            android:excludeFromRecents="true"
+            android:noHistory="false"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".AccountResetPassword"
+            android:excludeFromRecents="true"
+            android:noHistory="false"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
         <activity
             android:name=".KnowledgeActivity"
             android:excludeFromRecents="true"

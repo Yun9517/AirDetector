@@ -88,25 +88,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val mFragmentList = ArrayList<Fragment>()
 
     // ViewPager
-    private var mPageVp: CustomViewPager? = null
+    private var mPageVp : CustomViewPager? = null
 
     // var viewPager = VerticalViewPager()
     // ViewPager目前頁面
-    private var currentIndex: Int = 0
+    private var currentIndex : Int = 0
 
     // Drawer & NavigationBar
-    private var mDrawerLayout: DrawerLayout? = null
-    private var mDrawerToggle: ActionBarDrawerToggle? = null
+    private var mDrawerLayout : DrawerLayout? = null
+    private var mDrawerToggle : ActionBarDrawerToggle? = null
 
     // 電池電量數值
-    private var batValue: Int = 0
+    private var batValue : Int = 0
 
     // 藍芽icon in actionbar
-    private var bleIcon: MenuItem? = null
+    private var bleIcon : MenuItem? = null
     //電量icon
-    private var battreyIcon: MenuItem? = null
+    private var battreyIcon : MenuItem? = null
     //private var menuItem: MenuItem? = null
-    private var lightIcon: ImageView? = null
+    private var lightIcon : ImageView? = null
 
     private var connState = BleConnection.DISCONNECTED
 
@@ -120,45 +120,51 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //UArtService實體
     //private var mService: UartService? = null
 
-    private var mIsReceiverRegistered: Boolean = false
+    private var mIsReceiverRegistered : Boolean = false
     //private var mReceiver: MyBroadcastReceiver? = null
-    private var isGPSEnabled: Boolean = false
-    private var mLocationManager: LocationManager? = null
+    private var isGPSEnabled : Boolean = false
+    private var mLocationManager : LocationManager? = null
 
-    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************ //
-    private var drawerDeviceAddress: String? = null
+    // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************* //
+    private var drawerDeviceAddress : String? = null
+
+    // ***** 2018/03/12 Drawer Show Device Name ******************************* //
+    private var drawerDeviceName : String? = null
+
+    // ***** 2018/03/12 Drawer Show Account Name ****************************** //
+    private var drawerAccountName : String? = null
 
 
     // 20171212 Raymond added Wait screen
-    private var mWaitLayout: RelativeLayout? = null
-    private var mainLayout: LinearLayout? = null
+    private var mWaitLayout : RelativeLayout? = null
+    private var mainLayout : LinearLayout? = null
     //private var mMainReceiver: BroadcastReceiver? = null
     private var preheatCountDownInt = 0
 
-    private var topMenu: Menu? = null
+    private var topMenu : Menu? = null
 
     //20180122
-    private var soundPool: SoundPool? = null
+    private var soundPool : SoundPool? = null
     private var alertId = 0
-    private var lowPowerCont:Int=0
+    private var lowPowerCont : Int=0
 
     // Code to manage Service lifecycle.
-    private var mDeviceAddress: String? = null
-    private var mUartService: UartService? = null
+    private var mDeviceAddress : String? = null
+    private var mUartService : UartService? = null
 
     private var lati = 121.4215f
     private var longi = 24.959742f
-    private var locationListener: LocationListener? = null
+    private var locationListener : LocationListener? = null
 
     // FragmentAdapter
-    private lateinit var mFragmentAdapter: FragmentAdapter
+    private lateinit var mFragmentAdapter : FragmentAdapter
 
     //
     //private val mPM25Fg = ChartFragment()
     /** 是否禁止右劃標記  */
-    private var banDownDraw: Boolean = false
+    private var banDownDraw : Boolean = false
     /** 手指在螢幕上的最後x坐標  */
-    private var mLastMotionY: Float = 0.toFloat()
+    private var mLastMotionY : Float = 0.toFloat()
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
@@ -946,6 +952,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
                     val name = share.getString("name", "")
+                    drawerDeviceName = name
 
                     // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
                     /*if(name == "TVOC_NOSE") {
@@ -988,7 +995,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (connState == BleConnection.CONNECTED) {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = drawerDeviceAddress
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -996,7 +1004,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } else {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.txt_devname)?.text = getText(R.string.No_Device_Connect)
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = ""
+            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = getText(R.string.No_Device_Connect)
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = false
