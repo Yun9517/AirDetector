@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ApplicationErrorReport.TYPE_NONE
+import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
@@ -16,10 +18,15 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.ConnectivityManager
+import android.net.ConnectivityManager.TYPE_WIFI
+import android.net.NetworkInfo
+import android.net.wifi.WifiManager
 import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Contacts.PhonesColumns.TYPE_MOBILE
 import android.provider.Settings
 import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
@@ -33,6 +40,8 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
+import android.telephony.TelephonyManager
+import android.telephony.TelephonyManager.*
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
@@ -41,6 +50,7 @@ import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.CustomViewPager
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
+import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -53,12 +63,15 @@ import org.json.JSONException
 import org.json.JSONObject
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.R.id.info
 import com.microjet.airqi2.R.id.text_Account_status
 import io.realm.Realm
 import kotlinx.android.synthetic.main.drawer_header.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.io.IOException
+import java.lang.Math.E
+import java.lang.reflect.Array.get
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
@@ -211,6 +224,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
+    @SuppressLint("WifiManagerLeak")
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
@@ -260,8 +274,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         }
+        //20180311
+
+
+
+
         getLocation()
     }
+
 
     override fun onResume() {
         super.onResume()
@@ -620,19 +640,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun accountShow() {
         val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val MyToKen = shareToKen.getString("token", "")
-
+        if(GetNetWork.isFastGetNet) {
         if(MyToKen=="") {
+                Log.e("主葉面看偷肯",MyToKen)
             val i: Intent? = Intent(this, AccountManagementActivity::class.java)
             //text_Account_status.setText(R.string.account_Deactivation)
             startActivity(i)
         }else{
+                Log.e("主葉面!=空字串看偷肯",MyToKen)
             val i: Intent? = Intent(this, AccountActive::class.java)
             //text_Account_status.setText(R.string.account_Activation)
             startActivity(i)
         }
+        }else{
+            showDialog("請連接網路")
+        }
 
 
     }
+
+
 
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
@@ -1050,7 +1077,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //
 //        return isInBackground;
 //    }
-
+/*
     //20180307
     private var client: OkHttpClient? = null
     private val hasBeenUpLoaded = java.util.ArrayList<Int>()
@@ -1255,7 +1282,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         return dbSucessOrNot
     }
-
+*/
     private fun getLocation() {
         checkGPSPermisstion()
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -1284,7 +1311,50 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             text_Account_status.setText(R.string.account_Activation)
         }
     }
+
+    private fun getNetWork (): Boolean  {
+        var result = false
+        try {
+            val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
+
+
+            //判斷是否有網路
+            //net = networkInfo.isConnected
+            if (networkInfo == null || !networkInfo.isConnected()) {
+                result = false
+            } else {
+                result = networkInfo.isAvailable()
 }
+
+        }catch (E: Exception) {
+            Log.e("網路", E.toString())
+        }
+        return result
+    }
+
+
+    //20180312
+    fun showDialog(msg:String){
+        val Dialog = android.app.AlertDialog.Builder(this@MainActivity).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        Dialog.setTitle("提示")
+        Dialog.setMessage(msg.toString())
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
+        }
+        Dialog.show()
+    }
+
+
+}
+
+
+
+
 
 
 
