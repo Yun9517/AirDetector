@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
@@ -35,6 +36,9 @@ class AccountResetPassword : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
+                val intent = Intent()
+                intent.setClass(this@AccountResetPassword.mContext, AccountActive::class.java)
+                startActivity(intent)
                 finish()
                 return true
             }

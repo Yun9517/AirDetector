@@ -1,9 +1,11 @@
 package com.microjet.airqi2
 
 import android.content.Context
+import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
@@ -42,6 +44,10 @@ class AccountForgetPassword : AppCompatActivity() {
         when (item.itemId) {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
+                Log.d(this.javaClass.simpleName,"home icon")
+                val intent = Intent()
+                intent.setClass(this@AccountForgetPassword.mContext, AccountManagementActivity::class.java)
+                startActivity(intent)
                 finish()
                 return true
             }
