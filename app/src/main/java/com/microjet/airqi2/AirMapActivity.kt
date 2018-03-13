@@ -38,7 +38,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 .position(howBonBon)
                 .title("好棒棒！"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))*/
-
         if(checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(this, perms, REQUEST_LOCATION)
@@ -98,6 +97,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         client.lastLocation.addOnCompleteListener(this, {
             if(it.isSuccessful) {
                 val location = it.result
+            // add & mark by chungyen   if (location !=null)
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location.latitude, location.longitude), 15f))
             }
