@@ -55,23 +55,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val query = realm.where(AsmDataModel::class.java)
 
         val calendar = Calendar.getInstance()
-        /*calendar.set(Calendar.HOUR, 0)
-        calendar.set(Calendar.MINUTE, 0)
-        calendar.set(Calendar.SECOND, 0)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        val startDate = (calendar.timeInMillis + calendar.timeZone.rawOffset) / 10 // 獲取當前時間
-
-        calendar.set(Calendar.HOUR, 23)
-        calendar.set(Calendar.MINUTE, 59)
-        calendar.set(Calendar.SECOND, 59)
-        calendar.set(Calendar.MILLISECOND, 0)
-
-        val endDate = (calendar.timeInMillis + calendar.timeZone.rawOffset) / 10 // 獲取當前時間
-
-        val result = query.between("Created_time", startDate, endDate).findAll()//query.findAll()//
-
-        Log.i("DATE", "Database between: $startDate, $endDate. Result size: ${result.size}")*/
 
         //現在時間實體毫秒
         val touchTime = calendar.timeInMillis + calendar.timeZone.rawOffset
