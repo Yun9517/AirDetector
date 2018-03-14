@@ -57,7 +57,7 @@ class AccountActive : AppCompatActivity() {
             //finish()
         }
         // 03/14 edit ID
-        editName.setOnClickListener {
+        rename.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
             intent.setClass(this@AccountActive.mContext, NameReplaceActivity::class.java)
