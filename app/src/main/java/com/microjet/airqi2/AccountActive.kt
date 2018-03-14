@@ -34,7 +34,7 @@ class AccountActive : AppCompatActivity() {
         val myEmail= shareMSG.getString("email","")
         //val myPassword= shareMSG.getString("password","")
         Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail)
-        cannot_Receive_mail.setText("登入中:"+myName + "信箱:" + myEmail)
+        //cannot_Receive_mail.setText("登入中:"+myName + "信箱:" + myEmail)
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 
