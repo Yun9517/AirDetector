@@ -92,6 +92,14 @@
             android:theme="@style/AppTheme" />
 
         <activity
+            android:name=".NameReplaceActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="false"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <activity
             android:name=".KnowledgeActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"

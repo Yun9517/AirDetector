@@ -43,10 +43,22 @@ class AccountActive : AppCompatActivity() {
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 
+        // 03/14 edit ID
+        var editName = findViewById<TextView>(R.id.show_Name)
+            editName.text = myName
         change_password.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
             intent.setClass(this@AccountActive.mContext, AccountResetPassword::class.java)
+            //startActivityForResult(intent,1)
+            startActivity(intent)
+            //finish()
+        }
+        // 03/14 edit ID
+        editName.setOnClickListener {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val intent = Intent()
+            intent.setClass(this@AccountActive.mContext, NameReplaceActivity::class.java)
             //startActivityForResult(intent,1)
             startActivity(intent)
             //finish()
