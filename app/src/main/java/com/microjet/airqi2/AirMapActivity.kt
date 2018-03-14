@@ -10,7 +10,11 @@ import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
+import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.LayoutManager
+import android.support.v7.widget.StaggeredGridLayoutManager
 import android.util.Log
 import android.view.MenuItem
 import com.google.android.gms.location.LocationRequest
@@ -21,6 +25,7 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
 import com.microjet.airqi2.CustomAPI.AirMapAdapter
+import com.microjet.airqi2.CustomAPI.SelectedItem
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
@@ -43,6 +48,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
     private var arrData = ArrayList<AsmDataModel>()
+
+    var currentMarker: Marker? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,24 +82,24 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         if(result.size > 0) {
 
+            val rectOptions = PolylineOptions().color(Color.RED).width(20F)
+
             arrData.clear()
 
-            val rectOptions = PolylineOptions()
-                    .color(Color.RED)
-                    .width(20F)
+            mMap.clear()
 
             for (i in 0 until result.size) {
-                val latLng = LatLng((result[i]!!.latitude).toDouble(), (result[i]!!.longitude).toDouble())
-
-                rectOptions.add(latLng)
-
                 arrData.add(result[i]!!)
 
-                val marker = MarkerOptions()
-                marker.position(latLng)
-                marker.title("TVOC: ${result[i]!!.tvocValue}")
+                val latLng = LatLng((result[i]!!.latitude).toDouble(), (result[i]!!.longitude).toDouble())
+                rectOptions.add(latLng)
 
-                mMap.addMarker(marker)
+                /*val marker = MarkerOptions()
+                marker.position(latLng)
+                marker.title(result[i]!!.tvocValue)
+
+                mMap.addMarker(marker)*/
+                //Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
             mMap.addPolyline(rectOptions)
@@ -105,6 +112,22 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         recyclerView.adapter = mAdapter
 
         mAdapter.notifyDataSetChanged()
+
+        mAdapter.setOnItemClickListener { view, position ->
+            val latLng = LatLng((result[position]!!.latitude).toDouble(), (result[position]!!.longitude).toDouble())
+
+            if (currentMarker != null) {
+                currentMarker!!.remove()
+                currentMarker = null
+            }
+
+            if (currentMarker == null) {
+                currentMarker = mMap.addMarker(MarkerOptions().position(latLng).title(result[position]!!.tvocValue))
+            }
+
+            SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
+            mAdapter.notifyDataSetChanged()
+        }
     }
 
     // 初始化ActionBar

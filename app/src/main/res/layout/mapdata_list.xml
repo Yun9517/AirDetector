@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="200dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textDate"
@@ -34,6 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="@string/text_label_tvoc"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -43,6 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="60000 ppb"
             android:textAlignment="center" />
     </LinearLayout>
@@ -57,6 +60,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="@string/text_label_pm25"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -66,6 +70,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="9000 μm"
             android:textAlignment="center" />
     </LinearLayout>
@@ -80,6 +85,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="@string/text_label_co2"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -89,6 +95,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="5000 ppm"
             android:textAlignment="center" />
     </LinearLayout>
@@ -103,6 +110,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="@string/text_label_temperature"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -112,6 +120,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="100 °C"
             android:textAlignment="center" />
     </LinearLayout>
@@ -126,6 +135,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="@string/text_label_humidity"
             android:textAlignment="center"
             android:textStyle="bold" />
@@ -135,6 +145,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
+            android:singleLine="true"
             android:text="100 %"
             android:textAlignment="center" />
     </LinearLayout>
