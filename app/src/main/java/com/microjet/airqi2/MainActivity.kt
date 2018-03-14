@@ -951,8 +951,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
 
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                    //val nameshare = getSharedPreferences("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjBlODQ3OWU2MjRhNzVjMThiOTAyYzYzZTI1NzgwMDY4MzU1NTNkNWEyNzNlOWMwMTVjNzYzZDBkOGM2NjNiNWMyNTI1ZGI0Y2I1ZDU5NTk3In0.eyJhdWQiOiIxIiwianRpIjoiMGU4NDc5ZTYyNGE3NWMxOGI5MDJjNjNlMjU3ODAwNjgzNTU1M2Q1YTI3M2U5YzAxNWM3NjNkMGQ4YzY2M2I1YzI1MjVkYjRjYjVkNTk1OTciLCJpYXQiOjE1MjEwMTMwNTIsIm5iZiI6MTUyMTAxMzA1MiwiZXhwIjoxNTUyNTQ5MDUyLCJzdWIiOiIzMTEiLCJzY29wZXMiOltdfQ.aL5qFGRYFGgRR25DYJvnmo7YotOr9AE7GpzHdkJ6UaCN87A0ejThEPTdoMW-CiRhdQ4Yslm7ICoz45vDR4Hzrn4MrBLcPmMRuEXFwasdHfL-kLev2d8XH2JzuPBJjwit2n482CpQezXraVOroL5D2Rnd5jWLza5_8Nj5yG-RKvRMY6nF9rMt2TBvhhemFVPJs55mFaFKwvWUWxXKr1mLdpYIzecCshzRhHFBFqzM_5ZMrCiLg-yz0jvnmWlfxgVzM1XDVe9T-hx3OV98Rx8jRBbf10auXQ_lqtOFcEKQpzRQuiN7XVO7pYvIR47-hn34csan0XspWO04TXK685-1vfygc2vN7rn87_FUeIxeosj8YLLdmM5xCshzDxzfKfgquTEOeReIcXlHBne7skOudvR6qW54UebFxSb7OImdjWBC3Y8IbcRQraTSXh3GfWWni7XonLDQGcx5V5OYxDHV-RYd64l_9ZlTV01AYVMJ5C_QMVgPA0UAnjm5mLudBLKCW4a_m6plc_ZXBEulPzRer0BIZP4Gl1HBBEeE1h2vr58ixPXIGgRvslnIr98FlcfqpS2vlI5VQQokDmCtBlJq8VaIuAi1VXtpRVnZ9wcR94ws_puuHLadHLWFzGviSGwUgpKeF5qQGqx4TTB81YY9bJjsY7DJIONgVdIPiNtbtGo")
                     val deviceName = share.getString("name", "")
-                    val accountName = share.getString("name","")
+                    //val accountName = share.getString("name","")
+
+                    val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                    val accountName = shareMSG.getString("name", "")
+                    val myEmail= shareMSG.getString("email","")
+
                     drawerDeviceName = deviceName
                     drawerAccountName = accountName
 
