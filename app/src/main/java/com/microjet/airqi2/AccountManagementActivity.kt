@@ -60,7 +60,7 @@ class AccountManagementActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
-            userPassword = bundle.getString("pwd", "")
+            userPassword = bundle.getString("name", "")
             et_user_name?.setText(userEmail)
             et_password?.setText(userPassword)
 
@@ -185,14 +185,20 @@ class AccountManagementActivity : AppCompatActivity() {
                         Log.e("登入正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         val token = responseContent.getJSONObject("success").getString("token").toString()
+                        val userData:JSONObject = responseContent.getJSONObject("success").getJSONObject("userData")
+                        val name= userData.getString("name")
+                        val email=userData.getString("email")
+
                         Log.e("登入正確回來拿token", token)
                         login_Result = "成功登入"
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         share.edit().putString("token", token).apply()
+                        share.edit().putString("name", name).apply()
+                        share.edit().putString("email", email).apply()
 
                         //val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         val _token = share.getString("token", "")
-                        Log.e("偷肯:", _token)
+                        Log.e("偷肯+信箱+名字:", _token+email+name)
 
 //                        text_Account_status.toString(R.string.active)
 //                        login_Result = "登入正確"

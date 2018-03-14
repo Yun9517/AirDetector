@@ -115,7 +115,6 @@ class AccountRegisterActivity : AppCompatActivity() {
 
                         val share = getSharedPreferences("registerMSG", MODE_PRIVATE)
                         share.edit().putString("email", email).apply()
-                        //share.edit().putString("password", password).apply()
                         share.edit().putString("name", name).apply()
                         Log.e("我的名字:", name+"and"+password)
 
@@ -156,9 +155,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     val intent = Intent()
                     val bundle = Bundle()
                     Log.e("ㄍㄋㄋAndy", email)
-                    Log.e("ㄍㄋㄋAndy", password)
                     bundle.putString("email", email)
-                    bundle.putString("pwd", password)
                     bundle.putString("name", name)
 
                     intent.putExtras(bundle)
