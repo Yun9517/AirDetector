@@ -25,6 +25,8 @@ class AccountActive : AppCompatActivity() {
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             shareToKen.edit().putString("token","") .apply()
+            shareToKen.edit().putString("name","") .apply()
+            shareToKen.edit().putString("email","") .apply()
             finish()
         }
         text_Account_status
