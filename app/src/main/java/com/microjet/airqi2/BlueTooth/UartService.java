@@ -1429,7 +1429,7 @@ public class UartService extends Service {
                     arrB6.add(hashMapInB6);
                     //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                     dataNotSaved++;
-                    if (!downloading && dataNotSaved != 0) //&& downloadComplete) {
+                    if (!downloading && dataNotSaved != 0) {//&& downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
                         Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6", arrB6.toString());
@@ -1482,13 +1482,14 @@ public class UartService extends Service {
                         if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)) {
                             SharedPreferences shareToKen = getSharedPreferences("TOKEN", MODE_PRIVATE);
                             MyToKen = shareToKen.getString("token", "");
-                            if (MyToKen!="") {
+                            if (MyToKen != "") {
                                 Log.e("取得偷肯偷上傳資料:", MyToKen);
                                 new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
-                            }else {
+                            } else {
                                 Log.e("取得偷肯:", MyToKen);
                             }
                         }
+                    }
                     break;
 
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
