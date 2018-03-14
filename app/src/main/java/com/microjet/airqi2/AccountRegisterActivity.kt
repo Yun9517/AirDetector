@@ -55,14 +55,12 @@ class AccountRegisterActivity : AppCompatActivity() {
         user_register_mail = this.findViewById(R.id.email)
         //var btn_next_step = this.findViewById<Button>(R.id.nextStep)
         //var registerMail = null
-
-
         mything = mything(nextStep!!, false, "https://mjairql.com/api/v1/register")
 
 
         nextStep?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
-                if (isEmail(user_register_mail?.text) && user_register_mail?.text.toString() != "") {
+                if (isEmail(user_register_mail?.text.toString().trim()) && user_register_mail?.text.toString().trim() != "") {
                     if (Utils.isFastDoubleClick) {
                         showDialog("按慢一點太快了")
                     } else {
@@ -102,7 +100,7 @@ class AccountRegisterActivity : AppCompatActivity() {
 
                 //上傳資料
                 response = client.newCall(request).execute()
-                response = client.newCall(request).execute()
+
                 val any = if (response.isSuccessful) {
 
                     params[0].myBlean = false
@@ -117,7 +115,6 @@ class AccountRegisterActivity : AppCompatActivity() {
 
                         val share = getSharedPreferences("registerMSG", MODE_PRIVATE)
                         share.edit().putString("email", email).apply()
-                        //share.edit().putString("password", password).apply()
                         share.edit().putString("name", name).apply()
                         Log.e("我的名字:", name+"and"+password)
 
@@ -158,9 +155,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     val intent = Intent()
                     val bundle = Bundle()
                     Log.e("ㄍㄋㄋAndy", email)
-                    Log.e("ㄍㄋㄋAndy", password)
                     bundle.putString("email", email)
-                    bundle.putString("pwd", password)
                     bundle.putString("name", name)
 
                     intent.putExtras(bundle)
@@ -243,8 +238,9 @@ class AccountRegisterActivity : AppCompatActivity() {
 //    }
 
     //20180311
-    fun isEmail(strEmail: Editable?): Boolean {
-        val strPattern = ("\\w+@\\w+\\.\\w+")
+    fun isEmail(strEmail: String?): Boolean {
+        //val strPattern = ("\\w+@\\w+\\.\\w+")
+        val strPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
         val p = Pattern.compile(strPattern)
         val m = p.matcher(strEmail)
         return m.matches()

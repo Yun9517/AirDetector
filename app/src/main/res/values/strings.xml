@@ -212,6 +212,11 @@
     <string name="account_Activation">帳號已啟用</string>
     <string name="account_Deactivation">帳號尚未啟用</string>
     <string name="create_Description">系統將會寄送預設密碼至您的信箱，首次請以預設密碼登入，登入後可自行變更密碼。</string>
+    <string name="nick_Name">暱稱 : </string>
+    <string name="email">信箱 : </string>
+    <string name="edit">編輯</string>
+    <string name="nameReplace">改名子</string>
+    <string name="enterName">請輸入新的名字</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>

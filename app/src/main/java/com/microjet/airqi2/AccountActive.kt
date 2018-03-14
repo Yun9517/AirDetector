@@ -20,6 +20,8 @@ class AccountActive : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
         mContext = this@AccountActive.applicationContext
+
+
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             shareToKen.edit().putString("token","") .apply()
@@ -29,20 +31,34 @@ class AccountActive : AppCompatActivity() {
         initActionBar()
         
         //20180310
-        val shareMSG = getSharedPreferences("registerMSG", Context.MODE_PRIVATE)
+        val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
         val myName = shareMSG.getString("name", "")
         val myEmail= shareMSG.getString("email","")
         val myPassword= shareMSG.getString("password","")
         Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
-        cannot_Receive_mail.setText("登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
+        showMail.setText(myEmail)
+        show_Name.setText(myName)
+
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 
+        // 03/14 edit ID
+        var editName = findViewById<TextView>(R.id.show_Name)
+            editName.text = myName
         change_password.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
             intent.setClass(this@AccountActive.mContext, AccountResetPassword::class.java)
+            //startActivityForResult(intent,1)
+            startActivity(intent)
+            //finish()
+        }
+        // 03/14 edit ID
+        editName.setOnClickListener {
+            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            val intent = Intent()
+            intent.setClass(this@AccountActive.mContext, NameReplaceActivity::class.java)
             //startActivityForResult(intent,1)
             startActivity(intent)
             //finish()
