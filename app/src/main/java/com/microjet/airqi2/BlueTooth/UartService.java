@@ -2305,8 +2305,6 @@ public class UartService extends Service {
 
         realm3.close();
 
-        realm.close();
-
         return dbSucessOrNot;
     }
 

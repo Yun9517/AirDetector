@@ -291,11 +291,12 @@ class AccountManagementActivity : AppCompatActivity() {
 
     //20180311
     fun isEmail(strEmail: String?): Boolean {
-        val strPattern = ("\\w+@\\w+\\.\\w+")
+        //val strPattern = ("\\w+@\\w+\\.\\w+")
+        val strPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
         val p = Pattern.compile(strPattern)
         val m = p.matcher(strEmail)
         return m.matches()
-}
+    }
 
 
     //20180312
