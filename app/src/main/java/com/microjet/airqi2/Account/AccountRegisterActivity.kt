@@ -1,30 +1,24 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.Account
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
-import android.view.MotionEvent
-import android.view.View
 
 //20180307
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_register.*
 import okhttp3.*
 import org.json.JSONException
 import java.io.IOException
 import android.content.DialogInterface
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
-import android.text.Editable
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.R
 import org.json.JSONObject
 import java.util.regex.Pattern
 
@@ -37,7 +31,7 @@ class AccountRegisterActivity : AppCompatActivity() {
     private var register_mail_Result : String ? = null
     //private var register_mail_Faile : String ? = null
 
-    var mything:mything?=null
+    var mything: mything?=null
     //20180313
      var nextStep: Button? = null
 
@@ -62,16 +56,19 @@ class AccountRegisterActivity : AppCompatActivity() {
             if (GetNetWork.isFastGetNet) {
                 if (isEmail(user_register_mail?.text.toString().trim()) && user_register_mail?.text.toString().trim() != "") {
                     if (Utils.isFastDoubleClick) {
-                        showDialog("按慢一點太快了")
+                        //showDialog("按慢一點太快了")
+                        showDialog(getString(R.string.tooFast))
                     } else {
                         nextStep?.isEnabled=false
                         goRegisterAsyncTasks().execute(mything)
                     }
                 } else {
-                    showDialog("請輸入正確的E-mail地址")
+                    //showDialog("請輸入正確的E-mail地址")
+                    showDialog(getString(R.string.errorMail_address))
                 }
             }else{
-                showDialog("請連接網路")
+                //showDialog("請連接網路")
+                showDialog(getString(R.string.checkConnection))
             }
         }
     }
@@ -146,10 +143,12 @@ class AccountRegisterActivity : AppCompatActivity() {
             if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                Dialog.setTitle("提示")
+                //Dialog.setTitle("提示")
+                Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
-                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
                 { dialog, _ ->
                     dialog.dismiss()
                     val intent = Intent()
@@ -250,10 +249,12 @@ class AccountRegisterActivity : AppCompatActivity() {
     fun showDialog(msg:String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-        Dialog.setTitle("提示")
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
         { dialog, _ ->
             dialog.dismiss()
             //finish()

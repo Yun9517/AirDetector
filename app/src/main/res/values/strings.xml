@@ -222,4 +222,15 @@
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
+
+    <!-- 2018/03/14 Dialog Messages -->
+    <string name="tooFast">請不要點太快</string>
+    <string name="checkConnection">請連接網路</string>
+    <string name="errorMail_form">信箱輸入不正確</string>
+    <string name="errorMail_address">請輸入正確的信箱位置</string>
+    <string name="errorPassword">密碼輸入不正確</string>
+    <string name="remind">提示</string>
+    <string name="exceptName">請輸入欲更改的名稱</string>
+
+
 </resources>

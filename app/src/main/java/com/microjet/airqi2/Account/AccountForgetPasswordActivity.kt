@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.Account
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -14,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.R
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -23,18 +23,18 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
 
-class AccountForgetPassword : AppCompatActivity() {
+class AccountForgetPasswordActivity : AppCompatActivity() {
     private var mContext : Context? = null
     private var enterMail : EditText? = null
     private var btn_confirm : Button? = null
-    var mything:mything?=null
+    var mything: mything?=null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_forget_password)
 
-        mContext = this@AccountForgetPassword.applicationContext
-        //intent.setClass(this@AccountForgetPassword.mContext, AccountManagementActivity::class.java)
+        mContext = this@AccountForgetPasswordActivity.applicationContext
+        //intent.setClass(this@AccountForgetPasswordActivity.mContext, AccountManagementActivity.kt::class.java)
         initActionBar()
         // get reference to all views
         enterMail = this.findViewById(R.id.enter_Email)
@@ -49,7 +49,8 @@ class AccountForgetPassword : AppCompatActivity() {
                 {
                     if (Utils.isFastDoubleClick)
                     {
-                        showDialog("按慢一點太快了")
+                        //showDialog("按慢一點太快了")
+                        showDialog(getString(R.string.tooFast))
                     }
                     else
                     {
@@ -59,12 +60,14 @@ class AccountForgetPassword : AppCompatActivity() {
                 }
                 else
                 {
-                    showDialog("請連接網路")
+                    //showDialog("請連接網路")
+                    showDialog(getString(R.string.checkConnection))
                 }
             }
             else
             {
-                showDialog("信箱輸入不正確")
+                //showDialog("信箱輸入不正確")
+                showDialog(getString(R.string.errorMail_form))
             }
         }
 
@@ -85,7 +88,7 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
         -> {
             Log.d(this.javaClass.simpleName,"home icon")
             val intent = Intent()
-            intent.setClass(this@AccountForgetPassword.mContext, AccountManagementActivity::class.java)
+            intent.setClass(this@AccountForgetPasswordActivity.mContext, AccountManagementActivity::class.java)
             startActivity(intent)
             finish()
             return true
@@ -147,12 +150,14 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
-                val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPassword).create()
+                val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPasswordActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                Dialog.setTitle("提示")
+                //Dialog.setTitle("提示")
+                Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
-                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
                 { _, _ ->
                     val i: Intent? = Intent(applicationContext, AccountManagementActivity::class.java)
                     startActivity(i)
@@ -188,12 +193,14 @@ fun isEmail(strEmail: String): Boolean {
 
     //20180311
     fun showDialog(msg:String){
-        val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPassword).create()
+        val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPasswordActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-        Dialog.setTitle("提示")
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
         { dialog, _ ->
             dialog.dismiss()
             //finish()

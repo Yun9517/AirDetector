@@ -60,7 +60,7 @@
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
         <activity
-            android:name=".AccountManagementActivity"
+            android:name=".Account.AccountManagementActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -68,7 +68,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".AccountRegisterActivity"
+            android:name=".Account.AccountRegisterActivity"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:screenOrientation="portrait"
@@ -76,7 +76,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".AccountForgetPassword"
+            android:name=".Account.AccountForgetPasswordActivity"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:screenOrientation="portrait"
@@ -84,7 +84,15 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".AccountResetPassword"
+            android:name=".Account.AccountActiveActivity"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".Account.AccountResetPasswordActivity"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:screenOrientation="portrait"
@@ -92,7 +100,7 @@
             android:theme="@style/AppTheme" />
 
         <activity
-            android:name=".NameReplaceActivity"
+            android:name=".Account.AccountNameReplaceActivity"
             android:excludeFromRecents="true"
             android:noHistory="false"
             android:screenOrientation="portrait"
@@ -142,14 +150,6 @@
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
-
-        <activity
-            android:name=".AccountActive"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme" />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
