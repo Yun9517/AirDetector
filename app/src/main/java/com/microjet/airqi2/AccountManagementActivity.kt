@@ -61,10 +61,9 @@ class AccountManagementActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
-            userPassword = bundle.getString("name", "")
             mUserEmailEditText?.setText(userEmail)
-            mPasswordEditText?.setText(userPassword)
-            Log.e(this.javaClass.simpleName, userEmail + userPassword)
+            mPasswordEditText?.setText("")
+            Log.e(this.javaClass.simpleName, userEmail )
         }
 
 
@@ -169,10 +168,15 @@ class AccountManagementActivity : AppCompatActivity() {
                         Log.e("登入正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         val token = responseContent.getJSONObject("success").getString("token").toString()
+                        val name =responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
+                        val email =responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         share.edit().putString("token", token).apply()
+                        share.edit().putString("name", name).apply()
+                        share.edit().putString("email", email).apply()
+
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
