@@ -31,7 +31,7 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
-        var isPM25: String = "000000000000"
+        //var isPM25: String = "000000000000"
 
         fun applicationContext(): Context {
             return instance!!.applicationContext

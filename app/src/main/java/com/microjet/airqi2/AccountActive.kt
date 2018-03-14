@@ -2,13 +2,21 @@ package com.microjet.airqi2
 
 import android.content.Context
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
+import com.google.gson.JsonArray
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import okhttp3.HttpUrl
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
+import org.json.JSONObject
 
 /**
  * Created by B00170 on 2018/3/8.
@@ -47,6 +55,7 @@ class AccountActive : AppCompatActivity() {
             startActivity(intent)
             //finish()
         }
+        //DownloadTask().execute()
     }
     private fun initActionBar() {
         // 取得 actionBar
@@ -89,5 +98,109 @@ class AccountActive : AppCompatActivity() {
         val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
         val _token = share_token.getString("token","")
         Log.e("登出後onDestroy偷肯:",_token)
+    }
+
+    inner class DownloadTask : AsyncTask<Void, Void, String>() {
+
+        //取MAC
+        private val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        private val mDeviceAddress = share.getString("mac", "noValue")
+        private val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        private val token = share_token.getString("token","")
+        private val phpToken = "Bearer " + token
+
+        private val client = OkHttpClient()
+        private val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData")!!.newBuilder()
+                .addQueryParameter("mac_address", mDeviceAddress)
+                //.addQueryParameter("start_time", "0")
+                //.addQueryParameter("end_time", "1520941868267")
+        private val url = urlBuilder.build().toString()
+        private val request = Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("authorization",phpToken)
+                .build()
+
+        //jsonBack KEY
+        private val TEMPValue = "temperature"
+        private val HUMIValue = "humidity"
+        private val TVOCValue = "tvoc"
+        private val ECO2Value = "eco2"
+        private val PM25Value = "pm25"
+        private val Created_time = "timestamp"
+        private val Longitude = "longitude"
+        private val Latitude = "latitude"
+        //private val UpLoaded = "UpLoaded"
+        //private val MACAddress = "MACAddress"
+
+        override fun doInBackground(vararg params: Void?): String? {
+            try {
+                val response = client.newCall(request).execute()
+                if (!response.isSuccessful) {
+                    return null
+                } else {
+                    val res = response.body()?.string()
+                    val jsonObj = JSONObject(res)
+                    val returnResult = jsonObj.get("userData")
+                    if (returnResult != "connect info error") {
+                        val jsonArr: JSONArray = jsonObj.getJSONArray("userData")
+                        val jsonArrSize = jsonArr.length()
+                        Log.d("DownloadSize", jsonArrSize.toString())
+                        val timeStampArr = arrayListOf<Long>()
+                        for (i in 0 until jsonArr.length()) {
+                            val timeStamp = jsonArr.getJSONObject(i).getString("timestamp").toLong()
+                            timeStampArr.add(timeStamp)
+                        }
+                        Log.d("Download", timeStampArr.toString())
+
+                        val realm = Realm.getDefaultInstance()
+                        for (i in 0 until timeStampArr.size) {
+                            val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", timeStampArr[i]).findAll()
+                            if (query.isEmpty()) {
+                                val num = realm.where(AsmDataModel::class.java).max("id")
+                                val nextID: Int
+                                if (num == null) {
+                                    nextID = 1
+                                } else {
+                                    nextID = num.toInt() + 1
+                                }
+                                realm.executeTransaction {
+                                    val asmData = realm.createObject(AsmDataModel::class.java, nextID)
+                                    asmData.tvocValue = jsonArr.getJSONObject(i).getString(TVOCValue)
+                                    asmData.ecO2Value = jsonArr.getJSONObject(i).getString(ECO2Value)
+                                    asmData.tempValue = jsonArr.getJSONObject(i).getString(TEMPValue)
+                                    asmData.humiValue = jsonArr.getJSONObject(i).getString(HUMIValue)
+                                    asmData.pM25Value = jsonArr.getJSONObject(i).getString(PM25Value)
+                                    asmData.created_time = jsonArr.getJSONObject(i).getString(Created_time).toLong()
+                                    asmData.latitude = jsonArr.getJSONObject(i).getString(Latitude).toFloat()
+                                    asmData.longitude = jsonArr.getJSONObject(i).getString(Longitude).toFloat()
+                                    asmData.upLoaded = "1"
+                                    asmData.macAddress = mDeviceAddress
+                                    Log.d("Download", asmData.toString())
+                                }
+                            }
+                        }
+                        realm.close()
+                        //Log.d("Download",timeStamp)
+                    }
+                    Log.d("Download",res.toString())
+                    return res
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                return null
+            }
+        }
+
+        override fun onPreExecute() {
+            super.onPreExecute()
+            // ...
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+            if (result != null) {
+            }
+        }
     }
 }

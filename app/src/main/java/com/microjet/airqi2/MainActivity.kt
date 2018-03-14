@@ -221,7 +221,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
-        DownloadTask().execute()
     }
 
     @SuppressLint("WifiManagerLeak")

@@ -1187,10 +1187,10 @@ public class UartService extends Service {
                     isPM25 = RString.get(0);
                     deviceVersion = RString.get(3);
 
-                    MyApplication.Companion.setPM25(isPM25);
+                    //MyApplication.Companion.setPM25(isPM25);
                     MyApplication.Companion.putDeviceVersion(deviceVersion);
 
-                    Log.d("PARSERB1", "isPM25: " + isPM25);
+                    //Log.d("PARSERB1", "isPM25: " + isPM25);
                     Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
@@ -1346,11 +1346,11 @@ public class UartService extends Service {
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
-                            if (MyApplication.Companion.isPM25().equals("000000000000")) {
-                                asmData.setPM25Value("0");
-                            } else {
+                            //if (MyApplication.Companion.isPM25().equals("000000000000")) {
+                            //    asmData.setPM25Value("0");
+                            //} else {
                                 asmData.setPM25Value(RString.get(5));
-                            }
+                            //}
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
                             asmData.setLatitude(lati);
@@ -1407,11 +1407,11 @@ public class UartService extends Service {
                     hashMapInB6.put("HUMIValue", RString.get(1));
                     hashMapInB6.put("TVOCValue", RString.get(2));
                     hashMapInB6.put("ECO2Value", RString.get(3));
-                    if (MyApplication.Companion.isPM25().equals("000000000000")) {
-                        hashMapInB6.put(("PM25Value"), "0");
-                    } else {
+                    //if (MyApplication.Companion.isPM25().equals("000000000000")) {
+                        //hashMapInB6.put(("PM25Value"), "0");
+                    //} else {
                         hashMapInB6.put(("PM25Value"), RString.get(4));
-                    }
+                    //}
                     hashMapInB6.put("BatteryLife", RString.get(5));
                     hashMapInB6.put("CreatedTime", timeSetForB6());
                     hashMapInB6.put("MACADDRESS", macAddressForDB);
@@ -1431,7 +1431,7 @@ public class UartService extends Service {
                     dataNotSaved++;
                     if (!downloading && dataNotSaved != 0) {//&& downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
+                        //Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6", arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
                         for (int i = 0; i < arrB6.size(); i++) {
