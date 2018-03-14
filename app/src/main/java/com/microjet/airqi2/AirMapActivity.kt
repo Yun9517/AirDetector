@@ -10,6 +10,7 @@ import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
+import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.view.MenuItem
 import com.google.android.gms.location.LocationRequest
@@ -19,11 +20,14 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.microjet.airqi2.CustomAPI.AirMapAdapter
 import io.realm.Realm
 import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_airmap.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
@@ -38,6 +42,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private val REQUEST_LOCATION = 2
     private val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
+    private var arrData = ArrayList<AsmDataModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_airmap)
@@ -46,6 +52,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         initGoogleMapFragment()
 
         createLocationRequest()
+
+        initRecyclerView()
     }
 
     // 資料庫查詢
@@ -67,6 +75,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         if(result.size > 0) {
 
+            arrData.clear()
+
             val rectOptions = PolylineOptions()
                     .color(Color.RED)
                     .width(20F)
@@ -76,52 +86,25 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                 rectOptions.add(latLng)
 
+                arrData.add(result[i]!!)
+
                 val marker = MarkerOptions()
                 marker.position(latLng)
                 marker.title("TVOC: ${result[i]!!.tvocValue}")
 
-                /*when(result[i]!!.tvocValue.toInt()) {
-                    in 0..219 -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(),R.color.Main_textResult_Good))
-                            .add(latLng)
-
-                    in 220..659 -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(), R.color.Main_textResult_Moderate))
-                            .add(latLng)
-
-                    in 660..2199 -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(), R.color.Main_textResult_Orange))
-                            .add(latLng)
-
-                    in 2200..5499 -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(), R.color.Main_textResult_Bad))
-                            .add(latLng)
-
-                    in 5500..19999 -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(), R.color.Main_textResult_Purple))
-                            .add(latLng)
-
-                    else -> rectOptions.color(ContextCompat.getColor(
-                            MyApplication.applicationContext(), R.color.Main_textResult_Unhealthy))
-                            .add(latLng)
-                }*/
-
-                /*when(result[i]!!.tvocValue.toInt()) {
-                    in 0..219 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active))
-                    in 220..659 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_02yellow_active))
-                    in 660..2199 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_03orange_active))
-                    in 2200..5499 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_04red_active))
-                    in 5500..19999 -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_05purple_active))
-                    else -> marker.icon(BitmapDescriptorFactory.fromResource(R.drawable.face_icon_06brown_active))
-                }*/
                 mMap.addMarker(marker)
             }
 
             mMap.addPolyline(rectOptions)
         }
 
-        
-        realm.close()
+        realm.close()       // 撈完資料千萬要記得關掉！！！
+
+        val mAdapter = AirMapAdapter(arrData)
+
+        recyclerView.adapter = mAdapter
+
+        mAdapter.notifyDataSetChanged()
     }
 
     // 初始化ActionBar
@@ -145,6 +128,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // 初始化 RecyclerView
+    private fun initRecyclerView() {
+        val linearLayoutManager = LinearLayoutManager(this)
+        linearLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
+
+        recyclerView.layoutManager = linearLayoutManager
     }
 
     // 初始化GoogleMap UI元件
