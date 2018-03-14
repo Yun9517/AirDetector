@@ -138,7 +138,8 @@ class AccountResetPassword : AppCompatActivity() {
                         Log.e("修改密碼正確回來的錯誤", e.toString())
                     }
                     restpassword_Result = "密碼已經修改，請至登入頁面輸入帳密。"
-
+                    val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                    shareToKen.edit().putString("token","").apply()
                     //showDialog(restpassword_Result!!)
                 } else {
                     params[0].myBlean = false

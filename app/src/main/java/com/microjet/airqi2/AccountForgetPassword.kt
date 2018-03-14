@@ -25,7 +25,7 @@ import java.util.regex.Pattern
 
 class AccountForgetPassword : AppCompatActivity() {
     private var mContext : Context? = null
-    private var et_Mail : EditText? = null
+    private var enterMail : EditText? = null
     private var btn_confirm : Button? = null
     var mything:mything?=null
 
@@ -36,20 +36,14 @@ class AccountForgetPassword : AppCompatActivity() {
         mContext = this@AccountForgetPassword.applicationContext
         //intent.setClass(this@AccountForgetPassword.mContext, AccountManagementActivity::class.java)
         initActionBar()
-
         // get reference to all views
-        et_Mail = this.findViewById(R.id.enter_Email)
-         btn_confirm =this.findViewById<Button>(R.id.enter_email_confirm)
-
-//        btn_confirm?.setOnClickListener {
-//            if (isEmail(et_Mail?.text!!.trim().toString().trim()))
-//        }
-
+        enterMail = this.findViewById(R.id.enter_Email)
+        btn_confirm =this.findViewById(R.id.enter_email_confirm)
         mything = mything(btn_confirm!!, false, "https://mjairql.com/api/v1/forgotPassword")
 
         // 03/12
         btn_confirm?.setOnClickListener{
-            if (isEmail(et_Mail?.text.toString().trim()))
+            if (isEmail(enterMail?.text.toString().trim()))
             {
                 if (GetNetWork.isFastGetNet)
                 {
@@ -109,7 +103,7 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
         override fun doInBackground(vararg params: mything): String? {
             try {
                 var response: okhttp3.Response? = null
-                val forgetPassWordMail =et_Mail?.text.toString()
+                val forgetPassWordMail =enterMail?.text.toString()
                  Log.e("輸入的內容信箱", forgetPassWordMail)
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
@@ -124,24 +118,12 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
                 //上傳資料
                 response = client.newCall(request).execute()
-                response = client.newCall(request).execute()
-                val any = if (response.isSuccessful) {
-
+                if (response.isSuccessful) {
                     params[0].myBlean = false
-                    try {
-                        val tempBody: String = response.body()!!.string().toString()
-                        Log.e("忘記密碼正確回來", tempBody)
-                        val responseContent = JSONObject(tempBody)
-                        mForgetPassword = responseContent.getJSONObject("success").toString()
-
-                        Log.e("忘記密碼正確回來", "忘記回來:"+mForgetPassword)
-
-
-                        Log.e("我改的信箱:", mForgetPassword+"and"+mForgetPassword)
-
-                    } catch (e: JSONException) {
-                        e.printStackTrace()
-                    }
+                    val tempBody: String = response.body()!!.string().toString()
+                    Log.e("忘記密碼正確回來", tempBody)
+                    val responseContent = JSONObject(tempBody)
+                    //mForgetPassword = responseContent.getJSONObject("success").getString("")
                     mForgetPassword = "密碼已經寄送，請至登入頁面輸入密碼。"
                 } else {
                     params[0].myBlean = false
@@ -151,32 +133,29 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
                         params[0].button!!.isEnabled = true
                         btn_confirm?.isEnabled=true
                     })
-
                 }
-                //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
-            } catch (e: IOException) {
-                e.printStackTrace()
-            } catch (e: JSONException) {
-                e.printStackTrace()
             }
-
+            catch (e:Exception){
+                when (e){
+                    is IOException->{e.printStackTrace()}
+                    is JSONException->{e.printStackTrace()}
+                }
+            }
             return mForgetPassword
         }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "密碼已經修改，請至登入頁面輸入帳密。") {
+            if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPassword).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 Dialog.setTitle("提示")
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                { dialog, _ ->
-
-                    val intent = Intent()
-                    intent.setClass(this@AccountForgetPassword.mContext , AccountManagementActivity::class.java)
-                    startActivity(intent)
+                { _, _ ->
+                    val i: Intent? = Intent(applicationContext, AccountManagementActivity::class.java)
+                    startActivity(i)
                     finish()
                 }
                 Dialog.show()

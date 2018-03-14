@@ -31,7 +31,7 @@ class AccountActive : AppCompatActivity() {
         initActionBar()
         
         //20180310
-        val shareMSG = getSharedPreferences("registerMSG", Context.MODE_PRIVATE)
+        val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
         val myName = shareMSG.getString("name", "")
         val myEmail= shareMSG.getString("email","")
