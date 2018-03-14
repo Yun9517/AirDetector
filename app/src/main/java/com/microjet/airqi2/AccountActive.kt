@@ -20,21 +20,26 @@ class AccountActive : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
         mContext = this@AccountActive.applicationContext
+
+
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            shareToKen.edit().clear().apply()
+            shareToKen.edit().putString("token","") .apply()
             finish()
         }
         text_Account_status
         initActionBar()
         
         //20180310
-        val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val shareMSG = getSharedPreferences("registerMSG", Context.MODE_PRIVATE)
+
         val myName = shareMSG.getString("name", "")
         val myEmail= shareMSG.getString("email","")
-        //val myPassword= shareMSG.getString("password","")
-        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail)
-        //cannot_Receive_mail.setText("登入中:"+myName + "信箱:" + myEmail)
+        val myPassword= shareMSG.getString("password","")
+        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
+        showMail.setText(myEmail)
+        show_Name.setText(myName)
+
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 

@@ -61,7 +61,7 @@ class AccountResetPassword : AppCompatActivity() {
                         showDialog("按慢一點太快了")
                     } else {
                         btn_confirm_Modify?.isEnabled = false
-                        forgetPassWordAsyncTasks().execute(mything)
+                        resetPassWordAsyncTasks().execute(mything)
                     }
                     //showDshowDialog("請連接網路")
                 } else {
@@ -107,12 +107,11 @@ class AccountResetPassword : AppCompatActivity() {
     var password : String? =""
 
         @SuppressLint("StaticFieldLeak")
-    private inner class forgetPassWordAsyncTasks : AsyncTask<mything, Void, String>() {
+    private inner class resetPassWordAsyncTasks : AsyncTask<mything, Void, String>() {
         override fun doInBackground(vararg params: mything): String? {
             try {
                 var response: okhttp3.Response? = null
                 val restpassword = enterPassword?.text
-                password= restpassword.toString()
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
                 val body = RequestBody.create(mediaType, "password=" + restpassword)
@@ -134,16 +133,11 @@ class AccountResetPassword : AppCompatActivity() {
                         Log.e("修改密碼正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         resetpassword_Result = responseContent.getString("success")
-                        //Log.e("修改密碼正確回來", "名字:"+resetpassword_Result)
-
-
-                        //Log.e("我改的密碼:", resetpassword+"and"+resetpassword)
-
                     } catch (e: JSONException) {
                         e.printStackTrace()
                         Log.e("修改密碼正確回來的錯誤", e.toString())
                     }
-                    restpassword_Result = "修改密碼成功。"
+                    restpassword_Result = "密碼已經修改，請至登入頁面輸入帳密。"
 
                     //showDialog(restpassword_Result!!)
                 } else {
@@ -154,7 +148,7 @@ class AccountResetPassword : AppCompatActivity() {
                         params[0].button!!.isEnabled = true
                         btn_confirm_Modify?.isEnabled=true
                     })
-                   // showDialog(restpassword_Result!!)
+
                 }
                 //Toast.makeText(mContext, response.toString(), Toast.LENGTH_LONG).show()
             } catch (e: IOException) {
@@ -168,35 +162,27 @@ class AccountResetPassword : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-                if (result == "修改密碼成功") {
-                    val Dialog = android.app.AlertDialog.Builder(this@AccountResetPassword).create()
-                    //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                    Dialog.setTitle("提示")
-                    Dialog.setMessage(result.toString())
-                    Dialog.setCancelable(false)//讓返回鍵與空白無效
-                    Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-                    { dialog, _ ->
-                        dialog.dismiss()
+            if (result == "密碼已經修改，請至登入頁面輸入帳密。") {
+                val Dialog = android.app.AlertDialog.Builder(this@AccountResetPassword).create()
+                //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+                Dialog.setTitle("提示")
+                Dialog.setMessage(result.toString())
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                { dialog, _ ->
 
-                        val intent = Intent()
-                        val bundle = Bundle()
-                        Log.e("ㄍㄋㄋAndy", password)
-                        bundle.putString("email", password)
-
-                        intent.setClass(this@AccountResetPassword.mContext, AccountManagementActivity::class.java)
-                        startActivity(intent)
-                        finish()
-
-                    }
-                    Dialog.show()
-                } else {
-                    //20180313
-                    showDialog(result!!)
-
+                    val intent = Intent()
+                    intent.setClass(this@AccountResetPassword.mContext, AccountManagementActivity::class.java)
+                    startActivity(intent)
+                    finish()
                 }
+                Dialog.show()
+            } else {
 
-
+                showDialog(result!!)
+            }
         }
+
 
     }
 
