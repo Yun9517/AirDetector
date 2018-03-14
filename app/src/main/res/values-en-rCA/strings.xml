@@ -212,6 +212,7 @@
     <string name="nick_Name">ID : </string>
     <string name="email">Email : </string>
     <string name="edit">Edit</string>
-
+    <string name="nameReplace">New ID</string>
+    <string name="enterName">Enter your new ID here</string>
 
 </resources>
