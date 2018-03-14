@@ -38,8 +38,8 @@ class AccountActive : AppCompatActivity() {
 
         val myName = shareMSG.getString("name", "")
         val myEmail= shareMSG.getString("email","")
-        val myPassword= shareMSG.getString("password","")
-        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
+        //val myPassword= shareMSG.getString("password","")
+        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
         showMail.setText(myEmail)
         show_Name.setText(myName)
         //text_Account_status.text = myName

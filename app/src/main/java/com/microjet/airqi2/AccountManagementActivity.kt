@@ -37,16 +37,14 @@ class AccountManagementActivity : AppCompatActivity() {
     var mCreateAccountTextView:TextView?=null
 
     var userEmail = ""
-    var userPassword = ""
+    var userName = ""
     private var loginResult: String? = null
-    private var mMyThing:mything?=null
+    private var mMyThing:logInMything?=null
     var btnSubmit:Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         mContext = this@AccountManagementActivity.applicationContext
-
         initActionBar()
 
         // get reference to all views
@@ -61,9 +59,10 @@ class AccountManagementActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
+            userName = bundle.getString("name", "")
             mUserEmailEditText?.setText(userEmail)
-            mPasswordEditText?.setText("")
-            Log.e(this.javaClass.simpleName, userEmail )
+            //mPasswordEditText?.setText(userPassword)
+            Log.e(this.javaClass.simpleName, userEmail + userName)
         }
 
 
@@ -79,7 +78,7 @@ class AccountManagementActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        mMyThing = mything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
+        mMyThing = logInMything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
 
         btnSubmit?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
@@ -91,7 +90,7 @@ class AccountManagementActivity : AppCompatActivity() {
                         goLoginAsyncTasks().execute(mMyThing)
                     }
                 } else {
-                    showDialog("請輸入正確的E-mail地址與密碼")
+                    showDialog("請輸入正確的E-mail地址")
                 }
             }else{
                 showDialog("請連接網路")
@@ -136,8 +135,8 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-     private inner class goLoginAsyncTasks : AsyncTask<mything, Void, String>() {
-        override fun doInBackground(vararg params: mything): String? {
+     private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
+        override fun doInBackground(vararg params: logInMything): String? {
             try {
                 val response: okhttp3.Response?
                 //val registerMail = user_register_mail?.text
@@ -145,8 +144,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
                 userEmail = mUserEmailEditText!!.text.toString()
-                userPassword = mPasswordEditText!!.text.toString()
-                val ccc = "email=" + userEmail + "&password=" + userPassword
+                userName = mPasswordEditText!!.text.toString()
+                val ccc = "email=" + userEmail + "&password=" + userName
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
                 val body = RequestBody.create(mediaType, ccc)// )
@@ -257,7 +256,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class mything ( btn:Button?,blean:Boolean?,myString :String?){
+ class logInMything ( btn:Button?,blean:Boolean?,myString :String?){
     var button=btn
     var myBlean=blean
     var myAddress=myString
