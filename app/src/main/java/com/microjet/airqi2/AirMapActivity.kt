@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.LayoutManager
 import android.support.v7.widget.StaggeredGridLayoutManager
+import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
 import com.google.android.gms.location.LocationRequest
@@ -51,6 +52,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     var currentMarker: Marker? = null
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_airmap)
@@ -61,6 +63,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         createLocationRequest()
 
         initRecyclerView()
+
+        val mCal = Calendar.getInstance();
+        val s = DateFormat.format("yyyy-MM-dd", mCal.time)
+        datePicker.text = "DATE $s"
     }
 
     // 資料庫查詢
@@ -127,6 +133,27 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
+
+            when(result[position]!!.tvocValue.toInt()) {
+                in 0..219 -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
+                }
+                in 220..659 -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_02yellow_active)
+                }
+                in 660..2199 -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_03orange_active)
+                }
+                in 2200..5499 -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_04red_active)
+                }
+                in 5500..19999 -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_05purple_active)
+                }
+                else -> {
+                    imgAirQuality.setImageResource(R.drawable.face_icon_06brown_active)
+                }
+            }
         }
     }
 

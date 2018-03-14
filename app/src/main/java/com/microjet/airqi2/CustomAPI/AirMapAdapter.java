@@ -73,17 +73,9 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         @SuppressLint("SimpleDateFormat")
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm aa");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
 
         holder.textDate.setText(dateFormat.format(mDataset.get(position).getCreated_time()));
-
-        holder.textLat.setText(
-                mContext.getResources().getString(R.string.text_label_latitude) +
-                        mDataset.get(position).getLatitude().toString());
-
-        holder.textLng.setText(
-                mContext.getResources().getString(R.string.text_label_longitude) +
-                        mDataset.get(position).getLongitude().toString());
 
         holder.textTVOC.setText(mDataset.get(position).getTVOCValue() + " ppb");
         holder.textPM25.setText(mDataset.get(position).getPM25Value() + " μm");
@@ -99,8 +91,7 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
             holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_selected));
 
             holder.textDate.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
-            holder.textLat.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
-            holder.textLng.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
+
             holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textPM25.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textECO2.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
@@ -116,8 +107,7 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
             holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_not_select));
 
             holder.textDate.setTextColor(mContext.getResources().getColor(R.color.blackColor));
-            holder.textLat.setTextColor(mContext.getResources().getColor(R.color.blackColor));
-            holder.textLng.setTextColor(mContext.getResources().getColor(R.color.blackColor));
+
             holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textPM25.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textECO2.setTextColor(mContext.getResources().getColor(R.color.blackColor));
@@ -140,8 +130,6 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
     static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
         TextView textDate;
-        TextView textLat;
-        TextView textLng;
         TextView textTVOC;
         TextView textPM25;
         TextView textECO2;
@@ -156,8 +144,6 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         ViewHolder(View v) {
             super(v);
             textDate = v.findViewById(R.id.textDate);
-            textLat = v.findViewById(R.id.textLat);
-            textLng = v.findViewById(R.id.textLng);
             textTVOC = v.findViewById(R.id.textTVOCvalue);
             textPM25 = v.findViewById(R.id.textPM25value);
             textECO2 = v.findViewById(R.id.textECO2value);
