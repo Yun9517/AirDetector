@@ -25,11 +25,12 @@ class AccountActive : AppCompatActivity() {
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             shareToKen.edit().putString("token","") .apply()
-            shareToKen.edit().putString("name","") .apply()
-            shareToKen.edit().putString("email","") .apply()
+//            shareToKen.edit().putString("name","") .apply()
+//            shareToKen.edit().putString("email","") .apply()
+            //shareToKen.edit().clear().apply()
             finish()
         }
-        text_Account_status
+
         initActionBar()
         
         //20180310
@@ -41,7 +42,7 @@ class AccountActive : AppCompatActivity() {
         Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
         showMail.setText(myEmail)
         show_Name.setText(myName)
-
+        //text_Account_status.text = myName
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 
@@ -104,8 +105,8 @@ class AccountActive : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        val _token = share_token.getString("token","")
-        Log.e("登出後onDestroy偷肯:",_token)
+//        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+//        val _token = share_token.getString("token","")
+//        Log.e("登出後onDestroy偷肯:",_token)
     }
 }

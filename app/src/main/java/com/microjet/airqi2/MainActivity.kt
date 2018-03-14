@@ -1005,7 +1005,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.text_Account_status)?.text = drawerAccountName
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -1312,9 +1311,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val MyToKen = shareToKen.getString("token", "")
         if(MyToKen=="") {
-            text_Account_status.setText(R.string.account_Deactivation)
+            text_Account_status.setText(getString(R.string.account_Deactivation))
         }else{
-            text_Account_status.setText(R.string.account_Activation)
+            val MyName = shareToKen.getString("name", "")
+            text_Account_status.text = MyName
+            Log.e("MainActivity取名字",MyName)
         }
     }
 
