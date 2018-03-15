@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.microjet.airqi2.AsmDataModel;
@@ -91,11 +92,13 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
 
         // 設置選中狀態
         if (position == SelectedItem.getSelectedItem()) {
-            holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_selected));
+            //holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_selected));
 
+            holder.textDate.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_selected));
             holder.textDate.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
+            holder.imgPointer.setImageResource(R.drawable.img_pointer_selected);
 
-            holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
+            /*holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textPM25.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textECO2.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textTEMP.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
@@ -105,13 +108,15 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
             holder.textPM25title.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textECO2title.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
             holder.textTEMPtitle.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
-            holder.textHUMItitle.setTextColor(mContext.getResources().getColor(R.color.whiteColor));
+            holder.textHUMItitle.setTextColor(mContext.getResources().getColor(R.color.whiteColor));*/
         } else {
-            holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_not_select));
+            //holder.itemView.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_not_select));
 
+            holder.textDate.setBackground(mContext.getResources().getDrawable(R.drawable.recyclerview_not_select));
             holder.textDate.setTextColor(mContext.getResources().getColor(R.color.blackColor));
+            holder.imgPointer.setImageResource(R.drawable.img_pointer_unselect);
 
-            holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.blackColor));
+            /*holder.textTVOC.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textPM25.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textECO2.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textTEMP.setTextColor(mContext.getResources().getColor(R.color.blackColor));
@@ -121,7 +126,7 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
             holder.textPM25title.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textECO2title.setTextColor(mContext.getResources().getColor(R.color.blackColor));
             holder.textTEMPtitle.setTextColor(mContext.getResources().getColor(R.color.blackColor));
-            holder.textHUMItitle.setTextColor(mContext.getResources().getColor(R.color.blackColor));
+            holder.textHUMItitle.setTextColor(mContext.getResources().getColor(R.color.blackColor));*/
         }
 
         holder.itemView.setOnClickListener(v -> mOnItemClickListener.onItemClick(holder.itemView, position));
@@ -144,6 +149,8 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         TextView textTEMPtitle;
         TextView textHUMItitle;
 
+        ImageView imgPointer;
+
         ViewHolder(View v) {
             super(v);
             textDate = v.findViewById(R.id.textDate);
@@ -157,6 +164,8 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
             textECO2title = v.findViewById(R.id.textECO2title);
             textTEMPtitle = v.findViewById(R.id.textTEMPtitle);
             textHUMItitle = v.findViewById(R.id.textHUMItitle);
+
+            imgPointer = v.findViewById(R.id.imgPointer);
         }
     }
 

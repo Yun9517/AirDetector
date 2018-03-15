@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/imgAirQuality"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -94,7 +94,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.23"
-        android:background="@drawable/selector_item_selected"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true" />
