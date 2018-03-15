@@ -133,8 +133,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDeviceAddress : String? = null
     private var mUartService : UartService? = null
 
-    private var lati = 121.4215f
-    private var longi = 24.959742f
+    private var longi = 121.4215f
+    private var lati = 24.959742f
+
     private var locationListener : LocationListener? = null
 
     // FragmentAdapter
@@ -202,7 +203,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
-
     }
 
     @SuppressLint("WifiManagerLeak")

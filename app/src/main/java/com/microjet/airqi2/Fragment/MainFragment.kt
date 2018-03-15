@@ -305,8 +305,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
         tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
-        if (MyApplication.isPM25 == "000000000000") {
-        //if (pm25DataFloat == 65535f) {
+        //if (MyApplication.isPM25 == "000000000000") {
+        if (pm25DataFloat == 65535f) {
             tvBtmPM25Value.text = "Not Support"
             show_PM.isEnabled = false
         } else {

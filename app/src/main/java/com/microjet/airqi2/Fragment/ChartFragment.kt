@@ -711,9 +711,9 @@ class ChartFragment: Fragment() {
 
         calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH))
-        spinnerPositon = 0
-        btnTextChanged(spinnerPositon)
-        drawChart(spinnerPositon)
+        //spinnerPositon = 0
+        //btnTextChanged(spinnerPositon)
+        //drawChart(spinnerPositon)
     }
 
     override fun onResume() {
