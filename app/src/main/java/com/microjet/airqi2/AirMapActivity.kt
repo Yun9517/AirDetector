@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -57,14 +58,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private var datepickerHandler = Handler()
 
-    private lateinit var mContext: Context
+    private lateinit var mCal: Calendar
+    private lateinit var mDate: String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_airmap)
-
-        mContext = MyApplication.applicationContext()
 
         initActionBar()
         initGoogleMapFragment()
@@ -73,15 +73,19 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         initRecyclerView()
 
-        val mCal = Calendar.getInstance();
-        val s = DateFormat.format("yyyy-MM-dd", mCal.time)
-        datePicker.text = "DATE $s"
+        mCal = Calendar.getInstance()
+        mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
+        datePicker.text = "DATE $mDate"
 
         datePicker.setOnClickListener {
             datepickerHandler.post {
                 val dpd = DatePickerDialog(this@AirMapActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    mCal.set(year,month,dayOfMonth)
-                    Log.d("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
+                    mCal.set(year, month, dayOfMonth)
+                    Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
+                    mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
+                    datePicker.text = "DATE $mDate"
+                    getLocalData()
+                    //timePickerShow()
                 }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                 dpd.setMessage("請選擇日期")
                 dpd.show()
@@ -89,16 +93,28 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+
+
+    private fun timePickerShow() {
+        val tpd = TimePickerDialog(this@AirMapActivity, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
+
+        }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
+        tpd.setMessage("請選擇時間")
+        tpd.show()
+    }
+
     // 資料庫查詢
     @SuppressLint("SimpleDateFormat")
     private fun getLocalData() {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
+        
+        mMap.clear()
 
-        val calendar = Calendar.getInstance()
+        //val calendar = Calendar.getInstance()
 
         //現在時間實體毫秒
-        val touchTime = calendar.timeInMillis + calendar.timeZone.rawOffset
+        val touchTime = mCal.timeInMillis + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24)
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -109,7 +125,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         if(result.size > 0) {
             val rectOptions = PolylineOptions().color(Color.RED).width(20F)
             dataArray.clear()
-            //mMap.clear()
 
             for (i in 0 until result.size - 1) {
                 dataArray.add(result[i]!!)
@@ -140,7 +155,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         realm.close()       // 撈完資料千萬要記得關掉！！！
 
         val mAdapter = AirMapAdapter(dataArray)
-
         recyclerView.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
