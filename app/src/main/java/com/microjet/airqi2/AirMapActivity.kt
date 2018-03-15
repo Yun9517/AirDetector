@@ -2,9 +2,12 @@ package com.microjet.airqi2
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
@@ -52,10 +55,16 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     var currentMarker: Marker? = null
 
+    private var datepickerHandler = Handler()
+
+    private lateinit var mContext: Context
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_airmap)
+
+        mContext = MyApplication.applicationContext()
 
         initActionBar()
         initGoogleMapFragment()
@@ -67,6 +76,17 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val mCal = Calendar.getInstance();
         val s = DateFormat.format("yyyy-MM-dd", mCal.time)
         datePicker.text = "DATE $s"
+
+        datePicker.setOnClickListener {
+            datepickerHandler.post {
+                val dpd = DatePickerDialog(this@AirMapActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    mCal.set(year,month,dayOfMonth)
+                    Log.d("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
+                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
+                dpd.setMessage("請選擇日期")
+                dpd.show()
+            }
+        }
     }
 
     // 資料庫查詢
@@ -97,11 +117,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 val latitude: Double = result[i]!!.latitude.toDouble()
                 val longitude: Double = result[i]!!.longitude.toDouble()
 
-                val latLng = LatLng(latitude, longitude)
-
-                if(latitude < 121&&longitude > 90) {
-                    rectOptions.add(latLng)
+                // 針對經緯度相反做處理
+                val latLng = if(latitude < 90) {
+                    LatLng(latitude, longitude)
+                } else {
+                    LatLng(longitude, latitude)
                 }
+
+                rectOptions.add(latLng)
 
                 /*val marker = MarkerOptions()
                 marker.position(latLng)
