@@ -93,16 +93,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
-
-    private fun timePickerShow() {
-        val tpd = TimePickerDialog(this@AirMapActivity, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-
-        }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
-        tpd.setMessage("請選擇時間")
-        tpd.show()
-    }
-
     // 資料庫查詢
     @SuppressLint("SimpleDateFormat")
     private fun getLocalData() {
@@ -150,6 +140,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
 
             mMap.addPolyline(rectOptions)
+        } else {
+            dataArray.clear()
         }
 
         realm.close()       // 撈完資料千萬要記得關掉！！！
