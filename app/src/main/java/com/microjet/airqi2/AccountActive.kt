@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
-import com.google.gson.JsonArray
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -157,15 +156,8 @@ class AccountActive : AppCompatActivity() {
                         for (i in 0 until timeStampArr.size) {
                             val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", timeStampArr[i]).findAll()
                             if (query.isEmpty()) {
-                                val num = realm.where(AsmDataModel::class.java).max("id")
-                                val nextID: Int
-                                if (num == null) {
-                                    nextID = 1
-                                } else {
-                                    nextID = num.toInt() + 1
-                                }
                                 realm.executeTransaction {
-                                    val asmData = realm.createObject(AsmDataModel::class.java, nextID)
+                                    val asmData = realm.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
                                     asmData.tvocValue = jsonArr.getJSONObject(i).getString(TVOCValue)
                                     asmData.ecO2Value = jsonArr.getJSONObject(i).getString(ECO2Value)
                                     asmData.tempValue = jsonArr.getJSONObject(i).getString(TEMPValue)

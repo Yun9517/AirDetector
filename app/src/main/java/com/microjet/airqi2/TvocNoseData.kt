@@ -261,4 +261,16 @@ object TvocNoseData {
     //var ECO2Value: String = "20"
     //var PM25Value: String = "20"
     //var Created_time: Long = 1517195269840
+
+    fun getMaxID(): Int {
+        val realm = Realm.getDefaultInstance()
+        val num = realm.where(AsmDataModel::class.java).max("id")
+        val nextID: Int
+        if (num == null) {
+            nextID = 1
+        } else {
+            nextID = num!!.toInt() + 1
+        }
+        return nextID
+    }
 }

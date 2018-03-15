@@ -1,6 +1,8 @@
 package com.microjet.airqi2
 
+import android.content.Context
 import android.os.AsyncTask
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -8,53 +10,117 @@ import okhttp3.RequestBody
 import io.fabric.sdk.android.services.settings.IconRequest.build
 import okhttp3.Request
 import io.fabric.sdk.android.services.settings.IconRequest.build
+import io.realm.Realm
 import okhttp3.HttpUrl
-
-
-
-
+import org.json.JSONArray
+import org.json.JSONObject
 
 
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask : AsyncTask<Void, Void, String>() {
+class DownloadTask : AsyncTask<String, Void, String>() {
 
-    val client = OkHttpClient()
-    val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData")!!.newBuilder()
-    .addQueryParameter("mac_address", "C8:C6:88:16:91:38")
-    .addQueryParameter("start_time", "0")
-    .addQueryParameter("end_time", "1520941868267")
-    val url = urlBuilder.build().toString()
-    val request = Request.Builder()
-            .url(url)
-            .get()
-            .addHeader("authorization",
-                    "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk4NTE5MTRjNTZmN2UyMjc1MzY5YTRhMWFlMDVlODM3OGI1NDAxZDU1ZjMxMWQ5NjgyOWE0OWFiN2MxN2FlN2I1ZjlhMzYwODc3OWMzZTdjIn0.eyJhdWQiOiIxIiwianRpIjoiOTg1MTkxNGM1NmY3ZTIyNzUzNjlhNGExYWUwNWU4Mzc4YjU0MDFkNTVmMzExZDk2ODI5YTQ5YWI3YzE3YWU3YjVmOWEzNjA4Nzc5YzNlN2MiLCJpYXQiOjE1MjA5MzU3OTQsIm5iZiI6MTUyMDkzNTc5NCwiZXhwIjoxNTUyNDcxNzk0LCJzdWIiOiIyNTkiLCJzY29wZXMiOltdfQ.WV7Jr_zmKT7G6Dwgpibcjxzq5Le0eCwSuUh76pShB73Ue1zHZbCIOIyIGRGzPOomlh__jyikzGwuDsWJorVZRj_U6NzwHn_A-lmwcsfI2sx_4uOeP3QhFjy_6putK5waGbn4fDFqeu0QQOtXS2N8Ji7t9nRFmCiOElvP1Mnrj9lu146OIkl6SUR7eSKurBfWg29v7SMDkfJfkjEq9N14N1uC-KNt9p8Jr67Ly7Ajr065b2pXx4YYUX946uo_z_22EAoYj_ChAWMZO8wHEkCBAXrpWbwqf-qCHwKaHJD3plom22TFoJebFfRaoC2cZl6anActhBoIrnIiy-cjWlUc1F25JvbwIHHbvBx7rsBoI8CKu66M_84ESxg8wlY3OzwBBAM8FNqnOPTPHLrbBw_8f2iAiqgh0dbv4pObpEYU6TZKNqYH7SxcmOuBRccK70LmcMn7zy2lOWAbI6V29G-G5Lw2P_CyoDTwoEVzoLfB_TCpSAkedI5bg4FAU7aY_TGH56o51G_wsi8Ad4vQfOkq8KwZR5Zg9RJv98_qnK-lQ_V7mjdu7AoaLEz6d37fIG5qmYKWt9uhqcebN8MM5XG7S7vxjp1885gOZMbMeMXg_Dob3pTkzK-GM_qPcGA8kIDQmbUCJnJKc7e73ZMbMjBG9MAsWIG58jsDNPuDw6FfGy0")
-            .build()
 
-    override fun doInBackground(vararg params: Void?): String? {
+    //取MAC
+    //private val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+    //private val mDeviceAddress = share.getString("mac", "noValue")
+    //private val share_token = getSharedPreferences("TOKEN", AppCompatActivity.MODE_PRIVATE)
+    //private val token = share_token.getString("token","")
+
+    //jsonBack KEY
+    private val TEMPValue = "temperature"
+    private val HUMIValue = "humidity"
+    private val TVOCValue = "tvoc"
+    private val ECO2Value = "eco2"
+    private val PM25Value = "pm25"
+    private val Created_time = "timestamp"
+    private val Longitude = "longitude"
+    private val Latitude = "latitude"
+    //private val UpLoaded = "UpLoaded"
+    //private val MACAddress = "MACAddress"
+
+    override fun onPreExecute() {
+        super.onPreExecute()
+
+        // ...
+    }
+
+    override fun doInBackground(vararg params: String?): String? {
+        val mDeviceAddress = params[0]
+        val token = params[1]
+        val phpToken = "Bearer " + token
+
+        val client = OkHttpClient()
+        val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData")!!.newBuilder()
+                .addQueryParameter("mac_address", mDeviceAddress)
+        //.addQueryParameter("start_time", "0")
+        //.addQueryParameter("end_time", "1520941868267")
+        val url = urlBuilder.build().toString()
+        val request = Request.Builder()
+                .url(url)
+                .get()
+                .addHeader("authorization",phpToken)
+                .build()
+        Log.d("Download", "doInBackground")
         try {
             val response = client.newCall(request).execute()
-            return if (!response.isSuccessful) {
-                null
-            } else response.body()?.string()
+            if (!response.isSuccessful) {
+                return null
+            } else {
+                val res = response.body()?.string()
+                val jsonObj = JSONObject(res)
+                val returnResult = jsonObj.get("userData")
+                if (returnResult != "connect info error") {
+                    val jsonArr: JSONArray = jsonObj.getJSONArray("userData")
+                    val jsonArrSize = jsonArr.length()
+                    Log.d("DownloadSize", jsonArrSize.toString())
+                    val timeStampArr = arrayListOf<Long>()
+                    for (i in 0 until jsonArr.length()) {
+                        val timeStamp = jsonArr.getJSONObject(i).getString("timestamp").toLong()
+                        timeStampArr.add(timeStamp)
+                    }
+                    Log.d("Download", timeStampArr.toString())
+
+                    val realm = Realm.getDefaultInstance()
+                    for (i in 0 until timeStampArr.size) {
+                        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", timeStampArr[i]).findAll()
+                        if (query.isEmpty()) {
+                            realm.executeTransaction {
+                                val asmData = realm.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                                asmData.tvocValue = jsonArr.getJSONObject(i).getString(TVOCValue)
+                                asmData.ecO2Value = jsonArr.getJSONObject(i).getString(ECO2Value)
+                                asmData.tempValue = jsonArr.getJSONObject(i).getString(TEMPValue)
+                                asmData.humiValue = jsonArr.getJSONObject(i).getString(HUMIValue)
+                                asmData.pM25Value = jsonArr.getJSONObject(i).getString(PM25Value)
+                                asmData.created_time = jsonArr.getJSONObject(i).getString(Created_time).toLong()
+                                asmData.latitude = jsonArr.getJSONObject(i).getString(Latitude).toFloat()
+                                asmData.longitude = jsonArr.getJSONObject(i).getString(Longitude).toFloat()
+                                asmData.upLoaded = "1"
+                                asmData.macAddress = mDeviceAddress
+                                Log.d("Download", asmData.toString())
+                            }
+                        }
+                    }
+                    realm.close()
+                    //Log.d("Download",timeStamp)
+                }
+                Log.d("Download",res.toString())
+                return res
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             return null
         }
     }
 
-    override fun onPreExecute() {
-        super.onPreExecute()
-        // ...
+    override fun onProgressUpdate(vararg values: Void?) {
+        super.onProgressUpdate(*values)
     }
 
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
         if (result != null) {
-            Log.d("Download",result.toString())
         }
-
     }
 }

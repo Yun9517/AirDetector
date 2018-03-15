@@ -70,8 +70,10 @@ import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
+import com.microjet.airqi2.DownloadTask;
 import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.TvocNoseData;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 import com.microjet.airqi2.NotificationHelper;
@@ -179,8 +181,8 @@ public class UartService extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
-    private Float lati = 121.4215f;
-    private Float longi = 24.959742f;
+    private Float longi = 121.4215f;
+    private Float lati = 24.959742f;
 
     //20180227
     private OkHttpClient client = null;
@@ -1333,6 +1335,7 @@ public class UartService extends Service {
 
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
+                        /*
                         Number num = realm.where(AsmDataModel.class).max("id");
                         int nextID;
                         if (num == null) {
@@ -1340,8 +1343,9 @@ public class UartService extends Service {
                         } else {
                             nextID = num.intValue() + 1;
                         }
+                        */
                         realm.executeTransaction(r -> {
-                            AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                            AsmDataModel asmData = r.createObject(AsmDataModel.class, TvocNoseData.INSTANCE.getMaxID());
                             asmData.setTEMPValue(RString.get(1));
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
@@ -1380,6 +1384,9 @@ public class UartService extends Service {
 //                            data.putParcelableArrayList("resultSet", myDeviceData);
 //                            mainIntent.putExtra("result", data);
 //                            sendBroadcast(mainIntent);
+                            SharedPreferences share_token = getSharedPreferences("TOKEN", MODE_PRIVATE);
+                            String token = share_token.getString("token","");
+                            new DownloadTask().execute(macAddressForDB,token);
                         } else {
                             //NowItem++;
                             //counter++;
@@ -1437,13 +1444,7 @@ public class UartService extends Service {
                         for (int i = 0; i < arrB6.size(); i++) {
                             //Realm 資料庫
                             Realm realm = Realm.getDefaultInstance();
-                            Number num = realm.where(AsmDataModel.class).max("id");
-                            int nextID;
-                            if (num == null) {
-                                nextID = 1;
-                            } else {
-                                nextID = num.intValue() + 1;
-                            }
+
                             Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
                             if (maxCreatedTime == null) {
                                 maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2);
@@ -1452,7 +1453,7 @@ public class UartService extends Service {
                             int count = i;
                             if (!arrB6.get(count).get("CreatedTime").equals(maxCreatedTime)) {
                                 realm.executeTransaction(r -> {
-                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, TvocNoseData.INSTANCE.getMaxID());
                                     asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
                                     asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
                                     asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
