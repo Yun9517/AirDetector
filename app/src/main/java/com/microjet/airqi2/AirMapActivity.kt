@@ -108,7 +108,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private fun getLocalData() {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-        
+
         mMap.clear()
 
         //val calendar = Calendar.getInstance()
