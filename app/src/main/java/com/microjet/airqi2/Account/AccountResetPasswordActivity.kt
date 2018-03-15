@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.Account
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.R
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -21,7 +22,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 
-class AccountResetPassword : AppCompatActivity() {
+class AccountResetPasswordActivity : AppCompatActivity() {
     private var mContext : Context? = null
     // 03/13
     private var enterPassword : EditText? = null
@@ -30,7 +31,7 @@ class AccountResetPassword : AppCompatActivity() {
 
     private var restpassword_Result : String ? = null
 
-    var mything:mything?=null
+    var mything: mything?=null
     //20180313
     private var MyToKen: String? = ""
 
@@ -39,7 +40,7 @@ class AccountResetPassword : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_reset_password)
 
-        mContext = this@AccountResetPassword.applicationContext
+        mContext = this@AccountResetPasswordActivity.applicationContext
         initActionBar()
 
         enterPassword = this.findViewById(R.id.change_Password_first)
@@ -58,17 +59,20 @@ class AccountResetPassword : AppCompatActivity() {
             if (cheackRestPassWord(enterPassword?.text.toString().trim(), checkPassword?.text.toString().trim() )&& enterPassword?.text.toString() != "") {
                 if (GetNetWork.isFastGetNet) {
                     if (Utils.isFastDoubleClick) {
-                        showDialog("按慢一點太快了")
+                        //showDialog("按慢一點太快了")
+                        showDialog(getString(R.string.tooFast))
                     } else {
                         btn_confirm_Modify?.isEnabled = false
                         resetPassWordAsyncTasks().execute(mything)
                     }
-                    //showDshowDialog("請連接網路")
+                    //showDialog("請連接網路")
                 } else {
-                    showDialog("請連接網路")
+                    //showDialog("請連接網路")
+                    showDialog(getString(R.string.checkConnection))
                 }
             } else {
-                showDialog("密碼輸入不正確")
+                //showDialog("密碼輸入不正確")
+                showDialog(getString(R.string.errorPassword))
             }
         }
 
@@ -91,7 +95,7 @@ class AccountResetPassword : AppCompatActivity() {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
                 val intent = Intent()
-                intent.setClass(this@AccountResetPassword.mContext, AccountActive::class.java)
+                intent.setClass(this@AccountResetPasswordActivity.mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
                 return true
@@ -164,16 +168,18 @@ class AccountResetPassword : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if (result == "密碼已經修改，請至登入頁面輸入帳密。") {
-                val Dialog = android.app.AlertDialog.Builder(this@AccountResetPassword).create()
+                val Dialog = android.app.AlertDialog.Builder(this@AccountResetPasswordActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                Dialog.setTitle("提示")
+                //Dialog.setTitle("提示")
+                Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
-                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
                 { dialog, _ ->
 
                     val intent = Intent()
-                    intent.setClass(this@AccountResetPassword.mContext, AccountManagementActivity::class.java)
+                    intent.setClass(this@AccountResetPasswordActivity.mContext, AccountManagementActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
@@ -197,12 +203,14 @@ class AccountResetPassword : AppCompatActivity() {
 
         //20180311
         fun showDialog(msg:String){
-            val Dialog = android.app.AlertDialog.Builder(this@AccountResetPassword).create()
+            val Dialog = android.app.AlertDialog.Builder(this@AccountResetPasswordActivity).create()
             //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-            Dialog.setTitle("提示")
+            //Dialog.setTitle("提示")
+            Dialog.setTitle(getString(R.string.remind))
             Dialog.setMessage(msg.toString())
             Dialog.setCancelable(false)//讓返回鍵與空白無效
-            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+            //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
             { dialog, _ ->
                 dialog.dismiss()
                 //finish()

@@ -217,4 +217,13 @@
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
 
+    <!-- 2018/03/14 Dialog Messages -->
+    <string name="tooFast">Slow your click attempt</string>
+    <string name="checkConnection">Check network connection</string>
+    <string name="errorMail_form">Illegal mail form</string>
+    <string name="errorMail_address">Error address</string>
+    <string name="errorPassword">Password error</string>
+    <string name="remind">Notification</string>
+    <string name="exceptName">Decide a new name</string>
+
 </resources>

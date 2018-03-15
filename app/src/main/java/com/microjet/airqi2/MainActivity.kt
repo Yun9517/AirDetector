@@ -5,8 +5,6 @@ import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ApplicationErrorReport.TYPE_NONE
-import android.app.Dialog
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
@@ -19,16 +17,10 @@ import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
 import android.net.ConnectivityManager
-import android.net.ConnectivityManager.TYPE_WIFI
 import android.net.NetworkInfo
-import android.net.wifi.WifiManager
-import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.provider.Contacts.PhonesColumns.TYPE_MOBILE
 import android.provider.Settings
-import android.support.annotation.RequiresApi
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
@@ -40,12 +32,12 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
-import android.telephony.TelephonyManager
-import android.telephony.TelephonyManager.*
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
 import android.widget.*
+import com.microjet.airqi2.Account.AccountActiveActivity
+import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.CustomViewPager
@@ -56,23 +48,12 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
-import com.microjet.airqi2.Fragment.*
-import okhttp3.*
-import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
-import com.microjet.airqi2.R.id.info
-import com.microjet.airqi2.R.id.text_Account_status
 import io.realm.Realm
 import kotlinx.android.synthetic.main.drawer_header.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import java.io.IOException
-import java.lang.Math.E
-import java.lang.reflect.Array.get
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -648,12 +629,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             startActivity(i)
         }else{
                 Log.e("主葉面!=空字串看偷肯",MyToKen)
-            val i: Intent? = Intent(this, AccountActive::class.java)
+            val i: Intent? = Intent(this, AccountActiveActivity::class.java)
             //text_Account_status.setText(R.string.account_Activation)
             startActivity(i)
         }
         }else{
-            showDialog("請連接網路")
+            //showDialog("請連接網路")
+            showDialog(getString(R.string.checkConnection))
         }
 
 
@@ -1005,7 +987,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             nvDrawerNavigation?.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
-            nvDrawerNavigation?.getHeaderView(0)?.findViewById<TextView>(R.id.text_Account_status)?.text = drawerAccountName
             nvDrawerNavigation?.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             nvDrawerNavigation?.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -1312,9 +1293,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val MyToKen = shareToKen.getString("token", "")
         if(MyToKen=="") {
-            text_Account_status.setText(R.string.account_Deactivation)
+            text_Account_status.setText(getString(R.string.account_Deactivation))
         }else{
-            text_Account_status.setText(R.string.account_Activation)
+            val MyName = shareToKen.getString("name", "")
+            text_Account_status.text = MyName
+            Log.e("MainActivity取名字",MyName)
         }
     }
 
@@ -1344,10 +1327,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     fun showDialog(msg:String){
         val Dialog = android.app.AlertDialog.Builder(this@MainActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-        Dialog.setTitle("提示")
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
         { dialog, _ ->
             dialog.dismiss()
             //finish()

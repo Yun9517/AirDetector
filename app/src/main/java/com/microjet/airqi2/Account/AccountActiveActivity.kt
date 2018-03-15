@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.Account
 
 import android.content.Context
 import android.content.Intent
@@ -7,29 +7,30 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
+import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_account_active.*
-import kotlinx.android.synthetic.main.drawer_header.*
 
 /**
  * Created by B00170 on 2018/3/8.
  */
-class AccountActive : AppCompatActivity() {
+class AccountActiveActivity : AppCompatActivity() {
     private var mContext: Context? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
-        mContext = this@AccountActive.applicationContext
+        mContext = this@AccountActiveActivity.applicationContext
 
 
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             shareToKen.edit().putString("token","") .apply()
-            shareToKen.edit().putString("name","") .apply()
-            shareToKen.edit().putString("email","") .apply()
+//            shareToKen.edit().putString("name","") .apply()
+//            shareToKen.edit().putString("email","") .apply()
+            //shareToKen.edit().clear().apply()
             finish()
         }
-        text_Account_status
+
         initActionBar()
         
         //20180310
@@ -37,11 +38,11 @@ class AccountActive : AppCompatActivity() {
 
         val myName = shareMSG.getString("name", "")
         val myEmail= shareMSG.getString("email","")
-        val myPassword= shareMSG.getString("password","")
-        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail + "密碼:" + myPassword)
+        //val myPassword= shareMSG.getString("password","")
+        Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
         showMail.setText(myEmail)
         show_Name.setText(myName)
-
+        //text_Account_status.text = myName
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
 
@@ -51,7 +52,7 @@ class AccountActive : AppCompatActivity() {
         change_password.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
-            intent.setClass(this@AccountActive.mContext, AccountResetPassword::class.java)
+            intent.setClass(this@AccountActiveActivity.mContext, AccountResetPasswordActivity::class.java)
             //startActivityForResult(intent,1)
             startActivity(intent)
             //finish()
@@ -60,7 +61,7 @@ class AccountActive : AppCompatActivity() {
         rename.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
-            intent.setClass(this@AccountActive.mContext, NameReplaceActivity::class.java)
+            intent.setClass(this@AccountActiveActivity.mContext, AccountNameReplaceActivity::class.java)
             //startActivityForResult(intent,1)
             startActivity(intent)
             //finish()
@@ -104,8 +105,8 @@ class AccountActive : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        val _token = share_token.getString("token","")
-        Log.e("登出後onDestroy偷肯:",_token)
+//        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
+//        val _token = share_token.getString("token","")
+//        Log.e("登出後onDestroy偷肯:",_token)
     }
 }

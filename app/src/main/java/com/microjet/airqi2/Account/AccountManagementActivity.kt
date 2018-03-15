@@ -1,22 +1,18 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.Account
 
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import com.github.mikephil.charting.utils.Utils
 import com.microjet.airqi2.CustomAPI.GetNetWork
-import com.microjet.airqi2.R.id.text_Account_status
+import com.microjet.airqi2.R
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -37,16 +33,14 @@ class AccountManagementActivity : AppCompatActivity() {
     var mCreateAccountTextView:TextView?=null
 
     var userEmail = ""
-    var userPassword = ""
+    var userName = ""
     private var loginResult: String? = null
-    private var mMyThing:mything?=null
+    private var mMyThing: logInMything?=null
     var btnSubmit:Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
         mContext = this@AccountManagementActivity.applicationContext
-
         initActionBar()
 
         // get reference to all views
@@ -61,9 +55,10 @@ class AccountManagementActivity : AppCompatActivity() {
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
+            userName = bundle.getString("name", "")
             mUserEmailEditText?.setText(userEmail)
-            mPasswordEditText?.setText("")
-            Log.e(this.javaClass.simpleName, userEmail )
+            //mPasswordEditText?.setText(userPassword)
+            Log.e(this.javaClass.simpleName, userEmail + userName)
         }
 
 
@@ -75,26 +70,29 @@ class AccountManagementActivity : AppCompatActivity() {
 
         mForgotPasswordTextView?.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent(this, AccountForgetPassword::class.java)
+            val intent = Intent(this, AccountForgetPasswordActivity::class.java)
             startActivity(intent)
         }
 
-        mMyThing = mything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
+        mMyThing = logInMything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
 
         btnSubmit?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
                 if (isEmail(mUserEmailEditText?.text.toString()) && mUserEmailEditText?.text.toString() != "") {
                     if (com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick) {
-                        showDialog("按慢一點太快了")
+                        //showDialog("按慢一點太快了")
+                        showDialog(getString(R.string.tooFast))
                     } else {
                         btnSubmit?.isEnabled=false
                         goLoginAsyncTasks().execute(mMyThing)
                     }
                 } else {
-                    showDialog("請輸入正確的E-mail地址與密碼")
+                    //showDialog("請輸入正確的E-mail地址")
+                    showDialog(getString(R.string.errorMail_address))
                 }
             }else{
-                showDialog("請連接網路")
+                //showDialog("請連接網路")
+                showDialog(getString(R.string.checkConnection))
             }
         }
     }
@@ -136,8 +134,8 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-     private inner class goLoginAsyncTasks : AsyncTask<mything, Void, String>() {
-        override fun doInBackground(vararg params: mything): String? {
+     private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
+        override fun doInBackground(vararg params: logInMything): String? {
             try {
                 val response: okhttp3.Response?
                 //val registerMail = user_register_mail?.text
@@ -145,8 +143,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
                 userEmail = mUserEmailEditText!!.text.toString()
-                userPassword = mPasswordEditText!!.text.toString()
-                val ccc = "email=" + userEmail + "&password=" + userPassword
+                userName = mPasswordEditText!!.text.toString()
+                val ccc = "email=" + userEmail + "&password=" + userName
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
                 val body = RequestBody.create(mediaType, ccc)// )
@@ -209,16 +207,18 @@ class AccountManagementActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if (result== "成功登入") {
-                val intent = Intent(mContext,AccountActive::class.java)
+                val intent = Intent(mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
             }else{
                 val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-                Dialog.setTitle("提示")
+                //Dialog.setTitle("提示")
+                Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
-                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
                 { dialog, _ ->
                     dialog.dismiss()
                 }
@@ -246,10 +246,12 @@ class AccountManagementActivity : AppCompatActivity() {
      private fun showDialog(msg:String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-        Dialog.setTitle("提示")
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
         { dialog, _ ->
             dialog.dismiss()
             //finish()
@@ -257,7 +259,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class mything ( btn:Button?,blean:Boolean?,myString :String?){
+ class logInMything ( btn:Button?,blean:Boolean?,myString :String?){
     var button=btn
     var myBlean=blean
     var myAddress=myString
