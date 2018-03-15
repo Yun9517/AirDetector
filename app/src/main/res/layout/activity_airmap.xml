@@ -24,8 +24,8 @@
 
         <ImageView
             android:id="@+id/imgAirQuality"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_marginBottom="8dp"
             android:layout_marginStart="8dp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -81,8 +81,8 @@
             android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
             android:background="@drawable/map_radiobutton_style"
-            android:paddingEnd="5dp"
-            android:paddingStart="5dp"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp"
             android:text=" DATE 1234/12/21"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
