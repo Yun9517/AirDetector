@@ -48,7 +48,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private val REQUEST_LOCATION = 2
     private val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
 
-    private var arrData = ArrayList<AsmDataModel>()
+    private var dataArray = ArrayList<AsmDataModel>()
 
     var currentMarker: Marker? = null
 
@@ -71,7 +71,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // 資料庫查詢
     @SuppressLint("SimpleDateFormat")
-    private fun realmDataQuery() {
+    private fun getLocalData() {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
 
@@ -87,25 +87,28 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
-
             val rectOptions = PolylineOptions().color(Color.RED).width(20F)
+            dataArray.clear()
+            //mMap.clear()
 
-            arrData.clear()
+            for (i in 0 until result.size - 1) {
+                dataArray.add(result[i]!!)
 
-            mMap.clear()
+                val latitude: Double = result[i]!!.latitude.toDouble()
+                val longitude: Double = result[i]!!.longitude.toDouble()
 
-            for (i in 0 until result.size) {
-                arrData.add(result[i]!!)
+                val latLng = LatLng(latitude, longitude)
 
-                val latLng = LatLng((result[i]!!.latitude).toDouble(), (result[i]!!.longitude).toDouble())
-                rectOptions.add(latLng)
+                if(latitude < 121&&longitude > 90) {
+                    rectOptions.add(latLng)
+                }
 
                 /*val marker = MarkerOptions()
                 marker.position(latLng)
                 marker.title(result[i]!!.tvocValue)
 
                 mMap.addMarker(marker)*/
-                //Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
+                Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
             mMap.addPolyline(rectOptions)
@@ -113,10 +116,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         realm.close()       // 撈完資料千萬要記得關掉！！！
 
-        val mAdapter = AirMapAdapter(arrData)
+        val mAdapter = AirMapAdapter(dataArray)
 
         recyclerView.adapter = mAdapter
-
         mAdapter.notifyDataSetChanged()
 
         mAdapter.setOnItemClickListener { view, position ->
@@ -253,7 +255,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
             initLocation()
 
-            realmDataQuery()
+            getLocalData()
         }
     }
 }

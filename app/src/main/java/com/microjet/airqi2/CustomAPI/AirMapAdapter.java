@@ -14,6 +14,7 @@ import com.microjet.airqi2.R;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by ray650128 on 2018/3/14.
@@ -74,8 +75,10 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         // - replace the contents of the view with that element
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
+        Calendar calendar = Calendar.getInstance();
+        long nowTime = ((mDataset.get(position).getCreated_time()) - calendar.getTimeZone().getRawOffset());
 
-        holder.textDate.setText(dateFormat.format(mDataset.get(position).getCreated_time()));
+        holder.textDate.setText(String.valueOf(dateFormat.format(nowTime)));
 
         holder.textTVOC.setText(mDataset.get(position).getTVOCValue() + " ppb");
         holder.textPM25.setText(mDataset.get(position).getPM25Value() + " μm");
