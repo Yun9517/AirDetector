@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.microjet.airqi2.CustomAPI.AirMapAdapter
 import com.microjet.airqi2.CustomAPI.SelectedItem
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import io.realm.Realm
 import io.realm.Sort
@@ -80,17 +82,22 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         datePicker.text = "DATE $mDate"
 
         datePicker.setOnClickListener {
-            datepickerHandler.post {
-                val dpd = DatePickerDialog(this@AirMapActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    mCal.set(year, month, dayOfMonth)
-                    Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
-                    mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-                    datePicker.text = "DATE $mDate"
-                    getLocalData()
-                    //timePickerShow()
-                }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
-                dpd.setMessage("請選擇日期")
-                dpd.show()
+            if (Utils.isFastDoubleClick) {
+                Utils.toastMakeTextAndShow(this@AirMapActivity, "連點，母湯喔！！",
+                        Toast.LENGTH_SHORT)
+            } else {
+                datepickerHandler.post {
+                    val dpd = DatePickerDialog(this@AirMapActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        mCal.set(year, month, dayOfMonth)
+                        Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
+                        mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
+                        datePicker.text = "DATE $mDate"
+                        getLocalData()
+                        //timePickerShow()
+                    }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
+                    dpd.setMessage("請選擇日期")
+                    dpd.show()
+                }
             }
         }
 
