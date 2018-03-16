@@ -24,7 +24,7 @@
     <color name="AboutPageBackground">#E4F5FF</color>
     <color name="AboutTitle">#005041</color>
     <color name="AboutTextColor">#497739</color>
-    <color name="AboutHyperLink">#FF9100</color>
+    <color name="AboutHyperLink">#ff9100</color>
 
     <!-- Color for Main Page -->
     <color name="Main_frame_background">#B0E2BC</color> <!-- 主頁圓圈內 秀出數值與文字的框框底色 -->

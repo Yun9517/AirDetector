@@ -3,22 +3,19 @@ package com.microjet.airqi2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.app.TimePickerDialog
+import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat
+import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.content.res.AppCompatResources
-import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.RecyclerView.LayoutManager
-import android.support.v7.widget.StaggeredGridLayoutManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
@@ -28,13 +25,16 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import com.microjet.airqi2.CustomAPI.AirMapAdapter
 import com.microjet.airqi2.CustomAPI.SelectedItem
+import com.microjet.airqi2.Definition.BroadcastActions
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -54,12 +54,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private var dataArray = ArrayList<AsmDataModel>()
 
-    var currentMarker: Marker? = null
+    private var currentMarker: Marker? = null
 
     private var datepickerHandler = Handler()
 
     private lateinit var mCal: Calendar
     private lateinit var mDate: String
+
+    private lateinit var mAdapter: AirMapAdapter
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,16 +93,18 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 dpd.show()
             }
         }
+
+        LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
+                makeMainFragmentUpdateIntentFilter())
     }
 
-
-
-    private fun timePickerShow() {
-        val tpd = TimePickerDialog(this@AirMapActivity, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
-
-        }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
-        tpd.setMessage("請選擇時間")
-        tpd.show()
+    override fun onDestroy() {
+        super.onDestroy()
+        try {
+            LocalBroadcastManager.getInstance(this@AirMapActivity).unregisterReceiver(mGattUpdateReceiver)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     // 資料庫查詢
@@ -126,7 +130,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             val rectOptions = PolylineOptions().color(Color.RED).width(20F)
             dataArray.clear()
 
-            for (i in 0 until result.size - 1) {
+            for (i in 0 until result.size) {
                 dataArray.add(result[i]!!)
 
                 val latitude: Double = result[i]!!.latitude.toDouble()
@@ -150,49 +154,96 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
 
             mMap.addPolyline(rectOptions)
+        } else {
+            dataArray.clear()
         }
 
         realm.close()       // 撈完資料千萬要記得關掉！！！
 
-        val mAdapter = AirMapAdapter(dataArray)
+        mAdapter = AirMapAdapter(dataArray)
         recyclerView.adapter = mAdapter
+
+        if(dataArray.size > 0) {
+            val nowPosition = dataArray.size - 1
+            SelectedItem.setSelectedItem(nowPosition)    //自定義的方法，告訴adpter被點擊item
+            recyclerView.scrollToPosition(nowPosition)
+            updateFaceIcon(dataArray[nowPosition].tvocValue.toInt())
+
+            updateValuePanel(dataArray[nowPosition].tvocValue, dataArray[nowPosition].pM25Value,
+                    dataArray[nowPosition].ecO2Value, dataArray[nowPosition].tempValue,
+                    dataArray[nowPosition].humiValue)
+
+            putMarker((dataArray[nowPosition].latitude).toDouble(),
+                    (dataArray[nowPosition].longitude).toDouble())
+        } else {
+            updateValuePanel("----", "----", "----", "----",
+                    "----")
+        }
+
         mAdapter.notifyDataSetChanged()
 
-        mAdapter.setOnItemClickListener { view, position ->
-            val latLng = LatLng((result[position]!!.latitude).toDouble(), (result[position]!!.longitude).toDouble())
-
-            if (currentMarker != null) {
-                currentMarker!!.remove()
-                currentMarker = null
-            }
-
-            if (currentMarker == null) {
-                currentMarker = mMap.addMarker(MarkerOptions().position(latLng).title(result[position]!!.tvocValue))
-            }
+        mAdapter.setOnItemClickListener { _, position ->
+            putMarker((result[position]!!.latitude).toDouble(),
+                    (result[position]!!.longitude).toDouble())
 
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            when(result[position]!!.tvocValue.toInt()) {
-                in 0..219 -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
-                }
-                in 220..659 -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_02yellow_active)
-                }
-                in 660..2199 -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_03orange_active)
-                }
-                in 2200..5499 -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_04red_active)
-                }
-                in 5500..19999 -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_05purple_active)
-                }
-                else -> {
-                    imgAirQuality.setImageResource(R.drawable.face_icon_06brown_active)
-                }
+            updateFaceIcon(result[position]!!.tvocValue.toInt())
+
+            updateValuePanel(result[position]!!.tvocValue, result[position]!!.pM25Value,
+                    result[position]!!.ecO2Value, result[position]!!.tempValue,
+                    result[position]!!.humiValue)
+        }
+    }
+
+    // 更新那個笑到你心裡發寒的臉圖
+    private fun updateFaceIcon(value: Int) {
+        when(value) {
+            in 0..219 -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
             }
+            in 220..659 -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_02yellow_active)
+            }
+            in 660..2199 -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_03orange_active)
+            }
+            in 2200..5499 -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_04red_active)
+            }
+            in 5500..19999 -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_05purple_active)
+            }
+            else -> {
+                imgAirQuality.setImageResource(R.drawable.face_icon_06brown_active)
+            }
+        }
+    }
+
+    // 更新左上角空汙數值面板
+    @SuppressLint("SetTextI18n")
+    private fun updateValuePanel(tvocVal: String, pm25Val: String, eco2Val: String,
+                                 tempVal: String, humiVal: String) {
+        textTVOCvalue.text = "$tvocVal ppb"
+        textPM25value.text = "$pm25Val μg/m³"
+        textECO2value.text = "$eco2Val ppm"
+        textTEMPvalue.text = "$tempVal °C"
+        textHUMIvalue.text = "$humiVal %"
+    }
+
+    // 放入地圖圖釘
+    private fun putMarker(latitude: Double, longitude: Double) {
+
+        val latLng = LatLng(latitude, longitude)
+
+        if (currentMarker != null) {
+            currentMarker!!.remove()
+            currentMarker = null
+        }
+
+        if (currentMarker == null) {
+            currentMarker = mMap.addMarker(MarkerOptions().position(latLng))
         }
     }
 
@@ -239,7 +290,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val client = LocationServices.getFusedLocationProviderClient(this)
 
         client.lastLocation.addOnCompleteListener(this, {
-            if(it.isSuccessful) {
+            if(it != null && it.isSuccessful) {
                 val location = it.result
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         LatLng(location.latitude, location.longitude), 15f))
@@ -295,4 +346,39 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             getLocalData()
         }
     }
+
+
+
+    private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
+        return intentFilter
+    }
+
+    private val mGattUpdateReceiver = object : BroadcastReceiver() {
+        @SuppressLint("SimpleDateFormat", "SetTextI18n")
+        override fun onReceive(context: Context, intent: Intent) {
+            val action = intent.action
+            when (action) {
+                BroadcastActions.ACTION_GET_NEW_DATA -> {
+                    /*val bundle = intent.extras
+                    var tvocVal = "0"
+                    var eco2Val = "0"
+                    var tempVal = "0"
+                    var humiVal = "0"
+                    var pm25Val = "0"
+                    tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    eco2Val = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                    tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                    humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                    pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE)*/
+                }
+                BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
+                    getLocalData()
+                }
+            }
+        }
+    }
+
 }
