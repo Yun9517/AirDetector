@@ -1262,7 +1262,9 @@ public class UartService extends Service {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
-                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show();
+                        if (!Build.BRAND.equals("OPPO")) {
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show();
+                        }
                         //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
                         Log.d("UART", "getItem 1");
                         NowItem = 1;
@@ -1290,7 +1292,9 @@ public class UartService extends Service {
                                 countForItem = 0;
                             }
                             Log.d("0xB4countItem", Long.toString(countForItem));
-                            Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show();
+                            }
                         }
                         if (countForItem >= 1) {
                             NowItem = countForItem;
@@ -1300,7 +1304,9 @@ public class UartService extends Service {
                         } else {
                             downloading = false;
                             //downloadComplete = true;
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            }
                             //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
@@ -1377,7 +1383,9 @@ public class UartService extends Service {
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            }
                             //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
 //                            mainIntent.putExtra("status", "B5");
 //                            Bundle data = new Bundle();
@@ -1495,7 +1503,7 @@ public class UartService extends Service {
 
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
                     int ledState = txValue[3];
-
+                    if (txValue.length > 5) {
                     if (ledState == 1) {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 false).apply();
@@ -1503,8 +1511,8 @@ public class UartService extends Service {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 true).apply();
                     }
-
                     Log.e(TAG, "LED Status: " + ledState);
+                }
                     break;
                 case  (byte) 0xE0:
                     Log.d("0xE0", txValue.toString());
