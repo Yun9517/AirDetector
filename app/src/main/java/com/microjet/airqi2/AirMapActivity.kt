@@ -145,11 +145,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                 rectOptions.add(latLng)
 
-                /*val marker = MarkerOptions()
-                marker.position(latLng)
-                marker.title(result[i]!!.tvocValue)
-
-                mMap.addMarker(marker)*/
                 Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
@@ -347,11 +342,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-
-
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
-        intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
         return intentFilter
     }
@@ -361,19 +353,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             when (action) {
-                BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    /*val bundle = intent.extras
-                    var tvocVal = "0"
-                    var eco2Val = "0"
-                    var tempVal = "0"
-                    var humiVal = "0"
-                    var pm25Val = "0"
-                    tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    eco2Val = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE)*/
-                }
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
                     getLocalData()
                 }
