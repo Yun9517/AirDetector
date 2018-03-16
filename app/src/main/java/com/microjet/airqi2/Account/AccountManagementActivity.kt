@@ -260,7 +260,7 @@ class AccountManagementActivity : AppCompatActivity() {
     }
 }
  class logInMything ( btn:Button?,blean:Boolean?,myString :String?){
-    var button=btn
-    var myBlean=blean
-    var myAddress=myString
+    var button = btn
+    var myBlean = blean
+    var myAddress = myString
 }

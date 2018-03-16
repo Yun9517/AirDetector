@@ -20,6 +20,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
+import android.text.InputFilter
+
+
 
 /**
  * Created by B00170 on 2018/3/8.
@@ -51,8 +54,8 @@ class AccountActiveActivity : AppCompatActivity() {
         val myEmail= shareMSG.getString("email","")
         //val myPassword= shareMSG.getString("password","")
         Log.e("登入後我的資訊","登入中:"+myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
-        showMail.setText(myEmail)
-        show_Name.setText(myName)
+        showMail.text = myEmail
+        show_Name.text = myName
         //text_Account_status.text = myName
         // get reference to all views
         var change_password = findViewById<TextView>(R.id.change_password)
@@ -60,6 +63,8 @@ class AccountActiveActivity : AppCompatActivity() {
         // 03/14 edit ID
         var editName = findViewById<TextView>(R.id.show_Name)
             editName.text = myName
+        // 03/16 InputFilter max 20
+            editName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
         change_password.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()

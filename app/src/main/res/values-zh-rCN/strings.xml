@@ -212,7 +212,7 @@
     <string name="nick_Name">昵称 : </string>
     <string name="email">信箱 : </string>
     <string name="edit">编辑</string>
-    <string name="nameReplace">改名子</string>
+    <string name="nameReplace">改名字</string>
     <string name="enterName">请输入新的名字</string>
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>

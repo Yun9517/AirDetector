@@ -194,15 +194,15 @@ class AccountResetPasswordActivity : AppCompatActivity() {
     }
 
 
-    private fun cheackRestPassWord(resetword:String,checkword:String):Boolean{
-        val RestPW:String=resetword
-        val CheckPW:String=checkword
-        return  RestPW.equals(CheckPW)
+    private fun cheackRestPassWord(resetword: String, checkword: String): Boolean{
+        val RestPW: String = resetword
+        val CheckPW: String = checkword
+        return  RestPW.equals (CheckPW)
     }
 
 
         //20180311
-        fun showDialog(msg:String){
+        fun showDialog (msg:String) {
             val Dialog = android.app.AlertDialog.Builder(this@AccountResetPasswordActivity).create()
             //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
             //Dialog.setTitle("提示")

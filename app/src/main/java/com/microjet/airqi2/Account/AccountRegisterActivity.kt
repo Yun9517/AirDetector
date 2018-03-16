@@ -237,7 +237,7 @@ class AccountRegisterActivity : AppCompatActivity() {
 //    }
 
     //20180311
-    fun isEmail(strEmail: String?): Boolean {
+    fun isEmail (strEmail: String?): Boolean {
         //val strPattern = ("\\w+@\\w+\\.\\w+")
         val strPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
         val p = Pattern.compile(strPattern)
@@ -246,7 +246,7 @@ class AccountRegisterActivity : AppCompatActivity() {
     }
 
     //20180311
-    fun showDialog(msg:String){
+    fun showDialog (msg:String) {
         val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")

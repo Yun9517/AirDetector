@@ -172,7 +172,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
 
 //20180314
 class mything ( btn:Button?,blean:Boolean?,myString :String?){
-    var button=btn
-    var myBlean=blean
-    var myAddress=myString
+    var button = btn
+    var myBlean = blean
+    var myAddress = myString
 }

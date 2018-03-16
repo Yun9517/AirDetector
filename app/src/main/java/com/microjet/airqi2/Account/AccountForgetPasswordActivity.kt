@@ -174,10 +174,10 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
     }
 
 
-    private fun cheackRestPassWord(resetword:String,checkword:String):Boolean{
-        val RestPW:String=resetword
-        val CheckPW:String=checkword
-        return  RestPW.equals(CheckPW)
+    private fun cheackRestPassWord(resetword: String, checkword: String):Boolean{
+        val RestPW: String = resetword
+        val CheckPW: String = checkword
+        return  RestPW.equals (CheckPW)
     }
 
 
