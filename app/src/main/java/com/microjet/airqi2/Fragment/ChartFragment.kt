@@ -32,6 +32,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.FixBarChart
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
@@ -455,16 +456,21 @@ class ChartFragment: Fragment() {
         val dateFormat = SimpleDateFormat("yyyy/MM/dd")
         btnCallDatePicker?.text = dateFormat.format(calObject.time)
         btnCallDatePicker?.setOnClickListener {
-            datepickerHandler.post {
-                val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                    calObject.set(year,month,dayOfMonth)
-                    Log.d("ChartBtncall" + UseFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
-                    btnTextChanged(spinnerPositon)
-                    drawChart(spinnerPositon)
-                    timePickerShow()
-                }, calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
-                dpd.setMessage("請選擇日期")
-                dpd.show()
+            if (Utils.isFastDoubleClick) {
+                Utils.toastMakeTextAndShow(context, "連點，母湯喔！！",
+                        Toast.LENGTH_SHORT)
+            } else {
+                datepickerHandler.post {
+                    val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        calObject.set(year,month,dayOfMonth)
+                        Log.d("ChartBtncall" + UseFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
+                        btnTextChanged(spinnerPositon)
+                        drawChart(spinnerPositon)
+                        timePickerShow()
+                    }, calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
+                    dpd.setMessage("請選擇日期")
+                    dpd.show()
+                }
             }
         }
 
@@ -711,9 +717,9 @@ class ChartFragment: Fragment() {
 
         calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH))
-        spinnerPositon = 0
-        btnTextChanged(spinnerPositon)
-        drawChart(spinnerPositon)
+        //spinnerPositon = 0
+        //btnTextChanged(spinnerPositon)
+        //drawChart(spinnerPositon)
     }
 
     override fun onResume() {

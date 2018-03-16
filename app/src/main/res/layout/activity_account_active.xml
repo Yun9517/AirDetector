@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ChartBackground"
+    android:id="@+id/ActiveBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -23,20 +23,89 @@
             android:src="@mipmap/ic_launcher"/>
 
         <TextView
-            android:id="@+id/cannot_Receive_mail"
+            android:id="@+id/Active"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:text="@string/active"/>
+            android:text="@string/active"
+            android:textColor="@color/whiteColor"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="60dp"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/nick_Name"
+                />
+
+            <TextView
+                android:id="@+id/show_Name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLength="20"
+                android:singleLine="true"
+                android:layout_marginStart="8dp"/>
+
+            <TextView
+                android:id="@+id/rename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginStart="8dp"
+                android:text="@string/edit"
+                android:textColor="@color/hype_Link_Blue"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="60dp">
+
+            <TextView
+                android:id="@+id/yourMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/email"/>
+
+            <TextView
+                android:id="@+id/showMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/logout"
+            android:background="@drawable/style_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:text="@string/logout"
+            android:textColor="@color/whiteColor"/>
+
+        <TextView
+            android:id="@+id/change_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/logout"/>
+            android:layout_marginTop="12dp"
+            android:text="@string/change_Password"
+            android:textColor="@color/hype_Link_Blue"/>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

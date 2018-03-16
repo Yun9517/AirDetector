@@ -191,6 +191,13 @@
     <string name="login">登入</string>
     <string name="enter_Password">請輸入密碼</string>
     <string name="forget_Password">忘記密碼？</string>
+    <string name="forget_Password_Title">忘記密碼</string>
+    <string name="forget_Check_Password_Title">忘記密碼 - 變更密碼</string>
+    <string name="forget_Password_Description">我們將寄送驗證信至您的電子郵件，點入信中的驗證連結網址後，即可更便您的密碼。</string>
+    <string name="change_Password">修改密碼？</string>
+    <string name="change_Password_Title">修改密碼</string>
+    <string name="check_Password">請輸入新密碼</string>
+    <string name="double_check_Password">再次確認新密碼</string>
     <string name="no_Account">我還沒有註冊帳號  我想</string>
     <string name="create_New_account">建立新帳號</string>
     <string name="create_Account">建立帳號</string>
@@ -204,7 +211,26 @@
     <string name="logout">登出</string>
     <string name="account_Activation">帳號已啟用</string>
     <string name="account_Deactivation">帳號尚未啟用</string>
+    <string name="create_Description">系統將會寄送預設密碼至您的信箱，首次請以預設密碼登入，登入後可自行變更密碼。</string>
+    <string name="nick_Name">暱稱 : </string>
+    <string name="email">信箱 : </string>
+    <string name="edit">編輯</string>
+    <string name="nameReplace">改名字</string>
+    <string name="enterName">請輸入新的名字</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
+    <string name="text_label_latitude">緯度：</string>
+    <string name="text_label_longitude">經度：</string>
+
+    <!-- 2018/03/14 Dialog Messages -->
+    <string name="tooFast">請不要點太快</string>
+    <string name="checkConnection">請連接網路</string>
+    <string name="errorMail_form">信箱輸入不正確</string>
+    <string name="errorMail_address">請輸入正確的信箱位置</string>
+    <string name="errorPassword">密碼輸入不正確</string>
+    <string name="remind">提示</string>
+    <string name="exceptName">請輸入欲更改的名稱</string>
+
+
 </resources>

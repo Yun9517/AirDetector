@@ -264,7 +264,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider"
+                app:srcCompat="@color/whiteColor"
                 android:contentDescription="@null" />
 
             <LinearLayout
@@ -344,7 +344,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider"
+                app:srcCompat="@color/whiteColor"
                 android:contentDescription="@null" />
 
             <LinearLayout
@@ -385,7 +385,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider"
+                app:srcCompat="@color/whiteColor"
                 android:contentDescription="@null" />
 
             <LinearLayout

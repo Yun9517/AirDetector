@@ -188,6 +188,13 @@
     <string name="login">登入</string>
     <string name="enter_Password">请输入密码</string>
     <string name="forget_Password">忘记密码？</string>
+    <string name="forget_Password_Title">忘记密码</string>
+    <string name="forget_Check_Password_Title">忘记密码 - 变更密码</string>
+    <string name="forget_Password_Description">我们将寄送验证信至您的电子邮件，点入信中的验证连结网址后，即可更便您的密码。</string>
+    <string name="change_Password">修改密码？</string>
+    <string name="change_Password_Title">修改密码</string>
+    <string name="check_Password">请输入新密码</string>
+    <string name="double_check_Password">再次确认新密码</string>
     <string name="no_Account">我还没有注册账号 我想</string>
     <string name="create_New_account">建立新账号</string>
     <string name="create_Account">建立账号</string>
@@ -201,6 +208,23 @@
     <string name="logout">注销</string>
     <string name="account_Activation">账号已激活</string>
     <string name="account_Deactivation">账号未激活</string>
+    <string name="create_Description">系统将会寄送默认密码至您的信箱，首次请以默认密码登入，登入后可自行变更密码。</string>
+    <string name="nick_Name">昵称 : </string>
+    <string name="email">信箱 : </string>
+    <string name="edit">编辑</string>
+    <string name="nameReplace">改名字</string>
+    <string name="enterName">请输入新的名字</string>
+    <string name="text_label_latitude">緯度：</string>
+    <string name="text_label_longitude">經度：</string>
+
+    <!-- 2018/03/14 Dialog Messages -->
+    <string name="tooFast">请不要点太快</string>
+    <string name="checkConnection">请连接网络</string>
+    <string name="errorMail_form">信箱输入不正确</string>
+    <string name="errorMail_address">请输入正确的信箱位置</string>
+    <string name="errorPassword">密码输入不正确</string>
+    <string name="remind">提示</string>
+    <string name="exceptName">请输入欲更改的名称</string>
 
 </resources>
 

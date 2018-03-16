@@ -70,8 +70,10 @@ import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
+import com.microjet.airqi2.DownloadTask;
 import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.TvocNoseData;
 import com.microjet.airqi2.myData;
 import com.microjet.airqi2.R;
 import com.microjet.airqi2.NotificationHelper;
@@ -165,7 +167,7 @@ public class UartService extends Service {
     public static Activity nowActivity = null;
 
     private boolean downloading = false;
-    private boolean downloadComplete = false;
+    //private boolean downloadComplete = false;
     private int dataNotSaved = 0;
     private ArrayList<HashMap> arrB6 = new ArrayList();
 
@@ -179,8 +181,8 @@ public class UartService extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
-    private Float lati = 121.4215f;
-    private Float longi = 24.959742f;
+    private Float longi = 121.4215f;
+    private Float lati = 24.959742f;
 
     //20180227
     private OkHttpClient client = null;
@@ -213,6 +215,7 @@ public class UartService extends Service {
                         mBluetoothAdapter = mBluetoothManager.getAdapter();
                         mConnectionState = STATE_DISCONNECTED;
                         dataNotSaved = 0;
+                        downloading = false;
                         arrB6.clear();
 
                         isFirstB0 = true;
@@ -271,6 +274,7 @@ public class UartService extends Service {
                 mBluetoothAdapter = mBluetoothManager.getAdapter();
                 mConnectionState = STATE_DISCONNECTED;
                 dataNotSaved = 0;
+                downloading = false;
                 arrB6.clear();
                 disconnect();
                 close();
@@ -283,6 +287,7 @@ public class UartService extends Service {
                 sendBroadcast(mainIntent);
                 mBluetoothAdapter = mBluetoothManager.getAdapter();
                 mConnectionState = STATE_DISCONNECTED;
+                downloading = false;
                 dataNotSaved = 0;
                 arrB6.clear();
                 disconnect();
@@ -300,6 +305,7 @@ public class UartService extends Service {
                 sendBroadcast(mainIntent);
                 mBluetoothAdapter = mBluetoothManager.getAdapter();
                 dataNotSaved = 0;
+                downloading = false;
                 arrB6.clear();
                 disconnect();
                 close();// 防止出现status 133
@@ -1138,6 +1144,15 @@ public class UartService extends Service {
                         isFirstB0 = false;
 
                         writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+
+
+                        Handler hh = new Handler();
+                        hh.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
+                            }
+                        },1000);
                     }
 
 
@@ -1174,9 +1189,10 @@ public class UartService extends Service {
                     isPM25 = RString.get(0);
                     deviceVersion = RString.get(3);
 
-                    MyApplication.Companion.setPM25(isPM25);
+                    //MyApplication.Companion.setPM25(isPM25);
                     MyApplication.Companion.putDeviceVersion(deviceVersion);
 
+                    //Log.d("PARSERB1", "isPM25: " + isPM25);
                     Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
@@ -1246,8 +1262,8 @@ public class UartService extends Service {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
-                        //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_LONG).show();
-                        Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
+                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show();
+                        //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
                         Log.d("UART", "getItem 1");
                         NowItem = 1;
                         counter = 0;
@@ -1255,12 +1271,6 @@ public class UartService extends Service {
                         timeSetNowToThirty(b4correctTime);
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
-                        //計算有幾筆未上傳
-                        RealmQuery condition = realm.where(AsmDataModel.class).equalTo("UpLoaded", "0");
-                        RealmResults notupload = condition.findAll();
-                        if (notupload != null) {
-                            Log.d("NOTUPLOAD", String.valueOf(notupload.size()));
-                        }
                         //將資料庫最大時間與現在時間換算成Count
                         Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
                         if (maxCreatedTime == null) {
@@ -1273,24 +1283,25 @@ public class UartService extends Service {
                             Log.d("0xB4countLast", new Date(maxCreatedTime.longValue()).toString());
                             Log.d("0xB4countLast", new Date(nowTime).toString());
                             Long countForItemTime = nowTime - maxCreatedTime.longValue();
-                            Log.d("0xB4", countForItemTime.toString());
+                            Log.d("0xB4countItemTime", countForItemTime.toString());
                             countForItem = Math.min((int) (countForItemTime / (60L * 1000L)), getMaxItems());
                             //當小於0的時候讓它等於0
                             if (countForItem < 0) {
                                 countForItem = 0;
                             }
                             Log.d("0xB4countItem", Long.toString(countForItem));
-                            //Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show();
                         }
                         if (countForItem >= 1) {
                             NowItem = countForItem;
                             writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
+                            //downloadComplete = false;
                         } else {
                             downloading = false;
-                            downloadComplete = true;
-                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
-                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
+                            //downloadComplete = true;
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
                         mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem));
@@ -1299,7 +1310,7 @@ public class UartService extends Service {
                     } else if (getMaxItems() <= 0) {
                         //0xB6裡的Log會用到
                         timeSetNowToThirty(b4correctTime);
-                        downloadComplete = true;
+                        //downloadComplete = true;
                         downloading = false;
                     }
                     break;
@@ -1324,6 +1335,7 @@ public class UartService extends Service {
 
                         //Realm 資料庫
                         Realm realm = Realm.getDefaultInstance();
+                        /*
                         Number num = realm.where(AsmDataModel.class).max("id");
                         int nextID;
                         if (num == null) {
@@ -1331,17 +1343,18 @@ public class UartService extends Service {
                         } else {
                             nextID = num.intValue() + 1;
                         }
+                        */
                         realm.executeTransaction(r -> {
-                            AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                            AsmDataModel asmData = r.createObject(AsmDataModel.class, TvocNoseData.INSTANCE.getMaxID());
                             asmData.setTEMPValue(RString.get(1));
                             asmData.setHUMIValue(RString.get(2));
                             asmData.setTVOCValue(RString.get(3));
                             asmData.setECO2Value(RString.get(4));
-                            if (MyApplication.Companion.isPM25() == "000000000000") {
-                                asmData.setPM25Value("0");
-                            } else {
+                            //if (MyApplication.Companion.isPM25().equals("000000000000")) {
+                            //    asmData.setPM25Value("0");
+                            //} else {
                                 asmData.setPM25Value(RString.get(5));
-                            }
+                            //}
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
                             asmData.setLatitude(lati);
@@ -1359,18 +1372,21 @@ public class UartService extends Service {
                         if (NowItem <= 0) {
                             NowItem = 1;
                             downloading = false;
-                            downloadComplete = true;
+                            //downloadComplete = true;
                             counterB5 = 1;
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
-                            //Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_LONG).show();
-                            Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
 //                            mainIntent.putExtra("status", "B5");
 //                            Bundle data = new Bundle();
 //                            data.putParcelableArrayList("resultSet", myDeviceData);
 //                            mainIntent.putExtra("result", data);
 //                            sendBroadcast(mainIntent);
+                            SharedPreferences share_token = getSharedPreferences("TOKEN", MODE_PRIVATE);
+                            String token = share_token.getString("token","");
+                            new DownloadTask().execute(macAddressForDB,token);
                         } else {
                             //NowItem++;
                             //counter++;
@@ -1398,11 +1414,11 @@ public class UartService extends Service {
                     hashMapInB6.put("HUMIValue", RString.get(1));
                     hashMapInB6.put("TVOCValue", RString.get(2));
                     hashMapInB6.put("ECO2Value", RString.get(3));
-                    if (MyApplication.Companion.isPM25().equals("000000000000")) {
-                        hashMapInB6.put(("PM25Value"), "0");
-                    } else {
+                    //if (MyApplication.Companion.isPM25().equals("000000000000")) {
+                        //hashMapInB6.put(("PM25Value"), "0");
+                    //} else {
                         hashMapInB6.put(("PM25Value"), RString.get(4));
-                    }
+                    //}
                     hashMapInB6.put("BatteryLife", RString.get(5));
                     hashMapInB6.put("CreatedTime", timeSetForB6());
                     hashMapInB6.put("MACADDRESS", macAddressForDB);
@@ -1420,21 +1436,15 @@ public class UartService extends Service {
                     arrB6.add(hashMapInB6);
                     //在下載資料時因為沒寫入資料庫需要記住B6幾筆未寫入
                     dataNotSaved++;
-                    if (!downloading && dataNotSaved != 0 && downloadComplete) {
+                    if (!downloading && dataNotSaved != 0) {//&& downloadComplete) {
                         //將時間秒數寫入設定為 00  或  30
-                        Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
+                        //Log.d("0xB6OldTime", new Date(getMyDate().getTime()).toString());
                         Log.d("0xB6", arrB6.toString());
                         //如果來了10筆就用現在時間退10筆
                         for (int i = 0; i < arrB6.size(); i++) {
                             //Realm 資料庫
                             Realm realm = Realm.getDefaultInstance();
-                            Number num = realm.where(AsmDataModel.class).max("id");
-                            int nextID;
-                            if (num == null) {
-                                nextID = 1;
-                            } else {
-                                nextID = num.intValue() + 1;
-                            }
+
                             Number maxCreatedTime = realm.where(AsmDataModel.class).max("Created_time");
                             if (maxCreatedTime == null) {
                                 maxCreatedTime = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(2);
@@ -1443,7 +1453,7 @@ public class UartService extends Service {
                             int count = i;
                             if (!arrB6.get(count).get("CreatedTime").equals(maxCreatedTime)) {
                                 realm.executeTransaction(r -> {
-                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, nextID);
+                                    AsmDataModel asmData = r.createObject(AsmDataModel.class, TvocNoseData.INSTANCE.getMaxID());
                                     asmData.setTEMPValue(arrB6.get(count).get("TEMPValue").toString());
                                     asmData.setHUMIValue(arrB6.get(count).get("HUMIValue").toString());
                                     asmData.setTVOCValue(arrB6.get(count).get("TVOCValue").toString());
@@ -1459,10 +1469,10 @@ public class UartService extends Service {
                                     Log.d("RealmTimeB6", new Date(time).toString());
                                     //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                                 });
-                                realm.close();
                             } else {
                                 Log.d("0xb6CreatedTIME",arrB6.get(count).get("CreatedTime").toString());
                             }
+                            realm.close();
                         }
                         //寫入完畢後將未寫入筆數設為0
                         dataNotSaved = 0;
@@ -1473,10 +1483,10 @@ public class UartService extends Service {
                         if (mPreference.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)) {
                             SharedPreferences shareToKen = getSharedPreferences("TOKEN", MODE_PRIVATE);
                             MyToKen = shareToKen.getString("token", "");
-                            if (MyToKen!="") {
+                            if (MyToKen != "") {
                                 Log.e("取得偷肯偷上傳資料:", MyToKen);
                                 new postDataAsyncTasks().execute("https://mjairql.com/api/v1/upUserData");
-                            }else {
+                            } else {
                                 Log.e("取得偷肯:", MyToKen);
                             }
                         }
@@ -1485,7 +1495,7 @@ public class UartService extends Service {
 
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
                     int ledState = txValue[3];
-
+                    if (txValue.length > 5) {
                     if (ledState == 1) {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 false).apply();
@@ -1493,9 +1503,8 @@ public class UartService extends Service {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 true).apply();
                     }
-
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                     Log.e(TAG, "LED Status: " + ledState);
+                }
                     break;
                 case  (byte) 0xE0:
                     Log.d("0xE0", txValue.toString());
@@ -2091,7 +2100,7 @@ public class UartService extends Service {
     private ArrayList<Integer> hasBeenUpLoaded = new ArrayList<>();
 
     private class postDataAsyncTasks extends AsyncTask<String, Void, String> {
-        @RequiresApi(api = Build.VERSION_CODES.N)
+        //@RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected String doInBackground(String... params) {
             RequestBody return_body = null;
@@ -2295,8 +2304,6 @@ public class UartService extends Service {
         }
 
         realm3.close();
-
-        realm.close();
 
         return dbSucessOrNot;
     }

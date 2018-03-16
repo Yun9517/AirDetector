@@ -268,7 +268,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider" />
+                app:srcCompat="@color/whiteColor" />
 
             <LinearLayout
                 android:id="@+id/show_PM"
@@ -347,7 +347,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider" />
+                app:srcCompat="@color/whiteColor" />
 
             <LinearLayout
                 android:id="@+id/show_Temp"
@@ -387,7 +387,7 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="2dp"
                 android:layout_marginTop="5dp"
-                app:srcCompat="@drawable/ui_panel_divider" />
+                app:srcCompat="@color/whiteColor" />
 
             <LinearLayout
                 android:id="@+id/show_RH"
