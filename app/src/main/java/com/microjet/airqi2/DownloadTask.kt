@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
+import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
@@ -125,7 +126,9 @@ class DownloadTask : AsyncTask<String, Void, String>() {
         super.onPostExecute(result)
         if (result != null) {
             if (result == "DownloadCloudDone") {
-                Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+                if (Build.BRAND != "OPPO") {
+                    Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }

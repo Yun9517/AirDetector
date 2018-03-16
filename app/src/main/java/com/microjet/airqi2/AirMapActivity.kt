@@ -294,8 +294,11 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         client.lastLocation.addOnCompleteListener(this, {
             if(it != null && it.isSuccessful) {
                 val location = it.result
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location.latitude, location.longitude), 15f))
+                if (location == null) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
+                } else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15f))
+                }
             }
 
             Log.i("LOCATION", "Location Task is Successful: ${it.isSuccessful}")
