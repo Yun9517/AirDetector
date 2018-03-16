@@ -21,11 +21,36 @@ object  GetNetWork {
 
             //判斷是否有網路
             //net = networkInfo.isConnected
-            if (networkInfo == null || !networkInfo.isConnected()) {
-                return false
+
+            return this!!.isNetWorkAvailable()!!
+        }
+
+    // network available cannot ensure Internet is available
+    fun isNetWorkAvailable(): Boolean? {
+        val runtime = Runtime.getRuntime()
+
+
+
+        var isOnLineCheack:Boolean?=null
+        try {
+
+            var mIpAddProcess: Process? = null
+            mIpAddProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8")
+            val mExitValue = mIpAddProcess!!.waitFor()
+            System.out.println(" mExitValue " + mExitValue)
+
+
+
+            if (mExitValue == 0) {
+                isOnLineCheack=true
             } else {
-                return networkInfo.isAvailable()
+                isOnLineCheack=false
             }
 
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+
+        return isOnLineCheack
+    }
 }
