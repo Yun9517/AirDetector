@@ -110,7 +110,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                         name = responseContent.getJSONObject("success").getString("name").toString()
                         Log.e("註冊正確回來11", "名字:"+name)
 
-                        val share = getSharedPreferences("registerMSG", MODE_PRIVATE)
+                        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         share.edit().putString("email", email).apply()
                         share.edit().putString("name", name).apply()
                         Log.e("我的名字:", name+"and"+password)

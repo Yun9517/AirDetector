@@ -16,8 +16,7 @@ import okhttp3.OkHttpClient
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
-
-
+import org.json.JSONObject
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
@@ -98,11 +97,23 @@ class AccountNameReplaceActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+
+
+
+    var email=""
+    var password=""
+    var name=""
+
+
+
     inner class renameTask : android.os.AsyncTask<mything, Void, String>() {
         override fun doInBackground(vararg params: mything): String? {
 
             val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
             var token = share.getString("token", "")
+//            share.edit().putString("email", email).apply()
+//            share.edit().putString("name", name).apply()
+//            Log.e("我的名字:", name+"and"+password)
 
 
             val client = OkHttpClient()
@@ -118,21 +129,28 @@ class AccountNameReplaceActivity : AppCompatActivity() {
                     .addHeader("cache-control", "no-cache")
                     .addHeader("postman-token", "faf24922-3fc9-f28f-1c89-3ace2f560cdb")
                     .build()
-
-
             try {
                 var response = client.newCall(request).execute()
                 val any = if (response.isSuccessful) {
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
                     })
-                    params[0].myBlean = false
+
+                    nametxt+"修改成功"
+                    //params[0].myBlean = false
+//                    val tempBody: String = response.body()!!.string().toString()
+//                    Log.e("名字已經修改成功正確回來", tempBody)
+//                    val responseContent = JSONObject(tempBody)
+//                    val resetName_Result = responseContent.getString("success")
+//                    //resetName_Result = "名字已經修改成功。"
+//                    val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                 } else {
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
                         id_Confirm?.isEnabled = true
                     })
                     response.body()?.string()
+                    nametxt+"修改失敗"
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
