@@ -20,8 +20,7 @@ import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -64,6 +63,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mDate: String
 
     private lateinit var mAdapter: AirMapAdapter
+
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -228,7 +229,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private fun updateValuePanel(tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String) {
         textTVOCvalue.text = "$tvocVal ppb"
-        textPM25value.text = "$pm25Val μg/m³"
+
+        textPM25value.text = if(pm25Val == "65535") {
+            "沒有偵測"
+        } else {
+            "$pm25Val μg/m³"
+        }
+
         textECO2value.text = "$eco2Val ppm"
         textTEMPvalue.text = "$tempVal °C"
         textHUMIvalue.text = "$humiVal %"
@@ -289,13 +296,16 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     // 初始化位置，由於已經先在onMapReady()中要求權限了，因此無需再次要求權限
     @SuppressLint("MissingPermission")
     private fun initLocation() {
-        val client = LocationServices.getFusedLocationProviderClient(this)
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        client.lastLocation.addOnCompleteListener(this, {
+        mFusedLocationClient.lastLocation.addOnCompleteListener(this, {
             if(it != null && it.isSuccessful) {
                 val location = it.result
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location.latitude, location.longitude), 15f))
+                if (location == null) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
+                } else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15f))
+                }
             }
 
             Log.i("LOCATION", "Location Task is Successful: ${it.isSuccessful}")
