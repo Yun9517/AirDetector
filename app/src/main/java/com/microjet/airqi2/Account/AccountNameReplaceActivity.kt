@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
@@ -44,6 +45,9 @@ class AccountNameReplaceActivity : AppCompatActivity() {
 
         mMyThing = mything(id_Confirm!!, false, "https://mjairql.com/api/v1/editUserData")
 
+        // 03/16 InputFilter max 20
+        enter_ID.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+        
         // 03/12
         id_Confirm?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
