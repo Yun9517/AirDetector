@@ -106,6 +106,59 @@
             android:text="@string/change_Password"
             android:textColor="@color/hype_Link_Blue"/>
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/recordTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/recordTitle"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/fetchData"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:background="@drawable/style_login_button"
+                android:text="@string/fetchData"
+                android:textColor="@color/whiteColor" />
+
+            <Button
+                android:id="@+id/downloadData"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/style_login_button"
+                android:text="@string/downloadData"
+                android:textColor="@color/whiteColor" />
+
+            <Button
+                android:id="@+id/shareData"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/style_login_button"
+                android:text="@string/shareData"
+                android:textColor="@color/whiteColor" />
+
+        </LinearLayout>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
