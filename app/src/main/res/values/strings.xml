@@ -215,7 +215,7 @@
     <string name="nick_Name">暱稱 : </string>
     <string name="email">信箱 : </string>
     <string name="edit">編輯</string>
-    <string name="nameReplace">改名子</string>
+    <string name="nameReplace">改名字</string>
     <string name="enterName">請輸入新的名字</string>
 
     <string name="title_activity_splash">SplashActivity</string>
