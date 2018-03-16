@@ -1495,7 +1495,7 @@ public class UartService extends Service {
 
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
                     int ledState = txValue[3];
-
+                    if (txValue.length > 5) {
                     if (ledState == 1) {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 false).apply();
@@ -1503,8 +1503,8 @@ public class UartService extends Service {
                         mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                 true).apply();
                     }
-
                     Log.e(TAG, "LED Status: " + ledState);
+                }
                     break;
                 case  (byte) 0xE0:
                     Log.d("0xE0", txValue.toString());
