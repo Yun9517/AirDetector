@@ -64,8 +64,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mAdapter: AirMapAdapter
 
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
-
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -296,9 +294,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     // 初始化位置，由於已經先在onMapReady()中要求權限了，因此無需再次要求權限
     @SuppressLint("MissingPermission")
     private fun initLocation() {
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val client = LocationServices.getFusedLocationProviderClient(this)
 
-        mFusedLocationClient.lastLocation.addOnCompleteListener(this, {
+        client.lastLocation.addOnCompleteListener(this, {
             if(it != null && it.isSuccessful) {
                 val location = it.result
                 if (location == null) {
