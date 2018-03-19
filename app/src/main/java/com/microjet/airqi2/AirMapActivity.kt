@@ -20,6 +20,8 @@ import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -103,11 +105,27 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         imgExpand.setOnClickListener {
             if(valuePanel.visibility == View.VISIBLE) {
-                valuePanel.visibility = View.GONE
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
+
+                /*val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                        Animation.RELATIVE_TO_PARENT, -0.25f, Animation.RELATIVE_TO_PARENT,
+                        0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+                mHideAction.duration = 75
+
+                valuePanel.startAnimation(mHideAction)*/
+
+                valuePanel.visibility = View.GONE
             } else {
-                valuePanel.visibility = View.VISIBLE
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
+
+                /*val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -0.25f,
+                        Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+                        0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+                mShowAction.duration = 75
+
+                valuePanel.startAnimation(mShowAction)*/
+
+                valuePanel.visibility = View.VISIBLE
             }
         }
 
@@ -148,21 +166,25 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             dataArray.clear()
 
             for (i in 0 until result.size) {
-                dataArray.add(result[i]!!)
 
-                val latitude: Double = result[i]!!.latitude.toDouble()
-                val longitude: Double = result[i]!!.longitude.toDouble()
+                // 過濾掉初始值
+                if(result[i]!!.latitude.toDouble() != 24.959817 &&  result[i]!!.longitude.toDouble() != 121.4215) {
+                    dataArray.add(result[i]!!)
 
-                // 針對經緯度相反做處理
-                val latLng = if(latitude < 90) {
-                    LatLng(latitude, longitude)
-                } else {
-                    LatLng(longitude, latitude)
+                    val latitude: Double = result[i]!!.latitude.toDouble()
+                    val longitude: Double = result[i]!!.longitude.toDouble()
+
+                    // 針對經緯度相反做處理
+                    val latLng = if (latitude < 90) {
+                        LatLng(latitude, longitude)
+                    } else {
+                        LatLng(longitude, latitude)
+                    }
+
+                    rectOptions.add(latLng)
+
+                    Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
                 }
-
-                rectOptions.add(latLng)
-
-                Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
             mMap.addPolyline(rectOptions)
