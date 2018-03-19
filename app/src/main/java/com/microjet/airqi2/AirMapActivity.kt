@@ -107,23 +107,23 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             if(valuePanel.visibility == View.VISIBLE) {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
 
-                /*val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
                         Animation.RELATIVE_TO_PARENT, -0.25f, Animation.RELATIVE_TO_PARENT,
                         0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
                 mHideAction.duration = 75
 
-                valuePanel.startAnimation(mHideAction)*/
+                panel.startAnimation(mHideAction)
 
                 valuePanel.visibility = View.GONE
             } else {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
 
-                /*val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -0.25f,
+                val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -0.25f,
                         Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
                         0f, Animation.RELATIVE_TO_PARENT, 0.0f)
                 mShowAction.duration = 75
 
-                valuePanel.startAnimation(mShowAction)*/
+                panel.startAnimation(mShowAction)
 
                 valuePanel.visibility = View.VISIBLE
             }

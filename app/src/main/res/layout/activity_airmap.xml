@@ -22,6 +22,7 @@
         tools:context="com.microjet.airqi2.AirMapActivity" />
 
     <LinearLayout
+        android:id="@+id/panel"
         android:layout_width="wrap_content"
         android:layout_height="145dp"
         android:layout_marginTop="8dp"
