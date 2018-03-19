@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
@@ -16,7 +17,12 @@ import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.format.DateFormat
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
@@ -81,7 +87,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         mCal = Calendar.getInstance()
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-        datePicker.text = "DATE $mDate"
+        datePicker.text = setBtnText("DATE $mDate")
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
@@ -93,7 +99,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         mCal.set(year, month, dayOfMonth)
                         Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-                        datePicker.text = "DATE $mDate"
+                        datePicker.text = setBtnText("DATE $mDate")
                         getLocalData()
                         //timePickerShow()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
@@ -107,23 +113,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             if(valuePanel.visibility == View.VISIBLE) {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
 
-                val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
-                        Animation.RELATIVE_TO_PARENT, -0.25f, Animation.RELATIVE_TO_PARENT,
-                        0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
-                mHideAction.duration = 75
-
-                panel.startAnimation(mHideAction)
+                collapseValuePanelAnim(250)
 
                 valuePanel.visibility = View.GONE
             } else {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
 
-                val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -0.25f,
-                        Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
-                        0f, Animation.RELATIVE_TO_PARENT, 0.0f)
-                mShowAction.duration = 75
-
-                panel.startAnimation(mShowAction)
+                expandValuePanelAnim(250)
 
                 valuePanel.visibility = View.VISIBLE
             }
@@ -140,6 +136,36 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // 文字分割
+    private fun setBtnText(value: String): SpannableString {
+        val textSpan = SpannableString(value)
+        textSpan.setSpan(StyleSpan(Typeface.BOLD),
+                0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(StyleSpan(Typeface.NORMAL),
+                5, value.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+
+        return textSpan
+    }
+
+    // 動畫
+    private fun expandValuePanelAnim(duration: Long) {
+        val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+                0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mShowAction.duration = duration
+
+        panel.startAnimation(mShowAction)
+    }
+
+    private fun collapseValuePanelAnim(duration: Long) {
+        val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT,
+                0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mHideAction.duration = duration
+
+        panel.startAnimation(mHideAction)
     }
 
     // 資料庫查詢
