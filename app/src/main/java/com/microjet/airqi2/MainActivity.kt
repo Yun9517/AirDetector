@@ -150,8 +150,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
-            mUartService = (service as UartService.LocalBinder).serverInstance
-            if (!mUartService!!.initailze()) {
+            mUartService = (service as UartService.LocalBinder).service
+            if (!mUartService!!.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth")
                 finish()
             }
@@ -192,7 +192,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         setupDrawerContent(nvDrawerNavigation)
 
-        UartService.nowActivity = this
+        //UartService.nowActivity = this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         //20180206
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)

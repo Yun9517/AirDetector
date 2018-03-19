@@ -87,7 +87,7 @@ import org.json.JSONObject;
  * given Bluetooth LE device.
  */
 //藍牙連線Service
-public class UartService extends Service {
+public class UartService1 extends Service {
     private final static String TAG = UartService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -382,8 +382,8 @@ public class UartService extends Service {
 
     //BindService專用
     public class LocalBinder extends Binder {
-        public UartService getServerInstance() {
-            return UartService.this;
+        public UartService1 getServerInstance() {
+            return UartService1.this;
         }
     }
 
