@@ -144,7 +144,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
-            val rectOptions = PolylineOptions().color(Color.RED).width(20F)
+            val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
