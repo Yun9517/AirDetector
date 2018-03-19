@@ -19,6 +19,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -97,6 +98,16 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                     dpd.setMessage("請選擇日期")
                     dpd.show()
                 }
+            }
+        }
+
+        imgExpand.setOnClickListener {
+            if(valuePanel.visibility == View.VISIBLE) {
+                valuePanel.visibility = View.GONE
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
+            } else {
+                valuePanel.visibility = View.VISIBLE
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
             }
         }
 
