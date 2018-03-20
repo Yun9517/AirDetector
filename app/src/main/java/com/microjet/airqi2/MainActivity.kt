@@ -52,6 +52,9 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import io.realm.Realm
 import kotlinx.android.synthetic.main.drawer_header.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import kotlin.collections.ArrayList
@@ -165,7 +168,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     enum class BleConnection {
-        CONNECTING, CONNECTED, DISCONNECTING,DISCONNECTED,
+        CONNECTING,
+        CONNECTED,
+        DISCONNECTING,
+        DISCONNECTED,
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -203,6 +209,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
+        EventBus.getDefault().register(this);
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -320,6 +327,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService != null) {
             unbindService(mServiceConnection)
         }
+        EventBus.getDefault().unregister(this)
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -929,7 +937,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
                     val bundle = intent.extras
-                    drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
+                    //drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
 
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
@@ -1340,7 +1348,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Dialog.show()
     }
 
-
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onMessageEvent(event: BleEvent) {
+        Toast.makeText(this,event.message,Toast.LENGTH_SHORT).show()
+    }
 }
 
 

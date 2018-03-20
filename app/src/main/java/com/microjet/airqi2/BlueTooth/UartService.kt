@@ -6,8 +6,11 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
+import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -49,6 +52,7 @@ class UartService: Service() {
                 Log.i(TAG, "Connected to GATT server.")
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
+                EventBus.getDefault().post(BleEvent(intentAction))
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
@@ -88,7 +92,8 @@ class UartService: Service() {
 
     private fun broadcastUpdate(action: String) {
         val intent = Intent(action)
-        sendBroadcast(intent)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        //sendBroadcast(intent)
     }
 
     private fun broadcastUpdate(action: String,

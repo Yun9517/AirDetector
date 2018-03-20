@@ -59,6 +59,7 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.7.1@aar') {
         transitive = true
     }
+    compile 'org.greenrobot:eventbus:3.1.1'
 }
 
 repositories {
