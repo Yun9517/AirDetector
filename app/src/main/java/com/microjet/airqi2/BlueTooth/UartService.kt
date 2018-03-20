@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.microjet.airqi2.Definition.BroadcastActions
 import java.util.*
 
 /**
@@ -27,15 +28,13 @@ class UartService: Service() {
         val TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
     }
 
-    private val TAG = UartService::class.java!!.getSimpleName()
+    private val TAG = UartService::class.java!!.simpleName
     private var mBluetoothManager: BluetoothManager? = null
     private var mBluetoothAdapter: BluetoothAdapter? = null
     private var mBluetoothDeviceAddress: String? = null
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
 
-    val ACTION_GATT_CONNECTED = "com.example.bluetooth.le.ACTION_GATT_CONNECTED"
-    val ACTION_GATT_DISCONNECTED = "com.example.bluetooth.le.ACTION_GATT_DISCONNECTED"
     val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
     val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
     val EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA"
@@ -44,7 +43,7 @@ class UartService: Service() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             val intentAction: String
             if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = ACTION_GATT_CONNECTED
+                intentAction = BroadcastActions.ACTION_GATT_CONNECTED
                 mConnectionState = STATE_CONNECTED
                 broadcastUpdate(intentAction)
                 Log.i(TAG, "Connected to GATT server.")
@@ -52,7 +51,7 @@ class UartService: Service() {
                 Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
 
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                intentAction = ACTION_GATT_DISCONNECTED
+                intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                 mConnectionState = STATE_DISCONNECTED
                 Log.i(TAG, "Disconnected from GATT server.")
                 broadcastUpdate(intentAction)
@@ -62,6 +61,12 @@ class UartService: Service() {
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
+
+                val rxService = mBluetoothGatt!!.getService(RX_SERVICE_UUID)
+                val txChar = rxService!!.getCharacteristic(TX_CHAR_UUID)
+                setCharacteristicNotification(txChar!!,true)
+                Log.d("SERVICE",rxService.characteristics.toString())
+
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status)
             }
