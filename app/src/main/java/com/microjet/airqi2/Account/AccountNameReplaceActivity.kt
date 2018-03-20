@@ -60,7 +60,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
                     }
                 } else {
                     //showDialog("請輸入欲更改的名字")
-                    showDialog(getString(R.string.exceptName))
+                    showDialog(getString(R.string.expectName))
                 }
             } else {
                 //showDialog("請連接網路")
