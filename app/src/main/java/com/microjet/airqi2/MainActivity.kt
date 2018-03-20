@@ -10,19 +10,14 @@ import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
-import android.location.Criteria
-import android.location.Location
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
-import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
@@ -50,7 +45,6 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -97,41 +91,41 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //private var mService: UartService? = null
 
     private var mIsReceiverRegistered : Boolean = false
-    //private var mReceiver: MyBroadcastReceiver? = null
-    private var isGPSEnabled : Boolean = false
-    private var mLocationManager : LocationManager? = null
+    //private var mReceiver: myBroadcastReceiver? = null
+    private var isGPSEnabled: Boolean = false
+    private var mLocationManager: LocationManager? = null
 
     // ***** 2017/12/11 Drawer連線 會秀出 Mac Address ************************* //
-    private var drawerDeviceAddress : String? = null
+    private var drawerDeviceAddress: String? = null
 
     // ***** 2018/03/12 Drawer Show Device Name ******************************* //
-    private var drawerDeviceName : String? = null
+    private var drawerDeviceName: String? = null
 
     // ***** 2018/03/12 Drawer Show Account Name ****************************** //
-    private var drawerAccountName : String? = null
+    private var drawerAccountName: String? = null
 
 
     //private var mMainReceiver: BroadcastReceiver? = null
     private var preheatCountDownInt = 0
 
-    private var topMenu : Menu? = null
+    private var topMenu: Menu? = null
 
     //20180122
-    private var soundPool : SoundPool? = null
+    private var soundPool: SoundPool? = null
     private var alertId = 0
-    private var lowPowerCont : Int=0
+    private var lowPowerCont: Int = 0
 
     // Code to manage Service lifecycle.
-    private var mDeviceAddress : String? = null
-    private var mUartService : UartService? = null
+    private var mDeviceAddress: String? = null
+    private var mUartService: UartService? = null
 
-    private var longi = 121.4215f
-    private var lati = 24.959742f
+    //private var longi = 121.4215f
+    //private var lati = 24.959742f
 
-    private var locationListener : LocationListener? = null
+    private var locationListener: LocationListener? = null
 
     // FragmentAdapter
-    private lateinit var mFragmentAdapter : FragmentAdapter
+    private lateinit var mFragmentAdapter: FragmentAdapter
 
     //
     //private val mPM25Fg = ChartFragment()
@@ -178,7 +172,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e("Conn", MyApplication.getConnectStatus())
 
         if (!mIsReceiverRegistered) {
-            LocalBroadcastManager.getInstance(mContext).registerReceiver(MyBroadcastReceiver, makeGattUpdateIntentFilter())
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
             mIsReceiverRegistered = true
         }
 
@@ -218,7 +212,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mUartService?.connect(mDeviceAddress)
         }
 
-        locationListener = object : LocationListener {
+        /*locationListener = object : LocationListener {
             override fun onLocationChanged(location: Location?) {
                 Log.d("LocationListener1",location?.longitude.toString())
                 Log.d("LocationListener1",location?.latitude.toString())
@@ -252,7 +246,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
 
-        getLocation()
+        getLocation()*/
     }
 
 
@@ -296,7 +290,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onDestroy()
         Log.e(TAG, "call onDestroy")
         if (mIsReceiverRegistered) {
-            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(MyBroadcastReceiver)
+            LocalBroadcastManager.getInstance(mContext).unregisterReceiver(myBroadcastReceiver)
             mIsReceiverRegistered = false
         }
 
@@ -466,7 +460,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 如果 banDownDraw = true，封鎖下滑的手勢
     override fun dispatchTouchEvent(ev: MotionEvent): Boolean {
-        // TODO Auto-generated method stub
         if (banDownDraw) {
             when (ev.action) {
                 MotionEvent.ACTION_DOWN -> {
@@ -484,7 +477,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
         }
-        return super.dispatchTouchEvent(ev);
+        return super.dispatchTouchEvent(ev)
     }
 
     private fun initActionBar() {
@@ -506,14 +499,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
-    private fun checkLastPM25Value(): Boolean {
+    /*private fun checkLastPM25Value(): Boolean {
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
         val dbSize = query.findAll().size - 1
         val lastPM25val = query.findAll()[dbSize]!!.pM25Value
 
         return lastPM25val != "65535"
-    }
+    }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.main_menu, menu)
@@ -604,21 +597,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun accountShow() {
-        val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val MyToKen = shareToKen.getString("token", "")
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
         if(GetNetWork.isFastGetNet) {
-        if(MyToKen=="") {
-                Log.e("主葉面看偷肯",MyToKen)
-            val i: Intent? = Intent(this, AccountManagementActivity::class.java)
-            //text_Account_status.setText(R.string.account_Deactivation)
-            startActivity(i)
-        }else{
-                Log.e("主葉面!=空字串看偷肯",MyToKen)
-            val i: Intent? = Intent(this, AccountActiveActivity::class.java)
-            //text_Account_status.setText(R.string.account_Activation)
-            startActivity(i)
-        }
-        }else{
+            if(myToken == "") {
+                Log.e("主葉面看偷肯", myToken)
+                val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+                //text_Account_status.setText(R.string.account_Deactivation)
+                startActivity(i)
+            } else {
+                Log.e("主葉面!=空字串看偷肯", myToken)
+                val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+                //text_Account_status.setText(R.string.account_Activation)
+                startActivity(i)
+            }
+        } else {
             //showDialog("請連接網路")
             showDialog(getString(R.string.checkConnection))
         }
@@ -903,8 +896,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private val TAG = MainActivity::class.java.simpleName
-    // inner class MyBroadcastReceiver : BroadcastReceiver()
-    private val MyBroadcastReceiver = object : BroadcastReceiver() {
+    // inner class myBroadcastReceiver : BroadcastReceiver()
+    private val myBroadcastReceiver = object : BroadcastReceiver() {
         @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
             //updateUI(intent)
@@ -924,7 +917,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                     val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                     val accountName = shareMSG.getString("name", "")
-                    val myEmail= shareMSG.getString("email","")
+                    //val myEmail = shareMSG.getString("email","")
 
                     drawerDeviceName = deviceName
                     drawerAccountName = accountName
@@ -1255,7 +1248,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return dbSucessOrNot
     }
 */
-    private fun getLocation() {
+    /*private fun getLocation() {
         checkGPSPermisstion()
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val criteria = Criteria()
@@ -1272,57 +1265,56 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("MAINAC", permission.toString())
         val permission1 = PackageManager.PERMISSION_GRANTED
         Log.d("MAINAC", permission1.toString())
-    }
+    }*/
 
     private fun checkLoginState() {
-        val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val MyToKen = shareToKen.getString("token", "")
-        if(MyToKen=="") {
-            text_Account_status.setText(getString(R.string.account_Deactivation))
-        }else{
-            val MyName = shareToKen.getString("name", "")
-            text_Account_status.text = MyName
-            Log.e("MainActivity取名字",MyName)
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        if(myToken == "") {
+            text_Account_status.text = getString(R.string.account_Deactivation)
+        } else {
+            val myName = shareToken.getString("name", "")
+            text_Account_status.text = myName
+            Log.e("MainActivity取名字",myName)
         }
     }
 
-    private fun getNetWork (): Boolean  {
+    /*private fun getNetWork (): Boolean  {
         var result = false
         try {
             val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo: NetworkInfo? = connManager!!.getActiveNetworkInfo() as NetworkInfo
+            val networkInfo: NetworkInfo? = connManager!!.activeNetworkInfo as NetworkInfo
 
 
             //判斷是否有網路
             //net = networkInfo.isConnected
-            if (networkInfo == null || !networkInfo.isConnected()) {
-                result = false
+            result = if (networkInfo == null || !networkInfo.isConnected) {
+                false
             } else {
-                result = networkInfo.isAvailable()
-}
+                networkInfo.isAvailable
+            }
 
         }catch (E: Exception) {
             Log.e("網路", E.toString())
         }
         return result
-    }
+    }*/
 
 
     //20180312
-    fun showDialog(msg:String){
-        val Dialog = android.app.AlertDialog.Builder(this@MainActivity).create()
+    private fun showDialog(msg:String){
+        val dialog = android.app.AlertDialog.Builder(this@MainActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage(msg.toString())
-        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        dialog.setTitle(getString(R.string.remind))
+        dialog.setMessage(msg)
+        dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
-        { dialog, _ ->
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm)) { dialog, _ ->
             dialog.dismiss()
             //finish()
         }
-        Dialog.show()
+        dialog.show()
     }
 
 
