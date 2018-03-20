@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
@@ -189,7 +190,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
-            val rectOptions = PolylineOptions().color(Color.RED).width(10F)
+            //val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
@@ -198,17 +199,38 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
                     dataArray.add(result[i]!!)
 
-                    val latitude: Double = result[i]!!.latitude.toDouble()
-                    val longitude: Double = result[i]!!.longitude.toDouble()
+                    //val latitude: Double = result[i]!!.latitude.toDouble()
+                    //val longitude: Double = result[i]!!.longitude.toDouble()
 
                     // 針對經緯度相反做處理
-                    val latLng = if (latitude < 90) {
+                    /*val latLng = if (latitude < 90) {
                         LatLng(latitude, longitude)
                     } else {
                         LatLng(longitude, latitude)
+                    }*/
+
+                    val rectOptions = when(result[i]!!.tvocValue.toInt()) {
+                                in 0..219 -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Main_textResult_Good))
+                                in 220..659 -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Main_textResult_Moderate))
+                                in 660..2199 -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Main_textResult_Orange))
+                                in 2200..5499 -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Main_textResult_Bad))
+                                in 5500..19999 -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Main_textResult_Purple))
+                                else -> PolylineOptions().width(10F).color(
+                                        ContextCompat.getColor(this, R.color.Test_Unhealthy))
+                            }
+
+                    if(i < result.size - 1) {
+                        rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
+                        rectOptions.add(LatLng(result[i + 1]!!.latitude.toDouble(), result[i + 1]!!.longitude.toDouble()))
+                        mMap.addPolyline(rectOptions)
                     }
 
-                    rectOptions.add(latLng)
+                    //rectOptions.color(Color.GREEN).add(latLng)
 
                     @SuppressLint("SimpleDateFormat")
                     val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
@@ -219,7 +241,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
-            mMap.addPolyline(rectOptions)
+            //mMap.addPolyline(rectOptions)
         } else {
             dataArray.clear()
         }
