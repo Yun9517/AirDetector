@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
@@ -16,9 +17,17 @@ import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.SpannableStringBuilder
 import android.text.format.DateFormat
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -36,6 +45,7 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -78,7 +88,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         mCal = Calendar.getInstance()
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-        datePicker.text = "DATE $mDate"
+        datePicker.text = setBtnText("DATE $mDate")
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
@@ -90,13 +100,29 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         mCal.set(year, month, dayOfMonth)
                         Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-                        datePicker.text = "DATE $mDate"
+                        datePicker.text = setBtnText("DATE $mDate")
                         getLocalData()
                         //timePickerShow()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage("請選擇日期")
                     dpd.show()
                 }
+            }
+        }
+
+        imgExpand.setOnClickListener {
+            if(valuePanel.visibility == View.VISIBLE) {
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
+
+                collapseValuePanelAnim(250)
+
+                valuePanel.visibility = View.GONE
+            } else {
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
+
+                expandValuePanelAnim(250)
+
+                valuePanel.visibility = View.VISIBLE
             }
         }
 
@@ -111,6 +137,36 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // 文字分割
+    private fun setBtnText(value: String): SpannableString {
+        val textSpan = SpannableString(value)
+        textSpan.setSpan(StyleSpan(Typeface.BOLD),
+                0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(StyleSpan(Typeface.NORMAL),
+                5, value.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+
+        return textSpan
+    }
+
+    // 動畫
+    private fun expandValuePanelAnim(duration: Long) {
+        val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+                0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mShowAction.duration = duration
+
+        panel.startAnimation(mShowAction)
+    }
+
+    private fun collapseValuePanelAnim(duration: Long) {
+        val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT,
+                0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mHideAction.duration = duration
+
+        panel.startAnimation(mHideAction)
     }
 
     // 資料庫查詢
@@ -133,25 +189,34 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
-            val rectOptions = PolylineOptions().color(Color.RED).width(20F)
+            val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
-                dataArray.add(result[i]!!)
 
-                val latitude: Double = result[i]!!.latitude.toDouble()
-                val longitude: Double = result[i]!!.longitude.toDouble()
+                // 過濾掉初始值
+                if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
+                    dataArray.add(result[i]!!)
 
-                // 針對經緯度相反做處理
-                val latLng = if(latitude < 90) {
-                    LatLng(latitude, longitude)
-                } else {
-                    LatLng(longitude, latitude)
+                    val latitude: Double = result[i]!!.latitude.toDouble()
+                    val longitude: Double = result[i]!!.longitude.toDouble()
+
+                    // 針對經緯度相反做處理
+                    val latLng = if (latitude < 90) {
+                        LatLng(latitude, longitude)
+                    } else {
+                        LatLng(longitude, latitude)
+                    }
+
+                    rectOptions.add(latLng)
+
+                    @SuppressLint("SimpleDateFormat")
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
+                    val calendar = Calendar.getInstance()
+                    val nowTime = result[i]!!.created_time - calendar.timeZone.rawOffset
+
+                    Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
                 }
-
-                rectOptions.add(latLng)
-
-                Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
             mMap.addPolyline(rectOptions)

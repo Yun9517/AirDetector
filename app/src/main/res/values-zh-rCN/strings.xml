@@ -214,6 +214,11 @@
     <string name="edit">编辑</string>
     <string name="nameReplace">改名字</string>
     <string name="enterName">请输入新的名字</string>
+    <string name="recordTitle">个人纪录</string>
+    <string name="fetchData">查看</string>
+    <string name="downloadData">下载</string>
+    <string name="shareData">分享</string>
+
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
 
@@ -224,7 +229,7 @@
     <string name="errorMail_address">请输入正确的信箱位置</string>
     <string name="errorPassword">密码输入不正确</string>
     <string name="remind">提示</string>
-    <string name="exceptName">请输入欲更改的名称</string>
+    <string name="expectName">请输入欲更改的名称</string>
 
 </resources>
 

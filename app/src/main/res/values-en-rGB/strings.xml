@@ -213,6 +213,11 @@
     <string name="edit">Edit</string>
     <string name="nameReplace">New ID</string>
     <string name="enterName">Enter your new ID here</string>
+    <string name="recordTitle">Record</string>
+    <string name="fetchData">Check</string>
+    <string name="downloadData">Download</string>
+    <string name="shareData">Share</string>
+
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
 
@@ -223,6 +228,6 @@
     <string name="errorMail_address">Error address</string>
     <string name="errorPassword">Password error</string>
     <string name="remind">Notification</string>
-    <string name="exceptName">Decide a new name</string>
+    <string name="expectName">Decide a new name</string>
 
 </resources>
