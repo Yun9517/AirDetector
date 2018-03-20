@@ -268,8 +268,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStop() {
         super.onStop()
         Log.e(TAG, "call onStop")
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        locationManager.removeUpdates(locationListener)
+        //val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        //locationManager.removeUpdates(locationListener)
     }
 
 

@@ -249,17 +249,17 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mAdapter.notifyDataSetChanged()
 
         mAdapter.setOnItemClickListener { _, position ->
-            putMarker((result[position]!!.latitude).toDouble(),
-                    (result[position]!!.longitude).toDouble())
+            putMarker((dataArray[position].latitude).toDouble(),
+                    (dataArray[position].longitude).toDouble())
 
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            updateFaceIcon(result[position]!!.tvocValue.toInt())
+            updateFaceIcon(dataArray[position].tvocValue.toInt())
 
-            updateValuePanel(result[position]!!.tvocValue, result[position]!!.pM25Value,
-                    result[position]!!.ecO2Value, result[position]!!.tempValue,
-                    result[position]!!.humiValue)
+            updateValuePanel(dataArray[position].tvocValue, result[position]!!.pM25Value,
+                    dataArray[position].ecO2Value, result[position]!!.tempValue,
+                    dataArray[position].humiValue)
         }
     }
 
