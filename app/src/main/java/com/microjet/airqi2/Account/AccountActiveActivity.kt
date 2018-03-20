@@ -2,9 +2,11 @@ package com.microjet.airqi2.Account
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
+import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
@@ -79,8 +81,8 @@ class AccountActiveActivity : AppCompatActivity() {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
             intent.setClass(this@AccountActiveActivity.mContext, AccountNameReplaceActivity::class.java)
-            //startActivityForResult(intent,1)
-            startActivity(intent)
+            startActivityForResult(intent,1)
+//            startActivity(intent)
             //finish()
         }
         //DownloadTask().execute()
@@ -88,7 +90,25 @@ class AccountActiveActivity : AppCompatActivity() {
         // 03/19 Share to Line
         shareData.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW)
-            intent.setData(Uri.parse("line://msg/text" + "123321"))
+            intent.action = Intent.ACTION_SEND
+
+            //20180319
+            intent.putExtra(Intent.EXTRA_TEXT, "幹出來!")
+            intent.type = "text/plain"
+            startActivity(intent)
+
+
+
+
+            //PO文字
+//            val PACKAGE_NAME = "jp.naver.line.android"
+//            val CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity"
+//            val intent = Intent(Intent.ACTION_SEND)
+//            intent.setClassName(PACKAGE_NAME, CLASS_NAME)
+//            intent.type = "text/plain"
+//            intent.putExtra(Intent.EXTRA_TEXT, "123321")
+//            startActivity(intent)
+
         }
 
     }

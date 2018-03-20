@@ -35,7 +35,6 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -89,7 +88,12 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+        <intent-filter>
+            <action android:name="android.intent.action.SEND" />
+            <category android:name="android.intent.category.DEFAULT"/>
+        </intent-filter>
+        </activity>
 
         <activity
             android:name=".Account.AccountResetPasswordActivity"
@@ -150,6 +154,7 @@
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
+
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
