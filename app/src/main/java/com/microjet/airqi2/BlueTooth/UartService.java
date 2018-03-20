@@ -1155,10 +1155,10 @@ public class UartService extends Service {
                         },1000);
                     }
 
-
-                    if (Integer.valueOf(RString.get(2)) < 221) {
+                // 2018/03/20 Remove alert (Yellow)
+                    if (Integer.valueOf(RString.get(2)) < 661) {
                         //20180122  Andy
-                        countsound220 = 0;
+                        //countsound220 = 0;
                         countsound660 = 0;
                         countsound2200 = 0;
                         countsound5500 = 0;
@@ -1166,9 +1166,9 @@ public class UartService extends Service {
 
                         //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
                         //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
-                    } else if (Integer.valueOf(RString.get(2)) >= 220 && (Integer.valueOf(RString.get(2)) < 660)) {
-                        //20180122  Andy
-                        BEBEBEBE1(RString);
+//                    } else if (Integer.valueOf(RString.get(2)) >= 220 && (Integer.valueOf(RString.get(2)) < 660)) {
+//                        //20180122  Andy
+//                        BEBEBEBE1(RString);
                     } else if ((Integer.valueOf(RString.get(2)) >= 660) && (Integer.valueOf(RString.get(2)) < 2200)) {
                         //20180122  Andy
                         BEBEBEBE2(RString);
