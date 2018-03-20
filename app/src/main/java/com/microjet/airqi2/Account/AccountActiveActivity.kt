@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.nfc.Tag
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -24,7 +26,13 @@ import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 import android.text.InputFilter
-
+import android.os.Environment.getExternalStorageDirectory
+import android.widget.Toast
+import com.github.angads25.filepicker.controller.DialogSelectionListener
+import com.github.angads25.filepicker.model.DialogConfigs
+import com.github.angads25.filepicker.model.DialogProperties
+import com.github.angads25.filepicker.view.FilePickerDialog
+import java.io.File
 
 
 /**
@@ -89,17 +97,37 @@ class AccountActiveActivity : AppCompatActivity() {
 
         // 03/19 Share to Line
         shareData.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
+         /*   val intent = Intent(Intent.ACTION_VIEW)
             intent.action = Intent.ACTION_SEND
 
             //20180319
             intent.putExtra(Intent.EXTRA_TEXT, "幹出來!")
+            intent.data
             intent.type = "text/plain"
             startActivity(intent)
+            */
 
 
+           /*
+            val filename = "read.css"
+            val fileContents = "Hello world!"
+            this.mContext?.openFileOutput(filename, Context.MODE_PRIVATE).use {
+                it!!.write(fileContents.toByteArray())
+            }
+            val file = File(Environment.getExternalStorageDirectory(), "read.css")
 
+            val uri = Uri.fromFile(file)
+            val auxFile = File(uri.getPath())
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.action = Intent.ACTION_SEND
 
+            //20180319
+            Log.v("uri.path:",uri.path)
+            intent.putExtra(Intent.EXTRA_STREAM, uri.path)
+        //    intent.data
+        */
+    //        intent.type = "text/**"
+     //       startActivity(intent)
             //PO文字
 //            val PACKAGE_NAME = "jp.naver.line.android"
 //            val CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity"
@@ -108,6 +136,36 @@ class AccountActiveActivity : AppCompatActivity() {
 //            intent.type = "text/plain"
 //            intent.putExtra(Intent.EXTRA_TEXT, "123321")
 //            startActivity(intent)
+
+
+        ///    assertEquals(file.getAbsolutePath(), auxFile.getAbsolutePath())
+
+
+          //  NOTE: url.toString() return a String in the format: "file:///mnt/sdcard/myPicture.jpg", whereas url.getPath() returns a String in the format: "/mnt/sdcard/myPicture.jpg"
+
+            val properties = DialogProperties()
+            properties.selection_type = DialogConfigs.FILE_SELECT
+            properties.root = File(DialogConfigs.DEFAULT_DIR)
+            properties.error_dir = File(DialogConfigs.DEFAULT_DIR)
+            properties.extensions = null
+
+           var  dialog = FilePickerDialog(this, properties)
+            dialog.setTitle("Select files to share")
+
+            dialog.setDialogSelectionListener(DialogSelectionListener { files ->
+                if (null == files || files.size == 0) {
+                    Toast.makeText(mContext, "Select at least one file to start Share Mode", Toast.LENGTH_SHORT).show()
+                    return@DialogSelectionListener
+                }
+                val intent = Intent(Intent.ACTION_VIEW)
+                val uri = Uri.parse(files[0])
+                intent.action = Intent.ACTION_SEND
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+                intent.type = "image/jpeg"
+                startActivity(intent)
+            })
+            dialog.show()
+
 
         }
 
