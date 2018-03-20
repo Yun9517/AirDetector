@@ -45,6 +45,7 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -194,7 +195,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             for (i in 0 until result.size) {
 
                 // 過濾掉初始值
-                if(result[i]!!.latitude.toDouble() != 24.959817 &&  result[i]!!.longitude.toDouble() != 121.4215) {
+                if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
                     dataArray.add(result[i]!!)
 
                     val latitude: Double = result[i]!!.latitude.toDouble()
@@ -209,7 +210,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                     rectOptions.add(latLng)
 
-                    Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
+                    @SuppressLint("SimpleDateFormat")
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
+                    val calendar = Calendar.getInstance()
+                    val nowTime = result[i]!!.created_time - calendar.timeZone.rawOffset
+
+                    Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
                 }
             }
 
