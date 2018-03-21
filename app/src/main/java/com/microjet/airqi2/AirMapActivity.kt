@@ -108,7 +108,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
                         datePicker.text = setBtnText("DATE $mDate")
 
-                        startThread()
+                        startLoadDataThread()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage("請選擇日期")
                     dpd.show()
@@ -133,7 +133,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
 
         viewSelecter.setOnCheckedChangeListener { group, checkedId ->
-            startThread()
+            startLoadDataThread()
         }
 
         LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
@@ -150,16 +150,20 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     }
 
     // GetData執行緒啟動與關閉🙄
-    private fun startThread() {
+    private fun startLoadDataThread() {
+        pgLoading.visibility = View.VISIBLE
+        pgLoading.bringToFront()
+
         runGetDataThread = Thread(runGetDataRunnable)
         runGetDataThread!!.start()
     }
 
-    private fun stopThread() {
+    private fun stopLoadDataThread() {
         if(runGetDataThread != null) {
             runGetDataThread!!.interrupt()
             runGetDataThread = null
         }
+        pgLoading.visibility = View.GONE
     }
 
     // 文字分割
@@ -240,17 +244,17 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                     val rectOptions = when(data) {
                                 in 0..219 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Main_textResult_Good))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value1))
                                 in 220..659 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Main_textResult_Moderate))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value2))
                                 in 660..2199 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Main_textResult_Orange))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value3))
                                 in 2200..5499 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Main_textResult_Bad))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value4))
                                 in 5500..19999 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Main_textResult_Purple))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value5))
                                 else -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.Test_Unhealthy))
+                                        ContextCompat.getColor(this, R.color.air_map_line_value6))
                             }
 
                     if(i < result.size - 1) {
@@ -313,7 +317,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                     dataArray[position].humiValue)
         }
 
-        stopThread()
+        stopLoadDataThread()
     }
 
     // 更新那個笑到你心裡發寒的臉圖
@@ -431,8 +435,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     // 設定位置要求的參數
     private fun createLocationRequest() {
         val locationRequest = LocationRequest()
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 2000
+        locationRequest.interval = 30000        // original is 5000 milliseconds
+        locationRequest.fastestInterval = 12000  // original is 2000 milliseconds
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
@@ -471,7 +475,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
             initLocation()
 
-            startThread()
+            startLoadDataThread()
         }
     }
 
@@ -487,7 +491,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
-                    startThread()
+                    startLoadDataThread()
                 }
             }
         }

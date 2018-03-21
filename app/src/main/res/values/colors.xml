@@ -54,7 +54,7 @@
 
     <!-- 半透明背景 規則 前兩碼 = 透明度，後六碼 = 顏色 -->
     <color name="blackTransparentColor">#50000000</color> <!-- 黑色半透明 -->
-    <color name="blackTransparentColor_80">#CC000000</color> <!-- 黑色半透明80% -->
+    <color name="blackTransparentColor_80">#cc000000</color> <!-- 黑色半透明80% -->
     <color name="whiteTransparentColor_80">#CCffffff</color> <!-- 白色半透明80% -->
     <color name="whiteTransparentColor_50">#80ffffff</color> <!-- 白色半透明50% -->
 
@@ -66,4 +66,11 @@
 
     <color name="black_overlay">#66000000</color>
     <color name="hype_Link_Blue">#0064FF</color>
+
+    <color name="air_map_line_value1">#34B934</color> <!-- 主頁圓圈內 測量結果 "良好" 用色 -->
+    <color name="air_map_line_value2">#FFFF00</color> <!-- 主頁圓圈內 測量結果 "不佳" 用色 -->
+    <color name="air_map_line_value3">#FF5A00</color>
+    <color name="air_map_line_value4">#FF0000</color> <!-- 主頁圓圈內 測量結果 "差" 用色 -->
+    <color name="air_map_line_value5">#A037FF</color>
+    <color name="air_map_line_value6">#6E0000</color> <!-- 主頁圓圈內 測量結果 "極差" 用色 -->
 </resources>
