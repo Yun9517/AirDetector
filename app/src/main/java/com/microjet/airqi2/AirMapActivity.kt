@@ -280,7 +280,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             val nowPosition = dataArray.size - 1
             SelectedItem.setSelectedItem(nowPosition)    //自定義的方法，告訴adpter被點擊item
             recyclerView.scrollToPosition(nowPosition)
-            updateFaceIcon(dataArray[nowPosition].tvocValue.toInt())
+
+            val data = if(rbTVOC.isChecked) {
+                dataArray[nowPosition].tvocValue.toInt()
+            } else {
+                dataArray[nowPosition].pM25Value.toInt()
+            }
+
+            updateFaceIcon(data)
 
             updateValuePanel(dataArray[nowPosition].tvocValue, dataArray[nowPosition].pM25Value,
                     dataArray[nowPosition].ecO2Value, dataArray[nowPosition].tempValue,
@@ -302,7 +309,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            updateFaceIcon(dataArray[position].tvocValue.toInt())
+            val data = if(rbTVOC.isChecked) {
+                dataArray[position].tvocValue.toInt()
+            } else {
+                dataArray[position].pM25Value.toInt()
+            }
+
+            updateFaceIcon(data)
 
             updateValuePanel(dataArray[position].tvocValue, result[position]!!.pM25Value,
                     dataArray[position].ecO2Value, result[position]!!.tempValue,
