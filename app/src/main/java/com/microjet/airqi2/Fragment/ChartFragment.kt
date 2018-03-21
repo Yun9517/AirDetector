@@ -1054,6 +1054,9 @@ class ChartFragment: Fragment() {
                         //startUpdateDataAnimation()
                         animationCount = 0
                         downloadingData = true
+                    } else {
+                        downloadingData = false
+                        downloadComplete = true
                     }
                     //Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
                 }
