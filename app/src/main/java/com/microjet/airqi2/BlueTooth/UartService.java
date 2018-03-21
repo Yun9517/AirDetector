@@ -28,6 +28,7 @@ import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -37,11 +38,28 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.microjet.airqi2.AsmDataModel;
+import com.microjet.airqi2.Definition.BroadcastActions;
+import com.microjet.airqi2.Definition.BroadcastIntents;
+import com.microjet.airqi2.Definition.SavePreferences;
+import com.microjet.airqi2.DownloadTask;
+import com.microjet.airqi2.MainActivity;
+import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.NotificationHelper;
+import com.microjet.airqi2.R;
+import com.microjet.airqi2.TvocNoseData;
+import com.microjet.airqi2.myData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.HttpCookie;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,35 +70,13 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import io.realm.RealmAsyncTask;
-import io.realm.RealmList;
-import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.annotations.PrimaryKey;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-
-import com.crashlytics.android.Crashlytics;
-import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.CustomAPI.Utils;
-import com.microjet.airqi2.Definition.BroadcastActions;
-import com.microjet.airqi2.Definition.BroadcastIntents;
-import com.microjet.airqi2.Definition.SavePreferences;
-import com.microjet.airqi2.DownloadTask;
-import com.microjet.airqi2.MainActivity;
-import com.microjet.airqi2.MyApplication;
-import com.microjet.airqi2.TvocNoseData;
-import com.microjet.airqi2.myData;
-import com.microjet.airqi2.R;
-import com.microjet.airqi2.NotificationHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -1138,6 +1134,16 @@ public class UartService extends Service {
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
+
+                    //20180321
+                    writeDataToFile( RString ,getApplicationContext());
+//                    writeDataToFile(RString.get(1).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(2).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(3).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(4).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(5).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(6).toString()+",",getApplicationContext());
+
 
                     // 20180226 add
                     if (isFirstB0) {
@@ -2315,6 +2321,69 @@ public class UartService extends Service {
 
         return dbSucessOrNot;
     }
+
+    //20180321
+    public void writeDataToFile(ArrayList<String> data,Context context) {
+
+        try{
+
+            File kk =   context.getFileStreamPath("BLE_Data.csv");
+            if(!kk.exists()) {
+                OutputStreamWriter outputStreamWriterData = new OutputStreamWriter(context.openFileOutput("BLE_Data.csv", Context.MODE_PRIVATE));
+                outputStreamWriterData.write("TEMPValue,HUMIValue,TVOCValue,ECO2Value,PM25Value \r\n");
+                outputStreamWriterData.close();
+            }
+            File mSDFile = null;
+
+            //檢查有沒有SD卡裝置
+            if(Environment.getExternalStorageState().equals( Environment.MEDIA_REMOVED))
+            {
+                Toast.makeText( getApplicationContext(), "沒有SD卡!!!" , Toast.LENGTH_SHORT ).show();
+                return ;
+            }
+            else
+            {
+                //取得SD卡儲存路徑
+                mSDFile = Environment.getExternalStorageDirectory();
+                mSDFile = context.getFileStreamPath("BLE_Data.csv");
+                //mSDFile = context.getFileStreamPath("BLEaddressData.txt");
+            }
+            //取得SD卡儲存路徑
+            //mSDFile = Environment.getExternalStorageDirectory();
+            //建立文件檔儲存路徑
+            //File mFile = new File(mSDFile.getParent() + "/" + mSDFile.getName() + "/Andy123");
+            FileWriter mFileWriter = new FileWriter( mSDFile,true);
+            //若沒有檔案儲存路徑時則建立此檔案路徑
+            //if(!mSDFile.exists())
+            //{
+            //    mSDFile.mkdirs();
+            //}
+            //true新增 false為覆蓋
+
+            //String data03 = "Hello! This is Data02!!";
+            //mFileWriter.write(data03);
+            //String data02 = "\r\n";
+            //mFileWriter.write(data02);
+            //String data01 = "This is OutputStream Data01!";
+            //mFileWriter.write(data01);
+            //mFileWriter.write(data02);
+            //String data04 = "This is OutputStream DataTESTANDY!";
+            for (int k = 0; k < 5; k++ ){
+                mFileWriter.write(data.get(k)+",");
+            }
+            mFileWriter.write("\r\n");
+
+
+            mFileWriter.close();
+            //outputStreamWriterData.close();
+            Toast.makeText(getApplicationContext(), "手動模式已儲存文字"+data, Toast.LENGTH_SHORT).show();
+            Log.e("data write to failed: " ,data.toString());
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
 
 }
 

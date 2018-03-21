@@ -21,8 +21,7 @@ class DataToExcle {
     internal lateinit var EXCEL_PATH: String
 
     /** 開啟一個可寫入的excel檔案，注意最後必須調用closeExcelWritableWorkbook以完成寫入。  */
-    fun createExcelWritableWorkbook(path: String, fileName: String
-    ): Boolean {
+    fun createExcelWritableWorkbook(path: String, fileName: String): Boolean {
         this.path = path
         this.fileName = fileName + ".xls"
 
