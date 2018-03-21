@@ -11,6 +11,26 @@ import java.util.concurrent.TimeUnit
  * Created by B00175 on 2018/1/29.
  */
 object TvocNoseData {
+    //B0
+    val TEMP = "TEMP"
+    val HUMI = "HUMI"
+    val ECO2 = "ECO2"
+    val TVOC = "TVOC"
+    val PM25 = "PM25"
+    val BATT = "BATT"
+    val PREH = "PREH"
+    //B1
+    val MAC = "MAC"
+    val DEVICE = "DEV"
+    val TVOCSENOR = "TVOC"
+    val FW = "FW"
+    //B2
+//    val SR = "sample rate
+//    val sensor on time
+//    val time to get sample
+//    val pump on time
+
+
     var spinnerPosition: Int = 0
     var calObject = Calendar.getInstance()
 

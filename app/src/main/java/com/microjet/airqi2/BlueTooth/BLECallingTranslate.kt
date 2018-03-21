@@ -1,6 +1,7 @@
 package com.microjet.airqi2.BlueTooth
 
 import android.util.Log
+import com.microjet.airqi2.TvocNoseData
 import java.util.ArrayList
 import kotlin.experimental.and
 
@@ -797,6 +798,176 @@ object CallingTranslate {
         return byteArrayOf(Command_List.WriteCmd, Command_List.WriteThreeBytesLens, Command_List.GetSetPM25, input1, input2, input3, checkSum)
     }
 
+    fun getAllSensorKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1-> {//Temperature
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.TEMP,newTemp)
+                            value = 0
+                        }
+                        2-> {//Humidity
+                            returnValue.put(TvocNoseData.HUMI,value.toString())
+                            value = 0
+                        }
+                        4-> {//TVOC
+                            returnValue.put(TvocNoseData.TVOC,value.toString())
+                            value = 0
+                        }
+                        6-> {//CO2
+                            returnValue.put(TvocNoseData.ECO2,value.toString())
+                            value = 0
+                        }
+                        8->{//PM25
+                            returnValue.put(TvocNoseData.PM25,value.toString())
+                            value = 0
+                        }
+                        9->{//battery life
+                            returnValue.put(TvocNoseData.BATT,value.toString())
+                            value = 0
+                        }
+                        10->{//Preheater
+                            returnValue.put(TvocNoseData.PREH,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun parserGetInfoKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var stringHex = ""
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i = i + 1//Point to DataValue
+                    stringHex += Integer.toString((bytes[i] and  0xff.toByte()) + 0x100, 16).substring(1)
+                    when (j) {
+                        5//MAC Address
+                        -> {
+                            returnValue.put(TvocNoseData.MAC,stringHex)
+                            stringHex = ""
+                        }
+                        6//Device
+                        -> {
+                            returnValue.put(TvocNoseData.DEVICE,stringHex)
+                            stringHex = ""
+                        }
+                        7//VOC sensor
+                        -> {
+                            returnValue.put(TvocNoseData.TVOCSENOR,stringHex)
+                            stringHex = ""
+                        }
+                        10//FW Version
+                        -> {
+                            returnValue.put(TvocNoseData.FW,stringHex)
+                            stringHex = ""
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+
+        }
+        return returnValue
+    }
+
+    /*
+    fun parserGetSampleRateKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i++//Point to DataValue
+                    value = value shl 8
+                    value += bytes[i].toPositiveInt()
+                    when (j) {
+                        0//sample rate
+                        -> {
+                            returnValue.put()
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        2//sensor on time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        4//time to get sample
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        6//pump on time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        8//pumping time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                    /*暫時用不到
+                    9//get data in cycle 間隔多久取資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    10//期間內取幾次資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }*/
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+        return returnValue
+    }
+    */
 
 
     fun Byte.toPositiveInt() = toInt() and 0xFF

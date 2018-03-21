@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDrawerToggle : ActionBarDrawerToggle? = null
 
     // 電池電量數值
-    private var batValue : Int = 0
+    //private var batValue : Int = 0
 
     // 藍芽icon in actionbar
     private var bleIcon : MenuItem? = null
@@ -169,6 +169,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         DISCONNECTING,
         DISCONNECTED,
     }
+
+    private var errorTime = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -836,7 +838,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return intentFilter
     }
 
-    private fun displayConnetedBatteryLife() {
+    private fun displayConnetedBatteryLife(batValue: Int) {
         val icon: AnimationDrawable
         when (batValue) {
         // Charge
@@ -958,12 +960,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                     //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
                     //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
-                    batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-                    val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    Log.v(TAG, "電池電量: $batValue%")
+                    //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
+                    //val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    //Log.v(TAG, "電池電量: $batValue%")
                     // 預熱畫面控制
-                    heatingPanelControl(preheatCountDownString)
-                    displayConnetedBatteryLife()
+                    //heatingPanelControl(preheatCountDownString)
+                    //displayConnetedBatteryLife()
                 }
                 BroadcastActions.ACTION_DATA_AVAILABLE -> {
                     dataParse(intent)
@@ -1338,85 +1340,99 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Dialog.show()
     }
 
-    private var errorTime = 0
-    fun dataParse(intent: Intent) {
+
+    private fun dataParse(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
-
         when (txValue[0]) {
-
+            0xE0.toByte() -> { }
+            0xE1.toByte() -> { }
+            0xEA.toByte() -> { }
+            else -> { }
         }
         when (txValue[2]) {
-            0xE0.toByte() -> {
-                Log.d("UART feeback", "ok")
-                return
-            }
-            0xE1.toByte() -> {
-                Log.d("UART feedback", "Couldn't write in device")
-                return
-            }
-            0xE2.toByte() -> {
-                Log.d("UART feedback", "Temperature sensor fail")
-                return
-            }
-            0xE3.toByte() -> {
-                Log.d("UART feedback", "TVOC sensor fail")
-                return
-            }
-            0xE4.toByte() -> {
-                Log.d("UART feedback", "Pump power fail")
-                return
-            }
-            0xE5.toByte() -> {
-                Log.d("UART feedback", "Invalid value")
-                return
-            }
-            0xE6.toByte() -> {
-                Log.d("UART feedback", "Unknown command")
-                return
-            }
-            0xE7.toByte() -> {
-                Log.d("UART feedback", "Waiting timeout")
-                return
-            }
-            0xE8.toByte() -> {
-                Log.d("UART feedback", "Checksum error")
-                return
-            }
+            0xE0.toByte() -> { Log.d("UART feeback", "ok"); return}
+            0xE1.toByte() -> { Log.d("UART feedback", "Couldn't write in device"); return}
+            0xE2.toByte() -> { Log.d("UART feedback", "Temperature sensor fail"); return}
+            0xE3.toByte() -> { Log.d("UART feedback", "TVOC sensor fail"); return }
+            0xE4.toByte() -> { Log.d("UART feedback", "Pump power fail"); return }
+            0xE5.toByte() -> { Log.d("UART feedback", "Invalid value"); return }
+            0xE6.toByte() -> { Log.d("UART feedback", "Unknown command"); return }
+            0xE7.toByte() -> { Log.d("UART feedback", "Waiting timeout"); return }
+            0xE8.toByte() -> { Log.d("UART feedback", "Checksum error"); return }
             0xB1.toByte() -> Log.d(TAG, "cmd:0xB1 feedback")
             0xB2.toByte() -> Log.d(TAG, "cmd:0xB2 feedback")
             0xB4.toByte() -> Log.d(TAG, "cmd:0xB4 feedback")
             0xB5.toByte() -> Log.d(TAG, "cmd:0xB5 feedback")
             0xB9.toByte() -> Log.d(TAG, "cmd:0xB9 feedback")
         }
-
-        var sss = String.format("%02X", txValue[2])
-        Log.d("MAIN",sss)
-        if (errorTime >= 3) {
-            errorTime = 0
-        }
+        var singleByte = String.format("%02X", txValue[2])
+        Log.d("MAINSINGLECMD",singleByte)
+        if (errorTime >= 3) { errorTime = 0 }
         if (!checkCheckSum(txValue)) {
             errorTime += 1
         } else {
-            var rString = ArrayList<String>()
+            var hashMap = HashMap<String, String>()
             when (txValue[2]) {
                 0xB0.toByte() -> {
-                    rString = CallingTranslate.GetAllSensor(txValue)
-                    tvBtmTEMPValue.text = rString[0]
-                    tvBtmHUMIValue.text = rString[1]
-                    tvBtmTVOCValue.text = rString[2]
-                    tvBtmCO2Value.text = rString[3]
-                    tvBtmPM25Value.text = rString[4]
-                    //mainIntent.putExtra("BatteryLife", RString.get(5));
-                    //mainIntent.putExtra("PreheatCountDown", RString.get(6));
-                    Log.d("MAIN",rString[1].toString())
+                    hashMap = CallingTranslate.getAllSensorKeyValue(txValue)
+                    tvBtmTEMPValue.text = hashMap[TvocNoseData.TEMP]
+                    tvBtmHUMIValue.text = hashMap[TvocNoseData.HUMI]
+                    tvBtmTVOCValue.text = hashMap[TvocNoseData.TVOC]
+                    tvBtmCO2Value.text = hashMap[TvocNoseData.ECO2]
+                    tvBtmPM25Value.text = hashMap[TvocNoseData.PM25]
+                    heatingPanelControl(hashMap[TvocNoseData.PREH]!!)
+                    displayConnetedBatteryLife(hashMap[TvocNoseData.BATT]!!.toInt())
+                    Log.d("PARSERB0",hashMap.toString())
                 }
                 0xB1.toByte() -> {
-                    rString = CallingTranslate.ParserGetInfo(txValue)
-                    //isPM25 = rString[0]
-                    //deviceVersion = rString[3]
-                    //MyApplication.putDeviceVersion(deviceVersion)
-                    //Log.d("PARSEB1","Version " + deviceVersion)
+                    hashMap = CallingTranslate.parserGetInfoKeyValue(txValue)
+                    Log.d("PARSERB1",hashMap.toString())
                 }
+                /*
+                0xB2.toByte() -> {
+                    hashMap = CallingTranslate.parserGetSampleRateKeyValue(txValue)
+                    val share = getSharedPreferences("ASMSetting", Context.MODE_PRIVATE)
+                    val setting0 = share.getString("sample_rate", "2")
+                    val setting1 = share.getString("sensor_on_time_range", "60")
+                    val setting2 = share.getString("sensor_to_get_sample", "2")
+                    val setting3 = share.getString("pump_on_time", "1")
+                    val setting4 = share.getString("pumping_time_range", "2")
+
+                    share.edit()
+                            .putString("sample_rate", "2")
+                            .putString("sensor_on_time_range", "60")
+                            .putString("sensor_to_get_sample", "2")
+                            .putString("pump_on_time", "1")
+                            .putString("pumping_time_range", "2").apply()
+                    //if RString.size >= 5
+                    //{
+                    Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4))
+
+                        if (setting0 == RString.get(0)
+                                && setting1 == RString.get(1)
+                                && setting2 == RString.get(2)
+                                && setting3 == RString.get(3)
+                                && setting4 == RString.get(4)) {
+                            Log.d("0xB2", "True")
+                        } else {
+                            share.edit()
+                                    .putString("sample_rate", "2")
+                                    .putString("sensor_on_time_range", "60")
+                                    .putString("sensor_to_get_sample", "2")
+                                    .putString("pump_on_time", "1")
+                                    .putString("pumping_time_range", "2").apply()
+                            val param = intArrayOf(2, 2 * 30, 2, 1, 2, 0, 0)
+                            Log.d(TAG, "setSampleRate")
+                            writeRXCharacteristic(CallingTranslate.SetSampleRate(param))
+                        }
+                        setSampleRateTime(Integer.parseInt(RString.get(0)))
+                        writeRXCharacteristic(CallingTranslate.GetHistorySampleItems())
+                        //SetPM25 180308
+                        intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
+                        sendBroadcast(intent)
+                    }
+                }
+                */
             }
         }
     }

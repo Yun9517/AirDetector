@@ -109,7 +109,7 @@ class UartService: Service() {
                 for (byteChar in data)
                     stringBuilder.append(String.format("%02X ", byteChar))
                 //intent.putExtra(BroadcastActions.ACTION_EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
-                Log.d("UART",stringBuilder.toString())
+                Log.d("UARTRAWDATA",stringBuilder.toString())
             }
             intent.putExtra(BroadcastActions.ACTION_EXTRA_DATA, data)
         } else {
