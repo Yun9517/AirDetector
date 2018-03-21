@@ -245,20 +245,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         result[i]!!.pM25Value.toInt()
                     }
 
-                    val rectOptions = when(data) {
-                                in 0..219 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value1))
-                                in 220..659 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value2))
-                                in 660..2199 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value3))
-                                in 2200..5499 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value4))
-                                in 5500..19999 -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value5))
-                                else -> PolylineOptions().width(10F).color(
-                                        ContextCompat.getColor(this, R.color.air_map_line_value6))
-                            }
+                    val rectOptions = PolylineOptions()
+                            .width(10F)
+                            .color(setPolylineColor(data, rbTVOC.isChecked))
 
                     if(i < result.size - 1) {
                         rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
@@ -343,6 +332,29 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
             else -> {
                 imgAirQuality.setImageResource(R.drawable.face_icon_06brown_active)
+            }
+        }
+    }
+
+    // 取得軌跡顏色
+    private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
+        if(isTVOC) {
+            return when (value) {
+                in 0..219 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
+                in 220..659 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
+                in 660..2199 -> ContextCompat.getColor(this, R.color.air_map_line_value3)
+                in 2200..5499 -> ContextCompat.getColor(this, R.color.air_map_line_value4)
+                in 5500..19999 -> ContextCompat.getColor(this, R.color.air_map_line_value5)
+                else -> ContextCompat.getColor(this, R.color.air_map_line_value6)
+            }
+        } else {
+            return when (value) {
+                in 0..15 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
+                in 16..34 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
+                in 35..54 -> ContextCompat.getColor(this, R.color.air_map_line_value3)
+                in 55..150 -> ContextCompat.getColor(this, R.color.air_map_line_value4)
+                in 151..250 -> ContextCompat.getColor(this, R.color.air_map_line_value5)
+                else -> ContextCompat.getColor(this, R.color.air_map_line_value6)
             }
         }
     }
