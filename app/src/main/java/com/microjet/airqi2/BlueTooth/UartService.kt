@@ -8,6 +8,7 @@ import android.os.Binder
 import android.os.IBinder
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
+import android.widget.Toast
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
 import org.greenrobot.eventbus.EventBus
@@ -42,6 +43,9 @@ class UartService: Service() {
     val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
     val EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA"
 
+    private val bus = EventBus.getDefault()
+    private val bleEventObj = BleEvent()
+
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             val intentAction: String
@@ -52,8 +56,8 @@ class UartService: Service() {
                 Log.i(TAG, "Connected to GATT server.")
                 // Attempts to discover services after successful connection.
                 Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
-                EventBus.getDefault().post(BleEvent(intentAction))
-
+                bleEventObj.message = intentAction
+                bus.post(bleEventObj)
             } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                 intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                 mConnectionState = STATE_DISCONNECTED
@@ -64,13 +68,8 @@ class UartService: Service() {
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_GATT_SERVICES_DISCOVERED)
-
-                val rxService = mBluetoothGatt!!.getService(RX_SERVICE_UUID)
-                val txChar = rxService!!.getCharacteristic(TX_CHAR_UUID)
-                setCharacteristicNotification(txChar!!,true)
-                Log.d("SERVICE",rxService.characteristics.toString())
-
+                broadcastUpdate(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
+                enableTXNotification(gatt)
             } else {
                 Log.w(TAG, "onServicesDiscovered received: " + status)
             }
@@ -80,13 +79,13 @@ class UartService: Service() {
                                           characteristic: BluetoothGattCharacteristic,
                                           status: Int) {
             if (status == BluetoothGatt.GATT_SUCCESS) {
-                broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
+                //broadcastUpdate(BroadcastActions.ACTION_DATA_AVAILABLE, characteristic)
             }
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt,
                                              characteristic: BluetoothGattCharacteristic) {
-            broadcastUpdate(ACTION_DATA_AVAILABLE, characteristic)
+            broadcastUpdate(BroadcastActions.ACTION_DATA_AVAILABLE, characteristic)
         }
     }
 
@@ -99,34 +98,24 @@ class UartService: Service() {
     private fun broadcastUpdate(action: String,
                                 characteristic: BluetoothGattCharacteristic) {
         val intent = Intent(action)
-
         // This is special handling for the Heart Rate Measurement profile.  Data parsing is
         // carried out as per profile specifications:
         // http://developer.bluetooth.org/gatt/characteristics/Pages/CharacteristicViewer.aspx?u=org.bluetooth.characteristic.heart_rate_measurement.xml
-        if ("6e400003-b5a3-f393-e0a9-e50e24dcca9e".equals(characteristic.uuid)) {
-            val flag = characteristic.properties
-            var format = -1
-            if (flag and 0x01 != 0) {
-                format = BluetoothGattCharacteristic.FORMAT_UINT16
-                Log.d(TAG, "Heart rate format UINT16.")
-            } else {
-                format = BluetoothGattCharacteristic.FORMAT_UINT8
-                Log.d(TAG, "Heart rate format UINT8.")
-            }
-            val heartRate = characteristic.getIntValue(format, 1)!!
-            Log.d(TAG, String.format("Received heart rate: %d", heartRate))
-            intent.putExtra(EXTRA_DATA, heartRate.toString())
-        } else {
+        if (TX_CHAR_UUID == characteristic.uuid){
             // For all other profiles, writes the data formatted in HEX.
             val data = characteristic.value
             if (data != null && data.size > 0) {
                 val stringBuilder = StringBuilder(data.size)
                 for (byteChar in data)
                     stringBuilder.append(String.format("%02X ", byteChar))
-                intent.putExtra(EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
+                //intent.putExtra(BroadcastActions.ACTION_EXTRA_DATA, String(data) + "\n" + stringBuilder.toString())
+                Log.d("UART",stringBuilder.toString())
             }
+            intent.putExtra(BroadcastActions.ACTION_EXTRA_DATA, data)
+        } else {
+            Log.d("UART","broadcastUpdate Error")
         }
-        sendBroadcast(intent)
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
     }
 
     inner class LocalBinder : Binder() {
@@ -289,6 +278,23 @@ class UartService: Service() {
     fun getSupportedGattServices(): List<BluetoothGattService>? {
         return if (mBluetoothGatt == null) null else mBluetoothGatt?.getServices()
 
+    }
+
+    fun enableTXNotification(gatt: BluetoothGatt) {
+        val rxService = gatt?.getService(RX_SERVICE_UUID)
+        if (rxService == null) {
+            Toast.makeText(this,"Rx service not found!",Toast.LENGTH_SHORT).show()
+            return
+        }
+        val txChar = rxService.getCharacteristic(TX_CHAR_UUID)
+        if (txChar == null) {
+            Toast.makeText(this,"Tx characteristic not found!",Toast.LENGTH_SHORT).show()
+            return
+        }
+        mBluetoothGatt?.setCharacteristicNotification(txChar, true)
+        val descriptor = txChar.getDescriptor(CCCD)
+        descriptor.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+        mBluetoothGatt?.writeDescriptor(descriptor)
     }
 
 

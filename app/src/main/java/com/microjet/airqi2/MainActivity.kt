@@ -39,6 +39,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
+import com.microjet.airqi2.BlueTooth.CallingTranslate
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -50,14 +51,17 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.R.id.batStatus
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import kotlinx.android.synthetic.main.frg_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.nio.charset.Charset
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -211,7 +215,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
 
-        checkUIState()
+        //checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
 
@@ -269,7 +273,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         if (mUartService == null) {
             connState = BleConnection.DISCONNECTED
-            checkUIState()
+            //checkUIState()
         }
     }
 
@@ -557,7 +561,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //點選ActionBAR會返回
             android.R.id.home -> {
-                checkUIState()
+                //checkUIState()
                 checkLoginState()
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
@@ -691,7 +695,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.d("MAIN","BLEDISCONNTED ERROR")
         }
         //stopService(serviceIntent)
-        checkUIState()
+        //checkUIState()
     }
 
     private fun setGPSEnabled() {
@@ -818,14 +822,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
-        intentFilter.addAction(BroadcastActions.EXTRA_DATA)
-        //intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
         intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
+        //intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
+        /*
+        intentFilter.addAction(BroadcastActions.ACTION_EXTRA_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_GET_RESULT)
         intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
         intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_STATUS_HEATING)
+        */
         return intentFilter
     }
 
@@ -921,34 +928,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
-                    val bundle = intent.extras
-                    //drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
-
+                    bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
+                    img_bt_status.setImageResource(R.drawable.app_android_icon_connect)
                     val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-                    //val nameshare = getSharedPreferences("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjBlODQ3OWU2MjRhNzVjMThiOTAyYzYzZTI1NzgwMDY4MzU1NTNkNWEyNzNlOWMwMTVjNzYzZDBkOGM2NjNiNWMyNTI1ZGI0Y2I1ZDU5NTk3In0.eyJhdWQiOiIxIiwianRpIjoiMGU4NDc5ZTYyNGE3NWMxOGI5MDJjNjNlMjU3ODAwNjgzNTU1M2Q1YTI3M2U5YzAxNWM3NjNkMGQ4YzY2M2I1YzI1MjVkYjRjYjVkNTk1OTciLCJpYXQiOjE1MjEwMTMwNTIsIm5iZiI6MTUyMTAxMzA1MiwiZXhwIjoxNTUyNTQ5MDUyLCJzdWIiOiIzMTEiLCJzY29wZXMiOltdfQ.aL5qFGRYFGgRR25DYJvnmo7YotOr9AE7GpzHdkJ6UaCN87A0ejThEPTdoMW-CiRhdQ4Yslm7ICoz45vDR4Hzrn4MrBLcPmMRuEXFwasdHfL-kLev2d8XH2JzuPBJjwit2n482CpQezXraVOroL5D2Rnd5jWLza5_8Nj5yG-RKvRMY6nF9rMt2TBvhhemFVPJs55mFaFKwvWUWxXKr1mLdpYIzecCshzRhHFBFqzM_5ZMrCiLg-yz0jvnmWlfxgVzM1XDVe9T-hx3OV98Rx8jRBbf10auXQ_lqtOFcEKQpzRQuiN7XVO7pYvIR47-hn34csan0XspWO04TXK685-1vfygc2vN7rn87_FUeIxeosj8YLLdmM5xCshzDxzfKfgquTEOeReIcXlHBne7skOudvR6qW54UebFxSb7OImdjWBC3Y8IbcRQraTSXh3GfWWni7XonLDQGcx5V5OYxDHV-RYd64l_9ZlTV01AYVMJ5C_QMVgPA0UAnjm5mLudBLKCW4a_m6plc_ZXBEulPzRer0BIZP4Gl1HBBEeE1h2vr58ixPXIGgRvslnIr98FlcfqpS2vlI5VQQokDmCtBlJq8VaIuAi1VXtpRVnZ9wcR94ws_puuHLadHLWFzGviSGwUgpKeF5qQGqx4TTB81YY9bJjsY7DJIONgVdIPiNtbtGo")
-                    val deviceName = share.getString("name", "")
-                    //val accountName = share.getString("name","")
-
+                    show_Dev_address.text = share.getString("mac", "")
+                    show_Device_Name.text = share.getString("name", "")
                     val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-                    val accountName = shareMSG.getString("name", "")
-                    val myEmail= shareMSG.getString("email","")
-
-                    drawerDeviceName = deviceName
-                    drawerAccountName = accountName
-
-                    // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
-                    /*if(name == "TVOC_NOSE") {
-                        this@MainActivity.supportFragmentManager.beginTransaction().hide(mPM25Fg).commit()
-                    } else {
-                        this@MainActivity.supportFragmentManager.beginTransaction().show(mPM25Fg).commit()
-                    }*/
-                    // drawerDeviceAddress = intent.getStringExtra("macAddress")
-                    //    updateUI(intent)
+                    text_Account_status.text = shareMSG.getString("name", "")
+                    naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+                    naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
                     battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
+                    bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
+                    img_bt_status.setImageResource(R.drawable.app_android_icon_disconnect)
+                    show_Dev_address.text = ""
+                    show_Device_Name.text = "尚未連接裝置"
+                    naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+                    naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
                     heatingPanelHide()
                     //    updateUI(intent)
                 }
@@ -966,28 +965,33 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     heatingPanelControl(preheatCountDownString)
                     displayConnetedBatteryLife()
                 }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataParse(intent)
+                }
             }
             Log.d("MainActivity", "OnReceive: $action")
-            checkUIState()
+            //checkUIState()
         }
 
 
     }
 
+    /*
     @Synchronized private fun checkUIState() {
+
         if (connState == BleConnection.CONNECTED) {
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
+            //naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
             naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
             naviView.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
+            //bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
         } else {
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = ""
+            //naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = ""
             naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = getText(R.string.No_Device_Connect)
             naviView.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
@@ -996,7 +1000,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             lightIcon?.setImageResource(R.drawable.app_android_icon_light)
         }
         Log.d("MAINcheckUIState", connState.toString())
+
     }
+    */
 
 
     private fun makeBluetoothStateIntentFilter(): IntentFilter {
@@ -1307,8 +1313,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 result = false
             } else {
                 result = networkInfo.isAvailable()
-}
-
+            }
         }catch (E: Exception) {
             Log.e("網路", E.toString())
         }
@@ -1333,10 +1338,107 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Dialog.show()
     }
 
+    private var errorTime = 0
+    fun dataParse(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+
+        when (txValue[0]) {
+
+        }
+        when (txValue[2]) {
+            0xE0.toByte() -> {
+                Log.d("UART feeback", "ok")
+                return
+            }
+            0xE1.toByte() -> {
+                Log.d("UART feedback", "Couldn't write in device")
+                return
+            }
+            0xE2.toByte() -> {
+                Log.d("UART feedback", "Temperature sensor fail")
+                return
+            }
+            0xE3.toByte() -> {
+                Log.d("UART feedback", "TVOC sensor fail")
+                return
+            }
+            0xE4.toByte() -> {
+                Log.d("UART feedback", "Pump power fail")
+                return
+            }
+            0xE5.toByte() -> {
+                Log.d("UART feedback", "Invalid value")
+                return
+            }
+            0xE6.toByte() -> {
+                Log.d("UART feedback", "Unknown command")
+                return
+            }
+            0xE7.toByte() -> {
+                Log.d("UART feedback", "Waiting timeout")
+                return
+            }
+            0xE8.toByte() -> {
+                Log.d("UART feedback", "Checksum error")
+                return
+            }
+            0xB1.toByte() -> Log.d(TAG, "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d(TAG, "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d(TAG, "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d(TAG, "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d(TAG, "cmd:0xB9 feedback")
+        }
+
+        var sss = String.format("%02X", txValue[2])
+        Log.d("MAIN",sss)
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            var rString = ArrayList<String>()
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                    rString = CallingTranslate.GetAllSensor(txValue)
+                    tvBtmTEMPValue.text = rString[0]
+                    tvBtmHUMIValue.text = rString[1]
+                    tvBtmTVOCValue.text = rString[2]
+                    tvBtmCO2Value.text = rString[3]
+                    tvBtmPM25Value.text = rString[4]
+                    //mainIntent.putExtra("BatteryLife", RString.get(5));
+                    //mainIntent.putExtra("PreheatCountDown", RString.get(6));
+                    Log.d("MAIN",rString[1].toString())
+                }
+                0xB1.toByte() -> {
+                    rString = CallingTranslate.ParserGetInfo(txValue)
+                    //isPM25 = rString[0]
+                    //deviceVersion = rString[3]
+                    //MyApplication.putDeviceVersion(deviceVersion)
+                    //Log.d("PARSEB1","Version " + deviceVersion)
+                }
+            }
+        }
+    }
+
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        var max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        var checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onMessageEvent(event: BleEvent) {
         Toast.makeText(this,event.message,Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this,event.char?.uuid.toString(),Toast.LENGTH_SHORT).show()
     }
+
 }
 
 
