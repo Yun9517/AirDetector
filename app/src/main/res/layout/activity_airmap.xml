@@ -15,7 +15,7 @@
         android:background="@color/blackTransparentColor"
         android:padding="140dp"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -96,7 +96,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="60000 ppb"
+                        android:text="---- ppb"
                         android:textAlignment="center"
                         android:textColor="@color/AboutHyperLink" />
 
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="9000 μm"
+                        android:text="---- μg/m³"
                         android:textAlignment="center"
                         android:textColor="@color/AboutHyperLink" />
 
@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="5000 ppm"
+                        android:text="---- ppm"
                         android:textAlignment="center"
                         android:textColor="@color/AboutHyperLink" />
 
@@ -192,7 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="100 °C"
+                        android:text="---- °C"
                         android:textAlignment="center"
                         android:textColor="@color/AboutHyperLink" />
 
@@ -224,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:singleLine="true"
-                        android:text="100 %"
+                        android:text="---- %"
                         android:textAlignment="center"
                         android:textColor="@color/AboutHyperLink" />
 

@@ -108,6 +108,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
                         datePicker.text = setBtnText("DATE $mDate")
 
+                        pgLoading.visibility = View.VISIBLE
+                        pgLoading.bringToFront()
+
                         startLoadDataThread()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage("請選擇日期")
@@ -151,9 +154,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // GetData執行緒啟動與關閉🙄
     private fun startLoadDataThread() {
-        pgLoading.visibility = View.VISIBLE
-        pgLoading.bringToFront()
-
         runGetDataThread = Thread(runGetDataRunnable)
         runGetDataThread!!.start()
     }
@@ -163,7 +163,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             runGetDataThread!!.interrupt()
             runGetDataThread = null
         }
-        pgLoading.visibility = View.GONE
+
+        if(pgLoading.visibility == View.VISIBLE) {
+            pgLoading.visibility = View.GONE
+        }
     }
 
     // 文字分割
@@ -474,6 +477,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             mMap.uiSettings.isZoomControlsEnabled = true
 
             initLocation()
+
+            pgLoading.visibility = View.VISIBLE
+            pgLoading.bringToFront()
 
             startLoadDataThread()
         }
