@@ -2376,7 +2376,7 @@ public class UartService extends Service {
 
             mFileWriter.close();
             //outputStreamWriterData.close();
-            Toast.makeText(getApplicationContext(), "手動模式已儲存文字"+data, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "手動模式已儲存文字"+data, Toast.LENGTH_SHORT).show();
             Log.e("data write to failed: " ,data.toString());
         }
         catch (IOException e) {

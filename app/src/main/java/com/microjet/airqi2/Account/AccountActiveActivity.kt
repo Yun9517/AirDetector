@@ -1,30 +1,37 @@
 package com.microjet.airqi2.Account
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.provider.ContactsContract.Directory.PACKAGE_NAME
+import android.os.Environment
 import android.support.v7.app.AppCompatActivity
+import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
+import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
-import kotlinx.android.synthetic.main.activity_account_active.*
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
-import kotlinx.android.synthetic.main.drawer_header.*
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
 import org.json.JSONArray
+import org.json.JSONException
 import org.json.JSONObject
-import android.text.InputFilter
-
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.io.OutputStreamWriter
+import java.util.*
 
 
 /**
@@ -89,14 +96,22 @@ class AccountActiveActivity : AppCompatActivity() {
 
         // 03/19 Share to Line
         shareData.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.action = Intent.ACTION_SEND
 
-            //20180319
-            intent.putExtra(Intent.EXTRA_TEXT, "幹出來!")
-            intent.type = "text/plain"
-            startActivity(intent)
+            //20180321
+//            dbData2CVSAsyncTasks().execute()
+//
+//
+//
+//            val intent = Intent(Intent.ACTION_VIEW)
+//            intent.action = Intent.ACTION_SEND
+//            //val uri = Uri.fromFile(File(param))
+//            //intent.setDataAndType(uri, "application/vnd.ms-excel")
+//            //20180319
+//            intent.putExtra(Intent.EXTRA_TEXT, "幹出來!")
+//            intent.type = "text/plain"
+//            startActivity(intent)
 
+            //getExcelFileIntent()
 
 
 
@@ -108,6 +123,20 @@ class AccountActiveActivity : AppCompatActivity() {
 //            intent.type = "text/plain"
 //            intent.putExtra(Intent.EXTRA_TEXT, "123321")
 //            startActivity(intent)
+            val cachePath = applicationContext.externalCacheDir!!.path
+            val picFile = File(cachePath, "BLE_Data.csv")
+            val intent = Intent(Intent.ACTION_SEND)
+
+            intent.setAction(Intent.ACTION_SEND_MULTIPLE);
+            //intent.addCategory("android.intent.category.DEFAULT")
+            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            //val uri = Uri.fromFile(File("/data/user/0/com.microjet.airqi2/files/BLE_Data.csv"))//   /data/data/com.microjet.airqi2/files/BLE_Data.csv
+            intent.setType("*/*")
+            //intent.setDataAndType(uri, "|application/vnd.ms-excel|xls")
+            intent.putExtra(Intent.EXTRA_STREAM,picFile)
+            //intent.type = "|application/vnd.ms-excel|csv"
+            startActivity(intent)
+            Log.e("幹","幹")
 
         }
 
@@ -251,4 +280,189 @@ class AccountActiveActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    private inner class dbData2CVSAsyncTasks : AsyncTask<Void, Void, String>() {
+        //@RequiresApi(api = Build.VERSION_CODES.N)
+        override fun doInBackground(vararg params: Void): String? {
+            var return_body: RequestBody? = null
+            var getResponeResult = java.lang.Boolean.parseBoolean(null)
+            try {
+
+//                //取得getRequestBody
+//                return_body = getRequestBody()
+//                //呼叫getResponse取得結果
+//                if (return_body!!.contentLength() > 0) {
+//                    getResponeResult = getResponse(return_body)
+//
+//                    if (getResponeResult) {
+//                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+//                        val DBSucess = updateDB_UpLoaded()
+//                        if (DBSucess) {
+//                            Log.e("幹改進去", DBSucess.toString())
+//                        }
+//                        hasBeenUpLoaded.clear()
+//                    } else {
+//                        Log.e("幹改失敗拉!!", getResponeResult.toString())
+//                    }
+//                } else {
+//                    Log.e("幹太少筆啦!", return_body.contentLength().toString())
+//                }
+                try {
+                    val AllData = getDbData(Date().day, Date().day)
+                    writeDataToFile(AllData!!, this@AccountActiveActivity)
+                } catch (e: Exception) {
+                    Log.e("寫EXCLE檔失敗", e.toString())
+                }
+
+
+            } catch (e: Exception) {
+                Log.e("return_body_erro", e.toString())
+            }
+
+            return "已經按下分享"
+        }
+
+        override fun onPostExecute(result: String?) {
+            super.onPostExecute(result)
+
+            val Dialog = android.app.AlertDialog.Builder(this@AccountActiveActivity).create()
+            //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+            //Dialog.setTitle("提示")
+            Dialog.setTitle(getString(R.string.remind))
+            Dialog.setMessage(result.toString())
+            Dialog.setCancelable(false)//讓返回鍵與空白無效
+            //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
+            { dialog, _ ->
+                dialog.dismiss()
+            }
+            Dialog.show()
+            //finish()
+
+        }
+    }
+
+    //20180321
+    val DataArrayListOne = ArrayList<String>()
+    val DataArrayListAll= ArrayList< ArrayList<String>>()
+    private fun getDbData(startTimeZone: Int, EntTime: Int): ArrayList<String> {
+        //很重要同區域才可以叫到同一個東西
+        val realm1 = Realm.getDefaultInstance()
+        val query1 = realm1.where(AsmDataModel::class.java)
+        val result1 = query1.findAll()
+
+        Log.e("未上傳資料筆數", result1.size.toString())
+        Log.e("未上傳資料", result1.toString().toString())
+        //MyApplication getUUID=new MyApplication();
+        val UUID = MyApplication.getPsuedoUniqueID()
+        val timestampTEMP: Long? = null
+        try {
+            if (result1.size > 0) {
+                for (i in result1.indices) {
+                    //toltoSize++;
+                    //hasBeenUpLoaded.add(result1[i]!!.dataId)
+                    Log.i("text", "i=" + i + "\n")
+                    DataArrayListOne!!.add(result1[i]?.tempValue.toString())
+                    DataArrayListOne!!.add(result1[i]?.humiValue.toString())
+                    DataArrayListOne!!.add(result1[i]?.tvocValue.toString())
+                    DataArrayListOne!!.add(result1[i]?.ecO2Value.toString())
+                    DataArrayListOne!!.add(result1[i]?.pM25Value.toString())
+                    DataArrayListOne!!.add(result1[i]?.longitude!!.toString())
+                    DataArrayListOne!!.add(result1[i]?.latitude!!.toString())
+                    DataArrayListOne!!.add(result1[i]?.created_time.toString())
+                    //DataArrayListAll!!.add(DataArrayListOne)
+                    //Log.e("timestamp", "i=" + i + "timestamp=" + result1[i]!!.created_time!!.toString())
+                    //json_arr.put(json_obj_weather)
+                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
+
+                }
+            }else {
+                Log.e("未上傳資料筆數", result1.size.toString())
+            }
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+
+        realm1.close()
+
+        return DataArrayListOne
+    }
+
+
+
+
+    //20180321
+    fun writeDataToFile(data: ArrayList<String>, context: Context) {
+        try {
+
+            val kk = context.getFileStreamPath("BLE_Data.csv")
+            if (!kk.exists()) {
+                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.csv", Context.MODE_PRIVATE))
+                outputStreamWriterData.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
+                outputStreamWriterData.close()
+            }
+            var mSDFile: File? = null
+
+            //檢查有沒有SD卡裝置
+            if (Environment.getExternalStorageState() == Environment.MEDIA_REMOVED) {
+                Toast.makeText(applicationContext, "沒有SD卡!!!", Toast.LENGTH_SHORT).show()
+                return
+            } else {
+                //取得SD卡儲存路徑
+                mSDFile = Environment.getExternalStorageDirectory()
+                mSDFile = context.getFileStreamPath("BLE_Data.csv")
+                //mSDFile = context.getFileStreamPath("BLEaddressData.txt");
+            }
+            //取得SD卡儲存路徑
+            //mSDFile = Environment.getExternalStorageDirectory();
+            //建立文件檔儲存路徑
+            //File mFile = new File(mSDFile.getParent() + "/" + mSDFile.getName() + "/Andy123");
+            val mFileWriter = FileWriter(mSDFile!!, true)
+            //若沒有檔案儲存路徑時則建立此檔案路徑
+            //if(!mSDFile.exists())
+            //{
+            //    mSDFile.mkdirs();
+            //}
+            //true新增 false為覆蓋
+
+            //String data03 = "Hello! This is Data02!!";
+            //mFileWriter.write(data03);
+            //String data02 = "\r\n";
+            //mFileWriter.write(data02);
+            //String data01 = "This is OutputStream Data01!";
+            //mFileWriter.write(data01);
+            //mFileWriter.write(data02);
+            //String data04 = "This is OutputStream DataTESTANDY!";
+
+
+
+            for (k in 0..7) {
+                mFileWriter.write(data[k])
+            }
+
+            mFileWriter.write("\r\n")
+
+
+            mFileWriter.close()
+            //outputStreamWriterData.close();
+            //Toast.makeText(getApplicationContext(), "手動模式已儲存文字"+data, Toast.LENGTH_SHORT).show();
+            Log.e("data write to failed: ", data.toString())
+        } catch (e: IOException) {
+            Log.e("Exception", "File write failed: " + e.toString())
+        }
+    }
+
+    @SuppressLint("SdCardPath")
+//android获取一个用于打开Excel文件的intent
+    fun getExcelFileIntent() {
+        val intent = Intent("android.intent.action.VIEW")
+        intent.addCategory("android.intent.category.DEFAULT")
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        val uri = Uri.fromFile(File("/data/data/com.microjet.airqi2/files/BLE_Data.csv"))//   /data/data/com.microjet.airqi2/files/BLE_Data.csv
+        intent.setDataAndType(uri, "|application/vnd.ms-excel|csv")
+        this.startActivity(intent)
+    }
 }
+
+
