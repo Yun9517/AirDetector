@@ -21,11 +21,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import com.microjet.airqi2.BlueTooth.CallingTranslate
-import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.frg_main.*
@@ -61,7 +59,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     private var dataForState = DetectionData.TVOC
-    private var mConnState = false
+    private var connState = false
 
     private var errorTime = 0
 
@@ -651,7 +649,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     @SuppressLint("SimpleDateFormat")
     @Synchronized private fun checkUIState() {
-        if (mConnState && preHeat == "255") {
+        if (connState && preHeat == "255") {
             //setThresholdValue(dataForState)
             //setBarMaxValue(dataForState)
             when (dataForState) {
@@ -765,6 +763,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             tvNotify?.text = " "
             tvLastDetectTime.text = " "
             inCircleBar.setCurrentValues(0f)
+            imgLight?.setImageResource(R.drawable.app_android_icon_light)
         }
     }
 
@@ -778,22 +777,21 @@ class MainFragment : Fragment(), View.OnTouchListener {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    mConnState = false
-                    //setinCircleBarCurrentValue("0","0","0","0","0")
+                    connState = false
                 }
 
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    mConnState = true
+                    connState = true
                 }
 
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    val bundle = intent.extras
-                    tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
-                    humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
-                    tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
-                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
-                    pm25DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toFloat()
-                    preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    //val bundle = intent.extras
+                    //tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
+                    //humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
+                    //tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
+                    //co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
+                    //pm25DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toFloat()
+                    //preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
                 }
                 BroadcastActions.ACTION_DATA_AVAILABLE -> {
                     dataAvaliable(intent)
@@ -823,31 +821,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun dataAvaliable(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
-        when (txValue[0]) {
-            0xE0.toByte() -> { }
-            0xE1.toByte() -> { }
-            0xEA.toByte() -> { }
-            else -> { }
-        }
-        when (txValue[2]) {
-            0xE0.toByte() -> { Log.d("UART feeback", "ok"); return}
-            0xE1.toByte() -> { Log.d("UART feedback", "Couldn't write in device"); return}
-            0xE2.toByte() -> { Log.d("UART feedback", "Temperature sensor fail"); return}
-            0xE3.toByte() -> { Log.d("UART feedback", "TVOC sensor fail"); return }
-            0xE4.toByte() -> { Log.d("UART feedback", "Pump power fail"); return }
-            0xE5.toByte() -> { Log.d("UART feedback", "Invalid value"); return }
-            0xE6.toByte() -> { Log.d("UART feedback", "Unknown command"); return }
-            0xE7.toByte() -> { Log.d("UART feedback", "Waiting timeout"); return }
-            0xE8.toByte() -> { Log.d("UART feedback", "Checksum error"); return }
-            0xB1.toByte() -> Log.d(TAG, "cmd:0xB1 feedback")
-            0xB2.toByte() -> Log.d(TAG, "cmd:0xB2 feedback")
-            0xB4.toByte() -> Log.d(TAG, "cmd:0xB4 feedback")
-            0xB5.toByte() -> Log.d(TAG, "cmd:0xB5 feedback")
-            0xB9.toByte() -> Log.d(TAG, "cmd:0xB9 feedback")
-        }
-        var singleByte = String.format("%02X", txValue[2])
-        Log.d("MAINSINGLECMDTITLE",singleByte)
-
         if (errorTime >= 3) { errorTime = 0 }
         if (!checkCheckSum(txValue)) {
             errorTime += 1
@@ -855,13 +828,12 @@ class MainFragment : Fragment(), View.OnTouchListener {
             when (txValue[2]) {
                 0xB0.toByte() -> {
                     var hashMap = CallingTranslate.getAllSensorKeyValue(txValue)
-                    tvBtmTEMPValue.text = hashMap[TvocNoseData.TEMP]
-                    tvBtmHUMIValue.text = hashMap[TvocNoseData.HUMI]
-                    tvBtmTVOCValue.text = hashMap[TvocNoseData.TVOC]
-                    tvBtmCO2Value.text = hashMap[TvocNoseData.ECO2]
-                    tvBtmPM25Value.text = hashMap[TvocNoseData.PM25]
+                    tempDataFloat = hashMap[TvocNoseData.TEMP]!!.toFloat()
+                    humiDataFloat = hashMap[TvocNoseData.HUMI]!!.toFloat()
+                    tvocDataFloat = hashMap[TvocNoseData.TVOC]!!.toFloat()
+                    co2DataFloat = hashMap[TvocNoseData.ECO2]!!.toFloat()
+                    pm25DataFloat = hashMap[TvocNoseData.PM25]!!.toFloat()
                     preHeat = (hashMap[TvocNoseData.PREH]!!)
-                    //displayConnetedBatteryLife(hashMap[TvocNoseData.BATT]!!.toInt())
                     Log.d("PARSERB0", hashMap.toString())
                 }
             }
