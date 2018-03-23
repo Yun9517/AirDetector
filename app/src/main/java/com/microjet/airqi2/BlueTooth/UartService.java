@@ -2379,8 +2379,8 @@ public class UartService extends Service {
 
     private void createLocationRequest() {
         locationRequest = new LocationRequest();
-        locationRequest.setInterval(30000);          // original is 5000 milliseconds
-        locationRequest.setFastestInterval(12000);   // original is 2000 milliseconds
+        locationRequest.setInterval(5000);          // original is 5000 milliseconds
+        locationRequest.setFastestInterval(2000);   // original is 2000 milliseconds
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 }

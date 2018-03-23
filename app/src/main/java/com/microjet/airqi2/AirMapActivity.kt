@@ -463,8 +463,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     // 設定位置要求的參數
     private fun createLocationRequest() {
         val locationRequest = LocationRequest()
-        locationRequest.interval = 30000        // original is 5000 milliseconds
-        locationRequest.fastestInterval = 12000  // original is 2000 milliseconds
+        locationRequest.interval = 5000         // original is 5000 milliseconds
+        locationRequest.fastestInterval = 2000  // original is 2000 milliseconds
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
