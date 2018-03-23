@@ -246,7 +246,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                     }
 
                     val rectOptions = PolylineOptions()
-                            .width(10F)
+                            .width(20F)
                             .color(setPolylineColor(data, rbTVOC.isChecked))
 
                     if(i < result.size - 1) {
