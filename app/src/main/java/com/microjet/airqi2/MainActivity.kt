@@ -163,6 +163,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private var errorTime = 0
+    private var isFirstB0 = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1078,60 +1079,67 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     ble.BATT = hashMap[TvocNoseData.BATT]!!
                     EventBus.getDefault().post(ble)
                     */
-                    Log.d("PARSERB0", hashMap.toString())
+                    connectionInitMethod()
                 }
                 /*
                 0xB1.toByte() -> {
                     var hashMap = CallingTranslate.parserGetInfoKeyValue(txValue)
                     Log.d("PARSERB1", hashMap.toString())
                 }
-
+                */
                 0xB2.toByte() -> {
-                    var RString = CallingTranslate.ParserGetSampleRate(txValue)
-                    val share = getSharedPreferences("ASMSetting", Context.MODE_PRIVATE)
-                    val setting0 = share.getString("sample_rate", "2")
-                    val setting1 = share.getString("sensor_on_time_range", "60")
-                    val setting2 = share.getString("sensor_to_get_sample", "2")
-                    val setting3 = share.getString("pump_on_time", "1")
-                    val setting4 = share.getString("pumping_time_range", "2")
+                    var hashMap = CallingTranslate.ParserGetSampleRateKeyValue(txValue)
+                    /*
+
+                    val share = getSharedPreferences(TvocNoseData.ASMS, Context.MODE_PRIVATE)
+                    val setting0 = share.getString(TvocNoseData.SR, "2")
+                    val setting1 = share.getString(TvocNoseData.SOTR, "60")
+                    val setting2 = share.getString(TvocNoseData.STGS, "2")
+                    val setting3 = share.getString(TvocNoseData.POT, "1")
+                    val setting4 = share.getString(TvocNoseData.PT, "2")
 
                     share.edit()
-                            .putString("sample_rate", "2")
-                            .putString("sensor_on_time_range", "60")
-                            .putString("sensor_to_get_sample", "2")
-                            .putString("pump_on_time", "1")
-                            .putString("pumping_time_range", "2").apply()
-                    //if RString.size >= 5
-                    //{
-                    Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4))
+                            .putString(TvocNoseData.SR, "2")
+                            .putString(TvocNoseData.SOTR, "60")
+                            .putString(TvocNoseData.STGS, "2")
+                            .putString(TvocNoseData.POT, "1")
+                            .putString(TvocNoseData.PT, "2").apply()
 
-                    if (setting0 == RString.get(0)
-                            && setting1 == RString.get(1)
-                            && setting2 == RString.get(2)
-                            && setting3 == RString.get(3)
-                            && setting4 == RString.get(4)) {
-                        Log.d("0xB2", "True")
-                    } else {
-                        share.edit()
-                                .putString("sample_rate", "2")
-                                .putString("sensor_on_time_range", "60")
-                                .putString("sensor_to_get_sample", "2")
-                                .putString("pump_on_time", "1")
-                                .putString("pumping_time_range", "2").apply()
-                        val param = intArrayOf(2, 2 * 30, 2, 1, 2, 0, 0)
-                        Log.d(TAG, "setSampleRate")
-                        UartService().writeRXCharacteristic(CallingTranslate.SetSampleRate(param))
+                    //當寫入完畢時會回吐B2 ok的CMD所作的處理
+                    if (RString.size >= 5) {
+                        Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4))
+
+                        if (setting0 == RString.get(0)
+                                && setting1 == RString.get(1)
+                                && setting2 == RString.get(2)
+                                && setting3 == RString.get(3)
+                                && setting4 == RString.get(4)) {
+                            Log.d("0xB2", "True")
+                        } else {
+                            share.edit()
+                                    .putString("sample_rate", "2")
+                                    .putString("sensor_on_time_range", "60")
+                                    .putString("sensor_to_get_sample", "2")
+                                    .putString("pump_on_time", "1")
+                                    .putString("pumping_time_range", "2").apply()
+                            val param = intArrayOf(2, 2 * 30, 2, 1, 2, 0, 0)
+                            Log.d(TAG, "setSampleRate")
+                            writeRXCharacteristic(CallingTranslate.SetSampleRate(param))
+                        }
+                        setSampleRateTime(Integer.parseInt(RString.get(0)))
+                        writeRXCharacteristic(CallingTranslate.GetHistorySampleItems())
+                        //SetPM25 180308
+                        intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
+                        sendBroadcast(intent)
                     }
-                    //TODO setSampleRateTime(Integer.parseInt(RString.get(0)))
-                    UartService().writeRXCharacteristic(CallingTranslate.GetHistorySampleItems())
-                    //SetPM25 180308
-                    intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
-                    sendBroadcast(intent)
+                    */
+
+                    Log.d("0xB2", hashMap.toString())
                 }
                 0xB4.toByte() -> {
-                    saveToDB(txValue)
+                    saveToRealm(txValue)
                 }
-                */
+
             }
         }
     }
@@ -1162,6 +1170,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //Toast.makeText(this,event.char?.uuid.toString(),Toast.LENGTH_SHORT).show()
     }
     */
+
+    private fun saveToRealm(tx: ByteArray) {
+        Log.d("saveToRealm",tx[2].toString())
+    }
+
+    private fun connectionInitMethod() {
+        if (isFirstB0) {
+            isFirstB0 = false
+            mUartService?.writeRXCharacteristic(CallingTranslate.GetSampleRate())
+        }
+    }
 
 }
 

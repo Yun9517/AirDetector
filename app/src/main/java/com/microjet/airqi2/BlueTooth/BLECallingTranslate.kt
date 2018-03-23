@@ -968,6 +968,68 @@ object CallingTranslate {
         return returnValue
     }
     */
+    fun ParserGetSampleRateKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        0//sample rate
+                        -> {
+                            returnValue.put(TvocNoseData.SR,value.toString())
+                            value = 0
+                        }
+                        2//sensor_on_time_range
+                        -> {
+                            returnValue.put(TvocNoseData.SOTR,value.toString())
+                            value = 0
+                        }
+                        4//time to get sample
+                        -> {
+                            returnValue.put(TvocNoseData.STGS,value.toString())
+                            value = 0
+                        }
+                        6//pump on time
+                        -> {
+                            returnValue.put(TvocNoseData.POT,value.toString())
+                            value = 0
+                        }
+                        8//pumping time
+                        -> {
+                            returnValue.put(TvocNoseData.PT,value.toString())
+                            value = 0
+                        }
+                    /*暫時用不到
+                    9//get data in cycle 間隔多久取資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    10//期間內取幾次資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }*/
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
 
 
     fun Byte.toPositiveInt() = toInt() and 0xFF

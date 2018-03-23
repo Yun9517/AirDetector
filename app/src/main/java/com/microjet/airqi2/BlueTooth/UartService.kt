@@ -305,25 +305,26 @@ class UartService: Service() {
         mBluetoothGatt?.writeDescriptor(descriptor)
     }
 
-    /*
+
     fun writeRXCharacteristic(value: ByteArray) {
         //確定mBluetoothGatt存在才去取uuid
         if (mBluetoothGatt != null) {
-            val RxService = mBluetoothGatt?.getService(RX_SERVICE_UUID)
-            if (RxService == null) {
-                showMessage("mBluetoothGatt null " + mBluetoothGatt)
+            val rxService = mBluetoothGatt?.getService(RX_SERVICE_UUID)
+            if (rxService == null) {
+                //showMessage("mBluetoothGatt null " + mBluetoothGatt)
                 return
             }
-            val RxChar = RxService.getCharacteristic(RX_CHAR_UUID)
-            if (RxChar == null) {
-                showMessage("Rx charateristic not found!")
+            val rxChar = rxService.getCharacteristic(RX_CHAR_UUID)
+            if (rxChar == null) {
+                //showMessage("Rx charateristic not found!")
                 return
             }
-            RxChar.value = value
-            val status = mBluetoothGatt?.writeCharacteristic(RxChar)
+            rxChar.value = value
+            val status = mBluetoothGatt?.writeCharacteristic(rxChar)
             Log.d(TAG, "write TXchar - status=" + status)
         }
     }
+    /*
 
 
     fun saveToDB(tx: ByteArray) {

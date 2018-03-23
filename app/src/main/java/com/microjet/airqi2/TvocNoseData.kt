@@ -25,10 +25,12 @@ object TvocNoseData {
     val TVOCSENOR = "TVOC"
     val FW = "FW"
     //B2
-//    val SR = "sample rate
-//    val sensor on time
-//    val time to get sample
-//    val pump on time
+    val ASMS = "ASMSetting"
+    val SR = "sample_rate"
+    val SOTR = "sensor_on_time_range"
+    val STGS = "sensor_to_get_sample"
+    val POT = "pump_on_time"
+    val PT = "pumping_time_range"
 
 
     var spinnerPosition: Int = 0
