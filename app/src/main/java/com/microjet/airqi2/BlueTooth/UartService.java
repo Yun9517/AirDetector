@@ -22,17 +22,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -49,6 +58,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
@@ -65,6 +75,13 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.microjet.airqi2.AsmDataModel;
 import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
@@ -193,7 +210,7 @@ public class UartService extends Service {
     private String isPM25 = "";
 
     //20180309
-    private String MyToKen="";
+    private String MyToKen = "";
 
 
     //    public UartService() { //建構式
@@ -484,6 +501,10 @@ public class UartService extends Service {
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
         Log.e(TAG, "onCreate() called....");
+
+        // 20180320 Add LocationListener by Raymond Yang
+        createLocationRequest();
+        initFuseLocationProviderClient();
     }
 
 
@@ -840,10 +861,10 @@ public class UartService extends Service {
                 case BroadcastActions.INTENT_KEY_LED_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
                     break;
-                case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
+                /*case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
                     lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
                     longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
-                    break;
+                    break;*/
                 case BroadcastActions.INTENT_KEY_SET_PM25_ON:
                     writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(5));
                     break;
@@ -1152,13 +1173,13 @@ public class UartService extends Service {
                             public void run() {
                                 writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
                             }
-                        },1000);
+                        }, 1000);
                     }
 
-
-                    if (Integer.valueOf(RString.get(2)) < 221) {
+                // 2018/03/20 Remove alert (Yellow)
+                    if (Integer.valueOf(RString.get(2)) < 661) {
                         //20180122  Andy
-                        countsound220 = 0;
+                        //countsound220 = 0;
                         countsound660 = 0;
                         countsound2200 = 0;
                         countsound5500 = 0;
@@ -1166,9 +1187,9 @@ public class UartService extends Service {
 
                         //Log.e("歸零TVOC220計數變數:", Integer.toString(countsound220));
                         //Log.e("歸零TVOC660計數變數:", Integer.toString(countsound660));
-                    } else if (Integer.valueOf(RString.get(2)) >= 220 && (Integer.valueOf(RString.get(2)) < 660)) {
-                        //20180122  Andy
-                        BEBEBEBE1(RString);
+//                    } else if (Integer.valueOf(RString.get(2)) >= 220 && (Integer.valueOf(RString.get(2)) < 660)) {
+//                        //20180122  Andy
+//                        BEBEBEBE1(RString);
                     } else if ((Integer.valueOf(RString.get(2)) >= 660) && (Integer.valueOf(RString.get(2)) < 2200)) {
                         //20180122  Andy
                         BEBEBEBE2(RString);
@@ -1262,7 +1283,9 @@ public class UartService extends Service {
                         //mainIntent.putExtra("status", "MAXPROGRESSITEM");
                         //mainIntent.putExtra("MAXPROGRESSITEM", Integer.toString(getMaxItems()));
                         //sendBroadcast(mainIntent);
-                        Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show();
+                        if (!Build.BRAND.equals("OPPO")) {
+                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show();
+                        }
                         //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Data), Toast.LENGTH_SHORT);
                         Log.d("UART", "getItem 1");
                         NowItem = 1;
@@ -1290,7 +1313,9 @@ public class UartService extends Service {
                                 countForItem = 0;
                             }
                             Log.d("0xB4countItem", Long.toString(countForItem));
-                            Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Total_Data) + Long.toString(countForItem) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show();
+                            }
                         }
                         if (countForItem >= 1) {
                             NowItem = countForItem;
@@ -1300,7 +1325,9 @@ public class UartService extends Service {
                         } else {
                             downloading = false;
                             //downloadComplete = true;
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            }
                             //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
                         }
                         mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT);
@@ -1353,14 +1380,14 @@ public class UartService extends Service {
                             //if (MyApplication.Companion.isPM25().equals("000000000000")) {
                             //    asmData.setPM25Value("0");
                             //} else {
-                                asmData.setPM25Value(RString.get(5));
+                            asmData.setPM25Value(RString.get(5));
                             //}
                             asmData.setCreated_time((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000);
                             asmData.setMACAddress(macAddressForDB);
                             asmData.setLatitude(lati);
                             asmData.setLongitude(longi);
-                            Log.d("0xB5count",String.valueOf(countForItem));
-                            Log.d("0xB5count",String .valueOf(counterB5));
+                            Log.d("0xB5count", String.valueOf(countForItem));
+                            Log.d("0xB5count", String.valueOf(counterB5));
                             Log.d("RealmTimeB5", RString.toString());
                             Log.d("RealmTimeB5", new Date((getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000) + getSampleRateUnit() * counterB5 * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                         });
@@ -1377,7 +1404,9 @@ public class UartService extends Service {
                             //************** 2017/12/03 "尊重原創 留原始文字 方便搜尋" 更改成從String撈中英文字資料 ***************************//
                             //Toast.makeText(getApplicationContext(),"讀取完成",Toast.LENGTH_LONG).show();
                             //*****************************************************************************************************************//
-                            Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            if (!Build.BRAND.equals("OPPO")) {
+                                Toast.makeText(getApplicationContext(), getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show();
+                            }
                             //Utils.INSTANCE.toastMakeTextAndShow(getApplicationContext(), getString(R.string.Loading_Completely), Toast.LENGTH_SHORT);
 //                            mainIntent.putExtra("status", "B5");
 //                            Bundle data = new Bundle();
@@ -1385,8 +1414,8 @@ public class UartService extends Service {
 //                            mainIntent.putExtra("result", data);
 //                            sendBroadcast(mainIntent);
                             SharedPreferences share_token = getSharedPreferences("TOKEN", MODE_PRIVATE);
-                            String token = share_token.getString("token","");
-                            new DownloadTask().execute(macAddressForDB,token);
+                            String token = share_token.getString("token", "");
+                            new DownloadTask().execute(macAddressForDB, token);
                         } else {
                             //NowItem++;
                             //counter++;
@@ -1415,9 +1444,9 @@ public class UartService extends Service {
                     hashMapInB6.put("TVOCValue", RString.get(2));
                     hashMapInB6.put("ECO2Value", RString.get(3));
                     //if (MyApplication.Companion.isPM25().equals("000000000000")) {
-                        //hashMapInB6.put(("PM25Value"), "0");
+                    //hashMapInB6.put(("PM25Value"), "0");
                     //} else {
-                        hashMapInB6.put(("PM25Value"), RString.get(4));
+                    hashMapInB6.put(("PM25Value"), RString.get(4));
                     //}
                     hashMapInB6.put("BatteryLife", RString.get(5));
                     hashMapInB6.put("CreatedTime", timeSetForB6());
@@ -1470,7 +1499,7 @@ public class UartService extends Service {
                                     //Log.d("RealmTimeB6", new Date(getMyDate().getTime() + getSampleRateUnit() * (count) * 30 * 1000 + getCorrectTime() * 30 * 1000).toString());
                                 });
                             } else {
-                                Log.d("0xb6CreatedTIME",arrB6.get(count).get("CreatedTime").toString());
+                                Log.d("0xb6CreatedTIME", arrB6.get(count).get("CreatedTime").toString());
                             }
                             realm.close();
                         }
@@ -1496,17 +1525,17 @@ public class UartService extends Service {
                 case (byte) 0xB9:           // 取得裝置ＬＥＤ燈開或關
                     int ledState = txValue[3];
                     if (txValue.length > 5) {
-                    if (ledState == 1) {
-                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                false).apply();
-                    } else {
-                        mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                true).apply();
+                        if (ledState == 1) {
+                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                    false).apply();
+                        } else {
+                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                    true).apply();
+                        }
+                        Log.e(TAG, "LED Status: " + ledState);
                     }
-                    Log.e(TAG, "LED Status: " + ledState);
-                }
                     break;
-                case  (byte) 0xE0:
+                case (byte) 0xE0:
                     Log.d("0xE0", txValue.toString());
                     break;
 
@@ -2093,9 +2122,6 @@ public class UartService extends Service {
     }
 
 
-
-
-
     //postDataAsyncTasks doupdatddata = new postDataAsyncTasks();
     private ArrayList<Integer> hasBeenUpLoaded = new ArrayList<>();
 
@@ -2119,10 +2145,10 @@ public class UartService extends Service {
                             Log.e("幹改進去", String.valueOf(DBSucess));
                         }
                         hasBeenUpLoaded.clear();
-                    }else {
+                    } else {
                         Log.e("幹改失敗拉!!", String.valueOf(getResponeResult));
                     }
-                }else {
+                } else {
                     Log.e("幹太少筆啦!", String.valueOf(return_body.contentLength()));
                 }
 
@@ -2239,7 +2265,7 @@ public class UartService extends Service {
     //傳資料
     private boolean getResponse(RequestBody body) {
         Response response = null;
-        boolean resonseReselt= Boolean.parseBoolean(null);
+        boolean resonseReselt = Boolean.parseBoolean(null);
         try {
             if (body.contentLength() > 0) {
                 //丟資料
@@ -2260,11 +2286,11 @@ public class UartService extends Service {
                     //上傳資料
                     response = client.newCall(request).execute();
                     if (response.isSuccessful()) {//正確回來
-                        resonseReselt=true;
+                        resonseReselt = true;
                         Log.e("正確回來!!", response.body().string());
                     } else {//錯誤回來
                         Log.e("錯誤回來!!", response.body().string());
-                        resonseReselt=false;
+                        resonseReselt = false;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -2308,6 +2334,55 @@ public class UartService extends Service {
         return dbSucessOrNot;
     }
 
+    @SuppressLint("MissingPermission")
+    private void initFuseLocationProviderClient() {
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+
+        client.getLastLocation().addOnCompleteListener( task -> {
+            if(task.isSuccessful()) {
+                Location location = task.getResult();
+
+                if(location != null) {
+                    lati = (float)location.getLatitude();
+                    longi = (float)location.getLongitude();
+                } else {
+                    lati = 24.959817f;
+                    longi = 121.4215f;
+                }
+
+                Log.e("LOCATION", "Get Location from OnCompleteListener: " + lati + ", " + longi);
+            }
+        });
+
+        client.requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+
+                Location location = locationResult.getLastLocation();
+
+                if(location != null) {
+                    lati = (float)location.getLatitude();
+                    longi = (float)location.getLongitude();
+                } else {
+                    lati = 24.959817f;
+                    longi = 121.4215f;
+                }
+
+                Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
+            }
+        },
+                Looper.myLooper());
+    }
+
+    LocationRequest locationRequest;
+
+    private void createLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(5000);          // original is 5000 milliseconds
+        locationRequest.setFastestInterval(2000);   // original is 2000 milliseconds
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
 }
 
 

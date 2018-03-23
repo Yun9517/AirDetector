@@ -217,6 +217,10 @@
     <string name="edit">編輯</string>
     <string name="nameReplace">改名字</string>
     <string name="enterName">請輸入新的名字</string>
+    <string name="recordTitle">個人紀錄</string>
+    <string name="fetchData">查看</string>
+    <string name="downloadData">下載</string>
+    <string name="shareData">分享</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
@@ -230,7 +234,6 @@
     <string name="errorMail_address">請輸入正確的信箱位置</string>
     <string name="errorPassword">密碼輸入不正確</string>
     <string name="remind">提示</string>
-    <string name="exceptName">請輸入欲更改的名稱</string>
-
+    <string name="expectName">請輸入欲更改的名稱</string>
 
 </resources>

@@ -7,6 +7,19 @@
     android:orientation="vertical">
 
 
+    <ProgressBar
+        android:id="@+id/pgLoading"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/blackTransparentColor"
+        android:padding="140dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -22,188 +35,210 @@
         tools:context="com.microjet.airqi2.AirMapActivity" />
 
     <LinearLayout
-        android:layout_width="160dp"
+        android:id="@+id/panel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/map_value_background"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:background="@drawable/map_text_background"
-            android:text="數據"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textStyle="bold" />
+        <ScrollView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/textTVOCtitle"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:id="@+id/valuePanel"
+                android:layout_width="170dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/map_text_background"
-                android:singleLine="true"
-                android:text="@string/text_label_tvoc"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor" />
+                android:background="@drawable/map_value_background"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textTVOCvalue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="60000 ppb"
-                android:textAlignment="center"
-                android:textColor="@color/AboutHyperLink" />
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@drawable/map_text_background"
+                    android:text="數據"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textStyle="bold" />
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textTVOCtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_tvoc"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
 
-            <TextView
-                android:id="@+id/textPM25title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/map_text_background"
-                android:singleLine="true"
-                android:text="@string/text_label_pm25"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor" />
+                    <TextView
+                        android:id="@+id/textTVOCvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="---- ppb"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
 
-            <TextView
-                android:id="@+id/textPM25value"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="9000 μm"
-                android:textAlignment="center"
-                android:textColor="@color/AboutHyperLink" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textPM25title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_pm25"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
 
-            <TextView
-                android:id="@+id/textECO2title"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/map_text_background"
-                android:singleLine="true"
-                android:text="@string/text_label_co2"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor" />
+                    <TextView
+                        android:id="@+id/textPM25value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="---- μg/m³"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
 
-            <TextView
-                android:id="@+id/textECO2value"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="5000 ppm"
-                android:textAlignment="center"
-                android:textColor="@color/AboutHyperLink" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textECO2title"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_co2"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
 
-            <TextView
-                android:id="@+id/textTEMPtitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/map_text_background"
-                android:singleLine="true"
-                android:text="@string/text_label_temperature"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor" />
+                    <TextView
+                        android:id="@+id/textECO2value"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="---- ppm"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
 
-            <TextView
-                android:id="@+id/textTEMPvalue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="100 °C"
-                android:textAlignment="center"
-                android:textColor="@color/AboutHyperLink" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="1dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="1dp"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/textTEMPtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_temperature"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
 
-            <TextView
-                android:id="@+id/textHUMItitle"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/map_text_background"
-                android:singleLine="true"
-                android:text="@string/text_label_humidity"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor" />
+                    <TextView
+                        android:id="@+id/textTEMPvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="---- °C"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
 
-            <TextView
-                android:id="@+id/textHUMIvalue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:singleLine="true"
-                android:text="100 %"
-                android:textAlignment="center"
-                android:textColor="@color/AboutHyperLink" />
+                </LinearLayout>
 
-        </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textHUMItitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_humidity"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
+
+                    <TextView
+                        android:id="@+id/textHUMIvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="---- %"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <ImageView
+            android:id="@+id/imgExpand"
+            android:layout_width="20dp"
+            android:layout_height="148dp"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/airmap_infodrawer_close" />
 
     </LinearLayout>
 
@@ -236,7 +271,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <RadioButton
-                android:id="@+id/radioButton"
+                android:id="@+id/rbTVOC"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -251,7 +286,7 @@
                 android:textColor="@color/radiobutton" />
 
             <RadioButton
-                android:id="@+id/radioButton2"
+                android:id="@+id/rbPM25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
@@ -263,8 +298,7 @@
                 android:paddingStart="10dp"
                 android:paddingTop="5dp"
                 android:text="@string/text_label_pm25"
-                android:textColor="@color/radiobutton"
-                android:visibility="invisible" />
+                android:textColor="@color/radiobutton" />
         </RadioGroup>
 
         <Button

@@ -8,17 +8,24 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Spannable
+import android.text.SpannableString
 import android.text.format.DateFormat
+import android.text.style.StyleSpan
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
+import android.view.animation.Animation
+import android.view.animation.TranslateAnimation
 import android.widget.Toast
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -37,6 +44,7 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -65,6 +73,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mAdapter: AirMapAdapter
 
+    private var runGetDataThread: Thread? = null
+    private val runGetDataRunnable = Runnable {
+        runOnUiThread({
+            getLocalData()
+        })
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,7 +94,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         mCal = Calendar.getInstance()
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-        datePicker.text = "DATE $mDate"
+        datePicker.text = setBtnText("DATE $mDate")
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
@@ -91,14 +106,37 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                         mCal.set(year, month, dayOfMonth)
                         Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
-                        datePicker.text = "DATE $mDate"
-                        getLocalData()
-                        //timePickerShow()
+                        datePicker.text = setBtnText("DATE $mDate")
+
+                        pgLoading.visibility = View.VISIBLE
+                        pgLoading.bringToFront()
+
+                        startLoadDataThread()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage("請選擇日期")
                     dpd.show()
                 }
             }
+        }
+
+        imgExpand.setOnClickListener {
+            if(valuePanel.visibility == View.VISIBLE) {
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
+
+                collapseValuePanelAnim(250)
+
+                valuePanel.visibility = View.GONE
+            } else {
+                imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
+
+                expandValuePanelAnim(250)
+
+                valuePanel.visibility = View.VISIBLE
+            }
+        }
+
+        viewSelecter.setOnCheckedChangeListener { group, checkedId ->
+            startLoadDataThread()
         }
 
         LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
@@ -112,6 +150,53 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    // GetData執行緒啟動與關閉🙄
+    private fun startLoadDataThread() {
+        runGetDataThread = Thread(runGetDataRunnable)
+        runGetDataThread!!.start()
+    }
+
+    private fun stopLoadDataThread() {
+        if(runGetDataThread != null) {
+            runGetDataThread!!.interrupt()
+            runGetDataThread = null
+        }
+
+        if(pgLoading.visibility == View.VISIBLE) {
+            pgLoading.visibility = View.GONE
+        }
+    }
+
+    // 文字分割
+    private fun setBtnText(value: String): SpannableString {
+        val textSpan = SpannableString(value)
+        textSpan.setSpan(StyleSpan(Typeface.BOLD),
+                0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(StyleSpan(Typeface.NORMAL),
+                5, value.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+
+        return textSpan
+    }
+
+    // 動畫
+    private fun expandValuePanelAnim(duration: Long) {
+        val mShowAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, -1.0f,
+                Animation.RELATIVE_TO_PARENT, 0.0f, Animation.RELATIVE_TO_PARENT,
+                0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mShowAction.duration = duration
+
+        panel.startAnimation(mShowAction)
+    }
+
+    private fun collapseValuePanelAnim(duration: Long) {
+        val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, -1.0f, Animation.RELATIVE_TO_PARENT,
+                0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mHideAction.duration = duration
+
+        panel.startAnimation(mHideAction)
     }
 
     // 資料庫查詢
@@ -134,28 +219,54 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         Log.d("DATE", "Today total count: ${result.size}")
 
         if(result.size > 0) {
-            val rectOptions = PolylineOptions().color(Color.RED).width(20F)
+            //val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
-                dataArray.add(result[i]!!)
 
-                val latitude: Double = result[i]!!.latitude.toDouble()
-                val longitude: Double = result[i]!!.longitude.toDouble()
+                // 過濾掉初始值
+                if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
+                    dataArray.add(result[i]!!)
 
-                // 針對經緯度相反做處理
-                val latLng = if(latitude < 90) {
-                    LatLng(latitude, longitude)
-                } else {
-                    LatLng(longitude, latitude)
+                    //val latitude: Double = result[i]!!.latitude.toDouble()
+                    //val longitude: Double = result[i]!!.longitude.toDouble()
+
+                    // 針對經緯度相反做處理
+                    /*val latLng = if (latitude < 90) {
+                        LatLng(latitude, longitude)
+                    } else {
+                        LatLng(longitude, latitude)
+                    }*/
+
+                    // 判斷 RadioButton 選中的項目
+                    val data = if(rbTVOC.isChecked) {
+                        result[i]!!.tvocValue.toInt()
+                    } else {
+                        result[i]!!.pM25Value.toInt()
+                    }
+
+                    val rectOptions = PolylineOptions()
+                            .width(20F)
+                            .color(setPolylineColor(data, rbTVOC.isChecked))
+
+                    if(i < result.size - 1) {
+                        rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
+                        rectOptions.add(LatLng(result[i + 1]!!.latitude.toDouble(), result[i + 1]!!.longitude.toDouble()))
+                        mMap.addPolyline(rectOptions)
+                    }
+
+                    //rectOptions.color(Color.GREEN).add(latLng)
+
+                    @SuppressLint("SimpleDateFormat")
+                    val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
+                    val calendar = Calendar.getInstance()
+                    val nowTime = result[i]!!.created_time - calendar.timeZone.rawOffset
+
+                    Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
                 }
-
-                rectOptions.add(latLng)
-
-                Log.e("LOCATION", "Now get [$i], LatLng is: ${result[i]!!.latitude}, ${result[i]!!.longitude}")
             }
 
-            mMap.addPolyline(rectOptions)
+            //mMap.addPolyline(rectOptions)
         } else {
             dataArray.clear()
         }
@@ -169,7 +280,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             val nowPosition = dataArray.size - 1
             SelectedItem.setSelectedItem(nowPosition)    //自定義的方法，告訴adpter被點擊item
             recyclerView.scrollToPosition(nowPosition)
-            updateFaceIcon(dataArray[nowPosition].tvocValue.toInt())
+
+            val data = if(rbTVOC.isChecked) {
+                dataArray[nowPosition].tvocValue.toInt()
+            } else {
+                dataArray[nowPosition].pM25Value.toInt()
+            }
+
+            updateFaceIcon(data)
 
             updateValuePanel(dataArray[nowPosition].tvocValue, dataArray[nowPosition].pM25Value,
                     dataArray[nowPosition].ecO2Value, dataArray[nowPosition].tempValue,
@@ -185,18 +303,26 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mAdapter.notifyDataSetChanged()
 
         mAdapter.setOnItemClickListener { _, position ->
-            putMarker((result[position]!!.latitude).toDouble(),
-                    (result[position]!!.longitude).toDouble())
+            putMarker((dataArray[position].latitude).toDouble(),
+                    (dataArray[position].longitude).toDouble())
 
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            updateFaceIcon(result[position]!!.tvocValue.toInt())
+            val data = if(rbTVOC.isChecked) {
+                dataArray[position].tvocValue.toInt()
+            } else {
+                dataArray[position].pM25Value.toInt()
+            }
 
-            updateValuePanel(result[position]!!.tvocValue, result[position]!!.pM25Value,
-                    result[position]!!.ecO2Value, result[position]!!.tempValue,
-                    result[position]!!.humiValue)
+            updateFaceIcon(data)
+
+            updateValuePanel(dataArray[position].tvocValue, result[position]!!.pM25Value,
+                    dataArray[position].ecO2Value, result[position]!!.tempValue,
+                    dataArray[position].humiValue)
         }
+
+        stopLoadDataThread()
     }
 
     // 更新那個笑到你心裡發寒的臉圖
@@ -223,12 +349,41 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
+    // 取得軌跡顏色
+    private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
+        if(isTVOC) {
+            return when (value) {
+                in 0..219 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
+                in 220..659 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
+                in 660..2199 -> ContextCompat.getColor(this, R.color.air_map_line_value3)
+                in 2200..5499 -> ContextCompat.getColor(this, R.color.air_map_line_value4)
+                in 5500..19999 -> ContextCompat.getColor(this, R.color.air_map_line_value5)
+                else -> ContextCompat.getColor(this, R.color.air_map_line_value6)
+            }
+        } else {
+            return when (value) {
+                in 0..15 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
+                in 16..34 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
+                in 35..54 -> ContextCompat.getColor(this, R.color.air_map_line_value3)
+                in 55..150 -> ContextCompat.getColor(this, R.color.air_map_line_value4)
+                in 151..250 -> ContextCompat.getColor(this, R.color.air_map_line_value5)
+                else -> ContextCompat.getColor(this, R.color.air_map_line_value6)
+            }
+        }
+    }
+
     // 更新左上角空汙數值面板
     @SuppressLint("SetTextI18n")
     private fun updateValuePanel(tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String) {
         textTVOCvalue.text = "$tvocVal ppb"
-        textPM25value.text = "$pm25Val μg/m³"
+
+        textPM25value.text = if(pm25Val == "65535") {
+            "沒有偵測"
+        } else {
+            "$pm25Val μg/m³"
+        }
+
         textECO2value.text = "$eco2Val ppm"
         textTEMPvalue.text = "$tempVal °C"
         textHUMIvalue.text = "$humiVal %"
@@ -294,8 +449,11 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         client.lastLocation.addOnCompleteListener(this, {
             if(it != null && it.isSuccessful) {
                 val location = it.result
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                        LatLng(location.latitude, location.longitude), 15f))
+                if (location == null) {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
+                } else {
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(location.latitude, location.longitude), 15f))
+                }
             }
 
             Log.i("LOCATION", "Location Task is Successful: ${it.isSuccessful}")
@@ -305,8 +463,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     // 設定位置要求的參數
     private fun createLocationRequest() {
         val locationRequest = LocationRequest()
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 2000
+        locationRequest.interval = 5000         // original is 5000 milliseconds
+        locationRequest.fastestInterval = 2000  // original is 2000 milliseconds
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
@@ -345,7 +503,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
             initLocation()
 
-            getLocalData()
+            pgLoading.visibility = View.VISIBLE
+            pgLoading.bringToFront()
+
+            startLoadDataThread()
         }
     }
 
@@ -361,7 +522,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
-                    getLocalData()
+                    startLoadDataThread()
                 }
             }
         }
