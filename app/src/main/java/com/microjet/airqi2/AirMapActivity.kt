@@ -394,6 +394,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
         val latLng = LatLng(latitude, longitude)
 
+        // 移動畫面到目前的標記
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+
         if (currentMarker != null) {
             currentMarker!!.remove()
             currentMarker = null
