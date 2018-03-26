@@ -11,29 +11,43 @@ import java.util.concurrent.TimeUnit
  * Created by B00175 on 2018/1/29.
  */
 object TvocNoseData {
-    //B0
-    val TEMP = "TEMP"
-    val HUMI = "HUMI"
-    val ECO2 = "ECO2"
-    val TVOC = "TVOC"
-    val PM25 = "PM25"
-    val BATT = "BATT"
-    val PREH = "PREH"
-    //B1
+    //B0 2secData
+    val B0TEMP = "B0TEMP"
+    val B0HUMI = "B0HUMI"
+    val B0ECO2 = "B0ECO2"
+    val B0TVOC = "B0TVOC"
+    val B0PM25 = "B0PM25"
+    val B0BATT = "B0BATT"
+    val B0PREH = "B0PREH"
+    //B1 GetInfo
     val MAC = "MAC"
     val DEVICE = "DEV"
-    val TVOCSENOR = "TVOC"
+    val TVOCSENOR = "B0TVOC"
     val FW = "FW"
-    //B2
-    val ASMS = "ASMSetting"
-    val SR = "sample_rate"
-    val SOTR = "sensor_on_time_range"
-    val STGS = "sensor_to_get_sample"
-    val POT = "pump_on_time"
-    val PTR = "pumping_time_range"
-    //E0
+    //B2 GetSampleRate
+    val ASMS = "ASM_Setting"
+    val B2SR = "B2_Sample_Rate"
+    val SOTR = "Sensor_On_Time_Range"
+    val STGS = "Sensor_To_Get_Sample"
+    val POT = "Pump_On_Time"
+    val PTR = "Pumping_Time_Range"
+    //E0 GetLedState
     val PM25SR = "PM25Sample_Rate"
     val PM25GST = "PM25Get_Sample_Time"
+    //B4
+    val MAXI = "Max_Items"
+    val SS = "Sample_Status"
+    val CT = "Correct_Time"
+    val LDS = "Last_Data_Sec"
+    val B4SR = "B4_Sameple_Rate"
+    //B5
+    val II = "Item_Index"
+    val B5TEMP = "B5Temperature"
+    val B5HUMI = "B5HUMI"
+    val B5TVOC = "B5TVOC"
+    val B5ECO2 = "B5ECO2"
+    val B5PM25 = "B5PM25"
+    val RDC = "Recect_Data_Check"
 
 
     var spinnerPosition: Int = 0

@@ -38,10 +38,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.HttpCookie;
 import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -52,12 +49,8 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
-import io.realm.RealmAsyncTask;
-import io.realm.RealmList;
-import io.realm.RealmObject;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
-import io.realm.annotations.PrimaryKey;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -66,7 +59,6 @@ import okhttp3.Response;
 
 import com.crashlytics.android.Crashlytics;
 import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
@@ -1143,14 +1135,14 @@ public class UartService1 extends Service {
                     if (isFirstB0) {
                         isFirstB0 = false;
 
-                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetLedStateCMD());
+                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.getLedStateCMD());
 
 
                         Handler hh = new Handler();
                         hh.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetInfo());
+                                writeRXCharacteristic(BLECallingTranslate.INSTANCE.getInfo());
                             }
                         },1000);
                     }
@@ -1413,7 +1405,7 @@ public class UartService1 extends Service {
 //                        mainIntent.putExtra("HUMIValue", RString.get(1));
 //                        mainIntent.putExtra("TVOCValue", RString.get(2));
 //                        mainIntent.putExtra("eCO2Value", RString.get(3));
-//                        //mainIntent.putExtra("PM25", RString.get(4));
+//                        mainIntent.putExtra("PM25", RString.get(4));
 //                        mainIntent.putExtra("BatteryLife", RString.get(5));
 //                        mainIntent.putExtra("flag",RString.get(6));
                     sendBroadcast(mainIntent);

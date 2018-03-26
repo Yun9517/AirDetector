@@ -828,12 +828,12 @@ class MainFragment : Fragment(), View.OnTouchListener {
             when (txValue[2]) {
                 0xB0.toByte() -> {
                     var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
-                    tempDataFloat = hashMap[TvocNoseData.TEMP]!!.toFloat()
-                    humiDataFloat = hashMap[TvocNoseData.HUMI]!!.toFloat()
-                    tvocDataFloat = hashMap[TvocNoseData.TVOC]!!.toFloat()
-                    co2DataFloat = hashMap[TvocNoseData.ECO2]!!.toFloat()
-                    pm25DataFloat = hashMap[TvocNoseData.PM25]!!.toFloat()
-                    preHeat = (hashMap[TvocNoseData.PREH]!!)
+                    tempDataFloat = hashMap[TvocNoseData.B0TEMP]!!.toFloat()
+                    humiDataFloat = hashMap[TvocNoseData.B0HUMI]!!.toFloat()
+                    tvocDataFloat = hashMap[TvocNoseData.B0TVOC]!!.toFloat()
+                    co2DataFloat = hashMap[TvocNoseData.B0ECO2]!!.toFloat()
+                    pm25DataFloat = hashMap[TvocNoseData.B0PM25]!!.toFloat()
+                    preHeat = (hashMap[TvocNoseData.B0PREH]!!)
                     //Log.d("PARSERB0", hashMap.toString())
                 }
             }

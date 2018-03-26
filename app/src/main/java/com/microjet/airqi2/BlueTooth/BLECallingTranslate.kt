@@ -212,7 +212,7 @@ object BLECallingTranslate {
     }
 
     // Device led control
-    fun GetLedStateCMD(): ByteArray {
+    fun getLedStateCMD(): ByteArray {
         val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff)
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff, checkSum)
@@ -310,14 +310,14 @@ object BLECallingTranslate {
     }
 
     /**
-     * Return the GetInfo command include CheckSum
+     * Return the getInfo command include CheckSum
      *
      *
      *
      *
-     * @return the GetInfo command include CheckSum
+     * @return the getInfo command include CheckSum
      */
-    fun GetInfo(): ByteArray {
+    fun getInfo(): ByteArray {
         val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo)
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo, checkSum)
@@ -816,31 +816,31 @@ object BLECallingTranslate {
                         1-> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.TEMP,newTemp)
+                            returnValue.put(TvocNoseData.B0TEMP,newTemp)
                             value = 0
                         }
                         2-> {//Humidity
-                            returnValue.put(TvocNoseData.HUMI,value.toString())
+                            returnValue.put(TvocNoseData.B0HUMI,value.toString())
                             value = 0
                         }
                         4-> {//TVOC
-                            returnValue.put(TvocNoseData.TVOC,value.toString())
+                            returnValue.put(TvocNoseData.B0TVOC,value.toString())
                             value = 0
                         }
                         6-> {//CO2
-                            returnValue.put(TvocNoseData.ECO2,value.toString())
+                            returnValue.put(TvocNoseData.B0ECO2,value.toString())
                             value = 0
                         }
                         8->{//PM25
-                            returnValue.put(TvocNoseData.PM25,value.toString())
+                            returnValue.put(TvocNoseData.B0PM25,value.toString())
                             value = 0
                         }
                         9->{//battery life
-                            returnValue.put(TvocNoseData.BATT,value.toString())
+                            returnValue.put(TvocNoseData.B0BATT,value.toString())
                             value = 0
                         }
                         10->{//Preheater
-                            returnValue.put(TvocNoseData.PREH,value.toString())
+                            returnValue.put(TvocNoseData.B0PREH,value.toString())
                             value = 0
                         }
                         else -> {
@@ -985,7 +985,7 @@ object BLECallingTranslate {
                     when (j) {
                         0//sample rate
                         -> {
-                            returnValue.put(TvocNoseData.SR,value.toString())
+                            returnValue.put(TvocNoseData.B2SR,value.toString())
                             value = 0
                         }
                         2//sensor_on_time_range
@@ -1064,6 +1064,119 @@ object BLECallingTranslate {
         return returnValue
     }
 
+    fun parserGetHistorySampleItemsKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Max Items
+                        -> {
+                            returnValue.put(TvocNoseData.MAXI,Integer.toString(value))
+                            value = 0
+                        }
+                        2//sample status
+                        -> {
+                            returnValue.put(TvocNoseData.SS,Integer.toString(value))
+                            value = 0
+                        }
+                        3//correct time
+                        -> {
+                            returnValue.put(TvocNoseData.CT,Integer.toString(value))
+                            value = 0
+                        }
+                        5//最後週期離現在多久 last data sec
+                        -> {
+                            returnValue.put(TvocNoseData.LDS,Integer.toString(value))
+                            value = 0
+                        }
+                        6//samepleRate
+                        -> {
+                            returnValue.put(TvocNoseData.B4SR,Integer.toString(value))
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun parserGetHistorySampleItemKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Item Index
+                        -> {
+                            returnValue.put(TvocNoseData.II, value.toString())
+                            value = 0
+                        }
+                        3//Temperature
+                        -> {
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.B5TEMP,newTemp)
+                            value = 0
+                        }
+                        4//Humi
+                        -> {
+                            returnValue.put(TvocNoseData.B5HUMI, value.toString())
+                            value = 0
+                        }
+                        6//TVOC
+                        -> {
+                            returnValue.put(TvocNoseData.B5TVOC, value.toString())
+                            value = 0
+                        }
+                        8//CO2
+                        -> {
+                            returnValue.put(TvocNoseData.B5ECO2 ,value.toString())
+                            value = 0
+                        }
+                        10//PM25
+                        -> {
+                            returnValue.put(TvocNoseData.B5PM25, value.toString())
+                            value = 0
+                        }
+                        12//RecectDataCheck
+                        -> {
+                            returnValue.put(TvocNoseData.RDC ,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
 
 
     fun Byte.toPositiveInt() = toInt() and 0xFF
