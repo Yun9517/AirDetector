@@ -44,10 +44,6 @@ class UartService: Service() {
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
 
-    val ACTION_GATT_SERVICES_DISCOVERED = "com.example.bluetooth.le.ACTION_GATT_SERVICES_DISCOVERED"
-    val ACTION_DATA_AVAILABLE = "com.example.bluetooth.le.ACTION_DATA_AVAILABLE"
-    val EXTRA_DATA = "com.example.bluetooth.le.EXTRA_DATA"
-
     private val bus = EventBus.getDefault()
     private val bleEventObj = BleEvent()
 
@@ -328,7 +324,7 @@ class UartService: Service() {
 
 
     fun saveToDB(tx: ByteArray) {
-        var RString = CallingTranslate.ParserGetHistorySampleItems(tx)
+        var RString = BLECallingTranslate.ParserGetHistorySampleItems(tx)
         val maxItem = (Integer.parseInt(RString.get(0)))
 
         //setMaxItems(Integer.parseInt(RString.get(0)))//MAX Items
@@ -381,7 +377,7 @@ class UartService: Service() {
             }
             if (countForItem >= 1) {
                 NowItem = countForItem
-                writeRXCharacteristic(CallingTranslate.GetHistorySample(NowItem))
+                writeRXCharacteristic(BLECallingTranslate.GetHistorySample(NowItem))
                 downloading = true
                 //downloadComplete = false;
             } else {

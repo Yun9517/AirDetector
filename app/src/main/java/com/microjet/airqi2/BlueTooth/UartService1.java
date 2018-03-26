@@ -801,7 +801,7 @@ public class UartService1 extends Service {
 //                        CallFromConnect=true;
 //                    else
 //                        CallFromConnect=false;
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
                     Date date = new Date();
@@ -814,7 +814,7 @@ public class UartService1 extends Service {
                     String[] strY = {sdFormatY.format(date), sdFormatM.format(date), sdFormatD.format(date), sdFormatH.format(date), sdFormatm.format(date), sdFormatS.format(date)};
                     int[] param2 = {Integer.parseInt(strY[0]), Integer.parseInt(strY[1]), Integer.parseInt(strY[2]), Integer.parseInt(strY[3]), Integer.parseInt(strY[4]), Integer.parseInt(strY[5])};
                     Log.d(TAG, "callDeviceStartSample");
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
 //                case ACTION_GATT_SERVICES_DISCOVERED:
 //                    enableTXNotification();
@@ -828,27 +828,27 @@ public class UartService1 extends Service {
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(65002));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PumpOnCall(65002));
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(1));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PumpOnCall(1));
                     break;
                 case BroadcastActions.INTENT_KEY_LED_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(false));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(false));
                     break;
                 case BroadcastActions.INTENT_KEY_LED_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(true));
                     break;
                 case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
                     lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
                     longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(5));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25(5));
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(15));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25(15));
                     break;
 
             }
@@ -1128,7 +1128,7 @@ public class UartService1 extends Service {
             Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
             switch (txValue[2]) {
                 case (byte) 0xB0:
-                    RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
+                    RString = BLECallingTranslate.INSTANCE.GetAllSensor(txValue);
                     mainIntent.putExtra("status", "B0");
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));
@@ -1143,14 +1143,14 @@ public class UartService1 extends Service {
                     if (isFirstB0) {
                         isFirstB0 = false;
 
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetLedStateCMD());
 
 
                         Handler hh = new Handler();
                         hh.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
+                                writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetInfo());
                             }
                         },1000);
                     }
@@ -1185,7 +1185,7 @@ public class UartService1 extends Service {
 
                     break;
                 case (byte) 0xB1:
-                    RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetInfo(txValue);
                     isPM25 = RString.get(0);
                     deviceVersion = RString.get(3);
 
@@ -1196,7 +1196,7 @@ public class UartService1 extends Service {
                     Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
-                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     SharedPreferences share = getSharedPreferences("ASMSetting", MODE_PRIVATE);
                     String setting0 = share.getString("sample_rate", "2");
                     String setting1 = share.getString("sensor_on_time_range", "60");
@@ -1230,17 +1230,17 @@ public class UartService1 extends Service {
                                     .putString("pumping_time_range", "2").apply();
                             int[] param = {2, 2 * 30, 2, 1, 2, 0, 0};
                             Log.d(TAG, "setSampleRate");
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                            writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetSampleRate(param));
                         }
                         setSampleRateTime(Integer.parseInt(RString.get(0)));
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySampleItems());
                         //SetPM25 180308
                         intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON);
                         sendBroadcast(intent);
                     }
                     break;
                 case (byte) 0xB4:
-                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                     myDeviceData.clear();
                     //取得裝置目前B5的Index
                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
@@ -1298,7 +1298,7 @@ public class UartService1 extends Service {
                         }
                         if (countForItem >= 1) {
                             NowItem = countForItem;
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+                            writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
                             //downloadComplete = false;
                         } else {
@@ -1321,7 +1321,7 @@ public class UartService1 extends Service {
                     }
                     break;
                 case (byte) 0xB5:
-                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                     Log.d("0xB5Index", RString.get(0));
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
@@ -1407,7 +1407,7 @@ public class UartService1 extends Service {
                     }
                     break;
                 case (byte) 0xB6:
-                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                     mainIntent.putExtra("status", "B6");
 //                        mainIntent.putExtra("TEMPValue", RString.get(0));
 //                        mainIntent.putExtra("HUMIValue", RString.get(1));
@@ -1551,7 +1551,7 @@ public class UartService1 extends Service {
 
     final Runnable runnable = new Runnable() {
         public void run() {
-            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+            writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySample(NowItem));
             // TODO Auto-generated method stub
             // 需要背景作的事
         }

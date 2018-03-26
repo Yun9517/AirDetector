@@ -20,7 +20,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import com.microjet.airqi2.BlueTooth.CallingTranslate
+import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
@@ -827,14 +827,14 @@ class MainFragment : Fragment(), View.OnTouchListener {
         } else {
             when (txValue[2]) {
                 0xB0.toByte() -> {
-                    var hashMap = CallingTranslate.getAllSensorKeyValue(txValue)
+                    var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
                     tempDataFloat = hashMap[TvocNoseData.TEMP]!!.toFloat()
                     humiDataFloat = hashMap[TvocNoseData.HUMI]!!.toFloat()
                     tvocDataFloat = hashMap[TvocNoseData.TVOC]!!.toFloat()
                     co2DataFloat = hashMap[TvocNoseData.ECO2]!!.toFloat()
                     pm25DataFloat = hashMap[TvocNoseData.PM25]!!.toFloat()
                     preHeat = (hashMap[TvocNoseData.PREH]!!)
-                    Log.d("PARSERB0", hashMap.toString())
+                    //Log.d("PARSERB0", hashMap.toString())
                 }
             }
         }

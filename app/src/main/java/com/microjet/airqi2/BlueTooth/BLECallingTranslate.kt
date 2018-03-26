@@ -9,7 +9,7 @@ import kotlin.experimental.and
  * Created by B00055 on 2017/11/29.
  *
  */
-object CallingTranslate {
+object BLECallingTranslate {
 
     private fun getCheckSum(CMD: ByteArray): Byte {
         val j = CMD.size
@@ -783,13 +783,13 @@ object CallingTranslate {
         return ReturnValue
     }
 
-    fun GetPM25(): ByteArray {
+    fun getPM25(): ByteArray {
         val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25)
         val checkSum = getCheckSum(valueHandler)
         return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25, checkSum)
     }
 
-    fun SetPM25(inPut: Int): ByteArray {
+    fun setPM25(inPut: Int): ByteArray {
         var input1 = inPut.toByte()
         var input2 = 0.toByte()
         var input3 = 30.toByte()
@@ -1005,7 +1005,7 @@ object CallingTranslate {
                         }
                         8//pumping time
                         -> {
-                            returnValue.put(TvocNoseData.PT,value.toString())
+                            returnValue.put(TvocNoseData.PTR,value.toString())
                             value = 0
                         }
                     /*暫時用不到
@@ -1019,6 +1019,40 @@ object CallingTranslate {
                         ReturnValue.add(Integer.toString(value))
                         value = 0
                     }*/
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getPM25KeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == Command_List.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        0-> {//PM25 SampleRate
+                            returnValue.put(TvocNoseData.PM25SR,value.toString())
+                            value = 0
+                        }
+                        2-> {//GetSampleTime
+                            returnValue.put(TvocNoseData.PM25GST,value.toString())
+                            value = 0
+                        }
                         else -> {
                         }
                     }

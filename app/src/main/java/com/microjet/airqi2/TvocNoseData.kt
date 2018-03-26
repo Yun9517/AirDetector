@@ -30,7 +30,10 @@ object TvocNoseData {
     val SOTR = "sensor_on_time_range"
     val STGS = "sensor_to_get_sample"
     val POT = "pump_on_time"
-    val PT = "pumping_time_range"
+    val PTR = "pumping_time_range"
+    //E0
+    val PM25SR = "PM25Sample_Rate"
+    val PM25GST = "PM25Get_Sample_Time"
 
 
     var spinnerPosition: Int = 0

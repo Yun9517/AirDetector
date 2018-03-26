@@ -18,6 +18,7 @@ import android.media.SoundPool
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
@@ -38,7 +39,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
-import com.microjet.airqi2.BlueTooth.CallingTranslate
+import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -164,6 +165,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var errorTime = 0
     private var isFirstB0 = true
+    private var sampleRateTime = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1041,7 +1043,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             else -> { }
         }
         when (txValue[2]) {
-            0xE0.toByte() -> { Log.d("UART feeback", "ok"); return}
+            //0xE0.toByte() -> { Log.d("UART feeback", "ok"); return}
             0xE1.toByte() -> { Log.d("UART feedback", "Couldn't write in device"); return}
             0xE2.toByte() -> { Log.d("UART feedback", "Temperature sensor fail"); return}
             0xE3.toByte() -> { Log.d("UART feedback", "TVOC sensor fail"); return }
@@ -1065,7 +1067,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } else {
             when (txValue[2]) {
                 0xB0.toByte() -> {
-                    var hashMap = CallingTranslate.getAllSensorKeyValue(txValue)
+                    var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
                     heatingPanelControl(hashMap[TvocNoseData.PREH]!!)
                     displayConnetedBatteryLife(hashMap[TvocNoseData.BATT]!!.toInt())
                     /*
@@ -1083,63 +1085,65 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 /*
                 0xB1.toByte() -> {
-                    var hashMap = CallingTranslate.parserGetInfoKeyValue(txValue)
+                    var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
                     Log.d("PARSERB1", hashMap.toString())
                 }
                 */
                 0xB2.toByte() -> {
-                    var hashMap = CallingTranslate.ParserGetSampleRateKeyValue(txValue)
-                    /*
+                    if (txValue.size > 5) {
+                        var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
 
-                    val share = getSharedPreferences(TvocNoseData.ASMS, Context.MODE_PRIVATE)
-                    val setting0 = share.getString(TvocNoseData.SR, "2")
-                    val setting1 = share.getString(TvocNoseData.SOTR, "60")
-                    val setting2 = share.getString(TvocNoseData.STGS, "2")
-                    val setting3 = share.getString(TvocNoseData.POT, "1")
-                    val setting4 = share.getString(TvocNoseData.PT, "2")
+                        val share = getSharedPreferences(TvocNoseData.ASMS, Context.MODE_PRIVATE)
+                        val setting0 = share.getString(TvocNoseData.SR, "2")
+                        val setting1 = share.getString(TvocNoseData.SOTR, "60")
+                        val setting2 = share.getString(TvocNoseData.STGS, "2")
+                        val setting3 = share.getString(TvocNoseData.POT, "1")
+                        val setting4 = share.getString(TvocNoseData.PTR, "2")
+                        Log.d("0xB2Compare",
+                                setting0 + ":" + hashMap[TvocNoseData.SR] + " " +
+                                        setting1 + ":" + hashMap[TvocNoseData.SOTR] + " " +
+                                        setting2 + ":" + hashMap[TvocNoseData.STGS] + " " +
+                                        setting3 + ":" + hashMap[TvocNoseData.POT] + " " +
+                                        setting4 + ":" + hashMap[TvocNoseData.PTR])
 
-                    share.edit()
-                            .putString(TvocNoseData.SR, "2")
-                            .putString(TvocNoseData.SOTR, "60")
-                            .putString(TvocNoseData.STGS, "2")
-                            .putString(TvocNoseData.POT, "1")
-                            .putString(TvocNoseData.PT, "2").apply()
-
-                    //當寫入完畢時會回吐B2 ok的CMD所作的處理
-                    if (RString.size >= 5) {
-                        Log.d("0xB2Compare", setting0 + ":" + RString.get(0) + " " + setting1 + ":" + RString.get(1) + " " + setting2 + ":" + RString.get(2) + " " + setting3 + ":" + RString.get(3) + " " + setting4 + ":" + RString.get(4))
-
-                        if (setting0 == RString.get(0)
-                                && setting1 == RString.get(1)
-                                && setting2 == RString.get(2)
-                                && setting3 == RString.get(3)
-                                && setting4 == RString.get(4)) {
+                        if (setting0 == hashMap[TvocNoseData.SR]
+                                && setting1 == hashMap[TvocNoseData.SOTR]
+                                && setting2 == hashMap[TvocNoseData.STGS]
+                                && setting3 == hashMap[TvocNoseData.POT]
+                                && setting4 == hashMap[TvocNoseData.PTR])
+                        {
                             Log.d("0xB2", "True")
                         } else {
                             share.edit()
-                                    .putString("sample_rate", "2")
-                                    .putString("sensor_on_time_range", "60")
-                                    .putString("sensor_to_get_sample", "2")
-                                    .putString("pump_on_time", "1")
-                                    .putString("pumping_time_range", "2").apply()
+                                    .putString(TvocNoseData.SR, "2")
+                                    .putString(TvocNoseData.SOTR, "60")
+                                    .putString(TvocNoseData.STGS, "2")
+                                    .putString(TvocNoseData.POT, "1")
+                                    .putString(TvocNoseData.PTR, "2").apply()
                             val param = intArrayOf(2, 2 * 30, 2, 1, 2, 0, 0)
-                            Log.d(TAG, "setSampleRate")
-                            writeRXCharacteristic(CallingTranslate.SetSampleRate(param))
+                            mUartService?.writeRXCharacteristic(BLECallingTranslate.SetSampleRate(param))
                         }
-                        setSampleRateTime(Integer.parseInt(RString.get(0)))
-                        writeRXCharacteristic(CallingTranslate.GetHistorySampleItems())
-                        //SetPM25 180308
-                        intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
-                        sendBroadcast(intent)
+                        sampleRateTime = hashMap[TvocNoseData.SR]!!.toInt()
+                        mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
+                        //setPM25 180308
+                        //intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON)
+                        //sendBroadcast(intent)
+                        //}
+                        Log.d("0xB2", hashMap.toString())
+                    } else {
+                        Log.d("0xB2OK",txValue[3].toString())
                     }
-                    */
-
-                    Log.d("0xB2", hashMap.toString())
                 }
                 0xB4.toByte() -> {
                     saveToRealm(txValue)
                 }
-
+                0xE0.toByte() -> {
+                    var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
+                    if (hashMap[TvocNoseData.PM25SR] != "5" && hashMap[TvocNoseData.PM25GST] != "30") {
+                        BLECallingTranslate.setPM25(5)
+                    }
+                    Log.d("0xE0",hashMap.toString())
+                }
             }
         }
     }
@@ -1178,17 +1182,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun connectionInitMethod() {
         if (isFirstB0) {
             isFirstB0 = false
-            mUartService?.writeRXCharacteristic(CallingTranslate.GetSampleRate())
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.GetSampleRate())
+            val hh = Handler()
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getPM25()) }, 1000)
         }
     }
-
 }
-
-
-
-
-
-
-
-
 
