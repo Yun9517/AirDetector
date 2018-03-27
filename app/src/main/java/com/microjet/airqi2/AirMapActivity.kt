@@ -135,12 +135,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        viewSelecter.setOnCheckedChangeListener { group, checkedId ->
+        viewSelecter.setOnCheckedChangeListener { _, _ ->
             startLoadDataThread()
         }
 
         LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
-                makeMainFragmentUpdateIntentFilter())
+                makeBroadcastReceiverFilter())
     }
 
     override fun onDestroy() {
@@ -450,7 +450,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val client = LocationServices.getFusedLocationProviderClient(this)
 
         client.lastLocation.addOnCompleteListener(this, {
-            if(it != null && it.isSuccessful) {
+            if(it.isSuccessful) {
                 val location = it.result
                 if (location == null) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
@@ -491,10 +491,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mMap = p0!!
 
         // 彩蛋，好棒棒座標（拜託不要刪XD）
-        val howBonBon = LatLng(25.029639, 121.544416)
-        mMap.addMarker(MarkerOptions()
-                .position(howBonBon)
-                .title("好棒棒！"))
+        //val howBonBon = LatLng(25.029639, 121.544416)
+        //mMap.addMarker(MarkerOptions()
+        //        .position(howBonBon)
+        //        .title("好棒棒！"))
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))
 
         if(checkSelfPermission(this,
@@ -513,7 +513,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
+    private fun makeBroadcastReceiverFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
         return intentFilter
