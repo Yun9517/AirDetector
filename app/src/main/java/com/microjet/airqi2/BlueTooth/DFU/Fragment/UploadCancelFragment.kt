@@ -9,7 +9,7 @@ import android.support.v4.app.DialogFragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AlertDialog
 import android.util.Log
-import com.microjet.airqi2.BlueTooth.DFU.DfuService
+import com.microjet.airqi2.BlueTooth.DFU.DFUService
 import com.microjet.airqi2.R
 import no.nordicsemi.android.dfu.DfuBaseService
 

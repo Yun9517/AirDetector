@@ -34,7 +34,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
-import com.microjet.airqi2.BlueTooth.DFU.DfuActivity
+import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -577,7 +577,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171127 Raymond 新增：知識庫activity
     private fun knowledgeShow() {
         blueToothDisconnect()
-        val i: Intent? = Intent(this, DfuActivity::class.java)
+        val i: Intent? = Intent(this, DFUActivity::class.java)
         startActivity(i)
     }
 

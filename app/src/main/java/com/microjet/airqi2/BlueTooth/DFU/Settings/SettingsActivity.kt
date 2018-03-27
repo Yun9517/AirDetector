@@ -21,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // Display the fragment as the main content.
-        fragmentManager.beginTransaction().replace(R.id.content, SettingsFragment()).commit()
+        fragmentManager.beginTransaction().replace(R.id.content, SettingFragment()).commit()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

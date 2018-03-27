@@ -13,7 +13,7 @@ import no.nordicsemi.android.dfu.DfuSettingsConstants
  * Created by B00055 on 2018/3/26.
  */
 
-class SettingsFragment : PreferenceFragment(), DfuSettingsConstants, SharedPreferences.OnSharedPreferenceChangeListener {
+class SettingFragment : PreferenceFragment(), DfuSettingsConstants, SharedPreferences.OnSharedPreferenceChangeListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
