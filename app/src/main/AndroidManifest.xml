@@ -136,7 +136,9 @@
             </intent-filter>
 
         </activity>-->
-
+        <activity
+            android:name=".BlueTooth.DFU.Settings.SettingsActivity"
+            android:label="DFU Settings" />
         <service
             android:name=".BlueTooth.DFU.DFUService"
             android:exported="true"

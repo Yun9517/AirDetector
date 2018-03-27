@@ -17,8 +17,8 @@ class SettingsActivity : AppCompatActivity() {
         setContentView(R.layout.activity_settings)
 
         val toolbar = findViewById<Toolbar>(R.id.toolbar_actionbar)
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+     //   setSupportActionBar(toolbar)
+     //   supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         // Display the fragment as the main content.
         fragmentManager.beginTransaction().replace(R.id.content, SettingFragment()).commit()

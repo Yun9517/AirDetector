@@ -43,6 +43,7 @@ import com.microjet.airqi2.BlueTooth.DFU.Adapter.FileBrowserAppsAdapter
 import com.microjet.airqi2.BlueTooth.DFU.Fragment.UploadCancelFragment
 import com.microjet.airqi2.BlueTooth.DFU.Fragment.ZipInfoFragment
 import com.microjet.airqi2.BlueTooth.DFU.Settings.SettingFragment
+import com.microjet.airqi2.BlueTooth.DFU.Settings.SettingsActivity
 import com.microjet.airqi2.BlueTooth.Scanner.ScannerFragment
 import com.microjet.airqi2.CustomAPI.FileHelper
 import com.microjet.airqi2.R
@@ -369,14 +370,13 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
-        /*    R.id.action_about -> {
-                val fragment = AppHelpFragment.getInstance(R.string.dfu_about_text)
-                fragment.show(supportFragmentManager, "help_fragment")
-            }
+        //    R.id.action_about -> { //       val fragment = AppHelpFragment.getInstance(R.string.dfu_about_text)
+        //        fragment.show(supportFragmentManager, "help_fragment")
+        //    }
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
-            }*/
+            }
         }
         return true
     }
