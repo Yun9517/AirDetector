@@ -60,6 +60,7 @@ dependencies {
         transitive = true
     }
     compile 'com.github.angads25:filepicker:1.0.6'
+    implementation files('src/main/libs/jxl.jar')
 }
 
 repositories {

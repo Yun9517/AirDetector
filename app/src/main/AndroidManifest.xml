@@ -94,7 +94,27 @@
             <category android:name="android.intent.category.DEFAULT"/>
         </intent-filter>
         </activity>
-
+        <!--authorities="你的包名+fileprovider" -->
+        <provider
+            android:authorities="com.microjet.airqi2"
+            android:name="android.support.v4.content.FileProvider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths"/>
+        </provider>
+<!--
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="com.stylingandroid.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
+-->
         <activity
             android:name=".Account.AccountResetPasswordActivity"
             android:excludeFromRecents="true"

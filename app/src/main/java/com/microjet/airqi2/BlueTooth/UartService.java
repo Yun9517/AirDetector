@@ -22,57 +22,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.HttpCookie;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-
-import io.realm.Realm;
-import io.realm.RealmAsyncTask;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.annotations.PrimaryKey;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -80,24 +45,42 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.DownloadTask;
 import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.NotificationHelper;
+import com.microjet.airqi2.R;
 import com.microjet.airqi2.TvocNoseData;
 import com.microjet.airqi2.myData;
-import com.microjet.airqi2.R;
-import com.microjet.airqi2.NotificationHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
@@ -1159,6 +1142,16 @@ public class UartService extends Service {
                     mainIntent.putExtra("BatteryLife", RString.get(5));
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
+
+                    //20180321
+//                    writeDataToFile( RString ,getApplicationContext());
+//                    writeDataToFile(RString.get(1).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(2).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(3).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(4).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(5).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(6).toString()+",",getApplicationContext());
+
 
                     // 20180226 add
                     if (isFirstB0) {
@@ -2333,7 +2326,6 @@ public class UartService extends Service {
 
         return dbSucessOrNot;
     }
-
     @SuppressLint("MissingPermission")
     private void initFuseLocationProviderClient() {
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
