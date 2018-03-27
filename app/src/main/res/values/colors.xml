@@ -73,4 +73,14 @@
     <color name="air_map_line_value4">#FF0000</color> <!-- 主頁圓圈內 測量結果 "差" 用色 -->
     <color name="air_map_line_value5">#A037FF</color>
     <color name="air_map_line_value6">#6E0000</color> <!-- 主頁圓圈內 測量結果 "極差" 用色 -->
+
+
+    <!--DFU-->
+    <color name="backgroundColor">#E6E7E8</color>
+    <color name="headerBackgroundColor">#009ada</color>
+    <color name="headerTextColor">#FFFFFF</color>
+    <color name="actionBarColor">#009CDE</color>
+    <color name="darkGray">#AAABAF</color>
+    <color name="actionBarColorDark">#0081B7</color>
+
 </resources>

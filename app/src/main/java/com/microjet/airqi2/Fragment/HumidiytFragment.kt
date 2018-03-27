@@ -128,7 +128,7 @@ class HumidiytFragment : Fragment() {
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
 
-        mContext = this.context.applicationContext
+        mContext = this.context!!.applicationContext
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -136,7 +136,7 @@ class HumidiytFragment : Fragment() {
         LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_humidity, container, false)
 
     @SuppressLint("SimpleDateFormat")
@@ -758,9 +758,9 @@ class HumidiytFragment : Fragment() {
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "Humi")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
-                ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                ContextCompat.getColor(context, R.color.Main_textResult_Bad)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context!!, R.color.Main_textResult_Blue),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Bad)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
@@ -1001,9 +1001,9 @@ class HumidiytFragment : Fragment() {
 
     private fun getBarData(): BarData {
         val dataSetA = MyBarDataSet(getChartData(), "Humi")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
-                ContextCompat.getColor(context, R.color.progressBarMidColor),
-                ContextCompat.getColor(context, R.color.progressBarEndColor)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context!!, R.color.progressBarStartColor),
+                ContextCompat.getColor(context!!, R.color.progressBarMidColor),
+                ContextCompat.getColor(context!!, R.color.progressBarEndColor)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets

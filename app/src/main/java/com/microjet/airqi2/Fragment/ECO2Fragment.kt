@@ -119,7 +119,7 @@ class ECO2Fragment : Fragment() {
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
 
-        mContext = this.context.applicationContext
+        mContext = this.context!!.applicationContext
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -127,7 +127,7 @@ class ECO2Fragment : Fragment() {
         LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater!!.inflate(R.layout.frg_eco2, container, false)
 
     @SuppressLint("SimpleDateFormat")
@@ -639,12 +639,12 @@ class ECO2Fragment : Fragment() {
     }
     private fun getBarData3(inputTVOC: ArrayList<String>, inputTime: ArrayList<String>,positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputTVOC), "ECO2")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
@@ -822,9 +822,9 @@ class ECO2Fragment : Fragment() {
 
     private fun getBarData(): BarData {
         val dataSetA = MyBarDataSet(getChartData(), "TVOC")
-        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context, R.color.progressBarStartColor),
-                ContextCompat.getColor(context, R.color.progressBarMidColor),
-                ContextCompat.getColor(context, R.color.progressBarEndColor)))
+        dataSetA.setColors(intArrayOf(ContextCompat.getColor(context!!, R.color.progressBarStartColor),
+                ContextCompat.getColor(context!!, R.color.progressBarMidColor),
+                ContextCompat.getColor(context!!, R.color.progressBarEndColor)))
 
         val dataSets = ArrayList<IBarDataSet>()
         dataSets.add(dataSetA) // add the datasets
