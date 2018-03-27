@@ -53,7 +53,7 @@
             android:name=".BlueTooth.DeviceListActivity"
             android:excludeFromRecents="true"
             android:noHistory="true"
-            android:screenOrientation="portrait"
+            android:screenOrientation="unspecified"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
         <activity
