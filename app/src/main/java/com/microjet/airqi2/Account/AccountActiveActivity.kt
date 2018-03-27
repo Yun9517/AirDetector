@@ -2,12 +2,10 @@ package com.microjet.airqi2.Account
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
-import android.net.Uri
-import android.os.AsyncTask
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
@@ -17,21 +15,13 @@ import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
-import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
-import okhttp3.HttpUrl
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
-import java.io.OutputStreamWriter
+import java.io.*
 import java.util.*
+
+
 
 
 /**
@@ -39,12 +29,17 @@ import java.util.*
  */
 class AccountActiveActivity : AppCompatActivity() {
     private var mContext: Context? = null
+    private val ASSET_NAME = "BLE_Data.csv"
 
+    private var File: File? = null
+    private var cacheFile: File? = null
+
+    @SuppressLint("SdCardPath")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
         mContext = this@AccountActiveActivity.applicationContext
-
+        //dbData2CVSAsyncTasks().execute()
 
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -94,52 +89,17 @@ class AccountActiveActivity : AppCompatActivity() {
         }
         //DownloadTask().execute()
 
-        // 03/19 Share to Line
-        shareData.setOnClickListener {
-
-            //20180321
-//            dbData2CVSAsyncTasks().execute()
-//
-//
-//
-//            val intent = Intent(Intent.ACTION_VIEW)
-//            intent.action = Intent.ACTION_SEND
-//            //val uri = Uri.fromFile(File(param))
-//            //intent.setDataAndType(uri, "application/vnd.ms-excel")
-//            //20180319
-//            intent.putExtra(Intent.EXTRA_TEXT, "幹出來!")
-//            intent.type = "text/plain"
-//            startActivity(intent)
-
-            //getExcelFileIntent()
-
-
-
-            //PO文字
-//            val PACKAGE_NAME = "jp.naver.line.android"
-//            val CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity"
-//            val intent = Intent(Intent.ACTION_SEND)
-//            intent.setClassName(PACKAGE_NAME, CLASS_NAME)
-//            intent.type = "text/plain"
-//            intent.putExtra(Intent.EXTRA_TEXT, "123321")
-//            startActivity(intent)
-            val cachePath = applicationContext.externalCacheDir!!.path
-            val picFile = File(cachePath, "BLE_Data.csv")
-            val intent = Intent(Intent.ACTION_SEND)
-
-            intent.setAction(Intent.ACTION_SEND_MULTIPLE);
-            //intent.addCategory("android.intent.category.DEFAULT")
-            //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            //val uri = Uri.fromFile(File("/data/user/0/com.microjet.airqi2/files/BLE_Data.csv"))//   /data/data/com.microjet.airqi2/files/BLE_Data.csv
-            intent.setType("*/*")
-            //intent.setDataAndType(uri, "|application/vnd.ms-excel|xls")
-            intent.putExtra(Intent.EXTRA_STREAM,picFile)
-            //intent.type = "|application/vnd.ms-excel|csv"
-            startActivity(intent)
-            Log.e("幹","幹")
+        // 0322
+        downloadData.setOnClickListener {
 
         }
 
+        // 03/19 Share to Line
+        shareData.setOnClickListener {
+            //showDialog("以按下"+"分享按鈕")
+            dbData2CVSAsyncTasks()
+            file_Provider()
+        }
     }
     private fun initActionBar() {
         // 取得 actionBar
@@ -179,181 +139,30 @@ class AccountActiveActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-//        val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
-//        val _token = share_token.getString("token","")
-//        Log.e("登出後onDestroy偷肯:",_token)
-    }
-
-    inner class DownloadTask : AsyncTask<Void, Void, String>() {
-
-        //取MAC
-        private val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        private val mDeviceAddress = share.getString("mac", "noValue")
-        private val share_token = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        private val token = share_token.getString("token","")
-        private val phpToken = "Bearer " + token
-
-        private val client = OkHttpClient()
-        private val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData")!!.newBuilder()
-                .addQueryParameter("mac_address", mDeviceAddress)
-                //.addQueryParameter("start_time", "0")
-                //.addQueryParameter("end_time", "1520941868267")
-        private val url = urlBuilder.build().toString()
-        private val request = Request.Builder()
-                .url(url)
-                .get()
-                .addHeader("authorization",phpToken)
-                .build()
-
-        //jsonBack KEY
-        private val TEMPValue = "temperature"
-        private val HUMIValue = "humidity"
-        private val TVOCValue = "tvoc"
-        private val ECO2Value = "eco2"
-        private val PM25Value = "pm25"
-        private val Created_time = "timestamp"
-        private val Longitude = "longitude"
-        private val Latitude = "latitude"
-        //private val UpLoaded = "UpLoaded"
-        //private val MACAddress = "MACAddress"
-
-        override fun doInBackground(vararg params: Void?): String? {
-            try {
-                val response = client.newCall(request).execute()
-                if (!response.isSuccessful) {
-                    return null
-                } else {
-                    val res = response.body()?.string()
-                    val jsonObj = JSONObject(res)
-                    val returnResult = jsonObj.get("userData")
-                    if (returnResult != "connect info error") {
-                        val jsonArr: JSONArray = jsonObj.getJSONArray("userData")
-                        val jsonArrSize = jsonArr.length()
-                        Log.d("DownloadSize", jsonArrSize.toString())
-                        val timeStampArr = arrayListOf<Long>()
-                        for (i in 0 until jsonArr.length()) {
-                            val timeStamp = jsonArr.getJSONObject(i).getString("timestamp").toLong()
-                            timeStampArr.add(timeStamp)
-                        }
-                        Log.d("Download", timeStampArr.toString())
-
-                        val realm = Realm.getDefaultInstance()
-                        for (i in 0 until timeStampArr.size) {
-                            val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", timeStampArr[i]).findAll()
-                            if (query.isEmpty()) {
-                                realm.executeTransaction {
-                                    val asmData = realm.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
-                                    asmData.tvocValue = jsonArr.getJSONObject(i).getString(TVOCValue)
-                                    asmData.ecO2Value = jsonArr.getJSONObject(i).getString(ECO2Value)
-                                    asmData.tempValue = jsonArr.getJSONObject(i).getString(TEMPValue)
-                                    asmData.humiValue = jsonArr.getJSONObject(i).getString(HUMIValue)
-                                    asmData.pM25Value = jsonArr.getJSONObject(i).getString(PM25Value)
-                                    asmData.created_time = jsonArr.getJSONObject(i).getString(Created_time).toLong()
-                                    asmData.latitude = jsonArr.getJSONObject(i).getString(Latitude).toFloat()
-                                    asmData.longitude = jsonArr.getJSONObject(i).getString(Longitude).toFloat()
-                                    asmData.upLoaded = "1"
-                                    asmData.macAddress = mDeviceAddress
-                                    Log.d("Download", asmData.toString())
-                                }
-                            }
-                        }
-                        realm.close()
-                        //Log.d("Download",timeStamp)
-                    }
-                    Log.d("Download",res.toString())
-                    return res
-                }
-            } catch (e: Exception) {
-                e.printStackTrace()
-                return null
-            }
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            // ...
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-            if (result != null) {
-            }
-        }
     }
 
 
-    private inner class dbData2CVSAsyncTasks : AsyncTask<Void, Void, String>() {
-        //@RequiresApi(api = Build.VERSION_CODES.N)
-        override fun doInBackground(vararg params: Void): String? {
-            var return_body: RequestBody? = null
-            var getResponeResult = java.lang.Boolean.parseBoolean(null)
-            try {
-
-//                //取得getRequestBody
-//                return_body = getRequestBody()
-//                //呼叫getResponse取得結果
-//                if (return_body!!.contentLength() > 0) {
-//                    getResponeResult = getResponse(return_body)
-//
-//                    if (getResponeResult) {
-//                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
-//                        val DBSucess = updateDB_UpLoaded()
-//                        if (DBSucess) {
-//                            Log.e("幹改進去", DBSucess.toString())
-//                        }
-//                        hasBeenUpLoaded.clear()
-//                    } else {
-//                        Log.e("幹改失敗拉!!", getResponeResult.toString())
-//                    }
-//                } else {
-//                    Log.e("幹太少筆啦!", return_body.contentLength().toString())
-//                }
-                try {
-                    val AllData = getDbData(Date().day, Date().day)
-                    writeDataToFile(AllData!!, this@AccountActiveActivity)
-                } catch (e: Exception) {
-                    Log.e("寫EXCLE檔失敗", e.toString())
-                }
-
-
-            } catch (e: Exception) {
-                Log.e("return_body_erro", e.toString())
-            }
-
-            return "已經按下分享"
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-
-            val Dialog = android.app.AlertDialog.Builder(this@AccountActiveActivity).create()
-            //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
-            //Dialog.setTitle("提示")
-            Dialog.setTitle(getString(R.string.remind))
-            Dialog.setMessage(result.toString())
-            Dialog.setCancelable(false)//讓返回鍵與空白無效
-            //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
-            Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
-            { dialog, _ ->
-                dialog.dismiss()
-            }
-            Dialog.show()
-            //finish()
-
-        }
+//    private inner class dbData2CVSAsyncTasks(){ //: AsyncTask<Void, Void, String>() {
+private fun dbData2CVSAsyncTasks() {
+    try {
+        val AllData = getDbData(Date().day, Date().day)
+        writeDataToFile(AllData!!, this@AccountActiveActivity)
+    } catch (e: Exception) {
+        Log.e("return_body_erro", e.toString())
     }
+}
 
     //20180321
     val DataArrayListOne = ArrayList<String>()
-    val DataArrayListAll= ArrayList< ArrayList<String>>()
+    //val DataArrayListAll= ArrayList< ArrayList<String>>()
     private fun getDbData(startTimeZone: Int, EntTime: Int): ArrayList<String> {
         //很重要同區域才可以叫到同一個東西
         val realm1 = Realm.getDefaultInstance()
         val query1 = realm1.where(AsmDataModel::class.java)
         val result1 = query1.findAll()
 
-        Log.e("未上傳資料筆數", result1.size.toString())
-        Log.e("未上傳資料", result1.toString().toString())
+        Log.e("資料筆數", result1.size.toString())
+        Log.e("所有資料筆數", result1.toString().toString())
         //MyApplication getUUID=new MyApplication();
         val UUID = MyApplication.getPsuedoUniqueID()
         val timestampTEMP: Long? = null
@@ -389,16 +198,14 @@ class AccountActiveActivity : AppCompatActivity() {
         return DataArrayListOne
     }
 
-
-
-
     //20180321
     fun writeDataToFile(data: ArrayList<String>, context: Context) {
         try {
 
-            val kk = context.getFileStreamPath("BLE_Data.csv")
+            val kk = context.getFileStreamPath ("BLE_Data.pdf")
+            Log.e("","")
             if (!kk.exists()) {
-                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.csv", Context.MODE_PRIVATE))
+                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.pdf", Context.MODE_APPEND))
                 outputStreamWriterData.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
                 outputStreamWriterData.close()
             }
@@ -411,58 +218,89 @@ class AccountActiveActivity : AppCompatActivity() {
             } else {
                 //取得SD卡儲存路徑
                 mSDFile = Environment.getExternalStorageDirectory()
-                mSDFile = context.getFileStreamPath("BLE_Data.csv")
+                mSDFile = context.getFileStreamPath("BLE_Data.pdf")
+                mSDFile.delete()
                 //mSDFile = context.getFileStreamPath("BLEaddressData.txt");
             }
-            //取得SD卡儲存路徑
-            //mSDFile = Environment.getExternalStorageDirectory();
-            //建立文件檔儲存路徑
-            //File mFile = new File(mSDFile.getParent() + "/" + mSDFile.getName() + "/Andy123");
             val mFileWriter = FileWriter(mSDFile!!, true)
-            //若沒有檔案儲存路徑時則建立此檔案路徑
-            //if(!mSDFile.exists())
-            //{
-            //    mSDFile.mkdirs();
-            //}
-            //true新增 false為覆蓋
-
-            //String data03 = "Hello! This is Data02!!";
-            //mFileWriter.write(data03);
-            //String data02 = "\r\n";
-            //mFileWriter.write(data02);
-            //String data01 = "This is OutputStream Data01!";
-            //mFileWriter.write(data01);
-            //mFileWriter.write(data02);
-            //String data04 = "This is OutputStream DataTESTANDY!";
-
-
-
-            for (k in 0..7) {
-                mFileWriter.write(data[k])
+            for (l in 0..data.size/3) {
+                for (k in 0..7) {
+                    mFileWriter.write(data[k].toString()+",")
+                }
+                mFileWriter.write("\r\n")
             }
-
-            mFileWriter.write("\r\n")
-
-
             mFileWriter.close()
-            //outputStreamWriterData.close();
-            //Toast.makeText(getApplicationContext(), "手動模式已儲存文字"+data, Toast.LENGTH_SHORT).show();
-            Log.e("data write to failed: ", data.toString())
+            Log.e("Excel檔完成!!路徑為:", mSDFile.path)
         } catch (e: IOException) {
             Log.e("Exception", "File write failed: " + e.toString())
         }
     }
 
-    @SuppressLint("SdCardPath")
-//android获取一个用于打开Excel文件的intent
-    fun getExcelFileIntent() {
-        val intent = Intent("android.intent.action.VIEW")
-        intent.addCategory("android.intent.category.DEFAULT")
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        val uri = Uri.fromFile(File("/data/data/com.microjet.airqi2/files/BLE_Data.csv"))//   /data/data/com.microjet.airqi2/files/BLE_Data.csv
-        intent.setDataAndType(uri, "|application/vnd.ms-excel|csv")
-        this.startActivity(intent)
+//    private fun cacheFileDoesNotExist(): Boolean {
+//        if (cacheFile == null) {
+//            cacheFile = File(cacheDir, ASSET_NAME)
+//        }
+//        return !cacheFile!!.exists()
+//    }
+//
+//    private fun createCacheFile() {
+//      //  var inputStream: InputStream? = null
+//        var outputStream: OutputStream? = null
+//        val BUFFER_SIZE = 2048
+//        try {
+//        //    inputStream = assets.open(ASSET_NAME)
+//            outputStream = FileOutputStream(cacheFile)
+//            val buf = ByteArray(BUFFER_SIZE)
+//            var len: Int=2048//inputStream.read(buf)
+//           // while (len > 0) {
+//                outputStream.write(buf, 0, len)
+//
+//          //  }
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        } finally {
+//        //   close(inputStream)
+//            close(outputStream)
+//        }
+//    }
+
+    private fun close(closeable: Closeable?) {
+        if (closeable == null) {
+            return
+        }
+        try {
+            closeable.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+    }
+private fun file_Provider(){
+    var mSDFile: File? = null
+    mSDFile = this.getFilesDir()
+    mSDFile = this@AccountActiveActivity.getFileStreamPath("BLE_Data.pdf")
+    val uri = FileProvider.getUriForFile(this, packageName, mSDFile)
+
+    Log.e("#抓取檔案路徑為:",uri.path+"#packageName="+packageName+"#mSDFile="+mSDFile)
+    val intent = Intent(Intent.ACTION_SEND)
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    intent.data = uri
+    intent.putExtra(Intent.EXTRA_STREAM, uri)
+    intent.setType("pdf/plain")
+    intent.type = "Application/csv"
+    val chooser = Intent.createChooser(intent, title)
+
+    //給目錄臨時的權限
+    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+    // Verify the intent will resolve to at least one activity
+    if (intent.resolveActivity(getPackageManager()) != null) {
+        startActivity(chooser)
     }
 }
+
+
+}
+
+
 
 
