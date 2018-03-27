@@ -42,7 +42,7 @@ import no.nordicsemi.android.support.v18.scanner.ScanSettings
 
     private var mPermissionRationale: View? = null
 
-    private var mUuid: ParcelUuid? = null
+    private var mUuid: ParcelUuid? = ParcelUuid(UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"))
 
     private var mIsScanning = false
 
