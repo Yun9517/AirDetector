@@ -18,7 +18,11 @@ import com.microjet.airqi2.R
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
 import org.json.JSONException
-import java.io.*
+import java.io.Closeable
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -160,7 +164,6 @@ private fun dbData2CVSAsyncTasks() {
         val realm1 = Realm.getDefaultInstance()
         val query1 = realm1.where(AsmDataModel::class.java)
         val result1 = query1.findAll()
-
         Log.e("資料筆數", result1.size.toString())
         Log.e("所有資料筆數", result1.toString().toString())
         //MyApplication getUUID=new MyApplication();
@@ -168,23 +171,20 @@ private fun dbData2CVSAsyncTasks() {
         val timestampTEMP: Long? = null
         try {
             if (result1.size > 0) {
+                val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                 for (i in result1.indices) {
                     //toltoSize++;
                     //hasBeenUpLoaded.add(result1[i]!!.dataId)
                     Log.i("text", "i=" + i + "\n")
-                    DataArrayListOne!!.add(result1[i]?.tempValue.toString())
-                    DataArrayListOne!!.add(result1[i]?.humiValue.toString())
-                    DataArrayListOne!!.add(result1[i]?.tvocValue.toString())
-                    DataArrayListOne!!.add(result1[i]?.ecO2Value.toString())
-                    DataArrayListOne!!.add(result1[i]?.pM25Value.toString())
-                    DataArrayListOne!!.add(result1[i]?.longitude!!.toString())
-                    DataArrayListOne!!.add(result1[i]?.latitude!!.toString())
-                    DataArrayListOne!!.add(result1[i]?.created_time.toString())
-                    //DataArrayListAll!!.add(DataArrayListOne)
-                    //Log.e("timestamp", "i=" + i + "timestamp=" + result1[i]!!.created_time!!.toString())
-                    //json_arr.put(json_obj_weather)
-                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
-
+                    DataArrayListOne.add(result1[i]?.tempValue.toString())
+                    DataArrayListOne.add(result1[i]?.humiValue.toString())
+                    DataArrayListOne.add(result1[i]?.tvocValue.toString())
+                    DataArrayListOne.add(result1[i]?.ecO2Value.toString())
+                    DataArrayListOne.add(result1[i]?.pM25Value.toString())
+                    DataArrayListOne.add(result1[i]?.longitude!!.toString())
+                    DataArrayListOne.add(result1[i]?.latitude!!.toString())
+                    val date = dateLabelFormat.format(result1[i]?.created_time!!.toLong())
+                    DataArrayListOne.add(date)
                 }
             }else {
                 Log.e("未上傳資料筆數", result1.size.toString())
@@ -202,13 +202,13 @@ private fun dbData2CVSAsyncTasks() {
     fun writeDataToFile(data: ArrayList<String>, context: Context) {
         try {
 
-            val kk = context.getFileStreamPath ("BLE_Data.pdf")
+            val kk = context.getFileStreamPath ("BLE_Data.csv")
             Log.e("","")
-            if (!kk.exists()) {
-                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.pdf", Context.MODE_APPEND))
-                outputStreamWriterData.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
-                outputStreamWriterData.close()
-            }
+//            if (!kk.exists()) {
+//                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.csv", Context.MODE_APPEND))
+//                outputStreamWriterData.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
+//                outputStreamWriterData.close()
+//            }
             var mSDFile: File? = null
 
             //檢查有沒有SD卡裝置
@@ -218,16 +218,21 @@ private fun dbData2CVSAsyncTasks() {
             } else {
                 //取得SD卡儲存路徑
                 mSDFile = Environment.getExternalStorageDirectory()
-                mSDFile = context.getFileStreamPath("BLE_Data.pdf")
+                mSDFile = context.getFileStreamPath("BLE_Data.csv")
                 mSDFile.delete()
                 //mSDFile = context.getFileStreamPath("BLEaddressData.txt");
             }
+
             val mFileWriter = FileWriter(mSDFile!!, true)
-            for (l in 0..data.size/3) {
-                for (k in 0..7) {
-                    mFileWriter.write(data[k].toString()+",")
+            mFileWriter.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
+            for (l in 0..data.size) {
+                //for (k in 0..7) {
+                if (l != 0 && l.mod(8) == 0) {
+                    mFileWriter.write("\r\n")
                 }
-                mFileWriter.write("\r\n")
+
+                mFileWriter.write(data[l].toString() + ",")
+                //}
             }
             mFileWriter.close()
             Log.e("Excel檔完成!!路徑為:", mSDFile.path)
@@ -235,34 +240,6 @@ private fun dbData2CVSAsyncTasks() {
             Log.e("Exception", "File write failed: " + e.toString())
         }
     }
-
-//    private fun cacheFileDoesNotExist(): Boolean {
-//        if (cacheFile == null) {
-//            cacheFile = File(cacheDir, ASSET_NAME)
-//        }
-//        return !cacheFile!!.exists()
-//    }
-//
-//    private fun createCacheFile() {
-//      //  var inputStream: InputStream? = null
-//        var outputStream: OutputStream? = null
-//        val BUFFER_SIZE = 2048
-//        try {
-//        //    inputStream = assets.open(ASSET_NAME)
-//            outputStream = FileOutputStream(cacheFile)
-//            val buf = ByteArray(BUFFER_SIZE)
-//            var len: Int=2048//inputStream.read(buf)
-//           // while (len > 0) {
-//                outputStream.write(buf, 0, len)
-//
-//          //  }
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        } finally {
-//        //   close(inputStream)
-//            close(outputStream)
-//        }
-//    }
 
     private fun close(closeable: Closeable?) {
         if (closeable == null) {
@@ -278,7 +255,7 @@ private fun dbData2CVSAsyncTasks() {
 private fun file_Provider(){
     var mSDFile: File? = null
     mSDFile = this.getFilesDir()
-    mSDFile = this@AccountActiveActivity.getFileStreamPath("BLE_Data.pdf")
+    mSDFile = this@AccountActiveActivity.getFileStreamPath("BLE_Data.csv")
     val uri = FileProvider.getUriForFile(this, packageName, mSDFile)
 
     Log.e("#抓取檔案路徑為:",uri.path+"#packageName="+packageName+"#mSDFile="+mSDFile)
@@ -286,7 +263,7 @@ private fun file_Provider(){
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     intent.data = uri
     intent.putExtra(Intent.EXTRA_STREAM, uri)
-    intent.setType("pdf/plain")
+    intent.setType("csv/plain")
     intent.type = "Application/csv"
     val chooser = Intent.createChooser(intent, title)
 
