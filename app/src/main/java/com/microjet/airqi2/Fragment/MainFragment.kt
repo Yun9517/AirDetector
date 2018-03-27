@@ -63,7 +63,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
-        mContext = this.context.applicationContext
+        mContext = this.context!!.applicationContext
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +72,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 makeMainFragmentUpdateIntentFilter())
     }
 
-    override fun onCreateView(inflater: LayoutInflater?,
+    override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.frg_main, container, false)
@@ -325,9 +325,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_good)
                 inCircleState.text = getString(R.string.text_label_status_good)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_01)
                 //20180301
@@ -337,9 +337,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_mid)
                 inCircleState.text = getString(R.string.text_label_status_mid)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_02)
                 //20180301
@@ -349,9 +349,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_Medium_Orange)
                 inCircleState.text = getString(R.string.text_label_status_medium_Orange)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_03)
                 //20180301
@@ -361,9 +361,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_bad)
                 inCircleState.text = getString(R.string.text_label_status_bad)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
                 //20180301
@@ -373,9 +373,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_Serious_Purple)
                 inCircleState.text = getString(R.string.text_label_status_Serious_Purple)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_05)
                 //20180301
@@ -385,9 +385,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_air_Extreme_Dark_Purple)
                 inCircleState.text = getString(R.string.text_label_status_Extreme_Dark_Purple)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_06)
                 //20180301
@@ -402,9 +402,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Green)
                 inCircleState.text = getString(R.string.label_eCO2_Green)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_01)
                 //20180301
@@ -414,9 +414,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Yellow)
                 inCircleState.text = getString(R.string.label_eCO2_Yellow)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_02)
                 //20180301
@@ -426,9 +426,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Orange)
                 inCircleState.text = getString(R.string.label_eCO2_Orange)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_03)
                 //20180301
@@ -438,9 +438,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Red)
                 inCircleState.text = getString(R.string.label_eCO2_Red)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
                 //20180301
@@ -450,9 +450,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Purple)
                 inCircleState.text = getString(R.string.label_eCO2_Purple)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_05)
                 //20180301
@@ -462,9 +462,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_eCO2_Brown)
                 inCircleState.text = getString(R.string.label_eCO2_Brown)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_06)
                 //20180301
@@ -479,9 +479,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_02)
                 //20180301
@@ -491,9 +491,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_03)
                 //20180301
@@ -503,9 +503,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_temperature)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                        ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                        ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_temp_01)
                 //20180301
@@ -520,9 +520,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                        ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.progressBarMiddleBlue))
+                        ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_01)
                 //20180301
@@ -532,9 +532,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_02)
                 //20180301
@@ -545,9 +545,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.text_message_humidity)
                 inCircleState.text = " "
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180202
                 imgLight.setImageResource(R.drawable.face_icon_hmi_03)
                 //20180301
@@ -562,9 +562,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Green)
                 inCircleState.text = getString(R.string.label_pm25_Green)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Good))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_01)
                 //20180301
@@ -575,9 +575,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Yellow)
                 inCircleState.text = getString(R.string.label_pm25_Yellow)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Moderate))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_02)
                 //20180301
@@ -587,9 +587,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Orange)
                 inCircleState.text = getString(R.string.label_pm25_Orange)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Orange))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_03)
                 //20180301
@@ -599,9 +599,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Red)
                 inCircleState.text = getString(R.string.label_pm25_Red)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Bad))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
                 //20180301
@@ -611,9 +611,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Purple)
                 inCircleState.text = getString(R.string.label_pm25_Purple)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Main_textResult_Purple))
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_05)
                 //20180301
@@ -623,9 +623,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvNotify?.text = getString(R.string.message_pm25_Brown)
                 inCircleState.text = getString(R.string.label_pm25_Brown)
                 inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext, R.color.Test_Unhealthy))
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_06)
                 //20180301

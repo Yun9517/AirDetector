@@ -210,7 +210,7 @@ class ChartFragment: Fragment() {
         rightAxis.isEnabled = false
         chart_line.setDescription("")// clear default string
     }
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
 
         outState?.putInt("useFor", useFor)
         outState?.putInt("chartIntervalStep", chartIntervalStep)
@@ -222,7 +222,7 @@ class ChartFragment: Fragment() {
         outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
         outState?.putString("chartLabelUnit", chartLabelUnit)
         outState?.putString("chartLabel", chartLabel)
-        super.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState!!)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -367,11 +367,11 @@ class ChartFragment: Fragment() {
         btnCallDatePicker.text = dateFormat.format(calObject.time)
         btnCallDatePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
-                Utils.toastMakeTextAndShow(context, "連點，母湯喔！！",
+                Utils.toastMakeTextAndShow(context!!, "連點，母湯喔！！",
                         Toast.LENGTH_SHORT)
             } else {
                 datepickerHandler.post {
-                    val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    val dpd = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         calObject.set(year,month,dayOfMonth)
                         Log.d("ChartBtncall" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
                         btnTextChanged(spinnerPositon)
@@ -388,54 +388,56 @@ class ChartFragment: Fragment() {
             DEFINE_FRAGMENT_TVOC -> {
                 ChartLabel.text = getString(R.string.text_label_tvoc)
                 faceBar.setImageResource(R.drawable.face_bar_tvoc)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
             DEFINE_FRAGMENT_ECO2 -> {
                 ChartLabel.text = getString(R.string.text_label_co2)
                 faceBar.setImageResource(R.drawable.face_bar_eco2)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 ChartLabel.text = getString(R.string.text_label_temperature_full)
                 faceBar.setImageResource(R.drawable.face_bar_temp)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Blue),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_HUMIDITY -> {
                 ChartLabel.text = getString(R.string.text_label_humidity_full)
                 faceBar.setImageResource(R.drawable.face_bar_humidity)
-                intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad))
+                intArray = intArrayOf(ContextCompat.getColor(context!!, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_PM25 -> {
                 ChartLabel.text = getString(R.string.text_label_pm25)
                 faceBar.setImageResource(R.drawable.face_bar_pm25)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
         }
 
         configChartView()
         //chart_line.setOnChartValueSelectedListener(this)
     }
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater!!.inflate(R.layout.frg_chart, container, false)
+
+
 
     private fun changeBackground(input: Int) {
         when(useFor) {
@@ -527,8 +529,8 @@ class ChartFragment: Fragment() {
 
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
-        super.onAttach(activity)
-        mContext = this.context.applicationContext
+        super.onAttach(activity!!)
+        mContext = this.context!!.applicationContext
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -658,7 +660,7 @@ class ChartFragment: Fragment() {
                 if (mConnectStatus && !downloadingData) {
                     val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
-                    context.sendBroadcast(intent)
+                    context!!.sendBroadcast(intent)
                     Log.d("Fragment"+useFor.toString(),"getDeviceData")
                 }
             }
