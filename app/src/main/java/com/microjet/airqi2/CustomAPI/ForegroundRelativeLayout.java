@@ -1,4 +1,4 @@
-package com.microjet.airqi2;
+package com.microjet.airqi2.CustomAPI;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
+
+import com.microjet.airqi2.R;
 
 /**
  * Created by B00055 on 2018/3/27.

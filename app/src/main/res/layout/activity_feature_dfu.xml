@@ -31,7 +31,7 @@
 		android:id="@+id/toolbar_actionbar"
 		layout="@layout/toolbar"/>
 -->
-	<com.microjet.airqi2.ForegroundRelativeLayout
+	<com.microjet.airqi2.CustomAPI.ForegroundRelativeLayout
 		style="@style/HeaderShadow"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent">
@@ -285,6 +285,6 @@
 				android:text="@string/dfu_lib_version"
 				android:textSize="12sp"/>
 		</LinearLayout>
-	</com.microjet.airqi2.ForegroundRelativeLayout>
+	</com.microjet.airqi2.CustomAPI.ForegroundRelativeLayout>
 	<!-- The size of text below must be fixed, therefore dp are used instead of sp -->
 </LinearLayout>
