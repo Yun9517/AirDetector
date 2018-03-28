@@ -34,6 +34,7 @@ import java.util.*
 class MainFragment : Fragment(), View.OnTouchListener {
 
     private val TAG = this.javaClass.simpleName
+
     enum class DetectionData(val range1: Long, val range2: Long) {
         TVOC(220, 660),
         CO2(700, 1000),
@@ -126,7 +127,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2 || dataForState == DetectionData.PM25) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
-                when(motionEvent.action) {
+                when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
                         view.parent.requestDisallowInterceptTouchEvent(true)
                         Log.i("幹我按下了!!", motionEvent.action.toString() + actionToSring(motionEvent.action))
@@ -158,7 +159,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     override fun onTouch(v: View?, event: MotionEvent?): Boolean {
-        when(event!!.action) {
+        when (event!!.action) {
             MotionEvent.ACTION_DOWN -> {
                 v!!.parent.requestDisallowInterceptTouchEvent(true)
 
@@ -648,7 +649,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
     }
 
     @SuppressLint("SimpleDateFormat")
-    @Synchronized private fun checkUIState() {
+    @Synchronized
+    private fun checkUIState() {
         if (connState && preHeat == "255") {
             //setThresholdValue(dataForState)
             //setBarMaxValue(dataForState)
@@ -800,6 +802,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             checkUIState()
         }
     }
+
     //20180207
     private fun pumpOnStatus(beforeState: DetectionData, dataState: DetectionData) {
         if (beforeState != dataState) {
@@ -821,7 +824,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun dataAvaliable(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
-        if (errorTime >= 3) { errorTime = 0 }
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
         if (!checkCheckSum(txValue)) {
             errorTime += 1
         } else {

@@ -55,7 +55,7 @@ class DeviceListActivity : Activity() {
     private var mScanning: Boolean = false
 
     //private var listBluetoothDevice : MutableList<BluetoothDevice>
-    private var mLeDeviceListAdapter : LeDeviceListAdapter? = null
+    private var mLeDeviceListAdapter: LeDeviceListAdapter? = null
     //ListAdapter mLeDeviceListAdapter;
 
     private var mHandler: Handler? = null
@@ -94,9 +94,9 @@ class DeviceListActivity : Activity() {
 
         val backIntent = Intent()
         val backBundle = Bundle()
-        backBundle.putString("MAC",device.address)
+        backBundle.putString("MAC", device.address)
         backIntent.putExtras(backBundle)
-        setResult(RESULT_OK,backIntent)
+        setResult(RESULT_OK, backIntent)
         finish()
     }
 
@@ -292,9 +292,9 @@ class DeviceListActivity : Activity() {
     }
 
     private inner class LeDeviceListAdapter : BaseAdapter() {
-        private val mLeDevices : ArrayList<BluetoothDevice>
-        private val mLeDevicesRssi : ArrayList<Int>
-        private val mInflator : LayoutInflater
+        private val mLeDevices: ArrayList<BluetoothDevice>
+        private val mLeDevicesRssi: ArrayList<Int>
+        private val mInflator: LayoutInflater
 
         init {
             mLeDevices = ArrayList()
@@ -350,7 +350,7 @@ class DeviceListActivity : Activity() {
             val rssi = mLeDevicesRssi[i]
             val deviceName = device.name
             if (deviceName != null && deviceName.isNotEmpty()) {
-                if(deviceName.contains("ADDWII_ASM_1124L")) {
+                if (deviceName.contains("ADDWII_ASM_1124L")) {
                     viewHolder.deviceName!!.text = deviceName.substring(0, 16)
                 } else {
                     viewHolder.deviceName!!.text = deviceName
@@ -386,7 +386,7 @@ class DeviceListActivity : Activity() {
         return intentFilter
     }
 
-    private val mBluetoothStateReceiver = object: BroadcastReceiver() {
+    private val mBluetoothStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
             var stateStr = "BluetoothAdapter.STATE_OFF"

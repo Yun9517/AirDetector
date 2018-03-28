@@ -13,11 +13,11 @@ object BLECallingTranslate {
 
     private fun getCheckSum(CMD: ByteArray): Byte {
         val j = CMD.size
-        val checkSum : Byte
+        val checkSum: Byte
         var temp = 0
         val max = 0xFF.toByte()
         for (i in 0 until j)
-            temp+=CMD[i]
+            temp += CMD[i]
         checkSum = (max - temp).toByte()
         return checkSum
     }
@@ -220,7 +220,7 @@ object BLECallingTranslate {
 
     // Device led control
     fun SetLedOn(value: Boolean): ByteArray {
-        val setVal = if(value) {
+        val setVal = if (value) {
             BLECommand.LedOn
         } else {
             BLECommand.LedOff
@@ -358,7 +358,7 @@ object BLECallingTranslate {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
         var value = 0
-        var temp=0x00;
+        var temp = 0x00;
         var i = 0
         while (i < bytes.size) {
             if (bytes[i] == BLECommand.StopCmd) {
@@ -549,17 +549,17 @@ object BLECallingTranslate {
         val ReturnValue = ArrayList<String>()
         var CountTemp = 0
         var i = 0
-        var value=0
+        var value = 0
         while (i < bytes.size) {
             if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
-                CountTemp =(bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
+                CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
                 for (j in 0 until CountTemp - 2) {
                     i = i + 1//Point to DataValue
                     value = value shl 8
                     value = value + bytes[i].toPositiveInt()
-                   // stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
+                    // stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
                     when (j) {
                         0//sample rate
                         -> {
@@ -586,17 +586,17 @@ object BLECallingTranslate {
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        /*暫時用不到
-                        9//get data in cycle 間隔多久取資料
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }
-                        10//期間內取幾次資料
-                        -> {
-                            ReturnValue.add(Integer.toString(value))
-                            value = 0
-                        }*/
+                    /*暫時用不到
+                    9//get data in cycle 間隔多久取資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    10//期間內取幾次資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }*/
                         else -> {
                         }
                     }
@@ -623,7 +623,7 @@ object BLECallingTranslate {
                 i = i + 1//point to CMD;
                 for (j in 0 until CountTemp - 2) {
                     i = i + 1//Point to DataValue
-                    stringHex += Integer.toString((bytes[i] and  0xff.toByte()) + 0x100, 16).substring(1)
+                    stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
                     when (j) {
                         5//MAC Address
                         -> {
@@ -658,6 +658,7 @@ object BLECallingTranslate {
 
         return ReturnValue
     }
+
     //0xB6
     fun ParserGetAutoSendData(bytes: ByteArray): ArrayList<String> {
         val ReturnValue = ArrayList<String>()
@@ -676,7 +677,7 @@ object BLECallingTranslate {
                     value = value shl 8
                     value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        1-> {//Temperature
+                        1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
                             //value -= 6
@@ -684,27 +685,27 @@ object BLECallingTranslate {
                             value = 0
                             stringHex = ""
                         }
-                        2-> {//Humidity
+                        2 -> {//Humidity
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
-                        4-> {//TVOC
+                        4 -> {//TVOC
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        6-> {//CO2
+                        6 -> {//CO2
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        8->{//PM25
+                        8 -> {//PM25
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        9->{//battery life
+                        9 -> {//battery life
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
-                        10->{//flag 0 for old 1 for new
+                        10 -> {//flag 0 for old 1 for new
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
@@ -716,7 +717,7 @@ object BLECallingTranslate {
             }
             i++
         }
-        Log.d("PARSERB6",ReturnValue.toString())
+        Log.d("PARSERB6", ReturnValue.toString())
         return ReturnValue
     }
 
@@ -738,7 +739,7 @@ object BLECallingTranslate {
                     value = value shl 8
                     value = value + bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        1-> {//Temperature
+                        1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
                             //value -= 6
@@ -746,27 +747,27 @@ object BLECallingTranslate {
                             value = 0
                             stringHex = ""
                         }
-                        2-> {//Humidity
+                        2 -> {//Humidity
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
-                        4-> {//TVOC
+                        4 -> {//TVOC
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        6-> {//CO2
+                        6 -> {//CO2
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        8->{//PM25
+                        8 -> {//PM25
                             ReturnValue.add(Integer.toString(value))
                             value = 0
                         }
-                        9->{//battery life
+                        9 -> {//battery life
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
                         }
-                        10->{//Preheater
+                        10 -> {//Preheater
 
                             ReturnValue.add(bytes[i].toPositiveInt().toString())
                             value = 0
@@ -779,7 +780,7 @@ object BLECallingTranslate {
             }
             i++
         }
-        Log.d("PARSERB0",ReturnValue.toString())
+        Log.d("PARSERB0", ReturnValue.toString())
         return ReturnValue
     }
 
@@ -813,34 +814,34 @@ object BLECallingTranslate {
                     value = value.shl(8)
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        1-> {//Temperature
+                        1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.B0TEMP,newTemp)
+                            returnValue.put(TvocNoseData.B0TEMP, newTemp)
                             value = 0
                         }
-                        2-> {//Humidity
-                            returnValue.put(TvocNoseData.B0HUMI,value.toString())
+                        2 -> {//Humidity
+                            returnValue.put(TvocNoseData.B0HUMI, value.toString())
                             value = 0
                         }
-                        4-> {//TVOC
-                            returnValue.put(TvocNoseData.B0TVOC,value.toString())
+                        4 -> {//TVOC
+                            returnValue.put(TvocNoseData.B0TVOC, value.toString())
                             value = 0
                         }
-                        6-> {//CO2
-                            returnValue.put(TvocNoseData.B0ECO2,value.toString())
+                        6 -> {//CO2
+                            returnValue.put(TvocNoseData.B0ECO2, value.toString())
                             value = 0
                         }
-                        8->{//PM25
-                            returnValue.put(TvocNoseData.B0PM25,value.toString())
+                        8 -> {//PM25
+                            returnValue.put(TvocNoseData.B0PM25, value.toString())
                             value = 0
                         }
-                        9->{//battery life
-                            returnValue.put(TvocNoseData.B0BATT,value.toString())
+                        9 -> {//battery life
+                            returnValue.put(TvocNoseData.B0BATT, value.toString())
                             value = 0
                         }
-                        10->{//Preheater
-                            returnValue.put(TvocNoseData.B0PREH,value.toString())
+                        10 -> {//Preheater
+                            returnValue.put(TvocNoseData.B0PREH, value.toString())
                             value = 0
                         }
                         else -> {
@@ -865,26 +866,26 @@ object BLECallingTranslate {
                 i++//point to CMD;
                 for (j in 0 until dataLength - 2) {
                     i = i + 1//Point to DataValue
-                    stringHex += Integer.toString((bytes[i] and  0xff.toByte()) + 0x100, 16).substring(1)
+                    stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
                     when (j) {
                         5//MAC Address
                         -> {
-                            returnValue.put(TvocNoseData.MAC,stringHex)
+                            returnValue.put(TvocNoseData.MAC, stringHex)
                             stringHex = ""
                         }
                         6//Device
                         -> {
-                            returnValue.put(TvocNoseData.DEVICE,stringHex)
+                            returnValue.put(TvocNoseData.DEVICE, stringHex)
                             stringHex = ""
                         }
                         7//VOC sensor
                         -> {
-                            returnValue.put(TvocNoseData.TVOCSENOR,stringHex)
+                            returnValue.put(TvocNoseData.TVOCSENOR, stringHex)
                             stringHex = ""
                         }
                         10//FW Version
                         -> {
-                            returnValue.put(TvocNoseData.FW,stringHex)
+                            returnValue.put(TvocNoseData.FW, stringHex)
                             stringHex = ""
                         }
                         else -> {
@@ -985,27 +986,27 @@ object BLECallingTranslate {
                     when (j) {
                         0//sample rate
                         -> {
-                            returnValue.put(TvocNoseData.B2SR,value.toString())
+                            returnValue.put(TvocNoseData.B2SR, value.toString())
                             value = 0
                         }
                         2//sensor_on_time_range
                         -> {
-                            returnValue.put(TvocNoseData.SOTR,value.toString())
+                            returnValue.put(TvocNoseData.SOTR, value.toString())
                             value = 0
                         }
                         4//time to get sample
                         -> {
-                            returnValue.put(TvocNoseData.STGS,value.toString())
+                            returnValue.put(TvocNoseData.STGS, value.toString())
                             value = 0
                         }
                         6//pump on time
                         -> {
-                            returnValue.put(TvocNoseData.POT,value.toString())
+                            returnValue.put(TvocNoseData.POT, value.toString())
                             value = 0
                         }
                         8//pumping time
                         -> {
-                            returnValue.put(TvocNoseData.PTR,value.toString())
+                            returnValue.put(TvocNoseData.PTR, value.toString())
                             value = 0
                         }
                     /*暫時用不到
@@ -1045,12 +1046,12 @@ object BLECallingTranslate {
                     value = value.shl(8)
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        0-> {//PM25 SampleRate
-                            returnValue.put(TvocNoseData.PM25SR,value.toString())
+                        0 -> {//PM25 SampleRate
+                            returnValue.put(TvocNoseData.PM25SR, value.toString())
                             value = 0
                         }
-                        2-> {//GetSampleTime
-                            returnValue.put(TvocNoseData.PM25GST,value.toString())
+                        2 -> {//GetSampleTime
+                            returnValue.put(TvocNoseData.PM25GST, value.toString())
                             value = 0
                         }
                         else -> {
@@ -1081,27 +1082,27 @@ object BLECallingTranslate {
                     when (j) {
                         1//Max Items
                         -> {
-                            returnValue.put(TvocNoseData.MAXI,Integer.toString(value))
+                            returnValue.put(TvocNoseData.MAXI, Integer.toString(value))
                             value = 0
                         }
                         2//sample status
                         -> {
-                            returnValue.put(TvocNoseData.SS,Integer.toString(value))
+                            returnValue.put(TvocNoseData.SS, Integer.toString(value))
                             value = 0
                         }
                         3//correct time
                         -> {
-                            returnValue.put(TvocNoseData.CT,Integer.toString(value))
+                            returnValue.put(TvocNoseData.CT, Integer.toString(value))
                             value = 0
                         }
                         5//最後週期離現在多久 last data sec
                         -> {
-                            returnValue.put(TvocNoseData.LDS,Integer.toString(value))
+                            returnValue.put(TvocNoseData.LDS, Integer.toString(value))
                             value = 0
                         }
                         6//samepleRate
                         -> {
-                            returnValue.put(TvocNoseData.B4SR,Integer.toString(value))
+                            returnValue.put(TvocNoseData.B4SR, Integer.toString(value))
                             value = 0
                         }
                         else -> {
@@ -1208,7 +1209,7 @@ object BLECallingTranslate {
                     value = value.shl(8)
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        //RTC
+                    //RTC
                         4 -> {
                             returnValue.put(TvocNoseData.RTC, value.toString())
                             value = 0
@@ -1239,37 +1240,37 @@ object BLECallingTranslate {
                     value = value.shl(8)
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        1-> {//Temperature
+                        1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.C0TEMP,newTemp)
+                            returnValue.put(TvocNoseData.C0TEMP, newTemp)
                             value = 0
                         }
-                        2-> {//Humidity
-                            returnValue.put(TvocNoseData.C0HUMI,value.toString())
+                        2 -> {//Humidity
+                            returnValue.put(TvocNoseData.C0HUMI, value.toString())
                             value = 0
                         }
-                        4-> {//TVOC
-                            returnValue.put(TvocNoseData.C0TVOC,value.toString())
+                        4 -> {//TVOC
+                            returnValue.put(TvocNoseData.C0TVOC, value.toString())
                             value = 0
                         }
-                        6-> {//CO2
-                            returnValue.put(TvocNoseData.C0ECO2,value.toString())
+                        6 -> {//CO2
+                            returnValue.put(TvocNoseData.C0ECO2, value.toString())
                             value = 0
                         }
-                        8->{//PM25
-                            returnValue.put(TvocNoseData.C0PM25,value.toString())
+                        8 -> {//PM25
+                            returnValue.put(TvocNoseData.C0PM25, value.toString())
                             value = 0
                         }
-                        9->{//battery life
-                            returnValue.put(TvocNoseData.C0BATT,value.toString())
+                        9 -> {//battery life
+                            returnValue.put(TvocNoseData.C0BATT, value.toString())
                             value = 0
                         }
-                        10->{//Preheater
-                            returnValue.put(TvocNoseData.C0PREH,value.toString())
+                        10 -> {//Preheater
+                            returnValue.put(TvocNoseData.C0PREH, value.toString())
                             value = 0
                         }
-                        15->{
+                        15 -> {
                             returnValue.put(TvocNoseData.C0TIME, value.toString())
                             value = 0
                         }
@@ -1322,7 +1323,7 @@ object BLECallingTranslate {
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.C5TEMP,newTemp)
+                            returnValue.put(TvocNoseData.C5TEMP, newTemp)
                             value = 0
                         }
                         4//Humi
@@ -1337,7 +1338,7 @@ object BLECallingTranslate {
                         }
                         8//CO2
                         -> {
-                            returnValue.put(TvocNoseData.C5ECO2 ,value.toString())
+                            returnValue.put(TvocNoseData.C5ECO2, value.toString())
                             value = 0
                         }
                         10//PM25
@@ -1347,7 +1348,7 @@ object BLECallingTranslate {
                         }
                         15//C5TIME
                         -> {
-                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            returnValue.put(TvocNoseData.C5TIME, value.toString())
                             value = 0
                         }
                         else -> {
@@ -1361,7 +1362,7 @@ object BLECallingTranslate {
         return returnValue
     }
 
-    fun ParserGetAutoSendDataKeyValueC6(bytes: ByteArray): HashMap<String,String> {
+    fun ParserGetAutoSendDataKeyValueC6(bytes: ByteArray): HashMap<String, String> {
         val returnValue = HashMap<String, String>()
         var i = 0
         var value = 0
@@ -1385,7 +1386,7 @@ object BLECallingTranslate {
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.C5TEMP,newTemp)
+                            returnValue.put(TvocNoseData.C5TEMP, newTemp)
                             value = 0
                         }
                         4//Humi
@@ -1400,7 +1401,7 @@ object BLECallingTranslate {
                         }
                         8//CO2
                         -> {
-                            returnValue.put(TvocNoseData.C5ECO2 ,value.toString())
+                            returnValue.put(TvocNoseData.C5ECO2, value.toString())
                             value = 0
                         }
                         10//PM25
@@ -1410,7 +1411,7 @@ object BLECallingTranslate {
                         }
                         15//C6TIME
                         -> {
-                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            returnValue.put(TvocNoseData.C5TIME, value.toString())
                             value = 0
                         }
                         else -> {
@@ -1423,12 +1424,6 @@ object BLECallingTranslate {
         }
         return returnValue
     }
-
-
-
-
-
-
 
 
     fun Byte.toPositiveInt() = toInt() and 0xFF

@@ -17,7 +17,7 @@ object BLECommand {
     val TVOC: Byte = 0xA3.toByte()
     val CO2: Byte = 0xA4.toByte()
     val Temperature_RAW: Byte = 0xA5.toByte()
-    val Humidity_RAW: Byte= 0xA6.toByte()
+    val Humidity_RAW: Byte = 0xA6.toByte()
     val TVOC_RAW: Byte = 0xA7.toByte()
     val TVOC_Baseline: Byte = 0xA8.toByte()
     val NormalLens: Byte = 0x02.toByte()

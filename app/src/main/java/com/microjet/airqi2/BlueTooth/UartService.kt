@@ -6,7 +6,6 @@ import android.bluetooth.*
 import android.content.Context
 import android.content.Intent
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
@@ -16,21 +15,17 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
-import io.realm.Realm
 import org.greenrobot.eventbus.EventBus
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 /**
  * Created by B00175 on 2018/3/19.
  *
  */
-class UartService: Service() {
+class UartService : Service() {
 
     companion object {
         private val STATE_DISCONNECTED = 0
@@ -87,7 +82,7 @@ class UartService: Service() {
                 broadcastUpdate(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
                 enableTXNotification(gatt)
             } else {
-                Log.w(TAG, "onServicesDiscovered received: " + status)
+                Log.w(TAG, "onServicesDiscovered received: $status")
             }
         }
 
@@ -120,7 +115,7 @@ class UartService: Service() {
         if (TX_CHAR_UUID == characteristic.uuid) {
             // For all other profiles, writes the data formatted in HEX.
             val data = characteristic.value
-            if (data != null && data.size > 0) {
+            if (data != null && data.isNotEmpty()) {
                 val stringBuilder = StringBuilder(data.size)
                 for (byteChar in data)
                     stringBuilder.append(String.format("%02X ", byteChar))
@@ -169,7 +164,7 @@ class UartService: Service() {
             }
         }
 
-        mBluetoothAdapter = mBluetoothManager?.getAdapter()
+        mBluetoothAdapter = mBluetoothManager?.adapter
         if (mBluetoothAdapter == null) {
             Log.e(TAG, "Unable to obtain a BluetoothAdapter.")
             return false
@@ -198,11 +193,11 @@ class UartService: Service() {
         if (mBluetoothDeviceAddress != null && address == mBluetoothDeviceAddress
                 && mBluetoothGatt != null) {
             Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.")
-            if (mBluetoothGatt!!.connect()) {
+            return if (mBluetoothGatt!!.connect()) {
                 mConnectionState = STATE_CONNECTING
-                return true
+                true
             } else {
-                return false
+                false
             }
         }
 
@@ -293,12 +288,12 @@ class UartService: Service() {
      * @return A `List` of supported services.
      */
     fun getSupportedGattServices(): List<BluetoothGattService>? {
-        return if (mBluetoothGatt == null) null else mBluetoothGatt?.getServices()
+        return if (mBluetoothGatt == null) null else mBluetoothGatt?.services
 
     }
 
     fun enableTXNotification(gatt: BluetoothGatt) {
-        val rxService = gatt?.getService(RX_SERVICE_UUID)
+        val rxService = gatt.getService(RX_SERVICE_UUID)
         if (rxService == null) {
             Toast.makeText(this, "Rx service not found!", Toast.LENGTH_SHORT).show()
             return
@@ -320,18 +315,14 @@ class UartService: Service() {
         //確定mBluetoothGatt存在才去取uuid
         if (mBluetoothGatt != null) {
             val rxService = mBluetoothGatt?.getService(RX_SERVICE_UUID)
-            if (rxService == null) {
-                //showMessage("mBluetoothGatt null " + mBluetoothGatt)
-                return
-            }
+                    ?: //showMessage("mBluetoothGatt null " + mBluetoothGatt)
+                    return
             val rxChar = rxService.getCharacteristic(RX_CHAR_UUID)
-            if (rxChar == null) {
-                //showMessage("Rx charateristic not found!")
-                return
-            }
+                    ?: //showMessage("Rx charateristic not found!")
+                    return
             rxChar.value = value
             val status = mBluetoothGatt?.writeCharacteristic(rxChar)
-            Log.d(TAG, "write TXchar - status=" + status)
+            Log.d(TAG, "write TXchar - status=$status")
         }
     }
 
