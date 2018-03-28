@@ -694,7 +694,7 @@ class ChartFragment: Fragment() {
         arrData.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset

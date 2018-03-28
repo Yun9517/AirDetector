@@ -10,11 +10,16 @@ import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
+import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
+import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.provider.Settings
 import android.support.design.widget.NavigationView
@@ -35,24 +40,31 @@ import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
+import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.nio.ByteBuffer
+import java.util.*
+import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
+    private val TAG = MainActivity::class.java.simpleName
     private val DEFINE_FRAGMENT_TVOC = 1
     private val DEFINE_FRAGMENT_CO2 = 2
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
@@ -72,7 +84,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDrawerToggle : ActionBarDrawerToggle? = null
 
     // 電池電量數值
-    private var batValue : Int = 0
+    //private var batValue : Int = 0
 
     // 藍芽icon in actionbar
     private var bleIcon : MenuItem? = null
@@ -137,8 +149,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
-            mUartService = (service as UartService.LocalBinder).serverInstance
-            if (!mUartService!!.initailze()) {
+            mUartService = (service as UartService.LocalBinder).service
+            if (!mUartService!!.initialize()) {
                 Log.e(TAG, "Unable to initialize Bluetooth")
                 finish()
             }
@@ -152,8 +164,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     enum class BleConnection {
-        CONNECTING, CONNECTED, DISCONNECTING,DISCONNECTED,
+        CONNECTED,
+        DISCONNECTED,
     }
+
+    private var errorTime = 0
+    private var isFirstC0 = true
+    private var isFirstC6 = true
+    private var countForItem = 0
+    private var arrIndexMap = ArrayList<HashMap<String,String>>()
+    private var lock = false
+    private var arr1 = arrayListOf<HashMap<String,Int>>()
+    private var indexMap = HashMap<String,Int>()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -179,7 +202,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         setupDrawerContent(naviView)
 
-        UartService.nowActivity = this
+        //UartService.nowActivity = this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
         //20180206
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
@@ -190,6 +213,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
+        //EventBus.getDefault().register(this)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -199,7 +223,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
 
-        checkUIState()
+        //checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
 
@@ -212,53 +236,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             mUartService?.connect(mDeviceAddress)
         }
-
-        /*locationListener = object : LocationListener {
-            override fun onLocationChanged(location: Location?) {
-                Log.d("LocationListener1",location?.longitude.toString())
-                Log.d("LocationListener1",location?.latitude.toString())
-
-                lati = location?.latitude!!.toFloat()
-                longi = location.longitude.toFloat()
-
-                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                intent?.putExtra("status", BroadcastActions.INTENT_KEY_LOCATION_VALUE)
-                val bundle: Bundle? = Bundle()
-                bundle?.putFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE,lati)
-                bundle?.putFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE,longi)
-                intent!!.putExtra("TwoValueBundle",bundle)
-                sendBroadcast(intent)
-            }
-
-            override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onProviderEnabled(provider: String?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-
-            override fun onProviderDisabled(provider: String?) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            }
-        }
-        //20180311
-
-
-
-
-        getLocation()*/
     }
 
 
     override fun onResume() {
         super.onResume()
         Log.e(TAG, "call onResume")
-
         if (mUartService == null) {
             connState = BleConnection.DISCONNECTED
-            checkUIState()
         }
+        checkUIState()
     }
 
     override fun onPause() {
@@ -268,11 +255,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStop() {
         super.onStop()
+        checkUIState()
         Log.e(TAG, "call onStop")
-        //val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        //locationManager.removeUpdates(locationListener)
     }
-
 
     //20180202
     override fun onBackPressed() {
@@ -284,9 +269,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(intent)
     }
 
-
-
-
     override fun onDestroy() {
         super.onDestroy()
         Log.e(TAG, "call onDestroy")
@@ -296,17 +278,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         unregisterReceiver(mBluetoothStateReceiver)
-
-        //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        //serviceIntent!!.putExtra("status", "disconnect")
-        //sendBroadcast(serviceIntent)
-
-        //val intent: Intent? = Intent(this, UartService::class.java)
-        //stopService(intent)
         mUartService?.close()
         if (mUartService != null) {
             unbindService(mServiceConnection)
         }
+        //EventBus.getDefault().unregister(this)
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -390,6 +366,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun uiFindViewById() {
         viewPager.offscreenPageLimit = 5
         naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
+        lightIcon?.setImageResource(R.drawable.app_android_icon_light)
     }
 
     @Suppress("DEPRECATION")
@@ -543,7 +520,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //點選ActionBAR會返回
             android.R.id.home -> {
-                checkUIState()
+                //checkUIState()
                 checkLoginState()
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
@@ -678,14 +655,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.d("MAIN","BLEDISCONNTED ERROR")
         }
         //stopService(serviceIntent)
-        checkUIState()
+        //checkUIState()
     }
 
     private fun setGPSEnabled() {
         Toast.makeText(this, "無法取得定位，手機請開啟定位", Toast.LENGTH_SHORT).show()
         startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
-
+    //預熱畫面三個方法
     private fun heatingPanelShow() {
         waitLayout!!.visibility = View.VISIBLE
         val va = createDropAnim(waitLayout!!, 0, 100)
@@ -753,13 +730,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         mDeviceAddress = data.extras.getString("MAC")
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-                        print("MainActivity")
                         val result = mUartService?.connect(mDeviceAddress)
                         Log.d(TAG, "Connect request result=$result")
                     }
                 }
             }
-
+            /*
             REQUEST_SELECT_SAMPLE -> {
                 if (data != null) {
                     val value = data.getIntExtra("choseCycle", 0)
@@ -796,6 +772,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 else{ finish() }
             }
+            */
             else -> {
                 print("test")
             }
@@ -805,18 +782,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun makeGattUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
-        intentFilter.addAction(BroadcastActions.EXTRA_DATA)
-        //intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
         intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
+        /*
+        intentFilter.addAction(BroadcastActions.ACTION_GATT_SERVICES_DISCOVERED)
+        intentFilter.addAction(BroadcastActions.ACTION_EXTRA_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_GET_RESULT)
         intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
         intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_STATUS_HEATING)
+        */
         return intentFilter
     }
 
-    private fun displayConnetedBatteryLife() {
+    private fun displayConnetedBatteryLife(batValue: Int) {
         val icon: AnimationDrawable
         when (batValue) {
         // Charge
@@ -897,48 +877,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private val TAG = MainActivity::class.java.simpleName
-    // inner class myBroadcastReceiver : BroadcastReceiver()
     private val myBroadcastReceiver = object : BroadcastReceiver() {
         @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
-            //updateUI(intent)
             checkBluetooth()
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
-                    val bundle = intent.extras
-                    drawerDeviceAddress = bundle.getString(BroadcastActions.INTENT_KEY_DEVICE_ADDR)
-                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
-
-                    val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-                    //val nameshare = getSharedPreferences("authorization", "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6IjBlODQ3OWU2MjRhNzVjMThiOTAyYzYzZTI1NzgwMDY4MzU1NTNkNWEyNzNlOWMwMTVjNzYzZDBkOGM2NjNiNWMyNTI1ZGI0Y2I1ZDU5NTk3In0.eyJhdWQiOiIxIiwianRpIjoiMGU4NDc5ZTYyNGE3NWMxOGI5MDJjNjNlMjU3ODAwNjgzNTU1M2Q1YTI3M2U5YzAxNWM3NjNkMGQ4YzY2M2I1YzI1MjVkYjRjYjVkNTk1OTciLCJpYXQiOjE1MjEwMTMwNTIsIm5iZiI6MTUyMTAxMzA1MiwiZXhwIjoxNTUyNTQ5MDUyLCJzdWIiOiIzMTEiLCJzY29wZXMiOltdfQ.aL5qFGRYFGgRR25DYJvnmo7YotOr9AE7GpzHdkJ6UaCN87A0ejThEPTdoMW-CiRhdQ4Yslm7ICoz45vDR4Hzrn4MrBLcPmMRuEXFwasdHfL-kLev2d8XH2JzuPBJjwit2n482CpQezXraVOroL5D2Rnd5jWLza5_8Nj5yG-RKvRMY6nF9rMt2TBvhhemFVPJs55mFaFKwvWUWxXKr1mLdpYIzecCshzRhHFBFqzM_5ZMrCiLg-yz0jvnmWlfxgVzM1XDVe9T-hx3OV98Rx8jRBbf10auXQ_lqtOFcEKQpzRQuiN7XVO7pYvIR47-hn34csan0XspWO04TXK685-1vfygc2vN7rn87_FUeIxeosj8YLLdmM5xCshzDxzfKfgquTEOeReIcXlHBne7skOudvR6qW54UebFxSb7OImdjWBC3Y8IbcRQraTSXh3GfWWni7XonLDQGcx5V5OYxDHV-RYd64l_9ZlTV01AYVMJ5C_QMVgPA0UAnjm5mLudBLKCW4a_m6plc_ZXBEulPzRer0BIZP4Gl1HBBEeE1h2vr58ixPXIGgRvslnIr98FlcfqpS2vlI5VQQokDmCtBlJq8VaIuAi1VXtpRVnZ9wcR94ws_puuHLadHLWFzGviSGwUgpKeF5qQGqx4TTB81YY9bJjsY7DJIONgVdIPiNtbtGo")
-                    val deviceName = share.getString("name", "")
-                    //val accountName = share.getString("name","")
-
-                    val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-                    val accountName = shareMSG.getString("name", "")
-                    //val myEmail = shareMSG.getString("email","")
-
-                    drawerDeviceName = deviceName
-                    drawerAccountName = accountName
-
-                    // 判斷連線的裝置是TVOC_NOSE還是PM2.5_NOSE
-                    /*if(name == "TVOC_NOSE") {
-                        this@MainActivity.supportFragmentManager.beginTransaction().hide(mPM25Fg).commit()
-                    } else {
-                        this@MainActivity.supportFragmentManager.beginTransaction().show(mPM25Fg).commit()
-                    }*/
-                    // drawerDeviceAddress = intent.getStringExtra("macAddress")
-                    //    updateUI(intent)
+                    checkUIState()
+                    Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
                     connState = BleConnection.DISCONNECTED
-                    battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
-                    heatingPanelHide()
-                    //    updateUI(intent)
+                    isFirstC0 = true
+                    isFirstC6 = true
+                    checkUIState()
+                    Log.d(TAG, "OnReceive: $action")
                 }
+                /*
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     val bundle = intent.extras
                     //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
@@ -946,45 +903,51 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                     //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
                     //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
-                    batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-                    val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    Log.v(TAG, "電池電量: $batValue%")
+                    //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
+                    //val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    //Log.v(TAG, "電池電量: $batValue%")
                     // 預熱畫面控制
-                    heatingPanelControl(preheatCountDownString)
-                    displayConnetedBatteryLife()
+                    //heatingPanelControl(preheatCountDownString)
+                    //displayConnetedBatteryLife()
+                }
+                */
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
                 }
             }
-            Log.d("MainActivity", "OnReceive: $action")
-            checkUIState()
+            //Log.d("MainActivity", "OnReceive: $action")
+            //checkUIState()
         }
-
-
     }
 
     @Synchronized private fun checkUIState() {
         if (connState == BleConnection.CONNECTED) {
+            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
+            img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
+            val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+            show_Dev_address?.text = share.getString("mac", "")
+            show_Device_Name?.text = share.getString("name", "")
+            val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+            text_Account_status?.text = shareMSG.getString("name", "")
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = drawerDeviceAddress
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = drawerDeviceName
-            naviView.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_connect)
-            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
         } else {
+            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
+            img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
+            show_Dev_address?.text = ""
+            show_Device_Name?.text = "尚未連接裝置"
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Dev_address)?.text = ""
-            naviView.getHeaderView(0)?.findViewById<TextView>(R.id.show_Device_Name)?.text = getText(R.string.No_Device_Connect)
-            naviView.getHeaderView(0)?.findViewById<ImageView>(R.id.img_bt_status)?.setImageResource(R.drawable.app_android_icon_disconnect)
-            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
-            lightIcon?.setImageResource(R.drawable.app_android_icon_light)
+            heatingPanelHide()
         }
         Log.d("MAINcheckUIState", connState.toString())
     }
-
 
     private fun makeBluetoothStateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
@@ -1006,268 +969,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 BluetoothAdapter.STATE_ON -> {
                     stateStr = "BluetoothAdapter.STATE_ON"
-//                    val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-//                    val mBluetoothDeviceAddress = share.getString("mac", "noValue")
-//
-//                    if (mBluetoothDeviceAddress != "noValue" && !connState) {
-//                        val mainintent = Intent(BroadcastIntents.PRIMARY)
-//                        mainintent.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
-//                        mainintent.putExtra("mac", mBluetoothDeviceAddress)
-//                        sendBroadcast(mainintent)
-//                    }
                 }
             }
             Log.v(TAG, "mBluetoothStateReceiver: $stateStr")
         }
     }
-//private boolean isAppIsInBackground(Context context) {
-//        var boolean isInBackground = true;
-//        var ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-//        if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
-//            var List<ActivityManager.RunningAppProcessInfo> runningProcesses = am.getRunningAppProcesses();
-//            for (ActivityManager. android.app.ActivityManager.RunningAppProcessInfo processInfo : runningProcesses) {
-//                if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
-//                    for (String activeProcess : processInfo.pkgList) {
-//                        if (activeProcess.equals(context.getPackageName())) {
-//                            isInBackground = false;
-//                        }
-//                    }
-//                }
-//            }
-//        } else {
-//            var List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
-//             ComponentName componentInfo = taskInfo.get(0).topActivity;
-//            if (componentInfo.getPackageName().equals(context.getPackageName())) {
-//                isInBackground = false;
-//            }
-//        }
-//
-//        return isInBackground;
-//    }
-/*
-    //20180307
-    private var client: OkHttpClient? = null
-    private val hasBeenUpLoaded = java.util.ArrayList<Int>()
-    private inner class postDataAsyncTasks : AsyncTask<String, Void, String>() {
-        @RequiresApi(api = Build.VERSION_CODES.N)
-        override fun doInBackground(vararg params: String): String? {
-            var return_body: RequestBody? = null
-            var getResponeResult = java.lang.Boolean.parseBoolean(null)
-            try {
-                //取得getRequestBody
-                return_body = getRequestBody()
-                //呼叫getResponse取得結果
-                if (return_body!!.contentLength() > 0) {
-                    getResponeResult = getResponse(return_body)
-
-                    if (getResponeResult) {
-                        //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
-                        val DBSucess = updateDB_UpLoaded()
-                        if (DBSucess) {
-                            Log.e("幹改進去", DBSucess.toString())
-                        }
-                        hasBeenUpLoaded.clear()
-                    } else {
-                        Log.e("幹改失敗拉!!", getResponeResult.toString())
-                    }
-                } else {
-                    Log.e("幹太少筆啦!", return_body.contentLength().toString())
-                }
-
-            } catch (e: Exception) {
-                Log.e("return_body_erro", e.toString())
-            }
-            return null
-        }
-    }
-    //20180307
-    private fun getRequestBody(): RequestBody? {
-        //很重要同區域才可以叫到同一個東西
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val DeviceAddress = share.getString("mac", "noValue")
-        //        String serial = "";
-        //        //確認唯一識別碼(https://blog.mosil.biz/2014/05/android-device-id-uuid/)
-        //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-        //            serial = Build.SERIAL;
-        //        }
-        //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
-        val realm = Realm.getDefaultInstance()
-
-
-        val query2 = realm.where(AsmDataModel::class.java)
-        val result5 = query2.equalTo("UpLoaded", "1").findAll()
-        //        realm.executeTransaction((Realm realm1) -> {
-        //
-        //            for (int i = 0 ; i < result5.size() ; i++) {
-        //
-        //                result5.get(i).setUpLoaded("0");
-        //
-        //                Log.e("這個時間", String.valueOf(result5.toString()));
-        //            }
-        //
-        //        });
-
-        val query = realm.where(AsmDataModel::class.java)
-        val result1 = query.equalTo("UpLoaded", "0").findAll()
-
-        /*
-        RealmQuery<AsmDataModel> query9 = realm.where(AsmDataModel.class);
-        RealmResults<AsmDataModel> result7 =query9.distinct("Created_time");
-        Log.e("幹",String.valueOf(result7.size()));
-        Log.e("幹蝦小",String.valueOf(result1.size()));
-*/
-
-        Log.e("未上傳ID", result1.toString())
-        Log.e("已上ID", result5.toString())
-        Log.e("未上傳資料筆數", result1.size.toString())
-        Log.e("未上傳資料", result1.toString().toString())
-        Log.e("已上傳資料筆數", result5.size.toString())
-
-
-        //MyApplication getUUID=new MyApplication();
-        val UUID = MyApplication.getPsuedoUniqueID()
-        //製造RequestBody的地方
-        var body: RequestBody? = null
-
-        //20170227
-        val json_obj = JSONObject()            //用來當內層被丟進陣列內的JSON物件
-        val json_arr = JSONArray()                //JSON陣列
-
-        try {
-            if (result1.size > 0) {
-                for (i in result1.indices) {
-                    //toltoSize++;
-                    if (i == 6000) {
-                        break
-                    }
-                    //                if (result1.get(i).getCreated_time().equals(result1.get(i + 1).getCreated_time())) {
-                    //                    realm.beginTransaction();
-                    //                    result1.get(i).deleteFromRealm();
-                    //                    realm.commitTransaction();
-                    //                    Log.e("資料相同時", result1.get(i).getCreated_time().toString() + "下筆資料" + result1.get(i).getCreated_time().toString());
-                    //                }
-                    hasBeenUpLoaded.add(result1[i]!!.dataId)
-                    Log.i("text", "i=" + i + "\n")
-                    val json_obj_weather = JSONObject()            //單筆weather資料
-                    json_obj_weather.put("temperature", result1[i]!!.tempValue)
-                    json_obj_weather.put("humidity", result1[i]!!.humiValue)
-                    json_obj_weather.put("tvoc", result1[i]!!.tvocValue)
-                    json_obj_weather.put("eco2", result1[i]!!.ecO2Value)
-                    json_obj_weather.put("pm25", result1[i]!!.pM25Value)
-                    json_obj_weather.put("longitude", "24.778289")
-                    json_obj_weather.put("latitude", "120.988108")
-                    json_obj_weather.put("timestamp", result1[i]!!.created_time)
-                    Log.e("timestamp", "i=" + i + "timestamp=" + result1[i]!!.created_time!!.toString())
-                    json_arr.put(json_obj_weather)
-                    //Log.e("下一筆資料","這筆資料:"+result1.get(i).getCreated_time().toString()+"下一筆資料:"+result1.get(i+1).getCreated_time().toString());
-                }
-            } else {
-                Log.e("未上傳資料筆數", result1.size.toString())
-            }
-
-            json_obj.put("uuid", UUID)
-            json_obj.put("mac_address", DeviceAddress)
-            json_obj.put("registration_id", "qooo123457")
-            //再來將JSON陣列設定key丟進JSON物件
-            json_obj.put("weather", json_arr)
-            Log.e("全部資料", json_obj.toString())
-            val mediaType = MediaType.parse("application/x-www-form-urlencoded")
-            body = RequestBody.create(mediaType, "data=" + json_obj.toString())
-        } catch (e: JSONException) {
-            e.printStackTrace()
-        }
-
-        return body
-    }
-
-    //傳資料
-    private fun getResponse(body: RequestBody): Boolean {
-        var response: Response? = null
-        var resonseReselt = java.lang.Boolean.parseBoolean(null)
-        try {
-            if (body.contentLength() > 0) {
-                //丟資料
-                val request = Request.Builder()
-                        .url("https://mjairql.com/api/v1/upWeather")
-                        .post(body)
-                        .addHeader("content-type", "application/x-www-form-urlencoded")
-                        .addHeader("cache-control", "no-cache")
-                        .addHeader("postman-token", "a2fa2822-765d-209a-ec8c-82170c5171c0")
-                        .build()
-                try {
-                    client = OkHttpClient.Builder()
-                            .connectTimeout(0, TimeUnit.SECONDS)
-                            .writeTimeout(0, TimeUnit.SECONDS)
-                            .readTimeout(0, TimeUnit.SECONDS)
-                            .build()
-                    //上傳資料
-                    response = client?.newCall(request)?.execute()
-                    if (response!!.isSuccessful) {//正確回來
-                        resonseReselt = true
-                        Log.e("正確回來!!", response!!.body()!!.string())
-                    } else {//錯誤回來
-                        Log.e("錯誤回來!!", response!!.body()!!.string())
-                        resonseReselt = false
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Log.e("回來處理有錯!", e.toString())
-
-                }
-
-            }
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return resonseReselt
-    }
-
-    private fun updateDB_UpLoaded(): Boolean {
-        var dbSucessOrNot = java.lang.Boolean.parseBoolean(null)
-        val realm = Realm.getDefaultInstance()
-        try {
-            realm.executeTransaction { realm1: Realm ->
-                Log.e("正確回來TRY", hasBeenUpLoaded.size.toString())
-                for (i in 0 until hasBeenUpLoaded.size) {
-                    //realm.beginTransaction();
-                    val aaa = realm1.where(AsmDataModel::class.java)
-                            .equalTo("id", hasBeenUpLoaded.get(i))
-                            .findFirst()
-                    aaa!!.setUpLoaded("1")
-                    Log.e("回來更新", aaa!!.getDataId()!!.toString() + "更新?" + aaa!!.getUpLoaded())
-                }
-                val query3 = realm.where(AsmDataModel::class.java)
-                val result3 = query3.equalTo("UpLoaded", "1").findAll()
-                Log.e("正確更改", result3.size.toString())
-                Log.e("正確更改內容", result3.toString())
-            }
-            dbSucessOrNot = true
-        } catch (e: Exception) {
-            Log.e("dbSucessOrNot", e.toString())
-            dbSucessOrNot = false
-        }
-        return dbSucessOrNot
-    }
-*/
-    /*private fun getLocation() {
-        checkGPSPermisstion()
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        val criteria = Criteria()
-        criteria.accuracy = Criteria.ACCURACY_MEDIUM
-        criteria.powerRequirement = Criteria.POWER_MEDIUM
-        val provider = locationManager.getBestProvider(criteria, true)
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(provider, 5000, 10f, locationListener)
-        }
-    }
-
-    private fun checkGPSPermisstion() {
-        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-        Log.d("MAINAC", permission.toString())
-        val permission1 = PackageManager.PERMISSION_GRANTED
-        Log.d("MAINAC", permission1.toString())
-    }*/
 
     private fun checkLoginState() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -1280,28 +986,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("MainActivity取名字",myName)
         }
     }
-
-    /*private fun getNetWork (): Boolean  {
-        var result = false
-        try {
-            val connManager: ConnectivityManager? = getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
-            val networkInfo: NetworkInfo? = connManager!!.activeNetworkInfo as NetworkInfo
-
-
-            //判斷是否有網路
-            //net = networkInfo.isConnected
-            result = if (networkInfo == null || !networkInfo.isConnected) {
-                false
-            } else {
-                networkInfo.isAvailable
-            }
-
-        }catch (E: Exception) {
-            Log.e("網路", E.toString())
-        }
-        return result
-    }*/
-
 
     //20180312
     private fun showDialog(msg:String){
@@ -1320,13 +1004,319 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[0]) {
+            0xE0.toByte() -> { }
+            0xE1.toByte() -> { }
+            0xEA.toByte() -> { }
+            else -> { }
+        }
+        when (txValue[2]) {
+            0xB1.toByte() -> Log.d(TAG, "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d(TAG, "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d(TAG, "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d(TAG, "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d(TAG, "cmd:0xB9 feedback")
+        }
+        when (txValue[3]) {
+            0xE0.toByte() -> {
+                Log.d("UART feeback", "ok"); }
+            0xE1.toByte() -> {
+                Log.d("UART feedback", "Couldn't write in device"); return
+            }
+            0xE2.toByte() -> {
+                Log.d("UART feedback", "Temperature sensor fail"); return
+            }
+            0xE3.toByte() -> {
+                Log.d("UART feedback", "B0TVOC sensor fail"); return
+            }
+            0xE4.toByte() -> {
+                Log.d("UART feedback", "Pump power fail"); return
+            }
+            0xE5.toByte() -> {
+                Log.d("UART feedback", "Invalid value"); return
+            }
+            0xE6.toByte() -> {
+                Log.d("UART feedback", "Unknown command"); return
+            }
+            0xE7.toByte() -> {
+                Log.d("UART feedback", "Waiting timeout"); return
+            }
+            0xE8.toByte() -> {
+                Log.d("UART feedback", "Checksum error"); return
+            }
+        }
+
+        if (errorTime >= 3) { errorTime = 0 }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                    //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
+                    //heatingPanelControl(hashMap[TvocNoseData.B0PREH]!!)
+                    //displayConnetedBatteryLife(hashMap[TvocNoseData.B0BATT]!!.toInt())
+                    /*
+                    val ble = BleEvent()
+                    ble.B0TEMP = hashMap[TvocNoseData.B0TEMP]!!
+                    ble.B0HUMI = hashMap[TvocNoseData.B0HUMI]!!
+                    ble.B0TVOC = hashMap[TvocNoseData.B0TVOC]!!
+                    ble.B0ECO2 = hashMap[TvocNoseData.B0ECO2]!!
+                    ble.B0PM25 = hashMap[TvocNoseData.B0PM25]!!
+                    ble.B0PREH = hashMap[TvocNoseData.B0PREH]!!
+                    ble.B0BATT = hashMap[TvocNoseData.B0BATT]!!
+                    EventBus.getDefault().post(ble)
+                    */
+                    //connectionInitMethod()
+                }
+                0xB1.toByte() -> {
+                    var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                    Log.d("PARSERB1", hashMap.toString())
+                }
+                0xB2.toByte() -> {
+                    if (txValue.size > 5) {
+                        var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
+                        checkSampleRate(hashMap)
+                        mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
+                        Log.d("0xB2", hashMap.toString())
+                    } else {
+                        Log.d("0xB2OK",txValue[3].toString())
+                    }
+                }
+                0xB4.toByte() -> {
+                    getMaxItems(txValue)
+                }
+                0xB5.toByte() -> {
+                    //saveToRealm(txValue)
+                }
+                0xB9.toByte() -> {
+                    //Log.d("0xB9",hashMap.toString())
+                }
+                0xE0.toByte() -> {
+                    var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
+                    if (hashMap[TvocNoseData.PM25SR] != "5" && hashMap[TvocNoseData.PM25GST] != "30") {
+                        mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
+                    }
+                    Log.d("0xE0",hashMap.toString())
+                }
+                0xBB.toByte() -> {
+                    var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
+                    Log.d("0xBB",hashMap.toString())
+                }
+                0xC0.toByte() -> {
+                    var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                    heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
+                    displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
+                    val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
+                    connectionInitMethod(rtcTime)
+                    Log.d("0xC0",hashMap.toString())
+                }
+                0xC5.toByte() -> {
+                    putC5ToObject(txValue)
+                }
+                0xC6.toByte() -> {
+                    if (isFirstC6) {
+                        isFirstC6 = false
+                        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                    }
+                    var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
+                    saveToRealmC6(hashMap)
+                }
+            }
+        }
+    }
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        var max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        var checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
+    }
+
+    private fun getMaxItems(tx: ByteArray) {
+        var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
+        var sampleRateTime = 0
+        var maxItem = 0
+        var correctTime = 0
+        sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
+        maxItem = hashMap[TvocNoseData.MAXI]!!.toInt()
+        correctTime = hashMap[TvocNoseData.CT]!!.toInt()
+        Log.d("UART", "total item " + Integer.toString(maxItem))
+        if (maxItem > 0) {
+            if (Build.BRAND != "OPPO") {
+                Toast.makeText(applicationContext, getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show()
+            }
+            //Realm 資料庫
+            val realm = Realm.getDefaultInstance()
+            //將資料庫最大時間與現在時間換算成Count
+            var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
+            if (maxCreatedTime == null) {
+                maxCreatedTime = Calendar.getInstance().timeInMillis - TimeUnit.DAYS.toMillis(2)
+            }
+            val nowTime = Calendar.getInstance().timeInMillis
+            Log.d("0xB4countLast", Date(nowTime).toString())
+            Log.d("0xB4countLast", Date(maxCreatedTime.toLong()).toString())
+            val countForItemTime = nowTime - maxCreatedTime.toLong()
+            Log.d("0xB4countItemTime", countForItemTime!!.toString())
+            countForItem = Math.min((countForItemTime!! / (60L * 1000L)).toInt(), maxItem)
+            Log.d("0xB4countItem", java.lang.Long.toString(countForItem.toLong()))
+            if (Build.BRAND != "OPPO") {
+                Toast.makeText(applicationContext, getText(R.string.Total_Data).toString() + java.lang.Long.toString(countForItem.toLong()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show()
+            }
+            if (countForItem >= 1) {
+                //NowItem = countForItem
+                //mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(countForItem))
+                //downloading = true
+                //downloadComplete = false;
+            } else {
+                if (Build.BRAND != "OPPO") {
+                    Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
+        Log.d("getMaxItems",hashMap.toString())
+    }
+
+    private fun connectionInitMethod(rtcTime: Long) {
+        if (isFirstC0) {
+            isFirstC0 = false
+            val hh = Handler()
+            checkRTCSetted(rtcTime)
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.GetSampleRate()) }, 500)
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getPM25Rate()) }, 750)
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getLedStateCMD()) }, 1000)
+        }
+    }
+
+    private fun checkRTCSetted(rtcTime: Long) {
+        val now = (Calendar.getInstance().timeInMillis / 1000)
+        if (rtcTime != now) {
+            Log.d("NowTime", now.toString())
+            val nowByte = ByteBuffer.allocate(5).putLong(now).array()
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.setRTC(nowByte))
+        }
+    }
+
+    private fun checkSampleRate(hash: HashMap<String, String>) {
+        val share = getSharedPreferences(TvocNoseData.ASMS, Context.MODE_PRIVATE)
+        val setting0 = share.getString(TvocNoseData.B2SR, "2")
+        val setting1 = share.getString(TvocNoseData.SOTR, "60")
+        val setting2 = share.getString(TvocNoseData.STGS, "2")
+        val setting3 = share.getString(TvocNoseData.POT, "1")
+        val setting4 = share.getString(TvocNoseData.PTR, "2")
+        Log.d("0xB2Compare",
+                setting0 + ":" + hash[TvocNoseData.B2SR] + " " +
+                        setting1 + ":" + hash[TvocNoseData.SOTR] + " " +
+                        setting2 + ":" + hash[TvocNoseData.STGS] + " " +
+                        setting3 + ":" + hash[TvocNoseData.POT] + " " +
+                        setting4 + ":" + hash[TvocNoseData.PTR])
+
+        if (setting0 == hash[TvocNoseData.B2SR]
+                && setting1 == hash[TvocNoseData.SOTR]
+                && setting2 == hash[TvocNoseData.STGS]
+                && setting3 == hash[TvocNoseData.POT]
+                && setting4 == hash[TvocNoseData.PTR])
+        {
+            Log.d("0xB2", "True")
+        } else {
+            share.edit()
+                    .putString(TvocNoseData.B2SR, "2")
+                    .putString(TvocNoseData.SOTR, "60")
+                    .putString(TvocNoseData.STGS, "2")
+                    .putString(TvocNoseData.POT, "1")
+                    .putString(TvocNoseData.PTR, "2").apply()
+            val param = intArrayOf(2, 2 * 30, 2, 1, 2, 0, 0)
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.SetSampleRate(param))
+        }
+    }
+
+
+    private fun putC5ToObject(tx: ByteArray) {
+        var hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
+            if (!lock) {
+                indexMap.put("UTCBlockHead", hashMap[TvocNoseData.C5II]!!.toInt())
+                lock = true
+            }
+        }
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() == 0L) {
+            if (lock) {
+                indexMap.put("UTCBlockEnd", hashMap[TvocNoseData.C5II]!!.toInt())
+                val indexCopy = indexMap.clone() as HashMap<String, Int>
+                arr1.add(indexCopy)
+                indexMap.clear()
+                lock = false
+            }
+        }
+
+        mDeviceAddress = share.getString("mac", "noValue")
+        hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
+        hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
+        arrIndexMap.add(hashMap)
+
+        var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
+        Log.d("C5ToObject", nowItem.toString())
+        nowItem++
+        if (nowItem > 1440) { //|| nowItem == countForItem) {
+            if (Build.BRAND != "OPPO") {
+                Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+            }
+            saveToRealmC5()
+        } else {
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(nowItem))
+        }
+        Log.d("C5ARR",arr1.toString())
+    }
+
+    private fun saveToRealmC5() {
+        for (i in 0 until arr1.size) {
+            val head = arr1[i]["UTCBlockHead"]!! - 1
+            val end = arr1[i]["UTCBlockEnd"]!! - 1
+            var count = 0
+            for (y in head..end) {
+                val realm = Realm.getDefaultInstance()
+                realm.executeTransaction { r ->
+                    val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                    asmData.tempValue = arrIndexMap[y][TvocNoseData.C5TEMP].toString()
+                    asmData.humiValue = arrIndexMap[y][TvocNoseData.C5HUMI].toString()
+                    asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
+                    asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
+                    asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
+                    asmData.created_time = arrIndexMap[head][TvocNoseData.C5TIME].toString().toLong() - 60 * count//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                    asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
+                    asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
+                    asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
+                    Log.d("0xC5", asmData.toString())
+                }
+                realm.close()
+                count++
+            }
+        }
+    }
+
+    private fun saveToRealmC6(hashmap: HashMap<String, String>) {
+        val realm = Realm.getDefaultInstance()
+        realm.executeTransaction { r ->
+            val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+            asmData.tempValue = hashmap[TvocNoseData.C5TEMP].toString()
+            asmData.humiValue = hashmap[TvocNoseData.C5HUMI].toString()
+            asmData.tvocValue = hashmap[TvocNoseData.C5TVOC].toString()
+            asmData.ecO2Value = hashmap[TvocNoseData.C5ECO2].toString()
+            asmData.pM25Value = hashmap[TvocNoseData.C5PM25].toString()
+            asmData.created_time = Calendar.getInstance().timeInMillis//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+            asmData.macAddress = mDeviceAddress
+            asmData.latitude = TvocNoseData.lati
+            asmData.longitude = TvocNoseData.longi
+            Log.d("0xC6", asmData.toString())
+        }
+        realm.close()
+    }
 }
-
-
-
-
-
-
-
-
-

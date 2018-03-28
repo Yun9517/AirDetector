@@ -20,11 +20,12 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -32,6 +33,7 @@ import java.util.*
 
 class MainFragment : Fragment(), View.OnTouchListener {
 
+    private val TAG = this.javaClass.simpleName
     enum class DetectionData(val range1: Long, val range2: Long) {
         TVOC(220, 660),
         CO2(700, 1000),
@@ -57,7 +59,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     private var dataForState = DetectionData.TVOC
-    private var mConnState = false
+    private var connState = false
+
+    private var errorTime = 0
 
 
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
@@ -639,12 +643,13 @@ class MainFragment : Fragment(), View.OnTouchListener {
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
         intentFilter.addAction(BroadcastActions.ACTION_GATT_CONNECTED)
         intentFilter.addAction(BroadcastActions.ACTION_GET_NEW_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
         return intentFilter
     }
 
     @SuppressLint("SimpleDateFormat")
     @Synchronized private fun checkUIState() {
-        if (mConnState && preHeat == "255") {
+        if (connState && preHeat == "255") {
             //setThresholdValue(dataForState)
             //setBarMaxValue(dataForState)
             when (dataForState) {
@@ -758,6 +763,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             tvNotify?.text = " "
             tvLastDetectTime.text = " "
             inCircleBar.setCurrentValues(0f)
+            imgLight?.setImageResource(R.drawable.app_android_icon_light)
         }
     }
 
@@ -771,22 +777,24 @@ class MainFragment : Fragment(), View.OnTouchListener {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    mConnState = false
-                    //setinCircleBarCurrentValue("0","0","0","0","0")
+                    connState = false
                 }
 
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    mConnState = true
+                    connState = true
                 }
 
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    val bundle = intent.extras
-                    tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
-                    humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
-                    tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
-                    co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
-                    pm25DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toFloat()
-                    preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                    //val bundle = intent.extras
+                    //tempDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE).toFloat()
+                    //humiDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE).toFloat()
+                    //tvocDataFloat = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE).toFloat()
+                    //co2DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE).toFloat()
+                    //pm25DataFloat = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toFloat()
+                    //preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
                 }
             }
             checkUIState()
@@ -809,5 +817,46 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //************************************************************************************************************************************
             }
         }
+    }
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        if (errorTime >= 3) { errorTime = 0 }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                    //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
+                    // = hashMap[TvocNoseData.B0TEMP]!!.toFloat()
+                    //humiDataFloat = hashMap[TvocNoseData.B0HUMI]!!.toFloat()
+                    //tvocDataFloat = hashMap[TvocNoseData.B0TVOC]!!.toFloat()
+                    //co2DataFloat = hashMap[TvocNoseData.B0ECO2]!!.toFloat()
+                    //pm25DataFloat = hashMap[TvocNoseData.B0PM25]!!.toFloat()
+                    //preHeat = (hashMap[TvocNoseData.B0PREH]!!)
+                }
+                0xC0.toByte() -> {
+                    var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                    tempDataFloat = hashMap[TvocNoseData.C0TEMP]!!.toFloat()
+                    humiDataFloat = hashMap[TvocNoseData.C0HUMI]!!.toFloat()
+                    tvocDataFloat = hashMap[TvocNoseData.C0TVOC]!!.toFloat()
+                    co2DataFloat = hashMap[TvocNoseData.C0ECO2]!!.toFloat()
+                    pm25DataFloat = hashMap[TvocNoseData.C0PM25]!!.toFloat()
+                    preHeat = (hashMap[TvocNoseData.C0PREH]!!)
+                }
+            }
+        }
+    }
+
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        var max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        var checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
     }
 }

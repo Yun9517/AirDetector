@@ -1,6 +1,7 @@
 package com.microjet.airqi2.BlueTooth
 
 import android.util.Log
+import com.microjet.airqi2.TvocNoseData
 import java.util.ArrayList
 import kotlin.experimental.and
 
@@ -8,7 +9,7 @@ import kotlin.experimental.and
  * Created by B00055 on 2017/11/29.
  *
  */
-object CallingTranslate {
+object BLECallingTranslate {
 
     private fun getCheckSum(CMD: ByteArray): Byte {
         val j = CMD.size
@@ -22,117 +23,117 @@ object CallingTranslate {
     }
 
     fun getDeviceID(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.DeviceID)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.DeviceID)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.DeviceID, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.DeviceID, checkSum)
     }
 
     fun setDeviceID(inputID: Byte): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.SetIDLens, Command_List.DeviceID, inputID)
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.SetIDLens, BLECommand.DeviceID, inputID)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.SetIDLens, Command_List.DeviceID, inputID, checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.SetIDLens, BLECommand.DeviceID, inputID, checkSum)
     }
 
     fun SelfTestCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SelfTest)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SelfTest)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SelfTest, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SelfTest, checkSum)
     }
 
     fun TemperatureCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Temperature)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Temperature)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Temperature, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Temperature, checkSum)
     }
 
     fun HumidityCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Humidity)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Humidity)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Humidity, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Humidity, checkSum)
     }
 
     fun TVOCCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC, checkSum)
     }
 
     fun CO2Call(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.CO2)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.CO2)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.CO2, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.CO2, checkSum)
     }
 
     fun Temperature_RAWCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Temperature_RAW)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Temperature_RAW)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Temperature_RAW, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Temperature_RAW, checkSum)
     }
 
     fun Humidity_RAWCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Humidity_RAW)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Humidity_RAW)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.Humidity_RAW, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.Humidity_RAW, checkSum)
     }
 
     fun TVOC_RAWCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC_RAW)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC_RAW)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC_RAW, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC_RAW, checkSum)
     }
 
     fun GetTVOC_BaselineCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC_Baseline)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC_Baseline)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.TVOC_Baseline, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.TVOC_Baseline, checkSum)
     }
 
     fun WriteTVOC_BaselineCall(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.SetTVOCLens, 0x00.toByte(), 0x81.toByte(), 0xca.toByte(), 0x19.toByte(), 0x6d.toByte(), 0xdb.toByte())
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.SetTVOCLens, 0x00.toByte(), 0x81.toByte(), 0xca.toByte(), 0x19.toByte(), 0x6d.toByte(), 0xdb.toByte())
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.SetTVOCLens, 0x00.toByte(), 0x81.toByte(), 0xca.toByte(), 0x19.toByte(), 0x6d.toByte(), 0xdb.toByte(), checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.SetTVOCLens, 0x00.toByte(), 0x81.toByte(), 0xca.toByte(), 0x19.toByte(), 0x6d.toByte(), 0xdb.toByte(), checkSum)
     }
 
     fun GetADCData(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.GetADCDAtaLens, Command_List.GetADCData)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.GetADCDAtaLens, BLECommand.GetADCData)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.GetADCDAtaLens, Command_List.GetADCData, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.GetADCDAtaLens, BLECommand.GetADCData, checkSum)
     }
 
     fun ResetPumpFreq(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.ResetPumpFreq)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.ResetPumpFreq)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.ResetPumpFreq, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.ResetPumpFreq, checkSum)
     }
 
     fun GetPumpFreq(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetPumpFreq)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetPumpFreq)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetPumpFreq, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetPumpFreq, checkSum)
     }
 
     fun ResetDeviceFlash(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.ResetFlash)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.ResetFlash)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.ResetFlash, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.ResetFlash, checkSum)
     }
 
     fun PreHeater(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.PreHeater)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.PreHeater)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.PreHeater, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.PreHeater, checkSum)
     }
 
     fun GetBatteryLife(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetBatteryLife)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetBatteryLife)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetBatteryLife, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetBatteryLife, checkSum)
     }
 
     fun GetAllFromDevice(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetAllFromDevice)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetAllFromDevice)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetAllFromDevice, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetAllFromDevice, checkSum)
     }
 
     fun SetFanPower(inPut: Int): ByteArray {
@@ -144,9 +145,9 @@ object CallingTranslate {
         b[1] = (input and 0x00ff0000).ushr(16).toByte()
         b[2] = (input and 0x0000ff00).ushr(8).toByte()
         b[3] = (input and 0x000000ff).toByte()//little
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteOneByteLens, Command_List.FanPower, b[3])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteOneByteLens, BLECommand.FanPower, b[3])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteTwoBytesLens, Command_List.FanPower, b[3], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteTwoBytesLens, BLECommand.FanPower, b[3], checkSum)
     }
 
     /**
@@ -199,34 +200,34 @@ object CallingTranslate {
                 6 -> b[10] = a[3]
             }
         }
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.writeTwelveBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.writeTwelveBytesLens, BLECommand.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.writeTwelveBytesLens, Command_List.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.writeTwelveBytesLens, BLECommand.SetOrGetSampleRate, b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7], b[8], b[9], b[10], checkSum)
     }
 
     fun GetSampleRate(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SetOrGetSampleRate)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetOrGetSampleRate, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SetOrGetSampleRate, checkSum)
     }
 
     // Device led control
-    fun GetLedStateCMD(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff)
+    fun getLedStateCMD(): ByteArray {
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SetLedOnOff)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.SetLedOnOff, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.SetLedOnOff, checkSum)
     }
 
     // Device led control
     fun SetLedOn(value: Boolean): ByteArray {
         val setVal = if(value) {
-            Command_List.LedOn
+            BLECommand.LedOn
         } else {
-            Command_List.LedOff
+            BLECommand.LedOff
         }
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteOneByteLens, Command_List.SetLedOnOff, setVal)
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteOneByteLens, BLECommand.SetLedOnOff, setVal)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteOneByteLens, Command_List.SetLedOnOff, setVal, checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteOneByteLens, BLECommand.SetLedOnOff, setVal, checkSum)
     }
 
     /**
@@ -264,9 +265,9 @@ object CallingTranslate {
                 5 -> b[5] = a[3]
             }
         }
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteSixBytesLens, BLECommand.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteSixBytesLens, Command_List.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteSixBytesLens, BLECommand.CallDeviceStartingGetSample, b[0], b[1], b[2], b[3], b[4], b[5], checkSum)
     }
 
     /**
@@ -279,9 +280,9 @@ object CallingTranslate {
      * @return the command include CheckSum
      */
     fun GetHistorySampleItems(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetHistorySampleItems)
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetHistorySampleItems)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetHistorySampleItems, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetHistorySampleItems, checkSum)
     }
 
     /**
@@ -303,23 +304,23 @@ object CallingTranslate {
         b[1] = (input and 0x00ff0000).ushr(16).toByte()
         b[2] = (input and 0x0000ff00).ushr(8).toByte()
         b[3] = (input and 0x000000ff).toByte()//little
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.WriteTwoBytesLens, Command_List.GetHistorySample, b[2], b[3])
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySample, b[2], b[3])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.WriteTwoBytesLens, Command_List.GetHistorySample, b[2], b[3], checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySample, b[2], b[3], checkSum)
     }
 
     /**
-     * Return the GetInfo command include CheckSum
+     * Return the getInfo command include CheckSum
      *
      *
      *
      *
-     * @return the GetInfo command include CheckSum
+     * @return the getInfo command include CheckSum
      */
-    fun GetInfo(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo)
+    fun getInfo(): ByteArray {
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetInfo)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetInfo, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetInfo, checkSum)
     }
 
     fun SensorOn_OffCall(inPut: Int): ByteArray {
@@ -332,9 +333,9 @@ object CallingTranslate {
         b[1] = (input and 0x00ff0000).ushr(16).toByte()
         b[2] = (input and 0x0000ff00).ushr(8).toByte()
         b[3] = (input and 0x000000ff).toByte()//little
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteTwoBytesLens, Command_List.SensorOn_OFF, b[2], b[3])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteTwoBytesLens, BLECommand.SensorOn_OFF, b[2], b[3])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteTwoBytesLens, Command_List.SensorOn_OFF, b[2], b[3], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteTwoBytesLens, BLECommand.SensorOn_OFF, b[2], b[3], checkSum)
     }
 
     fun PumpOnCall(inPut: Int): ByteArray {
@@ -346,9 +347,9 @@ object CallingTranslate {
         b[1] = (input and 0x00ff0000).ushr(16).toByte()
         b[2] = (input and 0x0000ff00).ushr(8).toByte()
         b[3] = (input and 0x000000ff).toByte()//little
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.PumpOnLens, Command_List.PumpOn, b[2], b[3])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.PumpOnLens, BLECommand.PumpOn, b[2], b[3])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.PumpOnLens, Command_List.PumpOn, b[2], b[3], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.PumpOnLens, BLECommand.PumpOn, b[2], b[3], checkSum)
     }
 
 
@@ -360,7 +361,7 @@ object CallingTranslate {
         var temp=0x00;
         var i = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 for (j in 0 until CountTemp - 1) {
@@ -386,7 +387,7 @@ object CallingTranslate {
         var value = 0
         var i = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 for (j in 0 until CountTemp - 1) {
@@ -426,7 +427,7 @@ object CallingTranslate {
         var value = 0
         var i = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -496,7 +497,7 @@ object CallingTranslate {
         var value = 0
         var i = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -550,7 +551,7 @@ object CallingTranslate {
         var i = 0
         var value=0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp =(bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -616,7 +617,7 @@ object CallingTranslate {
         var stringHex = ""
         var i = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -665,7 +666,7 @@ object CallingTranslate {
         var i = 0
         var value = 0
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -727,7 +728,7 @@ object CallingTranslate {
         var value = 0
 
         while (i < bytes.size) {
-            if (bytes[i] == Command_List.StopCmd) {
+            if (bytes[i] == BLECommand.StopCmd) {
                 i = i + 1//point to DataLength
                 CountTemp = (bytes[i] and 0xFF.toByte()).toInt()//取得DataLength的Int數值
                 i = i + 1//point to CMD;
@@ -782,20 +783,651 @@ object CallingTranslate {
         return ReturnValue
     }
 
-    fun GetPM25(): ByteArray {
-        val valueHandler = byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25)
+    fun getPM25Rate(): ByteArray {
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetSetPM25)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.ReadCmd, Command_List.NormalLens, Command_List.GetSetPM25, checkSum)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetSetPM25, checkSum)
     }
 
-    fun SetPM25(inPut: Int): ByteArray {
+    fun setPM25Rate(inPut: Int): ByteArray {
         var input1 = inPut.toByte()
         var input2 = 0.toByte()
         var input3 = 30.toByte()
-        val valueHandler = byteArrayOf(Command_List.WriteCmd, Command_List.WriteThreeBytesLens, Command_List.GetSetPM25, input1, input2, input3)
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.GetSetPM25, input1, input2, input3)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(Command_List.WriteCmd, Command_List.WriteThreeBytesLens, Command_List.GetSetPM25, input1, input2, input3, checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.GetSetPM25, input1, input2, input3, checkSum)
     }
+
+    fun getAllSensorKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1-> {//Temperature
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.B0TEMP,newTemp)
+                            value = 0
+                        }
+                        2-> {//Humidity
+                            returnValue.put(TvocNoseData.B0HUMI,value.toString())
+                            value = 0
+                        }
+                        4-> {//TVOC
+                            returnValue.put(TvocNoseData.B0TVOC,value.toString())
+                            value = 0
+                        }
+                        6-> {//CO2
+                            returnValue.put(TvocNoseData.B0ECO2,value.toString())
+                            value = 0
+                        }
+                        8->{//PM25
+                            returnValue.put(TvocNoseData.B0PM25,value.toString())
+                            value = 0
+                        }
+                        9->{//battery life
+                            returnValue.put(TvocNoseData.B0BATT,value.toString())
+                            value = 0
+                        }
+                        10->{//Preheater
+                            returnValue.put(TvocNoseData.B0PREH,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun parserGetInfoKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var stringHex = ""
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i = i + 1//Point to DataValue
+                    stringHex += Integer.toString((bytes[i] and  0xff.toByte()) + 0x100, 16).substring(1)
+                    when (j) {
+                        5//MAC Address
+                        -> {
+                            returnValue.put(TvocNoseData.MAC,stringHex)
+                            stringHex = ""
+                        }
+                        6//Device
+                        -> {
+                            returnValue.put(TvocNoseData.DEVICE,stringHex)
+                            stringHex = ""
+                        }
+                        7//VOC sensor
+                        -> {
+                            returnValue.put(TvocNoseData.TVOCSENOR,stringHex)
+                            stringHex = ""
+                        }
+                        10//FW Version
+                        -> {
+                            returnValue.put(TvocNoseData.FW,stringHex)
+                            stringHex = ""
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+
+        }
+        return returnValue
+    }
+
+    /*
+    fun parserGetSampleRateKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i++//Point to DataValue
+                    value = value shl 8
+                    value += bytes[i].toPositiveInt()
+                    when (j) {
+                        0//sample rate
+                        -> {
+                            returnValue.put()
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        2//sensor on time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        4//time to get sample
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        6//pump on time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                        8//pumping time
+                        -> {
+                            returnValue
+                            ReturnValue.add(Integer.toString(value))
+                            value = 0
+                        }
+                    /*暫時用不到
+                    9//get data in cycle 間隔多久取資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    10//期間內取幾次資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }*/
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+                // ReturnValue.add(Integer.toString(value));
+            }
+            i++
+
+        }
+        return returnValue
+    }
+    */
+    fun ParserGetSampleRateKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) {
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        0//sample rate
+                        -> {
+                            returnValue.put(TvocNoseData.B2SR,value.toString())
+                            value = 0
+                        }
+                        2//sensor_on_time_range
+                        -> {
+                            returnValue.put(TvocNoseData.SOTR,value.toString())
+                            value = 0
+                        }
+                        4//time to get sample
+                        -> {
+                            returnValue.put(TvocNoseData.STGS,value.toString())
+                            value = 0
+                        }
+                        6//pump on time
+                        -> {
+                            returnValue.put(TvocNoseData.POT,value.toString())
+                            value = 0
+                        }
+                        8//pumping time
+                        -> {
+                            returnValue.put(TvocNoseData.PTR,value.toString())
+                            value = 0
+                        }
+                    /*暫時用不到
+                    9//get data in cycle 間隔多久取資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }
+                    10//期間內取幾次資料
+                    -> {
+                        ReturnValue.add(Integer.toString(value))
+                        value = 0
+                    }*/
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getPM25KeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        0-> {//PM25 SampleRate
+                            returnValue.put(TvocNoseData.PM25SR,value.toString())
+                            value = 0
+                        }
+                        2-> {//GetSampleTime
+                            returnValue.put(TvocNoseData.PM25GST,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun parserGetHistorySampleItemsKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Max Items
+                        -> {
+                            returnValue.put(TvocNoseData.MAXI,Integer.toString(value))
+                            value = 0
+                        }
+                        2//sample status
+                        -> {
+                            returnValue.put(TvocNoseData.SS,Integer.toString(value))
+                            value = 0
+                        }
+                        3//correct time
+                        -> {
+                            returnValue.put(TvocNoseData.CT,Integer.toString(value))
+                            value = 0
+                        }
+                        5//最後週期離現在多久 last data sec
+                        -> {
+                            returnValue.put(TvocNoseData.LDS,Integer.toString(value))
+                            value = 0
+                        }
+                        6//samepleRate
+                        -> {
+                            returnValue.put(TvocNoseData.B4SR,Integer.toString(value))
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    /*
+    fun parserGetHistorySampleItemKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Item Index
+                        -> {
+                            returnValue.put(TvocNoseData.II, value.toString())
+                            value = 0
+                        }
+                        3//Temperature
+                        -> {
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.B5TEMP,newTemp)
+                            value = 0
+                        }
+                        4//Humi
+                        -> {
+                            returnValue.put(TvocNoseData.B5HUMI, value.toString())
+                            value = 0
+                        }
+                        6//TVOC
+                        -> {
+                            returnValue.put(TvocNoseData.B5TVOC, value.toString())
+                            value = 0
+                        }
+                        8//CO2
+                        -> {
+                            returnValue.put(TvocNoseData.B5ECO2 ,value.toString())
+                            value = 0
+                        }
+                        10//PM25
+                        -> {
+                            returnValue.put(TvocNoseData.B5PM25, value.toString())
+                            value = 0
+                        }
+                        12//RecectDataCheck
+                        -> {
+                            returnValue.put(TvocNoseData.RDC ,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
+    */
+
+    fun getRTC(): ByteArray {
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetSetRTC)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.NormalLens, BLECommand.GetSetRTC, checkSum)
+    }
+
+    fun setRTC(bytes: ByteArray): ByteArray {
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[0], bytes[1], bytes[2], bytes[3])
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[0], bytes[1], bytes[2], bytes[3], checkSum)
+    }
+
+
+    fun parserGetRTCKeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        //RTC
+                        4 -> {
+                            returnValue.put(TvocNoseData.RTC, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getAllSensorC0KeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1-> {//Temperature
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.C0TEMP,newTemp)
+                            value = 0
+                        }
+                        2-> {//Humidity
+                            returnValue.put(TvocNoseData.C0HUMI,value.toString())
+                            value = 0
+                        }
+                        4-> {//TVOC
+                            returnValue.put(TvocNoseData.C0TVOC,value.toString())
+                            value = 0
+                        }
+                        6-> {//CO2
+                            returnValue.put(TvocNoseData.C0ECO2,value.toString())
+                            value = 0
+                        }
+                        8->{//PM25
+                            returnValue.put(TvocNoseData.C0PM25,value.toString())
+                            value = 0
+                        }
+                        9->{//battery life
+                            returnValue.put(TvocNoseData.C0BATT,value.toString())
+                            value = 0
+                        }
+                        10->{//Preheater
+                            returnValue.put(TvocNoseData.C0PREH,value.toString())
+                            value = 0
+                        }
+                        15->{
+                            returnValue.put(TvocNoseData.C0TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getHistorySampleC5(inPut: Int): ByteArray {
+        var input = inPut
+        val b = ByteArray(4)
+        if (input > 65535)
+            input = 65535
+        b[0] = (input and -0x1000000).ushr(24).toByte()//big
+        b[1] = (input and 0x00ff0000).ushr(16).toByte()
+        b[2] = (input and 0x0000ff00).ushr(8).toByte()
+        b[3] = (input and 0x000000ff).toByte()//little
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySampleC5, b[2], b[3])
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySampleC5, b[2], b[3], checkSum)
+    }
+
+    fun parserGetHistorySampleItemKeyValueC5(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Item Index
+                        -> {
+                            returnValue.put(TvocNoseData.C5II, value.toString())
+                            value = 0
+                        }
+                        3//Temperature
+                        -> {
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.C5TEMP,newTemp)
+                            value = 0
+                        }
+                        4//Humi
+                        -> {
+                            returnValue.put(TvocNoseData.C5HUMI, value.toString())
+                            value = 0
+                        }
+                        6//TVOC
+                        -> {
+                            returnValue.put(TvocNoseData.C5TVOC, value.toString())
+                            value = 0
+                        }
+                        8//CO2
+                        -> {
+                            returnValue.put(TvocNoseData.C5ECO2 ,value.toString())
+                            value = 0
+                        }
+                        10//PM25
+                        -> {
+                            returnValue.put(TvocNoseData.C5PM25, value.toString())
+                            value = 0
+                        }
+                        15//C5TIME
+                        -> {
+                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun ParserGetAutoSendDataKeyValueC6(bytes: ByteArray): HashMap<String,String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1//Item Index
+                        -> {
+                            returnValue.put(TvocNoseData.C5II, value.toString())
+                            value = 0
+                        }
+                        3//Temperature
+                        -> {
+                            var Tempvalue = -45 + 175.0f * value / 65535
+                            val newTemp = "%.1f".format(Tempvalue)
+                            returnValue.put(TvocNoseData.C5TEMP,newTemp)
+                            value = 0
+                        }
+                        4//Humi
+                        -> {
+                            returnValue.put(TvocNoseData.C5HUMI, value.toString())
+                            value = 0
+                        }
+                        6//TVOC
+                        -> {
+                            returnValue.put(TvocNoseData.C5TVOC, value.toString())
+                            value = 0
+                        }
+                        8//CO2
+                        -> {
+                            returnValue.put(TvocNoseData.C5ECO2 ,value.toString())
+                            value = 0
+                        }
+                        10//PM25
+                        -> {
+                            returnValue.put(TvocNoseData.C5PM25, value.toString())
+                            value = 0
+                        }
+                        15//C6TIME
+                        -> {
+                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
+
+
+
+
+
 
 
 

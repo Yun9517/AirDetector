@@ -11,6 +11,69 @@ import java.util.concurrent.TimeUnit
  * Created by B00175 on 2018/1/29.
  */
 object TvocNoseData {
+    //B0 2secData
+    val B0TEMP = "B0TEMP"
+    val B0HUMI = "B0HUMI"
+    val B0ECO2 = "B0ECO2"
+    val B0TVOC = "B0TVOC"
+    val B0PM25 = "B0PM25"
+    val B0BATT = "B0BATT"
+    val B0PREH = "B0PREH"
+    //B1 GetInfo
+    val MAC = "MAC"
+    val DEVICE = "DEV"
+    val TVOCSENOR = "B0TVOC"
+    val FW = "FW"
+    //B2 GetSampleRate
+    val ASMS = "ASM_Setting"
+    val B2SR = "B2_Sample_Rate"
+    val SOTR = "Sensor_On_Time_Range"
+    val STGS = "Sensor_To_Get_Sample"
+    val POT = "Pump_On_Time"
+    val PTR = "Pumping_Time_Range"
+    //E0 GetLedState
+    val PM25SR = "PM25Sample_Rate"
+    val PM25GST = "PM25Get_Sample_Time"
+    //B4
+    val MAXI = "Max_Items"
+    val SS = "Sample_Status"
+    val CT = "Correct_Time"
+    val LDS = "Last_Data_Sec"
+    val B4SR = "B4_Sameple_Rate"
+    //B5
+    val II = "Item_Index"
+    val B5TEMP = "B5Temperature"
+    val B5HUMI = "B5HUMI"
+    val B5TVOC = "B5TVOC"
+    val B5ECO2 = "B5ECO2"
+    val B5PM25 = "B5PM25"
+    val RDC = "Recect_Data_Check"
+    //BB
+    val RTC = "RTC"
+    //C0
+    val C0TEMP = "C0TEMP"
+    val C0HUMI = "C0HUMI"
+    val C0ECO2 = "C0ECO2"
+    val C0TVOC = "C0TVOC"
+    val C0PM25 = "C0PM25"
+    val C0BATT = "C0BATT"
+    val C0PREH = "C0PREH"
+    val C0TIME = "C0TIME"
+    //C5
+    val C5II = "C5Item_Index"
+    val C5TEMP = "C5Temperature"
+    val C5HUMI = "C5HUMI"
+    val C5TVOC = "C5TVOC"
+    val C5ECO2 = "C5ECO2"
+    val C5PM25 = "C5PM25"
+    val C5TIME = "C5TIME"
+    val C5MACA = "C5MAC"
+    val C5LATI = "C5LATI"
+    val C5LONGI = "C5LONGI"
+    //Location
+    var longi: Float? = 121.4215f
+    var lati: Float? = 24.959742f
+
     var spinnerPosition: Int = 0
     var calObject = Calendar.getInstance()
 
