@@ -73,6 +73,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mAdapter: AirMapAdapter
 
+    private var errorTime = 0
+
     private var runGetDataThread: Thread? = null
     private val runGetDataRunnable = Runnable {
         runOnUiThread({
@@ -516,6 +518,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private fun makeBroadcastReceiverFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
         return intentFilter
     }
 
@@ -527,8 +530,107 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
                     startLoadDataThread()
                 }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
+                }
             }
         }
     }
 
+
+
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[0]) {
+            0xE0.toByte() -> {
+            }
+            0xE1.toByte() -> {
+            }
+            0xEA.toByte() -> {
+            }
+            else -> {
+            }
+        }
+        when (txValue[2]) {
+            0xB1.toByte() -> Log.d("AirMapAC", "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d("AirMapAC", "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
+        }
+        when (txValue[3]) {
+            0xE0.toByte() -> {
+                Log.d("AirMapAC feeback", "ok"); }
+            0xE1.toByte() -> {
+                Log.d("AirMapAC feedback", "Couldn't write in device"); return
+            }
+            0xE2.toByte() -> {
+                Log.d("AirMapAC feedback", "Temperature sensor fail"); return
+            }
+            0xE3.toByte() -> {
+                Log.d("AirMapAC feedback", "B0TVOC sensor fail"); return
+            }
+            0xE4.toByte() -> {
+                Log.d("AirMapAC feedback", "Pump power fail"); return
+            }
+            0xE5.toByte() -> {
+                Log.d("AirMapAC feedback", "Invalid value"); return
+            }
+            0xE6.toByte() -> {
+                Log.d("AirMapAC feedback", "Unknown command"); return
+            }
+            0xE7.toByte() -> {
+                Log.d("AirMapAC feedback", "Waiting timeout"); return
+            }
+            0xE8.toByte() -> {
+                Log.d("AirMapAC feedback", "Checksum error"); return
+            }
+        }
+
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                }
+                0xB1.toByte() -> {
+                }
+                0xB2.toByte() -> {
+                }
+                0xB4.toByte() -> {
+                }
+                0xB5.toByte() -> {
+                }
+                0xB9.toByte() -> {
+                }
+                0xE0.toByte() -> {
+                }
+                0xBB.toByte() -> {
+                }
+                0xC0.toByte() -> {
+                }
+                0xC5.toByte() -> {
+                }
+                0xC6.toByte() -> {
+                    startLoadDataThread()
+                    Log.e("AirMapAC", "Now Starting Load Data.........")
+                }
+            }
+        }
+    }
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        val max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        val checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
+    }
 }
