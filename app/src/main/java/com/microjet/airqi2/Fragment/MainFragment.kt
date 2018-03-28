@@ -827,14 +827,22 @@ class MainFragment : Fragment(), View.OnTouchListener {
         } else {
             when (txValue[2]) {
                 0xB0.toByte() -> {
-                    var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
-                    tempDataFloat = hashMap[TvocNoseData.B0TEMP]!!.toFloat()
-                    humiDataFloat = hashMap[TvocNoseData.B0HUMI]!!.toFloat()
-                    tvocDataFloat = hashMap[TvocNoseData.B0TVOC]!!.toFloat()
-                    co2DataFloat = hashMap[TvocNoseData.B0ECO2]!!.toFloat()
-                    pm25DataFloat = hashMap[TvocNoseData.B0PM25]!!.toFloat()
-                    preHeat = (hashMap[TvocNoseData.B0PREH]!!)
-                    //Log.d("PARSERB0", hashMap.toString())
+                    //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
+                    // = hashMap[TvocNoseData.B0TEMP]!!.toFloat()
+                    //humiDataFloat = hashMap[TvocNoseData.B0HUMI]!!.toFloat()
+                    //tvocDataFloat = hashMap[TvocNoseData.B0TVOC]!!.toFloat()
+                    //co2DataFloat = hashMap[TvocNoseData.B0ECO2]!!.toFloat()
+                    //pm25DataFloat = hashMap[TvocNoseData.B0PM25]!!.toFloat()
+                    //preHeat = (hashMap[TvocNoseData.B0PREH]!!)
+                }
+                0xC0.toByte() -> {
+                    var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                    tempDataFloat = hashMap[TvocNoseData.C0TEMP]!!.toFloat()
+                    humiDataFloat = hashMap[TvocNoseData.C0HUMI]!!.toFloat()
+                    tvocDataFloat = hashMap[TvocNoseData.C0TVOC]!!.toFloat()
+                    co2DataFloat = hashMap[TvocNoseData.C0ECO2]!!.toFloat()
+                    pm25DataFloat = hashMap[TvocNoseData.C0PM25]!!.toFloat()
+                    preHeat = (hashMap[TvocNoseData.C0PREH]!!)
                 }
             }
         }

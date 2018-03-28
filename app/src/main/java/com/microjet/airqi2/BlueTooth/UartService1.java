@@ -837,10 +837,10 @@ public class UartService1 extends Service {
                     longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_ON:
-                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25(5));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25Rate(5));
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
-                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25(15));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25Rate(15));
                     break;
 
             }

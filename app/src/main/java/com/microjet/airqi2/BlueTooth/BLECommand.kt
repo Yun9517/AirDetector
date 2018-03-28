@@ -4,7 +4,7 @@ package com.microjet.airqi2.BlueTooth
  * Created by B00055 on 2017/11/29.
  *
  */
-object Command_List{
+object BLECommand {
     val ReadCmd: Byte = 0xE0.toByte()
     val WriteCmd: Byte = 0xE1.toByte()
     val StopCmd: Byte = 0xEA.toByte()
@@ -25,6 +25,7 @@ object Command_List{
     val WriteOneByteLens: Byte = 0x03.toByte()
     val WriteTwoBytesLens: Byte = 0x04.toByte()
     val WriteThreeBytesLens: Byte = 0x05.toByte()
+    val WriteFiveBytesLens: Byte = 0x07.toByte()
     val WriteElevenBytesLens: Byte = 0x0C.toByte()
     val writeTwelveBytesLens: Byte = 0x0D.toByte()
     val WriteSixBytesLens: Byte = 0x8.toByte()
@@ -50,4 +51,6 @@ object Command_List{
     val LedOn: Byte = 0x00.toByte()
     val LedOff: Byte = 0x01.toByte()
     val GetSetPM25: Byte = 0xE0.toByte()
+    val GetSetRTC: Byte = 0xBB.toByte()
+    val GetHistorySampleC5: Byte = 0xC5.toByte()
 }

@@ -48,7 +48,28 @@ object TvocNoseData {
     val B5ECO2 = "B5ECO2"
     val B5PM25 = "B5PM25"
     val RDC = "Recect_Data_Check"
-
+    //BB
+    val RTC = "RTC"
+    //C0
+    val C0TEMP = "C0TEMP"
+    val C0HUMI = "C0HUMI"
+    val C0ECO2 = "C0ECO2"
+    val C0TVOC = "C0TVOC"
+    val C0PM25 = "C0PM25"
+    val C0BATT = "C0BATT"
+    val C0PREH = "C0PREH"
+    val C0TIME = "C0TIME"
+    //C5
+    val C5II = "C5Item_Index"
+    val C5TEMP = "C5Temperature"
+    val C5HUMI = "C5HUMI"
+    val C5TVOC = "C5TVOC"
+    val C5ECO2 = "C5ECO2"
+    val C5PM25 = "C5PM25"
+    val C5TIME = "C5TIME"
+    val C5MACA = "C5MAC"
+    val C5LATI = "C5LATI"
+    val C5LONGI = "C5LONGI"
 
     var spinnerPosition: Int = 0
     var calObject = Calendar.getInstance()
