@@ -156,6 +156,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             // Automatically connects to the device upon successful start-up initialization.
             mUartService?.connect(mDeviceAddress)
+            mUartService?.initFuseLocationProviderClient()
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {

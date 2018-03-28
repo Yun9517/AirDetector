@@ -1,5 +1,6 @@
 package com.microjet.airqi2.BlueTooth
 
+import android.annotation.SuppressLint
 import android.app.Service
 import android.bluetooth.*
 import android.content.Context
@@ -7,13 +8,19 @@ import android.content.Intent
 import android.os.Binder
 import android.os.Build
 import android.os.IBinder
+import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.widget.Toast
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.LocationServices
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -21,6 +28,7 @@ import java.util.concurrent.TimeUnit
 
 /**
  * Created by B00175 on 2018/3/19.
+ *
  */
 class UartService: Service() {
 
@@ -46,6 +54,12 @@ class UartService: Service() {
 
     private val bus = EventBus.getDefault()
     private val bleEventObj = BleEvent()
+
+    // 20180328 Add Location Request to Service
+    private var longi: Float? = 121.4215f
+    private var lati: Float? = 24.959742f
+
+    private lateinit var locationRequest: LocationRequest
 
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -321,4 +335,52 @@ class UartService: Service() {
         }
     }
 
+    @SuppressLint("MissingPermission")
+    fun initFuseLocationProviderClient() {
+        val client = LocationServices.getFusedLocationProviderClient(this)
+
+        createLocationRequest()
+
+        client.lastLocation.addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                val location = task.result
+
+                if (location != null) {
+                    TvocNoseData.lati = location.latitude.toFloat()
+                    TvocNoseData.longi = location.longitude.toFloat()
+                } else {
+                    TvocNoseData.lati = 24.959817f
+                    TvocNoseData.longi = 121.4215f
+                }
+
+                Log.e("LOCATION", "Get Location from OnCompleteListener: $lati, $longi")
+            }
+        }
+
+        client.requestLocationUpdates(locationRequest, object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult?) {
+                super.onLocationResult(locationResult)
+
+                val location = locationResult!!.lastLocation
+
+                if (location != null) {
+                    TvocNoseData.lati = location.latitude.toFloat()
+                    TvocNoseData.longi = location.longitude.toFloat()
+                } else {
+                    TvocNoseData.lati = 24.959817f
+                    TvocNoseData.longi = 121.4215f
+                }
+
+                Log.e("LOCATION", "Get Location from LocationCallback: $lati, $longi")
+            }
+        },
+                Looper.myLooper())
+    }
+
+    private fun createLocationRequest() {
+        locationRequest = LocationRequest()
+        locationRequest.interval = 5000          // original is 5000 milliseconds
+        locationRequest.fastestInterval = 2000   // original is 2000 milliseconds
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
 }
