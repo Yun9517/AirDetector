@@ -1187,9 +1187,9 @@ object BLECallingTranslate {
     }
 
     fun setRTC(bytes: ByteArray): ByteArray {
-        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[0], bytes[1], bytes[2], bytes[3])
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[4], bytes[5], bytes[6], bytes[7])
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[0], bytes[1], bytes[2], bytes[3], checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteFiveBytesLens, BLECommand.GetSetRTC, 0x00.toByte(), bytes[4], bytes[5], bytes[6], bytes[7], checkSum)
     }
 
 

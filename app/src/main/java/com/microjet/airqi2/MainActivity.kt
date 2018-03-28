@@ -1199,7 +1199,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val now = (Calendar.getInstance().timeInMillis / 1000)
         if (rtcTime != now) {
             Log.d("NowTime", now.toString())
-            val nowByte = ByteBuffer.allocate(5).putLong(now).array()
+            val nowByte = ByteBuffer.allocate(8).putLong(now).array()
             mUartService?.writeRXCharacteristic(BLECallingTranslate.setRTC(nowByte))
         }
     }
