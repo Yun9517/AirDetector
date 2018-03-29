@@ -3,8 +3,10 @@ package com.microjet.airqi2.BlueTooth
 import android.annotation.SuppressLint
 import android.app.Service
 import android.bluetooth.*
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
@@ -135,6 +137,7 @@ class UartService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
+        registerReceiver(mServiceReceiver, makeServiceIntentFilter())
         return mBinder
     }
 
@@ -142,6 +145,7 @@ class UartService : Service() {
         // After using a given device, you should make sure that BluetoothGatt.close() is called
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
+        unregisterReceiver(mServiceReceiver)
         close()
         return super.onUnbind(intent)
     }
@@ -373,5 +377,22 @@ class UartService : Service() {
         locationRequest.interval = 5000          // original is 5000 milliseconds
         locationRequest.fastestInterval = 2000   // original is 2000 milliseconds
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+    }
+
+    private fun makeServiceIntentFilter(): IntentFilter {
+        val intentFilter = IntentFilter()
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_OFF)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_ON)
+        return intentFilter
+    }
+
+    private val mServiceReceiver = object : BroadcastReceiver() {
+        override fun onReceive(p0: Context?, p1: Intent?) {
+
+            when(p1!!.action) {
+                BroadcastActions.INTENT_KEY_LED_OFF -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(false))
+                BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
+            }
+        }
     }
 }
