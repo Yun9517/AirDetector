@@ -238,7 +238,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            /*val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
             if (isChecked) {
                 text_led_stat!!.text = getString(R.string.text_setting_on)
@@ -246,7 +246,15 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 text_led_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_OFF)
-            }
+            }*/
+
+            val intent: Intent? = Intent(
+                    if (isChecked) {
+                        BroadcastActions.INTENT_KEY_LED_ON
+                    } else {
+                        BroadcastActions.INTENT_KEY_LED_OFF
+                    }
+            )
 
             sendBroadcast(intent)
 

@@ -107,10 +107,12 @@ class DownloadTask : AsyncTask<String, Void, String>() {
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
+                    Log.d("Download",res.toString())
+                    return "DownloadCloudDone"
+                } else {
+                    Log.d("Download",res.toString())
+                    return "Error"
                 }
-                Log.d("Download",res.toString())
-                val downLoadDone = "DownloadCloudDone"
-                return downLoadDone
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -125,9 +127,16 @@ class DownloadTask : AsyncTask<String, Void, String>() {
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
         if (result != null) {
-            if (result == "DownloadCloudDone") {
-                if (Build.BRAND != "OPPO") {
-                    Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+            when (result) {
+                "DownloadCloudDone" -> {
+                    if (Build.BRAND != "OPPO") {
+                        Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                "Error" -> {
+                    if (Build.BRAND != "OPPO") {
+                        Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
+                    }
                 }
             }
         }

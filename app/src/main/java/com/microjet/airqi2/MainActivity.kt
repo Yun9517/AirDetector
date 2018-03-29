@@ -735,44 +735,44 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
             }
-            /*
-            REQUEST_SELECT_SAMPLE -> {
-                if (data != null) {
-                    val value = data.getIntExtra("choseCycle", 0)
-                    val uuintent: Intent? = Intent(BroadcastIntents.PRIMARY)
-                    uuintent!!.putExtra("status", "setSampleRate")
+        /*
+        REQUEST_SELECT_SAMPLE -> {
+            if (data != null) {
+                val value = data.getIntExtra("choseCycle", 0)
+                val uuintent: Intent? = Intent(BroadcastIntents.PRIMARY)
+                uuintent!!.putExtra("status", "setSampleRate")
 
-                    when (value) {//resolution 1= 30 second
-                        0 -> {//30s
-                            uuintent.putExtra("SampleTime", 1)//
-                        }
-                        1 -> {//10min
-                            uuintent.putExtra("SampleTime", 20)
-                        }
-                        2 -> {//15min
-                            uuintent.putExtra("SampleTime", 30)
-                        }
-                        3 -> {//20min
-                            uuintent.putExtra("SampleTime", 40)
-                        }
-                        4 -> {//30min
-                            uuintent.putExtra("SampleTime", 60)
-                        }
-                        else -> {
-                            uuintent.putExtra("SampleTime", 1)
-                        }
+                when (value) {//resolution 1= 30 second
+                    0 -> {//30s
+                        uuintent.putExtra("SampleTime", 1)//
                     }
-                    sendBroadcast(uuintent)
-
+                    1 -> {//10min
+                        uuintent.putExtra("SampleTime", 20)
+                    }
+                    2 -> {//15min
+                        uuintent.putExtra("SampleTime", 30)
+                    }
+                    3 -> {//20min
+                        uuintent.putExtra("SampleTime", 40)
+                    }
+                    4 -> {//30min
+                        uuintent.putExtra("SampleTime", 60)
+                    }
+                    else -> {
+                        uuintent.putExtra("SampleTime", 1)
+                    }
                 }
-            }
-            5->{
-                if (resultCode == Activity.RESULT_OK) {
+                sendBroadcast(uuintent)
 
-                }
-                else{ finish() }
             }
-            */
+        }
+        5->{
+            if (resultCode == Activity.RESULT_OK) {
+
+            }
+            else{ finish() }
+        }
+        */
             else -> {
                 print("test")
             }
@@ -895,22 +895,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
-                /*
-                BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    val bundle = intent.extras
-                    //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
-                    //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
-                    //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
-                    //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
-                    //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
-                    //val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    //Log.v(TAG, "電池電量: $batValue%")
-                    // 預熱畫面控制
-                    //heatingPanelControl(preheatCountDownString)
-                    //displayConnetedBatteryLife()
-                }
-                */
+            /*
+            BroadcastActions.ACTION_GET_NEW_DATA -> {
+                val bundle = intent.extras
+                //val tempVal = bundle.getString(BroadcastActions.INTENT_KEY_TEMP_VALUE)
+                //val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
+                //val tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
+                //val co2Val = bundle.getString(BroadcastActions.INTENT_KEY_CO2_VALUE)
+                //val pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE).toInt()
+                //batValue = bundle.getString(BroadcastActions.INTENT_KEY_BATTERY_LIFE).toInt()
+                //val preheatCountDownString = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
+                //Log.v(TAG, "電池電量: $batValue%")
+                // 預熱畫面控制
+                //heatingPanelControl(preheatCountDownString)
+                //displayConnetedBatteryLife()
+            }
+            */
                 BroadcastActions.ACTION_DATA_AVAILABLE -> {
                     dataAvaliable(intent)
                 }
@@ -1091,6 +1091,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     //saveToRealm(txValue)
                 }
                 0xB9.toByte() -> {
+                    val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+                    val ledState = txValue[3].toInt()
+                    if (txValue.size > 5) {
+                        if (ledState == 1) {
+                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                    false).apply()
+                        } else {
+                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                    true).apply()
+                        }
+                        Log.e(TAG, "LED Status: $ledState")
+                    }
                     //Log.d("0xB9",hashMap.toString())
                 }
                 0xE0.toByte() -> {

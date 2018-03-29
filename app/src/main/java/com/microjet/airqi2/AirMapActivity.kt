@@ -261,8 +261,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                     @SuppressLint("SimpleDateFormat")
                     val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
-                    val calendar = Calendar.getInstance()
-                    val nowTime = result[i]!!.created_time - calendar.timeZone.rawOffset
+                    //val calendar = Calendar.getInstance()
+                    val nowTime = result[i]!!.created_time// - calendar.timeZone.rawOffset
 
                     Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
                 }
