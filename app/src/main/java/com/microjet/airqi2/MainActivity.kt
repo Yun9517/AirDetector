@@ -1284,18 +1284,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             var count = 0
             for (y in head..end) {
                 val realm = Realm.getDefaultInstance()
-                realm.executeTransaction { r ->
-                    val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
-                    asmData.tempValue = arrIndexMap[y][TvocNoseData.C5TEMP].toString()
-                    asmData.humiValue = arrIndexMap[y][TvocNoseData.C5HUMI].toString()
-                    asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
-                    asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
-                    asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
-                    asmData.created_time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
-                    asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
-                    asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
-                    asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
-                    Log.d("0xC5", asmData.toString())
+                val time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
+                if (query.isEmpty()) {
+                    realm.executeTransaction { r ->
+                        val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                        asmData.tempValue = arrIndexMap[y][TvocNoseData.C5TEMP].toString()
+                        asmData.humiValue = arrIndexMap[y][TvocNoseData.C5HUMI].toString()
+                        asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
+                        asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
+                        asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
+                        asmData.created_time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                        asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
+                        asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
+                        asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
+                        Log.d("0xC5", asmData.toString())
+                    }
                 }
                 realm.close()
                 count++
@@ -1305,18 +1309,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun saveToRealmC6(hashmap: HashMap<String, String>) {
         val realm = Realm.getDefaultInstance()
-        realm.executeTransaction { r ->
-            val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
-            asmData.tempValue = hashmap[TvocNoseData.C6TEMP].toString()
-            asmData.humiValue = hashmap[TvocNoseData.C6HUMI].toString()
-            asmData.tvocValue = hashmap[TvocNoseData.C6TVOC].toString()
-            asmData.ecO2Value = hashmap[TvocNoseData.C6ECO2].toString()
-            asmData.pM25Value = hashmap[TvocNoseData.C6PM25].toString()
-            asmData.created_time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
-            asmData.macAddress = mDeviceAddress
-            asmData.latitude = TvocNoseData.lati
-            asmData.longitude = TvocNoseData.longi
-            Log.d("0xC6", asmData.toString())
+        val time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
+        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
+        if (query.isEmpty()) {
+            realm.executeTransaction { r ->
+                val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                asmData.tempValue = hashmap[TvocNoseData.C6TEMP].toString()
+                asmData.humiValue = hashmap[TvocNoseData.C6HUMI].toString()
+                asmData.tvocValue = hashmap[TvocNoseData.C6TVOC].toString()
+                asmData.ecO2Value = hashmap[TvocNoseData.C6ECO2].toString()
+                asmData.pM25Value = hashmap[TvocNoseData.C6PM25].toString()
+                asmData.created_time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                asmData.macAddress = mDeviceAddress
+                asmData.latitude = TvocNoseData.lati
+                asmData.longitude = TvocNoseData.longi
+                Log.d("0xC6", asmData.toString())
+            }
         }
         realm.close()
     }
