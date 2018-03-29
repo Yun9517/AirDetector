@@ -76,8 +76,8 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         // - replace the contents of the view with that element
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
-        Calendar calendar = Calendar.getInstance();
-        long nowTime = ((mDataset.get(position).getCreated_time()) - calendar.getTimeZone().getRawOffset());
+        //Calendar calendar = Calendar.getInstance();
+        long nowTime = ((mDataset.get(position).getCreated_time()) );// - calendar.getTimeZone().getRawOffset());
 
         holder.textDate.setText(String.valueOf(dateFormat.format(nowTime)));
 
