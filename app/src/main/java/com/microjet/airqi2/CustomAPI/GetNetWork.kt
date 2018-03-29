@@ -72,6 +72,6 @@ object  GetNetWork {
             e.printStackTrace()
         }
 
-        return isOnLineCheack
+        return true
     }
 }

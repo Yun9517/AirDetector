@@ -6,6 +6,7 @@ package com.microjet.airqi2.Account
 //import com.github.angads25.filepicker.view.FilePickerDialog
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -19,10 +20,12 @@ import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
+import com.microjet.airqi2.DownloadTask
 import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_account_active.*
+import kotlinx.android.synthetic.main.drawer_header.*
 import org.json.JSONException
 import java.io.Closeable
 import java.io.File
@@ -103,35 +106,17 @@ class AccountActiveActivity : AppCompatActivity() {
             file_Provider()
         }
 
+        downloadData.setOnClickListener {
+            val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+            val token = share_token.getString("token", "")
+            val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+            val macAddressForDB = share.getString("mac", "noValue")
+            DownloadTask().execute(macAddressForDB, token)
+        }
+
     }
-//
-//        // 0322
-//        downloadData.setOnClickListener {
-//        ///    assertEquals(file.getAbsolutePath(), auxFile.getAbsolutePath())
-//          //  NOTE: url.toString() return a String in the format: "file:///mnt/sdcard/myPicture.jpg", whereas url.getPath() returns a String in the format: "/mnt/sdcard/myPicture.jpg"
-//            val properties = DialogProperties()
-//            properties.selection_type = DialogConfigs.FILE_SELECT
-//            properties.root = File(DialogConfigs.DEFAULT_DIR)
-//            properties.error_dir = File(DialogConfigs.DEFAULT_DIR)
-//            properties.extensions = null
-//
-//           var  dialog = FilePickerDialog(this, properties)
-//            dialog.setTitle("Select files to share")
-//
-//            dialog.setDialogSelectionListener(DialogSelectionListener { files ->
-//                if (null == files || files.size == 0) {
-//                    Toast.makeText(mContext, "Select at least one file to start Share Mode", Toast.LENGTH_SHORT).show()
-//                    return@DialogSelectionListener
-//                }
-//                val intent = Intent(Intent.ACTION_VIEW)
-//                val uri = Uri.parse(files[0])
-//                intent.action = Intent.ACTION_SEND
-//                intent.putExtra(Intent.EXTRA_STREAM, uri)
-//                intent.type = "image/jpeg"
-//                startActivity(intent)
-//            })
-//            dialog.show()
-//        }
+
+
 
 
 

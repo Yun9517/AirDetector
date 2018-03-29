@@ -10,13 +10,10 @@ import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
-import android.location.Criteria
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -47,6 +44,7 @@ import com.microjet.airqi2.CustomAPI.FragmentAdapter
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
@@ -556,7 +554,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171127 Raymond 新增：知識庫activity
     private fun knowledgeShow() {
         blueToothDisconnect()
-        val i: Intent? = Intent(this, DFUActivity::class.java)
+        val i: Intent? = Intent(this, KnowledgeActivity::class.java)
         startActivity(i)
     }
 
@@ -1174,6 +1172,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(countForItem))
                 //downloading = true
                 //downloadComplete = false;
+                val mainIntent = Intent(BroadcastIntents.PRIMARY)
+                mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
+                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem))
+                sendBroadcast(mainIntent)
             } else {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
@@ -1266,12 +1268,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
         nowItem++
+
         if (nowItem > maxItem) { //|| nowItem == countForItem) {
             if (Build.BRAND != "OPPO") {
                 Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
             }
             saveToRealmC5()
         } else {
+            val mainIntent = Intent(BroadcastIntents.PRIMARY)
+            mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA)
+            mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(nowItem))
+            sendBroadcast(mainIntent)
             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(nowItem))
         }
         Log.d("C5ARR",arr1.toString())
