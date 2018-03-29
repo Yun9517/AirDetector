@@ -99,6 +99,9 @@ class ChartFragment : Fragment() {
     private var intArray: IntArray? = null
     private var chartLabel: String = ""
 
+
+    private var errorTime = 0
+
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
         chart_line.yChartInterval.size
@@ -1031,6 +1034,7 @@ class ChartFragment : Fragment() {
         intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
         intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
         return intentFilter
     }
 
@@ -1152,6 +1156,9 @@ class ChartFragment : Fragment() {
                         drawChart(spinnerPositon)
                     }
                 }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
+                }
             }
             checkUIState()
         }
@@ -1198,5 +1205,105 @@ class ChartFragment : Fragment() {
             tpd.setMessage("請選擇時間")
             tpd.show()
         }
+    }
+
+
+
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[0]) {
+            0xE0.toByte() -> {
+            }
+            0xE1.toByte() -> {
+            }
+            0xEA.toByte() -> {
+            }
+            else -> {
+            }
+        }
+        when (txValue[2]) {
+            0xB1.toByte() -> Log.d("AirMapAC", "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d("AirMapAC", "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
+        }
+        when (txValue[3]) {
+            0xE0.toByte() -> {
+                Log.d("AirMapAC feeback", "ok"); }
+            0xE1.toByte() -> {
+                Log.d("AirMapAC feedback", "Couldn't write in device"); return
+            }
+            0xE2.toByte() -> {
+                Log.d("AirMapAC feedback", "Temperature sensor fail"); return
+            }
+            0xE3.toByte() -> {
+                Log.d("AirMapAC feedback", "B0TVOC sensor fail"); return
+            }
+            0xE4.toByte() -> {
+                Log.d("AirMapAC feedback", "Pump power fail"); return
+            }
+            0xE5.toByte() -> {
+                Log.d("AirMapAC feedback", "Invalid value"); return
+            }
+            0xE6.toByte() -> {
+                Log.d("AirMapAC feedback", "Unknown command"); return
+            }
+            0xE7.toByte() -> {
+                Log.d("AirMapAC feedback", "Waiting timeout"); return
+            }
+            0xE8.toByte() -> {
+                Log.d("AirMapAC feedback", "Checksum error"); return
+            }
+        }
+
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                }
+                0xB1.toByte() -> {
+                }
+                0xB2.toByte() -> {
+                }
+                0xB4.toByte() -> {
+                }
+                0xB5.toByte() -> {
+                }
+                0xB9.toByte() -> {
+                }
+                0xE0.toByte() -> {
+                }
+                0xBB.toByte() -> {
+                }
+                0xC0.toByte() -> {
+                }
+                0xC5.toByte() -> {
+                }
+                0xC6.toByte() -> {
+                    if (spinnerPositon == 0) {
+                        btnTextChanged(spinnerPositon)
+                        drawChart(spinnerPositon)
+                    }
+                    Log.e("ChartFrg", "Now Starting Load Data.........")
+                }
+            }
+        }
+    }
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        val max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        val checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
     }
 }
