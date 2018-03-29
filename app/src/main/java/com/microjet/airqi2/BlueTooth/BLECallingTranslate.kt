@@ -1347,7 +1347,7 @@ object BLECallingTranslate {
                         }
                         15//C5TIME
                         -> {
-                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            returnValue.put(TvocNoseData.C5TIME ,value.toLong().toString())
                             value = 0
                         }
                         else -> {
@@ -1376,41 +1376,42 @@ object BLECallingTranslate {
                     value = value.shl(8)
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
-                        1//Item Index
-                        -> {
-                            returnValue.put(TvocNoseData.C5II, value.toString())
-                            value = 0
-                        }
-                        3//Temperature
+                        1//Temperature
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
                             val newTemp = "%.1f".format(Tempvalue)
-                            returnValue.put(TvocNoseData.C5TEMP,newTemp)
+                            returnValue.put(TvocNoseData.C6TEMP,newTemp)
                             value = 0
                         }
-                        4//Humi
+                        2//Humi
                         -> {
-                            returnValue.put(TvocNoseData.C5HUMI, value.toString())
+                            returnValue.put(TvocNoseData.C6HUMI, value.toString())
                             value = 0
                         }
-                        6//TVOC
+                        4//TVOC
                         -> {
-                            returnValue.put(TvocNoseData.C5TVOC, value.toString())
+                            returnValue.put(TvocNoseData.C6TVOC, value.toString())
                             value = 0
                         }
-                        8//CO2
+                        6//CO2
                         -> {
-                            returnValue.put(TvocNoseData.C5ECO2 ,value.toString())
+                            returnValue.put(TvocNoseData.C6ECO2 ,value.toString())
                             value = 0
                         }
-                        10//PM25
+                        8//PM25
                         -> {
-                            returnValue.put(TvocNoseData.C5PM25, value.toString())
+                            returnValue.put(TvocNoseData.C6PM25, value.toString())
                             value = 0
+                        }
+                        9 -> {
+
+                        }
+                        10-> {
+
                         }
                         15//C6TIME
                         -> {
-                            returnValue.put(TvocNoseData.C5TIME ,value.toString())
+                            returnValue.put(TvocNoseData.C6TIME ,value.toString())
                             value = 0
                         }
                         else -> {
@@ -1423,12 +1424,6 @@ object BLECallingTranslate {
         }
         return returnValue
     }
-
-
-
-
-
-
 
 
     fun Byte.toPositiveInt() = toInt() and 0xFF

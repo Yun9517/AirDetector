@@ -177,6 +177,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var lock = false
     private var arr1 = arrayListOf<HashMap<String,Int>>()
     private var indexMap = HashMap<String,Int>()
+    private var maxItem = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1142,7 +1143,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun getMaxItems(tx: ByteArray) {
         var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
         var sampleRateTime = 0
-        var maxItem = 0
         var correctTime = 0
         sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
         maxItem = hashMap[TvocNoseData.MAXI]!!.toInt()
@@ -1157,9 +1157,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //將資料庫最大時間與現在時間換算成Count
             var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
             if (maxCreatedTime == null) {
-                maxCreatedTime = Calendar.getInstance().timeInMillis - TimeUnit.DAYS.toMillis(2)
+                maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2)
             }
-            val nowTime = Calendar.getInstance().timeInMillis
+            val nowTime = System.currentTimeMillis()//Calendar.getInstance().timeInMillis
             Log.d("0xB4countLast", Date(nowTime).toString())
             Log.d("0xB4countLast", Date(maxCreatedTime.toLong()).toString())
             val countForItemTime = nowTime - maxCreatedTime.toLong()
@@ -1196,7 +1196,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun checkRTCSetted(rtcTime: Long) {
-        val now = (Calendar.getInstance().timeInMillis / 1000)
+        val now = (System.currentTimeMillis() / 1000)
         if (rtcTime != now) {
             Log.d("NowTime", now.toString())
             val nowByte = ByteBuffer.allocate(8).putLong(now).array()
@@ -1266,7 +1266,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
         nowItem++
-        if (nowItem > 1440) { //|| nowItem == countForItem) {
+        if (nowItem > maxItem) { //|| nowItem == countForItem) {
             if (Build.BRAND != "OPPO") {
                 Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
             }
@@ -1291,7 +1291,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
                     asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
                     asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
-                    asmData.created_time = arrIndexMap[head][TvocNoseData.C5TIME].toString().toLong() - 60 * count//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                    asmData.created_time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
                     asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
                     asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
                     asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
@@ -1307,12 +1307,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val realm = Realm.getDefaultInstance()
         realm.executeTransaction { r ->
             val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
-            asmData.tempValue = hashmap[TvocNoseData.C5TEMP].toString()
-            asmData.humiValue = hashmap[TvocNoseData.C5HUMI].toString()
-            asmData.tvocValue = hashmap[TvocNoseData.C5TVOC].toString()
-            asmData.ecO2Value = hashmap[TvocNoseData.C5ECO2].toString()
-            asmData.pM25Value = hashmap[TvocNoseData.C5PM25].toString()
-            asmData.created_time = Calendar.getInstance().timeInMillis//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+            asmData.tempValue = hashmap[TvocNoseData.C6TEMP].toString()
+            asmData.humiValue = hashmap[TvocNoseData.C6HUMI].toString()
+            asmData.tvocValue = hashmap[TvocNoseData.C6TVOC].toString()
+            asmData.ecO2Value = hashmap[TvocNoseData.C6ECO2].toString()
+            asmData.pM25Value = hashmap[TvocNoseData.C6PM25].toString()
+            asmData.created_time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
             asmData.macAddress = mDeviceAddress
             asmData.latitude = TvocNoseData.lati
             asmData.longitude = TvocNoseData.longi

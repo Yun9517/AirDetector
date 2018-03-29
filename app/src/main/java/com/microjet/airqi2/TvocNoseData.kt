@@ -73,6 +73,18 @@ object TvocNoseData {
     //Location
     var longi: Float? = 121.4215f
     var lati: Float? = 24.959742f
+    //C6
+    val C6II = "C6Item_Index"
+    val C6TEMP = "C6Temperature"
+    val C6HUMI = "C6HUMI"
+    val C6TVOC = "C6TVOC"
+    val C6ECO2 = "C6ECO2"
+    val C6PM25 = "C6PM25"
+    val C6TIME = "C6TIME"
+    val C6MACA = "C6MAC"
+    val C6LATI = "C6LATI"
+    val C6LONGI = "C6LONGI"
+
 
     var spinnerPosition: Int = 0
     var calObject = Calendar.getInstance()
