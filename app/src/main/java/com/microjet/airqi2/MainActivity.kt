@@ -51,9 +51,12 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.nio.ByteBuffer
@@ -242,6 +245,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
             connState = BleConnection.DISCONNECTED
@@ -251,6 +255,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPause() {
         super.onPause()
+        EventBus.getDefault().unregister(this);
         Log.e(TAG, "call onPause")
     }
 
@@ -554,9 +559,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 20171127 Raymond 新增：知識庫activity
     private fun knowledgeShow() {
+      val aat=  AirActionTask(this.mContext,"201803130000","0000")
+      val myResponse = aat.execute("postFWVersion")
+        Log.v("AirActionTask","OVER")
+        /*
         blueToothDisconnect()
         val i: Intent? = Intent(this, DFUActivity::class.java)
         startActivity(i)
+        */
     }
 
     // 20171219 Raymond 新增：Q&A activity
@@ -1319,5 +1329,39 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.d("0xC6", asmData.toString())
         }
         realm.close()
+    }
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent ){
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message)
+        {
+            "New FW Arrival"->{
+                showDownloadDialog(bleEvent.message!!)
+            }
+        }
+
+    }
+    private fun showDownloadDialog(msg: String) {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage(msg+"\twant to update?")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        { dialog, _ ->
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+
+            dialog.dismiss()
+            val aat = AirActionTask(this.mContext)
+            aat.execute("downloadFWFile")
+        }
+        Dialog.show()
     }
 }
