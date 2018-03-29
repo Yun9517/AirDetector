@@ -6,22 +6,26 @@ package com.microjet.airqi2.Account
 //import com.github.angads25.filepicker.view.FilePickerDialog
 
 import android.annotation.SuppressLint
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.content.pm.ApplicationInfo
 import android.os.Bundle
 import android.os.Environment
+import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
+import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import io.realm.Realm
+import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
 import org.json.JSONException
 import java.io.Closeable
@@ -30,8 +34,10 @@ import java.io.FileWriter
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 
+@Suppress("NAME_SHADOWING")
 /**
  * Created by B00170 on 2018/3/8.
  */
@@ -41,8 +47,13 @@ class AccountActiveActivity : AppCompatActivity() {
 
     private var File: File? = null
     private var cacheFile: File? = null
+    //試Realm拉資料
+    private var arrTime = ArrayList<String>()
+    private var arrData = ArrayList<String>()
+    var useFor = 0
+    var calObject = Calendar.getInstance()
 
-    @SuppressLint("SdCardPath")
+    @SuppressLint("SdCardPath", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
@@ -70,6 +81,7 @@ class AccountActiveActivity : AppCompatActivity() {
         show_Name.text = myName
         //text_Account_status.text = myName
         // get reference to all views
+
         var change_password = findViewById<TextView>(R.id.change_password)
 
         // 03/14 edit ID
@@ -86,23 +98,50 @@ class AccountActiveActivity : AppCompatActivity() {
             //finish()
         }
         // 03/14 edit ID
+
+        var cal = Calendar.getInstance()
         rename.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent()
             intent.setClass(this@AccountActiveActivity.mContext, AccountNameReplaceActivity::class.java)
             startActivityForResult(intent, 1)
-//            startActivity(intent)
-            //finish()
         }
 
-        // 03/19 Share to Line
-        shareData.setOnClickListener()
-        {
-            //showDialog("以按下"+"分享按鈕")
-            dbData2CVSAsyncTasks()
-            file_Provider()
+
+
+
+
+            // create an OnDateSetListener
+            val dateSetListener = object : DatePickerDialog.OnDateSetListener {
+                override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
+                                       dayOfMonth: Int) {
+                    cal.set(Calendar.YEAR, year)
+                    cal.set(Calendar.MONTH, monthOfYear)
+                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                    calObject.set(year, monthOfYear, dayOfMonth)
+                    updateDateInView()
+                }
+            }
+            // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
+        shareData!!.setOnClickListener {
+            DatePickerDialog(this@AccountActiveActivity,
+                    dateSetListener,
+                    // set DatePickerDialog to point to today's date when it loads up
+                    cal.get(Calendar.YEAR),
+                    cal.get(Calendar.MONTH),
+                    cal.get(Calendar.DAY_OF_MONTH)).show()
         }
 
+
+    }
+
+    private fun updateDateInView() {
+        val myFormat = "MM/dd/yyyy" // mention the format you need
+        val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
+        dbData2CVSAsyncTasks()//sdf)
+        // if(this.checkLineInstalled()!!) {
+        file_Provider()
+        System.currentTimeMillis()
     }
 //
 //        // 0322
@@ -177,9 +216,9 @@ class AccountActiveActivity : AppCompatActivity() {
 
 
     //    private inner class dbData2CVSAsyncTasks(){ //: AsyncTask<Void, Void, String>() {
-    private fun dbData2CVSAsyncTasks() {
+    private fun dbData2CVSAsyncTasks( ){//TS: TvocNoseData) {
         try {
-            val AllData = getDbData(Date().day, Date().day)
+            val AllData = getDbData(Date().day, Date().day )//Date().day, Date().day)
             writeDataToFile(AllData, this@AccountActiveActivity)
         } catch (e: Exception) {
             Log.e("return_body_erro", e.toString())
@@ -190,11 +229,28 @@ class AccountActiveActivity : AppCompatActivity() {
     val DataArrayListOne = ArrayList<String>()
 
     //val DataArrayListAll= ArrayList< ArrayList<String>>()
-    private fun getDbData(startTimeZone: Int, EntTime: Int): ArrayList<String> {
+    private fun getDbData( startTimeZone: Int, EntTime: Int): ArrayList<String> {
         //很重要同區域才可以叫到同一個東西
-        val realm1 = Realm.getDefaultInstance()
-        val query1 = realm1.where(AsmDataModel::class.java)
-        val result1 = query1.findAll()
+//        val realm1 = Realm.getDefaultInstance()
+//        val query1 = realm1.where(AsmDataModel::class.java)
+//        val result1 = query1.findAll()
+
+        arrTime.clear()
+        arrData.clear()
+        //現在時間實體毫秒
+        //var touchTime = Calendar.getInstance().timeInMillis
+        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
+        //將日期設為今天日子加一天減1秒
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        //一天共有2880筆
+        val dataCount = (endDayLast - endDay) / (60 * 1000)
+        Log.d("TimePeriod" + useFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
+        query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
+        val result1 = query.findAll()
         Log.e("資料筆數", result1.size.toString())
         Log.e("所有資料筆數", result1.toString().toString())
         //MyApplication getUUID=new MyApplication();
@@ -224,7 +280,7 @@ class AccountActiveActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        realm1.close()
+        realm.close()
 
         return DataArrayListOne
     }
@@ -261,7 +317,6 @@ class AccountActiveActivity : AppCompatActivity() {
                 if (l != 0 && l.mod(8) == 0) {
                     mFileWriter.write("\r\n")
                 }
-
                 mFileWriter.write(data[l].toString() + ",")
                 //}
             }
@@ -283,10 +338,31 @@ class AccountActiveActivity : AppCompatActivity() {
         }
 
     }
+    //20180329
+    private fun  checkLineInstalled(): Boolean? {
+
+
+        val lineInstallFlag: Boolean = false
+
+
+        val pm = packageManager
+        val m_appList = pm.getInstalledApplications(0)
+        val ai:ApplicationInfo
+
+        m_appList?.forEachIndexed { _, ai ->
+            if (ai.packageName.equals(PACKAGE_NAME)) {
+                val lineInstallFlag = true
+            }
+        }
+        return lineInstallFlag;
+    }
+
+
+
 
     private fun file_Provider() {
         var mSDFile: File? = null
-        mSDFile = this.getFilesDir()
+        //mSDFile = this.getFilesDir()
         mSDFile = this@AccountActiveActivity.getFileStreamPath("BLE_Data.csv")
         val uri = FileProvider.getUriForFile(this, packageName, mSDFile)
 
@@ -303,10 +379,33 @@ class AccountActiveActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         // Verify the intent will resolve to at least one activity
         if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(chooser)
+            startActivityForResult(chooser,0)
         }
+
+
+////        //PO文字
+//        val PACKAGE_NAME = "jp.naver.line.android"
+//        val CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity"
+//        val Lineintent = Intent(Intent.ACTION_SEND)
+//        Lineintent.setClassName(PACKAGE_NAME, CLASS_NAME)
+//        intent.data = uri
+//        Lineintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        Lineintent.setType("csv/plain")
+//        intent.type = "Application/csv"
+//        Lineintent.putExtra(Intent.EXTRA_STREAM, uri)
+//        //Lineintent.data = uri
+//        //Lineintent.putExtra(Intent.EXTRA_TEXT, uri)
+//        startActivity(intent)
     }
 }
+
+
+
+
+
+
+
+
 
 
 
