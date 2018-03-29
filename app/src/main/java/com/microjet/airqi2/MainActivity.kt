@@ -802,14 +802,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // Charge
             in 101..200 -> {
                 when (batValue) {
-                    in 198..200 -> {
+                    200 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_6)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (icon.isRunning) {
                             icon.stop()
                         }
                     }
-                    in 180..198 -> {
+                    in 180..199 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_5)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
@@ -852,8 +852,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     icon.stop()
                 }*/
                 when (batValue) {
-                    in 96..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
-                    in 76..95 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
+                    100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
+                    in 76..99 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
                     in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
                     in 41..55 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
                     in 21..40 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x2)
