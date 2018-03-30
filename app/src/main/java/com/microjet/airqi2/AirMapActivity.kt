@@ -212,9 +212,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         //val calendar = Calendar.getInstance()
 
         //現在時間實體毫秒
-        val touchTime = mCal.timeInMillis + mCal.timeZone.rawOffset
+        val touchTime = mCal.timeInMillis// + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24)
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result = query.findAll()
