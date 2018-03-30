@@ -9,8 +9,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
@@ -134,6 +136,14 @@ class AccountActiveActivity : AppCompatActivity() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
+
+//        change_password.setOnClickListener {
+//            if(isConnected()) {
+//                //showDialog(getString(R.string.checkConnection))
+//            } else {
+//                showDialog(getString(R.string.checkConnection))
+//            }
+//        }
 
         downloadData.setOnClickListener {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -322,6 +332,15 @@ class AccountActiveActivity : AppCompatActivity() {
         }
 
     }
+
+    // 2018/03/30
+
+    private fun isConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
     //20180329
     private fun  checkLineInstalled(): Boolean? {
 
