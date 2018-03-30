@@ -1334,10 +1334,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     fun onEvent(bleEvent: BleEvent ){
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
-        when (bleEvent.message)
-        {
-            "New FW Arrival"->{
+        when (bleEvent.message) {
+            "New FW Arrival "->{
                 showDownloadDialog(bleEvent.message!!)
+            }
+            "Download Success"->{
+
+                val intent = Intent()
+                intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
+                intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
+                intent.setClass(this, DFUActivity::class.java)
+                startActivity(intent)
             }
         }
 
@@ -1364,4 +1371,5 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         Dialog.show()
     }
+
 }

@@ -10,14 +10,16 @@ import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStream
-import java.io.InputStreamReader
 import android.content.SharedPreferences
 import android.content.Context.MODE_PRIVATE
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.SavePreferences.AirActionTask_KEY
 import org.greenrobot.eventbus.EventBus
+import java.io.*
+import java.net.URL
+import com.microjet.airqi2.URL.AirActionTask.PostDownload
+
+
 
 
 /**
@@ -50,17 +52,21 @@ import org.greenrobot.eventbus.EventBus
     var mContext: Context? = null
     private var urlV:String?=null
     private var urlDT:String?=null
+    private var callback: PostDownload? = null
     private var mPreference: SharedPreferences? = null
+
     init {//主建構元
       //  mContext=input
     }
     constructor(input: Context):this(){//第二建構元
         mContext=input
+     //   callback=callbackInput
     }
     constructor(input: Context,urlVersion:String, urlDeviceType:String):this(){//第二建構元
         mContext=input
         urlV=urlVersion
         urlDT=urlDeviceType
+
     }
     override fun onPreExecute() {
         //在此要生成進度條
@@ -116,22 +122,18 @@ import org.greenrobot.eventbus.EventBus
             mProgressBar?.progress = values[0]!!.toInt()
         }
         Log.d(javaClass.simpleName,"我在onProgressUpdate")
-
     }
 
     override fun onPostExecute(result: ArrayList<String>?) {
         //  showDialog("Downloaded " + result + " bytes");
-        when (result?.get(0))
-        {
+        when (result?.get(0)) {
             "postFWVersion"->{
-                mPreference?.edit()?.putString("FilePath", result[1])?.apply()
-                EventBus.getDefault().post(BleEvent("New FW Arrival"))
-                //將路徑存起來
-                //使用event 通知有新的FW版本
+                mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
+                EventBus.getDefault().post(BleEvent("New FW Arrival "))//使用event 通知有新的FW版本
             }
             "downloadFWFile"->{
-                mPreference?.edit()?.putString("FilePath", "")?.apply()
-                //將路徑關閉
+                mPreference?.edit()?.putString("FilePath", "")?.apply()//將路徑關閉
+                EventBus.getDefault().post(BleEvent("Download Success"))
             }
             else ->{
 
@@ -185,7 +187,7 @@ import org.greenrobot.eventbus.EventBus
 
     }
 
-    private fun downloadFWFile(url:String):String{
+    private fun downloadFWFileold(url:String):String{
         val client = OkHttpClient()
         val urlBuilder = HttpUrl.parse(url)!!.newBuilder()
         val url = urlBuilder.build().toString()
@@ -193,45 +195,66 @@ import org.greenrobot.eventbus.EventBus
                 .url(url)
                 .get()
                 .build()
-
             val response = client.newCall(request).execute()
             if (response.code() == 200) {
                 try {
-                    var inputFile = response.body()?.byteStream()
+                    var inputFile = response.body()?.byteStream()//開啟讀檔串流
                     var downloaded: Long = 0
-                    val target = response.body()?.contentLength()
-
+                    val target = response.body()?.contentLength()//獲取檔案大小
                     publishProgress(0, target)
-                     var buff=ByteArray(1024)
-                    while (true) {
-                        val readed = inputFile?.read(buff)
-                        if (readed == -1) {
-                            break
-                        }
-                        downloaded += readed!!
-                        publishProgress(downloaded, target)
+                     var buff=ByteArray(1024)//一次讀1024 byte
 
+                    val file = File(mContext!!.cacheDir, "FWupdate.zip")
+                    if (file.exists())
+                        file.delete()
+                    val outputStream=FileOutputStream(file)
+                    var count:Int?=null
+                    while ({ count = inputFile?.read(buff); count }() != -1)
+                    {
+                        outputStream.write(buff)
+                        downloaded += count!!
+                        publishProgress(downloaded, target)
                     }
+                    outputStream.flush()
+                    outputStream.close()
                     response.body()?.close()
-                    if (inputFile != null) {
-                        inputFile.close()
-                    }
                 }
                 catch(e: Exception) {
-                    e.printStackTrace()
+                    Log.v(javaClass.simpleName,e.toString())
                 }
         }
-        return "mylove"
+        return "Download Success"
+    }
+
+    private fun downloadFWFile(url:String):String{
+        val url = URL(url)
+        val connection = url.openConnection()
+        try{
+            connection.connect()
+            val lenghtOfFile = connection.contentLength.toLong()
+            val input = BufferedInputStream(url.openStream())
+            val file = File(mContext!!.cacheDir, "FWupdate.zip")
+            val output = FileOutputStream(file) //context.openFileOutput("content.zip", Context.MODE_PRIVATE);
+            val data = ByteArray(1024)
+            var total: Long = 0
+            var count: Int=0
+            while ({count = input.read(data);count }() != -1)
+            {
+                total += count
+                publishProgress(total,lenghtOfFile)
+                output.write(data, 0, count)
+            }
+            output.flush()
+            output.close()
+            input.close()
+        }
+        catch(e: Exception) {
+            Log.v(javaClass.simpleName,e.toString())
+        }
+        return "Download Success"
+    }
+
+    interface  PostDownload {
+          fun downloadDone(fd: File)
     }
 }
-
-/*
-var inputFile = response.body()?.byteStream()
-var inputReader = InputStreamReader(inputFile)
-var reader = BufferedReader(inputReader)
-var line = reader.readLine()
-var result = line
-while (line != null) {
-    line = reader.readLine()
-    result += reader.readLine()
-        */
