@@ -51,9 +51,13 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
         newAccount.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent(this, AccountRegisterActivity::class.java)
-            startActivity(intent)
+            if (isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent(this, AccountRegisterActivity::class.java)
+                startActivity(intent)
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
         }
 
         forgotPassword.setOnClickListener {
@@ -84,7 +88,11 @@ class AccountManagementActivity : AppCompatActivity() {
                 }
             }else{
                 //showDialog("請連接網路")
-                showDialog(getString(R.string.checkConnection))
+                if (isConnected()) {
+                    goLoginAsyncTasks().execute(mMyThing)
+                } else {
+                    showDialog(getString(R.string.checkConnection))
+                }
             }
         }
     }
