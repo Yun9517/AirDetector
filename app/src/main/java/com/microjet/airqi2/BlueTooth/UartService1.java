@@ -22,57 +22,22 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.BitmapFactory;
-import android.location.Criteria;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.Vibrator;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
-
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.HttpCookie;
-import java.text.SimpleDateFormat;
-import java.time.DateTimeException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
-import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
-
-import io.realm.Realm;
-import io.realm.RealmAsyncTask;
-import io.realm.RealmList;
-import io.realm.RealmObject;
-import io.realm.RealmQuery;
-import io.realm.RealmResults;
-import io.realm.annotations.PrimaryKey;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -80,31 +45,48 @@ import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.CustomAPI.Utils;
 import com.microjet.airqi2.Definition.BroadcastActions;
 import com.microjet.airqi2.Definition.BroadcastIntents;
 import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.DownloadTask;
 import com.microjet.airqi2.MainActivity;
 import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.NotificationHelper;
+import com.microjet.airqi2.R;
 import com.microjet.airqi2.TvocNoseData;
 import com.microjet.airqi2.myData;
-import com.microjet.airqi2.R;
-import com.microjet.airqi2.NotificationHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
  */
 //藍牙連線Service
-public class UartService extends Service {
+public class UartService1 extends Service {
     private final static String TAG = UartService.class.getSimpleName();
 
     private BluetoothManager mBluetoothManager;
@@ -399,8 +381,8 @@ public class UartService extends Service {
 
     //BindService專用
     public class LocalBinder extends Binder {
-        public UartService getServerInstance() {
-            return UartService.this;
+        public UartService1 getServerInstance() {
+            return UartService1.this;
         }
     }
 
@@ -658,7 +640,7 @@ public class UartService extends Service {
      */
     public void enableTXNotification() {
         /*
-    	if (mBluetoothGatt == null) {
+        if (mBluetoothGatt == null) {
     		showMessage("mBluetoothGatt null" + mBluetoothGatt);
     		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
     		return;
@@ -822,7 +804,7 @@ public class UartService extends Service {
 //                        CallFromConnect=true;
 //                    else
 //                        CallFromConnect=false;
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.GetSampleRate());
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetSampleRate());
                     break;
                 case "callDeviceStartSample":
                     Date date = new Date();
@@ -835,7 +817,7 @@ public class UartService extends Service {
                     String[] strY = {sdFormatY.format(date), sdFormatM.format(date), sdFormatD.format(date), sdFormatH.format(date), sdFormatm.format(date), sdFormatS.format(date)};
                     int[] param2 = {Integer.parseInt(strY[0]), Integer.parseInt(strY[1]), Integer.parseInt(strY[2]), Integer.parseInt(strY[3]), Integer.parseInt(strY[4]), Integer.parseInt(strY[5])};
                     Log.d(TAG, "callDeviceStartSample");
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.CallDeviceStartRecord(param2));
                     break;
 //                case ACTION_GATT_SERVICES_DISCOVERED:
 //                    enableTXNotification();
@@ -849,27 +831,27 @@ public class UartService extends Service {
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(65002));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PumpOnCall(65002));
                     break;
                 //20180130
                 case BroadcastActions.INTENT_KEY_PUMP_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.PumpOnCall(1));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PumpOnCall(1));
                     break;
                 case BroadcastActions.INTENT_KEY_LED_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(false));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(false));
                     break;
                 case BroadcastActions.INTENT_KEY_LED_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetLedOn(true));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(true));
                     break;
                 /*case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
                     lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);
                     longi = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE);
                     break;*/
                 case BroadcastActions.INTENT_KEY_SET_PM25_ON:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(5));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25Rate(5));
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
-                    writeRXCharacteristic(CallingTranslate.INSTANCE.SetPM25(15));
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25Rate(15));
                     break;
 
             }
@@ -1149,7 +1131,7 @@ public class UartService extends Service {
             Intent mainIntent = new Intent(BroadcastIntents.PRIMARY);
             switch (txValue[2]) {
                 case (byte) 0xB0:
-                    RString = CallingTranslate.INSTANCE.GetAllSensor(txValue);
+                    RString = BLECallingTranslate.INSTANCE.GetAllSensor(txValue);
                     mainIntent.putExtra("status", "B0");
                     mainIntent.putExtra("TEMPValue", RString.get(0));
                     mainIntent.putExtra("HUMIValue", RString.get(1));
@@ -1160,23 +1142,33 @@ public class UartService extends Service {
                     mainIntent.putExtra("PreheatCountDown", RString.get(6));
                     sendBroadcast(mainIntent);
 
+                    //20180321
+//                    writeDataToFile( RString ,getApplicationContext());
+//                    writeDataToFile(RString.get(1).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(2).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(3).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(4).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(5).toString()+",",getApplicationContext());
+//                    writeDataToFile(RString.get(6).toString()+",",getApplicationContext());
+
+
                     // 20180226 add
                     if (isFirstB0) {
                         isFirstB0 = false;
 
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetLedStateCMD());
+                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.getLedStateCMD());
 
 
                         Handler hh = new Handler();
                         hh.postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                writeRXCharacteristic(CallingTranslate.INSTANCE.GetInfo());
+                                writeRXCharacteristic(BLECallingTranslate.INSTANCE.getInfo());
                             }
                         }, 1000);
                     }
 
-                // 2018/03/20 Remove alert (Yellow)
+                    // 2018/03/20 Remove alert (Yellow)
                     if (Integer.valueOf(RString.get(2)) < 661) {
                         //20180122  Andy
                         //countsound220 = 0;
@@ -1206,7 +1198,7 @@ public class UartService extends Service {
 
                     break;
                 case (byte) 0xB1:
-                    RString = CallingTranslate.INSTANCE.ParserGetInfo(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetInfo(txValue);
                     isPM25 = RString.get(0);
                     deviceVersion = RString.get(3);
 
@@ -1217,7 +1209,7 @@ public class UartService extends Service {
                     Log.d("PARSERB1", "Version: " + deviceVersion);
                     break;
                 case (byte) 0xB2:
-                    RString = CallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetSampleRate(txValue);
                     SharedPreferences share = getSharedPreferences("ASMSetting", MODE_PRIVATE);
                     String setting0 = share.getString("sample_rate", "2");
                     String setting1 = share.getString("sensor_on_time_range", "60");
@@ -1251,17 +1243,17 @@ public class UartService extends Service {
                                     .putString("pumping_time_range", "2").apply();
                             int[] param = {2, 2 * 30, 2, 1, 2, 0, 0};
                             Log.d(TAG, "setSampleRate");
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.SetSampleRate(param));
+                            writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetSampleRate(param));
                         }
                         setSampleRateTime(Integer.parseInt(RString.get(0)));
-                        writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySampleItems());
+                        writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySampleItems());
                         //SetPM25 180308
                         intent.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_ON);
                         sendBroadcast(intent);
                     }
                     break;
                 case (byte) 0xB4:
-                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetHistorySampleItems(txValue);
                     myDeviceData.clear();
                     //取得裝置目前B5的Index
                     setMaxItems(Integer.parseInt(RString.get(0)));//MAX Items
@@ -1319,7 +1311,7 @@ public class UartService extends Service {
                         }
                         if (countForItem >= 1) {
                             NowItem = countForItem;
-                            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+                            writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySample(NowItem));
                             downloading = true;
                             //downloadComplete = false;
                         } else {
@@ -1342,7 +1334,7 @@ public class UartService extends Service {
                     }
                     break;
                 case (byte) 0xB5:
-                    RString = CallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetHistorySampleItem(txValue);
                     //getDateTime(getMyDate().getTime()-getCorrectTime()*60*1000);
                     Log.d("0xB5Index", RString.get(0));
                     if (Integer.parseInt(RString.get(0)) == NowItem) {//將資料存入MyData
@@ -1428,13 +1420,13 @@ public class UartService extends Service {
                     }
                     break;
                 case (byte) 0xB6:
-                    RString = CallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
+                    RString = BLECallingTranslate.INSTANCE.ParserGetAutoSendData(txValue);
                     mainIntent.putExtra("status", "B6");
 //                        mainIntent.putExtra("TEMPValue", RString.get(0));
 //                        mainIntent.putExtra("HUMIValue", RString.get(1));
 //                        mainIntent.putExtra("TVOCValue", RString.get(2));
 //                        mainIntent.putExtra("eCO2Value", RString.get(3));
-//                        //mainIntent.putExtra("PM25", RString.get(4));
+//                        mainIntent.putExtra("PM25", RString.get(4));
 //                        mainIntent.putExtra("BatteryLife", RString.get(5));
 //                        mainIntent.putExtra("flag",RString.get(6));
                     sendBroadcast(mainIntent);
@@ -1572,7 +1564,7 @@ public class UartService extends Service {
 
     final Runnable runnable = new Runnable() {
         public void run() {
-            writeRXCharacteristic(CallingTranslate.INSTANCE.GetHistorySample(NowItem));
+            writeRXCharacteristic(BLECallingTranslate.INSTANCE.GetHistorySample(NowItem));
             // TODO Auto-generated method stub
             // 需要背景作的事
         }
@@ -2338,13 +2330,13 @@ public class UartService extends Service {
     private void initFuseLocationProviderClient() {
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
 
-        client.getLastLocation().addOnCompleteListener( task -> {
-            if(task.isSuccessful()) {
+        client.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 Location location = task.getResult();
 
-                if(location != null) {
-                    lati = (float)location.getLatitude();
-                    longi = (float)location.getLongitude();
+                if (location != null) {
+                    lati = (float) location.getLatitude();
+                    longi = (float) location.getLongitude();
                 } else {
                     lati = 24.959817f;
                     longi = 121.4215f;
@@ -2355,23 +2347,23 @@ public class UartService extends Service {
         });
 
         client.requestLocationUpdates(locationRequest, new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
 
-                Location location = locationResult.getLastLocation();
+                        Location location = locationResult.getLastLocation();
 
-                if(location != null) {
-                    lati = (float)location.getLatitude();
-                    longi = (float)location.getLongitude();
-                } else {
-                    lati = 24.959817f;
-                    longi = 121.4215f;
-                }
+                        if (location != null) {
+                            lati = (float) location.getLatitude();
+                            longi = (float) location.getLongitude();
+                        } else {
+                            lati = 24.959817f;
+                            longi = 121.4215f;
+                        }
 
-                Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
-            }
-        },
+                        Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
+                    }
+                },
                 Looper.myLooper());
     }
 
@@ -2384,7 +2376,4 @@ public class UartService extends Service {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
     }
 }
-
-
-
 

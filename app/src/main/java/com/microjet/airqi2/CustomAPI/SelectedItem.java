@@ -5,7 +5,7 @@ package com.microjet.airqi2.CustomAPI;
  */
 
 public class SelectedItem {
-    private static int slectedItem ;
+    private static int slectedItem;
     public final static int TODO = 0;
     public final static int DATEEVENT = 1;
 

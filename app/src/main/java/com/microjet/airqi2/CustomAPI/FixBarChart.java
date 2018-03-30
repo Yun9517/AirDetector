@@ -40,7 +40,7 @@ public class FixBarChart extends BarChart {
                 downPoint.y = evt.getY();
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.i("Gesture getScrollX ", getScrollX() + "" );
+                Log.i("Gesture getScrollX ", getScrollX() + "");
                 if (getScaleX() > 1 && Math.abs(evt.getX() - downPoint.x) > 5) {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }

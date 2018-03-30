@@ -48,7 +48,7 @@ import kotlin.collections.ArrayList
  *
  */
 
-class ChartFragment: Fragment() {
+class ChartFragment : Fragment() {
     private val DEFINE_FRAGMENT_TVOC = 1
     private val DEFINE_FRAGMENT_ECO2 = 2
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
@@ -59,13 +59,13 @@ class ChartFragment: Fragment() {
 
     private var mDataCount: Int = 60
 
-    private var mConnectStatus : Boolean = false
+    private var mConnectStatus: Boolean = false
 
     //試Realm拉資料
     private var arrTime = ArrayList<String>()
     private var arrData = ArrayList<String>()
     //20180122
-    
+
     private var animationCount = 0
     private var downloadingData = false
 
@@ -96,8 +96,11 @@ class ChartFragment: Fragment() {
     private var chartLabelUnit = ""
     private var labelTextViewArray = ArrayList<TextView>()
     private var labelArray = ArrayList<String>()
-    private var intArray : IntArray? = null
-    private var chartLabel : String = ""
+    private var intArray: IntArray? = null
+    private var chartLabel: String = ""
+
+
+    private var errorTime = 0
 
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
@@ -108,7 +111,7 @@ class ChartFragment: Fragment() {
             lineRectFArray.add(chart_line.getBarBounds(BarEntry(i.toFloat(), j)))
             j++
         }
-        for  (i in lineRectFArray.indices) {//放置標籤
+        for (i in lineRectFArray.indices) {//放置標籤
             labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f)
             labelTextViewArray[i].x = chart_line.x - labelTextViewArray[i].width.toFloat()
         }
@@ -120,9 +123,10 @@ class ChartFragment: Fragment() {
         //視Radio id畫圖
         chart_line.clear()
     }
-    fun configFragment(input:Int) {
+
+    fun configFragment(input: Int) {
         useFor = input
-        when (input){
+        when (input) {
             DEFINE_FRAGMENT_TVOC -> {
                 chartLabel = "TVOC"
                 chartMin = 0.0f
@@ -180,6 +184,7 @@ class ChartFragment: Fragment() {
             }
         }
     }
+
     // 20171128 Added by Raymond
     private fun configChartView() {
         val xAxis: XAxis = chart_line.xAxis
@@ -210,7 +215,8 @@ class ChartFragment: Fragment() {
         rightAxis.isEnabled = false
         chart_line.setDescription("")// clear default string
     }
-    override fun onSaveInstanceState(outState: Bundle?) {
+
+    override fun onSaveInstanceState(outState: Bundle) {
 
         outState?.putInt("useFor", useFor)
         outState?.putInt("chartIntervalStep", chartIntervalStep)
@@ -222,7 +228,7 @@ class ChartFragment: Fragment() {
         outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
         outState?.putString("chartLabelUnit", chartLabelUnit)
         outState?.putString("chartLabel", chartLabel)
-        super.onSaveInstanceState(outState)
+        super.onSaveInstanceState(outState!!)
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -250,10 +256,12 @@ class ChartFragment: Fragment() {
             textView.width = 200
             textView.textAlignment = View.TEXT_ALIGNMENT_VIEW_END
             labelTextViewArray.add(textView)
-            when (i){
-                chartMax.toInt() -> {textView.text = chartLabelUnit}
+            when (i) {
+                chartMax.toInt() -> {
+                    textView.text = chartLabelUnit
+                }
                 else -> {
-                    when (useFor){
+                    when (useFor) {
                         DEFINE_FRAGMENT_TEMPERATURE -> {
                             textView.text = (chartMin - 10 + (j) * chartIntervalStep).toInt().toString()
                         }
@@ -265,7 +273,7 @@ class ChartFragment: Fragment() {
             }
             RelativeLayoutForLabelTextView.addView(textView)
         }
-        
+
         chart_line.setOnChartValueSelectedListener(object : OnChartValueSelectedListener {
             override fun onNothingSelected() {
 
@@ -274,7 +282,7 @@ class ChartFragment: Fragment() {
             @SuppressLint("SetTextI18n", "SimpleDateFormat")
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 ChartSelectDetectionTime.text = labelArray[h!!.xIndex]
-                when (useFor){
+                when (useFor) {
                     DEFINE_FRAGMENT_TVOC -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
@@ -332,20 +340,20 @@ class ChartFragment: Fragment() {
         })
 
         //修改上排Spinner及Button
-        val cycleList = ArrayAdapter.createFromResource(context,R.array.SpinnerArray,android.R.layout.simple_spinner_dropdown_item)
+        val cycleList = ArrayAdapter.createFromResource(context, R.array.SpinnerArray, android.R.layout.simple_spinner_dropdown_item)
         sprChart.adapter = cycleList
         sprChart.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
-                when(spinnerPositon) {
+                when (spinnerPositon) {
                     0 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
-                    1 ->{
+                    1 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
-                    2->{
+                    2 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
                 }
@@ -356,7 +364,7 @@ class ChartFragment: Fragment() {
 //                if (selectedItem == "Add new category") {
 //                    // do your stuff
 //                }
-                Log.d("Humi",selectedItem)
+                Log.d("Humi", selectedItem)
             } // to close the onItemSelected
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -367,12 +375,12 @@ class ChartFragment: Fragment() {
         btnCallDatePicker.text = dateFormat.format(calObject.time)
         btnCallDatePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
-                Utils.toastMakeTextAndShow(context, "連點，母湯喔！！",
+                Utils.toastMakeTextAndShow(context!!, "連點，母湯喔！！",
                         Toast.LENGTH_SHORT)
             } else {
                 datepickerHandler.post {
-                    val dpd = DatePickerDialog(context, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                        calObject.set(year,month,dayOfMonth)
+                    val dpd = DatePickerDialog(context!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                        calObject.set(year, month, dayOfMonth)
                         Log.d("ChartBtncall" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
                         btnTextChanged(spinnerPositon)
                         drawChart(spinnerPositon)
@@ -383,64 +391,66 @@ class ChartFragment: Fragment() {
                 }
             }
         }
-        
-        when(useFor) {
+
+        when (useFor) {
             DEFINE_FRAGMENT_TVOC -> {
                 ChartLabel.text = getString(R.string.text_label_tvoc)
                 faceBar.setImageResource(R.drawable.face_bar_tvoc)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
             DEFINE_FRAGMENT_ECO2 -> {
                 ChartLabel.text = getString(R.string.text_label_co2)
                 faceBar.setImageResource(R.drawable.face_bar_eco2)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 ChartLabel.text = getString(R.string.text_label_temperature_full)
                 faceBar.setImageResource(R.drawable.face_bar_temp)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Blue),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_HUMIDITY -> {
                 ChartLabel.text = getString(R.string.text_label_humidity_full)
                 faceBar.setImageResource(R.drawable.face_bar_humidity)
-                intArray = intArrayOf(ContextCompat.getColor(context, R.color.Main_textResult_Blue),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad))
+                intArray = intArrayOf(ContextCompat.getColor(context!!, R.color.Main_textResult_Blue),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad))
             }
             DEFINE_FRAGMENT_PM25 -> {
                 ChartLabel.text = getString(R.string.text_label_pm25)
                 faceBar.setImageResource(R.drawable.face_bar_pm25)
-                intArray = intArrayOf(ContextCompat.getColor(mContext, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context, R.color.Main_textResult_Unhealthy))
+                intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
         }
 
         configChartView()
         //chart_line.setOnChartValueSelectedListener(this)
     }
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
             inflater!!.inflate(R.layout.frg_chart, container, false)
 
+
     private fun changeBackground(input: Int) {
-        when(useFor) {
+        when (useFor) {
             DEFINE_FRAGMENT_TVOC -> {
-                when(input) {
+                when (input) {
                     in 0..220 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
@@ -457,7 +467,7 @@ class ChartFragment: Fragment() {
             }
 
             DEFINE_FRAGMENT_ECO2 -> {
-                when(input) {
+                when (input) {
                     in 0..699 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
@@ -474,7 +484,7 @@ class ChartFragment: Fragment() {
             }
 
             DEFINE_FRAGMENT_TEMPERATURE -> {
-                when(input) {
+                when (input) {
                     in 28..34 -> {
                         ChartBackground.setBackgroundResource(R.drawable.bg_temp_green)
                     }
@@ -491,7 +501,7 @@ class ChartFragment: Fragment() {
             }
 
             DEFINE_FRAGMENT_HUMIDITY -> {
-                when(input) {
+                when (input) {
                     in 45..65 -> {
                         ChartBackground.setBackgroundResource(R.drawable.bg_rh_green)
                     }
@@ -507,7 +517,7 @@ class ChartFragment: Fragment() {
                 }
             }
             DEFINE_FRAGMENT_PM25 -> {
-                when(input) {
+                when (input) {
                     in 0..15 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
@@ -527,8 +537,8 @@ class ChartFragment: Fragment() {
 
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
-        super.onAttach(activity)
-        mContext = this.context.applicationContext
+        super.onAttach(activity!!)
+        mContext = this.context!!.applicationContext
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -539,7 +549,7 @@ class ChartFragment: Fragment() {
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
     private fun btnTextChanged(position: Int?) {
-        when(position) {
+        when (position) {
             0 -> {
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd")
                 btnCallDatePicker.text = dateFormat.format(calObject.time)
@@ -585,7 +595,7 @@ class ChartFragment: Fragment() {
                 //chart_line.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = chart_line.data!!.dataSetCount
-                chart_line.highlightValue(l, y-1)
+                chart_line.highlightValue(l, y - 1)
                 //Log.v("Highligh:",l.toString())
             }
             1 -> {
@@ -640,7 +650,8 @@ class ChartFragment: Fragment() {
         }
     }
 
-    @Synchronized private fun checkUIState() {
+    @Synchronized
+    private fun checkUIState() {
         if (mConnectStatus) {
             if (animationCount > 1440) {
                 downloadingData = false
@@ -658,8 +669,8 @@ class ChartFragment: Fragment() {
                 if (mConnectStatus && !downloadingData) {
                     val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
                     intent!!.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
-                    context.sendBroadcast(intent)
-                    Log.d("Fragment"+useFor.toString(),"getDeviceData")
+                    context!!.sendBroadcast(intent)
+                    Log.d("Fragment" + useFor.toString(), "getDeviceData")
                 }
             }
             else -> {
@@ -692,10 +703,10 @@ class ChartFragment: Fragment() {
         arrData.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -704,7 +715,7 @@ class ChartFragment: Fragment() {
         Log.d("TimePeriod" + useFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
         query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
-        Log.d("getRealmDay"+useFor.toString(), result1.size.toString())
+        Log.d("getRealmDay" + useFor.toString(), result1.size.toString())
         var avgValueFloat = 0.0f
         var avgValueInt = 0
         var sumValueFloat = 0.0f
@@ -713,14 +724,14 @@ class ChartFragment: Fragment() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrData.add("65538")
-            arrTime.add(((endDay + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
+            arrTime.add((endDay + y * 60 * 1000).toString())
         }
 
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { _, asmDataModel ->
                 val count = ((asmDataModel.created_time - endDay) / (60 * 1000)).toInt()
-                when(useFor) {
+                when (useFor) {
                     DEFINE_FRAGMENT_TVOC -> {
                         arrData[count] = asmDataModel.tvocValue.toString()
                         sumValueInt += arrData[count].toInt()
@@ -746,7 +757,7 @@ class ChartFragment: Fragment() {
             }
             Log.d("getRealmDay" + useFor.toString(), result1.last().toString())
             //20180122
-            when(useFor) {
+            when (useFor) {
                 DEFINE_FRAGMENT_TEMPERATURE -> {
                     avgValueFloat = (sumValueFloat / result1.size) - 10.0f
                 }
@@ -760,7 +771,7 @@ class ChartFragment: Fragment() {
         // Show Date
         val dateFormat = SimpleDateFormat("yyyy-MM-dd")
         show_Today.text = dateFormat.format(endDay)
-        show_Yesterday!!.text =  dateFormat.format(endDay - TimeUnit.DAYS.toMillis((1).toLong()))
+        show_Yesterday!!.text = dateFormat.format(endDay - TimeUnit.DAYS.toMillis((1).toLong()))
         //Log.d("getRealmWeek", sqlWeekBase.toString())
         //跑七筆BarChart
         // for (y in 0..1) {
@@ -779,8 +790,7 @@ class ChartFragment: Fragment() {
         if (result2.size != 0) {
             var sumYesterday = 0.0F
             for (i in result2) {
-                when(useFor)
-                {
+                when (useFor) {
                     DEFINE_FRAGMENT_TVOC -> {
                         sumYesterday += i.tvocValue.toInt()
                     }
@@ -803,27 +813,26 @@ class ChartFragment: Fragment() {
             avgTVOC3 = 0.0F
         }
         //}
-        when(useFor)
-        {
+        when (useFor) {
             DEFINE_FRAGMENT_TVOC -> {
                 result_Today.text = avgValueInt.toString() + " ppb"
-                result_Yesterday.text = avgTVOC3.toInt().toString()+ " ppb"
+                result_Yesterday.text = avgTVOC3.toInt().toString() + " ppb"
             }
             DEFINE_FRAGMENT_ECO2 -> {
                 result_Today.text = avgValueInt.toString() + " ppm"
-                result_Yesterday.text = avgTVOC3.toInt().toString()+ " ppm"
+                result_Yesterday.text = avgTVOC3.toInt().toString() + " ppm"
             }
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 result_Today.text = "%.1f".format(avgValueFloat) + " ℃"
-                result_Yesterday.text = "%.1f".format(avgTVOC3)+ " ℃"
+                result_Yesterday.text = "%.1f".format(avgTVOC3) + " ℃"
             }
-            DEFINE_FRAGMENT_HUMIDITY-> {
+            DEFINE_FRAGMENT_HUMIDITY -> {
                 result_Today.text = avgValueInt.toString() + " %"
-                result_Yesterday.text = avgTVOC3.toInt().toString()+ " %"
+                result_Yesterday.text = avgTVOC3.toInt().toString() + " %"
             }
             DEFINE_FRAGMENT_PM25 -> {
                 result_Today.text = avgValueInt.toString() + " μg/m³"
-                result_Yesterday.text = avgPM25.toInt().toString()+ " μg/m³"
+                result_Yesterday.text = avgPM25.toInt().toString() + " μg/m³"
             }
         }
     }
@@ -834,9 +843,9 @@ class ChartFragment: Fragment() {
         arrData.clear()
         //拿到現在是星期幾的Int
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         //今天的00:00
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         var thisWeekAVETvoc: Float
@@ -858,8 +867,7 @@ class ChartFragment: Fragment() {
             if (result1.size != 0) {
                 var sumThisAndLastWeek = 0f
                 for (i in result1) {
-                    when(useFor)
-                    {
+                    when (useFor) {
                         DEFINE_FRAGMENT_TVOC -> {
                             sumThisAndLastWeek += i.tvocValue.toInt()
                         }
@@ -880,11 +888,11 @@ class ChartFragment: Fragment() {
                 thisWeekAVETvoc = (sumThisAndLastWeek / result1.size)
                 arrData.add(thisWeekAVETvoc.toString())
                 //依序加入時間
-                arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime.add((sqlStartDate).toString())
             } else {
                 //result_Today.text = "$lastWeekAVETvoc ppb"
                 arrData.add("65538")
-                arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime.add((sqlStartDate).toString())
             }
         }
     }
@@ -895,8 +903,8 @@ class ChartFragment: Fragment() {
         //拿到現在是星期幾的Int
         val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
         val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
@@ -918,8 +926,7 @@ class ChartFragment: Fragment() {
             if (result1.size != 0) {
                 var sumMonth = 0f
                 for (i in result1) {
-                    when(useFor)
-                    {
+                    when (useFor) {
                         DEFINE_FRAGMENT_TVOC -> {
                             sumMonth += i.tvocValue.toInt()
                         }
@@ -927,7 +934,7 @@ class ChartFragment: Fragment() {
                             sumMonth += i.ecO2Value.toInt()
                         }
                         DEFINE_FRAGMENT_TEMPERATURE -> {
-                            sumMonth += i.tempValue.toFloat()+10.0f
+                            sumMonth += i.tempValue.toFloat() + 10.0f
                         }
                         DEFINE_FRAGMENT_HUMIDITY -> {
                             sumMonth += i.humiValue.toInt()
@@ -940,11 +947,11 @@ class ChartFragment: Fragment() {
                 val aveTvoc = (sumMonth / result1.size)
                 arrData.add(aveTvoc.toString())
                 //依序加入時間
-                arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime.add(sqlStartDate.toString())
                 Log.d("getRealmMonth" + useFor.toString(), result1.last().toString())
             } else {
                 arrData.add("65538")
-                arrTime.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
+                arrTime.add((sqlStartDate).toString())
             }
         }
 
@@ -1027,6 +1034,7 @@ class ChartFragment: Fragment() {
         intentFilter.addAction(BroadcastActions.ACTION_GET_HISTORY_COUNT)
         intentFilter.addAction(BroadcastActions.ACTION_LOADING_DATA)
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
         return intentFilter
     }
 
@@ -1049,29 +1057,13 @@ class ChartFragment: Fragment() {
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                    if (totalData.toInt() != 0) {
-                        setProgressBarMax(totalData.toInt())
-                        //startUpdateDataAnimation()
-                        animationCount = 0
-                        downloadingData = true
-                    } else {
-                        downloadingData = false
-                        downloadComplete = true
-                    }
-                    //Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
+                    setProgressBarMax(1440)
+                    //setProgressBarMax(totalData.toInt())
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgressBarNow(nowData.toInt())
-                    if(nowData.toInt() == chartDataLoading.max) {
-                        downloadingData = false
-                        //stopUpdateDataAnimation()
-                        downloadComplete = true
-                        //frg_radioGroup.check(R.id.radioButton_Hour)
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
-                    }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     if (!downloadingData && !downloadComplete) {
@@ -1084,7 +1076,7 @@ class ChartFragment: Fragment() {
                     var tempVal = "0"
                     var humiVal = "0"
                     var pm25Val = "0"
-                    when (useFor){
+                    when (useFor) {
                         DEFINE_FRAGMENT_TVOC -> {
                             tvocVal = bundle.getString(BroadcastActions.INTENT_KEY_TVOC_VALUE)
                         }
@@ -1104,7 +1096,7 @@ class ChartFragment: Fragment() {
 
                     //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
                     preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    if(preHeat == "255") {
+                    if (preHeat == "255") {
                         //新增AnimationCount
                         animationCount++
                         counter++
@@ -1128,12 +1120,12 @@ class ChartFragment: Fragment() {
 
                         if (counter % getDataCycle == 0) {
                             counter = 0
-                            when (useFor){
+                            when (useFor) {
                                 DEFINE_FRAGMENT_TEMPERATURE -> {
                                     valueFloatAVG /= getDataCycle
                                     valueFloatAVG = 0.0
                                 }
-                                else ->{
+                                else -> {
                                     valueIntAVG /= getDataCycle
                                     valueIntAVG = 0
                                 }
@@ -1147,6 +1139,9 @@ class ChartFragment: Fragment() {
                         btnTextChanged(spinnerPositon)
                         drawChart(spinnerPositon)
                     }
+                }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
                 }
             }
             checkUIState()
@@ -1166,8 +1161,7 @@ class ChartFragment: Fragment() {
     private fun getChartData(): List<BarEntry> {
         val chartData = ArrayList<BarEntry>()
         var j = 0
-        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep)
-        {
+        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {
             j += 1
             chartData.add(BarEntry((i).toFloat(), j))
         }
@@ -1195,5 +1189,105 @@ class ChartFragment: Fragment() {
             tpd.setMessage("請選擇時間")
             tpd.show()
         }
+    }
+
+
+
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[0]) {
+            0xE0.toByte() -> {
+            }
+            0xE1.toByte() -> {
+            }
+            0xEA.toByte() -> {
+            }
+            else -> {
+            }
+        }
+        when (txValue[2]) {
+            0xB1.toByte() -> Log.d("AirMapAC", "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d("AirMapAC", "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
+        }
+        when (txValue[3]) {
+            0xE0.toByte() -> {
+                Log.d("AirMapAC feeback", "ok"); }
+            0xE1.toByte() -> {
+                Log.d("AirMapAC feedback", "Couldn't write in device"); return
+            }
+            0xE2.toByte() -> {
+                Log.d("AirMapAC feedback", "Temperature sensor fail"); return
+            }
+            0xE3.toByte() -> {
+                Log.d("AirMapAC feedback", "B0TVOC sensor fail"); return
+            }
+            0xE4.toByte() -> {
+                Log.d("AirMapAC feedback", "Pump power fail"); return
+            }
+            0xE5.toByte() -> {
+                Log.d("AirMapAC feedback", "Invalid value"); return
+            }
+            0xE6.toByte() -> {
+                Log.d("AirMapAC feedback", "Unknown command"); return
+            }
+            0xE7.toByte() -> {
+                Log.d("AirMapAC feedback", "Waiting timeout"); return
+            }
+            0xE8.toByte() -> {
+                Log.d("AirMapAC feedback", "Checksum error"); return
+            }
+        }
+
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                }
+                0xB1.toByte() -> {
+                }
+                0xB2.toByte() -> {
+                }
+                0xB4.toByte() -> {
+                }
+                0xB5.toByte() -> {
+                }
+                0xB9.toByte() -> {
+                }
+                0xE0.toByte() -> {
+                }
+                0xBB.toByte() -> {
+                }
+                0xC0.toByte() -> {
+                }
+                0xC5.toByte() -> {
+                }
+                0xC6.toByte() -> {
+                    if (spinnerPositon == 0) {
+                        btnTextChanged(spinnerPositon)
+                        drawChart(spinnerPositon)
+                    }
+                    Log.e("ChartFrg", "Now Starting Load Data.........")
+                }
+            }
+        }
+    }
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        val max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        val checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
     }
 }

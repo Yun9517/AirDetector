@@ -52,7 +52,7 @@ class SettingActivity : AppCompatActivity() {
         mCycleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spCycle.adapter = mCycleAdapter
 
-        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY,0)
+        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
 
         //測試資料庫讀是否成功
@@ -93,7 +93,7 @@ class SettingActivity : AppCompatActivity() {
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
         //20180227
-        swCloudVal=mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
 
         spCycle.setSelection(spCycleVal)
 
@@ -109,7 +109,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.isChecked = swLedPowerVal
 
-        swClouudFun.isChecked=swCloudVal
+        swClouudFun.isChecked = swCloudVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -238,7 +238,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
+            /*val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
             if (isChecked) {
                 text_led_stat!!.text = getString(R.string.text_setting_on)
@@ -246,7 +246,15 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 text_led_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_OFF)
-            }
+            }*/
+
+            val intent: Intent? = Intent(
+                    if (isChecked) {
+                        BroadcastActions.INTENT_KEY_LED_ON
+                    } else {
+                        BroadcastActions.INTENT_KEY_LED_OFF
+                    }
+            )
 
             sendBroadcast(intent)
 
@@ -301,8 +309,8 @@ class SettingActivity : AppCompatActivity() {
     private fun updateData() {
         //拉取資料加上傳搞定
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
-        Log.d("SETTCLOUD",result.toString())
+        val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findFirst()
+        Log.d("SETTCLOUD", result.toString())
 
         //對資料庫做操作的方法
         /*
@@ -341,13 +349,13 @@ class SettingActivity : AppCompatActivity() {
         */
 
 
-        val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded","0").findFirst()
-        Log.d("SETTCLOUD",result1.toString())
+        val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findFirst()
+        Log.d("SETTCLOUD", result1.toString())
 
         //val result2 = realm.where(AsmDataModel::class.java).equalTo("Created_time",1520332440000).findAll()
-        val result2 = realm.where(AsmDataModel::class.java).between("Created_time",1520424060000, 1520424060000).findAll()
+        val result2 = realm.where(AsmDataModel::class.java).between("Created_time", 1520424060000, 1520424060000).findAll()
 
-        Log.d("SETTCLOUD",result2.toString())
+        Log.d("SETTCLOUD", result2.toString())
 
     }
 

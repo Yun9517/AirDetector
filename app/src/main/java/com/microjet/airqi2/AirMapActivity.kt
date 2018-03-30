@@ -55,7 +55,7 @@ import kotlin.collections.ArrayList
  *
  */
 
-class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
+class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
@@ -72,6 +72,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private lateinit var mDate: String
 
     private lateinit var mAdapter: AirMapAdapter
+
+    private var errorTime = 0
 
     private var runGetDataThread: Thread? = null
     private val runGetDataRunnable = Runnable {
@@ -120,7 +122,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
 
         imgExpand.setOnClickListener {
-            if(valuePanel.visibility == View.VISIBLE) {
+            if (valuePanel.visibility == View.VISIBLE) {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
 
                 collapseValuePanelAnim(250)
@@ -135,12 +137,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
-        viewSelecter.setOnCheckedChangeListener { group, checkedId ->
+        viewSelecter.setOnCheckedChangeListener { _, _ ->
             startLoadDataThread()
         }
 
         LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
-                makeMainFragmentUpdateIntentFilter())
+                makeBroadcastReceiverFilter())
     }
 
     override fun onDestroy() {
@@ -159,12 +161,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun stopLoadDataThread() {
-        if(runGetDataThread != null) {
+        if (runGetDataThread != null) {
             runGetDataThread!!.interrupt()
             runGetDataThread = null
         }
 
-        if(pgLoading.visibility == View.VISIBLE) {
+        if (pgLoading.visibility == View.VISIBLE) {
             pgLoading.visibility = View.GONE
         }
     }
@@ -210,22 +212,22 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         //val calendar = Calendar.getInstance()
 
         //現在時間實體毫秒
-        val touchTime = mCal.timeInMillis + mCal.timeZone.rawOffset
+        val touchTime = mCal.timeInMillis// + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24)
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result = query.findAll()
         Log.d("DATE", "Today total count: ${result.size}")
 
-        if(result.size > 0) {
+        if (result.size > 0) {
             //val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
 
                 // 過濾掉初始值
-                if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
+                if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
                     dataArray.add(result[i]!!)
 
                     //val latitude: Double = result[i]!!.latitude.toDouble()
@@ -239,7 +241,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                     }*/
 
                     // 判斷 RadioButton 選中的項目
-                    val data = if(rbTVOC.isChecked) {
+                    val data = if (rbTVOC.isChecked) {
                         result[i]!!.tvocValue.toInt()
                     } else {
                         result[i]!!.pM25Value.toInt()
@@ -249,7 +251,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                             .width(20F)
                             .color(setPolylineColor(data, rbTVOC.isChecked))
 
-                    if(i < result.size - 1) {
+                    if (i < result.size - 1) {
                         rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
                         rectOptions.add(LatLng(result[i + 1]!!.latitude.toDouble(), result[i + 1]!!.longitude.toDouble()))
                         mMap.addPolyline(rectOptions)
@@ -259,8 +261,8 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
                     @SuppressLint("SimpleDateFormat")
                     val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
-                    val calendar = Calendar.getInstance()
-                    val nowTime = result[i]!!.created_time - calendar.timeZone.rawOffset
+                    //val calendar = Calendar.getInstance()
+                    val nowTime = result[i]!!.created_time// - calendar.timeZone.rawOffset
 
                     Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
                 }
@@ -276,12 +278,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mAdapter = AirMapAdapter(dataArray)
         recyclerView.adapter = mAdapter
 
-        if(dataArray.size > 0) {
+        if (dataArray.size > 0) {
             val nowPosition = dataArray.size - 1
             SelectedItem.setSelectedItem(nowPosition)    //自定義的方法，告訴adpter被點擊item
             recyclerView.scrollToPosition(nowPosition)
 
-            val data = if(rbTVOC.isChecked) {
+            val data = if (rbTVOC.isChecked) {
                 dataArray[nowPosition].tvocValue.toInt()
             } else {
                 dataArray[nowPosition].pM25Value.toInt()
@@ -309,7 +311,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            val data = if(rbTVOC.isChecked) {
+            val data = if (rbTVOC.isChecked) {
                 dataArray[position].tvocValue.toInt()
             } else {
                 dataArray[position].pM25Value.toInt()
@@ -327,7 +329,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // 更新那個笑到你心裡發寒的臉圖
     private fun updateFaceIcon(value: Int) {
-        when(value) {
+        when (value) {
             in 0..219 -> {
                 imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
             }
@@ -351,7 +353,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // 取得軌跡顏色
     private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
-        if(isTVOC) {
+        if (isTVOC) {
             return when (value) {
                 in 0..219 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
                 in 220..659 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
@@ -378,7 +380,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                                  tempVal: String, humiVal: String) {
         textTVOCvalue.text = "$tvocVal ppb"
 
-        textPM25value.text = if(pm25Val == "65535") {
+        textPM25value.text = if (pm25Val == "65535") {
             "沒有偵測"
         } else {
             "$pm25Val μg/m³"
@@ -393,6 +395,9 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     private fun putMarker(latitude: Double, longitude: Double) {
 
         val latLng = LatLng(latitude, longitude)
+
+        // 移動畫面到目前的標記
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
 
         if (currentMarker != null) {
             currentMarker!!.remove()
@@ -447,7 +452,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val client = LocationServices.getFusedLocationProviderClient(this)
 
         client.lastLocation.addOnCompleteListener(this, {
-            if(it != null && it.isSuccessful) {
+            if (it.isSuccessful) {
                 val location = it.result
                 if (location == null) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
@@ -473,7 +478,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<out String>,
                                             grantResults: IntArray) {
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_LOCATION -> {
                 mMap.isMyLocationEnabled =
                         grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -488,13 +493,13 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mMap = p0!!
 
         // 彩蛋，好棒棒座標（拜託不要刪XD）
-        val howBonBon = LatLng(25.029639, 121.544416)
-        mMap.addMarker(MarkerOptions()
-                .position(howBonBon)
-                .title("好棒棒！"))
+        //val howBonBon = LatLng(25.029639, 121.544416)
+        //mMap.addMarker(MarkerOptions()
+        //        .position(howBonBon)
+        //        .title("好棒棒！"))
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))
 
-        if(checkSelfPermission(this,
+        if (checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(this, perms, REQUEST_LOCATION)
         } else {
@@ -510,9 +515,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
     }
 
-    private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
+    private fun makeBroadcastReceiverFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_SAVE_INSTANT_DATA)
+        intentFilter.addAction(BroadcastActions.ACTION_DATA_AVAILABLE)
         return intentFilter
     }
 
@@ -524,8 +530,110 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
                     startLoadDataThread()
                 }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
+                }
             }
         }
     }
 
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[0]) {
+            0xE0.toByte() -> {
+            }
+            0xE1.toByte() -> {
+            }
+            0xEA.toByte() -> {
+            }
+            else -> {
+            }
+        }
+        when (txValue[2]) {
+            0xB1.toByte() -> Log.d("AirMapAC", "cmd:0xB1 feedback")
+            0xB2.toByte() -> Log.d("AirMapAC", "cmd:0xB2 feedback")
+            0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
+            0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
+            0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
+            0xBA.toByte() -> Log.d("AirMapAC", "cmd:0xBA feedback")
+        }
+        when (txValue[3]) {
+            0xE0.toByte() -> {
+                Log.d("AirMapAC feeback", "ok"); }
+            0xE1.toByte() -> {
+                Log.d("AirMapAC feedback", "Couldn't write in device"); return
+            }
+            0xE2.toByte() -> {
+                Log.d("AirMapAC feedback", "Temperature sensor fail"); return
+            }
+            0xE3.toByte() -> {
+                Log.d("AirMapAC feedback", "B0TVOC sensor fail"); return
+            }
+            0xE4.toByte() -> {
+                Log.d("AirMapAC feedback", "Pump power fail"); return
+            }
+            0xE5.toByte() -> {
+                Log.d("AirMapAC feedback", "Invalid value"); return
+            }
+            0xE6.toByte() -> {
+                Log.d("AirMapAC feedback", "Unknown command"); return
+            }
+            0xE7.toByte() -> {
+                Log.d("AirMapAC feedback", "Waiting timeout"); return
+            }
+            0xE8.toByte() -> {
+                Log.d("AirMapAC feedback", "Checksum error"); return
+            }
+        }
+
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
+        if (!checkCheckSum(txValue)) {
+            errorTime += 1
+        } else {
+            when (txValue[2]) {
+                0xB0.toByte() -> {
+                }
+                0xB1.toByte() -> {
+                }
+                0xB2.toByte() -> {
+                }
+                0xB4.toByte() -> {
+                }
+                0xB5.toByte() -> {
+                }
+                0xB9.toByte() -> {
+                }
+                0xBA.toByte() -> {
+                    //MyApplication.setSharePreferenceManualDisconn(true)
+                    //Log.e("AirMapAC", "Manual Disconnect from Device.........")
+                }
+                0xE0.toByte() -> {
+                }
+                0xBB.toByte() -> {
+                }
+                0xC0.toByte() -> {
+                }
+                0xC5.toByte() -> {
+                }
+                0xC6.toByte() -> {
+                    startLoadDataThread()
+                    Log.e("AirMapAC", "Now Starting Load Data.........")
+                }
+            }
+        }
+    }
+
+    private fun checkCheckSum(input: ByteArray): Boolean {
+        var checkSum = 0x00
+        val max = 0xFF.toByte()
+        for (i in 0 until input.size) {
+            checkSum += input[i]
+        }
+        val checkSumByte = checkSum.toByte()
+        return checkSumByte == max
+
+    }
 }

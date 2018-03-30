@@ -14,11 +14,12 @@ object BroadcastActions {
     const val DEVICE_DOES_NOT_SUPPORT_UART = "com.microjet.airqi.DEVICE_DOES_NOT_SUPPORT_UART"
     const val ACTION_GATT_SERVICES_DISCOVERED = "com.microjet.airqi.ACTION_GATT_SERVICES_DISCOVERED"
     const val ACTION_DATA_AVAILABLE = "com.microjet.airqi.ACTION_DATA_AVAILABLE"
+    const val ACTION_EXTRA_DATA = "com.microjet.airqi.EXTRA_DATA"
 
     // Activity 對 Service 動作定義
     const val ACTION_CONNECT_DEVICE = "com.microjet.airqi.ACTION_CONNECT_DEVICE"
     const val ACTION_DISCONNECT_DEVICE = "com.microjet.airqi.ACTION_DISCONNECT_DEVICE"
-    const val EXTRA_DATA = "com.microjet.airqi.EXTRA_DATA"
+
 
     const val ACTION_UPDATE_BLE_DEVICE = "com.microjet.airqi.ACTION_UPDATE_BLE_DEVICE"
 

@@ -11,7 +11,7 @@ import android.content.Intent
 class CharacteristicReceiver : BroadcastReceiver() {
     //private var nm: NotificationManager? = null
     val ACTION = "Characteristic"
-        private val NOTIFY_ID = 1
+    private val NOTIFY_ID = 1
 
     override fun onReceive(context: Context, intent: Intent) {
     }

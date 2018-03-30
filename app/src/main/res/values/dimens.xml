@@ -1,3 +1,16 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
+
+    <!--DFU-->
+    <dimen name="feature_device_name_margin_top">20dp</dimen>
+    <dimen name="dfu_feature_title_long_margin">-186dp</dimen>
+    <dimen name="activity_vertical_margin_bottom">32dp</dimen>
+    <dimen name="feature_horizontal_margin">50dp</dimen>
+    <dimen name="feature_vertical_margin_top">50dp</dimen>
+    <dimen name="feature_section_padding">8dp</dimen>
+
+    <dimen name="alert_dialog_padding">24dp</dimen>
+    <dimen name="alert_dialog_padding_top">18dp</dimen>
+    <dimen name="alert_dialog_padding_bottom">0dp</dimen>
+
 </resources>

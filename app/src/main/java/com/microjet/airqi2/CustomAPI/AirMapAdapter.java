@@ -19,7 +19,6 @@ import java.util.Calendar;
 
 /**
  * Created by ray650128 on 2018/3/14.
- *
  */
 
 public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder> implements View.OnClickListener {
@@ -32,14 +31,14 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
 
     // 定義 OnItenClickListener 的介面
     public interface OnItemClickListener {
-        void onItemClick(View view , int position);
+        void onItemClick(View view, int position);
     }
 
     @Override
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意這裡使用getTag方法獲取position
-            mOnItemClickListener.onItemClick(v, (int)v.getTag());
+            mOnItemClickListener.onItemClick(v, (int) v.getTag());
         }
     }
 
@@ -57,7 +56,7 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
     // Create new views (invoked by the layout manager)
     @Override
     public AirMapAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+                                                       int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.mapdata_list, parent, false);
@@ -76,8 +75,8 @@ public class AirMapAdapter extends RecyclerView.Adapter<AirMapAdapter.ViewHolder
         // - replace the contents of the view with that element
         @SuppressLint("SimpleDateFormat")
         SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm aa");
-        Calendar calendar = Calendar.getInstance();
-        long nowTime = ((mDataset.get(position).getCreated_time()) - calendar.getTimeZone().getRawOffset());
+        //Calendar calendar = Calendar.getInstance();
+        long nowTime = ((mDataset.get(position).getCreated_time()));// - calendar.getTimeZone().getRawOffset());
 
         holder.textDate.setText(String.valueOf(dateFormat.format(nowTime)));
 
