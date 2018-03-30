@@ -3,6 +3,7 @@ package com.microjet.airqi2.Account
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.R
+import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -27,63 +29,53 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private var mContext: Context? = null
 
-    var mUserEmailEditText: EditText? = null
-    var mPasswordEditText: EditText? = null
-    var mForgotPasswordTextView: TextView? = null
-    var mCreateAccountTextView: TextView? = null
-
     var userEmail = ""
     var userName = ""
     private var loginResult: String? = null
     private var mMyThing: logInMything? = null
-    var btnSubmit: Button? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         mContext = this@AccountManagementActivity.applicationContext
         initActionBar()
 
-        // get reference to all views
-        mUserEmailEditText = findViewById(R.id.email)
-        mPasswordEditText = findViewById(R.id.password)
-        btnSubmit = findViewById(R.id.login)
-        mForgotPasswordTextView = findViewById(R.id.forgotPassword)
-        mCreateAccountTextView = findViewById(R.id.newAccount)
-    //    var register_mail_Result: String?
-
-
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
             userName = bundle.getString("name", "")
-            mUserEmailEditText?.setText(userEmail)
+            email.setText(userEmail)
             //mPasswordEditText?.setText(userPassword)
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
 
 
-        mCreateAccountTextView?.setOnClickListener {
+        newAccount.setOnClickListener {
             //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             val intent = Intent(this, AccountRegisterActivity::class.java)
             startActivity(intent)
         }
 
-        mForgotPasswordTextView?.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent(this, AccountForgetPasswordActivity::class.java)
-            startActivity(intent)
+        forgotPassword.setOnClickListener {
+            if (isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent(this, AccountForgetPasswordActivity::class.java)
+                startActivity(intent)
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
         }
 
-        mMyThing = logInMything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
+        mMyThing = logInMything(login!!, false, "https://mjairql.com/api/v1/login")
 
-        btnSubmit?.setOnClickListener {
+        login?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
-                if (isEmail(mUserEmailEditText?.text.toString()) && mUserEmailEditText?.text.toString() != "") {
+                if (isEmail(email?.text.toString()) && email?.text.toString() != "") {
                     if (com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick) {
                         //showDialog("按慢一點太快了")
                         showDialog(getString(R.string.tooFast))
                     } else {
-                        btnSubmit?.isEnabled = false
+                        login?.isEnabled = false
                         goLoginAsyncTasks().execute(mMyThing)
                     }
                 } else {
@@ -134,6 +126,14 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // 2018/03/30
+
+    private fun isConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
      private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
         override fun doInBackground(vararg params: logInMything): String? {
             try {
@@ -142,8 +142,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
-                userEmail = mUserEmailEditText!!.text.toString()
-                userName = mPasswordEditText!!.text.toString()
+                userEmail = email!!.text.toString()
+                userName = password!!.text.toString()
                 val ccc = "email=" + userEmail + "&password=" + userName
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
@@ -181,7 +181,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 } else {
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
-                        btnSubmit?.isEnabled=true
+                        login?.isEnabled=true
                     })
 
                     params[0].myBlean = false
