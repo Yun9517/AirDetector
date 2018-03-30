@@ -1193,7 +1193,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForItem = Math.min((countForItemTime!! / (60L * 1000L)).toInt(), maxItem)
             Log.d("0xB4countItem", java.lang.Long.toString(countForItem.toLong()))
             if (Build.BRAND != "OPPO") {
-                Toast.makeText(applicationContext, getText(R.string.Total_Data).toString() + java.lang.Long.toString(countForItem.toLong()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show()
+                //Toast.makeText(applicationContext, getText(R.string.Total_Data).toString() + java.lang.Long.toString(countForItem.toLong()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show()
             }
             if (countForItem >= 1) {
                 //NowItem = countForItem
@@ -1206,7 +1206,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 sendBroadcast(mainIntent)
             } else {
                 if (Build.BRAND != "OPPO") {
-                    Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
             }
         }
@@ -1312,9 +1312,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun saveToRealmC5() {
+        var end = 0
         for (i in 0 until arr1.size) {
             val head = arr1[i]["UTCBlockHead"]!! - 1
-            val end = arr1[i]["UTCBlockEnd"]!! - 1
+            end = arr1[i]["UTCBlockEnd"]!! - 1
             var count = 0
             for (y in head..end) {
                 val realm = Realm.getDefaultInstance()
@@ -1339,6 +1340,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 count++
             }
         }
+        if (Build.BRAND != "OPPO") {
+            Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+        }
+        //為了發版先將UploadTask要用的東西先放這
+        val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val token = share_token.getString("token", "")
+        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+        val macAddressForDB = share.getString("mac", "noValue")
+        UploadTask().execute(macAddressForDB,token)
     }
 
     private fun saveToRealmC6(hashmap: HashMap<String, String>) {

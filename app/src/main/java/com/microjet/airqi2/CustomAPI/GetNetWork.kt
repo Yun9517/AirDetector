@@ -52,7 +52,7 @@ object GetNetWork {
 //
 //        return true
 
-
+        /*
         try {
 
             var mIpAddProcess: Process?
@@ -71,6 +71,7 @@ object GetNetWork {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        */
 
         return true
     }
