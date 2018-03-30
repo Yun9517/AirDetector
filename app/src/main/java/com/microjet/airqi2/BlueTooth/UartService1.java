@@ -80,22 +80,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import com.crashlytics.android.Crashlytics;
-import com.microjet.airqi2.AsmDataModel;
-import com.microjet.airqi2.Definition.BroadcastActions;
-import com.microjet.airqi2.Definition.BroadcastIntents;
-import com.microjet.airqi2.Definition.SavePreferences;
-import com.microjet.airqi2.DownloadTask;
-import com.microjet.airqi2.MainActivity;
-import com.microjet.airqi2.MyApplication;
-import com.microjet.airqi2.TvocNoseData;
-import com.microjet.airqi2.myData;
-import com.microjet.airqi2.R;
-import com.microjet.airqi2.NotificationHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Service for managing connection and data communication with a GATT server hosted on a

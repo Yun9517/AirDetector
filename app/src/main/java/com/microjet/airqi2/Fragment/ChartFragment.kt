@@ -1057,29 +1057,12 @@ class ChartFragment : Fragment() {
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                    if (totalData.toInt() != 0) {
-                        setProgressBarMax(totalData.toInt())
-                        //startUpdateDataAnimation()
-                        animationCount = 0
-                        downloadingData = true
-                    } else {
-                        downloadingData = false
-                        downloadComplete = true
-                    }
-                    //Toast.makeText(context,"共有資料"+ totalData + "筆",Toast.LENGTH_LONG).show()
+                    setProgressBarMax(totalData.toInt())
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgressBarNow(nowData.toInt())
-                    if (nowData.toInt() == chartDataLoading.max) {
-                        downloadingData = false
-                        //stopUpdateDataAnimation()
-                        downloadComplete = true
-                        //frg_radioGroup.check(R.id.radioButton_Hour)
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
-                    }
                 }
                 BroadcastActions.ACTION_GET_NEW_DATA -> {
                     if (!downloadingData && !downloadComplete) {
