@@ -21,7 +21,8 @@ public class AsmDataModel extends RealmObject {
     private Float Latitude = 24.959817f;
     private String MACAddress = "11:22:33:44:55:66";
 
-    public AsmDataModel(){}
+    public AsmDataModel() {
+    }
 
     public Integer getDataId() {
         return id;
@@ -79,9 +80,13 @@ public class AsmDataModel extends RealmObject {
         this.Created_time = Created_time;
     }
 
-    public String getUpLoaded() { return UpLoaded; }
+    public String getUpLoaded() {
+        return UpLoaded;
+    }
 
-    public void setUpLoaded(String UpLoaded) { this.UpLoaded = UpLoaded; }
+    public void setUpLoaded(String UpLoaded) {
+        this.UpLoaded = UpLoaded;
+    }
 
     public Float getLongitude() {
         return Longitude;

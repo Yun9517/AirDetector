@@ -13,7 +13,7 @@ class KnowledgeActivity : AppCompatActivity() {
 
     private var mContext: Context? = null
 
-    override fun onCreate(savedInstanceState:Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_knowledge)
 
@@ -36,9 +36,9 @@ class KnowledgeActivity : AppCompatActivity() {
 
         webView!!.setBackgroundColor(Color.TRANSPARENT)  //  WebView 背景透明效果，不知道为什么在xml配置中无法设置？
 
-        if(mLang == "zh-TW" || mLang == "zh-HK") {
+        if (mLang == "zh-TW" || mLang == "zh-HK") {
             webView!!.loadUrl("file:///android_asset/knowledge/index.html")
-        } else if (mLang == "zh-CN"){
+        } else if (mLang == "zh-CN") {
             webView!!.loadUrl("file:///android_asset/knowledge/index-zh_CN.html")
         } else {
             webView!!.loadUrl("file:///android_asset/knowledge/index-en_US.html")

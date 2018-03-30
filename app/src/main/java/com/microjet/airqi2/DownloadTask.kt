@@ -63,7 +63,7 @@ class DownloadTask : AsyncTask<String, Void, String>() {
         val request = Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("authorization",phpToken)
+                .addHeader("authorization", phpToken)
                 .build()
         Log.d("Download", "doInBackground")
         try {
@@ -107,10 +107,10 @@ class DownloadTask : AsyncTask<String, Void, String>() {
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
-                    Log.d("Download",res.toString())
+                    Log.d("Download", res.toString())
                     return "DownloadCloudDone"
                 } else {
-                    Log.d("Download",res.toString())
+                    Log.d("Download", res.toString())
                     return "Error"
                 }
             }

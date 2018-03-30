@@ -389,7 +389,7 @@ class UartService : Service() {
     private val mServiceReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
 
-            when(p1!!.action) {
+            when (p1!!.action) {
                 BroadcastActions.INTENT_KEY_LED_OFF -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(false))
                 BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
             }
