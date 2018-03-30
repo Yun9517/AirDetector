@@ -55,7 +55,7 @@ import kotlin.collections.ArrayList
  *
  */
 
-class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
+class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
 
@@ -122,7 +122,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         }
 
         imgExpand.setOnClickListener {
-            if(valuePanel.visibility == View.VISIBLE) {
+            if (valuePanel.visibility == View.VISIBLE) {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
 
                 collapseValuePanelAnim(250)
@@ -161,12 +161,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     }
 
     private fun stopLoadDataThread() {
-        if(runGetDataThread != null) {
+        if (runGetDataThread != null) {
             runGetDataThread!!.interrupt()
             runGetDataThread = null
         }
 
-        if(pgLoading.visibility == View.VISIBLE) {
+        if (pgLoading.visibility == View.VISIBLE) {
             pgLoading.visibility = View.GONE
         }
     }
@@ -220,14 +220,14 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val result = query.findAll()
         Log.d("DATE", "Today total count: ${result.size}")
 
-        if(result.size > 0) {
+        if (result.size > 0) {
             //val rectOptions = PolylineOptions().color(Color.RED).width(10F)
             dataArray.clear()
 
             for (i in 0 until result.size) {
 
                 // 過濾掉初始值
-                if(result[i]!!.latitude != 24.959817f &&  result[i]!!.longitude != 121.4215f) {
+                if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
                     dataArray.add(result[i]!!)
 
                     //val latitude: Double = result[i]!!.latitude.toDouble()
@@ -241,7 +241,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                     }*/
 
                     // 判斷 RadioButton 選中的項目
-                    val data = if(rbTVOC.isChecked) {
+                    val data = if (rbTVOC.isChecked) {
                         result[i]!!.tvocValue.toInt()
                     } else {
                         result[i]!!.pM25Value.toInt()
@@ -251,7 +251,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                             .width(20F)
                             .color(setPolylineColor(data, rbTVOC.isChecked))
 
-                    if(i < result.size - 1) {
+                    if (i < result.size - 1) {
                         rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
                         rectOptions.add(LatLng(result[i + 1]!!.latitude.toDouble(), result[i + 1]!!.longitude.toDouble()))
                         mMap.addPolyline(rectOptions)
@@ -278,12 +278,12 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         mAdapter = AirMapAdapter(dataArray)
         recyclerView.adapter = mAdapter
 
-        if(dataArray.size > 0) {
+        if (dataArray.size > 0) {
             val nowPosition = dataArray.size - 1
             SelectedItem.setSelectedItem(nowPosition)    //自定義的方法，告訴adpter被點擊item
             recyclerView.scrollToPosition(nowPosition)
 
-            val data = if(rbTVOC.isChecked) {
+            val data = if (rbTVOC.isChecked) {
                 dataArray[nowPosition].tvocValue.toInt()
             } else {
                 dataArray[nowPosition].pM25Value.toInt()
@@ -311,7 +311,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             SelectedItem.setSelectedItem(position)    //自定義的方法，告訴adpter被點擊item
             mAdapter.notifyDataSetChanged()
 
-            val data = if(rbTVOC.isChecked) {
+            val data = if (rbTVOC.isChecked) {
                 dataArray[position].tvocValue.toInt()
             } else {
                 dataArray[position].pM25Value.toInt()
@@ -329,7 +329,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // 更新那個笑到你心裡發寒的臉圖
     private fun updateFaceIcon(value: Int) {
-        when(value) {
+        when (value) {
             in 0..219 -> {
                 imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
             }
@@ -353,7 +353,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
 
     // 取得軌跡顏色
     private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
-        if(isTVOC) {
+        if (isTVOC) {
             return when (value) {
                 in 0..219 -> ContextCompat.getColor(this, R.color.air_map_line_value1)
                 in 220..659 -> ContextCompat.getColor(this, R.color.air_map_line_value2)
@@ -380,7 +380,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                                  tempVal: String, humiVal: String) {
         textTVOCvalue.text = "$tvocVal ppb"
 
-        textPM25value.text = if(pm25Val == "65535") {
+        textPM25value.text = if (pm25Val == "65535") {
             "沒有偵測"
         } else {
             "$pm25Val μg/m³"
@@ -452,7 +452,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         val client = LocationServices.getFusedLocationProviderClient(this)
 
         client.lastLocation.addOnCompleteListener(this, {
-            if(it.isSuccessful) {
+            if (it.isSuccessful) {
                 val location = it.result
                 if (location == null) {
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(LatLng(24.959817, 121.4215), 15f))
@@ -478,7 +478,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
     override fun onRequestPermissionsResult(requestCode: Int,
                                             permissions: Array<out String>,
                                             grantResults: IntArray) {
-        when(requestCode) {
+        when (requestCode) {
             REQUEST_LOCATION -> {
                 mMap.isMyLocationEnabled =
                         grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED
@@ -499,7 +499,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
         //        .title("好棒棒！"))
         //mMap.moveCamera(CameraUpdateFactory.newLatLng(howBonBon))
 
-        if(checkSelfPermission(this,
+        if (checkSelfPermission(this,
                         Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(this, perms, REQUEST_LOCATION)
         } else {
@@ -536,8 +536,6 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             }
         }
     }
-
-
 
 
     private fun dataAvaliable(intent: Intent) {

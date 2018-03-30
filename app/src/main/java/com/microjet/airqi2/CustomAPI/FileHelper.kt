@@ -177,14 +177,14 @@ object FileHelper {
      */
     private fun copyRawResource(context: Context, rawResId: Int, dest: File) {
         try {
-            val readIs= context.resources.openRawResource(rawResId)
+            val readIs = context.resources.openRawResource(rawResId)
             val fos = FileOutputStream(dest)
 
             val buf = ByteArray(1024)
             var read: Int
             try {
-                read=readIs.read(buf)
-                while (read> 0) {
+                read = readIs.read(buf)
+                while (read > 0) {
                     fos.write(buf, 0, read)
                     read = readIs.read(buf)
                 }
@@ -193,7 +193,7 @@ object FileHelper {
                 fos.close()
             }
         } catch (e: IOException) {
-         //   DebugLogger.e(TAG, "Error while copying HEX file " + e.toString())
+            //   DebugLogger.e(TAG, "Error while copying HEX file " + e.toString())
         }
 
     }

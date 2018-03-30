@@ -52,7 +52,7 @@ class ColorArcProgressBar : View {
 
     private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)
 
-    private var range= floatArrayOf(18f,27f)
+    private var range = floatArrayOf(18f, 27f)
     private var mTouchInvalidateRadius: Float = 0.toFloat()//触摸失效半径,控件外层都可触摸,当触摸区域小于这个值的时候触摸失效
 
     private val startAngle = 135f//开始角度(0°与控件X轴平行)
@@ -89,9 +89,9 @@ class ColorArcProgressBar : View {
     private val isAutoTextSize = true
 
     // sweepAngle / maxValues 的值
-  //  private var k: Float = 0.toFloat() //(0-220
-  //  private var m: Float=0.toFloat()   // 220-660
-  //  private var q: Float=0.toFloat()    //660-MaxValue
+    //  private var k: Float = 0.toFloat() //(0-220
+    //  private var m: Float=0.toFloat()   // 220-660
+    //  private var q: Float=0.toFloat()    //660-MaxValue
     private var listener: OnSeekArcChangeListener? = null
 
     private var seekEnable: Boolean = false
@@ -127,6 +127,7 @@ class ColorArcProgressBar : View {
         sweepGradient = SweepGradient(centerX, centerY, colors, angles)
 
     }
+
     /**
      * 初始化布局配置
      *
@@ -146,7 +147,7 @@ class ColorArcProgressBar : View {
         hintColor = a.getColor(R.styleable.ColorArcProgressBar_hint_color, -0x989899)
 
         colors = intArrayOf(color1, color2, color3, color3)
-        range = floatArrayOf(threadhold1,threadhold2)
+        range = floatArrayOf(threadhold1, threadhold2)
         sweepAngle = a.getInteger(R.styleable.ColorArcProgressBar_sweep_angle, 270).toFloat()
         bgArcWidth = a.getDimension(R.styleable.ColorArcProgressBar_bg_arc_width, dipToPx(10f).toFloat())
         progressWidth = a.getDimension(R.styleable.ColorArcProgressBar_front_width, dipToPx(10f).toFloat())
@@ -304,7 +305,7 @@ class ColorArcProgressBar : View {
         canvas.drawArc(bgRect!!, startAngle, sweepAngle, false, allArcPaint!!)
 
         //设置渐变色
-        if(colors.size > 3) {
+        if (colors.size > 3) {
             rotateMatrix!!.setRotate(130f, centerX, centerY)
         } else {
             rotateMatrix!!.setRotate(130f, centerX, centerY)
@@ -339,26 +340,28 @@ class ColorArcProgressBar : View {
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
 
-        setRangeAngle(floatArrayOf(80f,110f,80f))
+        setRangeAngle(floatArrayOf(80f, 110f, 80f))
 
-        setRangeValues(floatArrayOf(range[0],range[1]-range[0],maxValues-range[1]))
+        setRangeValues(floatArrayOf(range[0], range[1] - range[0], maxValues - range[1]))
 
     }
-    fun setThreadholdValue(Range:FloatArray){
-       for ( i in 0 until range.size) {
-            range[i]=Range[i]
+
+    fun setThreadholdValue(Range: FloatArray) {
+        for (i in 0 until range.size) {
+            range[i] = Range[i]
         }
     }
-    private var k: FloatArray = floatArrayOf(0f,0f,0f) //(0-220
-   // private var m: Float=0.toFloat()   // 220-660
-  //  private var q: Float=0.toFloat()    //660-MaxValue
+
+    private var k: FloatArray = floatArrayOf(0f, 0f, 0f) //(0-220
+    // private var m: Float=0.toFloat()   // 220-660
+    //  private var q: Float=0.toFloat()    //660-MaxValue
 
 
+    private var mAngleArray: FloatArray? = null
+    fun setRangeAngle(input: FloatArray) {
+        mAngleArray = input
+    }
 
-   private var mAngleArray  :FloatArray? = null
-    fun setRangeAngle(input:FloatArray){
-        mAngleArray=input
-   }
     /**
      * 设置區間值
      *角度與數值分配
@@ -366,10 +369,11 @@ class ColorArcProgressBar : View {
      * @param Values
      */
     fun setRangeValues(Values: FloatArray) {
-        for (i in 0 until Values.size){
-            k[i]= mAngleArray!![i]/(Values[i])
+        for (i in 0 until Values.size) {
+            k[i] = mAngleArray!![i] / (Values[i])
         }
     }
+
     /**
      * 设置当前值
      *
@@ -385,30 +389,31 @@ class ColorArcProgressBar : View {
         }
         this.currentValues = currentValues
         lastAngle = currentAngle
-        if (currentValues<=range[0]){
-            setAnimation(lastAngle, currentValues * k[0], aniSpeed)}
-        else if (currentValues>range[0] && currentValues<=range[1]){
-            setAnimation(lastAngle, (currentValues-range[0]) * k[1]+mAngleArray!![0], aniSpeed)}
-        else{
-            setAnimation(lastAngle, (currentValues-range[1]) * k[2]+mAngleArray!![0]+mAngleArray!![1], aniSpeed)}
+        if (currentValues <= range[0]) {
+            setAnimation(lastAngle, currentValues * k[0], aniSpeed)
+        } else if (currentValues > range[0] && currentValues <= range[1]) {
+            setAnimation(lastAngle, (currentValues - range[0]) * k[1] + mAngleArray!![0], aniSpeed)
+        } else {
+            setAnimation(lastAngle, (currentValues - range[1]) * k[2] + mAngleArray!![0] + mAngleArray!![1], aniSpeed)
+        }
     }
+
     private fun setAnimation(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)
         progressAnimator!!.duration = length.toLong()
         progressAnimator!!.setTarget(currentAngle)
 
-        if (currentValues <=220) {
+        if (currentValues <= 220) {
             progressAnimator!!.addUpdateListener { animation ->
                 currentAngle = animation.animatedValue as Float
                 currentValues = currentAngle / k[0]
             }
-        }else if (currentValues>220 && currentValues<=660) {
+        } else if (currentValues > 220 && currentValues <= 660) {
             progressAnimator!!.addUpdateListener { animation ->
                 currentAngle = animation.animatedValue as Float
                 currentValues = currentAngle / k[1]
             }
-        }
-        else {
+        } else {
             progressAnimator!!.addUpdateListener { animation ->
                 currentAngle = animation.animatedValue as Float
                 currentValues = currentAngle / k[2]
@@ -416,6 +421,7 @@ class ColorArcProgressBar : View {
         }
         progressAnimator!!.start()
     }
+
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (seekEnable) {
             this.parent.requestDisallowInterceptTouchEvent(true)//一旦底层View收到touch的action后调用这个方法那么父层View就不会再调用onInterceptTouchEvent了，也无法截获以后的action

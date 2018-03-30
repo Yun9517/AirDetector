@@ -16,7 +16,7 @@ import java.net.URL
  * Created by B00170 on 2018/3/12.
  */
 //20180312
-object  GetNetWork {
+object GetNetWork {
 
     val isFastGetNet: Boolean
         get() {
@@ -33,7 +33,7 @@ object  GetNetWork {
     // network available cannot ensure Internet is available
     fun isNetWorkAvailable(): Boolean? {
         val runtime = Runtime.getRuntime()
-        var isOnLineCheack:Boolean?=null
+        var isOnLineCheack: Boolean? = null
 
         //再用非同步或開新執行續跑
 //        val socket: Socket
@@ -63,9 +63,9 @@ object  GetNetWork {
 
 
             if (mExitValue == 0) {
-                isOnLineCheack=true
+                isOnLineCheack = true
             } else {
-                isOnLineCheack=false
+                isOnLineCheack = false
             }
 
         } catch (e: Exception) {

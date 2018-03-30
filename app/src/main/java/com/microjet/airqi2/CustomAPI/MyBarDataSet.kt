@@ -14,22 +14,21 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
     }
 
     override fun getColor(index: Int): Int {
-        when (label)
-        {
+        when (label) {
             "TVOC" -> {
-                return when(getEntryForXIndex(index).`val`) {
+                return when (getEntryForXIndex(index).`val`) {
                     in 0..220 -> mColors[0]         //G
                     in 221..660 -> mColors[1]       //Y
                     in 661..2200 -> mColors[2]      //O
                     in 2201..5500 -> mColors[3]     //R
                     in 5501..20000 -> mColors[4]    //P
-                    //20180227未偵測值
+                //20180227未偵測值
                     in 65537..65538 -> Color.TRANSPARENT
                     else -> mColors[5]              //B
                 }
             }
             "ECO2" -> {
-                return when(getEntryForXIndex(index).`val`) {
+                return when (getEntryForXIndex(index).`val`) {
                     in 0..700 -> mColors[0]         //G
                     in 701..1000 -> mColors[1]       //Y
                     in 1001..1500 -> mColors[2]      //O
@@ -48,7 +47,7 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                 }
             }
             "Humi" -> {
-                return when(getEntryForXIndex(index).`val`) {
+                return when (getEntryForXIndex(index).`val`) {
                     in 0..44 -> mColors[0]         //Blue
                     in 45..65 -> mColors[1]       //Green
                     in 65537..65538 -> Color.TRANSPARENT
@@ -56,7 +55,7 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
                 }
             }
             "PM2.5" -> {
-                return when(getEntryForXIndex(index).`val`) {
+                return when (getEntryForXIndex(index).`val`) {
                     in 0..15 -> mColors[0]         //G
                     in 16..34 -> mColors[1]       //Y
                     in 35..54 -> mColors[2]      //O

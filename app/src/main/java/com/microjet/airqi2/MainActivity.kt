@@ -76,20 +76,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // var viewPager = VerticalViewPager()
     // ViewPager目前頁面
-    private var currentIndex : Int = 0
+    private var currentIndex: Int = 0
 
     // Drawer & NavigationBar
-    private var mDrawerToggle : ActionBarDrawerToggle? = null
+    private var mDrawerToggle: ActionBarDrawerToggle? = null
 
     // 電池電量數值
     //private var batValue : Int = 0
 
     // 藍芽icon in actionbar
-    private var bleIcon : MenuItem? = null
+    private var bleIcon: MenuItem? = null
     //電量icon
-    private var battreyIcon : MenuItem? = null
+    private var battreyIcon: MenuItem? = null
     //private var menuItem: MenuItem? = null
-    private var lightIcon : ImageView? = null
+    private var lightIcon: ImageView? = null
 
     private var connState = BleConnection.DISCONNECTED
 
@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //UArtService實體
     //private var mService: UartService? = null
 
-    private var mIsReceiverRegistered : Boolean = false
+    private var mIsReceiverRegistered: Boolean = false
     //private var mReceiver: myBroadcastReceiver? = null
     private var isGPSEnabled: Boolean = false
     private var mLocationManager: LocationManager? = null
@@ -141,9 +141,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //
     //private val mPM25Fg = ChartFragment()
     /** 是否禁止右劃標記  */
-    private var banDownDraw : Boolean = false
+    private var banDownDraw: Boolean = false
     /** 手指在螢幕上的最後x坐標  */
-    private var mLastMotionY : Float = 0.toFloat()
+    private var mLastMotionY: Float = 0.toFloat()
 
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
@@ -153,7 +153,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 finish()
             }
             // Automatically connects to the device upon successful start-up initialization.
-            if(!MyApplication.getSharePreferenceManualDisconn()) {
+            if (!MyApplication.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
             mUartService?.initFuseLocationProviderClient()
@@ -173,10 +173,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var isFirstC0 = true
     private var isFirstC6 = true
     private var countForItem = 0
-    private var arrIndexMap = ArrayList<HashMap<String,String>>()
+    private var arrIndexMap = ArrayList<HashMap<String, String>>()
     private var lock = false
-    private var arr1 = arrayListOf<HashMap<String,Int>>()
-    private var indexMap = HashMap<String,Int>()
+    private var arr1 = arrayListOf<HashMap<String, Int>>()
+    private var indexMap = HashMap<String, Int>()
     private var maxItem = 0
 
 
@@ -237,7 +237,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
 
-            if(!MyApplication.getSharePreferenceManualDisconn()) {
+            if (!MyApplication.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
         }
@@ -367,7 +367,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
-
     private fun uiFindViewById() {
         viewPager.offscreenPageLimit = 5
         naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
@@ -426,7 +425,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
                 val name = share.getString("name", "")
 
-                if(name == "TVOC_NOSE") {
+                if (name == "TVOC_NOSE") {
                     banDownDraw = position == 4     // 如果 position = 4，banDownDraw = true，反之 banDownDraw = false
                 }
                 //Log.e("offset:", offset.toString() + "")
@@ -522,7 +521,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //            }
 
 
-
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
@@ -583,8 +581,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun accountShow() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        if(GetNetWork.isFastGetNet) {
-            if(myToken == "") {
+        if (GetNetWork.isFastGetNet) {
+            if (myToken == "") {
                 Log.e("主葉面看偷肯", myToken)
                 val i: Intent? = Intent(this, AccountManagementActivity::class.java)
                 //text_Account_status.setText(R.string.account_Deactivation)
@@ -604,7 +602,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
-
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
@@ -619,13 +616,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         when (menuItem.itemId) {
             R.id.nav_add_device -> blueToothConnect()
             R.id.nav_disconnect_device -> blueToothDisconnect()
-            R.id.nav_about ->  aboutShow()
+            R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
             R.id.nav_air_map -> airmapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
-            R.id.nav_getData -> {            }
+            R.id.nav_getData -> {
+            }
             R.id.nav_setting -> settingShow()
         }
         drawerLayout?.closeDrawer(GravityCompat.START)
@@ -645,7 +643,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val i: Intent? = Intent(this,
                     DeviceListActivity::class.java)
             //startActivity(i)
-            startActivityForResult(i,REQUEST_SELECT_DEVICE)
+            startActivityForResult(i, REQUEST_SELECT_DEVICE)
         }
         //startActivityForResult(i,REQUEST_SELECT_DEVICE)
     }
@@ -657,7 +655,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //sendBroadcast(serviceIntent)
             mUartService?.disconnect()
         } else {
-            Log.d("MAIN","BLEDISCONNTED ERROR")
+            Log.d("MAIN", "BLEDISCONNTED ERROR")
         }
         //stopService(serviceIntent)
         //checkUIState()
@@ -667,6 +665,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Toast.makeText(this, "無法取得定位，手機請開啟定位", Toast.LENGTH_SHORT).show()
         startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
     }
+
     //預熱畫面三個方法
     private fun heatingPanelShow() {
         waitLayout!!.visibility = View.VISIBLE
@@ -687,7 +686,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun heatingPanelControl(preheatCountDownString : String) {
+    private fun heatingPanelControl(preheatCountDownString: String) {
         if (waitLayout!!.visibility == View.INVISIBLE) {
             heatingPanelShow()
             waitLayout!!.bringToFront()
@@ -875,8 +874,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lowPowerCont++
                 if (mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false) && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
                 {
-                    lowPowerCont=0
-                    soundPool!!.play(alertId,1F , 1F, 0, 0, 1F)
+                    lowPowerCont = 0
+                    soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
                 }
             }
         }
@@ -925,7 +924,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    @Synchronized private fun checkUIState() {
+    @Synchronized
+    private fun checkUIState() {
         if (connState == BleConnection.CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
@@ -960,7 +960,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return intentFilter
     }
 
-    private val mBluetoothStateReceiver = object: BroadcastReceiver() {
+    private val mBluetoothStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
             var stateStr = "BluetoothAdapter.STATE_OFF"
@@ -983,17 +983,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun checkLoginState() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        if(myToken == "") {
+        if (myToken == "") {
             text_Account_status.text = getString(R.string.account_Deactivation)
         } else {
             val myName = shareToken.getString("name", "")
             text_Account_status.text = myName
-            Log.e("MainActivity取名字",myName)
+            Log.e("MainActivity取名字", myName)
         }
     }
 
     //20180312
-    private fun showDialog(msg:String){
+    private fun showDialog(msg: String) {
         val dialog = android.app.AlertDialog.Builder(this@MainActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -1012,10 +1012,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun dataAvaliable(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
         when (txValue[0]) {
-            0xE0.toByte() -> { }
-            0xE1.toByte() -> { }
-            0xEA.toByte() -> { }
-            else -> { }
+            0xE0.toByte() -> {
+            }
+            0xE1.toByte() -> {
+            }
+            0xEA.toByte() -> {
+            }
+            else -> {
+            }
         }
         when (txValue[2]) {
             0xB1.toByte() -> Log.d(TAG, "cmd:0xB1 feedback")
@@ -1054,7 +1058,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
 
-        if (errorTime >= 3) { errorTime = 0 }
+        if (errorTime >= 3) {
+            errorTime = 0
+        }
         if (!checkCheckSum(txValue)) {
             errorTime += 1
         } else {
@@ -1087,7 +1093,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
                         Log.d("0xB2", hashMap.toString())
                     } else {
-                        Log.d("0xB2OK",txValue[3].toString())
+                        Log.d("0xB2OK", txValue[3].toString())
                     }
                 }
                 0xB4.toByte() -> {
@@ -1120,11 +1126,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     if (hashMap[TvocNoseData.PM25SR] != "5" && hashMap[TvocNoseData.PM25GST] != "30") {
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
                     }
-                    Log.d("0xE0",hashMap.toString())
+                    Log.d("0xE0", hashMap.toString())
                 }
                 0xBB.toByte() -> {
                     var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
-                    Log.d("0xBB",hashMap.toString())
+                    Log.d("0xBB", hashMap.toString())
                 }
                 0xC0.toByte() -> {
                     var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
@@ -1132,7 +1138,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
                     val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
                     connectionInitMethod(rtcTime)
-                    Log.d("0xC0",hashMap.toString())
+                    Log.d("0xC0", hashMap.toString())
                 }
                 0xC5.toByte() -> {
                     putC5ToObject(txValue)
@@ -1205,7 +1211,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
 
-        Log.d("getMaxItems",hashMap.toString())
+        Log.d("getMaxItems", hashMap.toString())
     }
 
     private fun connectionInitMethod(rtcTime: Long) {
@@ -1246,8 +1252,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 && setting1 == hash[TvocNoseData.SOTR]
                 && setting2 == hash[TvocNoseData.STGS]
                 && setting3 == hash[TvocNoseData.POT]
-                && setting4 == hash[TvocNoseData.PTR])
-        {
+                && setting4 == hash[TvocNoseData.PTR]) {
             Log.d("0xB2", "True")
         } else {
             share.edit()
@@ -1303,7 +1308,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             sendBroadcast(mainIntent)
             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(nowItem))
         }
-        Log.d("C5ARR",arr1.toString())
+        Log.d("C5ARR", arr1.toString())
     }
 
     private fun saveToRealmC5() {

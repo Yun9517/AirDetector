@@ -10,12 +10,13 @@ import android.view.View;
 
 /**
  * Created by ray650128 on 2017/12/8.
- * 
  */
 
-public class CustomViewPager  extends ViewPager {
+public class CustomViewPager extends ViewPager {
 
-    /** ViewPager是否可以滑動 */
+    /**
+     * ViewPager是否可以滑動
+     */
     private boolean isScrollable;
 
     public boolean isScrollable() {
