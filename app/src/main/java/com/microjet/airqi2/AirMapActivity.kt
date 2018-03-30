@@ -558,6 +558,7 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
             0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
             0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
             0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
+            0xBA.toByte() -> Log.d("AirMapAC", "cmd:0xBA feedback")
         }
         when (txValue[3]) {
             0xE0.toByte() -> {
