@@ -608,6 +608,10 @@ class AirMapActivity: AppCompatActivity(), OnMapReadyCallback {
                 }
                 0xB9.toByte() -> {
                 }
+                0xBA.toByte() -> {
+                    //MyApplication.setSharePreferenceManualDisconn(true)
+                    //Log.e("AirMapAC", "Manual Disconnect from Device.........")
+                }
                 0xE0.toByte() -> {
                 }
                 0xBB.toByte() -> {

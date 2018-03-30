@@ -153,7 +153,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 finish()
             }
             // Automatically connects to the device upon successful start-up initialization.
-            mUartService?.connect(mDeviceAddress)
+            if(!MyApplication.getSharePreferenceManualDisconn()) {
+                mUartService?.connect(mDeviceAddress)
+            }
             mUartService?.initFuseLocationProviderClient()
         }
 
@@ -234,7 +236,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mDeviceAddress != "noValue" && connState == BleConnection.DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-            mUartService?.connect(mDeviceAddress)
+
+            if(!MyApplication.getSharePreferenceManualDisconn()) {
+                mUartService?.connect(mDeviceAddress)
+            }
         }
     }
 
@@ -1018,6 +1023,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             0xB4.toByte() -> Log.d(TAG, "cmd:0xB4 feedback")
             0xB5.toByte() -> Log.d(TAG, "cmd:0xB5 feedback")
             0xB9.toByte() -> Log.d(TAG, "cmd:0xB9 feedback")
+            0xBA.toByte() -> Log.d(TAG, "cmd:0xBA feedback")
         }
         when (txValue[3]) {
             0xE0.toByte() -> {
@@ -1104,6 +1110,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         Log.e(TAG, "LED Status: $ledState")
                     }
                     //Log.d("0xB9",hashMap.toString())
+                }
+                0xBA.toByte() -> {
+                    MyApplication.setSharePreferenceManualDisconn(true)
+                    Log.e("0xBA", "Manual Disconnect from Device.........")
                 }
                 0xE0.toByte() -> {
                     var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)

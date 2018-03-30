@@ -39,6 +39,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import java.util.*
 
@@ -74,6 +75,9 @@ class DeviceListActivity : Activity() {
 
 
         scanLeDevice(false)
+
+        // 20180330 Add Manual Disconnect
+        MyApplication.setSharePreferenceManualDisconn(false)
 
 //            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 //            intent!!.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
