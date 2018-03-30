@@ -262,7 +262,7 @@ class AccountActiveActivity : AppCompatActivity() {
                     dataArrayListOnee.add(result1[i]?.longitude!!.toString()+",")
                     dataArrayListOnee.add(result1[i]?.latitude!!.toString()+",")
                     val date = dateLabelFormat.format(result1[i]?.created_time!!.toLong())
-                    dataArrayListOnee.add(date+",\r\n" )
+                    dataArrayListOnee.add(date+"\r\n" )
                 }
             } else {
                 Log.e("未上傳資料筆數", result1.size.toString())
@@ -292,8 +292,8 @@ class AccountActiveActivity : AppCompatActivity() {
             mFileWriter.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
             for (l in 0..data.size) {
                 mFileWriter.write(data[l])//data[l])
+                mFileWriter.flush()
             }
-            mFileWriter.flush()
             Log.e("全給我進去!!",data.last())
             mFileWriter.close()
             Log.e("Excel檔完成!!路徑為:", mSDFile.path)
@@ -301,6 +301,7 @@ class AccountActiveActivity : AppCompatActivity() {
             Log.e("Exception", "File write failed: " + e.toString())
         }
     }
+
     private fun close(closeable: Closeable?) {
         if (closeable == null) {
             return
@@ -310,12 +311,9 @@ class AccountActiveActivity : AppCompatActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
-
     }
 
     // 2018/03/30
-
     private fun isConnected(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
@@ -324,11 +322,7 @@ class AccountActiveActivity : AppCompatActivity() {
 
     //20180329
     private fun  checkLineInstalled(): Boolean? {
-
-
         val lineInstallFlag: Boolean = false
-
-
         val pm = packageManager
         val m_appList = pm.getInstalledApplications(0)
         val ai:ApplicationInfo
@@ -364,14 +358,6 @@ class AccountActiveActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
-
-
-
-
-
 
 
 
