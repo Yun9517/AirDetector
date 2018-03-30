@@ -29,14 +29,14 @@ class AccountManagementActivity : AppCompatActivity() {
 
     var mUserEmailEditText: EditText? = null
     var mPasswordEditText: EditText? = null
-    var mForgotPasswordTextView:TextView?=null
-    var mCreateAccountTextView:TextView?=null
+    var mForgotPasswordTextView: TextView? = null
+    var mCreateAccountTextView: TextView? = null
 
     var userEmail = ""
     var userName = ""
     private var loginResult: String? = null
-    private var mMyThing: logInMything?=null
-    var btnSubmit:Button? = null
+    private var mMyThing: logInMything? = null
+    var btnSubmit: Button? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -83,7 +83,7 @@ class AccountManagementActivity : AppCompatActivity() {
                         //showDialog("按慢一點太快了")
                         showDialog(getString(R.string.tooFast))
                     } else {
-                        btnSubmit?.isEnabled=false
+                        btnSubmit?.isEnabled = false
                         goLoginAsyncTasks().execute(mMyThing)
                     }
                 } else {
@@ -166,8 +166,8 @@ class AccountManagementActivity : AppCompatActivity() {
                         Log.e("登入正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         val token = responseContent.getJSONObject("success").getString("token").toString()
-                        val name =responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
-                        val email =responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
+                        val name = responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
+                        val email = responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
@@ -206,7 +206,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result== "成功登入") {
+            if (result == "成功登入") {
                 val intent = Intent(mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -243,7 +243,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
     //20180312
-     private fun showDialog(msg:String){
+     private fun showDialog(msg: String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -259,7 +259,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class logInMything ( btn:Button?,blean:Boolean?,myString :String?){
+ class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn
     var myBlean = blean
     var myAddress = myString

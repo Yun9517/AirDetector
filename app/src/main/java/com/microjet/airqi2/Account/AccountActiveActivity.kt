@@ -92,15 +92,22 @@ class AccountActiveActivity : AppCompatActivity() {
         // 03/14 edit ID
         var editName = findViewById<TextView>(R.id.show_Name)
         editName.text = myName
+
         // 03/16 InputFilter max 20
         editName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+
+        // 03/30 
         change_password.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent()
-            intent.setClass(this@AccountActiveActivity.mContext, AccountResetPasswordActivity::class.java)
-            //startActivityForResult(intent,1)
-            startActivity(intent)
-            //finish()
+            if(isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent()
+                intent.setClass(this@AccountActiveActivity.mContext, AccountResetPasswordActivity::class.java)
+                startActivity(intent)
+                //finish()
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
+
         }
         // 03/14 edit ID
 
@@ -112,20 +119,13 @@ class AccountActiveActivity : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
-
-
-
-
             // create an OnDateSetListener
-            val dateSetListener = object : DatePickerDialog.OnDateSetListener {
-                override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                       dayOfMonth: Int) {
-                    cal.set(Calendar.YEAR, year)
-                    cal.set(Calendar.MONTH, monthOfYear)
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    calObject.set(year, monthOfYear, dayOfMonth)
-                    updateDateInView()
-                }
+            val dateSetListener = DatePickerDialog.OnDateSetListener { view, year, monthOfYear, dayOfMonth ->
+                cal.set(Calendar.YEAR, year)
+                cal.set(Calendar.MONTH, monthOfYear)
+                cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+                calObject.set(year, monthOfYear, dayOfMonth)
+                updateDateInView()
             }
             // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         shareData!!.setOnClickListener {
@@ -136,14 +136,6 @@ class AccountActiveActivity : AppCompatActivity() {
                     cal.get(Calendar.MONTH),
                     cal.get(Calendar.DAY_OF_MONTH)).show()
         }
-
-//        change_password.setOnClickListener {
-//            if(isConnected()) {
-//                //showDialog(getString(R.string.checkConnection))
-//            } else {
-//                showDialog(getString(R.string.checkConnection))
-//            }
-//        }
 
         downloadData.setOnClickListener {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -164,9 +156,22 @@ class AccountActiveActivity : AppCompatActivity() {
         System.currentTimeMillis()
     }
 
-
-
-
+    //20180311
+    fun showDialog (msg:String) {
+        val Dialog = android.app.AlertDialog.Builder(this@AccountActiveActivity).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage(msg.toString())
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
+        }
+        Dialog.show()
+    }
 
     private fun initActionBar() {
         // 取得 actionBar
@@ -353,11 +358,11 @@ class AccountActiveActivity : AppCompatActivity() {
         val ai:ApplicationInfo
 
         m_appList?.forEachIndexed { _, ai ->
-            if (ai.packageName.equals(PACKAGE_NAME)) {
+            if (ai.packageName == PACKAGE_NAME) {
                 val lineInstallFlag = true
             }
         }
-        return lineInstallFlag;
+        return lineInstallFlag
     }
 
 
