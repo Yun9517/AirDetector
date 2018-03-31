@@ -896,6 +896,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     connState = BleConnection.DISCONNECTED
                     isFirstC0 = true
                     isFirstC6 = true
+                    arr1.clear()
+                    arrIndexMap.clear()
+                    lock = false
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
@@ -1285,6 +1288,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 arr1.add(indexCopy)
                 indexMap.clear()
                 lock = false
+                Log.d("C5ARR", arr1.toString())
             }
         }
 
@@ -1304,11 +1308,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             //如果到大筆後仍然沒有解鎖，設邊界值給他
             if (lock) {
-                val deviceLast = maxItem
-                indexMap.put("UTCBlockEnd", deviceLast)
+                indexMap.put("UTCBlockEnd", maxItem)
                 val indexCopy = indexMap.clone() as HashMap<String, Int>
                 arr1.add(indexCopy)
                 indexMap.clear()
+                lock = false
             }
             saveToRealmC5()
         } else {
@@ -1318,7 +1322,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             sendBroadcast(mainIntent)
             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(nowItem))
         }
-        Log.d("C5ARR", arr1.toString())
     }
 
     private fun saveToRealmC5() {
