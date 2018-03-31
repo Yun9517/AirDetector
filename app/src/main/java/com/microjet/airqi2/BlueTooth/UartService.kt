@@ -383,15 +383,18 @@ class UartService : Service() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_OFF)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_OFF)
         return intentFilter
     }
 
     private val mServiceReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-
             when (p1!!.action) {
                 BroadcastActions.INTENT_KEY_LED_OFF -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(false))
                 BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
+                BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
+                BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
             }
         }
     }
