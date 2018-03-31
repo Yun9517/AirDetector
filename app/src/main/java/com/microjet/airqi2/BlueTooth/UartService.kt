@@ -49,8 +49,8 @@ class UartService : Service() {
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
 
-    private val bus = EventBus.getDefault()
-    private val bleEventObj = BleEvent()
+   // private val bus = EventBus.getDefault()
+    //private val bleEventObj = BleEvent()
 
     // 20180328 Add Location Request to Service
     private var longi: Float? = 121.4215f

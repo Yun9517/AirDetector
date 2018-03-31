@@ -212,7 +212,6 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             showBLEDialog()
         }
         setGUI()
-
         // Try to create sample files
         if (FileHelper.newSamplesAvailable(this)) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
@@ -241,8 +240,18 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         }
 
         DfuServiceListenerHelper.registerProgressListener(this, mDfuProgressListener)
+        val file=File(cacheDir, "FWupdate.zip")
+
+        myDeviceAddress = intent.extras.getString("ADDRESS")
+        myDeviceName = intent.extras.getString("DEVICE_NAME")
+        if( file.exists()) {
+            mjupdateFileInfo(file.name, file.length(), 0)
+            mFilePath=file.path
+        }
     }
 
+    var myDeviceName:String?=null
+    var myDeviceAddress:String?=null
     override fun onDestroy() {
         super.onDestroy()
         DfuServiceListenerHelper.unregisterProgressListener(this, mDfuProgressListener)
@@ -638,7 +647,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         // Save current state in order to restore it if user quit the Activity
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val editor = preferences.edit()
-        editor.putString(PREFS_DEVICE_NAME, mSelectedDevice!!.name)
+        editor.putString(PREFS_DEVICE_NAME,myDeviceName)// mSelectedDevice!!.name)
         editor.putString(PREFS_FILE_NAME, mFileNameView!!.text.toString())
         editor.putString(PREFS_FILE_TYPE, mFileTypeView!!.text.toString())
         editor.putString(PREFS_FILE_SCOPE, mFileScopeView!!.text.toString())
@@ -656,15 +665,15 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             numberOfPackets = DfuServiceInitiator.DEFAULT_PRN_VALUE
         }
 
-        val starter = DfuServiceInitiator(mSelectedDevice!!.address)
-                .setDeviceName(mSelectedDevice!!.name)
+        val starter = DfuServiceInitiator(myDeviceAddress)//mSelectedDevice!!.address)
+                .setDeviceName(myDeviceName)//mSelectedDevice!!.name)
                 .setKeepBond(keepBond)
                 .setForceDfu(forceDfu)
                 .setPacketsReceiptNotificationsEnabled(enablePRNs)
                 .setPacketsReceiptNotificationsValue(numberOfPackets)
                 .setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true)
         if (mFileType == DfuBaseService.TYPE_AUTO) {
-            starter.setZip(mFileStreamUri, mFilePath)
+            starter.setZip( mFilePath)// starter.setZip(mFileStreamUri, mFilePath)
             if (mScope != null)
                 starter.setScope(mScope!!)
         } else {
@@ -778,5 +787,65 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             }
         }
         return false
+    }
+
+    /**
+     * Updates the file information on UI
+     *
+     * @param fileName file name
+     * @param fileSize file length
+     */
+    private fun mjupdateFileInfo(fileName: String, fileSize: Long, fileType: Int) {
+        mFileNameView!!.text = fileName
+        when (fileType) {
+            DfuBaseService.TYPE_AUTO -> mFileTypeView!!.text = resources.getStringArray(R.array.dfu_file_type)[0]
+            DfuBaseService.TYPE_SOFT_DEVICE -> mFileTypeView!!.text = resources.getStringArray(R.array.dfu_file_type)[1]
+            DfuBaseService.TYPE_BOOTLOADER -> mFileTypeView!!.text = resources.getStringArray(R.array.dfu_file_type)[2]
+            DfuBaseService.TYPE_APPLICATION -> mFileTypeView!!.text = resources.getStringArray(R.array.dfu_file_type)[3]
+        }
+        mFileSizeView!!.text = getString(R.string.dfu_file_size_text, fileSize)
+        mFileScopeView!!.text = getString(R.string.not_available)
+        val extension = if (mFileType == DfuBaseService.TYPE_AUTO) "(?i)ZIP" else "(?i)HEX|BIN" // (?i) =  case insensitive
+        mStatusOk = MimeTypeMap.getFileExtensionFromUrl(fileName).matches(extension.toRegex())
+        val statusOk = mStatusOk
+        mFileStatusView!!.setText(if (statusOk) R.string.dfu_file_status_ok else R.string.dfu_file_status_invalid)
+        mUploadButton!!.setEnabled(statusOk)//mSelectedDevice != null &&
+
+                // Ask the user for the Init packet file if HEX or BIN files are selected. In case of a ZIP file the Init packets should be included in the ZIP.
+        if (statusOk) {
+            if (fileType != DfuBaseService.TYPE_AUTO) {
+                mScope = null
+                mFileScopeView!!.text = getString(R.string.not_available)
+                AlertDialog.Builder(this).setTitle(R.string.dfu_file_init_title).setMessage(R.string.dfu_file_init_message)
+                        .setNegativeButton(R.string.no, { dialog, which ->
+                            mInitFilePath = null
+                            mInitFileStreamUri = null
+                        }).setPositiveButton(R.string.yes, { dialog, which ->
+                            val intent = Intent(Intent.ACTION_GET_CONTENT)
+                            intent.type = DfuBaseService.MIME_TYPE_OCTET_STREAM
+                            intent.addCategory(Intent.CATEGORY_OPENABLE)
+                            startActivityForResult(intent, SELECT_INIT_FILE_REQ)
+                        }).show()
+            } else {
+                AlertDialog.Builder(this).setTitle(R.string.dfu_file_scope_title).setCancelable(false)
+                        .setSingleChoiceItems(R.array.dfu_file_scope, 0, { dialog, which ->
+                            when (which) {
+                                0 -> mScope = null
+                                1 -> mScope = DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS
+                                2 -> mScope = DfuServiceInitiator.SCOPE_APPLICATION
+                            }
+                        }).setPositiveButton(R.string.ok, { dialogInterface, i ->
+                            val index: Int
+                            if (mScope == null) {
+                                index = 0
+                            } else if (mScope == DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS) {
+                                index = 1
+                            } else {
+                                index = 2
+                            }
+                            mFileScopeView!!.text = resources.getStringArray(R.array.dfu_file_scope)[index]
+                        }).show()
+            }
+        }
     }
 }
