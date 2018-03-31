@@ -1057,8 +1057,8 @@ class ChartFragment : Fragment() {
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                    setProgressBarMax(1440)
-                    //setProgressBarMax(totalData.toInt())
+                    //setProgressBarMax(1440)
+                    setProgressBarMax(totalData.toInt())
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
                     val bundle = intent.extras
