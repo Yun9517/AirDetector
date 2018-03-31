@@ -1067,6 +1067,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (!checkCheckSum(txValue)) {
             errorTime += 1
         } else {
+            if (txValue.size > 5) {
             when (txValue[2]) {
                 0xB0.toByte() -> {
                     //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
@@ -1091,14 +1092,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     Log.d("PARSERB1", hashMap.toString())
                 }
                 0xB2.toByte() -> {
-                    if (txValue.size > 5) {
+
                         var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
                         checkSampleRate(hashMap)
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
                         Log.d("0xB2", hashMap.toString())
-                    } else {
-                        Log.d("0xB2OK", txValue[3].toString())
-                    }
                 }
                 0xB4.toByte() -> {
                     getMaxItems(txValue)
@@ -1127,7 +1125,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 0xE0.toByte() -> {
                     var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
-                    if (hashMap[TvocNoseData.PM25SR] != "5" && hashMap[TvocNoseData.PM25GST] != "30") {
+                    if (hashMap[TvocNoseData.PM25SR] != "5" || hashMap[TvocNoseData.PM25GST] != "30") {
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
                     }
                     Log.d("0xE0", hashMap.toString())
@@ -1155,6 +1153,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                     saveToRealmC6(hashMap)
                 }
+            }
+            } else {
+                Log.d("0xB2OK", txValue.size.toString())
             }
         }
     }
@@ -1288,7 +1289,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 arr1.add(indexCopy)
                 indexMap.clear()
                 lock = false
-                Log.d("C5ARR", arr1.toString())
             }
         }
 
@@ -1322,6 +1322,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             sendBroadcast(mainIntent)
             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(nowItem))
         }
+        Log.d("C5ARR", arr1.toString())
     }
 
     private fun saveToRealmC5() {
