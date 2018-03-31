@@ -128,8 +128,22 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
         //  showDialog("Downloaded " + result + " bytes");
         when (result?.get(0)) {
             "postFWVersion"->{
-                mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
-                EventBus.getDefault().post(BleEvent("New FW Arrival "))//使用event 通知有新的FW版本
+                when(result?.get(1)){
+                //無新版本
+                    "version latest" ->{
+                        Log.d(javaClass.simpleName,"version latest")
+                    }
+                //資訊有錯
+                     "device type error"->{
+                         Log.d(javaClass.simpleName,"device type error")
+                     }
+                    else->{
+                        mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
+                        EventBus.getDefault().post(BleEvent("New FW Arrival "))//使用event 通知有新的FW版本
+                    }
+
+                }
+
             }
             "downloadFWFile"->{
                 mPreference?.edit()?.putString("FilePath", "")?.apply()//將路徑關閉
@@ -148,7 +162,6 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
         Log.d(javaClass.simpleName,"我在onPostExecute")
     }
     private fun doFWVersionCheck():String{
-        var isNewFW=false
         val client = OkHttpClient()
         val urlBuilder = HttpUrl.parse(postFWversion)!!.newBuilder()
                 .addQueryParameter("deviceType", urlDT)
@@ -165,26 +178,25 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
                 return "False"
             } else {
                 val res = response.body()?.string()
+                response.body()?.close()
                 val jsonObj = JSONObject(res)
                 val returnResult = jsonObj.get("message")
-                if (returnResult == "version latest") {
-                    isNewFW=true
-                }
-                else{
-                     dataUrl=jsonObj.getString("url")
-                    isNewFW=false
+                when (returnResult) {
+                    //無新版本
+                    "version latest" ->{ dataUrl=returnResult.toString()}
+                    //資訊有錯
+                    "device type error"->{dataUrl=returnResult.toString()}
+                    else->{ //有新版本
+                        dataUrl=jsonObj.getString("url")
+                  }
                 }
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-        finally{
-            if (isNewFW)
-                return "已是最新版"
-            else
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            finally {
                 return dataUrl!!
-        }
-
+            }
     }
 
     private fun downloadFWFileold(url:String):String{

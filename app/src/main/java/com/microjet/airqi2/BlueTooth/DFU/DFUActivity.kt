@@ -9,11 +9,7 @@ import android.app.NotificationManager
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.CursorLoader
-import android.content.Intent
-import android.content.Loader
-import android.content.SharedPreferences
+import android.content.*
 import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
@@ -47,6 +43,7 @@ import com.microjet.airqi2.BlueTooth.DFU.Settings.SettingsActivity
 import com.microjet.airqi2.BlueTooth.Scanner.ScannerFragment
 import com.microjet.airqi2.CustomAPI.FileHelper
 import com.microjet.airqi2.R
+import com.microjet.airqi2.URL.AirActionTask
 import no.nordicsemi.android.dfu.DfuBaseService
 import no.nordicsemi.android.dfu.DfuProgressListenerAdapter
 import no.nordicsemi.android.dfu.DfuServiceInitiator
@@ -155,7 +152,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
                 Handler().postDelayed({
                     onTransferCompleted()
-
+                    showDownloadDialog("DFU Successful")
                     // if this activity is still open and upload process was completed, cancel the notification
                     val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     manager.cancel(DfuBaseService.NOTIFICATION_ID)
@@ -165,7 +162,21 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 mDfuCompleted = true
             }
         }
-
+        private fun showDownloadDialog(msg: String) {
+            val Dialog = android.app.AlertDialog.Builder(this@DFUActivity).create()
+            //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+            //Dialog.setTitle("提示")
+            Dialog.setTitle(getString(R.string.remind))
+            Dialog.setMessage(msg)
+            Dialog.setCancelable(false)//讓返回鍵與空白無效
+            //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+            Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+            { dialog, _ ->
+                dialog.dismiss()
+                finish()
+            }
+            Dialog.show()
+        }
         override fun onDfuAborted(deviceAddress: String?) {
             mTextPercentage!!.setText(R.string.dfu_status_aborted)
             // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
@@ -728,6 +739,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
     private fun onTransferCompleted() {
         clearUI(true)
         showToast(R.string.dfu_success)
+
     }
 
     fun onUploadCanceled() {

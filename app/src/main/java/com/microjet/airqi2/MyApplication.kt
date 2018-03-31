@@ -32,6 +32,7 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
+        private var deviceSerial: String=""
         //var isPM25: String = "000000000000"
 
         fun applicationContext(): Context {
@@ -105,6 +106,8 @@ class MyApplication : Application() {
         fun getDeviceVersion(): String {
             return deviceVer
         }
+        fun putDeviceSerial(value:String) {deviceSerial=value}
+       // fun getDeviceSerial() : String {return deviceSerial}
 
         fun getSharePreferenceManualDisconn(): Boolean {
             val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)

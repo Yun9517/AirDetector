@@ -563,9 +563,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun knowledgeShow() {
         //blueToothDisconnect()
         val i: Intent? = Intent(this, KnowledgeActivity::class.java)
-      val aat=  AirActionTask(this.mContext,"201803130000","0000")
-      val myResponse = aat.execute("postFWVersion")
-        Log.v("AirActionTask","OVER")
+        startActivity(i)
         /*
         blueToothDisconnect()
         val i: Intent? = Intent(this, DFUActivity::class.java)
@@ -1096,6 +1094,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 0xB1.toByte() -> {
                     var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                    MyApplication.putDeviceVersion(hashMap["FW"].toString())
+                    MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
+                    CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
                     Log.d("PARSERB1", hashMap.toString())
                 }
                 0xB2.toByte() -> {
@@ -1234,6 +1235,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.GetSampleRate()) }, 500)
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getPM25Rate()) }, 750)
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getLedStateCMD()) }, 1000)
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getInfo()) }, 1250)
         }
     }
 
@@ -1438,5 +1440,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         Dialog.show()
     }
-
+    fun CheckFWversion(Version:String,DeviceType:String) {
+        val aat = AirActionTask(this.mContext, Version, DeviceType)
+        val myResponse = aat.execute("postFWVersion")
+        Log.v("AirActionTask", "OVER")
+    }
 }

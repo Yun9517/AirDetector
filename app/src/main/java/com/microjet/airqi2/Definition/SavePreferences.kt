@@ -7,7 +7,6 @@ import com.microjet.airqi2.URL.AirActionTask
  */
 object SavePreferences {
     const val SETTING_KEY: String = "airqi2.settings"
-    const  val SETTING_KEY: String = "airqi2.settings"
     const  val AirActionTask_KEY: String = "airqi2.AirActionTask_KEY"
 
     // 偏好設定中儲存藍芽名稱及MAC Address的KEY
