@@ -1084,6 +1084,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
                 0xB1.toByte() -> {
                     var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                    MyApplication.putDeviceVersion(hashMap["FW"].toString())
                     Log.d("PARSERB1", hashMap.toString())
                 }
                 0xB2.toByte() -> {
@@ -1202,7 +1203,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //downloadComplete = false;
                 val mainIntent = Intent(BroadcastIntents.PRIMARY)
                 mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(countForItem))
+                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
                 sendBroadcast(mainIntent)
             } else {
                 if (Build.BRAND != "OPPO") {
@@ -1222,6 +1223,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.GetSampleRate()) }, 500)
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getPM25Rate()) }, 750)
             hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getLedStateCMD()) }, 1000)
+            hh.postDelayed({ mUartService?.writeRXCharacteristic(BLECallingTranslate.getInfo()) }, 1250)
         }
     }
 
@@ -1301,8 +1303,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
             }
             //如果到大筆後仍然沒有解鎖，設邊界值給他
-            if (!lock) {
-                val deviceLast = 1440
+            if (lock) {
+                val deviceLast = maxItem
                 indexMap.put("UTCBlockEnd", deviceLast)
                 val indexCopy = indexMap.clone() as HashMap<String, Int>
                 arr1.add(indexCopy)
@@ -1323,7 +1325,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (arr1.size == 0) {
             val hash = HashMap<String, Int>()
             hash["UTCBlockHead"] = 1
-            hash["UTCBlockEnd"] = 1440
+            hash["UTCBlockEnd"] = maxItem
             arr1.add(hash)
         }
         for (i in 0 until arr1.size) {
