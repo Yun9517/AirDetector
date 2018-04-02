@@ -29,7 +29,7 @@ private var AllTemp = ArrayList<String>()
 private var AllPM25 = ArrayList<String>()
 private val calObject = Calendar.getInstance()
 
-private var adapter :Fetch_Adapter?=null
+private var adapter: Fetch_Adapter? = null
 private val TAG = FetchDataMain::class.java.simpleName
 
 @TargetApi(Build.VERSION_CODES.O)
@@ -125,7 +125,7 @@ class FetchDataMain : AppCompatActivity() {
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
         val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d(TAG + "TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
+        Log.d(TAG + "TVOCbtncallRealm", calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -152,7 +152,7 @@ class FetchDataMain : AppCompatActivity() {
             arrTvoc3.add("0")
             arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
-        var aveTvoc=0
+        var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
@@ -204,7 +204,7 @@ class FetchDataMain : AppCompatActivity() {
         //val realm= Realm.getDefaultInstance()
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
-        var AVGTvoc3 :Float= 0F
+        var AVGTvoc3: Float= 0F
         Log.d("getRealmWeek", sqlStartDate.toString())
         Log.d("getRealmWeek", sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
@@ -217,7 +217,7 @@ class FetchDataMain : AppCompatActivity() {
             }
             AVGTvoc3 = (sumTvocYesterday / result2.size)
         } else {
-            AVGTvoc3=0F
+            AVGTvoc3 = 0F
         }
 
         //}
