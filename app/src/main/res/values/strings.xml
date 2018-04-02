@@ -263,4 +263,9 @@
 
     <string name="font_path">fonts/trebucbd.ttf</string>
     <string name="normal_font_path">fonts/trebuc.ttf</string>
+    <string name="title_tvoc">TVOC_Data</string>
+    <string name="title_eco2">Eco2_Data</string>
+    <string name="title_humidy">Humidy_Data</string>
+    <string name="title_temperatur">Temperatur_Data</string>
+    <string name="title_pm25">PM2.5</string>
 </resources>

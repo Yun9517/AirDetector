@@ -27,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.DownloadTask
+import com.microjet.airqi2.FetchDataMain
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
@@ -73,7 +74,14 @@ class AccountActiveActivity : AppCompatActivity() {
         }
 
         initActionBar()
-
+        //barney ++
+        fetchData.setOnClickListener{
+            Log.d("click action","-- BT fetchData click --")
+            val intent = Intent()
+            intent.setClass(this@AccountActiveActivity.mContext, FetchDataMain::class.java)
+//            startActivityForResult(intent,1)
+            startActivity(intent)
+        }
         //20180310
         val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
