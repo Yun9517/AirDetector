@@ -128,7 +128,7 @@ class FetchDataMain : AppCompatActivity() {
         //val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
         Log.d(TAG + "TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -151,7 +151,7 @@ class FetchDataMain : AppCompatActivity() {
         //先生出2880筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvoc3.add("0")
-            arrTime3.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
+            arrTime3.add((startTime + y * 60 * 1000).toString())
         }
         var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
