@@ -136,6 +136,7 @@ class MyApplication : Application() {
 
         Realm.setDefaultConfiguration(config)
 
+        /*
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
         Log.d("REALMAPP", query.toString())
@@ -157,6 +158,7 @@ class MyApplication : Application() {
             }
         }
         realm.close()
+        */
 
 
         mPrimaryReceiver = PrimaryReceiver()

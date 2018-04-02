@@ -703,8 +703,8 @@ class ChartFragment : Fragment() {
         arrData.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.HOUR).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -843,7 +843,7 @@ class ChartFragment : Fragment() {
         arrData.clear()
         //拿到現在是星期幾的Int
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         //今天的00:00
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
@@ -903,7 +903,7 @@ class ChartFragment : Fragment() {
         //拿到現在是星期幾的Int
         val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
         val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())

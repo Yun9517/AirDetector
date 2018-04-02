@@ -244,7 +244,8 @@ class AccountActiveActivity : AppCompatActivity() {
     //20180321
     private fun getDbData( startTimeZone: Int, EntTime: Int): ArrayList<String> {
         val dataArrayListOnee = ArrayList<String>()
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val touchTime = if (calObject.get(Calendar.HOUR) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)

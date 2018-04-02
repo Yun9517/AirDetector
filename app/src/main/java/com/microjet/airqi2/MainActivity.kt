@@ -1310,9 +1310,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         nowItem++
 
         if (nowItem > maxItem) { //|| nowItem == countForItem) {
+            /*
             if (Build.BRAND != "OPPO") {
                 Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
             }
+            */
             //如果到大筆後仍然沒有解鎖，設邊界值給他
             if (lock) {
                 indexMap.put("UTCBlockEnd", maxItem)
