@@ -137,6 +137,7 @@
                 android:layout_height="30dp"
                 android:background="@drawable/style_login_button"
                 android:text="@string/fetchData"
+                android:visibility="invisible"
                 android:textColor="@color/whiteColor" />
 
             <Button
@@ -145,7 +146,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/style_login_button"
-                android:text="@string/downloadData"
+                android:text="雲端同步"
                 android:textColor="@color/whiteColor" />
 
             <Button
