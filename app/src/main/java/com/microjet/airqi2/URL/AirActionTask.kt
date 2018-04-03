@@ -161,7 +161,7 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
         }
         Log.d(javaClass.simpleName,"我在onPostExecute")
     }
-    private fun doFWVersionCheck():String{
+    private fun doFWVersionCheck(): String {
         val client = OkHttpClient()
         val urlBuilder = HttpUrl.parse(postFWversion)!!.newBuilder()
                 .addQueryParameter("deviceType", urlDT)
@@ -171,11 +171,11 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
                 .url(url)
                 .get()
                 .build()
-        var dataUrl:String?=null
+        var dataUrl = ""
         try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                return "False"
+                dataUrl = "False"
             } else {
                 val res = response.body()?.string()
                 response.body()?.close()
@@ -191,12 +191,11 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
                   }
                 }
             }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            finally {
-                return dataUrl!!
-            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return dataUrl
+        }
+        return dataUrl
     }
 
     private fun downloadFWFileold(url:String):String{

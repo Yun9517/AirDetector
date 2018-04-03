@@ -39,7 +39,7 @@ class FetchDataMain : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_tvoc -> {
                     message.setText(R.string.title_tvoc)
-                    getRealmDay()
+                    //getRealmDay()
 //                    Log.d("getRealmDay--Tvoc Value", "ALL Tvoc" + AllTvoc)
                     adapter = Fetch_Adapter(AllTime,AllTvoc,this)
                     lv_data_info.adapter = adapter
@@ -50,7 +50,7 @@ class FetchDataMain : AppCompatActivity() {
                 }
                 R.id.navigation_pm25 -> {
                     message.setText(R.string.title_pm25)
-                    getRealmDay()
+                    //getRealmDay()
 //                    Log.d("getRealmDay--AllPM25 Value", "ALL AllPM25" + AllPM25)
                     adapter = Fetch_Adapter(AllTime,AllPM25,this)
                     lv_data_info.adapter = adapter
@@ -61,7 +61,7 @@ class FetchDataMain : AppCompatActivity() {
                 }
                 R.id.navigation_co2 -> {
                     message.setText(R.string.title_eco2)
-                    getRealmDay()
+                    //getRealmDay()
                     adapter = Fetch_Adapter(AllTime, AllECo2,this)
                     lv_data_info.adapter = adapter
 
@@ -73,7 +73,7 @@ class FetchDataMain : AppCompatActivity() {
                 }
                 R.id.navigation_humidy -> {
                     message.setText(R.string.title_humidy)
-                    getRealmDay()
+                    //getRealmDay()
                     adapter = Fetch_Adapter(AllTime, AllHumidy,this)
                     lv_data_info.adapter = adapter
                     Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
@@ -82,7 +82,7 @@ class FetchDataMain : AppCompatActivity() {
                 }
                 R.id.navigation_temperatur -> {
                     message.setText(R.string.title_temperatur)
-                    getRealmDay()
+                    //getRealmDay()
                     adapter = Fetch_Adapter(AllTime, AllTemp,this)
                     lv_data_info.adapter = adapter
                     Log.d(TAG + "Time size", "ALL Time " + AllTime.size)

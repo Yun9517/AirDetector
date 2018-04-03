@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var arr1 = arrayListOf<HashMap<String, Int>>()
     private var indexMap = HashMap<String, Int>()
     private var maxItem = 0
+    private var blueToothstateStr = "BluetoothAdapter.STATE_OFF"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -889,7 +890,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val myBroadcastReceiver = object : BroadcastReceiver() {
         @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
-            checkBluetooth()
+            //checkBluetooth()
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
@@ -971,20 +972,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val mBluetoothStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
-            var stateStr = "BluetoothAdapter.STATE_OFF"
 
             when (state) {
                 BluetoothAdapter.STATE_TURNING_OFF -> {
-                    stateStr = "BluetoothAdapter.STATE_TURNING_OFF"
+                    mUartService?.disconnect()
+                    checkUIState()
+                    blueToothstateStr = "BluetoothAdapter.STATE_TURNING_OFF"
                 }
                 BluetoothAdapter.STATE_OFF -> {
-                    stateStr = "BluetoothAdapter.STATE_OFF"
+                    blueToothstateStr = "BluetoothAdapter.STATE_OFF"
                 }
                 BluetoothAdapter.STATE_ON -> {
-                    stateStr = "BluetoothAdapter.STATE_ON"
+                    blueToothstateStr = "BluetoothAdapter.STATE_ON"
                 }
             }
-            Log.v(TAG, "mBluetoothStateReceiver: $stateStr")
+            Log.v(TAG, "mBluetoothStateReceiver: $blueToothstateStr")
         }
     }
 
@@ -1406,7 +1408,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "New FW Arrival "->{
-                showDownloadDialog(bleEvent.message!!)
+                //showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{
 
