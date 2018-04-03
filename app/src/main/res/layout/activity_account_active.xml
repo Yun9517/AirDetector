@@ -138,7 +138,6 @@
                 android:layout_height="30dp"
                 android:background="@drawable/style_login_button"
                 android:text="@string/fetchData"
-                android:visibility="invisible"
                 android:textColor="@color/whiteColor" />
 
             <Button

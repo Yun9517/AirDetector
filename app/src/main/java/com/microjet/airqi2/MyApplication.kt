@@ -32,6 +32,7 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
+        private var deviceSerial: String=""
         //var isPM25: String = "000000000000"
 
         fun applicationContext(): Context {
@@ -105,6 +106,8 @@ class MyApplication : Application() {
         fun getDeviceVersion(): String {
             return deviceVer
         }
+        fun putDeviceSerial(value:String) {deviceSerial=value}
+       // fun getDeviceSerial() : String {return deviceSerial}
 
         fun getSharePreferenceManualDisconn(): Boolean {
             val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
@@ -133,6 +136,7 @@ class MyApplication : Application() {
 
         Realm.setDefaultConfiguration(config)
 
+        /*
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
         Log.d("REALMAPP", query.toString())
@@ -154,6 +158,7 @@ class MyApplication : Application() {
             }
         }
         realm.close()
+        */
 
 
         mPrimaryReceiver = PrimaryReceiver()

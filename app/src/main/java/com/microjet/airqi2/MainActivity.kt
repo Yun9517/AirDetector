@@ -49,9 +49,12 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.nio.ByteBuffer
@@ -178,6 +181,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var arr1 = arrayListOf<HashMap<String, Int>>()
     private var indexMap = HashMap<String, Int>()
     private var maxItem = 0
+    private var blueToothstateStr = "BluetoothAdapter.STATE_OFF"
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -246,6 +250,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
             connState = BleConnection.DISCONNECTED
@@ -255,6 +260,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPause() {
         super.onPause()
+        EventBus.getDefault().unregister(this);
         Log.e(TAG, "call onPause")
     }
 
@@ -884,7 +890,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val myBroadcastReceiver = object : BroadcastReceiver() {
         @SuppressLint("SetTextI18n", "CommitTransaction")
         override fun onReceive(context: Context?, intent: Intent) {
-            checkBluetooth()
+            //checkBluetooth()
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
@@ -966,20 +972,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val mBluetoothStateReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             val state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, BluetoothAdapter.STATE_OFF)
-            var stateStr = "BluetoothAdapter.STATE_OFF"
 
             when (state) {
                 BluetoothAdapter.STATE_TURNING_OFF -> {
-                    stateStr = "BluetoothAdapter.STATE_TURNING_OFF"
+                    mUartService?.disconnect()
+                    checkUIState()
+                    blueToothstateStr = "BluetoothAdapter.STATE_TURNING_OFF"
                 }
                 BluetoothAdapter.STATE_OFF -> {
-                    stateStr = "BluetoothAdapter.STATE_OFF"
+                    blueToothstateStr = "BluetoothAdapter.STATE_OFF"
                 }
                 BluetoothAdapter.STATE_ON -> {
-                    stateStr = "BluetoothAdapter.STATE_ON"
+                    blueToothstateStr = "BluetoothAdapter.STATE_ON"
                 }
             }
-            Log.v(TAG, "mBluetoothStateReceiver: $stateStr")
+            Log.v(TAG, "mBluetoothStateReceiver: $blueToothstateStr")
         }
     }
 
@@ -1064,7 +1071,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (errorTime >= 3) {
             errorTime = 0
         }
-        if (!checkCheckSum(txValue)) {
+        if (!Utils.checkCheckSum(txValue)) {
             errorTime += 1
         } else {
             if (txValue.size > 5) {
@@ -1089,6 +1096,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 0xB1.toByte() -> {
                     var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
                     MyApplication.putDeviceVersion(hashMap["FW"].toString())
+                    MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
+                    CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
                     Log.d("PARSERB1", hashMap.toString())
                 }
                 0xB2.toByte() -> {
@@ -1160,7 +1169,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun checkCheckSum(input: ByteArray): Boolean {
+    /*private fun checkCheckSum(input: ByteArray): Boolean {
         var checkSum = 0x00
         var max = 0xFF.toByte()
         for (i in 0 until input.size) {
@@ -1169,7 +1178,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var checkSumByte = checkSum.toByte()
         return checkSumByte == max
 
-    }
+    }*/
 
     private fun getMaxItems(tx: ByteArray) {
         var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
@@ -1303,9 +1312,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         nowItem++
 
         if (nowItem > maxItem) { //|| nowItem == countForItem) {
+            /*
             if (Build.BRAND != "OPPO") {
                 Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
             }
+            */
             //如果到大筆後仍然沒有解鎖，設邊界值給他
             if (lock) {
                 indexMap.put("UTCBlockEnd", maxItem)
@@ -1390,5 +1401,51 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
         realm.close()
+    }
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent ){
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "New FW Arrival "->{
+                //showDownloadDialog(bleEvent.message!!)
+            }
+            "Download Success"->{
+
+                val intent = Intent()
+                intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
+                intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
+                intent.setClass(this, DFUActivity::class.java)
+                startActivity(intent)
+            }
+        }
+
+    }
+    private fun showDownloadDialog(msg: String) {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage(msg+"\twant to update?")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        { dialog, _ ->
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+
+            dialog.dismiss()
+            val aat = AirActionTask(this.mContext)
+            aat.execute("downloadFWFile")
+        }
+        Dialog.show()
+    }
+    fun CheckFWversion(Version:String,DeviceType:String) {
+        val aat = AirActionTask(this.mContext, Version, DeviceType)
+        val myResponse = aat.execute("postFWVersion")
+        Log.v("AirActionTask", "OVER")
     }
 }

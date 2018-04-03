@@ -888,6 +888,11 @@ object BLECallingTranslate {
                             returnValue.put(TvocNoseData.FW, stringHex)
                             stringHex = ""
                         }
+                        12//FW Serial
+                        ->{
+                            returnValue.put(TvocNoseData.FWSerial, stringHex)
+                            stringHex = ""
+                        }
                         else -> {
                         }
                     }

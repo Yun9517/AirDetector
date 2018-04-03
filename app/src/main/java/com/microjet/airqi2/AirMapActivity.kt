@@ -212,7 +212,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
         //val calendar = Calendar.getInstance()
 
         //現在時間實體毫秒
-        val touchTime = mCal.timeInMillis// + mCal.timeZone.rawOffset
+        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
+        //val touchTime = mCal.timeInMillis// + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -590,7 +591,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (errorTime >= 3) {
             errorTime = 0
         }
-        if (!checkCheckSum(txValue)) {
+        if (!Utils.checkCheckSum(txValue)) {
             errorTime += 1
         } else {
             when (txValue[2]) {
@@ -624,16 +625,5 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
-    }
-
-    private fun checkCheckSum(input: ByteArray): Boolean {
-        var checkSum = 0x00
-        val max = 0xFF.toByte()
-        for (i in 0 until input.size) {
-            checkSum += input[i]
-        }
-        val checkSumByte = checkSum.toByte()
-        return checkSumByte == max
-
     }
 }

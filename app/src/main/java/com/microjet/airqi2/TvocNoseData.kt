@@ -24,6 +24,7 @@ object TvocNoseData {
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
     val FW = "FW"
+    val FWSerial="FWSerial"
     //B2 GetSampleRate
     val ASMS = "ASM_Setting"
     val B2SR = "B2_Sample_Rate"

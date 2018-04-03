@@ -27,6 +27,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.DownloadTask
+import com.microjet.airqi2.FetchDataMain
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
@@ -73,7 +74,14 @@ class AccountActiveActivity : AppCompatActivity() {
         }
 
         initActionBar()
-
+        //barney ++
+        fetchData.setOnClickListener{
+            Log.d("click action","-- BT fetchData click --")
+            val intent = Intent()
+            intent.setClass(this@AccountActiveActivity.mContext, FetchDataMain::class.java)
+//            startActivityForResult(intent,1)
+            startActivity(intent)
+        }
         //20180310
         val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
@@ -214,7 +222,8 @@ class AccountActiveActivity : AppCompatActivity() {
     //20180321
     private fun getDbData( startTimeZone: Int, EntTime: Int): ArrayList<String> {
         val dataArrayListOnee = ArrayList<String>()
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val touchTime = if (calObject.get(Calendar.HOUR) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)

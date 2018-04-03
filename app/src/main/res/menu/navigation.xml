@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_tvoc"
+        android:icon="@drawable/ic_tvoc_black_24dp"
+        android:title="@string/title_tvoc"
+        />
+
+    <item
+        android:id="@+id/navigation_pm25"
+        android:icon="@drawable/ic_pm25_black_24dp"
+        android:title="@string/title_pm25" />
+    <item
+        android:id="@+id/navigation_co2"
+        android:icon="@drawable/ic_eco2_black_24dp"
+        android:title="@string/title_eco2" />
+
+    <item
+        android:id="@+id/navigation_humidy"
+        android:icon="@drawable/ic_humidy_black_24dp"
+        android:title="@string/title_humidy" />
+    <item
+        android:id="@+id/navigation_temperatur"
+        android:icon="@drawable/ic_temp_black_24dp"
+        android:title="@string/title_temperatur" />
+
+</menu>

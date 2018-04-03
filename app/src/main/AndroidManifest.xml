@@ -184,7 +184,14 @@
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".FetchDataMain"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme"
+            />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
