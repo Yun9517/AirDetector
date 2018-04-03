@@ -1069,7 +1069,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (errorTime >= 3) {
             errorTime = 0
         }
-        if (!checkCheckSum(txValue)) {
+        if (!Utils.checkCheckSum(txValue)) {
             errorTime += 1
         } else {
             if (txValue.size > 5) {
@@ -1167,7 +1167,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    private fun checkCheckSum(input: ByteArray): Boolean {
+    /*private fun checkCheckSum(input: ByteArray): Boolean {
         var checkSum = 0x00
         var max = 0xFF.toByte()
         for (i in 0 until input.size) {
@@ -1176,7 +1176,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var checkSumByte = checkSum.toByte()
         return checkSumByte == max
 
-    }
+    }*/
 
     private fun getMaxItems(tx: ByteArray) {
         var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
