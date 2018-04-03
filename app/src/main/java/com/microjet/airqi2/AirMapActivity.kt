@@ -591,7 +591,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
         if (errorTime >= 3) {
             errorTime = 0
         }
-        if (!checkCheckSum(txValue)) {
+        if (!Utils.checkCheckSum(txValue)) {
             errorTime += 1
         } else {
             when (txValue[2]) {
@@ -625,16 +625,5 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
         }
-    }
-
-    private fun checkCheckSum(input: ByteArray): Boolean {
-        var checkSum = 0x00
-        val max = 0xFF.toByte()
-        for (i in 0 until input.size) {
-            checkSum += input[i]
-        }
-        val checkSumByte = checkSum.toByte()
-        return checkSumByte == max
-
     }
 }
