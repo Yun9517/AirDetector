@@ -18,7 +18,7 @@ class PrimaryReceiver : BroadcastReceiver() {
     //private var nm: NotificationManager? = null
 
     private val NOTIFY_ID = 1
-    private val TAG="Broadcast:"
+    private val TAG = "Broadcast:"
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.getStringExtra("status")) {
@@ -110,16 +110,16 @@ class PrimaryReceiver : BroadcastReceiver() {
                 context.sendBroadcast(mainIntent)
                 */
             }
-            //"B5" -> {
-                //var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
-                //mainIntent.putExtra("status", "B5")
-                //mainIntent.putExtras(intent)
-                //context.sendBroadcast(mainIntent)
-                // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
-                //  var mydata=bundle.getParcelableArrayExtra("resultSet")
-                //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
-                //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
-            //}
+        //"B5" -> {
+        //var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
+        //mainIntent.putExtra("status", "B5")
+        //mainIntent.putExtras(intent)
+        //context.sendBroadcast(mainIntent)
+        // var bundle= mainIntent.putExtra("TVOCValue",intent.getBundleExtra("result"))
+        //  var mydata=bundle.getParcelableArrayExtra("resultSet")
+        //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
+        //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
+        //}
             "message" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "message")
@@ -183,12 +183,12 @@ class PrimaryReceiver : BroadcastReceiver() {
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
             }
-            BroadcastActions.INTENT_KEY_LOADING_DATA->{
+            BroadcastActions.INTENT_KEY_LOADING_DATA -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_LOADING_DATA, intent.getStringExtra(BroadcastActions.INTENT_KEY_LOADING_DATA))
                 broadcastUpdate(context, BroadcastActions.ACTION_LOADING_DATA, bundle)
             }
-            BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT->{
+            BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT -> {
                 val bundle = Bundle()
                 //   Bundle[{status=MAXPROGRESSITEM, MAXPROGRESSITEM=1440}]
                 bundle.putString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, intent.getStringExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT))
@@ -225,8 +225,8 @@ class PrimaryReceiver : BroadcastReceiver() {
                 //val getLongi = intent.getFloatExtra(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE)
                 val getBundle = intent.getBundleExtra("TwoValueBundle")
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
-                intent?.putExtra("status",BroadcastActions.INTENT_KEY_LOCATION_VALUE)
-                intent?.putExtra("TwoValueBundle",getBundle)
+                intent?.putExtra("status", BroadcastActions.INTENT_KEY_LOCATION_VALUE)
+                intent?.putExtra("TwoValueBundle", getBundle)
                 context.sendBroadcast(intent)
             }
             BroadcastActions.INTENT_KEY_SET_PM25_ON -> {
@@ -259,12 +259,14 @@ class PrimaryReceiver : BroadcastReceiver() {
             }
         }
     }
-    private fun broadcastUpdate(context:Context,action: String, bundle: Bundle) {
+
+    private fun broadcastUpdate(context: Context, action: String, bundle: Bundle) {
         val intent = Intent(action)
         intent.putExtras(bundle)
         LocalBroadcastManager.getInstance(context).sendBroadcast(intent)
         Log.v(TAG, "Send broadcast: " + action)
     }
+
     companion object {
         val ACTION = "Main"
     }

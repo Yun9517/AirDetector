@@ -640,7 +640,7 @@ public class UartService1 extends Service {
      */
     public void enableTXNotification() {
         /*
-    	if (mBluetoothGatt == null) {
+        if (mBluetoothGatt == null) {
     		showMessage("mBluetoothGatt null" + mBluetoothGatt);
     		broadcastUpdate(DEVICE_DOES_NOT_SUPPORT_UART);
     		return;
@@ -1168,7 +1168,7 @@ public class UartService1 extends Service {
                         }, 1000);
                     }
 
-                // 2018/03/20 Remove alert (Yellow)
+                    // 2018/03/20 Remove alert (Yellow)
                     if (Integer.valueOf(RString.get(2)) < 661) {
                         //20180122  Andy
                         //countsound220 = 0;
@@ -2325,17 +2325,18 @@ public class UartService1 extends Service {
 
         return dbSucessOrNot;
     }
+
     @SuppressLint("MissingPermission")
     private void initFuseLocationProviderClient() {
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
 
-        client.getLastLocation().addOnCompleteListener( task -> {
-            if(task.isSuccessful()) {
+        client.getLastLocation().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 Location location = task.getResult();
 
-                if(location != null) {
-                    lati = (float)location.getLatitude();
-                    longi = (float)location.getLongitude();
+                if (location != null) {
+                    lati = (float) location.getLatitude();
+                    longi = (float) location.getLongitude();
                 } else {
                     lati = 24.959817f;
                     longi = 121.4215f;
@@ -2346,23 +2347,23 @@ public class UartService1 extends Service {
         });
 
         client.requestLocationUpdates(locationRequest, new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                super.onLocationResult(locationResult);
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        super.onLocationResult(locationResult);
 
-                Location location = locationResult.getLastLocation();
+                        Location location = locationResult.getLastLocation();
 
-                if(location != null) {
-                    lati = (float)location.getLatitude();
-                    longi = (float)location.getLongitude();
-                } else {
-                    lati = 24.959817f;
-                    longi = 121.4215f;
-                }
+                        if (location != null) {
+                            lati = (float) location.getLatitude();
+                            longi = (float) location.getLongitude();
+                        } else {
+                            lati = 24.959817f;
+                            longi = 121.4215f;
+                        }
 
-                Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
-            }
-        },
+                        Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
+                    }
+                },
                 Looper.myLooper());
     }
 

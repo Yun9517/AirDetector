@@ -9,8 +9,12 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
+
 import android.content.pm.ApplicationInfo
+import android.net.ConnectivityManager
+
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
@@ -19,17 +23,15 @@ import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
-import android.widget.DatePicker
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.DownloadTask
-import com.microjet.airqi2.MyApplication
+import com.microjet.airqi2.FetchDataMain
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
-import kotlinx.android.synthetic.main.drawer_header.*
 import org.json.JSONException
 import java.io.Closeable
 import java.io.File
@@ -72,7 +74,14 @@ class AccountActiveActivity : AppCompatActivity() {
         }
 
         initActionBar()
-
+        //barney ++
+        fetchData.setOnClickListener{
+            Log.d("click action","-- BT fetchData click --")
+            val intent = Intent()
+            intent.setClass(this@AccountActiveActivity.mContext, FetchDataMain::class.java)
+//            startActivityForResult(intent,1)
+            startActivity(intent)
+        }
         //20180310
         val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
@@ -90,15 +99,22 @@ class AccountActiveActivity : AppCompatActivity() {
         // 03/14 edit ID
         var editName = findViewById<TextView>(R.id.show_Name)
         editName.text = myName
+
         // 03/16 InputFilter max 20
         editName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+
+        // 03/30 
         change_password.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent()
-            intent.setClass(this@AccountActiveActivity.mContext, AccountResetPasswordActivity::class.java)
-            //startActivityForResult(intent,1)
-            startActivity(intent)
-            //finish()
+            if(isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent()
+                intent.setClass(this@AccountActiveActivity.mContext, AccountResetPasswordActivity::class.java)
+                startActivity(intent)
+                //finish()
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
+
         }
         // 03/14 edit ID
 
@@ -110,29 +126,15 @@ class AccountActiveActivity : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
-
-
-
-
-            // create an OnDateSetListener
-            val dateSetListener = object : DatePickerDialog.OnDateSetListener {
-                override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
-                                       dayOfMonth: Int) {
-                    cal.set(Calendar.YEAR, year)
-                    cal.set(Calendar.MONTH, monthOfYear)
-                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                    calObject.set(year, monthOfYear, dayOfMonth)
-                    updateDateInView()
-                }
-            }
-            // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         shareData!!.setOnClickListener {
-            DatePickerDialog(this@AccountActiveActivity,
-                    dateSetListener,
-                    // set DatePickerDialog to point to today's date when it loads up
-                    cal.get(Calendar.YEAR),
-                    cal.get(Calendar.MONTH),
-                    cal.get(Calendar.DAY_OF_MONTH)).show()
+            var cal = Calendar.getInstance()
+            val dpd = DatePickerDialog(this!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                cal.set(year, month, dayOfMonth)
+                calObject.set(year, month, dayOfMonth)
+                updateDateInView()
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+            dpd.setMessage("請選擇日期")
+            dpd.show()
         }
 
         downloadData.setOnClickListener {
@@ -146,17 +148,27 @@ class AccountActiveActivity : AppCompatActivity() {
     }
 
     private fun updateDateInView() {
-        val myFormat = "MM/dd/yyyy" // mention the format you need
-        val sdf = SimpleDateFormat(myFormat, Locale.TAIWAN)
         dbData2CVSAsyncTasks()//sdf)
-        // if(this.checkLineInstalled()!!) {
         file_Provider()
-        System.currentTimeMillis()
     }
 
 
-
-
+    //20180311
+    fun showDialog (msg:String) {
+        val Dialog = android.app.AlertDialog.Builder(this@AccountActiveActivity).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage(msg.toString())
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
+        }
+        Dialog.show()
+    }
 
     private fun initActionBar() {
         // 取得 actionBar
@@ -198,8 +210,6 @@ class AccountActiveActivity : AppCompatActivity() {
         super.onDestroy()
     }
 
-
-    //    private inner class dbData2CVSAsyncTasks(){ //: AsyncTask<Void, Void, String>() {
     private fun dbData2CVSAsyncTasks( ){//TS: TvocNoseData) {
         try {
             val AllData = getDbData(Date().day, Date().day )//Date().day, Date().day)
@@ -210,23 +220,12 @@ class AccountActiveActivity : AppCompatActivity() {
     }
 
     //20180321
-    val DataArrayListOne = ArrayList<String>()
-
-    //val DataArrayListAll= ArrayList< ArrayList<String>>()
     private fun getDbData( startTimeZone: Int, EntTime: Int): ArrayList<String> {
-        //很重要同區域才可以叫到同一個東西
-//        val realm1 = Realm.getDefaultInstance()
-//        val query1 = realm1.where(AsmDataModel::class.java)
-//        val result1 = query1.findAll()
-
-        arrTime.clear()
-        arrData.clear()
-        //現在時間實體毫秒
-        //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
+        val dataArrayListOnee = ArrayList<String>()
+        val touchTime = if (calObject.get(Calendar.HOUR) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.DAY_OF_MONTH).toString())
-        //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -236,26 +235,21 @@ class AccountActiveActivity : AppCompatActivity() {
         query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.e("資料筆數", result1.size.toString())
-        Log.e("所有資料筆數", result1.toString().toString())
-        //MyApplication getUUID=new MyApplication();
-        val UUID = MyApplication.getPsuedoUniqueID()
-        val timestampTEMP: Long? = null
+        Log.e("所有資料筆數", result1.toString())
         try {
             if (result1.size > 0) {
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                 for (i in result1.indices) {
-                    //toltoSize++;
-                    //hasBeenUpLoaded.add(result1[i]!!.dataId)
                     Log.i("text", "i=" + i + "\n")
-                    DataArrayListOne.add(result1[i]?.tempValue.toString())
-                    DataArrayListOne.add(result1[i]?.humiValue.toString())
-                    DataArrayListOne.add(result1[i]?.tvocValue.toString())
-                    DataArrayListOne.add(result1[i]?.ecO2Value.toString())
-                    DataArrayListOne.add(result1[i]?.pM25Value.toString())
-                    DataArrayListOne.add(result1[i]?.longitude!!.toString())
-                    DataArrayListOne.add(result1[i]?.latitude!!.toString())
+                    dataArrayListOnee.add(result1[i]?.tempValue.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.humiValue.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.tvocValue.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.ecO2Value.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.pM25Value.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.longitude!!.toString()+",")
+                    dataArrayListOnee.add(result1[i]?.latitude!!.toString()+",")
                     val date = dateLabelFormat.format(result1[i]?.created_time!!.toLong())
-                    DataArrayListOne.add(date)
+                    dataArrayListOnee.add(date+"\r\n" )
                 }
             } else {
                 Log.e("未上傳資料筆數", result1.size.toString())
@@ -263,25 +257,14 @@ class AccountActiveActivity : AppCompatActivity() {
         } catch (e: JSONException) {
             e.printStackTrace()
         }
-
         realm.close()
-
-        return DataArrayListOne
+        return dataArrayListOnee
     }
 
     //20180321
     private fun writeDataToFile(data: ArrayList<String>, context: Context) {
         try {
-
-            val kk = context.getFileStreamPath("BLE_Data.csv")
-            Log.e("", "")
-//            if (!kk.exists()) {
-//                val outputStreamWriterData = OutputStreamWriter(context.openFileOutput("BLE_Data.csv", Context.MODE_APPEND))
-//                outputStreamWriterData.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
-//                outputStreamWriterData.close()
-//            }
             var mSDFile: File? = null
-
             //檢查有沒有SD卡裝置
             if (Environment.getExternalStorageState() == Environment.MEDIA_REMOVED) {
                 Toast.makeText(applicationContext, "沒有SD卡!!!", Toast.LENGTH_SHORT).show()
@@ -291,19 +274,14 @@ class AccountActiveActivity : AppCompatActivity() {
                 mSDFile = Environment.getExternalStorageDirectory()
                 mSDFile = context.getFileStreamPath("BLE_Data.csv")
                 mSDFile.delete()
-                //mSDFile = context.getFileStreamPath("BLEaddressData.txt");
             }
-
             val mFileWriter = FileWriter(mSDFile!!, true)
             mFileWriter.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
             for (l in 0..data.size) {
-                //for (k in 0..7) {
-                if (l != 0 && l.mod(8) == 0) {
-                    mFileWriter.write("\r\n")
-                }
-                mFileWriter.write(data[l].toString() + ",")
-                //}
+                mFileWriter.write(data[l])//data[l])
+                mFileWriter.flush()
             }
+            Log.e("全給我進去!!",data.last())
             mFileWriter.close()
             Log.e("Excel檔完成!!路徑為:", mSDFile.path)
         } catch (e: IOException) {
@@ -320,30 +298,30 @@ class AccountActiveActivity : AppCompatActivity() {
         } catch (e: IOException) {
             e.printStackTrace()
         }
-
     }
+
+    // 2018/03/30
+    private fun isConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
     //20180329
     private fun  checkLineInstalled(): Boolean? {
-
-
         val lineInstallFlag: Boolean = false
-
-
         val pm = packageManager
         val m_appList = pm.getInstalledApplications(0)
         val ai:ApplicationInfo
 
         m_appList?.forEachIndexed { _, ai ->
-            if (ai.packageName.equals(PACKAGE_NAME)) {
+            if (ai.packageName == PACKAGE_NAME) {
                 val lineInstallFlag = true
             }
         }
-        return lineInstallFlag;
+        return lineInstallFlag
+
     }
-
-
-
-
     private fun file_Provider() {
         var mSDFile: File? = null
         //mSDFile = this.getFilesDir()
@@ -365,31 +343,8 @@ class AccountActiveActivity : AppCompatActivity() {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(chooser,0)
         }
-
-
-////        //PO文字
-//        val PACKAGE_NAME = "jp.naver.line.android"
-//        val CLASS_NAME = "jp.naver.line.android.activity.selectchat.SelectChatActivity"
-//        val Lineintent = Intent(Intent.ACTION_SEND)
-//        Lineintent.setClassName(PACKAGE_NAME, CLASS_NAME)
-//        intent.data = uri
-//        Lineintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        Lineintent.setType("csv/plain")
-//        intent.type = "Application/csv"
-//        Lineintent.putExtra(Intent.EXTRA_STREAM, uri)
-//        //Lineintent.data = uri
-//        //Lineintent.putExtra(Intent.EXTRA_TEXT, uri)
-//        startActivity(intent)
     }
 }
-
-
-
-
-
-
-
-
 
 
 

@@ -13,6 +13,7 @@ import android.net.ConnectivityManager
 
 import android.os.Build
 import android.os.Handler
+import com.microjet.airqi2.Definition.SavePreferences
 import java.util.*
 
 
@@ -31,6 +32,7 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
+        private var deviceSerial: String=""
         //var isPM25: String = "000000000000"
 
         fun applicationContext(): Context {
@@ -104,6 +106,18 @@ class MyApplication : Application() {
         fun getDeviceVersion(): String {
             return deviceVer
         }
+        fun putDeviceSerial(value:String) {deviceSerial=value}
+       // fun getDeviceSerial() : String {return deviceSerial}
+
+        fun getSharePreferenceManualDisconn(): Boolean {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            return share.getBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, false)
+        }
+
+        fun setSharePreferenceManualDisconn(value: Boolean) {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            share.edit().putBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, value).apply()
+        }
 
     }
 
@@ -116,19 +130,20 @@ class MyApplication : Application() {
         Realm.init(this)
         //val config = RealmConfiguration.Builder().name("myrealm.realm").build()
         val config = RealmConfiguration.Builder().name("myrealm.realm").schemaVersion(2).migration(RealmMigrations()).build()
-        Log.d("REALMAPP",config.schemaVersion.toString())
-        Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
-        Log.d("REALMAPP",RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
+        Log.d("REALMAPP", config.schemaVersion.toString())
+        Log.d("REALMAPP", RealmConfiguration.Builder().name("myrealm.realm").build().path.toString())
+        Log.d("REALMAPP", RealmConfiguration.Builder().name("myrealm.realm").build().realmDirectory.toString())
 
         Realm.setDefaultConfiguration(config)
 
+        /*
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java).sort("Created_time").findAll()
-        Log.d("REALMAPP",query.toString())
+        Log.d("REALMAPP", query.toString())
         var createdTime = 0L
         val idArr = arrayListOf<Int>()
         query?.forEachIndexed { index, asmDataModel ->
-            Log.d("REALMAPP",index.toString())
+            Log.d("REALMAPP", index.toString())
             if (asmDataModel.created_time == createdTime) {
                 idArr.add(asmDataModel.dataId)
             }
@@ -137,12 +152,13 @@ class MyApplication : Application() {
         for (i in idArr) {
             val realm1 = Realm.getDefaultInstance()
             val query1 = realm1.where(AsmDataModel::class.java).equalTo("id", i).findAll()
-            Log.d("REALMAPPDUP",query1.toString())
+            Log.d("REALMAPPDUP", query1.toString())
             realm1.executeTransaction {
                 query1.deleteAllFromRealm()
             }
         }
         realm.close()
+        */
 
 
         mPrimaryReceiver = PrimaryReceiver()

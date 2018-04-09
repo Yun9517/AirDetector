@@ -234,22 +234,23 @@ class NetUtils(val context: Context) {
     /**
      * 当前SIM卡状态
      */
-    val SIM_STATE: Boolean
-            = !(TELEPHONY_MANAGER.simState == TelephonyManager.SIM_STATE_ABSENT
+    val SIM_STATE: Boolean = !(TELEPHONY_MANAGER.simState == TelephonyManager.SIM_STATE_ABSENT
             || TELEPHONY_MANAGER.simState == TelephonyManager.SIM_STATE_UNKNOWN)
 
 
     /**
      * 手机串号
      */
-    val IMEI: String? @SuppressLint("MissingPermission")
-    get() = TELEPHONY_MANAGER.deviceId
+    val IMEI: String?
+        @SuppressLint("MissingPermission")
+        get() = TELEPHONY_MANAGER.deviceId
 
     /**
      * 国际移动用户标识码
      */
-    val IMSI: String? @SuppressLint("MissingPermission")
-    get() = TELEPHONY_MANAGER.subscriberId
+    val IMSI: String?
+        @SuppressLint("MissingPermission")
+        get() = TELEPHONY_MANAGER.subscriberId
 
 }
 

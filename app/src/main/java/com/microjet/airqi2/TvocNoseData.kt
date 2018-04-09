@@ -24,6 +24,7 @@ object TvocNoseData {
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
     val FW = "FW"
+    val FWSerial="FWSerial"
     //B2 GetSampleRate
     val ASMS = "ASM_Setting"
     val B2SR = "B2_Sample_Rate"
@@ -123,7 +124,7 @@ object TvocNoseData {
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
         val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
+        Log.d("TVOCbtncallRealm", calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -147,7 +148,7 @@ object TvocNoseData {
             arrHumiDay.add("0")
             arrTimeDay.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
         }
-        var aveTvoc=0
+        var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
@@ -181,7 +182,7 @@ object TvocNoseData {
         //val realm= Realm.getDefaultInstance()
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
-        var AVGTvoc3 :Float= 0F
+        var AVGTvoc3: Float = 0F
         Log.d("getRealmWeek", sqlStartDate.toString())
         Log.d("getRealmWeek", sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
@@ -194,7 +195,7 @@ object TvocNoseData {
             }
             AVGTvoc3 = (sumTvocYesterday / result2.size)
         } else {
-            AVGTvoc3=0F
+            AVGTvoc3 = 0F
         }
 
         //}
@@ -282,7 +283,7 @@ object TvocNoseData {
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth", sqlMonthBase.toString())
         //跑七筆BarChart
-        for (y in 0..(monthCount-1)) {
+        for (y in 0..(monthCount - 1)) {
             //第一筆為日 00:00
             val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59

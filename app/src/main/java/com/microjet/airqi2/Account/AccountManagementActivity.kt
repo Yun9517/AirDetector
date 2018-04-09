@@ -3,6 +3,7 @@ package com.microjet.airqi2.Account
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.widget.EditText
 import android.widget.TextView
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.R
+import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -27,63 +29,57 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private var mContext: Context? = null
 
-    var mUserEmailEditText: EditText? = null
-    var mPasswordEditText: EditText? = null
-    var mForgotPasswordTextView:TextView?=null
-    var mCreateAccountTextView:TextView?=null
-
     var userEmail = ""
     var userName = ""
     private var loginResult: String? = null
-    private var mMyThing: logInMything?=null
-    var btnSubmit:Button? = null
+    private var mMyThing: logInMything? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         mContext = this@AccountManagementActivity.applicationContext
         initActionBar()
 
-        // get reference to all views
-        mUserEmailEditText = findViewById(R.id.email)
-        mPasswordEditText = findViewById(R.id.password)
-        btnSubmit = findViewById(R.id.login)
-        mForgotPasswordTextView = findViewById(R.id.forgotPassword)
-        mCreateAccountTextView = findViewById(R.id.newAccount)
-    //    var register_mail_Result: String?
-
-
         val bundle = intent.extras
         if (bundle != null) {
             userEmail = bundle.getString("email", "")
             userName = bundle.getString("name", "")
-            mUserEmailEditText?.setText(userEmail)
+            email.setText(userEmail)
             //mPasswordEditText?.setText(userPassword)
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
 
 
-        mCreateAccountTextView?.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent(this, AccountRegisterActivity::class.java)
-            startActivity(intent)
+        newAccount.setOnClickListener {
+            if (isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent(this, AccountRegisterActivity::class.java)
+                startActivity(intent)
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
         }
 
-        mForgotPasswordTextView?.setOnClickListener {
-            //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-            val intent = Intent(this, AccountForgetPasswordActivity::class.java)
-            startActivity(intent)
+        forgotPassword.setOnClickListener {
+            if (isConnected()) {
+                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+                val intent = Intent(this, AccountForgetPasswordActivity::class.java)
+                startActivity(intent)
+            } else {
+                showDialog(getString(R.string.checkConnection))
+            }
         }
 
-        mMyThing = logInMything(btnSubmit!!, false, "https://mjairql.com/api/v1/login")
+        mMyThing = logInMything(login!!, false, "https://mjairql.com/api/v1/login")
 
-        btnSubmit?.setOnClickListener {
+        login?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
-                if (isEmail(mUserEmailEditText?.text.toString()) && mUserEmailEditText?.text.toString() != "") {
+                if (isEmail(email?.text.toString()) && email?.text.toString() != "") {
                     if (com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick) {
                         //showDialog("按慢一點太快了")
                         showDialog(getString(R.string.tooFast))
                     } else {
-                        btnSubmit?.isEnabled=false
+                        login?.isEnabled = false
                         goLoginAsyncTasks().execute(mMyThing)
                     }
                 } else {
@@ -92,7 +88,11 @@ class AccountManagementActivity : AppCompatActivity() {
                 }
             }else{
                 //showDialog("請連接網路")
-                showDialog(getString(R.string.checkConnection))
+                if (isConnected()) {
+                    goLoginAsyncTasks().execute(mMyThing)
+                } else {
+                    showDialog(getString(R.string.checkConnection))
+                }
             }
         }
     }
@@ -134,6 +134,14 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // 2018/03/30
+
+    private fun isConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
+
      private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
         override fun doInBackground(vararg params: logInMything): String? {
             try {
@@ -142,8 +150,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
 
-                userEmail = mUserEmailEditText!!.text.toString()
-                userName = mPasswordEditText!!.text.toString()
+                userEmail = email!!.text.toString()
+                userName = password!!.text.toString()
                 val ccc = "email=" + userEmail + "&password=" + userName
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
@@ -166,8 +174,8 @@ class AccountManagementActivity : AppCompatActivity() {
                         Log.e("登入正確回來", tempBody)
                         val responseContent = JSONObject(tempBody)
                         val token = responseContent.getJSONObject("success").getString("token").toString()
-                        val name =responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
-                        val email =responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
+                        val name = responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
+                        val email = responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
@@ -181,7 +189,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 } else {
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
-                        btnSubmit?.isEnabled=true
+                        login?.isEnabled=true
                     })
 
                     params[0].myBlean = false
@@ -206,7 +214,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result== "成功登入") {
+            if (result == "成功登入") {
                 val intent = Intent(mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
@@ -243,7 +251,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
     //20180312
-     private fun showDialog(msg:String){
+     private fun showDialog(msg: String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -259,7 +267,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class logInMything ( btn:Button?,blean:Boolean?,myString :String?){
+ class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn
     var myBlean = blean
     var myAddress = myString

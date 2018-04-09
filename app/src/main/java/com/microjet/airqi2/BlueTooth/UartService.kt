@@ -49,8 +49,8 @@ class UartService : Service() {
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
 
-    private val bus = EventBus.getDefault()
-    private val bleEventObj = BleEvent()
+   // private val bus = EventBus.getDefault()
+    //private val bleEventObj = BleEvent()
 
     // 20180328 Add Location Request to Service
     private var longi: Float? = 121.4215f
@@ -383,15 +383,18 @@ class UartService : Service() {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_OFF)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_OFF)
         return intentFilter
     }
 
     private val mServiceReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
-
-            when(p1!!.action) {
+            when (p1!!.action) {
                 BroadcastActions.INTENT_KEY_LED_OFF -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(false))
                 BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
+                BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
+                BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
             }
         }
     }

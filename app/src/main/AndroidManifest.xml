@@ -102,17 +102,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/filepaths"/>
         </provider>
-<!--
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.stylingandroid.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
-        </provider>
--->
+
         <activity
             android:name=".Account.AccountResetPasswordActivity"
             android:excludeFromRecents="true"
@@ -194,7 +184,14 @@
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".FetchDataMain"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme"
+            />
 
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.

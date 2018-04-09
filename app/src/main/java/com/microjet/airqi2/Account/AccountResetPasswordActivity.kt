@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.AsyncTask
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -29,9 +30,9 @@ class AccountResetPasswordActivity : AppCompatActivity() {
     private var checkPassword : EditText? = null
     private var btn_confirm_Modify : Button? = null
 
-    private var restpassword_Result : String ? = null
+    private var restpassword_Result : String? = null
 
-    var mything: mything?=null
+    var mything: mything? = null
     //20180313
     private var MyToKen: String? = ""
 
@@ -63,7 +64,11 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                         showDialog(getString(R.string.tooFast))
                     } else {
                         btn_confirm_Modify?.isEnabled = false
-                        resetPassWordAsyncTasks().execute(mything)
+                        if (isConnected()) {
+                            resetPassWordAsyncTasks().execute(mything)
+                        } else {
+                            showDialog(getString(R.string.checkConnection))
+                        }
                     }
                     //showDialog("請連接網路")
                 } else {
@@ -78,6 +83,13 @@ class AccountResetPasswordActivity : AppCompatActivity() {
 
     }
 
+    // 2018/03/30
+
+    private fun isConnected(): Boolean {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        return networkInfo != null && networkInfo.isConnected
+    }
 
 
 
@@ -98,7 +110,6 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                 intent.setClass(this@AccountResetPasswordActivity.mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
-                return true
             }
             else -> {
             }
@@ -164,6 +175,14 @@ class AccountResetPasswordActivity : AppCompatActivity() {
 
             return restpassword_Result
         }
+
+            // 2018/03/30
+
+            private fun isConnected(): Boolean {
+                val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+                val networkInfo = cm.activeNetworkInfo
+                return networkInfo != null && networkInfo.isConnected
+            }
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)

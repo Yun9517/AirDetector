@@ -55,7 +55,7 @@ class DownloadTask : AsyncTask<String, Void, String>() {
         val phpToken = "Bearer " + token
 
         val client = OkHttpClient()
-        val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData")!!.newBuilder()
+        val urlBuilder = HttpUrl.parse("http://api.mjairql.com/api/v1/getUserData?mac_address")!!.newBuilder()
                 .addQueryParameter("mac_address", mDeviceAddress)
         //.addQueryParameter("start_time", "0")
         //.addQueryParameter("end_time", "1520941868267")
@@ -63,7 +63,7 @@ class DownloadTask : AsyncTask<String, Void, String>() {
         val request = Request.Builder()
                 .url(url)
                 .get()
-                .addHeader("authorization",phpToken)
+                .addHeader("authorization", phpToken)
                 .build()
         Log.d("Download", "doInBackground")
         try {
@@ -107,10 +107,10 @@ class DownloadTask : AsyncTask<String, Void, String>() {
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
-                    Log.d("Download",res.toString())
+                    Log.d("Download", res.toString())
                     return "DownloadCloudDone"
                 } else {
-                    Log.d("Download",res.toString())
+                    Log.d("Download", res.toString())
                     return "Error"
                 }
             }

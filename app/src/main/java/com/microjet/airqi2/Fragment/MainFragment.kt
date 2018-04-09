@@ -191,8 +191,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     private fun sendPumpCommand(command: String) {
-        val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-        intent!!.putExtra("status", command)
+        val intent: Intent? = Intent(command)
+        //intent!!.putExtra("status", command)
         mContext!!.sendBroadcast(intent)
     }
 

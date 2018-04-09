@@ -1,10 +1,13 @@
 package com.microjet.airqi2.Definition
 
+import com.microjet.airqi2.URL.AirActionTask
+
 /**
  * Created by ray650128 on 2017/11/30.
  */
 object SavePreferences {
-    const  val SETTING_KEY: String = "airqi2.settings"
+    const val SETTING_KEY: String = "airqi2.settings"
+    const  val AirActionTask_KEY: String = "airqi2.AirActionTask_KEY"
 
     // 偏好設定中儲存藍芽名稱及MAC Address的KEY
     const val SETTING_SAVED_BT_NAME = "airqi2.settings.SETTING_SAVED_BT_NAME"
@@ -25,6 +28,8 @@ object SavePreferences {
     //20180222
     const val SETTING_LED_SWITCH = "airqi2.settings.SETTING_LED_SWITCH"
     //20180227
-    const val SETTING_CLOUD_FUN ="airqi2.settings.SETTING_CLOUD_FUN"
+    const val SETTING_CLOUD_FUN = "airqi2.settings.SETTING_CLOUD_FUN"
+    //20180330
+    const val SETTING_MANUAL_DISCONNECT = "airqi2.settings.SETTING_MANUAL_DISCONNECT"
 
 }

@@ -230,6 +230,11 @@
     <string name="errorPassword">密码输入不正确</string>
     <string name="remind">提示</string>
     <string name="expectName">请输入欲更改的名称</string>
+    <string name="title_tvoc">TVOC_Data</string>
+    <string name="title_eco2">Eco2_Data</string>
+    <string name="title_humidy">Humidy_Data</string>
+    <string name="title_temperatur">Temperatur_Data</string>
+    <string name="title_pm25">PM2.5</string>
 
     <string name="title_activity_tour">TourActivity</string>
     <string name="title_activity_air_map1">Map</string>
@@ -367,6 +372,8 @@
 		\n\nFor more information about the DFU, see the About DFU section in Settings.</string>
     <string name="font_path">fonts/trebucbd.ttf</string>
     <string name="normal_font_path">fonts/trebuc.ttf</string>
+    <string name="Accept">Yes</string>
+    <string name="Reject">NO</string>
 
 </resources>
 

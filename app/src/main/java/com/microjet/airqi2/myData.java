@@ -8,12 +8,12 @@ import android.os.Parcelable;
  */
 
 public class myData implements Parcelable {
-   public myData(String Temp,String Humidity,String Tvoc,String CO2,String Time){
-        Temperatur_Data=Temp;
-        Humidy_Data=Humidity;
-        TVOC_Data=Tvoc;
-        CO2_Data=CO2;
-        time=Time;
+    public myData(String Temp, String Humidity, String Tvoc, String CO2, String Time) {
+        Temperatur_Data = Temp;
+        Humidy_Data = Humidity;
+        TVOC_Data = Tvoc;
+        CO2_Data = CO2;
+        time = Time;
     }
 
     public String getTemperatur_Data() {
@@ -42,7 +42,7 @@ public class myData implements Parcelable {
     String CO2_Data;
     String time;
 
-    public myData(Parcel in){
+    public myData(Parcel in) {
         String[] data = new String[5];
 
         in.readStringArray(data);
@@ -55,20 +55,21 @@ public class myData implements Parcelable {
     }
 
     @Override
-    public int describeContents(){
+    public int describeContents() {
         return 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(new String[] {
+        dest.writeStringArray(new String[]{
                 this.Temperatur_Data,
-                this.Humidy_Data ,
-                this.TVOC_Data ,
-                this.CO2_Data ,
-                 this.time
+                this.Humidy_Data,
+                this.TVOC_Data,
+                this.CO2_Data,
+                this.time
         });
     }
+
     public static final Parcelable.Creator CREATOR = new Parcelable.Creator() {
         public myData createFromParcel(Parcel in) {
             return new myData(in);
