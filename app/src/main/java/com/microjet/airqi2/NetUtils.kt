@@ -14,6 +14,17 @@ import java.io.InputStreamReader
  * Created by B00170 on 2018/3/11.
  */
 class NetUtils(val context: Context) {
+
+    enum class NetworkType {
+        UNKNOWN,
+        DISCONNECTION,
+        WIFI,
+        DATA2G,
+        DATA3G,
+        DATA4G,
+        DATA5G
+    }
+
     /**
      * 当前WIFI是否可用
      */
@@ -252,14 +263,4 @@ class NetUtils(val context: Context) {
         @SuppressLint("MissingPermission")
         get() = TELEPHONY_MANAGER.subscriberId
 
-}
-
-enum class NetworkType {
-    UNKNOWN,
-    DISCONNECTION,
-    WIFI,
-    DATA2G,
-    DATA3G,
-    DATA4G,
-    DATA5G
 }
