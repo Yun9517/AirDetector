@@ -70,6 +70,8 @@ class AccountActiveActivity : AppCompatActivity() {
 //            shareToKen.edit().putString("name","") .apply()
 //            shareToKen.edit().putString("email","") .apply()
             //shareToKen.edit().clear().apply()
+            intent.setClass(this@AccountActiveActivity.mContext, AccountManagementActivity::class.java)
+            startActivity(intent)
             finish()
         }
 

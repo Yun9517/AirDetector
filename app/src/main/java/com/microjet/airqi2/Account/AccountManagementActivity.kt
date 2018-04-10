@@ -1,5 +1,6 @@
 package com.microjet.airqi2.Account
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -23,6 +24,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
+import android.content.SharedPreferences
+
+
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -34,6 +38,7 @@ class AccountManagementActivity : AppCompatActivity() {
     private var loginResult: String? = null
     private var mMyThing: logInMything? = null
 
+    @SuppressLint("ApplySharedPref")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -46,10 +51,12 @@ class AccountManagementActivity : AppCompatActivity() {
             userName = bundle.getString("name", "")
             email.setText(userEmail)
             //mPasswordEditText?.setText(userPassword)
+            rememberID.isChecked = true
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
-
-
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        email.setText(share.getString("email",""))
+        rememberID.isChecked = share.getBoolean("rememberID",false)
         newAccount.setOnClickListener {
             if (isConnected()) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -71,6 +78,25 @@ class AccountManagementActivity : AppCompatActivity() {
         }
 
         mMyThing = logInMything(login!!, false, "https://mjairql.com/api/v1/login")
+
+        // 2018/04/09
+        rememberID.setOnCheckedChangeListener { buttonView, isChecked ->
+            val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+
+            if(rememberID.isChecked) {
+                share.edit().putBoolean("rememberID",true).apply()
+                //var emailString=  email!!.text.toString()
+                //share.edit().putString("token", token).apply()
+                //share.edit().putString("name", name).apply()
+                //share.edit().putString("email", emailString).apply()
+                //Log.e("正確回來", email.toString())
+
+            } else {
+                //share.edit().putString("email", "").apply()
+                share.edit().putBoolean("rememberID", false).apply()
+                email.setText(share.getString("email",""))
+            }
+        }
 
         login?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
@@ -99,7 +125,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        }
+    }
 
     override fun onStop() {
         super.onStop()
@@ -142,7 +168,7 @@ class AccountManagementActivity : AppCompatActivity() {
         return networkInfo != null && networkInfo.isConnected
     }
 
-     private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
+    private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
         override fun doInBackground(vararg params: logInMything): String? {
             try {
                 val response: okhttp3.Response?
@@ -153,6 +179,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 userEmail = email!!.text.toString()
                 userName = password!!.text.toString()
                 val ccc = "email=" + userEmail + "&password=" + userName
+
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
                 val body = RequestBody.create(mediaType, ccc)// )
@@ -176,12 +203,23 @@ class AccountManagementActivity : AppCompatActivity() {
                         val token = responseContent.getJSONObject("success").getString("token").toString()
                         val name = responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
                         val email = responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
+                        // 2018/04/09
+                        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
-                        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                        share.edit().putString("token", token).apply()
-                        share.edit().putString("name", name).apply()
-                        share.edit().putString("email", email).apply()
+
+                        if (rememberID.isChecked)
+                        {
+                            share.edit().putString("token", token).apply()
+                            share.edit().putString("name", name).apply()
+                            share.edit().putString("email", email).apply()
+                            //rememberID.setChecked(false)
+                            share.edit().putBoolean("rememberID", true).apply()
+                        }
+                        else{
+                            share.edit().putBoolean("rememberID", false).apply()
+                            //share.edit().putString("email", "").apply()
+                        }
 
                     } catch (e: JSONException) {
                         e.printStackTrace()
@@ -247,11 +285,11 @@ class AccountManagementActivity : AppCompatActivity() {
         val p = Pattern.compile(strPattern)
         val m = p.matcher(strEmail)
         return m.matches()
-}
+    }
 
 
     //20180312
-     private fun showDialog(msg: String){
+    private fun showDialog(msg: String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -267,7 +305,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
+class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn
     var myBlean = blean
     var myAddress = myString

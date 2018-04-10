@@ -217,6 +217,7 @@
     <string name="fetchData">Check</string>
     <string name="downloadData">Download</string>
     <string name="shareData">Share</string>
+    <string name="rememberID">Remember user ID</string>
 
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -33,10 +34,7 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.Marker
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.android.gms.maps.model.PolylineOptions
+import com.google.android.gms.maps.model.*
 import com.microjet.airqi2.CustomAPI.AirMapAdapter
 import com.microjet.airqi2.CustomAPI.SelectedItem
 import com.microjet.airqi2.CustomAPI.Utils
@@ -514,6 +512,20 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback {
 
             startLoadDataThread()
         }
+
+        try {
+            // Customise the styling of the base map using a JSON object defined
+            // in a raw resource file.
+            val success = mMap.setMapStyle(
+                    MapStyleOptions.loadRawResourceStyle(
+                            this, R.raw.style_json))
+
+            if (!success) {
+
+            }
+        } catch (e: Resources.NotFoundException) {
+        }
+
     }
 
     private fun makeBroadcastReceiverFilter(): IntentFilter {

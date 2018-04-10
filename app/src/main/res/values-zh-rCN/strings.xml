@@ -218,6 +218,7 @@
     <string name="fetchData">查看</string>
     <string name="downloadData">下载</string>
     <string name="shareData">分享</string>
+    <string name="rememberID">記住帳號</string>
 
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
