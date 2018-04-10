@@ -79,25 +79,6 @@ class AccountManagementActivity : AppCompatActivity() {
 
         mMyThing = logInMything(login!!, false, "https://mjairql.com/api/v1/login")
 
-        // 2018/04/09
-        rememberID.setOnCheckedChangeListener { buttonView, isChecked ->
-            val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-
-            if(rememberID.isChecked) {
-                share.edit().putBoolean("rememberID",true).apply()
-                //var emailString=  email!!.text.toString()
-                //share.edit().putString("token", token).apply()
-                //share.edit().putString("name", name).apply()
-                //share.edit().putString("email", emailString).apply()
-                //Log.e("正確回來", email.toString())
-
-            } else {
-                //share.edit().putString("email", "").apply()
-                share.edit().putBoolean("rememberID", false).apply()
-                email.setText(share.getString("email",""))
-            }
-        }
-
         login?.setOnClickListener {
             if (GetNetWork.isFastGetNet) {
                 if (isEmail(email?.text.toString()) && email?.text.toString() != "") {
@@ -207,20 +188,22 @@ class AccountManagementActivity : AppCompatActivity() {
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
-
+                 // ****** 2018/04/10 Remember ID *******************************************************//
                         if (rememberID.isChecked)
                         {
+                            share.edit().putBoolean("rememberID", true).apply()
                             share.edit().putString("token", token).apply()
                             share.edit().putString("name", name).apply()
                             share.edit().putString("email", email).apply()
                             //rememberID.setChecked(false)
-                            share.edit().putBoolean("rememberID", true).apply()
                         }
                         else{
                             share.edit().putBoolean("rememberID", false).apply()
-                            //share.edit().putString("email", "").apply()
+                            //share.edit().putString("email", email).apply()
+                            share.edit().putString("token", token).apply()
+                            share.edit().putString("name", name).apply()
+                            share.edit().putString("email", "").apply()
                         }
-
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -229,12 +212,9 @@ class AccountManagementActivity : AppCompatActivity() {
                         params[0].button!!.isEnabled = true
                         login?.isEnabled=true
                     })
-
                     params[0].myBlean = false
                     Log.e("登入錯誤回來", response.body()!!.string())
                     loginResult = "登入失敗"
-
-
                 }
             }
             catch (e: Exception) {
