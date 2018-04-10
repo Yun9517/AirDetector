@@ -14,10 +14,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
-import android.os.Build
-import android.os.Bundle
-import android.os.Handler
-import android.os.IBinder
+import android.os.*
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
@@ -1337,48 +1334,64 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun saveToRealmC5() {
-        if (arr1.size == 0) {
-            val hash = HashMap<String, Int>()
-            hash["UTCBlockHead"] = 1
-            hash["UTCBlockEnd"] = maxItem
-            arr1.add(hash)
-        }
-        for (i in 0 until arr1.size) {
-            val head = arr1[i]["UTCBlockHead"]!! - 1
-            val end = arr1[i]["UTCBlockEnd"]!! - 1
-            var count = 0
-            for (y in head..end) {
-                val realm = Realm.getDefaultInstance()
-                val time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
-                val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
-                if (query.isEmpty() && time > 1514736000000) {
-                    realm.executeTransaction { r ->
-                        val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
-                        asmData.tempValue = arrIndexMap[y][TvocNoseData.C5TEMP].toString()
-                        asmData.humiValue = arrIndexMap[y][TvocNoseData.C5HUMI].toString()
-                        asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
-                        asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
-                        asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
-                        asmData.created_time = time //(arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
-                        asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
-                        asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
-                        asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
-                        Log.d("0xC5", asmData.toString())
+        class SaveRealmTask: AsyncTask<Void, Void, Void>() {
+            override fun doInBackground(vararg params: Void?): Void? {
+                try {
+                    if (arr1.size == 0) {
+                        val hash = HashMap<String, Int>()
+                        hash["UTCBlockHead"] = 1
+                        hash["UTCBlockEnd"] = maxItem
+                        arr1.add(hash)
                     }
+                    for (i in 0 until arr1.size) {
+                        val head = arr1[i]["UTCBlockHead"]!! - 1
+                        val end = arr1[i]["UTCBlockEnd"]!! - 1
+                        var count = 0
+                        for (y in head..end) {
+                            val realm = Realm.getDefaultInstance()
+                            val time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                            val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
+                            if (query.isEmpty() && time > 1514736000000) {
+                                realm.executeTransaction { r ->
+                                    val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                                    asmData.tempValue = arrIndexMap[y][TvocNoseData.C5TEMP].toString()
+                                    asmData.humiValue = arrIndexMap[y][TvocNoseData.C5HUMI].toString()
+                                    asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
+                                    asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
+                                    asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
+                                    asmData.created_time = time //(arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                                    asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
+                                    asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
+                                    asmData.longitude = arrIndexMap[y][TvocNoseData.C5LONGI]?.toFloat()
+                                    Log.d("0xC5", asmData.toString())
+                                }
+                            }
+                            realm.close()
+                            count++
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-                realm.close()
-                count++
+                return null
+            }
+
+            override fun onPostExecute(result: Void?) {
+                super.onPostExecute(result)
+                if (Build.BRAND != "OPPO") {
+                    Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+                }
+                //為了發版先將UploadTask要用的東西先放這
+                val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                val token = share_token.getString("token", "")
+                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                val macAddressForDB = share.getString("mac", "noValue")
+                if (token != "") {
+                    Thread(Runnable { UploadTask().execute(macAddressForDB, token) }).start()
+                }
             }
         }
-        if (Build.BRAND != "OPPO") {
-            Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
-        }
-        //為了發版先將UploadTask要用的東西先放這
-        val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val token = share_token.getString("token", "")
-        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-        val macAddressForDB = share.getString("mac", "noValue")
-        UploadTask().execute(macAddressForDB,token)
+        SaveRealmTask().execute()
     }
 
     private fun saveToRealmC6(hashmap: HashMap<String, String>) {
