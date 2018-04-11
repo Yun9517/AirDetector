@@ -188,20 +188,20 @@ class AccountManagementActivity : AppCompatActivity() {
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
-                 // ****** 2018/04/10 Remember ID *******************************************************//
+                        share.edit().putString("token", token).apply()
+                        share.edit().putString("name", name).apply()
+                        share.edit().putString("email", email).apply()
+                        // ****** 2018/04/10 Remember ID *******************************************************//
+                        share.edit().putString("LoginEmail", email).apply()
+
                         if (rememberID.isChecked)
                         {
                             share.edit().putBoolean("rememberID", true).apply()
-                            share.edit().putString("token", token).apply()
-                            share.edit().putString("name", name).apply()
                             share.edit().putString("email", email).apply()
                             //rememberID.setChecked(false)
                         }
                         else{
                             share.edit().putBoolean("rememberID", false).apply()
-                            //share.edit().putString("email", email).apply()
-                            share.edit().putString("token", token).apply()
-                            share.edit().putString("name", name).apply()
                             share.edit().putString("email", "").apply()
                         }
                     } catch (e: JSONException) {
