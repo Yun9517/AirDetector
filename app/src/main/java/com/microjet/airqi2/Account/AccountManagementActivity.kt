@@ -11,8 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_login.*
@@ -38,7 +36,6 @@ class AccountManagementActivity : AppCompatActivity() {
     private var loginResult: String? = null
     private var mMyThing: logInMything? = null
 
-    @SuppressLint("ApplySharedPref")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -55,7 +52,7 @@ class AccountManagementActivity : AppCompatActivity() {
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        email.setText(share.getString("email",""))
+        email.setText(share.getString("LoginEmail",""))
         rememberID.isChecked = share.getBoolean("rememberID",false)
         newAccount.setOnClickListener {
             if (isConnected()) {
@@ -188,21 +185,17 @@ class AccountManagementActivity : AppCompatActivity() {
                         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
-                 // ****** 2018/04/10 Remember ID *******************************************************//
-                        if (rememberID.isChecked)
-                        {
+                        share.edit().putString("token", token).apply()
+                        share.edit().putString("name", name).apply()
+                        share.edit().putString("email", email).apply()
+
+                        // ****** 2018/04/10 Remember ID *******************************************************//
+                        if (rememberID.isChecked) {
                             share.edit().putBoolean("rememberID", true).apply()
-                            share.edit().putString("token", token).apply()
-                            share.edit().putString("name", name).apply()
-                            share.edit().putString("email", email).apply()
-                            //rememberID.setChecked(false)
-                        }
-                        else{
+                            share.edit().putString("LoginEmail", email).apply()
+                        }else{
                             share.edit().putBoolean("rememberID", false).apply()
-                            //share.edit().putString("email", email).apply()
-                            share.edit().putString("token", token).apply()
-                            share.edit().putString("name", name).apply()
-                            share.edit().putString("email", "").apply()
+                            share.edit().putString("LoginEmail", "").apply()
                         }
                     } catch (e: JSONException) {
                         e.printStackTrace()

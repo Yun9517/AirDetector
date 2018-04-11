@@ -88,6 +88,7 @@ class AccountActiveActivity : AppCompatActivity() {
         val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
         val myName = shareMSG.getString("name", "")
+        // ****** 2018/04/10 Remember ID *******************************************************//
         val myEmail = shareMSG.getString("email", "")
         //val myPassword= shareMSG.getString("password","")
         Log.e("登入後我的資訊", "登入中:" + myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
