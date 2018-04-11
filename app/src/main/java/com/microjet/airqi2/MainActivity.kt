@@ -4,7 +4,7 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
-import android.app.Activity
+import android.app.*
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
@@ -33,8 +33,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
-import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
+import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -68,8 +68,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
     private val DEFINE_FRAGMENT_HUMIDITY = 4
     private val DEFINE_FRAGMENT_PM25 = 5
-
-    private val mContext = this@MainActivity
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -120,31 +118,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var preheatCountDownInt = 0
 
     private var topMenu: Menu? = null
-
-    //20180122
-    private var soundPool: SoundPool? = null
-    private var alertId = 0
-    private var lowPowerCont: Int = 0
-
     // Code to manage Service lifecycle.
     private var mDeviceAddress: String? = null
     private var mUartService: UartService? = null
-
     //private var longi = 121.4215f
     //private var lati = 24.959742f
-
     private var locationListener: LocationListener? = null
-
     // FragmentAdapter
     private lateinit var mFragmentAdapter: FragmentAdapter
-
-    //
     //private val mPM25Fg = ChartFragment()
     /** 是否禁止右劃標記  */
     private var banDownDraw: Boolean = false
     /** 手指在螢幕上的最後x坐標  */
     private var mLastMotionY: Float = 0.toFloat()
-
     private val mServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, service: IBinder) {
             mUartService = (service as UartService.LocalBinder).service
@@ -180,43 +166,37 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var maxItem = 0
     private var blueToothstateStr = "BluetoothAdapter.STATE_OFF"
 
+    //20180411
+    private val soundPool2= SoundPool(1, AudioManager.STREAM_MUSIC, 100)
+    private var alertId = 0
+    private var lowPowerCont: Int = 0
+    private var warningClass: WarningClass? = null
+    val mContext = this@MainActivity
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.e(TAG, "call onCreate")
-
         uiFindViewById()
-
         viewPagerInit()
-
         initActionBar()
-
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
-
         Log.e("Conn", MyApplication.getConnectStatus())
-
         if (!mIsReceiverRegistered) {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
             mIsReceiverRegistered = true
         }
-
         setupDrawerContent(naviView)
-
-        //UartService.nowActivity = this
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
-        //20180206
-        soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
-        alertId = soundPool!!.load(this, R.raw.low_power, 1)
-
 
         //20180209
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        Log.d("MAINACUUID", MyApplication.getPsuedoUniqueID())
-        //EventBus.getDefault().register(this)
+        //20180411   建立警告物件
+        warningClass = WarningClass(this)
+        alertId = soundPool2!!.load(this, R.raw.low_power, 1)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -225,25 +205,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
-
         //checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
-
-
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
         mDeviceAddress = share.getString("mac", "noValue")
         if (mDeviceAddress != "noValue" && connState == BleConnection.DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-
             if (!MyApplication.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
         }
     }
-
 
     override fun onResume() {
         super.onResume()
@@ -878,7 +853,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false) && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
                 {
                     lowPowerCont = 0
-                    soundPool!!.play(alertId, 1F, 1F, 0, 0, 1F)
+                    soundPool2!!.play(alertId, 1F, 1F, 0, 0, 1F)
                 }
             }
         }
@@ -1016,6 +991,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
+    @SuppressLint("NewApi")
     private fun dataAvaliable(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
         when (txValue[0]) {
@@ -1072,94 +1048,96 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             errorTime += 1
         } else {
             if (txValue.size > 5) {
-            when (txValue[2]) {
-                0xB0.toByte() -> {
-                    //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
-                    //heatingPanelControl(hashMap[TvocNoseData.B0PREH]!!)
-                    //displayConnetedBatteryLife(hashMap[TvocNoseData.B0BATT]!!.toInt())
-                    /*
-                    val ble = BleEvent()
-                    ble.B0TEMP = hashMap[TvocNoseData.B0TEMP]!!
-                    ble.B0HUMI = hashMap[TvocNoseData.B0HUMI]!!
-                    ble.B0TVOC = hashMap[TvocNoseData.B0TVOC]!!
-                    ble.B0ECO2 = hashMap[TvocNoseData.B0ECO2]!!
-                    ble.B0PM25 = hashMap[TvocNoseData.B0PM25]!!
-                    ble.B0PREH = hashMap[TvocNoseData.B0PREH]!!
-                    ble.B0BATT = hashMap[TvocNoseData.B0BATT]!!
-                    EventBus.getDefault().post(ble)
-                    */
-                    //connectionInitMethod()
-                }
-                0xB1.toByte() -> {
-                    var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
-                    MyApplication.putDeviceVersion(hashMap["FW"].toString())
-                    MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
-                    CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
-                    Log.d("PARSERB1", hashMap.toString())
-                }
-                0xB2.toByte() -> {
+                when (txValue[2]) {
+                    0xB0.toByte() -> {
+                        //var hashMap = BLECallingTranslate.getAllSensorKeyValue(txValue)
+                        //heatingPanelControl(hashMap[TvocNoseData.B0PREH]!!)
+                        //displayConnetedBatteryLife(hashMap[TvocNoseData.B0BATT]!!.toInt())
+                        /*
+                        val ble = BleEvent()
+                        ble.B0TEMP = hashMap[TvocNoseData.B0TEMP]!!
+                        ble.B0HUMI = hashMap[TvocNoseData.B0HUMI]!!
+                        ble.B0TVOC = hashMap[TvocNoseData.B0TVOC]!!
+                        ble.B0ECO2 = hashMap[TvocNoseData.B0ECO2]!!
+                        ble.B0PM25 = hashMap[TvocNoseData.B0PM25]!!
+                        ble.B0PREH = hashMap[TvocNoseData.B0PREH]!!
+                        ble.B0BATT = hashMap[TvocNoseData.B0BATT]!!
+                        EventBus.getDefault().post(ble)
+                        */
+                        //connectionInitMethod()
+                    }
+                    0xB1.toByte() -> {
+                        var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                        MyApplication.putDeviceVersion(hashMap["FW"].toString())
+                        MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
+                        CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
+                        Log.d("PARSERB1", hashMap.toString())
+                    }
+                    0xB2.toByte() -> {
 
                         var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
                         checkSampleRate(hashMap)
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
                         Log.d("0xB2", hashMap.toString())
-                }
-                0xB4.toByte() -> {
-                    getMaxItems(txValue)
-                }
-                0xB5.toByte() -> {
-                    //saveToRealm(txValue)
-                }
-                0xB9.toByte() -> {
-                    val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-                    val ledState = txValue[3].toInt()
-                    if (txValue.size > 5) {
-                        if (ledState == 1) {
-                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                    false).apply()
-                        } else {
-                            mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                    true).apply()
+                    }
+                    0xB4.toByte() -> {
+                        getMaxItems(txValue)
+                    }
+                    0xB5.toByte() -> {
+                        //saveToRealm(txValue)
+                    }
+                    0xB9.toByte() -> {
+                        val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+                        val ledState = txValue[3].toInt()
+                        if (txValue.size > 5) {
+                            if (ledState == 1) {
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                        false).apply()
+                            } else {
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                        true).apply()
+                            }
+                            Log.e(TAG, "LED Status: $ledState")
                         }
-                        Log.e(TAG, "LED Status: $ledState")
+                        //Log.d("0xB9",hashMap.toString())
                     }
-                    //Log.d("0xB9",hashMap.toString())
-                }
-                0xBA.toByte() -> {
-                    MyApplication.setSharePreferenceManualDisconn(true)
-                    Log.e("0xBA", "Manual Disconnect from Device.........")
-                }
-                0xE0.toByte() -> {
-                    var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
-                    if (hashMap[TvocNoseData.PM25SR] != "5" || hashMap[TvocNoseData.PM25GST] != "30") {
-                        mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
+                    0xBA.toByte() -> {
+                        MyApplication.setSharePreferenceManualDisconn(true)
+                        Log.e("0xBA", "Manual Disconnect from Device.........")
                     }
-                    Log.d("0xE0", hashMap.toString())
-                }
-                0xBB.toByte() -> {
-                    var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
-                    Log.d("0xBB", hashMap.toString())
-                }
-                0xC0.toByte() -> {
-                    var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
-                    heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
-                    displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
-                    val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
-                    connectionInitMethod(rtcTime)
-                    Log.d("0xC0", hashMap.toString())
-                }
-                0xC5.toByte() -> {
-                    putC5ToObject(txValue)
-                }
-                0xC6.toByte() -> {
-                    if (isFirstC6) {
-                        isFirstC6 = false
-                        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                    0xE0.toByte() -> {
+                        var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
+                        if (hashMap[TvocNoseData.PM25SR] != "5" || hashMap[TvocNoseData.PM25GST] != "30") {
+                            mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
+                        }
+                        Log.d("0xE0", hashMap.toString())
                     }
-                    var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
-                    saveToRealmC6(hashMap)
+                    0xBB.toByte() -> {
+                        var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
+                        Log.d("0xBB", hashMap.toString())
+                    }
+                    0xC0.toByte() -> {
+                        var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                        heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
+                        displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
+                        val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
+                        connectionInitMethod(rtcTime)
+                        Log.d("0xC0", hashMap.toString())
+
+                    }
+                    0xC5.toByte() -> {
+                        putC5ToObject(txValue)
+                    }
+                    0xC6.toByte() -> {
+                        if (isFirstC6) {
+                            isFirstC6 = false
+                            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                        }
+                        var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
+                        saveToRealmC6(hashMap)
+                        warningClass!!.judgeTvoc(hashMap[TvocNoseData.C6TVOC]!!.toInt())
+                    }
                 }
-            }
             } else {
                 Log.d("0xB2OK", txValue.size.toString())
             }
@@ -1432,7 +1410,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 startActivity(intent)
             }
         }
-
     }
     private fun showDownloadDialog(msg: String) {
         val Dialog = android.app.AlertDialog.Builder(this).create()
@@ -1456,9 +1433,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         Dialog.show()
     }
+
     fun CheckFWversion(Version:String,DeviceType:String) {
         val aat = AirActionTask(this.mContext, Version, DeviceType)
         val myResponse = aat.execute("postFWVersion")
         Log.v("AirActionTask", "OVER")
     }
 }
+
+
