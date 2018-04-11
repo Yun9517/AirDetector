@@ -1064,7 +1064,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         ble.B0BATT = hashMap[TvocNoseData.B0BATT]!!
                         EventBus.getDefault().post(ble)
                         */
-                        //connectionInitMethod()
+                        val now = (System.currentTimeMillis() / 1000)
+                        connectionInitMethod(now)
                     }
                     0xB1.toByte() -> {
                         var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
@@ -1376,7 +1377,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val realm = Realm.getDefaultInstance()
         val time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
         val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
-        if (query.isEmpty()) {
+        if (query.isEmpty() && time > 1514736000000) {
             realm.executeTransaction { r ->
                 val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
                 asmData.tempValue = hashmap[TvocNoseData.C6TEMP].toString()
@@ -1399,10 +1400,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "New FW Arrival "->{
-                //showDownloadDialog(bleEvent.message!!)
+                showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{
-
                 val intent = Intent()
                 intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
