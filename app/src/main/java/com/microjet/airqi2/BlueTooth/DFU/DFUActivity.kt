@@ -644,7 +644,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
      * Callback of UPDATE/CANCEL button on DfuActivity
      */
     fun onUploadClicked(view: View) {
-        if (isDfuServiceRunning()) {
+        if (isDfuServiceRunning()) {//確保dfu service只跑一個
             showUploadCancelDialog()
             return
         }
