@@ -5,23 +5,17 @@ package com.microjet.airqi2;
  */
 
 import android.annotation.SuppressLint;
-import android.app.PendingIntent;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.content.res.AppCompatResources;
-
-import javax.annotation.meta.When;
-
-import static java.lang.System.in;
 
 public class NotificationHelper extends ContextWrapper {
     private NotificationManager notifManager;
@@ -79,14 +73,13 @@ public class NotificationHelper extends ContextWrapper {
     }
 
     public void set_TCOC_Value(Integer value) {
-        Integer Value = value;
-        if (Value >= 220 && Value < 660) {
+        if (value >= 220 && value < 660) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_02);
-        } else if (Value >= 660 && Value < 2200) {
+        } else if (value >= 660 && value < 2200) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_03);
-        } else if (Value >= 2200 && Value < 5500) {
+        } else if (value >= 2200 && value < 5500) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_04);
-        } else if (Value >= 5500 && Value < 20000) {
+        } else if (value >= 5500 && value < 20000) {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_05);
         } else {
             bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.history_face_icon_06);
