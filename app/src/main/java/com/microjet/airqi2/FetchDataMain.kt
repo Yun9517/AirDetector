@@ -19,22 +19,23 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
-private var arrTime3 = ArrayList<String>()
-private var arrTvoc3 = ArrayList<String>()
-private var AllTime = ArrayList<String>()
-private var AllTvoc = ArrayList<String>()
-private var AllECo2 = ArrayList<String>()
-private var AllHumidy = ArrayList<String>()
-private var AllTemp = ArrayList<String>()
-private var AllPM25 = ArrayList<String>()
-private val calObject = Calendar.getInstance()
-
-private var adapter: Fetch_Adapter? = null
-private val TAG = FetchDataMain::class.java.simpleName
 
 @TargetApi(Build.VERSION_CODES.O)
 class FetchDataMain : AppCompatActivity() {
    @RequiresApi(Build.VERSION_CODES.O)
+    private var arrTime3 = ArrayList<String>()
+    private var arrTvoc3 = ArrayList<String>()
+    private var AllTime = ArrayList<String>()
+    private var AllTvoc = ArrayList<String>()
+    private var AllECo2 = ArrayList<String>()
+    private var AllHumidy = ArrayList<String>()
+    private var AllTemp = ArrayList<String>()
+    private var AllPM25 = ArrayList<String>()
+    private val calObject = Calendar.getInstance()
+
+    private var adapter: Fetch_Adapter? = null
+    private val TAG = FetchDataMain::class.java.simpleName
+
    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.navigation_tvoc -> {

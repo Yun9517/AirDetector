@@ -52,6 +52,14 @@
             android:inputType="textPassword"
             android:textSize="18sp" />
 
+        <CheckBox
+            android:id="@+id/rememberID"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/rememberID" />
+
         <TextView
             android:id="@+id/forgotPassword"
             android:layout_width="wrap_content"

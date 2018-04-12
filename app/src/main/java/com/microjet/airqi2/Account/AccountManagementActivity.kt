@@ -1,5 +1,6 @@
 package com.microjet.airqi2.Account
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,8 +11,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_login.*
@@ -23,6 +22,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
+import android.content.SharedPreferences
+
+
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -46,10 +48,12 @@ class AccountManagementActivity : AppCompatActivity() {
             userName = bundle.getString("name", "")
             email.setText(userEmail)
             //mPasswordEditText?.setText(userPassword)
+            rememberID.isChecked = true
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
-
-
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        email.setText(share.getString("LoginEmail",""))
+        rememberID.isChecked = share.getBoolean("rememberID",false)
         newAccount.setOnClickListener {
             if (isConnected()) {
                 //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -99,7 +103,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        }
+    }
 
     override fun onStop() {
         super.onStop()
@@ -142,7 +146,7 @@ class AccountManagementActivity : AppCompatActivity() {
         return networkInfo != null && networkInfo.isConnected
     }
 
-     private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
+    private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {
         override fun doInBackground(vararg params: logInMything): String? {
             try {
                 val response: okhttp3.Response?
@@ -153,6 +157,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 userEmail = email!!.text.toString()
                 userName = password!!.text.toString()
                 val ccc = "email=" + userEmail + "&password=" + userName
+
 
                 Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
                 val body = RequestBody.create(mediaType, ccc)// )
@@ -176,13 +181,22 @@ class AccountManagementActivity : AppCompatActivity() {
                         val token = responseContent.getJSONObject("success").getString("token").toString()
                         val name = responseContent.getJSONObject("success").getJSONObject("userData").getString("name")
                         val email = responseContent.getJSONObject("success").getJSONObject("userData").getString("email")
+                        // 2018/04/09
+                        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         Log.e("登入正確回來拿token", token)
                         loginResult = "成功登入"
-                        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
                         share.edit().putString("token", token).apply()
                         share.edit().putString("name", name).apply()
                         share.edit().putString("email", email).apply()
 
+                        // ****** 2018/04/10 Remember ID *******************************************************//
+                        if (rememberID.isChecked) {
+                            share.edit().putBoolean("rememberID", true).apply()
+                            share.edit().putString("LoginEmail", email).apply()
+                        }else{
+                            share.edit().putBoolean("rememberID", false).apply()
+                            share.edit().putString("LoginEmail", "").apply()
+                        }
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
@@ -191,12 +205,9 @@ class AccountManagementActivity : AppCompatActivity() {
                         params[0].button!!.isEnabled = true
                         login?.isEnabled=true
                     })
-
                     params[0].myBlean = false
                     Log.e("登入錯誤回來", response.body()!!.string())
                     loginResult = "登入失敗"
-
-
                 }
             }
             catch (e: Exception) {
@@ -247,11 +258,11 @@ class AccountManagementActivity : AppCompatActivity() {
         val p = Pattern.compile(strPattern)
         val m = p.matcher(strEmail)
         return m.matches()
-}
+    }
 
 
     //20180312
-     private fun showDialog(msg: String){
+    private fun showDialog(msg: String){
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -267,7 +278,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Dialog.show()
     }
 }
- class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
+class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn
     var myBlean = blean
     var myAddress = myString

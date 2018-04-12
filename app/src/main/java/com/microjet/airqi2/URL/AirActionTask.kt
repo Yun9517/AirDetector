@@ -60,7 +60,7 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
     }
     constructor(input: Context):this(){//第二建構元
         mContext=input
-     //   callback=callbackInput
+    //    callback=callbackInput
     }
     constructor(input: Context,urlVersion:String, urlDeviceType:String):this(){//第二建構元
         mContext=input
@@ -137,6 +137,12 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
                      "device type error"->{
                          Log.d(javaClass.simpleName,"device type error")
                      }
+                     "internet error"->{
+                        Log.d(javaClass.simpleName,"internet error")
+                    }
+                     "catch error"->{
+                        Log.d(javaClass.simpleName,"catch error")
+                    }
                     else->{
                         mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
                         EventBus.getDefault().post(BleEvent("New FW Arrival "))//使用event 通知有新的FW版本
@@ -171,11 +177,11 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
                 .url(url)
                 .get()
                 .build()
-        var dataUrl = ""
+        var dataUrl ="internet error"
         try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                dataUrl = "False"
+                dataUrl = "internet error"
             } else {
                 val res = response.body()?.string()
                 response.body()?.close()
@@ -193,7 +199,8 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return dataUrl
+            Log.d(javaClass.simpleName,e.message)
+            return "catch error"
         }
         return dataUrl
     }
