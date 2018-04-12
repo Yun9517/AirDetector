@@ -363,7 +363,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
                     android:text="-10" />
-                <!--
+
                                               <ImageView
                                                   android:id="@+id/imgBarRed"
                                                   android:layout_width="10dp"
@@ -371,20 +371,20 @@
                                                   android:layout_alignParentEnd="true"
                                                   android:layout_marginTop="15dp"
                                                   android:src="@color/progressBarEndColor" />
+                <!--
+                                                              <ImageView
+                                                                  android:id="@+id/imgBarYellow"
+                                                                  android:layout_width="10dp"
+                                                                  android:layout_height="match_parent"
+                                                                  android:layout_alignParentEnd="true"
+                                                                  android:src="@color/progressBarMidColor" />
 
-                                              <ImageView
-                                                  android:id="@+id/imgBarYellow"
-                                                  android:layout_width="10dp"
-                                                  android:layout_height="match_parent"
-                                                  android:layout_alignParentEnd="true"
-                                                  android:src="@color/progressBarMidColor" />
-
-                                              <ImageView
-                                                  android:id="@+id/imgBarGreen"
-                                                  android:layout_width="10dp"
-                                                  android:layout_height="match_parent"
-                                                  android:layout_alignParentEnd="true"
-                                                  android:src="@color/progressBarStartColor" /> -->
+                                                              <ImageView
+                                                                  android:id="@+id/imgBarGreen"
+                                                                  android:layout_width="10dp"
+                                                                  android:layout_height="match_parent"
+                                                                  android:layout_alignParentEnd="true"
+                                                                  android:src="@color/progressBarStartColor" /> -->
 
             </RelativeLayout>
 

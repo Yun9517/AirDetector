@@ -265,7 +265,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
                     android:text="500" />
-                <!--
+
                 <ImageView
                     android:id="@+id/imgBarRed"
                     android:layout_width="10dp"
@@ -273,7 +273,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="15dp"
                     android:src="@color/progressBarEndColor" />
-
+                <!--
                 <ImageView
                     android:id="@+id/imgBarYellow"
                     android:layout_width="10dp"
