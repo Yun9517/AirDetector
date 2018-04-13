@@ -1,12 +1,14 @@
 package com.microjet.airqi2
 
 import android.app.Application
+import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.widget.Toast
+import com.microjet.airqi2.Definition.SavePreferences
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody
@@ -22,7 +24,7 @@ import org.json.JSONObject
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask : AsyncTask<String, Void, String>() {
+class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
 
 
     //取MAC
@@ -42,11 +44,20 @@ class DownloadTask : AsyncTask<String, Void, String>() {
     private val Latitude = "latitude"
     //private val UpLoaded = "UpLoaded"
     //private val MACAddress = "MACAddress"
+    private var mContext: Context = input
+    private var mProgressBar: ProgressDialog?=null
+
 
     override fun onPreExecute() {
         super.onPreExecute()
-
-        // ...
+        if (mContext!=null) {
+            mProgressBar = ProgressDialog(mContext)
+            mProgressBar?.setMessage("下載資料中")
+            mProgressBar?.isIndeterminate = false//功能不知道
+            mProgressBar?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+            mProgressBar?.setCancelable(false)
+            mProgressBar?.show()
+        }
     }
 
     override fun doInBackground(vararg params: String?): String? {
@@ -87,8 +98,9 @@ class DownloadTask : AsyncTask<String, Void, String>() {
 
                     val realm = Realm.getDefaultInstance()
                     for (i in 0 until timeStampArr.size) {
-                        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", timeStampArr[i]).findAll()
-                        if (query.isEmpty()) {
+                        val time = timeStampArr[i]
+                        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
+                        if (query.isEmpty() && time > 1514736000000) {
                             realm.executeTransaction {
                                 val asmData = realm.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
                                 asmData.tvocValue = jsonArr.getJSONObject(i).getString(TVOCValue)
@@ -139,6 +151,7 @@ class DownloadTask : AsyncTask<String, Void, String>() {
                     }
                 }
             }
+            mProgressBar?.dismiss()
         }
     }
 }
