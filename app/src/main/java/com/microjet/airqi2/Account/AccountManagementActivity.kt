@@ -23,8 +23,9 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
 import android.content.SharedPreferences
-
-
+import com.microjet.airqi2.DownloadTask
+import com.microjet.airqi2.TvocNoseData
+import org.json.JSONArray
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -188,6 +189,10 @@ class AccountManagementActivity : AppCompatActivity() {
                         share.edit().putString("token", token).apply()
                         share.edit().putString("name", name).apply()
                         share.edit().putString("email", email).apply()
+                        val deviceArr: JSONArray = responseContent.getJSONObject("success").getJSONArray("deviceList")
+                        share.edit().putString("deviceLi", deviceArr.toString()).apply()
+                        Log.d("DDDD",deviceArr.toString())
+
 
                         // ****** 2018/04/10 Remember ID *******************************************************//
                         if (rememberID.isChecked) {

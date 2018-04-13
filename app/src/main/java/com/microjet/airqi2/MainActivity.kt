@@ -524,6 +524,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
         val i: Intent? = Intent(this, AboutActivity::class.java)
+                .putExtra("ADDRESS",show_Dev_address?.text.toString())
+                .putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
         startActivity(i)
     }
 
@@ -1400,14 +1402,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "New FW Arrival "->{
-                showDownloadDialog(bleEvent.message!!)
+            //    showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{
-                val intent = Intent()
+             /*   val intent = Intent()
                 intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
-                startActivity(intent)
+                startActivity(intent)*/
             }
         }
     }

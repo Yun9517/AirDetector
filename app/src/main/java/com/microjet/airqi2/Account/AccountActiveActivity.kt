@@ -19,19 +19,18 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
 import android.support.v4.content.FileProvider
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
 import android.view.MenuItem
 import android.widget.TextView
 import android.widget.Toast
-import com.microjet.airqi2.AsmDataModel
-import com.microjet.airqi2.DownloadTask
-import com.microjet.airqi2.FetchDataMain
-import com.microjet.airqi2.R
+import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
+import org.json.JSONArray
 import org.json.JSONException
 import java.io.Closeable
 import java.io.File
@@ -40,6 +39,7 @@ import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 @Suppress("NAME_SHADOWING")
@@ -129,6 +129,19 @@ class AccountActiveActivity : AppCompatActivity() {
             startActivityForResult(intent, 1)
         }
 
+        // create an OnDateSetListener
+//            val dateSetListener = object : DatePickerDialog.OnDateSetListener {
+//                override fun onDateSet(view: DatePicker, year: Int, monthOfYear: Int,
+//                                       dayOfMonth: Int) {
+//                    cal.set(Calendar.YEAR, year)
+//                    cal.set(Calendar.MONTH, monthOfYear)
+//                    cal.set(Calendar.DAY_OF_MONTH, dayOfMonth)
+//                    calObject.set(year, monthOfYear, dayOfMonth)
+//                    updateDateInView()
+//                }
+//            }
+
+        // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
         shareData!!.setOnClickListener {
             var cal = Calendar.getInstance()
             val dpd = DatePickerDialog(this!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -143,9 +156,22 @@ class AccountActiveActivity : AppCompatActivity() {
         downloadData.setOnClickListener {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val token = share_token.getString("token", "")
+            //取得裝置資料清單下載
+            val arr = JSONArray(shareMSG.getString("deviceLi",""))
+            val list = ArrayList<String>()
+            for (i in 0 until arr!!.length()) {
+                list.add(arr.getJSONObject(i).getString("mac_address"))
+            }
+            val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
+            AlertDialog.Builder(this)
+                    .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
+                        DownloadTask(this).execute(list[which], token)
+                    }).show()
+            /*
             val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
             val macAddressForDB = share.getString("mac", "noValue")
             DownloadTask().execute(macAddressForDB, token)
+            */
         }
 
     }

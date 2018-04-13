@@ -161,6 +161,10 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 // Save that the DFU process has finished
                 mDfuCompleted = true
             }
+            val file=File(cacheDir, "FWupdate.zip")
+            if( file.exists()) {
+               file.delete()
+            }
         }
         private fun showDownloadDialog(msg: String) {
             val Dialog = android.app.AlertDialog.Builder(this@DFUActivity).create()

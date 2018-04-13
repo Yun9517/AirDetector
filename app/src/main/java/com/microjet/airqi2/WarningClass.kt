@@ -8,9 +8,9 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.AudioManager
-import android.media.SoundPool
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.PowerManager
 import android.os.Vibrator
@@ -24,119 +24,70 @@ import com.microjet.airqi2.Definition.SavePreferences
  */
 class WarningClass {
     //20180122
-    private val soundPool= SoundPool(5, AudioManager.STREAM_MUSIC, 100)
-    //private MediaPlayer mp = null;
-    //private MediaPlayer mp = null;
-    private val soundsMap=HashMap<Int, Int>()
-    //20180402 Icon的HashMap
-    private val iconMap= HashMap<Int, Int>()
-    //20180402 title的HashMap
-    private val titleMap= HashMap<Int, String>()
-    //20180402 vibrator的HashMap
-    private val vibratorMap= HashMap<Int, Long>()
-    //20180402 message的HashMap
-    private val messageMap= HashMap<Int, String>()
     private val REQUEST_CODE = 0xb01
 
-
     private var notificationManager: NotificationManager? = null
-    private var m_context: Context?=null
+    private var m_context: Context? = null
     private var mVibrator: Vibrator? = null
-    private var mPreference: SharedPreferences?=null
-    constructor(MustInputContext:Context){
-        m_context=MustInputContext
-        mPreference= m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+    private var mPreference: SharedPreferences? = null
+
+    constructor (MustInputContext: Context) {
+        m_context = MustInputContext
+        mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         mVibrator = m_context!!.applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?
         notificationManager = m_context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        warningSetingArea()
     }
-    private  fun warningSetingArea(){
-        //20180122   Andy_soundsMap
-        this.soundsMap!!.put(5, soundPool!!.load(m_context, R.raw.tvoc_over20000, 1))
-        this.soundsMap!!.put(4, soundPool!!.load(m_context, R.raw.tvoc_over5500, 1))
-        this.soundsMap!!.put(3, soundPool!!.load(m_context,R.raw.tvoc_over2200, 1))
-        this.soundsMap!!.put(2, soundPool!!.load(m_context, R.raw.tvoc_over660, 1))
-        this.soundsMap!!.put(1, soundPool!!.load(m_context, R.raw.tvoc_over220, 1))
-        //titleMap的選項Maps
-        this.titleMap!!.put(1,m_context!!.getString(R.string.warning_title_Yellow))
-        this.titleMap!!.put(2, m_context!!.getString(R.string.warning_title_Orange))
-        this.titleMap!!.put(3, m_context!!.getString(R.string.warning_title_Red))
-        this.titleMap!!.put(4, m_context!!.getString(R.string.warning_title_Purple))
-        this.titleMap!!.put(5, m_context!!.getString(R.string.warning_title_Brown))
-        //message的選項Maps
-        this.messageMap!!.put(1, m_context!!.getString(R.string.text_message_air_mid))
-        this.messageMap!!.put(2, m_context!!.getString(R.string.text_message_air_Medium_Orange))
-        this.messageMap!!.put(3, m_context!!.getString(R.string.text_message_air_bad))
-        this.messageMap!!.put(4, m_context!!.getString(R.string.text_message_air_Serious_Purple))
-        this.messageMap!!.put(5, m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
-        //icon的圖片選擇Maps
-        this.iconMap!!.put(1,R.drawable.history_face_icon_02)
-        this.iconMap!!.put(2,R.drawable.history_face_icon_03)
-        this.iconMap!!.put(3,R.drawable.history_face_icon_04)
-        this.iconMap!!.put(4,R.drawable.history_face_icon_05)
-        this.iconMap!!.put(5,R.drawable.history_face_icon_06)
-        //震動秒數的Maps
-        this.vibratorMap!!.put(1, 1000L)
-        this.vibratorMap!!.put(2, 2000L)
-        this.vibratorMap!!.put(3, 3000L)
-        this.vibratorMap!!.put(4, 4000L)
-        this.vibratorMap!!.put(5, 5000L)
-    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun judgeTvoc(TVOCString:Int) {
+    fun judgeTvoc(tvocValue: Int) {
         //20180403
-        var bebe5RString = TVOCString
-        when (bebe5RString) {
-        //Integer.valueOf(bebe5RString.get(2)
-//            in 220..660 -> {
-//                warning_function(1, 1, 1, 1, 1, bebe5RString)  //輕度汙染
-//            }
+        when (tvocValue) {
             in 660..2200 -> {
-                warning_function(2, 2, 2, 2, 2, bebe5RString)  //中度汙染
+                warningFunction(R.raw.tvoc_over660,
+                        2000L,
+                        R.drawable.history_face_icon_03,
+                        R.string.warning_title_Orange,
+                        R.string.text_message_air_Medium_Orange,
+                        tvocValue)  //中度汙染
             }
             in 2201..5500 -> {
-                warning_function(3, 3, 3, 3, 3, bebe5RString)  //重度汙染
+                warningFunction(R.raw.tvoc_over2200,
+                        3000L,
+                        R.drawable.history_face_icon_04,
+                        R.string.warning_title_Red,
+                        R.string.text_message_air_bad,
+                        tvocValue)  //重度汙染
             }
             in 5501..20000 -> {
-                warning_function(4, 4, 4, 4, 4, bebe5RString)  //嚴重汙染
+                warningFunction(R.raw.tvoc_over5500,
+                        4000L,
+                        R.drawable.history_face_icon_05,
+                        R.string.warning_title_Purple,
+                        R.string.text_message_air_Serious_Purple,
+                        tvocValue) //嚴重汙染
             }
             in 20001..60000 -> {
-                warning_function(5, 5, 5, 5, 5, bebe5RString)  //非常嚴重汙染
+                warningFunction(R.raw.tvoc_over20000,
+                        5000L,
+                        R.drawable.history_face_icon_06,
+                        R.string.warning_title_Brown,
+                        R.string.text_message_air_Extreme_Dark_Purple,
+                        tvocValue)  //非常嚴重汙染
             }
         }
     }
+
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun warning_function(soundNo: Int, vibratorSecond: Int, iconSelect: Int,
-                         titleSelect: Int, messageSelect: Int, BEBERString: Int) {
-        //20180124
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
-            //mp.start();
-            //20171220   Andy
-            try {
-                playSound(soundNo, 1.0f)
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false) && mVibrator != null) {
-            // 震动 1s
-            mVibrator!!.vibrate(vibratorMap!![vibratorSecond]!!.toLong())
-        }
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
-            if (isAppIsInBackground(m_context!!)) {
-                try {
-                    makeNotificationShow(iconMap!![iconSelect]!!.toInt(),
-                            titleMap!![titleSelect].toString(),
-                            messageMap!![messageSelect],
-                            BEBERString.toString())
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-
-            }
-        }
+    private fun warningFunction(soundNo: Int,
+                                vibratorSecond: Long,
+                                iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
+        //
+        playSound(soundNo)
+        sendVibrator(vibratorSecond)
+        sendNotification(iconSelect,titleSelect,messageSelect,tvoc)
     }
+
     @SuppressLint("ObsoleteSdkInt")
     private fun isAppIsInBackground(context: Context): Boolean {
         var isInBackground = true
@@ -161,22 +112,15 @@ class WarningClass {
         }
         return isInBackground
     }
-    //播放音樂的撥放器
-    fun playSound(sound: Int, fSpeed: Float) {
-        val mgr = (m_context!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager?)!!
-        val streamVolumeCurrent = mgr.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
-        val streamVolumeMax = mgr.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
-        val volume = streamVolumeCurrent / streamVolumeMax
-        var id:Int=soundsMap!!.get(sound)!!
-        var success=  this.soundPool!!.play(id, 1f, 1f, 1, 0, fSpeed)
-    }
+
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(iconID: Int, title: String, text: String?, value: String) {
+    private fun makeNotificationShow(iconID: Bitmap, title: String, text: String?, value: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
-        @SuppressLint("ResourceAsColor") val notification = NotificationCompat.Builder(m_context)
+        @SuppressLint("ResourceAsColor")
+        val notification = NotificationCompat.Builder(m_context)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setLargeIcon(BitmapFactory.decodeResource(m_context!!.resources, iconID))
+                .setLargeIcon(iconID)
                 .setContentTitle(title)
                 .setStyle(bigStyle)
                 .setPriority(Notification.PRIORITY_DEFAULT)
@@ -189,8 +133,8 @@ class WarningClass {
         notification.contentIntent = pi
         //20180109   Andy
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val  notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(Integer.parseInt(value))//RString.get(2)));
+            val notificationHelper = NotificationHelper(m_context!!)
+            notificationHelper!!.set_TCOC_Value(value)//RString.get(2)));
             val NB = notificationHelper!!.getNotification1(title, text.toString())
             notificationHelper!!.notify(REQUEST_CODE, NB)
         } else {
@@ -206,8 +150,42 @@ class WarningClass {
                 //點亮屏幕
                 wl.release()
                 Log.e("休眠狀態下", "喚醒螢幕")
-            }catch (e:Exception ){
+            } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    private fun playSound(sn: Int) {
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
+            try {
+                val mp = MediaPlayer.create(m_context, sn)
+                mp.start()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun sendVibrator(vicSec: Long) {
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false) && mVibrator != null) {
+            mVibrator!!.vibrate(vicSec)
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun sendNotification(icon: Int, title: Int, message: Int, tvoc: Int) {
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
+            if (isAppIsInBackground(m_context!!)) {
+                try {
+                    makeNotificationShow(
+                            BitmapFactory.decodeResource(m_context!!.resources, icon),
+                            m_context!!.getString(title),
+                            m_context!!.getString(message),
+                            tvoc)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }
