@@ -1407,7 +1407,7 @@ public class UartService1 extends Service {
 //                            sendBroadcast(mainIntent);
                             SharedPreferences share_token = getSharedPreferences("TOKEN", MODE_PRIVATE);
                             String token = share_token.getString("token", "");
-                            new DownloadTask().execute(macAddressForDB, token);
+                            //new DownloadTask().execute(macAddressForDB, token);
                         } else {
                             //NowItem++;
                             //counter++;
