@@ -53,11 +53,11 @@ class AirQiDataSet {
         this.PM25Value = PM25Value
     }
 
-    fun getCreated_time(): Long? {
+    fun getCreatedTime(): Long? {
         return Created_time
     }
 
-    fun setCreated_time(Created_time: Long?) {
+    fun setCreatedTime(Created_time: Long?) {
         this.Created_time = Created_time
     }
 
