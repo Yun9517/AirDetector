@@ -10,13 +10,14 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
-import android.os.*
+import android.os.AsyncTask
+import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.format.DateFormat
@@ -34,8 +35,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
-import com.microjet.airqi2.CustomAPI.AirMapAdapter
-import com.microjet.airqi2.CustomAPI.SelectedItem
+import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.mobile2box.MJGraphView.MJGraphData
@@ -45,8 +45,6 @@ import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
 import java.lang.ref.WeakReference
-import java.sql.Date
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -66,7 +64,6 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     private var datepickerHandler = Handler()
 
-
     private lateinit var mDate: String
 
     private var errorTime = 0
@@ -84,7 +81,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     companion object {
         private lateinit var mCal: Calendar
         private lateinit var mMap: GoogleMap
-        private var dataArray = ArrayList<MyData>()
+        private var dataArray = ArrayList<AirQiDataSet>()
         var aResult = java.util.ArrayList<MJGraphData>()
 
         fun runRealmQueryData(): RealmResults<AsmDataModel> {
@@ -100,82 +97,6 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             return query.findAll()
         }
     }
-
-    class MyData {
-        private var TEMPValue: String? = null
-        private var HUMIValue: String? = null
-        private var TVOCValue: String? = null
-        private var ECO2Value: String? = null
-        private var PM25Value: String? = null
-        private var Created_time: Long? = null
-        private var Longitude: Float? = 121.4215f
-        private var Latitude: Float? = 24.959817f
-
-        fun getTEMPValue(): String? {
-            return TEMPValue
-        }
-
-        fun setTEMPValue(TEMPValue: String) {
-            this.TEMPValue = TEMPValue
-        }
-
-        fun getHUMIValue(): String? {
-            return HUMIValue
-        }
-
-        fun setHUMIValue(HUMIValue: String) {
-            this.HUMIValue = HUMIValue
-        }
-
-        fun getTVOCValue(): String? {
-            return TVOCValue
-        }
-
-        fun setTVOCValue(TVOCValue: String) {
-            this.TVOCValue = TVOCValue
-        }
-
-        fun getECO2Value(): String? {
-            return ECO2Value
-        }
-
-        fun setECO2Value(ECO2Value: String) {
-            this.ECO2Value = ECO2Value
-        }
-
-        fun getPM25Value(): String? {
-            return PM25Value
-        }
-
-        fun setPM25Value(PM25Value: String) {
-            this.PM25Value = PM25Value
-        }
-
-        fun getCreated_time(): Long? {
-            return Created_time
-        }
-
-        fun setCreated_time(Created_time: Long?) {
-            this.Created_time = Created_time
-        }
-
-        fun getLongitude(): Float? {
-            return Longitude
-        }
-
-        fun setLongitude(Longitude: Float?) {
-            this.Longitude = Longitude
-        }
-
-        fun getLatitude(): Float? {
-            return Latitude
-        }
-
-        fun setLatitude(Latitude: Float?) {
-            this.Latitude = Latitude
-        }
-    }
-
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -269,7 +190,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
     // 取得軌跡顏色
-    fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
+    private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
         if (isTVOC) {
             return when (value) {
                 in 0..219 -> ContextCompat.getColor(MyApplication.applicationContext(), R.color.air_map_line_value1)
@@ -321,162 +242,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         panel.startAnimation(mHideAction)
     }
 
-    private class LoadData(private val _viewGraph: WeakReference<MJGraphView>?,
-                           private val _isTVOC: Boolean) :
-            AsyncTask<Void, Void, MutableList<MJGraphData>>() {     //AsyncTask<Void, Void, MutableList<MJGraphData>>()
-
-        override fun doInBackground(vararg _params: Void): MutableList<MJGraphData>? {
-            val result = runRealmQueryData()
-
-            Log.d("DATE", "Today total count: ${result.size}")
-
-            if (result.size > 0) {
-                dataArray.clear()
-                aResult.clear()
-
-                for (i in 0 until result.size) {
-
-                    // 過濾掉初始值
-                    if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
-                        val temp = MyData()
-                        temp.setTVOCValue(result[i]!!.tvocValue)
-                        temp.setPM25Value(result[i]!!.pM25Value)
-                        temp.setHUMIValue(result[i]!!.humiValue)
-                        temp.setTEMPValue(result[i]!!.tempValue)
-                        temp.setECO2Value(result[i]!!.ecO2Value)
-                        temp.setLatitude(result[i]!!.latitude)
-                        temp.setLongitude(result[i]!!.longitude)
-                        dataArray.add(temp)
-
-                        // 判斷 RadioButton 選中的項目
-                        val data = if (_isTVOC) {
-                            result[i]!!.tvocValue.toInt()
-                        } else {
-                            result[i]!!.pM25Value.toInt()
-                        }
-
-                        val o: MJGraphData? = MJGraphData(result[i]!!.created_time, data)
-                        if (o != null) {
-                            try {
-                                aResult.add(o)
-                            } catch (_e: ClassCastException) {
-                                _e.printStackTrace()
-                            } catch (_e: IllegalArgumentException) {
-                                _e.printStackTrace()
-                            } catch (_e: UnsupportedOperationException) {
-                                _e.printStackTrace()
-                            }
-                        }
-                    }
-                }
-            } else {
-                dataArray.clear()
-                aResult.clear()
-            }
-
-            //realm.close()       // 撈完資料千萬要記得關掉！！！
-
-            return aResult
-        }
-
-        override fun onPostExecute(_data: MutableList<MJGraphData>?) {
-            if (_viewGraph != null) {
-                // set source data
-                // ---------------
-                _viewGraph.get()!!.SetData(_data)
-                _viewGraph.clear()
-            }
-
-            AirMapActivity().startLoadDataThread()
-        }
-    }
-
-    // 資料庫查詢
-    /*@SuppressLint("SimpleDateFormat")
-    private fun getLocalData() {
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-
-        mMap.clear()
-
-        //現在時間實體毫秒
-        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
-        //val touchTime = mCal.timeInMillis// + mCal.timeZone.rawOffset
-        //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
-        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
-        val result = query.findAll()
-        Log.d("DATE", "Today total count: ${result.size}")
-
-        if (result.size > 0) {
-            dataArray.clear()
-            aResult.clear()
-
-            for (i in 0 until result.size) {
-
-                // 過濾掉初始值
-                if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
-                    val temp = MyData()
-                    temp.setTVOCValue(result[i]!!.tvocValue)
-                    temp.setPM25Value(result[i]!!.pM25Value)
-                    temp.setHUMIValue(result[i]!!.humiValue)
-                    temp.setTEMPValue(result[i]!!.tempValue)
-                    temp.setECO2Value(result[i]!!.ecO2Value)
-                    temp.setLatitude(result[i]!!.latitude)
-                    temp.setLongitude(result[i]!!.longitude)
-                    dataArray.add(temp)
-
-                    // 判斷 RadioButton 選中的項目
-                    val data = if (rbTVOC.isChecked) {
-                        result[i]!!.tvocValue.toInt()
-                    } else {
-                        result[i]!!.pM25Value.toInt()
-                    }
-
-                    val rectOptions = PolylineOptions()
-                            .width(20F)
-                            .color(setPolylineColor(data, rbTVOC.isChecked))
-
-                    if (i < result.size - 1) {
-                        rectOptions.add(LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble()))
-                        rectOptions.add(LatLng(result[i + 1]!!.latitude.toDouble(), result[i + 1]!!.longitude.toDouble()))
-                        mMap.addPolyline(rectOptions)
-                    }
-
-                    val o: MJGraphData? = MJGraphData(result[i]!!.created_time, data)
-                    if (o != null) {
-                        try {
-                            aResult.add(o)
-                        } catch (_e: ClassCastException) {
-                            _e.printStackTrace()
-                        } catch (_e: IllegalArgumentException) {
-                            _e.printStackTrace()
-                        } catch (_e: UnsupportedOperationException) {
-                            _e.printStackTrace()
-                        }
-                    }
-
-                    @SuppressLint("SimpleDateFormat")
-                    val dateFormat = SimpleDateFormat("yyyy/MM/dd, EEE hh:mm aa")
-                    //val calendar = Calendar.getInstance()
-                    val nowTime = result[i]!!.created_time// - calendar.timeZone.rawOffset
-
-                    Log.e("LOCATION", "Index[$i]: Date is ${dateFormat.format(nowTime)}, Location is: (${result[i]!!.latitude}, ${result[i]!!.longitude})")
-                }
-            }
-
-            //mMap.addPolyline(rectOptions)
-        } else {
-            dataArray.clear()
-            aResult.clear()
-        }
-
-        realm.close()       // 撈完資料千萬要記得關掉！！！
-
-        stopLoadDataThread()
-    }*/
-
+    // 畫軌跡
     private fun drawMapPolyLine(boolean: Boolean) {
         if (dataArray.size > 0) {
             for (i in 0 until dataArray.size) {
@@ -556,7 +322,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val latLng = LatLng(latitude, longitude)
 
         // 移動畫面到目前的標記
-        mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
 
         if (currentMarker != null) {
             currentMarker!!.remove()
@@ -576,7 +342,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // create cursor (min: 8px, max: 24px)
         // -----------------------------------
-        lineChart.CreateCursor(0xffff0000.toInt(), 0x80000000.toInt(), 24)
+        lineChart.CreateCursor(0xffff0000.toInt(), 0x80000000.toInt(), 16)
 
         // initialize the data interval in minutes (min: 1min, max: 60min)
         // ---------------------------------------------------------------
@@ -591,8 +357,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // set labels
         // ----------
-        lineChart.SetLabelMonth(arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
-        lineChart.SetLabelWeek(arrayOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"))
+//        lineChart.SetLabelMonth(arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
+//        lineChart.SetLabelWeek(arrayOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"))
 //			viewAppMainGraph.SetLabelYear(", %d")
 
 //			viewAppMainGraph.SetLabelMonth(arrayOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"))
@@ -601,7 +367,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // set the graph line width (min: 2px, max: 8px)
         // ---------------------------------------------
-        lineChart.SetLineWidth(2)
+        lineChart.SetLineWidth(3)
 //			viewAppMainGraph.SetLineWidth(8)
 
         // set graph mode
@@ -859,12 +625,105 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 0xC5.toByte() -> {
                 }
                 0xC6.toByte() -> {
-                    //startLoadDataThread()
-                    LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+                    //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+                    val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
+
+                    val data = if(rbTVOC.isChecked) {
+                        hashMap[TvocNoseData.C6TVOC]!!.toInt()
+                    } else {
+                        hashMap[TvocNoseData.C6PM25]!!.toInt()
+                    }
+
+                    val rtcTime = hashMap[TvocNoseData.C6TIME]!!.toLong()
+                    lineChart.AddData(MJGraphData(rtcTime, data))
+
+                    val temp = AirQiDataSet()
+                    temp.setTVOCValue(hashMap[TvocNoseData.C6TVOC]!!)
+                    temp.setPM25Value(hashMap[TvocNoseData.C6PM25]!!)
+                    temp.setHUMIValue(hashMap[TvocNoseData.C6HUMI]!!)
+                    temp.setTEMPValue(hashMap[TvocNoseData.C6TEMP]!!)
+                    temp.setECO2Value(hashMap[TvocNoseData.C6ECO2]!!)
+                    temp.setCreated_time((hashMap[TvocNoseData.C6TIME]!!.toLong())/* + mCal.timeZone.rawOffset*/)
+                    temp.setLatitude(TvocNoseData.lati)
+                    temp.setLongitude(TvocNoseData.longi)
+                    dataArray.add(temp)
 
                     Log.e("AirMapAC", "Now Starting Load Data.........")
                 }
             }
+        }
+    }
+
+
+    private class LoadData(private val _viewGraph: WeakReference<MJGraphView>?,
+                           private val _isTVOC: Boolean) :
+            AsyncTask<Void, Void, MutableList<MJGraphData>>() {     //AsyncTask<Void, Void, MutableList<MJGraphData>>()
+
+        override fun doInBackground(vararg _params: Void): MutableList<MJGraphData>? {
+            val result = runRealmQueryData()
+
+            Log.d("DATE", "Today total count: ${result.size}")
+
+            if (result.size > 0) {
+                dataArray.clear()
+                aResult.clear()
+
+                for (i in 0 until result.size) {
+
+                    // 過濾掉初始值
+                    if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
+                        val temp = AirQiDataSet()
+                        temp.setTVOCValue(result[i]!!.tvocValue)
+                        temp.setPM25Value(result[i]!!.pM25Value)
+                        temp.setHUMIValue(result[i]!!.humiValue)
+                        temp.setTEMPValue(result[i]!!.tempValue)
+                        temp.setECO2Value(result[i]!!.ecO2Value)
+                        temp.setLatitude(result[i]!!.latitude)
+                        temp.setLongitude(result[i]!!.longitude)
+                        dataArray.add(temp)
+
+                        // 判斷 RadioButton 選中的項目
+                        val data = if (_isTVOC) {
+                            result[i]!!.tvocValue.toInt()
+                        } else {
+                            result[i]!!.pM25Value.toInt()
+                        }
+
+                        val o: MJGraphData? = MJGraphData(result[i]!!.created_time, data)
+                        if (o != null) {
+                            try {
+                                aResult.add(o)
+                            } catch (_e: ClassCastException) {
+                                _e.printStackTrace()
+                            } catch (_e: IllegalArgumentException) {
+                                _e.printStackTrace()
+                            } catch (_e: UnsupportedOperationException) {
+                                _e.printStackTrace()
+                            }
+                        }
+                    }
+                }
+            } else {
+                dataArray.clear()
+                aResult.clear()
+            }
+
+            return aResult
+        }
+
+        override fun onPostExecute(_data: MutableList<MJGraphData>?) {
+            if (_viewGraph != null) {
+                // set source data
+                // ---------------
+                _viewGraph.get()!!.SetData(_data)
+                _viewGraph.clear()
+            }
+
+            AirMapActivity().startLoadDataThread()
+
+            //if(_viewGraph != null) {
+            //    _viewGraph.get()!!.AddData(aResult[dataArray.lastIndex])
+            //}
         }
     }
 }

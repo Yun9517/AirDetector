@@ -321,7 +321,7 @@
         android:id="@+id/lineChart"
         android:layout_width="0dp"
         android:layout_height="100dp"
-        android:background="#80808080"
+        android:background="@color/blackTransparentColor_80"
         android:fillViewport="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
