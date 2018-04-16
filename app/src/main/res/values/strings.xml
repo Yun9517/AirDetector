@@ -222,6 +222,7 @@
     <string name="downloadData">下載</string>
     <string name="shareData">分享</string>
     <string name="rememberID">記住帳號</string>
+    <string name="syncData">雲端同步</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
@@ -272,4 +273,5 @@
     <string name="title_humidy">Humidy_Data</string>
     <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
+    <string name="map_result_title">情報</string>
 </resources>

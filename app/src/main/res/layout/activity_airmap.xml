@@ -65,7 +65,7 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginTop="1dp"
                     android:background="@drawable/map_text_background"
-                    android:text="數據"
+                    android:text="@string/map_result_title"
                     android:textAlignment="center"
                     android:textColor="@color/whiteColor"
                     android:textStyle="bold" />
