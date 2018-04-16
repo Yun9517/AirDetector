@@ -35,9 +35,9 @@ import com.microjet.airqi2.URL.AirActionTask.PostDownload
  *  */
  class AirActionTask (): AsyncTask<String, Long, ArrayList<String>?>() {
     // AsyncTask的 3 個傳入的參數
-    // String 就是 Params 參數的類別
-    // Int 就是 Progress 參數的類別
-    // ArrayList<String> 就是 Result 參數的類別
+    // String 就是 Params 參數的類別  doInBackground(vararg params: String?)
+    // Long 就是 Progress 參數的類別  onProgressUpdate(vararg values: Long?)
+    // ArrayList<String> 就是 Result 參數的類別  onPostExecute(result: ArrayList<String>?)
 
   //  AsyncTask 的運作有 4 個階段：
   //  onPreExecute -- AsyncTask 執行前的準備工作，例如畫面上顯示進度表，
