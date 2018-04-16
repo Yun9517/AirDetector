@@ -5,12 +5,14 @@ package com.microjet.airqi2.BlueTooth.DFU
  */
 import android.app.ActivityManager
 import android.app.NotificationManager
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.webkit.MimeTypeMap
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.microjet.airqi2.R
 import no.nordicsemi.android.dfu.*
@@ -19,32 +21,41 @@ import java.io.File
 class DFUProcessClass (){
     private val mDfuProgressListener = object : DfuProgressListenerAdapter() {
         override fun onDeviceConnecting(deviceAddress: String?) {
+        //    mProgressBar?.setTitle("Now status")
+            mProgressBar?.setMessage("Device Connected")
         //    mProgressBar!!.isIndeterminate = true
         //    mTextPercentage!!.setText(R.string.dfu_status_connecting)
         }
 
         override fun onDfuProcessStarting(deviceAddress: String?) {
-        //    mProgressBar!!.isIndeterminate = true
+            mProgressBar!!.isIndeterminate = true
+         //   mProgressBar?.setTitle("Now status")
+         //   mProgressBar?.setMessage("")
         //    mTextPercentage!!.setText(R.string.dfu_status_starting)
         }
 
         override fun onEnablingDfuMode(deviceAddress: String?) {
-            //mProgressBar!!.isIndeterminate = true
+            mProgressBar!!.isIndeterminate = true
             //mTextPercentage!!.setText(R.string.dfu_status_switching_to_dfu)
         }
 
         override fun onFirmwareValidating(deviceAddress: String?) {
-            //mProgressBar!!.isIndeterminate = true
+            mProgressBar!!.isIndeterminate = true
+           // mProgressBar?.setTitle("Now status")
+            mProgressBar?.setMessage("Data validating")
             //mTextPercentage!!.setText(R.string.dfu_status_validating)
         }
 
         override fun onDeviceDisconnecting(deviceAddress: String?) {
-            //mProgressBar!!.isIndeterminate = true
+            mProgressBar!!.isIndeterminate = true
+            mProgressBar?.setMessage("Device disconnecting")
             //mTextPercentage!!.setText(R.string.dfu_status_disconnecting)
+
         }
 
         override fun onDfuCompleted(deviceAddress: String?) {
             //mTextPercentage!!.setText(R.string.dfu_status_completed)
+            mProgressBar?.setMessage("Dfu Completed")
             if (mResumed) {
                 // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
                 Handler().postDelayed({
@@ -57,6 +68,7 @@ class DFUProcessClass (){
             } else {
                 // Save that the DFU process has finished
                 mDfuCompleted = true
+                mProgressBar!!.dismiss()
             }
         }
         /*
@@ -88,8 +100,9 @@ class DFUProcessClass (){
         }
 
         override fun onProgressChanged(deviceAddress: String?, percent: Int, speed: Float, avgSpeed: Float, currentPart: Int, partsTotal: Int) {
-            //mProgressBar!!.isIndeterminate = false
-            //mProgressBar!!.progress = percent
+            mProgressBar!!.isIndeterminate = false
+            mProgressBar?.setMessage("資料上傳至裝置中，請勿關閉裝置")
+            mProgressBar!!.progress = percent
             //mTextPercentage!!.text = getString(R.string.dfu_uploading_percentage, percent)
             /*
             if (partsTotal > 1)
@@ -111,6 +124,7 @@ class DFUProcessClass (){
                 }, 200)
             } else {
                 mDfuError = message
+                mProgressBar?.setTitle(message)
             }
         }
     }
@@ -137,13 +151,23 @@ class DFUProcessClass (){
     var myDeviceName:String?=null
     var myDeviceAddress:String?=null
     private var mFilePath: String? = null
+    private  var mProgressBar :ProgressDialog?=null
     init {}
     constructor(input: Context):this(){//第二建構元
         mContext=input
-        //    callback=callbackInput
     }
 
     fun DFUAction(DeviceName:String,DeviceAddress:String){
+        DfuServiceListenerHelper.registerProgressListener(mContext, mDfuProgressListener)
+        if (mContext!=null) {
+            mProgressBar = ProgressDialog(mContext)
+            mProgressBar?.setMessage("DFUing")
+            mProgressBar?.isIndeterminate = false//功能不知道
+            mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
+            mProgressBar?.setCancelable(true)//
+            mProgressBar?.max=100
+            mProgressBar?.show()
+        }
         mFileType=DfuBaseService.TYPE_AUTO
         myDeviceName=DeviceName
         myDeviceAddress=DeviceAddress
@@ -151,6 +175,7 @@ class DFUProcessClass (){
         val file= File(mContext!!.cacheDir, "FWupdate.zip")
         if( file.exists()) {
             mjupdateFileInfo(file.name, file.length())
+            mFilePath=file.path
             if (isDfuServiceRunning()) {//確保dfu service只跑一個
              //   showUploadCancelDialog()
                 return
@@ -162,6 +187,8 @@ class DFUProcessClass (){
             saveCurrentState()
         }
     }
+
+
     private fun saveCurrentState(){
         val preferences = PreferenceManager.getDefaultSharedPreferences(this.mContext!!)
         val editor = preferences.edit()
@@ -171,7 +198,7 @@ class DFUProcessClass (){
        // editor.putString(PREFS_FILE_SCOPE, mFileScopeView!!.text.toString())
         editor.apply()
         val keepBond = preferences.getBoolean(SETTINGS_KEEP_BOND, false)
-        val forceDfu = preferences.getBoolean(DfuSettingsConstants.SETTINGS_ASSUME_DFU_NODE, false)
+        val forceDfu = preferences.getBoolean(DfuSettingsConstants.SETTINGS_ASSUME_DFU_NODE, true)
         val enablePRNs = preferences.getBoolean(DfuSettingsConstants.SETTINGS_PACKET_RECEIPT_NOTIFICATION_ENABLED, Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
         val value = preferences.getString(DfuSettingsConstants.SETTINGS_NUMBER_OF_PACKETS, DfuServiceInitiator.DEFAULT_PRN_VALUE.toString())
         var numberOfPackets: Int

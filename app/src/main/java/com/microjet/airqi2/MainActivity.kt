@@ -35,6 +35,7 @@ import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
+import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -1403,11 +1404,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{
+                /*
                 val intent = Intent()
                 intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
-                startActivity(intent)
+                startActivity(intent)*/
+              var dfup= DFUProcessClass(this)
+                dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
             }
         }
     }
