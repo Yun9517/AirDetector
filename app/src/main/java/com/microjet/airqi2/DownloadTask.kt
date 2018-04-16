@@ -24,7 +24,7 @@ import org.json.JSONObject
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
+class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
 
 
     //取MAC
@@ -50,13 +50,12 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
 
     override fun onPreExecute() {
         super.onPreExecute()
+        //白告: 總數最大值，無法更為0，預設值似乎不能低於100
         if (mContext!=null) {
             mProgressBar = ProgressDialog(mContext)
             mProgressBar?.setMessage("下載資料中")
             mProgressBar?.isIndeterminate = false//功能不知道
             mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)//STYLE_SPINNER
-            //白告: 總數最大值，無法更為0，預設值似乎不能低於100
-            mProgressBar?.setMax(0);
             mProgressBar?.setCancelable(false)
             mProgressBar?.show()
         }
@@ -93,19 +92,14 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
                     //讀取並計算字元個數
                     val jsonArrSize = jsonArr.length()
                     Log.d("DownloadSize", jsonArrSize.toString())
-
                     val timeStampArr = arrayListOf<Long>()
                     for (i in 0 until jsonArr.length()) {
                         val timeStamp = jsonArr.getJSONObject(i).getString("timestamp").toLong()
                         timeStampArr.add(timeStamp)
                     }
                     Log.d("Download", timeStampArr.toString())
-
                     val realm = Realm.getDefaultInstance()
-
                     Log.d("timeStampArr.size", timeStampArr.size.toString())
-                    //資料數總量更新
-                    mProgressBar?.setMax(timeStampArr.size);
                     for (i in 0 until timeStampArr.size) {
                         val time = timeStampArr[i]
                         val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
@@ -125,8 +119,8 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
                                 Log.d("Download", asmData.toString())
                             }
                         }
-                        //資料解析完一筆，進度+1
-                        mProgressBar?.setProgress(+i);
+                        //val ii = ((i / timeStampArr.size.toFloat()) * 100).toInt()  取百分比的進度條
+                        publishProgress(i,timeStampArr.size)        //取總比數的進度條
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
@@ -144,9 +138,10 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
     }
 
     //更新視窗的改變
-    override fun onProgressUpdate(vararg values: Void?) {
+    override fun onProgressUpdate(vararg values: Int?) {
         super.onProgressUpdate(*values)
-
+        mProgressBar?.progress = values[0]!!
+        mProgressBar?.max =values[1]!!
     }
 
     override fun onPostExecute(result: String?) {
