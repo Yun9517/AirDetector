@@ -162,6 +162,7 @@ class AccountActiveActivity : AppCompatActivity() {
             dpd.show()
         }
 
+        //雲端DATA DOWNLOAD 按鈕事件
         downloadData.setOnClickListener {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val token = share_token.getString("token", "")

@@ -928,7 +928,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
-            show_Device_Name?.text = "尚未連接裝置"
+            show_Device_Name?.text = getString(R.string.No_Device_Connect)
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
