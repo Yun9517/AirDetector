@@ -152,11 +152,6 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 makeBroadcastReceiverFilter())
     }
 
-    override fun onResume() {
-        super.onResume()
-        LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
-    }
-
     override fun onDestroy() {
         super.onDestroy()
         try {
@@ -267,6 +262,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
 
         stopLoadDataThread()
+
+        //if(lineChart != null) {
+        //    lineChart.AddData(MJGraphData(dataArray[dataArray.lastIndex].getCreatedTime()!!, dataArray[dataArray.lastIndex].getTVOCValue()!!.toInt()))
+        //}
     }
 
     // 更新那個笑到你心裡發寒的臉圖
@@ -708,7 +707,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                         }
 
                         val o: MJGraphData? = MJGraphData(temp.getCreatedTime()!!, data)
-                        if (o != null) {
+                        if (o != null && i < result.size - 1) {
                             try {
                                 aResult.add(o)
                             } catch (_e: ClassCastException) {
@@ -738,13 +737,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 // ---------------
                 _viewGraph.get()!!.SetData(_data)
                 _viewGraph.clear()
-
-                AirMapActivity().startLoadDataThread()
             }
 
-            //if(_viewGraph != null) {
-            //    _viewGraph.get()!!.AddData(aResult[dataArray.lastIndex])
-            //}
+            AirMapActivity().startLoadDataThread()
         }
     }
 }
