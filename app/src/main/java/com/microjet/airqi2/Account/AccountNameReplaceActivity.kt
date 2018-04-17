@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
+import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_namereplace.*
 import okhttp3.OkHttpClient
@@ -80,15 +81,17 @@ class AccountNameReplaceActivity : AppCompatActivity() {
         actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
+    // ***** 2018/04/17 Add function for intent activity *********************** //
+    private fun accountActiveShow() {
+        val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+        startActivity(i)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
-                val intent = Intent()
-                intent.setClass(this@AccountNameReplaceActivity.mContext, AccountActiveActivity::class.java)
-                startActivity(intent)
-                finish()
-                return true
+                accountActiveShow()
             }
             else -> {
             }
@@ -165,10 +168,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
                 share.edit().putString("name", result).apply()
                 //    share.edit().putString("name", name).apply()
                 Log.d("Download", result.toString())
-                val intent = Intent()
-                intent.setClass(this@AccountNameReplaceActivity.mContext, AccountActiveActivity::class.java)
-                startActivity(intent)
-                finish()
+                accountActiveShow()
             }
         }
     }

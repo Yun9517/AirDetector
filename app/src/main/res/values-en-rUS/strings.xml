@@ -239,4 +239,5 @@
     <string name="title_pm25">PM2.5</string>
     <string name="map_result_title">Information</string>
 
+    <string name="skipTourGuide">Got it</string>
 </resources>

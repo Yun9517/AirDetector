@@ -193,15 +193,17 @@ class AccountRegisterActivity : AppCompatActivity() {
         actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
 
+    // ***** 2018/04/17 Add function for intent activity *********************** //
+    private fun accountActiveShow() {
+        val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+        startActivity(i)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
-                val intent = Intent()
-                intent.setClass(this@AccountRegisterActivity.mContext, AccountManagementActivity::class.java)
-                startActivity(intent)
-                finish()
-                return true
+                accountActiveShow()
             }
             else -> {
 

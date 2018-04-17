@@ -274,4 +274,6 @@
     <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
     <string name="map_result_title">情報</string>
+
+    <string name="skipTourGuide">已了解</string>
 </resources>
