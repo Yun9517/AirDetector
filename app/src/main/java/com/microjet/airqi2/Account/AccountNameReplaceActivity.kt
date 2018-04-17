@@ -92,6 +92,8 @@ class AccountNameReplaceActivity : AppCompatActivity() {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
                 accountActiveShow()
+                finish()
+                return true
             }
             else -> {
             }

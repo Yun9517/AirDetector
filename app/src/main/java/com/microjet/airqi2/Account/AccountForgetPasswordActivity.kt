@@ -81,8 +81,8 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
     }
 
     // ***** 2018/04/17 Add function for intent activity *********************** //
-    private fun accountActiveShow() {
-        val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+    private fun accountManagementShow() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
         startActivity(i)
     }
 
@@ -91,7 +91,9 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
                 Log.d(this.javaClass.simpleName,"home icon")
-                accountActiveShow()
+                accountManagementShow()
+                finish()
+                return true
             }
             else -> {
             }
