@@ -6,15 +6,13 @@ package com.microjet.airqi2.Account
 //import com.github.angads25.filepicker.view.FilePickerDialog
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
-
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
@@ -23,13 +21,17 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
+import kotlinx.android.synthetic.main.app_downloaddata_select.*
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.Closeable
@@ -164,27 +166,53 @@ class AccountActiveActivity : AppCompatActivity() {
 
         //雲端DATA DOWNLOAD 按鈕事件
         downloadData.setOnClickListener {
-            val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            val token = share_token.getString("token", "")
-            //取得裝置資料清單下載
-            val arr = JSONArray(shareMSG.getString("deviceLi",""))
-            val list = ArrayList<String>()
-            for (i in 0 until arr!!.length()) {
-                list.add(arr.getJSONObject(i).getString("mac_address"))
+           if(isConnected()) {
+                val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                val token = share_token.getString("token", "")
+                //取得裝置資料清單下載
+                val arr = JSONArray(shareMSG.getString("deviceLi",""))
+                val list = ArrayList<String>()
+                for (i in 0 until arr!!.length()) {
+                    list.add(arr.getJSONObject(i).getString("mac_address"))
+                }
+                val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
+
+                select()
+                /*
+                AlertDialog.Builder(this)
+                        .setView(R.layout.app_downloaddata_select)
+                        .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
+                            DownloadTask(this).execute(list[which], token)
+                        }).show()
+               */
+                /*
+                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                val macAddressForDB = share.getString("mac", "noValue")
+                DownloadTask().execute(macAddressForDB, token)
+                */
+            } else {
+                showDialog(getString(R.string.checkConnection))
             }
-            val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
-            AlertDialog.Builder(this)
-                    .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
-                        DownloadTask(this).execute(list[which], token)
-                    }).show()
-            /*
-            val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-            val macAddressForDB = share.getString("mac", "noValue")
-            DownloadTask().execute(macAddressForDB, token)
-            */
+
         }
 
+
     }
+
+
+    private fun select() {
+        val builder = AlertDialog.Builder(this)
+        val inflater : LayoutInflater=LayoutInflater.from(this)
+        val view : View = inflater.inflate(R.layout.app_downloaddata_select,null)
+        val dialog : Dialog=builder.create()
+        dialog.show()
+        dialog.getWindow().setContentView(view)
+        val b_update = view.findViewById<Button>(R.id.btn_cancel_download)
+        b_update.setOnClickListener {
+            dialog.dismiss()//結束dialog
+        }
+    }
+
 
     private fun updateDateInView() {
         dbData2CVSAsyncTasks()//sdf)

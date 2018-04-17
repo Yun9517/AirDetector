@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="330dp"
+        android:layout_height="270dp"
+        android:background="#ffffffff">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="60dp"
+            android:layout_margin="0dp"
+            android:focusable="true"
+            android:background="#00FFFF">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:id="@+id/text_title"
+                android:text="雲端下載"
+                android:minHeight="50dp"
+                android:padding="10dp"
+                android:textColor="@android:color/black"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="5dp" />
+        </RelativeLayout>
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:layout_alignParentBottom="true"
+            android:minHeight="100dp"
+            android:padding="30dp"
+            android:textColor="@android:color/black"
+            android:background="@android:color/white"
+            android:id="@+id/listview" />
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:weightSum="1">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="取消"
+                android:id="@+id/btn_cancel_download"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="0.22" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
