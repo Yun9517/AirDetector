@@ -1140,7 +1140,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                         var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
-                        warningClass!!.judgeTvoc(hashMap[TvocNoseData.C6TVOC]!!.toInt())
+                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt())
                     }
                 }
             } else {
