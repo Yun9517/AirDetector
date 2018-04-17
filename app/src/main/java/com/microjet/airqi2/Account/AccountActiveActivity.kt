@@ -14,6 +14,7 @@ import android.content.Intent
 
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
+import android.os.Build
 
 import android.os.Bundle
 import android.os.Environment
@@ -168,16 +169,22 @@ class AccountActiveActivity : AppCompatActivity() {
             val token = share_token.getString("token", "")
             //取得裝置資料清單下載
             val arr = JSONArray(shareMSG.getString("deviceLi",""))
-            val list = ArrayList<String>()
-            for (i in 0 until arr!!.length()) {
-                list.add(arr.getJSONObject(i).getString("mac_address"))
-            }
-            val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
-            AlertDialog.Builder(this)
-                    .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
-                        DownloadTask(this).execute(list[which], token)
-                    }).show()
-            /*
+            //新帳號會拿不到deviceList，要加上安全判斷
+            if (arr.length() != 0) {
+                val list = ArrayList<String>()
+                for (i in 0 until arr!!.length()) {
+                    list.add(arr.getJSONObject(i).getString("mac_address"))
+                }
+                val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
+                AlertDialog.Builder(this)
+                        .setItems(sh, DialogInterface.OnClickListener { dialog, which ->
+                            DownloadTask(this).execute(list[which], token)
+                        }).show()
+            } else {
+                if (Build.BRAND != "OPPO") {
+                    Toast.makeText(MyApplication.applicationContext(), "沒有資料可供下載", Toast.LENGTH_SHORT).show()
+                }
+            }/*
             val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
             val macAddressForDB = share.getString("mac", "noValue")
             DownloadTask().execute(macAddressForDB, token)
