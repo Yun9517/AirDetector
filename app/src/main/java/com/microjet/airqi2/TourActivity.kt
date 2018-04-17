@@ -73,6 +73,8 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         val iv = ImageView(this)
         //默認展示的第一個視圖為images[0]
         iv.setImageResource(images[0])
+        iv.adjustViewBounds = true
+        //iv.scaleType = ImageView.ScaleType.FIT_CENTER
         return iv
     }
 
