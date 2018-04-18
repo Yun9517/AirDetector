@@ -34,11 +34,16 @@ class SplashActivity : AppCompatActivity() {
         {
             // This method will be executed once the timer is over
             // Start your app main activity
-            val i = Intent(this@SplashActivity, MainActivity::class.java) //MainActivity為主要檔案名稱
-            startActivity(i)
-
+            if (MyApplication.getIsFirstUsed()) {
+                val i = Intent(this@SplashActivity, TourActivity::class.java) //放你想跳過去的頁面
+                startActivity(i)
+                finish()
+            } else {
+                val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
+                startActivity(i)
+                finish()
+            }
             // close this activity
-            finish()
         }, AUTO_HIDE_DELAY_MILLIS.toLong())
     }
 

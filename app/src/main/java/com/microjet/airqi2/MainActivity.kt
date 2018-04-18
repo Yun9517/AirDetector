@@ -60,6 +60,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -1221,7 +1222,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkRTCSetted(rtcTime: Long) {
         val now = (System.currentTimeMillis() / 1000)
-        if (rtcTime != now) {
+        val secondOffset = abs(rtcTime - now)
+        Log.d("RTCOffSet", secondOffset.toString())
+        if (secondOffset > 5) { //如果rtc秒數offset大於5秒才重set
             Log.d("NowTime", now.toString())
             val nowByte = ByteBuffer.allocate(8).putLong(now).array()
             mUartService?.writeRXCharacteristic(BLECallingTranslate.setRTC(nowByte))

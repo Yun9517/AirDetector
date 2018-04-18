@@ -1,6 +1,5 @@
 package com.microjet.airqi2.Account
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -22,9 +21,6 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
-import android.content.SharedPreferences
-import com.microjet.airqi2.DownloadTask
-import com.microjet.airqi2.TvocNoseData
 import org.json.JSONArray
 
 
@@ -55,21 +51,19 @@ class AccountManagementActivity : AppCompatActivity() {
         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
         email.setText(share.getString("LoginEmail",""))
         rememberID.isChecked = share.getBoolean("rememberID",false)
+
+        // ****** Create Account Button ******************** //
         newAccount.setOnClickListener {
             if (isConnected()) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                val intent = Intent(this, AccountRegisterActivity::class.java)
-                startActivity(intent)
+                registerShow()
             } else {
                 showDialog(getString(R.string.checkConnection))
             }
         }
-
+        // ****** Forget Password Feature ********************//
         forgotPassword.setOnClickListener {
             if (isConnected()) {
-                //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-                val intent = Intent(this, AccountForgetPasswordActivity::class.java)
-                startActivity(intent)
+                forgotPasswordShow()
             } else {
                 showDialog(getString(R.string.checkConnection))
             }
@@ -139,12 +133,24 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    // 2018/03/30
+    // 2018/03/30 Check network status
 
     private fun isConnected(): Boolean {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         return networkInfo != null && networkInfo.isConnected
+    }
+
+    // 2018/04/17 Add function for intent activity
+
+    private fun forgotPasswordShow() {
+        val i: Intent? = Intent(this, AccountForgetPasswordActivity::class.java)
+        startActivity(i)
+    }
+
+    private fun registerShow() {
+        val i: Intent? = Intent(this, AccountRegisterActivity::class.java)
+        startActivity(i)
     }
 
     private inner class goLoginAsyncTasks : AsyncTask<logInMything, Void, String>() {

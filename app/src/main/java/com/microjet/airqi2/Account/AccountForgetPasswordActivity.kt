@@ -73,31 +73,33 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
 
     }//onCreat
 
-
-
-private fun initActionBar() {
-    // 取得 actionBar
-    val actionBar = supportActionBar
-    // 設定顯示左上角的按鈕
-    actionBar!!.setDisplayHomeAsUpEnabled(true)
-}
-
-override fun onOptionsItemSelected(item: MenuItem): Boolean {
-    when (item.itemId) {
-        android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
-        -> {
-            Log.d(this.javaClass.simpleName,"home icon")
-            val intent = Intent()
-            intent.setClass(this@AccountForgetPasswordActivity.mContext, AccountManagementActivity::class.java)
-            startActivity(intent)
-            finish()
-            return true
-        }
-        else -> {
-        }
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
     }
-    return super.onOptionsItemSelected(item)
-}
+
+    // ***** 2018/04/17 Add function for intent activity *********************** //
+    private fun accountManagementShow() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+        startActivity(i)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                Log.d(this.javaClass.simpleName,"home icon")
+                accountManagementShow()
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     var mForgetPassword=""
 
@@ -181,14 +183,14 @@ override fun onOptionsItemSelected(item: MenuItem): Boolean {
     }
 
 
-//20180311
-fun isEmail(strEmail: String): Boolean {
-    //val strPattern = ("\\w+@\\w+\\.\\w+")
-    val strPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
-    val p = Pattern.compile(strPattern)
-    val m = p.matcher(strEmail)
-    return m.matches()
-}
+    //20180311
+    fun isEmail(strEmail: String): Boolean {
+        //val strPattern = ("\\w+@\\w+\\.\\w+")
+        val strPattern = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$"
+        val p = Pattern.compile(strPattern)
+        val m = p.matcher(strEmail)
+        return m.matches()
+    }
 
 
     //20180311

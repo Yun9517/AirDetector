@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
@@ -42,6 +43,11 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         imgSwitcher!!.setFactory(this)//通過工廠實現ImageSwitcher
         initpoint()
         imgSwitcher!!.setOnTouchListener(this)//設置觸摸事件
+
+        skipTour.setOnClickListener {
+            mainShow()
+        }
+
     }
 
     //初始化導航圓點的方法
@@ -76,6 +82,13 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         iv.adjustViewBounds = true
         //iv.scaleType = ImageView.ScaleType.FIT_CENTER
         return iv
+    }
+
+    private fun mainShow() {
+        // ****** 2018/04/17 Call Identify the App is first time initial or not from MyApplication ************//
+        MyApplication.saveIsFirstUsed()
+        val i: Intent? = Intent(this, MainActivity::class.java)
+        startActivity(i)
     }
 
     @SuppressLint("ClickableViewAccessibility")
