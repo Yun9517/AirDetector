@@ -85,6 +85,8 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
     }
 
     private fun mainShow() {
+        // ****** 2018/04/17 Call Identify the App is first time initial or not from MyApplication ************//
+        MyApplication.saveIsFirstUsed()
         val i: Intent? = Intent(this, MainActivity::class.java)
         startActivity(i)
     }

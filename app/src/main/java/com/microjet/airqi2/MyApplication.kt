@@ -104,18 +104,6 @@ class MyApplication : Application() {
             return share.getString("mac", "11:22:33:44:55:66")
         }
 
-        // ****** 2018/04/17 Identify the App is first time initial or not ************///
-        @SuppressLint("ApplySharedPref")
-        fun saveIsFirstUsed(context: Context) {
-            val sp = context.getSharedPreferences("GtdSharedPreferences", Activity.MODE_PRIVATE)
-            sp.edit().putBoolean("isFirstUsed", false).commit()
-        }
-
-        fun getIsFirstUsed(context: Context): Boolean {
-            val share = context.getSharedPreferences("GtdSharedPreferences", Activity.MODE_PRIVATE)
-            return share.getBoolean("isFirstUsed", true)
-        }
-
         fun putDeviceVersion(value: String) {
             deviceVer = value
         }
@@ -136,6 +124,16 @@ class MyApplication : Application() {
             share.edit().putBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, value).apply()
         }
 
+        // ****** 2018/04/17 Identify the App is first time initial or not ************//
+        fun saveIsFirstUsed() {
+            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
+            share.edit().putBoolean("isFirstUsed", false).commit()
+        }
+
+        fun getIsFirstUsed(): Boolean {
+            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
+            return share.getBoolean("isFirstUsed", true)
+        }
     }
 
     override fun onCreate() {
@@ -176,8 +174,6 @@ class MyApplication : Application() {
         }
         realm.close()
         */
-
-
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)
         this.registerReceiver(mPrimaryReceiver, filter)
