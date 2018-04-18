@@ -274,4 +274,8 @@
     <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
     <string name="map_result_title">情報</string>
+
+    <!--    雲端下載視窗    -->
+    <string name="messag_text">以連接的藍牙裝置</string>
+    <string name="messag_dowload">雲端同步下載</string>
 </resources>
