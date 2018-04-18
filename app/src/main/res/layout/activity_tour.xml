@@ -5,27 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
-    <Button
-        android:id="@+id/skipTour"
-        android:background="@drawable/style_black_button"
-        android:layout_gravity="end"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="18dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/skipTourGuide"
-        android:textColor="@color/AboutHyperLink"
-        android:textSize="18sp"/>
-
     <ImageSwitcher
         android:id="@+id/imgSwitcher"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
     </ImageSwitcher>
+
+    <Button
+        android:id="@+id/skipTour"
+        android:background="@drawable/style_black_button"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="4dp"
+        android:text="@string/getStarted"
+        android:textColor="@color/AboutHyperLink"
+        android:textSize="22sp"/>
 
     <LinearLayout
         android:id="@+id/point_layout"
