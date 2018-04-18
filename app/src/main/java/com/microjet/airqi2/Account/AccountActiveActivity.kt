@@ -24,9 +24,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
@@ -176,15 +174,13 @@ class AccountActiveActivity : AppCompatActivity() {
                     list.add(arr.getJSONObject(i).getString("mac_address"))
                 }
                 val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
-
-                select()
-                /*
-                AlertDialog.Builder(this)
-                        .setView(R.layout.app_downloaddata_select)
+                select(list,token)
+               /*
+               AlertDialog.Builder(this)
                         .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
                             DownloadTask(this).execute(list[which], token)
                         }).show()
-               */
+                */
                 /*
                 val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
                 val macAddressForDB = share.getString("mac", "noValue")
@@ -200,16 +196,24 @@ class AccountActiveActivity : AppCompatActivity() {
     }
 
 
-    private fun select() {
+    private fun select(list:ArrayList<String>,token:String ) {
+        Log.e("list的內容", list.toString())
         val builder = AlertDialog.Builder(this)
         val inflater : LayoutInflater=LayoutInflater.from(this)
         val view : View = inflater.inflate(R.layout.app_downloaddata_select,null)
         val dialog : Dialog=builder.create()
         dialog.show()
         dialog.getWindow().setContentView(view)
-        val b_update = view.findViewById<Button>(R.id.btn_cancel_download)
-        b_update.setOnClickListener {
-            dialog.dismiss()//結束dialog
+        val bt_cancel = view.findViewById<Button>(R.id.bt_cancel_download)//使用app_downloaddata_select頁面的元件
+        val bt_listview = view.findViewById<ListView>(R.id.bt_listview)
+        val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1,list)
+        bt_listview.adapter = adapter //listview.setAdapter(adapter)
+        bt_listview.setOnItemClickListener { parent, view, position, id ->
+            DownloadTask(this).execute(list[position], token)
+            dialog.dismiss()//結束小視窗
+        }
+        bt_cancel.setOnClickListener {
+            dialog.dismiss()//結束小視窗
         }
     }
 
