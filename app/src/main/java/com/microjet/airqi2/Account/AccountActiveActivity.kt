@@ -173,9 +173,9 @@ class AccountActiveActivity : AppCompatActivity() {
                 for (i in 0 until arr!!.length()) {
                     list.add(arr.getJSONObject(i).getString("mac_address"))
                 }
-                val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
                 select(list,token)
                /*
+               val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
                AlertDialog.Builder(this)
                         .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
                             DownloadTask(this).execute(list[which], token)
@@ -195,7 +195,7 @@ class AccountActiveActivity : AppCompatActivity() {
 
     }
 
-
+    // 04/18 雲端視窗顯示
     private fun select(list:ArrayList<String>,token:String ) {
         Log.e("list的內容", list.toString())
         val builder = AlertDialog.Builder(this)
@@ -209,8 +209,12 @@ class AccountActiveActivity : AppCompatActivity() {
         val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1,list)
         bt_listview.adapter = adapter //listview.setAdapter(adapter)
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            DownloadTask(this).execute(list[position], token)
-            dialog.dismiss()//結束小視窗
+            if(isConnected()) {
+                DownloadTask(this).execute(list[position], token)
+                dialog.dismiss()//結束小視窗
+            }else{
+                showDialog(getString(R.string.checkConnection))
+            }
         }
         bt_cancel.setOnClickListener {
             dialog.dismiss()//結束小視窗
