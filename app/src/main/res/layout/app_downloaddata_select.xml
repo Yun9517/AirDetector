@@ -36,7 +36,8 @@
             android:id="@+id/messag_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:minHeight="5dp"
+            android:padding="10dp"
             android:text="@string/messag_text"
             android:textSize="20dp"
             android:textStyle="normal" />
@@ -57,6 +58,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:fadeScrollbars="false"
+                    android:minHeight="10dp"
+                    android:padding="5dp"
                     android:stackFromBottom="false"
                     android:textColor="@android:color/black">
 
