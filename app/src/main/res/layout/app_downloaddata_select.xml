@@ -6,14 +6,14 @@
     android:gravity="center">
 
     <LinearLayout
-        android:layout_width="330dp"
-        android:layout_height="285dp"
+        android:layout_width="320dp"
+        android:layout_height="500dp"
         android:background="#ffffffff"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="60dp"
+            android:layout_height="55dp"
             android:layout_margin="0dp"
             android:background="#3C3C3C"
             android:focusable="true">
@@ -27,9 +27,8 @@
                 android:minHeight="50dp"
                 android:padding="10dp"
                 android:text="@string/messag_dowload"
-                android:textSize="22sp"
                 android:textColor="#ffffffff"
-                 />
+                android:textSize="22sp" />
 
         </RelativeLayout>
 
@@ -37,45 +36,42 @@
             android:id="@+id/messag_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:text="@string/messag_text"
             android:textSize="20dp"
-            android:gravity="center"
-            android:textStyle="normal"/>
+            android:textStyle="normal" />
 
-
-        <ListView
-            android:id="@+id/bt_listview"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_alignParentBottom="true"
-            android:background="@android:color/white"
-            android:minHeight="100dp"
-            android:padding="30dp"
-            android:textColor="@android:color/black">
-
-        </ListView>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:background="#3C3C3C"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="2">
+
+                <ListView
+                    android:id="@+id/bt_listview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:fadeScrollbars="false"
+                    android:stackFromBottom="false"
+                    android:textColor="@android:color/black">
+
+                </ListView>
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/bt_cancel_download"
-                android:layout_width="200dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_marginStart="20dp"
-                android:background="#3C3C3C"
-                android:layout_gravity="center"
+                android:background="@color/blackTransparentColor_80"
+                android:text="@android:string/cancel"
                 android:textColor="@color/whiteColor"
-                android:textSize="18sp"
-                android:text="取消" />
+                android:textSize="18sp" />
 
         </LinearLayout>
-
     </LinearLayout>
-
 </LinearLayout>
