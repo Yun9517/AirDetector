@@ -164,7 +164,6 @@ class AccountActiveActivity : AppCompatActivity() {
 
         //雲端DATA DOWNLOAD 按鈕事件
         downloadData.setOnClickListener {
-           if(isConnected()) {
                 val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                 val token = share_token.getString("token", "")
                 //取得裝置資料清單下載
@@ -186,9 +185,6 @@ class AccountActiveActivity : AppCompatActivity() {
                 val macAddressForDB = share.getString("mac", "noValue")
                 DownloadTask().execute(macAddressForDB, token)
                 */
-            } else {
-                showDialog(getString(R.string.checkConnection))
-            }
 
         }
 
@@ -209,12 +205,8 @@ class AccountActiveActivity : AppCompatActivity() {
         val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1,list)
         bt_listview.adapter = adapter //listview.setAdapter(adapter)
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            if(isConnected()) {
-                DownloadTask(this).execute(list[position], token)
-                dialog.dismiss()//結束小視窗
-            }else{
-                showDialog(getString(R.string.checkConnection))
-            }
+          DownloadTask(this).execute(list[position], token)
+          dialog.dismiss()//結束小視窗
         }
         bt_cancel.setOnClickListener {
             dialog.dismiss()//結束小視窗
