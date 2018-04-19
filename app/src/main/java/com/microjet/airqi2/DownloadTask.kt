@@ -81,7 +81,7 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
         try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                return null
+                return "ResponseError"//null
             } else {
                 val res = response.body()?.string()
                 val jsonObj = JSONObject(res)
@@ -133,7 +133,7 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
+            return "ReconnectNetwork"//null
         }
     }
 
@@ -156,6 +156,14 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
                 "Error" -> {
                     if (Build.BRAND != "OPPO") {
                         Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                "ResponseError" -> {
+                    Log.e("ResponseError","測試中")
+                }
+                "ReconnectNetwork" -> {
+                    if (Build.BRAND != "OPPO") {
+                        Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
                     }
                 }
             }
