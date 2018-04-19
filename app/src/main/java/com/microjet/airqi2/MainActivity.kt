@@ -35,6 +35,7 @@ import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
+import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
@@ -59,6 +60,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
+import kotlin.math.abs
 
 
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
@@ -927,7 +929,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
-            show_Device_Name?.text = "尚未連接裝置"
+            show_Device_Name?.text = getString(R.string.No_Device_Connect)
             naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
@@ -1138,7 +1140,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                         var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
-                        warningClass!!.judgeTvoc(hashMap[TvocNoseData.C6TVOC]!!.toInt())
+                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt())
                     }
                 }
             } else {
@@ -1220,7 +1222,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkRTCSetted(rtcTime: Long) {
         val now = (System.currentTimeMillis() / 1000)
-        if (rtcTime != now) {
+        val secondOffset = abs(rtcTime - now)
+        Log.d("RTCOffSet", secondOffset.toString())
+        if (secondOffset > 5) { //如果rtc秒數offset大於5秒才重set
             Log.d("NowTime", now.toString())
             val nowByte = ByteBuffer.allocate(8).putLong(now).array()
             mUartService?.writeRXCharacteristic(BLECallingTranslate.setRTC(nowByte))
@@ -1402,14 +1406,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "New FW Arrival "->{
-            //    showDownloadDialog(bleEvent.message!!)
+                showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{
-             /*   val intent = Intent()
+                /*
+                val intent = Intent()
                 intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
+              var dfup= DFUProcessClass(this)
+                dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
             }
         }
     }

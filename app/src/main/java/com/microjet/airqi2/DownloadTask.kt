@@ -24,7 +24,7 @@ import org.json.JSONObject
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
+class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
 
 
     //取MAC
@@ -50,16 +50,17 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
 
     override fun onPreExecute() {
         super.onPreExecute()
+        //白告: 總數最大值，無法更為0，預設值似乎不能低於100
         if (mContext!=null) {
             mProgressBar = ProgressDialog(mContext)
             mProgressBar?.setMessage("下載資料中")
             mProgressBar?.isIndeterminate = false//功能不知道
-            mProgressBar?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+            mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)//STYLE_SPINNER
             mProgressBar?.setCancelable(false)
             mProgressBar?.show()
         }
     }
-
+    //主要背景執行
     override fun doInBackground(vararg params: String?): String? {
         val mDeviceAddress = params[0]
         val token = params[1]
@@ -80,13 +81,15 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
         try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                return null
+                return "ResponseError"//null
             } else {
                 val res = response.body()?.string()
                 val jsonObj = JSONObject(res)
                 val returnResult = jsonObj.get("userData")
                 if (returnResult != "connect info error") {
+                    //攝取userData的內容
                     val jsonArr: JSONArray = jsonObj.getJSONArray("userData")
+                    //讀取並計算字元個數
                     val jsonArrSize = jsonArr.length()
                     Log.d("DownloadSize", jsonArrSize.toString())
                     val timeStampArr = arrayListOf<Long>()
@@ -95,8 +98,8 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
                         timeStampArr.add(timeStamp)
                     }
                     Log.d("Download", timeStampArr.toString())
-
                     val realm = Realm.getDefaultInstance()
+                    Log.d("timeStampArr.size", timeStampArr.size.toString())
                     for (i in 0 until timeStampArr.size) {
                         val time = timeStampArr[i]
                         val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
@@ -116,6 +119,8 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
                                 Log.d("Download", asmData.toString())
                             }
                         }
+                        //val ii = ((i / timeStampArr.size.toFloat()) * 100).toInt()  取百分比的進度條
+                        publishProgress(i,timeStampArr.size)        //取總比數的進度條
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
@@ -128,12 +133,15 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            return null
+            return "ReconnectNetwork"//null
         }
     }
 
-    override fun onProgressUpdate(vararg values: Void?) {
+    //更新視窗的改變
+    override fun onProgressUpdate(vararg values: Int?) {
         super.onProgressUpdate(*values)
+        mProgressBar?.progress = values[0]!!
+        mProgressBar?.max =values[1]!!
     }
 
     override fun onPostExecute(result: String?) {
@@ -148,6 +156,14 @@ class DownloadTask(input: Context) : AsyncTask<String, Void, String>() {
                 "Error" -> {
                     if (Build.BRAND != "OPPO") {
                         Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                "ResponseError" -> {
+                    Log.e("ResponseError","測試中")
+                }
+                "ReconnectNetwork" -> {
+                    if (Build.BRAND != "OPPO") {
+                        Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
                     }
                 }
             }

@@ -105,13 +105,13 @@
     <string name="CustomerService">http://www.curiejet.com/zh-tw/</string>
 
     <!-- Add String for Notification -->
-    <string name="warning_title_Yellow">輕度危險警告通知!!!</string>
-    <string name="warning_title_Orange">中度危險警告通知!!!</string>
-    <string name="warning_title_Red">重度危險警告通知!!!</string>
-    <string name="warning_title_Purple">嚴重危險警告通知!!!</string>
-    <string name="warning_title_Brown">非常嚴重危險警告通知!!!</string>
+    <string name="warning_title_Yellow">轻度危险警告通知!!!</string>
+    <string name="warning_title_Orange">中度危险警告通知!!!</string>
+    <string name="warning_title_Red">重度危险警告通知!!!</string>
+    <string name="warning_title_Purple">严重危险警告通知!!!</string>
+    <string name="warning_title_Brown">非常严重危险警告通知!!!</string>
 
-    <string name="Medium_warning">中度危險，請盡快離開現場!!!</string>
+    <string name="Medium_warning">中度危险，请尽快离开现场!!!</string>
 
     <!-- Add Calendar String -->
     <string name="week_First_Word">第</string>
@@ -173,8 +173,8 @@
     <string name="led_light">LED指示灯</string>
 
     <!-- 2018/03/02 -->
-    <string name="auto_sync">自動同步雲端</string>
-    <string name="allow_3G">允許行動網路</string>
+    <string name="auto_sync">自动同步云端</string>
+    <string name="allow_3G">允许行动网络</string>
 
     //20180227
     <string name="cloud_fun">雲端功能</string>
@@ -218,7 +218,8 @@
     <string name="fetchData">查看</string>
     <string name="downloadData">下载</string>
     <string name="shareData">分享</string>
-    <string name="rememberID">記住帳號</string>
+    <string name="rememberID">记住账号</string>
+    <string name="syncData">云端同步</string>
 
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
@@ -236,7 +237,7 @@
     <string name="title_humidy">Humidy_Data</string>
     <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
-
+    <string name="map_result_title">情报</string>
     <string name="title_activity_tour">TourActivity</string>
     <string name="title_activity_air_map1">Map</string>
     <string name="title_activity_splash">SplashActivity</string>
@@ -376,6 +377,7 @@
     <string name="Accept">Yes</string>
     <string name="Reject">NO</string>
 
+    <string name="getStarted">开始体验</string>
 </resources>
 
 

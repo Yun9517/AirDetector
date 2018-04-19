@@ -10,7 +10,8 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.media.MediaPlayer
+import android.media.AudioManager
+import android.media.SoundPool
 import android.os.Build
 import android.os.PowerManager
 import android.os.Vibrator
@@ -24,22 +25,31 @@ import com.microjet.airqi2.Definition.SavePreferences
  */
 class WarningClass {
     //20180122
-    private val REQUEST_CODE = 0xb01
+    private val REQUEST_TVOC_CODE = 0x01
+    private val REQUEST_PM25_CODE = 0x01
 
     private var notificationManager: NotificationManager? = null
+    private var notificationManager2: NotificationManager? = null
     private var m_context: Context? = null
     private var mVibrator: Vibrator? = null
     private var mPreference: SharedPreferences? = null
 
+    //Test
+    private var soundsMap: HashMap<Int, Int> =HashMap<Int,Int>()
+    private var soundPool: SoundPool? =null
     constructor (MustInputContext: Context) {
         m_context = MustInputContext
         mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         mVibrator = m_context!!.applicationContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator?
         notificationManager = m_context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager2 = m_context!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        //Test
+        soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 0)
+        soundPool!!.setOnLoadCompleteListener(soundPoolOnLoadCompleteListener)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun judgeTvoc(tvocValue: Int) {
+    fun judgeValue(tvocValue: Int) {
         //20180403
         when (tvocValue) {
             in 660..2200 -> {
@@ -79,11 +89,10 @@ class WarningClass {
 
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private fun warningFunction(soundNo: Int,
+    private fun warningFunction(soundResNo: Int,
                                 vibratorSecond: Long,
                                 iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
-        //
-        playSound(soundNo)
+        soundPool!!.load(m_context, soundResNo, 1)
         sendVibrator(vibratorSecond)
         sendNotification(iconSelect,titleSelect,messageSelect,tvoc)
     }
@@ -126,25 +135,26 @@ class WarningClass {
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
+        //20180109   Andy
         val intent = Intent(m_context!!, MainActivity::class.java)
         //當使用者點擊通知Bar時，切換回MainActivity
-        val pi = PendingIntent.getActivity(m_context!!, REQUEST_CODE,
+        val pi = PendingIntent.getActivity(m_context!!, REQUEST_TVOC_CODE,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
         notification.contentIntent = pi
-        //20180109   Andy
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(value)//RString.get(2)));
+            notificationHelper!!.set_TCOC_Value(value)
             val NB = notificationHelper!!.getNotification1(title, text.toString())
-            notificationHelper!!.notify(REQUEST_CODE, NB)
+            notificationHelper!!.notify(REQUEST_TVOC_CODE, NB)
         } else {
             try {
                 //送到手機的通知欄
-                notificationManager!!.notify(1, notification)
+                notificationManager!!.notify(REQUEST_TVOC_CODE, notification)
                 //20180209
-                val pm = m_context!!.getSystemService(Context.POWER_SERVICE) as PowerManager
+                val powerManager = m_context!!.getSystemService(Context.POWER_SERVICE) as PowerManager
                 //獲取電源管理器對象
-                val wl = pm.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "bright")
+                val wl = powerManager.newWakeLock(PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "bright")
                 //獲取PowerManager.WakeLock對象,後面的參數|表示同時傳入兩個值,最後的是LogCat裡用的Tag
                 wl.acquire(2 * 1000L)
                 //點亮屏幕
@@ -156,16 +166,6 @@ class WarningClass {
         }
     }
 
-    private fun playSound(sn: Int) {
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
-            try {
-                val mp = MediaPlayer.create(m_context, sn)
-                mp.start()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-        }
-    }
 
     private fun sendVibrator(vicSec: Long) {
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false) && mVibrator != null) {
@@ -186,6 +186,16 @@ class WarningClass {
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
+            }
+        }
+    }
+    private var soundPoolOnLoadCompleteListener: SoundPool.OnLoadCompleteListener = SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
+            if(status == 0) {
+                soundPool.play(sampleId, 1.0f, 1.0f, 0, 0, 1f)
+            }
+            else{
+                Log.e("SoundPoolErroCode",status.toString())
             }
         }
     }

@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">ADDWII</string>
-    <string name="app_name_air_map">空氣地圖</string>
-    <string name="app_name_knowledge">知識庫</string>
-    <string name="app_name_about">關於APP</string>
+    <string name="app_name_air_map">Air map</string>
+    <string name="app_name_knowledge">Knowledge</string>
+    <string name="app_name_about">About</string>
     <string name="text_message_air_good">Air quality is normal, please keep it fresh. TVOC is low, no irritation or discomfort risk.</string>
     <string name="text_message_air_mid">The air quality is slightly polluted. Avoid staying in this situation too long (12 months). Improved ventilation is recommended.</string>
     <string name="text_message_air_Medium_Orange">The air quality is poor. Avoid staying in this situation too long (1 month). Intensified ventilation is recommended.</string>
@@ -218,6 +218,7 @@
     <string name="downloadData">Download</string>
     <string name="shareData">Share</string>
     <string name="rememberID">Remember user ID</string>
+    <string name="syncData">Sync</string>
 
     <string name="text_label_latitude">緯度：</string>
     <string name="text_label_longitude">經度：</string>
@@ -235,5 +236,7 @@
     <string name="title_humidy">Humidy_Data</string>
     <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
+    <string name="map_result_title">Information</string>
 
+    <string name="getStarted">Get Started</string>
 </resources>

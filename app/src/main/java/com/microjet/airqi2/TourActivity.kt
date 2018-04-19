@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.MotionEvent
@@ -13,12 +14,21 @@ import java.util.*
 class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouchListener {
 
     //圖片id數組
+//    private var images = intArrayOf(
+//            R.drawable.operation_guide_01,
+//            R.drawable.operation_guide_02,
+//            R.drawable.operation_guide_03,
+//            R.drawable.operation_guide_04,
+//            R.drawable.operation_guide_05)
+
     private var images = intArrayOf(
-            R.drawable.operation_guide_01,
-            R.drawable.operation_guide_02,
-            R.drawable.operation_guide_03,
-            R.drawable.operation_guide_04,
-            R.drawable.operation_guide_05)
+            R.drawable.new_guide_01,
+            R.drawable.new_guide_02,
+            R.drawable.new_guide_03,
+            R.drawable.new_guide_04,
+            R.drawable.new_guide_05,
+            R.drawable.new_guide_06,
+            R.drawable.new_guide_07)
 
     //實例化存儲導航圓點的集合
     private var points = ArrayList<ImageView>()
@@ -33,6 +43,11 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         imgSwitcher!!.setFactory(this)//通過工廠實現ImageSwitcher
         initpoint()
         imgSwitcher!!.setOnTouchListener(this)//設置觸摸事件
+
+        skipTour.setOnClickListener {
+            mainShow()
+        }
+
     }
 
     //初始化導航圓點的方法
@@ -64,7 +79,16 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         val iv = ImageView(this)
         //默認展示的第一個視圖為images[0]
         iv.setImageResource(images[0])
+        iv.adjustViewBounds = true
+        //iv.scaleType = ImageView.ScaleType.FIT_CENTER
         return iv
+    }
+
+    private fun mainShow() {
+        // ****** 2018/04/17 Call Identify the App is first time initial or not from MyApplication ************//
+        MyApplication.saveIsFirstUsed()
+        val i: Intent? = Intent(this, MainActivity::class.java)
+        startActivity(i)
     }
 
     @SuppressLint("ClickableViewAccessibility")

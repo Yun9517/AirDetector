@@ -6,15 +6,14 @@ package com.microjet.airqi2.Account
 //import com.github.angads25.filepicker.view.FilePickerDialog
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
-
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.ContactsContract.Directory.PACKAGE_NAME
@@ -23,9 +22,10 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.MenuItem
-import android.widget.TextView
-import android.widget.Toast
+import android.view.View
+import android.widget.*
 import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
@@ -153,27 +153,25 @@ class AccountActiveActivity : AppCompatActivity() {
             dpd.show()
         }
 
+        //雲端DATA DOWNLOAD 按鈕事件
         downloadData.setOnClickListener {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val token = share_token.getString("token", "")
             //取得裝置資料清單下載
             val arr = JSONArray(shareMSG.getString("deviceLi",""))
-            val list = ArrayList<String>()
-            for (i in 0 until arr!!.length()) {
-                list.add(arr.getJSONObject(i).getString("mac_address"))
+            //新帳號會拿不到deviceList，要加上安全判斷
+            if (arr.length() != 0) {
+                val list = ArrayList<String>()
+                for (i in 0 until arr!!.length()) {
+                    list.add(arr.getJSONObject(i).getString("mac_address"))
+                }
+                selectDeviceDownload(list, token)
+            } else {
+                if (Build.BRAND != "OPPO") {
+                    Toast.makeText(MyApplication.applicationContext(), "沒有資料可供下載", Toast.LENGTH_SHORT).show()
+                }
             }
-            val sh = list.toArray(arrayOfNulls<CharSequence>(list.size))
-            AlertDialog.Builder(this)
-                    .setItems(sh,DialogInterface.OnClickListener { dialog, which ->
-                        DownloadTask(this).execute(list[which], token)
-                    }).show()
-            /*
-            val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-            val macAddressForDB = share.getString("mac", "noValue")
-            DownloadTask().execute(macAddressForDB, token)
-            */
         }
-
     }
 
     private fun updateDateInView() {
@@ -371,6 +369,30 @@ class AccountActiveActivity : AppCompatActivity() {
         // Verify the intent will resolve to at least one activity
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(chooser,0)
+        }
+    }
+
+    // 04/18 雲端視窗顯示
+    private fun selectDeviceDownload(list: ArrayList<String>, token: String) {
+        Log.e("list的內容", list.toString())
+        val builder = AlertDialog.Builder(this)
+        val inflater: LayoutInflater=LayoutInflater.from(this)
+        val view: View = inflater.inflate(R.layout.app_downloaddata_select,null)
+        val dialog: Dialog=builder.create()
+        dialog.show()
+        dialog.getWindow().setContentView(view)
+        val bt_cancel = view.findViewById<Button>(R.id.bt_cancel_download)//使用app_downloaddata_select頁面的元件
+        val bt_listview = view.findViewById<ListView>(R.id.bt_listview)
+        val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1, list)
+        bt_listview.adapter = adapter //listview.setAdapter(adapter)
+        bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
+        bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
+        bt_listview.setOnItemClickListener { parent, view, position, id ->
+            DownloadTask(this).execute(list[position], token)
+            dialog.dismiss()//結束小視窗
+        }
+        bt_cancel.setOnClickListener {
+            dialog.dismiss()//結束小視窗
         }
     }
 }

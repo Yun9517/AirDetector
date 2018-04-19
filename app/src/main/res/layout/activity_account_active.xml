@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="20dp"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/big_logo"/>
 
         <TextView
             android:id="@+id/Active"
@@ -146,7 +146,7 @@
                 android:layout_height="30dp"
                 android:layout_marginStart="20dp"
                 android:background="@drawable/style_login_button"
-                android:text="雲端同步"
+                android:text="@string/syncData"
                 android:textColor="@color/whiteColor" />
 
             <Button

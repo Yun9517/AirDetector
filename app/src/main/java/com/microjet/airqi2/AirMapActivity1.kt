@@ -44,7 +44,7 @@ import com.mobile2box.MJGraphView.MJGraphView
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_airmap.*
+import kotlinx.android.synthetic.main.activity_airmap1.*
 import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,7 +57,7 @@ import kotlin.collections.ArrayList
  *
  */
 
-class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGraphUpdateCallback {
+class AirMapActivity1 : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGraphUpdateCallback {
 
     private val REQUEST_LOCATION = 2
     private val perms: Array<String> = arrayOf(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -90,7 +90,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_airmap)
+        setContentView(R.layout.activity_airmap1)
 
         initActionBar()
         initGoogleMapFragment()
@@ -103,11 +103,11 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
-                Utils.toastMakeTextAndShow(this@AirMapActivity, "連點，母湯喔！！",
+                Utils.toastMakeTextAndShow(this@AirMapActivity1, "連點，母湯喔！！",
                         Toast.LENGTH_SHORT)
             } else {
                 datepickerHandler.post {
-                    val dpd = DatePickerDialog(this@AirMapActivity, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+                    val dpd = DatePickerDialog(this@AirMapActivity1, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                         mCal.set(year, month, dayOfMonth)
                         Log.e("AirMap Button", mCal.get(Calendar.DAY_OF_MONTH).toString())
                         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
@@ -148,14 +148,14 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
         }
 
-        LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
+        LocalBroadcastManager.getInstance(this@AirMapActivity1).registerReceiver(mGattUpdateReceiver,
                 makeBroadcastReceiverFilter())
     }
 
     override fun onDestroy() {
         super.onDestroy()
         try {
-            LocalBroadcastManager.getInstance(this@AirMapActivity).unregisterReceiver(mGattUpdateReceiver)
+            LocalBroadcastManager.getInstance(this@AirMapActivity1).unregisterReceiver(mGattUpdateReceiver)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -474,7 +474,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             initLineChart()
         }
 
-        try {
+        /*try {
             // Customise the styling of the base map using a JSON object defined
             // in a raw resource file.
             val success = mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.style_json))
@@ -483,7 +483,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
             }
         } catch (e: Resources.NotFoundException) {
-        }
+        }*/
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -676,7 +676,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         @SuppressLint("SimpleDateFormat")
         override fun doInBackground(vararg _params: Void): MutableList<MJGraphData>? {
             Looper.prepare()
-            val result = AirMapActivity().runRealmQueryData()
+            val result = AirMapActivity1().runRealmQueryData()
 
             Log.d("DATE", "Today total count: ${result.size}")
 
@@ -739,7 +739,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 _viewGraph.clear()
             }
 
-            AirMapActivity().startLoadDataThread()
+            AirMapActivity1().startLoadDataThread()
         }
     }
 }

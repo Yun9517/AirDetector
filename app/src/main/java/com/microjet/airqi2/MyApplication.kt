@@ -1,5 +1,6 @@
 package com.microjet.airqi2
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
@@ -15,6 +16,10 @@ import android.os.Build
 import android.os.Handler
 import com.microjet.airqi2.Definition.SavePreferences
 import java.util.*
+import android.app.Activity
+import android.content.SharedPreferences
+
+
 
 
 /**
@@ -119,6 +124,16 @@ class MyApplication : Application() {
             share.edit().putBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, value).apply()
         }
 
+        // ****** 2018/04/17 Identify the App is first time initial or not ************//
+        fun saveIsFirstUsed() {
+            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
+            share.edit().putBoolean("isFirstUsed", false).commit()
+        }
+
+        fun getIsFirstUsed(): Boolean {
+            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
+            return share.getBoolean("isFirstUsed", true)
+        }
     }
 
     override fun onCreate() {
@@ -159,8 +174,6 @@ class MyApplication : Application() {
         }
         realm.close()
         */
-
-
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)
         this.registerReceiver(mPrimaryReceiver, filter)
