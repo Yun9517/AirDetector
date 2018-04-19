@@ -4,7 +4,9 @@ import android.annotation.SuppressLint
 import android.app.ActivityManager
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -16,7 +18,6 @@ import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import android.widget.Toast
 import com.microjet.airqi2.Definition.SavePreferences
 
 /**
@@ -135,6 +136,12 @@ class WarningClass {
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
         //20180109   Andy
+        val intent = Intent(m_context!!, MainActivity::class.java)
+        //當使用者點擊通知Bar時，切換回MainActivity
+        val pi = PendingIntent.getActivity(m_context!!, REQUEST_TVOC_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        notification.contentIntent = pi
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper!!.set_TCOC_Value(value)
@@ -183,13 +190,13 @@ class WarningClass {
         }
     }
     private var soundPoolOnLoadCompleteListener: SoundPool.OnLoadCompleteListener = SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
-        //if (status == 0) {
-        if (status == 0 && mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
-            soundPool.play(sampleId, 1.0f, 1.0f, 0, 0, 1f)
-        } else {
-            Toast.makeText(m_context,
-                    "SoundPool.load() fail",
-                    Toast.LENGTH_LONG).show()
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
+            if(status == 0) {
+                soundPool.play(sampleId, 1.0f, 1.0f, 0, 0, 1f)
+            }
+            else{
+                Log.e("SoundPoolErroCode",status.toString())
+            }
         }
     }
 }
