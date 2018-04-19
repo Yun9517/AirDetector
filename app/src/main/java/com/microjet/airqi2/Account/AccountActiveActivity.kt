@@ -204,6 +204,8 @@ class AccountActiveActivity : AppCompatActivity() {
         val bt_listview = view.findViewById<ListView>(R.id.bt_listview)
         val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1,list)
         bt_listview.adapter = adapter //listview.setAdapter(adapter)
+        bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
+        bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
           DownloadTask(this).execute(list[position], token)
           dialog.dismiss()//結束小視窗
