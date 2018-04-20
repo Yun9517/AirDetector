@@ -378,6 +378,8 @@
     <string name="Reject">NO</string>
 
     <string name="getStarted">开始体验</string>
+    <string name="messag_text">蓝牙装置名称</string>
+    <string name="messag_dowload">云端同步下载</string>
 </resources>
 
 
