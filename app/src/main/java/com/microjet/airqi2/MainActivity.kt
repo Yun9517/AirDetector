@@ -1334,7 +1334,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         var count = 0
                         for (y in head..end) {
                             val realm = Realm.getDefaultInstance()
-                            val time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                            val time = if (arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() > 1514736000)
+                            {
+                                arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() * 1000
+                            } else {
+                                (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                            }
                             val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
                             if (query.isEmpty() && time > 1514736000000) {
                                 realm.executeTransaction { r ->
