@@ -146,28 +146,32 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
 
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
-        if (result != null) {
-            when (result) {
-                "DownloadCloudDone" -> {
-                    if (Build.BRAND != "OPPO") {
-                        Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+        try {
+            if (result != null) {
+                when (result) {
+                    "DownloadCloudDone" -> {
+                        if (Build.BRAND != "OPPO") {
+                            Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    "Error" -> {
+                        if (Build.BRAND != "OPPO") {
+                            Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    "ResponseError" -> {
+                        Log.e("ResponseError", "測試中")
+                    }
+                    "ReconnectNetwork" -> {
+                        if (Build.BRAND != "OPPO") {
+                            Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
-                "Error" -> {
-                    if (Build.BRAND != "OPPO") {
-                        Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
-                    }
-                }
-                "ResponseError" -> {
-                    Log.e("ResponseError","測試中")
-                }
-                "ReconnectNetwork" -> {
-                    if (Build.BRAND != "OPPO") {
-                        Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                mProgressBar?.dismiss()
             }
-            mProgressBar?.dismiss()
+        } catch (e: Exception) {
+
         }
     }
 }
