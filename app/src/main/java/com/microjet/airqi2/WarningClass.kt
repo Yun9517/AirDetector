@@ -20,7 +20,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
 
-@Suppress("INTEGER_OVERFLOW")
+
 /**
  * Created by B00170 on 2018/4/11.
  */
@@ -154,12 +154,12 @@ class WarningClass {
 
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private fun warningFunction(showDatetype:Int,soundResNo: Int,
+    private fun warningFunction(showDateTypeId:Int,soundResNo: Int,
                                 vibratorSecond: Long,
                                 iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
         soundPool!!.load(m_context, soundResNo, 1)
         sendVibrator(vibratorSecond)
-        sendNotification(showDatetype,iconSelect,titleSelect,messageSelect,tvoc)
+        sendNotification(showDateTypeId,iconSelect,titleSelect,messageSelect,tvoc)
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -188,7 +188,7 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(dT:Int,iconID: Bitmap, title: String, text: String?, value: Int) {
+    private fun makeNotificationShow(DateType:Int,iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
         @SuppressLint("ResourceAsColor")
@@ -204,20 +204,20 @@ class WarningClass {
         //20180109   Andy
         val intent = Intent(m_context!!, MainActivity::class.java)
         //當使用者點擊通知Bar時，切換回MainActivity
-        val pi = PendingIntent.getActivity(m_context!!, dT,
+        val pi = PendingIntent.getActivity(m_context!!, DateType,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
         notification.contentIntent = pi
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(value)
+            notificationHelper!!.set_TCOC_Value(dataValue)
             val NB = notificationHelper!!.getNotification1(title, text.toString())
-            notificationHelper!!.notify(dT, NB)
+            notificationHelper!!.notify(DateType, NB)
         } else {
             try {
                 //送到手機的通知欄
-                notificationManager!!.notify(dT, notification)
+                notificationManager!!.notify(DateType, notification)
                 //20180209
                 val powerManager = m_context!!.getSystemService(Context.POWER_SERVICE) as PowerManager
                 //獲取電源管理器對象
@@ -240,25 +240,25 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(dataType: Int,icon: Int, title: Int, message: Int, tvoc: Int) {
+    private fun sendNotification(DateTypeId: Int,icon: Int, title: Int, message: Int, value: Int) {
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
             if (isAppIsInBackground(m_context!!)) {
                 try {
-                    var titletype = ""
-                    when (dataType) {
+                    var titleShowType = ""
+                    when (DateTypeId) {
                         REQUEST_TVOC_CODE -> {
-                            titletype = m_context!!.getString(R.string.title_tvoc)
+                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_tvoc) + ":"+value+" ppb "
                         }
                         REQUEST_PM25_CODE -> {
-                            titletype = m_context!!.getString(R.string.title_pm25)
+                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_pm25) + ":"+value+" μg/m³ "
                         }
                     }
                     makeNotificationShow(
-                            dataType,
+                            DateTypeId,
                             BitmapFactory.decodeResource(m_context!!.resources, icon),
-                            titletype + ":" + m_context!!.getString(title),
+                            titleShowType,
                             m_context!!.getString(message),
-                            tvoc)
+                            value)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
