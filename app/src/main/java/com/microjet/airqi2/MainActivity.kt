@@ -34,7 +34,6 @@ import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
-import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
@@ -1140,7 +1139,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                         var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
-                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt())
+                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(),hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
                 }
             } else {
