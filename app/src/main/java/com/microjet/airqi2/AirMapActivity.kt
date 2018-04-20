@@ -16,7 +16,6 @@ import android.os.Handler
 import android.os.Looper
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.app.AppCompatActivity
 import android.text.Spannable
@@ -28,6 +27,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.TranslateAnimation
+import android.widget.ProgressBar
 import android.widget.Toast
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
@@ -39,9 +39,11 @@ import com.google.android.gms.maps.model.*
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.Colors
 import com.mobile2box.MJGraphView.MJGraphData
 import com.mobile2box.MJGraphView.MJGraphView
 import io.realm.Realm
+import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
@@ -72,13 +74,13 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     private var showTVOC = true
 
-    private var runGetDataThread: Thread? = null
+    /*private var runGetDataThread: Thread? = null
     private val runGetDataRunnable = Runnable {
         runOnUiThread({
             //getLocalData()
             drawMapPolyLine(showTVOC)
         })
-    }
+    }*/
 
     companion object {
         private lateinit var mCal: Calendar
@@ -116,9 +118,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                         //pgLoading.visibility = View.VISIBLE
                         //pgLoading.bringToFront()
 
-                        //startLoadDataThread()
-
-                        LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+                        //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+                        //getRealmDay()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage("請選擇日期")
                     dpd.show()
@@ -144,8 +145,14 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         viewSelecter.setOnCheckedChangeListener { _, _ ->
             //startLoadDataThread()
+
+            //pgLoading.visibility = View.VISIBLE
+            //pgLoading.bringToFront()
+
             showTVOC = rbTVOC.isChecked
-            LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+            //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+
+            //getRealmDay()
         }
 
         LocalBroadcastManager.getInstance(this@AirMapActivity).registerReceiver(mGattUpdateReceiver,
@@ -162,7 +169,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
     // GetData執行緒啟動與關閉🙄
-    fun startLoadDataThread() {
+    /*fun startLoadDataThread() {
         runGetDataThread = Thread(runGetDataRunnable)
         runGetDataThread!!.start()
     }
@@ -176,10 +183,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         //if (pgLoading.visibility == View.VISIBLE) {
         //    pgLoading.visibility = View.GONE
         //}
-    }
+    }*/
 
     // 取得軌跡顏色
-    private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
+    /*private fun setPolylineColor(value: Int, isTVOC: Boolean): Int {
         if (isTVOC) {
             return when (value) {
                 in 0..219 -> ContextCompat.getColor(MyApplication.applicationContext(), R.color.air_map_line_value1)
@@ -199,7 +206,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 else -> ContextCompat.getColor(MyApplication.applicationContext(), R.color.air_map_line_value6)
             }
         }
-    }
+    }*/
 
     // 文字分割
     private fun setBtnText(value: String): SpannableString {
@@ -231,42 +238,42 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         panel.startAnimation(mHideAction)
     }
 
-    // 畫軌跡
-    private fun drawMapPolyLine(boolean: Boolean) {
-        if (dataArray.size > 0) {
-            for (i in 0 until dataArray.size) {
+// 畫軌跡
+/*private fun drawMapPolyLine(boolean: Boolean) {
+    if (dataArray.size > 0) {
+        for (i in 0 until dataArray.size) {
 
-                // 過濾掉初始值
-                if (dataArray[i].getLatitude() != 24.959817f && dataArray[i].getLongitude() != 121.4215f) {
+            // 過濾掉初始值
+            if (dataArray[i].getLatitude() != 24.959817f && dataArray[i].getLongitude() != 121.4215f) {
 
-                    val data = if (boolean) {
-                        dataArray[i].getTVOCValue()!!.toInt()
-                    } else {
-                        dataArray[i].getPM25Value()!!.toInt()
-                    }
+                val data = if (boolean) {
+                    dataArray[i].getTVOCValue()!!.toInt()
+                } else {
+                    dataArray[i].getPM25Value()!!.toInt()
+                }
 
-                    val rectOptions = PolylineOptions()
-                            .width(20F)
-                            .color(setPolylineColor(data, boolean))
+                val rectOptions = PolylineOptions()
+                        .width(20F)
+                        .color(setPolylineColor(data, boolean))
 
-                    if (i < dataArray.size - 1) {
-                        rectOptions.add(LatLng(dataArray[i].getLatitude()!!.toDouble(), dataArray[i].getLongitude()!!.toDouble()))
-                        rectOptions.add(LatLng(dataArray[i + 1].getLatitude()!!.toDouble(), dataArray[i + 1].getLongitude()!!.toDouble()))
-                        mMap.addPolyline(rectOptions)
-                    }
+                if (i < dataArray.size - 1) {
+                    rectOptions.add(LatLng(dataArray[i].getLatitude()!!.toDouble(), dataArray[i].getLongitude()!!.toDouble()))
+                    rectOptions.add(LatLng(dataArray[i + 1].getLatitude()!!.toDouble(), dataArray[i + 1].getLongitude()!!.toDouble()))
+                    mMap.addPolyline(rectOptions)
                 }
             }
-        } else {
-            dataArray.clear()
-            aResult.clear()
         }
-
-        stopLoadDataThread()
-
-        //if(lineChart != null) {
-        //    lineChart.AddData(MJGraphData(dataArray[dataArray.lastIndex].getCreatedTime()!!, dataArray[dataArray.lastIndex].getTVOCValue()!!.toInt()))
-        //}
+    } else {
+        dataArray.clear()
+        aResult.clear()
     }
+
+    stopLoadDataThread()
+
+    //if(lineChart != null) {
+    //    lineChart.AddData(MJGraphData(dataArray[dataArray.lastIndex].getCreatedTime()!!, dataArray[dataArray.lastIndex].getTVOCValue()!!.toInt()))
+    //}
+}*/
 
     // 更新那個笑到你心裡發寒的臉圖
     private fun updateFaceIcon(value: Int) {
@@ -373,7 +380,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         // -------------------------------------------------
         lineChart.SetOnUpdateCallback(this)
 
-        LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+        //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
     }
 
     // 初始化ActionBar
@@ -467,11 +474,15 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
             initLocation()
 
+            //startLoadDataThread()
+            initLineChart()
+
+            runRealmQueryData()
+
             //pgLoading.visibility = View.VISIBLE
             //pgLoading.bringToFront()
 
-            //startLoadDataThread()
-            initLineChart()
+            //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
         }
 
         try {
@@ -530,29 +541,33 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
                     //startLoadDataThread()
 
-                    LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
+                    //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
                 }
                 BroadcastActions.ACTION_DATA_AVAILABLE -> {
-                    dataAvaliable(intent)
+                    //dataAvaliable(intent)
                 }
             }
         }
     }
 
 
-
-
-    private fun runRealmQueryData(): RealmResults<AsmDataModel> {
+    private fun runRealmQueryData() {
         val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
 
         //現在時間實體毫秒
         val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
-        return query.findAll()
+
+        val result = realm.where(AsmDataModel::class.java)
+                .between("Created_time", startTime, endTime)
+                .sort("Created_time", Sort.ASCENDING).findAllAsync()
+
+        result.addChangeListener(RealmChangeListener {
+            drawMapPolyLine1(it)
+            Log.e("Realm Listener", "Update Map...")
+        })
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -640,7 +655,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                     //LoadData(WeakReference(lineChart), rbTVOC.isChecked).execute()
                     val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
 
-                    val data = if(rbTVOC.isChecked) {
+                    val data = if (rbTVOC.isChecked) {
                         hashMap[TvocNoseData.C6TVOC]!!.toInt()
                     } else {
                         hashMap[TvocNoseData.C6PM25]!!.toInt()
@@ -669,7 +684,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
 
-    private class LoadData(private val _viewGraph: WeakReference<MJGraphView>?,
+    /*private class LoadData(private val _viewGraph: WeakReference<MJGraphView>?,
                            private val _isTVOC: Boolean) :
             AsyncTask<Void, Void, MutableList<MJGraphData>>() {     //AsyncTask<Void, Void, MutableList<MJGraphData>>()
 
@@ -739,7 +754,102 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 _viewGraph.clear()
             }
 
-            AirMapActivity().startLoadDataThread()
+            //AirMapActivity().startLoadDataThread()
+
+            AirMapActivity().getRealmDay()
         }
+    }*/
+
+
+    private fun getRealmDay() {
+        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
+        //將日期設為今天日子加一天減1秒
+        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
+        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        //一天共有2880筆
+        //val dataCount = (endDayLast - endDay) / (60 * 1000)
+        query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
+        //query.lessThan("Created_time", endDayLast).sort("Created_time", Sort.ASCENDING)
+        val result1 = query.findAllAsync()
+
+        result1.addChangeListener(RealmChangeListener {
+            drawMapPolyLine1(it)
+            Log.e("Realm Listener", "Update Map...")
+        })
+    }
+
+    private fun getRealmData() {
+        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
+        val endDayLast = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val realm = Realm.getDefaultInstance()
+        val query = realm.where(AsmDataModel::class.java)
+        val results = query.between("Created_time", startTime, endDayLast).sort("Created_time", Sort.ASCENDING).findAll()
+/*        results.addChangeListener(RealmChangeListener {
+        val rectOptions = PolylineOptions().width(20F).color(setPolylineColor(results.last()!!.tvocValue.toInt(), true))
+        rectOptions.add(LatLng(it.last()!!.latitude.toDouble(),it.last()!!.longitude.toDouble()))
+        mMap.addPolyline(rectOptions)
+    })*/
+        drawMapPolyLine1(results)
+    }
+
+    // 畫軌跡
+    private fun drawMapPolyLine1(datas: RealmResults<AsmDataModel>) {
+        val rectOptions1 = PolylineOptions()
+        rectOptions1.color(Colors.tvocCO2Colors[0])
+
+        val rectOptions2 = PolylineOptions()
+        rectOptions2.color(Colors.tvocCO2Colors[1])
+
+        val rectOptions3 = PolylineOptions()
+        rectOptions3.color(Colors.tvocCO2Colors[2])
+
+        val rectOptions4 = PolylineOptions()
+        rectOptions4.color(Colors.tvocCO2Colors[3])
+
+        val rectOptions5 = PolylineOptions()
+        rectOptions5.color(Colors.tvocCO2Colors[4])
+
+        val rectOptions6 = PolylineOptions()
+        rectOptions6.color(Colors.tvocCO2Colors[5])
+
+        datas.forEachIndexed { index, asmDataModel ->
+            if (index < datas.size - 1) {
+                when (asmDataModel.tvocValue.toInt()) {
+                    in 0..219 -> {
+                        rectOptions1.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions1.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                    in 220..659 -> {
+                        rectOptions2.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions2.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                    in 660..2199 -> {
+                        rectOptions3.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions3.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                    in 2200..5499 -> {
+                        rectOptions4.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions4.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                    in 5500..19999 -> {
+                        rectOptions5.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions5.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                    else -> {
+                        rectOptions6.add(LatLng(datas[index]!!.latitude.toDouble(), datas[index]!!.longitude.toDouble()))
+                        rectOptions6.add(LatLng(datas[index + 1]!!.latitude.toDouble(), datas[index + 1]!!.longitude.toDouble()))
+                    }
+                }
+            }
+        }
+        mMap.addPolyline(rectOptions1)
+        mMap.addPolyline(rectOptions2)
+        mMap.addPolyline(rectOptions3)
+        mMap.addPolyline(rectOptions4)
+        mMap.addPolyline(rectOptions5)
+        mMap.addPolyline(rectOptions6)
     }
 }
