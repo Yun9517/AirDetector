@@ -20,13 +20,14 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
 
+
 /**
  * Created by B00170 on 2018/4/11.
  */
 class WarningClass {
     //20180122
     private val REQUEST_TVOC_CODE = 0x01
-    private val REQUEST_PM25_CODE = 0x01
+    private val REQUEST_PM25_CODE = 0x02
 
     private var notificationManager: NotificationManager? = null
     private var notificationManager2: NotificationManager? = null
@@ -49,52 +50,116 @@ class WarningClass {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun judgeValue(tvocValue: Int) {
+    fun judgeValue(tvocValue: Int,pm25Value: Int) {
         //20180403
+        //TVOC
         when (tvocValue) {
             in 660..2200 -> {
-                warningFunction(R.raw.tvoc_over660,
+                warningFunction(REQUEST_TVOC_CODE,
+                        R.raw.tvoc_over660,
                         2000L,
                         R.drawable.history_face_icon_03,
-                        R.string.warning_title_Orange,
+                        R.string.warning_title_Orange,//+tvocValue,
                         R.string.text_message_air_Medium_Orange,
                         tvocValue)  //中度汙染
             }
             in 2201..5500 -> {
-                warningFunction(R.raw.tvoc_over2200,
+                warningFunction(REQUEST_TVOC_CODE,
+                        R.raw.tvoc_over2200,
                         3000L,
                         R.drawable.history_face_icon_04,
-                        R.string.warning_title_Red,
+                        R.string.warning_title_Red,//+tvocValue,
                         R.string.text_message_air_bad,
                         tvocValue)  //重度汙染
             }
             in 5501..20000 -> {
-                warningFunction(R.raw.tvoc_over5500,
+                warningFunction(REQUEST_TVOC_CODE,
+                        R.raw.tvoc_over5500,
                         4000L,
                         R.drawable.history_face_icon_05,
-                        R.string.warning_title_Purple,
+                        R.string.warning_title_Purple,//+tvocValue,
                         R.string.text_message_air_Serious_Purple,
                         tvocValue) //嚴重汙染
             }
             in 20001..60000 -> {
-                warningFunction(R.raw.tvoc_over20000,
+                warningFunction(REQUEST_TVOC_CODE,
+                        R.raw.tvoc_over20000,
                         5000L,
                         R.drawable.history_face_icon_06,
-                        R.string.warning_title_Brown,
+                        R.string.warning_title_Brown,//+tvocValue,
                         R.string.text_message_air_Extreme_Dark_Purple,
                         tvocValue)  //非常嚴重汙染
+            }
+        }
+
+        //20180409
+        //PM2.5
+        when (pm25Value) {
+            in 0..15 -> {
+//                warningFunction(REQUEST_PM25_CODE,
+//                        R.raw.low_power,
+//                        0L,
+//                        R.drawable.history_face_icon_01,
+//                        R.string.label_pm25_Green,
+//                        R.string.message_pm25_Green,
+//                        pm25Value)  //5
+            }
+            in 16..34 -> {
+//                warningFunction(REQUEST_PM25_CODE,
+//                        R.raw.low_power,
+//                        1000L,
+//                        R.drawable.history_face_icon_02,
+//                        R.string.label_pm25_Yellow,//+pm25Value,
+//                        R.string.message_pm25_Yellow,
+//                        pm25Value)  //輕度汙染
+            }
+            in 35..54 -> {
+                warningFunction(REQUEST_PM25_CODE,
+                        R.raw.tvoc_over660,
+                        2000L,
+                        R.drawable.history_face_icon_03,
+                        R.string.label_pm25_Orange,//+pm25Value,
+                        R.string.message_pm25_Orange,
+                        pm25Value)  //中度汙染
+            }
+            in 55..150 -> {
+                warningFunction(REQUEST_PM25_CODE,
+                        R.raw.tvoc_over2200,
+                        3000L,
+                        R.drawable.history_face_icon_04,
+                        R.string.label_pm25_Red,//+pm25Value,
+                        R.string.message_pm25_Red,
+                        pm25Value)  //重度汙染
+            }
+            in 151..250 -> {
+                warningFunction(REQUEST_PM25_CODE,
+                        R.raw.tvoc_over5500,
+                        4000L,
+                        R.drawable.history_face_icon_05,
+                        R.string.label_pm25_Purple,//+pm25Value,
+                        R.string.message_pm25_Purple,
+                        pm25Value) //嚴重汙染
+            }
+            else -> {
+                warningFunction(REQUEST_PM25_CODE,
+                        R.raw.tvoc_over20000,
+                        5000L,
+                        R.drawable.history_face_icon_06,
+                        R.string.label_pm25_Brown,//+pm25Value,
+                        R.string.message_pm25_Brown,
+                        pm25Value)  //非常嚴重汙染
             }
         }
     }
 
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private fun warningFunction(soundResNo: Int,
+    private fun warningFunction(showDateTypeId:Int,soundResNo: Int,
                                 vibratorSecond: Long,
                                 iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
         soundPool!!.load(m_context, soundResNo, 1)
         sendVibrator(vibratorSecond)
-        sendNotification(iconSelect,titleSelect,messageSelect,tvoc)
+        sendNotification(showDateTypeId,iconSelect,titleSelect,messageSelect,tvoc)
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -123,9 +188,9 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(iconID: Bitmap, title: String, text: String?, value: Int) {
+    private fun makeNotificationShow(DateType:Int,iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
-        bigStyle.bigText(m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
+        bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
                 .setSmallIcon(R.mipmap.ic_launcher)
@@ -135,22 +200,24 @@ class WarningClass {
                 .setPriority(Notification.PRIORITY_DEFAULT)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
+
         //20180109   Andy
         val intent = Intent(m_context!!, MainActivity::class.java)
         //當使用者點擊通知Bar時，切換回MainActivity
-        val pi = PendingIntent.getActivity(m_context!!, REQUEST_TVOC_CODE,
+        val pi = PendingIntent.getActivity(m_context!!, DateType,
                 intent, PendingIntent.FLAG_UPDATE_CURRENT)
         notification.contentIntent = pi
 
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(value)
+            notificationHelper!!.set_TCOC_Value(dataValue)
             val NB = notificationHelper!!.getNotification1(title, text.toString())
-            notificationHelper!!.notify(REQUEST_TVOC_CODE, NB)
+            notificationHelper!!.notify(DateType, NB)
         } else {
             try {
                 //送到手機的通知欄
-                notificationManager!!.notify(REQUEST_TVOC_CODE, notification)
+                notificationManager!!.notify(DateType, notification)
                 //20180209
                 val powerManager = m_context!!.getSystemService(Context.POWER_SERVICE) as PowerManager
                 //獲取電源管理器對象
@@ -166,7 +233,6 @@ class WarningClass {
         }
     }
 
-
     private fun sendVibrator(vicSec: Long) {
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false) && mVibrator != null) {
             mVibrator!!.vibrate(vicSec)
@@ -174,15 +240,25 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(icon: Int, title: Int, message: Int, tvoc: Int) {
+    private fun sendNotification(DateTypeId: Int,icon: Int, title: Int, message: Int, value: Int) {
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
             if (isAppIsInBackground(m_context!!)) {
                 try {
+                    var titleShowType = ""
+                    when (DateTypeId) {
+                        REQUEST_TVOC_CODE -> {
+                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_tvoc) + ":"+value+" ppb "
+                        }
+                        REQUEST_PM25_CODE -> {
+                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_pm25) + ":"+value+" μg/m³ "
+                        }
+                    }
                     makeNotificationShow(
+                            DateTypeId,
                             BitmapFactory.decodeResource(m_context!!.resources, icon),
-                            m_context!!.getString(title),
+                            titleShowType,
                             m_context!!.getString(message),
-                            tvoc)
+                            value)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

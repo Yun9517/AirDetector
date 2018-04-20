@@ -34,7 +34,6 @@ import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
-import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
@@ -1140,7 +1139,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                         var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
-                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt())
+                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(),hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
                 }
             } else {
@@ -1334,7 +1333,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         var count = 0
                         for (y in head..end) {
                             val realm = Realm.getDefaultInstance()
-                            val time = (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                            val time = if (arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() > 1514736000)
+                            {
+                                arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() * 1000
+                            } else {
+                                (arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000
+                            }
                             val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
                             if (query.isEmpty() && time > 1514736000000) {
                                 realm.executeTransaction { r ->
