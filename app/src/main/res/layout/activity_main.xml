@@ -56,6 +56,85 @@
     </android.support.v4.view.ViewPager>
 -->
         </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="false"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:orientation="vertical"
+            android:paddingBottom="2dp"
+            android:paddingTop="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/dot1"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/dot2"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/dot3"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/dot4"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/dot5"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+
+            <ImageView
+                android:id="@+id/dot6"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="1dp"
+                android:layout_marginStart="1dp"
+                android:layout_weight="1"
+                app:srcCompat="@android:color/transparent" />
+        </LinearLayout>
+
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
