@@ -52,12 +52,12 @@
 					<article class="ac-auto">
 						<p> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;根據德國聯邦環境局所提出的報告而界定, 不同的濃度區間對應不同的暴露時間。請參考以下範圍界定及暴露時間建議</br>
 							TVOC的範圍界定 (汙染程度 / 暴露時間)</br>
-							TVOC>=20000 ppb:  非常嚴重汙染</br>
-							TVOC>=5500 ppb (<20000): 嚴重汙染</br>
-							TVOC>=2200 ppb (<5500): 重度汙染 / 數小時內</br>
-							TVOC>=660 ppb (<2200):  中度汙染 / 小於1個月內</br>
-							TVOC>=220 ppb (<660): 輕度汙染 / 小於12個月內</br>
-							TVOC<220 ppb : 正常 / 無限制</br>
+							TVOC < 220 ppb : 正常 / 無限制</br>
+							TVOC >= 220 ppb (<660): 輕度汙染 / 小於12個月內</br>
+							TVOC >= 660 ppb (<2200):  中度汙染 / 小於1個月內</br>
+							TVOC >= 2200 ppb (<5500): 重度汙染 / 數小時內</br>
+							TVOC >= 5500 ppb (<20000): 嚴重汙染</br>
+							TVOC >= 20000 ppb:  非常嚴重汙染</br>
 						</p>
 					</article>
 				</div>
@@ -80,10 +80,10 @@
 					<label for="ac-7">PM2.5 汙染的標準與範圍界定？</label>
 					<article class="ac-auto">
 						<p> <15 : 正常</br>
-							>=15,<35 : 濃度中等</br>
-							>=35,<54 : 濃度過高</br>
-							>=54,< : 150有害健康</br>
-							>=150,<250 : 非常有害健康</br>
+							>=15, <35 : 濃度中等</br>
+							>=35, <54 : 濃度過高</br>
+							>=54, <150 : 有害健康</br>
+							>=150, <250 : 非常有害健康</br>
 							>=250 : 極度危害健康</br>
 						</p>
 					</article>
@@ -108,12 +108,13 @@
 					<input id="ac-10" name="accordion-1" type="radio" />
 					<label for="ac-10">eCO2的範圍界定</label>
 					<article class="ac-auto">
-						<p> eCO2>=5000 ppm : 極度危害健康</br>
-							eCO2>=2500 ppm (<5000): 非常有害健康</br>
-							eCO2>=1500 ppm (<2500): 有害健康</br>
-							eCO2>=1000 ppm (<1500): 濃度過高</br>
-							eCO2>=700 ppm (<1000): 濃度中等</br>
-							eCO2>=400 ppm (<700): 正常</br>
+						<p>
+							eCO2 >= 400 ppm (<700): 正常</br>
+							eCO2 >= 700 ppm (<1000): 濃度中等</br>
+							eCO2 >= 1000 ppm (<1500): 濃度過高</br>
+							eCO2 >= 1500 ppm (<2500): 有害健康</br>
+							eCO2 >= 2500 ppm (<5000): 非常有害健康</br>
+							eCO2 >= 5000 ppm : 極度危害健康</br>
 						</p>
 					</article>
 				</div>
