@@ -50,8 +50,8 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
 
     override fun onPreExecute() {
         super.onPreExecute()
-        //白告: 總數最大值，無法更為0，預設值似乎不能低於100
-        if (mContext!=null) {
+        //白告: 總數最大值，無法更為0，預設值似乎不能低於100 //!getActivity().isFinishing() && getActivity()!= null
+        if (mContext!= null) {
             mProgressBar = ProgressDialog(mContext)
             mProgressBar?.setMessage("下載資料中")
             mProgressBar?.isIndeterminate = false//功能不知道
@@ -121,6 +121,13 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
                         }
                         //val ii = ((i / timeStampArr.size.toFloat()) * 100).toInt()  取百分比的進度條
                         publishProgress(i,timeStampArr.size)        //取總比數的進度條
+
+                        if (isCancelled) {
+                            mProgressBar?.dismiss()
+                            realm.close()
+                            break
+                        }
+
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)

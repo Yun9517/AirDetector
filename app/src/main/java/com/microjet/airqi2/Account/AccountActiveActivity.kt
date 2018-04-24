@@ -8,11 +8,13 @@ package com.microjet.airqi2.Account
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
+import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
@@ -57,6 +59,9 @@ class AccountActiveActivity : AppCompatActivity() {
     private var arrData = ArrayList<String>()
     var useFor = 0
     var calObject = Calendar.getInstance()
+    var dialog: Dialog? =null
+    private var download: AsyncTask<String, Int, String>? = null
+
 
     @SuppressLint("SdCardPath", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -242,8 +247,16 @@ class AccountActiveActivity : AppCompatActivity() {
         super.onRestart()
     }
 
+    override fun onStop() {
+        super.onStop()
+        dialog?.dismiss()
+        download?.cancel(true)
+    }
+
     override fun onDestroy() {
         super.onDestroy()
+        dialog?.dismiss()
+        download?.cancel(true)
     }
 
     private fun dbData2CVSAsyncTasks( ){//TS: TvocNoseData) {
@@ -387,9 +400,9 @@ class AccountActiveActivity : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater: LayoutInflater=LayoutInflater.from(this)
         val view: View = inflater.inflate(R.layout.app_downloaddata_select,null)
-        val dialog: Dialog=builder.create()
-        dialog.show()
-        dialog.getWindow().setContentView(view)
+        dialog = builder.create()
+        dialog?.show()
+        dialog?.getWindow()?.setContentView(view)
         val bt_cancel = view.findViewById<Button>(R.id.bt_cancel_download)//使用app_downloaddata_select頁面的元件
         val bt_listview = view.findViewById<ListView>(R.id.bt_listview)
         val adapter=ArrayAdapter(this,android.R.layout.simple_list_item_1, list)
@@ -397,11 +410,11 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            DownloadTask(this).execute(list[position], token)
-            dialog.dismiss()//結束小視窗
+            download=DownloadTask(this).execute(list[position], token)
+            dialog?.dismiss()//結束小視窗
         }
         bt_cancel.setOnClickListener {
-            dialog.dismiss()//結束小視窗
+            dialog?.dismiss()//結束小視窗
         }
     }
 }
