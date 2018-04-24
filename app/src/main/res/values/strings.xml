@@ -277,4 +277,5 @@
     <!--    雲端下載視窗    -->
     <string name="messag_text">藍牙裝置名稱</string>
     <string name="messag_dowload">雲端同步下載</string>
+    <string name="text_navi_personal">個人軌跡</string>
 </resources>
