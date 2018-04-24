@@ -11,6 +11,7 @@ import android.os.Handler
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.content.res.AppCompatResources
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.format.DateFormat
@@ -28,6 +29,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import com.microjet.airqi2.CustomAPI.OnMultipleClickListener
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.Colors
 import com.mobile2box.MJGraphView.MJGraphData
@@ -40,6 +42,7 @@ import kotlinx.android.synthetic.main.activity_airmap.*
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 /**
@@ -137,6 +140,12 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             //runRealmQueryData()
             loadLineChartData(result)
         }
+
+        imgAirQuality.setOnClickListener(object : OnMultipleClickListener(10, 250) {
+            override fun onMultipleClick(v: View) {
+                loadFaceMarker()
+            }
+        })
     }
 
     override fun onResume() {
@@ -622,4 +631,39 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             }
         }
     }
+
+
+
+    // 彩蛋 軌跡圖變成一堆臉
+    private fun loadFaceMarker() {
+        mMap.clear()
+
+        for(i in 0 until result.size) {
+            val latLng = LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble())
+            val markerOptions = MarkerOptions()
+
+            markerOptions.icon(when(result[i]!!.tvocValue.toInt()) {
+                in 0..219 -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active)
+                }
+                in 220..659 -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_02yellow_active)
+                }
+                in 660..2199 -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_03orange_active)
+                }
+                in 2200..5499 -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_04red_active)
+                }
+                in 5500..19999 -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_05purple_active)
+                }
+                else -> {
+                    BitmapDescriptorFactory.fromResource(R.drawable.face_icon_06brown_active)
+                }
+            })
+            mMap.addMarker(markerOptions.position(latLng))
+        }
+    }
+
 }
