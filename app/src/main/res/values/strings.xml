@@ -239,7 +239,6 @@
     <string name="expectName">請輸入欲更改的名稱</string>
 
 
-
     <string name="scanner_title">Select device:</string>
     <string name="scanner_empty">No device found</string>
     <string name="scanner_action_scan">Scan</string>

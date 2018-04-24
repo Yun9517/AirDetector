@@ -18,7 +18,6 @@ import android.os.*
 import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -31,8 +30,6 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
-import android.view.animation.Animation
-import android.view.animation.TranslateAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -52,10 +49,9 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
-import kotlinx.android.synthetic.main.activity_airmap.*
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_tour.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -502,6 +498,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private var clickCount = 0
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
         //電池點選顯示對話方塊先關掉
@@ -518,6 +516,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                }
 //            }
 
+            R.id.bleStatus -> {
+                if(clickCount > 10) {
+                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
+                    clickCount = 0
+                } else {
+                    clickCount++
+                }
+            }
 
         //點選ActionBAR會返回
             android.R.id.home -> {

@@ -27,7 +27,7 @@
     <color name="AboutHyperLink">#ff9100</color>
 
     <!-- Color for Main Page -->
-    <color name="Main_frame_background">#B0E2BC</color> <!-- 主頁圓圈內 秀出數值與文字的框框底色 -->
+    <color name="Main_frame_background">#b0e2bc</color> <!-- 主頁圓圈內 秀出數值與文字的框框底色 -->
     <color name="Main_remind_background">#E2FCF4</color> <!-- 主頁圓圈下 秀出提醒文字的框框底色 -->
     <color name="Main_textResult_Good">#34B934</color> <!-- 主頁圓圈內 測量結果 "良好" 用色 -->
     <color name="Main_textResult_Moderate">#FFFA78</color> <!-- 主頁圓圈內 測量結果 "不佳" 用色 -->
@@ -61,7 +61,7 @@
     <!-- UI預設色彩 -->
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#ff4081</color>
     <color name="colorPointer">#FF4081</color>
 
     <color name="black_overlay">#66000000</color>
