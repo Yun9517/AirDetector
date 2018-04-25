@@ -2,6 +2,7 @@ package com.microjet.airqi2.engieeringMode
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.res.Resources
@@ -20,11 +21,13 @@ import kotlinx.android.synthetic.main.activity_engineer_mode.*
 
 class EngineerModeActivity : AppCompatActivity() {
 
-    private var device = ArrayList<DeviceInfo>()
-    private lateinit var deviceAdapter: DeviceAdapter
+    var device = ArrayList<DeviceInfo>()
+    lateinit var deviceAdapter: DeviceAdapter
 
     private val REQUEST_CAMERA = 2
     private val perms: Array<String> = arrayOf(Manifest.permission.CAMERA)
+
+    private val PICK_QRCODE_REQUEST = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +61,7 @@ class EngineerModeActivity : AppCompatActivity() {
                 ActivityCompat.requestPermissions(this, perms, REQUEST_CAMERA)
             } else {
                 val intent = Intent(this@EngineerModeActivity, ScanActivity::class.java)
-                startActivity(intent)
+                startActivityForResult(intent, PICK_QRCODE_REQUEST)
             }
         }
     }
@@ -69,6 +72,29 @@ class EngineerModeActivity : AppCompatActivity() {
         deviceList.adapter = deviceAdapter
         mLayoutManager.orientation = LinearLayout.VERTICAL
         deviceList.layoutManager = mLayoutManager
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        // Check which request we're responding to
+        if (requestCode == PICK_QRCODE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == Activity.RESULT_OK) {
+                val device1 = DeviceInfo()
+                device1.DeviceName = "NAME: ${data.getStringExtra("deviceName")}"
+                device1.DeviceAddress = "MAC: ${data.getStringExtra("deviceAddr")}"
+                device1.DeviceSerial = "SN: 0938-5938-78-3064"
+                device1.ConnectTime = "1970/12/01 23:59:59"
+                device1.TVOCValue = "10000"
+                device1.ECO2Value = "30000"
+                device1.PM25Value = "10000"
+                device1.HUMIValue = "100"
+                device1.TEMPValue = "0"
+                device1.RSSIValue = "-128"
+
+                device.add(device1)
+                deviceAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     // 初始化ActionBar

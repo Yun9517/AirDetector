@@ -1,5 +1,6 @@
 package com.microjet.airqi2.engieeringMode
 
+import android.app.Activity
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -7,6 +8,8 @@ import com.google.zxing.Result
 import com.microjet.airqi2.MainActivity
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView
+import org.json.JSONException
+import org.json.JSONObject
 
 class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
 
@@ -35,7 +38,17 @@ class ScanActivity : AppCompatActivity(), ZXingScannerView.ResultHandler {
         // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
 
         //EngineerModeActivity.tvresult.setText(rawResult.text)
-        onBackPressed()
+        try {
+            val jsonOBJ = JSONObject(rawResult.text)
+            intent.putExtra("deviceName", jsonOBJ.getString("Name"))
+            intent.putExtra("deviceAddr", jsonOBJ.getString("Address"))
+            setResult(Activity.RESULT_OK, intent)
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            setResult(Activity.RESULT_CANCELED, intent)
+        }
+
+        finish()
 
         // If you would like to resume scanning, call this method below:
         //mScannerView.resumeCameraPreview(this);
