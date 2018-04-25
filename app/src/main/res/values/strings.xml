@@ -223,6 +223,9 @@
     <string name="shareData">分享</string>
     <string name="rememberID">記住帳號</string>
     <string name="syncData">雲端同步</string>
+    <string name="download_text">下載進度:</string>
+    <string name="download_max">/請稍後</string>
+    <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
