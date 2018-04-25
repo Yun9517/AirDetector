@@ -624,13 +624,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
-            R.id.nav_air_map -> airmapShow()
+            R.id.nav_air_map -> publicMapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
             R.id.nav_getData -> {
             }
             R.id.nav_setting -> settingShow()
+            R.id.nav_personal_map -> airmapShow()
         }
         drawerLayout?.closeDrawer(GravityCompat.START)
     }
@@ -1520,6 +1521,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         fadeOut.duration = duration
 
         indicator.startAnimation(fadeOut)
+    }
+
+    private fun publicMapShow() {
+        val i: Intent? = Intent(this, PublicMapActivity::class.java)
+        startActivity(i)
     }
 }
 
