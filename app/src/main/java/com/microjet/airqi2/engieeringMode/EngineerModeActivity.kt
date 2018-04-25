@@ -1,21 +1,30 @@
 package com.microjet.airqi2.engieeringMode
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.content.res.Resources
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.view.MenuItem
 import android.widget.LinearLayout
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.maps.model.MapStyleOptions
+import com.microjet.airqi2.AirMapActivity
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_engineer_mode.*
-import android.widget.Toast
-import com.microjet.airqi2.MainActivity
-
 
 
 class EngineerModeActivity : AppCompatActivity() {
 
     private var device = ArrayList<DeviceInfo>()
     private lateinit var deviceAdapter: DeviceAdapter
+
+    private val REQUEST_CAMERA = 2
+    private val perms: Array<String> = arrayOf(Manifest.permission.CAMERA)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,6 +50,16 @@ class EngineerModeActivity : AppCompatActivity() {
         fab.setOnClickListener {
             device.add(device1)
             deviceAdapter.notifyDataSetChanged()
+        }
+
+        fab2.setOnClickListener {
+            if (ActivityCompat.checkSelfPermission(this,
+                            Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, perms, REQUEST_CAMERA)
+            } else {
+                val intent = Intent(this@EngineerModeActivity, ScanActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
@@ -72,5 +91,18 @@ class EngineerModeActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // 權限要求結果，由於已經先在onMapReady()中要求權限了，因此在處理的程式碼中無需再次要求權限
+    @SuppressLint("MissingPermission")
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            grantResults: IntArray) {
+        when (requestCode) {
+            REQUEST_CAMERA -> {
+                val intent = Intent(this@EngineerModeActivity, ScanActivity::class.java)
+                startActivity(intent)
+            }
+        }
     }
 }
