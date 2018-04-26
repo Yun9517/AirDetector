@@ -417,19 +417,35 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            seeUI()
-            download=DownloadTask(this, download_Bar!!,download_min!!,download_max!!,download_text!!).execute(list[position], token)
+            download=DownloadTask(this, download_Bar!!).execute(list[position], token)
             dialog?.dismiss()//結束小視窗
         }
         bt_cancel.setOnClickListener {
             dialog?.dismiss()//結束小視窗
         }
     }
-        fun seeUI(){
+
+    fun text_show() {
         download_Bar?.setVisibility(View.VISIBLE)
         download_text?.setVisibility(View.VISIBLE)
         download_min?.setVisibility(View.VISIBLE)
         download_max?.setVisibility(View.VISIBLE)
+    }
+
+    fun text_invisable() {
+        download_Bar?.setVisibility(View.GONE)
+        download_text?.setVisibility(View.GONE)
+        download_min?.setVisibility(View.GONE)
+        download_max?.setVisibility(View.GONE)
+    }
+
+    fun control_Text(getNow: Int, getMax: Int){
+        download_Bar?.setVisibility(View.VISIBLE)
+        download_text?.setVisibility(View.VISIBLE)
+        download_min?.setVisibility(View.VISIBLE)
+        download_max?.setVisibility(View.VISIBLE)
+        download_min?.setText((getNow).toString())
+        download_max?.setText(" /"+getMax.toString())
     }
 }
 
