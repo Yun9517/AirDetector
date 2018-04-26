@@ -61,13 +61,20 @@ class AccountActiveActivity : AppCompatActivity() {
     var calObject = Calendar.getInstance()
     var dialog: Dialog? =null
     private var download: AsyncTask<String, Int, String>? = null
-
+    var download_Bar: ProgressBar? = null
+    var download_min: TextView? = null
+    var download_max: TextView? = null
+    var download_text: TextView? = null
 
     @SuppressLint("SdCardPath", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
         mContext = this@AccountActiveActivity.applicationContext
+        download_Bar = this.findViewById(R.id.progressBar2)
+        download_min = this.findViewById(R.id.download_min)
+        download_max = this.findViewById(R.id.download_max)
+        download_text = this.findViewById(R.id.download_text)
 
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -410,12 +417,19 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            download=DownloadTask(this).execute(list[position], token)
+            seeUI()
+            download=DownloadTask(this, download_Bar!!,download_min!!,download_max!!,download_text!!).execute(list[position], token)
             dialog?.dismiss()//結束小視窗
         }
         bt_cancel.setOnClickListener {
             dialog?.dismiss()//結束小視窗
         }
+    }
+        fun seeUI(){
+        download_Bar?.setVisibility(View.VISIBLE)
+        download_text?.setVisibility(View.VISIBLE)
+        download_min?.setVisibility(View.VISIBLE)
+        download_max?.setVisibility(View.VISIBLE)
     }
 }
 
