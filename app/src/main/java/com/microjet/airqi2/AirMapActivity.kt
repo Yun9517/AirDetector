@@ -479,7 +479,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         // set gap between each item (min: 2px, max: 6px)
         // ----------------------------------------------
 		//lineChart.SetItemGap(3)
-        lineChart.SetItemGap(6)
+        lineChart.SetItemGap(3)
 
         // set labels
         // ----------
@@ -493,7 +493,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // set the graph line width (min: 2px, max: 8px)
         // ---------------------------------------------
-        lineChart.SetLineWidth(3)
+        lineChart.SetLineWidth(2)
 		//	lineChart.SetLineWidth(8)
 
         // set graph mode
