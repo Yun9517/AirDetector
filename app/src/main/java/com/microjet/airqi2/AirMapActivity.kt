@@ -139,6 +139,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             
             //runRealmQueryData()
             loadLineChartData(result)
+            drawMapPolyLine(result)
         }
 
         imgAirQuality.setOnClickListener(object : OnMultipleClickListener(10, 250) {
@@ -594,7 +595,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
 
         val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
-        Log.e("Scroll To", "Time: ${dateFormat.format(result[position]!!.created_time)}, Timestamp: ${result[position]!!.created_time}, Value: ${data}")
+        Log.e("Scroll To", "Time: ${dateFormat.format(result[position]!!.created_time)}, " +
+                "Timestamp: ${result[position]!!.created_time}, Value: $data, " +
+                "Lat: ${result[position]!!.latitude}, Lng: ${result[position]!!.longitude}")
     }
 
     // 初始化位置，由於已經先在onMapReady()中要求權限了，因此無需再次要求權限
