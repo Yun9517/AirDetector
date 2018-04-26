@@ -32,8 +32,8 @@ public class RealmMigrations implements RealmMigration {
             userSchema.addField("Longitude", Float.class);
             userSchema.addField("Latitude", Float.class);
             userSchema.addField("MACAddress", String.class);
-            userSchema.transform(obj -> obj.set("Longitude", 121.421151f));
-            userSchema.transform(obj -> obj.set("Latitude", 24.959817f));
+            userSchema.transform(obj -> obj.set("Longitude", 255f));
+            userSchema.transform(obj -> obj.set("Latitude", 255f));
             userSchema.transform(obj -> obj.set("MACAddress", MACADDR));
             oldVersion++;
         }

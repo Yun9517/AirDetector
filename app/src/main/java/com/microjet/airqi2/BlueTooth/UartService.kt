@@ -53,7 +53,7 @@ class UartService : Service() {
     //private val bleEventObj = BleEvent()
 
     // 20180328 Add Location Request to Service
-    private var longi: Float? = 121.4215f
+    private var longi: Float? = 255f
     private var lati: Float? = 24.959742f
 
     private lateinit var locationRequest: LocationRequest
@@ -344,8 +344,8 @@ class UartService : Service() {
                     TvocNoseData.lati = location.latitude.toFloat()
                     TvocNoseData.longi = location.longitude.toFloat()
                 } else {
-                    TvocNoseData.lati = 24.959817f
-                    TvocNoseData.longi = 121.4215f
+                    TvocNoseData.lati = 255f
+                    TvocNoseData.longi = 255f
                 }
 
                 Log.e("LOCATION", "Get Location from OnCompleteListener: $lati, $longi")
@@ -362,8 +362,8 @@ class UartService : Service() {
                     TvocNoseData.lati = location.latitude.toFloat()
                     TvocNoseData.longi = location.longitude.toFloat()
                 } else {
-                    TvocNoseData.lati = 24.959817f
-                    TvocNoseData.longi = 121.4215f
+                    TvocNoseData.lati = 255f
+                    TvocNoseData.longi = 255f
                 }
 
                 Log.e("LOCATION", "Get Location from LocationCallback: $lati, $longi")

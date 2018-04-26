@@ -237,7 +237,7 @@ class AirMapActivity1 : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJG
             for (i in 0 until dataArray.size) {
 
                 // 過濾掉初始值
-                if (dataArray[i].getLatitude() != 24.959817f && dataArray[i].getLongitude() != 121.4215f) {
+                if (dataArray[i].getLatitude() != 255f && dataArray[i].getLongitude() != 255f) {
 
                     val data = if (boolean) {
                         dataArray[i].getTVOCValue()!!.toInt()
@@ -687,7 +687,7 @@ class AirMapActivity1 : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJG
                 for (i in 0 until result.size) {
 
                     // 過濾掉初始值
-                    if (result[i]!!.latitude != 24.959817f && result[i]!!.longitude != 121.4215f) {
+                    if (result[i]!!.latitude != 255f && result[i]!!.longitude != 255f) {
                         val temp = AirQiDataSet()
                         temp.setTVOCValue(result[i]!!.tvocValue)
                         temp.setPM25Value(result[i]!!.pM25Value)
