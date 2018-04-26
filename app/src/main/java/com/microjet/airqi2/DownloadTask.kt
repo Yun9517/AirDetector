@@ -11,7 +11,6 @@ import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Definition.SavePreferences
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -28,7 +27,7 @@ import org.json.JSONObject
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask(input: Context, pb: ProgressBar) : AsyncTask<String, Int, String>() {
+class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, download_max: TextView, download_text:TextView) : AsyncTask<String, Int, String>() {
 
 
     //取MAC
@@ -50,12 +49,15 @@ class DownloadTask(input: Context, pb: ProgressBar) : AsyncTask<String, Int, Str
     //private val MACAddress = "MACAddress"
     private var mContext: Context = input
     private var mProgressBar = pb
-    var test = mContext
+    private var tv_min = download_min
+    private var tv_max = download_max
+    private var tv_title = download_text
 
 
     override fun onPreExecute() {
         super.onPreExecute()
-         mProgressBar.visibility = View.VISIBLE
+        //白告: 總數最大值，無法更為0，預設值似乎不能低於100 //!getActivity().isFinishing() && getActivity()!= null
+        mProgressBar.visibility = View.VISIBLE
     }
     //主要背景執行
     override fun doInBackground(vararg params: String?): String? {
@@ -116,7 +118,9 @@ class DownloadTask(input: Context, pb: ProgressBar) : AsyncTask<String, Int, Str
                                 Log.d("Download", asmData.toString())
                             }
                         }
+                        //val ii = ((i / timeStampArr.size.toFloat()) * 100).toInt()  取百分比的進度條
                         publishProgress(i,timeStampArr.size)        //取總比數的進度條
+
                         if (isCancelled) {
                             realm.close()
                             break
@@ -141,9 +145,10 @@ class DownloadTask(input: Context, pb: ProgressBar) : AsyncTask<String, Int, Str
     //更新視窗的改變
     override fun onProgressUpdate(vararg values: Int?) {
         super.onProgressUpdate(*values)
-        mProgressBar?.progress = values[0]!!
+        mProgressBar?.progress = values[0]!!+1
         mProgressBar?.max =values[1]!!
-        ( mContext as? AccountActiveActivity)?.control_Text( values[0]!!+1,values[1]!!)
+        tv_min.text = values[0].toString()
+        tv_max.text = "/ "+values[1].toString()
     }
 
     override fun onPostExecute(result: String?) {
@@ -154,7 +159,10 @@ class DownloadTask(input: Context, pb: ProgressBar) : AsyncTask<String, Int, Str
                     "DownloadCloudDone" -> {
                         if (Build.BRAND != "OPPO") {
                             Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
-                         }
+                            tv_min.setVisibility(View.INVISIBLE)
+                            tv_max.setVisibility(View.INVISIBLE)
+                            tv_title.setVisibility(View.INVISIBLE)
+                        }
                     }
                     "Error" -> {
                         if (Build.BRAND != "OPPO") {
