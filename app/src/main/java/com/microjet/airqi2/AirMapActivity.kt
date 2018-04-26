@@ -196,7 +196,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             for (i in 0 until datas.size) {
 
                 // 過濾掉初始值
-                if (datas[i]!!.latitude != 24.959817f && datas[i]!!.longitude != 121.4215f) {
+                if (datas[i]!!.latitude != 255f && datas[i]!!.longitude != 255f) {
 
                     // 判斷 RadioButton 選中的項目
                     val data = if(rbTVOC.isChecked) {
@@ -239,7 +239,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             }
 
             val nullDataText = "-----"
-            updateValuePanel(nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
+            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
         }
 
         lineChart.SetData(aResult)
@@ -419,9 +419,17 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
     // 更新左上角空汙數值面板
-    @SuppressLint("SetTextI18n")
-    private fun updateValuePanel(tvocVal: String, pm25Val: String, eco2Val: String,
+    @SuppressLint("SetTextI18n", "SimpleDateFormat")
+    private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String) {
+        val dateFormat = SimpleDateFormat("HH:mm")
+
+        textTIMEvalue.text = if(timeVal != 0L) {
+            dateFormat.format(timeVal)
+        } else {
+            "--:--"
+        }
+
         textTVOCvalue.text = "$tvocVal ppb"
 
         textPM25value.text = if (pm25Val == "65535") {
@@ -576,9 +584,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
             updateFaceIcon(data, rbTVOC.isChecked)
 
-            updateValuePanel(result[position]!!.tvocValue, result[position]!!.pM25Value,
-                    result[position]!!.ecO2Value, result[position]!!.tempValue,
-                    result[position]!!.humiValue)
+            updateValuePanel(result[position]!!.created_time, result[position]!!.tvocValue,
+                    result[position]!!.pM25Value, result[position]!!.ecO2Value,
+                    result[position]!!.tempValue, result[position]!!.humiValue)
         } catch (_e: IllegalArgumentException) {
             _e.printStackTrace()
         } catch (_e: NullPointerException) {

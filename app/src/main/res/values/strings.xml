@@ -39,6 +39,7 @@
     <string name="message_pm25_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
 
     <string name="text_message_temperature">一般來說，人體在室內感覺最舒適的溫度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <string name="text_label_time">時間</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
