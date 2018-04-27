@@ -380,6 +380,10 @@
     <string name="getStarted">开始体验</string>
     <string name="messag_text">蓝牙装置名称</string>
     <string name="messag_dowload">云端同步下载</string>
+    <string name="text_label_time">时间</string>
+    <string name="download_text">下载进度:</string>
+    <string name="download_min">喝杯茶</string>
+    <string name="text_navi_personal">个人轨迹</string>
 </resources>
 
 
