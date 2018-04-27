@@ -516,14 +516,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                }
 //            }
 
-            R.id.bleStatus -> {
-                if(clickCount > 10) {
-                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
-                    clickCount = 0
-                } else {
-                    clickCount++
-                }
-            }
+//            R.id.bleStatus -> {
+//                if(clickCount > 10) {
+//                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
+//                    clickCount = 0
+//                } else {
+//                    clickCount++
+//                }
+//            }
 
         //點選ActionBAR會返回
             android.R.id.home -> {

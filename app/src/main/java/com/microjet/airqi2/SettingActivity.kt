@@ -250,8 +250,10 @@ class SettingActivity : AppCompatActivity() {
 
             val intent: Intent? = Intent(
                     if (isChecked) {
+                        text_led_stat!!.text = getString(R.string.text_setting_on)
                         BroadcastActions.INTENT_KEY_LED_ON
                     } else {
+                        text_led_stat.text = getString(R.string.text_setting_off)
                         BroadcastActions.INTENT_KEY_LED_OFF
                     }
             )
