@@ -28,6 +28,8 @@ import android.support.v7.content.res.AppCompatResources
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
+import android.view.animation.AccelerateInterpolator
+import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -47,6 +49,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -174,6 +177,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
+    //20180423
+    private var points = java.util.ArrayList<ImageView>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -181,6 +187,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         uiFindViewById()
         viewPagerInit()
         initActionBar()
+        initpoint()
+
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -233,7 +241,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPause() {
         super.onPause()
-        EventBus.getDefault().unregister(this);
+        EventBus.getDefault().unregister(this)
         Log.e(TAG, "call onPause")
     }
 
@@ -408,11 +416,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     banDownDraw = position == 4     // 如果 position = 4，banDownDraw = true，反之 banDownDraw = false
                 }
                 //Log.e("offset:", offset.toString() + "")
+
+                indicator.visibility = View.VISIBLE
+
+                collapseIndicatorAnim(250)
+
+                indicator.visibility = View.INVISIBLE
             }
 
             override fun onPageSelected(position: Int) {
                 Log.d("PageSelected", position.toString())
                 currentIndex = position
+                setImageBackground(position)
             }
         })
 
@@ -483,6 +498,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         return super.onCreateOptionsMenu(menu)
     }
 
+    private var clickCount = 0
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item!!.itemId) {
         //電池點選顯示對話方塊先關掉
@@ -499,6 +516,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                }
 //            }
 
+            R.id.bleStatus -> {
+                if(clickCount > 10) {
+                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
+                    clickCount = 0
+                } else {
+                    clickCount++
+                }
+            }
 
         //點選ActionBAR會返回
             android.R.id.home -> {
@@ -599,13 +624,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
-            R.id.nav_air_map -> airmapShow()
+            R.id.nav_air_map -> publicMapShow()
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
             R.id.nav_getData -> {
             }
             R.id.nav_setting -> settingShow()
+            R.id.nav_personal_map -> airmapShow()
         }
         drawerLayout?.closeDrawer(GravityCompat.START)
     }
@@ -935,6 +961,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             heatingPanelHide()
         }
+
+
         Log.d("MAINcheckUIState", connState.toString())
     }
 
@@ -1221,7 +1249,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkRTCSetted(rtcTime: Long) {
         val now = (System.currentTimeMillis() / 1000)
-        val secondOffset = abs(rtcTime - now)
+        val secondOffset = Math.abs(rtcTime - now)
         Log.d("RTCOffSet", secondOffset.toString())
         if (secondOffset > 5) { //如果rtc秒數offset大於5秒才重set
             Log.d("NowTime", now.toString())
@@ -1451,6 +1479,53 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val aat = AirActionTask(this.mContext, Version, DeviceType)
         val myResponse = aat.execute("postFWVersion")
         Log.v("AirActionTask", "OVER")
+    }
+
+
+
+    //初始化導航圓點的方法
+    private fun initpoint() {
+        val count = indicator.childCount//獲取布局中圓點數量
+        for (i in 0 until count) {
+            //將布局中的圓點加入到圓點集合中
+            points.add(indicator.getChildAt(i) as ImageView)
+        }
+        //設置第一張圖片（也就是圖片數組的0下標）的圓點狀態為觸摸實心狀態
+        points[0].setImageResource(R.drawable.viewpager_indicator_focused)
+    }
+
+    //設選中圖片對應的導航原點的狀態
+    private fun setImageBackground(selectImage: Int) {
+        for (i in points.indices) {
+            //如果選中圖片的下標等於圓點集合中下標的id，則改變圓點狀態
+            if (i == selectImage) {
+                points[i].setImageResource(R.drawable.viewpager_indicator_focused)
+            } else {
+                points[i].setImageResource(R.drawable.viewpager_indicator_unfocused)
+            }
+        }
+    }
+
+
+    // 關閉動畫
+    private fun collapseIndicatorAnim(duration: Long) {
+        /*val mHideAction = TranslateAnimation(Animation.RELATIVE_TO_PARENT, 0f,
+                Animation.RELATIVE_TO_PARENT, 1.0f, Animation.RELATIVE_TO_PARENT,
+                0.0f, Animation.RELATIVE_TO_PARENT, 0.0f)
+        mHideAction.duration = duration
+
+        indicator.startAnimation(mHideAction)*/
+        val fadeOut = AlphaAnimation(1f, 0f)
+        fadeOut.interpolator = AccelerateInterpolator()
+        fadeOut.startOffset = duration
+        fadeOut.duration = duration
+
+        indicator.startAnimation(fadeOut)
+    }
+
+    private fun publicMapShow() {
+        val i: Intent? = Intent(this, PublicMapActivity::class.java)
+        startActivity(i)
     }
 }
 

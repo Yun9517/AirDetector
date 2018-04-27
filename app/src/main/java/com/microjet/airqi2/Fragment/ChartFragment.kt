@@ -590,8 +590,13 @@ class ChartFragment : Fragment() {
                 //chart_line.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
                 //chart_line.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                chart_line.centerViewToAnimated(l.toFloat(), 0F,
-                        YAxis.AxisDependency.LEFT, 1000)
+                if (useFor == DEFINE_FRAGMENT_PM25) {
+                    chart_line.centerViewToAnimated(l.toFloat() / 5, 0F,
+                            YAxis.AxisDependency.LEFT, 1000)
+                } else {
+                    chart_line.centerViewToAnimated(l.toFloat(), 0F,
+                            YAxis.AxisDependency.LEFT, 1000)
+                }
                 //chart_line.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = chart_line.data!!.dataSetCount
@@ -722,9 +727,16 @@ class ChartFragment : Fragment() {
         var sumValueInt = 0
 
         //先生出2880筆值為0的陣列
-        for (y in 0..dataCount) {
-            arrData.add("65538")
-            arrTime.add((endDay + y * 60 * 1000).toString())
+        if (useFor == DEFINE_FRAGMENT_PM25) {
+            for (y in 0..dataCount step 5) {
+                arrData.add("65538")
+                arrTime.add((endDay + y * 60 * 1000).toString())
+            }
+        } else {
+            for (y in 0..dataCount) {
+                arrData.add("65538")
+                arrTime.add((endDay + y * 60 * 1000).toString())
+            }
         }
 
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
@@ -749,6 +761,7 @@ class ChartFragment : Fragment() {
                         sumValueInt += arrData[count].toInt()
                     }
                     DEFINE_FRAGMENT_PM25 -> {
+                        val count = ((asmDataModel.created_time - endDay) / (60 * 1000 * 5)).toInt()
                         arrData[count] = asmDataModel.pM25Value.toString()
                         sumValueInt += arrData[count].toInt()
                     }
@@ -832,7 +845,7 @@ class ChartFragment : Fragment() {
             }
             DEFINE_FRAGMENT_PM25 -> {
                 result_Today.text = avgValueInt.toString() + " μg/m³"
-                result_Yesterday.text = avgPM25.toInt().toString() + " μg/m³"
+                result_Yesterday.text = avgTVOC3.toInt().toString() + " μg/m³"
             }
         }
     }

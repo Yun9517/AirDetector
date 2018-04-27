@@ -39,6 +39,7 @@
     <string name="message_pm25_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
 
     <string name="text_message_temperature">一般來說，人體在室內感覺最舒適的溫度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <string name="text_label_time">時間</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
@@ -223,6 +224,9 @@
     <string name="shareData">分享</string>
     <string name="rememberID">記住帳號</string>
     <string name="syncData">雲端同步</string>
+    <string name="download_text">下載進度:</string>
+    <string name="download_max">/請稍後</string>
+    <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
@@ -237,7 +241,6 @@
     <string name="errorPassword">密碼輸入不正確</string>
     <string name="remind">提示</string>
     <string name="expectName">請輸入欲更改的名稱</string>
-
 
 
     <string name="scanner_title">Select device:</string>
@@ -388,4 +391,5 @@
     <!--    雲端下載視窗    -->
     <string name="messag_text">藍牙裝置名稱</string>
     <string name="messag_dowload">雲端同步下載</string>
+    <string name="text_navi_personal">個人軌跡</string>
 </resources>

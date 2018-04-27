@@ -17,8 +17,8 @@ public class AsmDataModel extends RealmObject {
     private String PM25Value;
     private Long Created_time;
     private String UpLoaded = "0";
-    private Float Longitude = 121.4215f;
-    private Float Latitude = 24.959817f;
+    private Float Longitude = 255f;
+    private Float Latitude = 255f;
     private String MACAddress = "11:22:33:44:55:66";
 
     public AsmDataModel() {

@@ -9,156 +9,223 @@
     android:orientation="vertical"
     android:background="@drawable/app_bg_cloud_green">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <ImageView
+        android:id="@+id/loginLogo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="128dp"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/big_logo"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/loginLogo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:src="@drawable/big_logo"/>
+    <TextView
+        android:id="@+id/Active"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="157dp"
+        android:layout_marginStart="157dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/active"
+        android:textColor="@color/whiteColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/loginLogo" />
+
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginEnd="152dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Active">
 
         <TextView
-            android:id="@+id/Active"
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nick_Name" />
+
+        <TextView
+            android:id="@+id/show_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:maxLength="20"
+            android:singleLine="true" />
+
+        <TextView
+            android:id="@+id/rename"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:text="@string/active"
-            android:textColor="@color/whiteColor"/>
+            android:layout_marginStart="8dp"
+            android:text="@string/edit"
+            android:textColor="@color/hype_Link_Blue" />
 
-        <LinearLayout
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <TextView
+            android:id="@+id/yourMail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/email" />
+
+        <TextView
+            android:id="@+id/showMail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="60dp"
             android:layout_gravity="start"
-            android:orientation="horizontal">
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp" />
 
-            <TextView
-                android:id="@+id/userName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/nick_Name"
-                />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/show_Name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLength="20"
-                android:singleLine="true"
-                android:layout_marginStart="8dp"/>
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center"
+        android:layout_marginEnd="148dp"
+        android:layout_marginStart="148dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/style_login_button"
+        android:text="@string/logout"
+        android:textColor="@color/whiteColor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout1" />
 
-            <TextView
-                android:id="@+id/rename"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="8dp"
-                android:text="@string/edit"
-                android:textColor="@color/hype_Link_Blue"/>
+    <TextView
+        android:id="@+id/change_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="157dp"
+        android:layout_marginStart="157dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/change_Password"
+        android:textColor="@color/hype_Link_Blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/logout" />
 
-        </LinearLayout>
+    <TextView
+        android:id="@+id/recordTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="154dp"
+        android:layout_marginStart="154dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/recordTitle"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/change_password" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginStart="60dp">
-
-            <TextView
-                android:id="@+id/yourMail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/email"/>
-
-            <TextView
-                android:id="@+id/showMail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp" />
-
-        </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginEnd="40dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recordTitle">
 
         <Button
-            android:id="@+id/logout"
-            android:background="@drawable/style_login_button"
+            android:id="@+id/fetchData"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:text="@string/logout"
-            android:textColor="@color/whiteColor"/>
+            android:background="@drawable/style_login_button"
+            android:text="@string/fetchData"
+            android:textColor="@color/whiteColor" />
+
+        <Button
+            android:id="@+id/downloadData"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/style_login_button"
+            android:text="@string/syncData"
+            android:textColor="@color/whiteColor" />
+
+        <Button
+            android:id="@+id/shareData"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="20dp"
+            android:background="@drawable/style_login_button"
+            android:text="@string/shareData"
+            android:textColor="@color/whiteColor" />
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
+
+
+    <LinearLayout
+        android:id="@+id/linear_layout3"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="@+id/progressBar2"
+        app:layout_constraintTop_toBottomOf="@+id/progressBar2">
 
         <TextView
-            android:id="@+id/change_password"
+            android:id="@+id/download_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="12dp"
-            android:text="@string/change_Password"
-            android:textColor="@color/hype_Link_Blue"/>
+            android:layout_weight="1"
+            android:text="@string/download_text"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="189dp"
+            tools:layout_editor_absoluteY="481dp" />
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/download_min"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="20dp"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/recordTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/recordTitle"
-                android:textSize="18sp"
-                android:visibility="invisible"
-                android:textStyle="bold" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/fetchData"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:background="@drawable/style_login_button"
-                android:text="@string/fetchData"
-                android:textColor="@color/whiteColor" />
-
-            <Button
-                android:id="@+id/downloadData"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/style_login_button"
-                android:text="@string/syncData"
-                android:textColor="@color/whiteColor" />
-
-            <Button
-                android:id="@+id/shareData"
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:layout_marginStart="20dp"
-                android:background="@drawable/style_login_button"
-                android:text="@string/shareData"
-                android:textColor="@color/whiteColor" />
-
-        </LinearLayout>
+            android:layout_weight="1"
+            android:text="@string/download_min"
+            android:visibility="invisible"
+            tools:layout_editor_absoluteX="257dp"
+            tools:layout_editor_absoluteY="481dp" />
 
     </LinearLayout>
 
