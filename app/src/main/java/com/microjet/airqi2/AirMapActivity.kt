@@ -452,7 +452,11 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val latLng = LatLng(latitude, longitude)
 
         // 移動畫面到目前的標記
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        if(mMap.cameraPosition.zoom == 2.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
+        } else {
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
 
         if (currentMarker != null) {
             currentMarker!!.remove()
