@@ -134,6 +134,16 @@ class MyApplication : Application() {
             val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
             return share.getBoolean("isFirstUsed", true)
         }
+
+        fun getSharePreferenceMapPanelStat(): Boolean {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            return share.getBoolean(SavePreferences.SETTING_MAP_PANEL_STATUS, false)
+        }
+
+        fun setSharePreferenceMapPanelStat(value: Boolean) {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            share.edit().putBoolean(SavePreferences.SETTING_MAP_PANEL_STATUS, value).apply()
+        }
     }
 
     override fun onCreate() {

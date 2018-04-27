@@ -7,6 +7,9 @@ import android.os.AsyncTask
 import android.os.Build
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Definition.SavePreferences
 import okhttp3.MediaType
@@ -24,7 +27,7 @@ import org.json.JSONObject
 /**
  * Created by B00175 on 2018/3/13.
  */
-class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
+class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, download_text:TextView) : AsyncTask<String, Int, String>() {
 
 
     //取MAC
@@ -45,20 +48,16 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
     //private val UpLoaded = "UpLoaded"
     //private val MACAddress = "MACAddress"
     private var mContext: Context = input
-    private var mProgressBar: ProgressDialog?=null
+    private var mProgressBar = pb
+    private var tv_min = download_min
+    private var tv_title = download_text
 
 
     override fun onPreExecute() {
         super.onPreExecute()
-        //白告: 總數最大值，無法更為0，預設值似乎不能低於100
-        if (mContext!=null) {
-            mProgressBar = ProgressDialog(mContext)
-            mProgressBar?.setMessage("下載資料中")
-            mProgressBar?.isIndeterminate = false//功能不知道
-            mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)//STYLE_SPINNER
-            mProgressBar?.setCancelable(false)
-            mProgressBar?.show()
-        }
+        mProgressBar.visibility = View.VISIBLE
+        tv_min.visibility = View.VISIBLE
+        tv_title.visibility = View.VISIBLE
     }
     //主要背景執行
     override fun doInBackground(vararg params: String?): String? {
@@ -121,6 +120,11 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
                         }
                         //val ii = ((i / timeStampArr.size.toFloat()) * 100).toInt()  取百分比的進度條
                         publishProgress(i,timeStampArr.size)        //取總比數的進度條
+
+                        if (isCancelled) {
+                            break
+                        }
+
                     }
                     realm.close()
                     //Log.d("Download",timeStamp)
@@ -142,6 +146,7 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
         super.onProgressUpdate(*values)
         mProgressBar?.progress = values[0]!!
         mProgressBar?.max =values[1]!!
+        tv_min.text = (values[0]!!+1).toString()+"/ "+values[1]!!.toString()
     }
 
     override fun onPostExecute(result: String?) {
@@ -168,7 +173,9 @@ class DownloadTask(input: Context) : AsyncTask<String, Int, String>() {
                         }
                     }
                 }
-                mProgressBar?.dismiss()
+                mProgressBar?.visibility = View.GONE
+                tv_min?.visibility = View.GONE
+                tv_title?.visibility = View.GONE
             }
         } catch (e: Exception) {
 

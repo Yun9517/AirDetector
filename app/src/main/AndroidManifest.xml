@@ -19,6 +19,8 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".MyApplication"
@@ -33,15 +35,14 @@
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".CustomDialogActivity"
             android:excludeFromRecents="true"
@@ -63,7 +64,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".Account.AccountRegisterActivity"
             android:excludeFromRecents="true"
@@ -71,7 +71,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".Account.AccountForgetPasswordActivity"
             android:excludeFromRecents="true"
@@ -79,7 +78,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".Account.AccountActiveActivity"
             android:excludeFromRecents="true"
@@ -87,20 +85,21 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme">
-        <intent-filter>
-            <action android:name="android.intent.action.SEND" />
-            <category android:name="android.intent.category.DEFAULT"/>
-        </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
         </activity>
-        <!--authorities="你的包名+fileprovider" -->
+        <!-- authorities="你的包名+fileprovider" -->
         <provider
-            android:authorities="com.microjet.airqi2"
             android:name="android.support.v4.content.FileProvider"
-            android:grantUriPermissions="true"
-            android:exported="false">
+            android:authorities="com.microjet.airqi2"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths"/>
+                android:resource="@xml/filepaths" />
         </provider>
 
         <activity
@@ -110,7 +109,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".Account.AccountNameReplaceActivity"
             android:excludeFromRecents="true"
@@ -118,7 +116,6 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-
         <activity
             android:name=".KnowledgeActivity"
             android:excludeFromRecents="true"
@@ -129,7 +126,7 @@
         <activity
             android:name=".QandAActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
+            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
@@ -138,26 +135,31 @@
 
         <activity
             android:name=".BlueTooth.DFU.DFUActivity"
-            android:label="DFU"/>
-        <!--     android:icon="@drawable/ic_dfu_feature"
+            android:label="DFU" />
+        <!--
+        android:icon="@drawable/ic_dfu_feature"
         <intent-filter>
               <action android:name="android.intent.action.MAIN" />
             <category android:name="no.nordicsemi.android.nrftoolbox.LAUNCHER" />
             </intent-filter>
 
-        </activity>-->
+        </activity>
+        -->
         <activity
             android:name=".BlueTooth.DFU.Settings.SettingsActivity"
             android:label="DFU Settings" />
+
         <service
             android:name=".BlueTooth.DFU.DFUService"
             android:exported="true"
-            android:label="nRF Toolbox DFU Proxy" >
+            android:label="nRF Toolbox DFU Proxy">
             <intent-filter>
                 <action android:name="no.nordicsemi.android.action.DFU_UPLOAD" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
+
         <activity
             android:name=".AboutActivity"
             android:excludeFromRecents="true"
@@ -167,7 +169,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AirMapActivity"
-            android:label="@string/app_name_air_map"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -193,6 +194,10 @@
             android:theme="@style/AppTheme"
             />
 
+        <activity
+            android:name=".PublicMapActivity"
+            android:theme="@style/AppTheme" />
+
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -204,6 +209,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <activity android:name=".engieeringMode.EngineerModeActivity" />
+        <activity android:name=".engieeringMode.ScanActivity"></activity>
     </application>
 
 </manifest>

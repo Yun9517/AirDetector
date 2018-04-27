@@ -10,8 +10,8 @@ class AirQiDataSet {
     private var ECO2Value: String? = null
     private var PM25Value: String? = null
     private var Created_time: Long? = null
-    private var Longitude: Float? = 121.4215f
-    private var Latitude: Float? = 24.959817f
+    private var Longitude: Float? = 255f
+    private var Latitude: Float? = 255f
 
     fun getTEMPValue(): String? {
         return TEMPValue

@@ -79,6 +79,38 @@
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/textTIMEtitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_time"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
+
+                    <TextView
+                        android:id="@+id/textTIMEvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="--:--"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
+
+                    <TextView
                         android:id="@+id/textTVOCtitle"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"

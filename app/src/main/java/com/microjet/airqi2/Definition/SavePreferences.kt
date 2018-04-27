@@ -31,5 +31,7 @@ object SavePreferences {
     const val SETTING_CLOUD_FUN = "airqi2.settings.SETTING_CLOUD_FUN"
     //20180330
     const val SETTING_MANUAL_DISCONNECT = "airqi2.settings.SETTING_MANUAL_DISCONNECT"
+    //20180423
+    const val SETTING_MAP_PANEL_STATUS = "airqi2.settings.SETTING_MAP_PANEL_STATUS"
 
 }
