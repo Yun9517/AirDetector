@@ -54,7 +54,7 @@ class UartService : Service() {
 
     // 20180328 Add Location Request to Service
     private var longi: Float? = 255f
-    private var lati: Float? = 24.959742f
+    private var lati: Float? = 255f
 
     private lateinit var locationRequest: LocationRequest
 

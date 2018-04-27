@@ -181,7 +181,7 @@ public class UartService1 extends Service {
 
     private String macAddressForDB = "11:22:33:44:55:77";
     private Float longi = 255f;
-    private Float lati = 24.959742f;
+    private Float lati = 255f;
 
     //20180227
     private OkHttpClient client = null;
