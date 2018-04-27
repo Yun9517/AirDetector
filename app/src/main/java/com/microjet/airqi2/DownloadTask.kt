@@ -122,7 +122,6 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
                         publishProgress(i,timeStampArr.size)        //取總比數的進度條
 
                         if (isCancelled) {
-                            realm.close()
                             break
                         }
 
