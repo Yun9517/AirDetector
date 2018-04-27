@@ -180,8 +180,8 @@ public class UartService1 extends Service {
     private Boolean isFirstB0 = true;
 
     private String macAddressForDB = "11:22:33:44:55:77";
-    private Float longi = 121.4215f;
-    private Float lati = 24.959742f;
+    private Float longi = 255f;
+    private Float lati = 255f;
 
     //20180227
     private OkHttpClient client = null;
@@ -2338,8 +2338,8 @@ public class UartService1 extends Service {
                     lati = (float) location.getLatitude();
                     longi = (float) location.getLongitude();
                 } else {
-                    lati = 24.959817f;
-                    longi = 121.4215f;
+                    lati = 255f;
+                    longi = 255f;
                 }
 
                 Log.e("LOCATION", "Get Location from OnCompleteListener: " + lati + ", " + longi);
@@ -2357,8 +2357,8 @@ public class UartService1 extends Service {
                             lati = (float) location.getLatitude();
                             longi = (float) location.getLongitude();
                         } else {
-                            lati = 24.959817f;
-                            longi = 121.4215f;
+                            lati = 255f;
+                            longi = 255f;
                         }
 
                         Log.e("LOCATION", "Get Location from LocationCallback: " + lati + ", " + longi);
