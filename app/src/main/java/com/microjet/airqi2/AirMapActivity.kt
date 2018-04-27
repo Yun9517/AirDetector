@@ -64,6 +64,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     private lateinit var listener: RealmChangeListener<RealmResults<AsmDataModel>>
 
+    private lateinit var filter: List<AsmDataModel>
+
     companion object {
         private lateinit var mCal: Calendar
         private lateinit var mMap: GoogleMap
@@ -136,7 +138,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             pgLoading.bringToFront()
             
             //runRealmQueryData()
-            loadLineChartData(result)
+            drawLineChart(result)
             drawMapPolyLine(result)
         }
 
@@ -174,8 +176,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
         listener = RealmChangeListener {
-            drawMapPolyLine(it)
-            loadLineChartData(it)
+            filter = it.filter { it.latitude < 255f && it.latitude != null }
+            drawMapPolyLine(filter)
+            drawLineChart(filter)
             Log.e("Realm Listener", "Update Map...")
         }
 
@@ -188,19 +191,19 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     // 讀取線圖資料
     @SuppressLint("SimpleDateFormat")
-    private fun loadLineChartData(datas: RealmResults<AsmDataModel>) {
+    private fun drawLineChart(datas: List<AsmDataModel>) {
         aResult.clear()
 
-        if (datas.size > 0) {
+        if (datas.isNotEmpty()) {
             for (i in 0 until datas.size) {
                 // 判斷 RadioButton 選中的項目
                 val data = if (rbTVOC.isChecked) {
-                    datas[i]!!.tvocValue.toInt()
+                    datas[i].tvocValue.toInt()
                 } else {
-                    datas[i]!!.pM25Value.toInt()
+                    datas[i].pM25Value.toInt()
                 }
 
-                val o: MJGraphData? = MJGraphData(datas[i]!!.created_time, data)
+                val o: MJGraphData? = MJGraphData(datas[i].created_time, data)
                 if (o != null && i < result.size - 1) {
                     try {
                         aResult.add(o)
@@ -215,7 +218,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 }
 
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
-                Log.e("LoadChartData", "Time: ${dateFormat.format(datas[i]!!.created_time)}, Value: $data")
+                Log.e("LoadChartData", "Time: ${dateFormat.format(datas[i].created_time)}, Value: $data")
             }
         } else {
             val o: MJGraphData? = MJGraphData(mCal.timeInMillis, 0)
@@ -238,7 +241,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         lineChart.SetData(aResult)
 
-        lineChart.SetCurrentIndex(aResult.size - 1)
+        // 如果曲線圖目前的 Index 在很前面就不移動游標
+        if(lineChart.CurrentIndex() > (aResult.size - 10) || lineChart.CurrentIndex() < 10) {
+            lineChart.SetCurrentIndex(aResult.size - 1)
+        }
 
         if (pgLoading.visibility == View.VISIBLE) {
             pgLoading.visibility = View.GONE
@@ -246,7 +252,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
     // 畫軌跡
-    private fun drawMapPolyLine(datas: RealmResults<AsmDataModel>) {
+    private fun drawMapPolyLine(datas: List<AsmDataModel>) {
         val rectOptions1 = PolylineOptions()
         rectOptions1.color(Colors.tvocCO2Colors[0])
 
@@ -264,63 +270,63 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         val rectOptions6 = PolylineOptions()
         rectOptions6.color(Colors.tvocCO2Colors[5])
+        
+        //val dataFilter = datas.filter { it.latitude < 255f && it.latitude != null }
 
-        val dataFilter = datas.filter { it.latitude < 255f && it.latitude != null }
-
-        dataFilter.forEachIndexed { index, asmDataModel ->
+        datas.forEachIndexed { index, asmDataModel ->
             if (index < datas.size - 1) {
                 if (rbTVOC.isChecked) {
                     when (asmDataModel.tvocValue.toInt()) {
                         in 0..219 -> {
-                            rectOptions1.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions1.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions1.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions1.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 220..659 -> {
-                            rectOptions2.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions2.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions2.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions2.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 660..2199 -> {
-                            rectOptions3.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions3.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions3.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions3.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 2200..5499 -> {
-                            rectOptions4.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions4.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions4.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions4.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 5500..19999 -> {
-                            rectOptions5.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions5.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions5.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions5.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         else -> {
-                            rectOptions6.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions6.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions6.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions6.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                     }
                 } else {
                     when (asmDataModel.pM25Value.toInt()) {
                         in 0..15 -> {
-                            rectOptions1.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions1.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions1.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions1.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 16..34 -> {
-                            rectOptions2.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions2.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions2.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions2.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 35..54 -> {
-                            rectOptions3.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions3.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions3.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions3.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 55..150 -> {
-                            rectOptions4.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions4.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions4.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions4.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         in 151..250 -> {
-                            rectOptions5.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions5.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions5.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions5.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                         else -> {
-                            rectOptions6.add(LatLng(dataFilter[index]!!.latitude.toDouble(), dataFilter[index]!!.longitude.toDouble()))
-                            rectOptions6.add(LatLng(dataFilter[index + 1]!!.latitude.toDouble(), dataFilter[index + 1]!!.longitude.toDouble()))
+                            rectOptions6.add(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble()))
+                            rectOptions6.add(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble()))
                         }
                     }
                 }
@@ -569,20 +575,20 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     @SuppressLint("SimpleDateFormat")
     override fun OnUpdate(_index: Int, _data: MJGraphData) {
         val data = if (rbTVOC.isChecked) {
-            result[_index]!!.tvocValue!!.toInt()
+            filter[_index].tvocValue!!.toInt()
         } else {
-            result[_index]!!.pM25Value!!.toInt()
+            filter[_index].pM25Value!!.toInt()
         }
 
         try {
-            putMarker((result[_index]!!.latitude)!!.toDouble(),
-                    (result[_index]!!.longitude)!!.toDouble())
+            putMarker((filter[_index].latitude)!!.toDouble(),
+                    (filter[_index].longitude)!!.toDouble())
 
             updateFaceIcon(data, rbTVOC.isChecked)
 
-            updateValuePanel(result[_index]!!.created_time, result[_index]!!.tvocValue,
-                    result[_index]!!.pM25Value, result[_index]!!.ecO2Value,
-                    result[_index]!!.tempValue, result[_index]!!.humiValue)
+            updateValuePanel(filter[_index].created_time, filter[_index].tvocValue,
+                    filter[_index].pM25Value, filter[_index].ecO2Value,
+                    filter[_index].tempValue, filter[_index].humiValue)
         } catch (_e: IllegalArgumentException) {
             _e.printStackTrace()
         } catch (_e: NullPointerException) {
@@ -590,9 +596,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
 
         val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
-        Log.e("Scroll", "Time: ${dateFormat.format(result[_index]!!.created_time)}, " +
-                "Timestamp: ${result[_index]!!.created_time}, Value: $data, " +
-                "Lat: ${result[_index]!!.latitude}, Lng: ${result[_index]!!.longitude}")
+        Log.e("Scroll", "Time: ${dateFormat.format(filter[_index].created_time)}, " +
+                "Timestamp: ${filter[_index].created_time}, Value: $data, " +
+                "Lat: ${filter[_index].latitude}, Lng: ${filter[_index].longitude}")
     }
 
     // 初始化位置，由於已經先在onMapReady()中要求權限了，因此無需再次要求權限
@@ -645,10 +651,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         mMap.clear()
 
         for(i in 0 until result.size) {
-            val latLng = LatLng(result[i]!!.latitude.toDouble(), result[i]!!.longitude.toDouble())
+            val latLng = LatLng(filter[i].latitude.toDouble(), filter[i].longitude.toDouble())
             val markerOptions = MarkerOptions()
 
-            markerOptions.icon(when(result[i]!!.tvocValue.toInt()) {
+            markerOptions.icon(when(filter[i].tvocValue.toInt()) {
                 in 0..219 -> {
                     BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active)
                 }
