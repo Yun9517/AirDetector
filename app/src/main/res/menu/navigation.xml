@@ -23,8 +23,8 @@
         android:icon="@drawable/ic_humidy_black_24dp"
         android:title="@string/title_humidy" />
     <item
-        android:id="@+id/navigation_temperatur"
+        android:id="@+id/navigation_temperature"
         android:icon="@drawable/ic_temp_black_24dp"
-        android:title="@string/title_temperatur" />
+        android:title="@string/title_temperature" />
 
 </menu>

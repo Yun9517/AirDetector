@@ -81,8 +81,8 @@ class FetchDataMain : AppCompatActivity() {
                     Log.d(TAG + "AllHumidy size", "ALL Humidy " + AllHumidy.size)
                     return@OnNavigationItemSelectedListener true
                 }
-                R.id.navigation_temperatur -> {
-                    message.setText(R.string.title_temperatur)
+                R.id.navigation_temperature -> {
+                    message.setText(R.string.title_temperature)
                     //getRealmDay()
                     adapter = Fetch_Adapter(AllTime, AllTemp,this)
                     lv_data_info.adapter = adapter

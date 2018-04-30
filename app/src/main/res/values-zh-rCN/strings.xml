@@ -376,8 +376,12 @@
     <string name="normal_font_path">fonts/trebuc.ttf</string>
     <string name="Accept">Yes</string>
     <string name="Reject">NO</string>
-
     <string name="getStarted">开始体验</string>
+
+    <!--    雲端下載視窗    -->
+    <string name="messag_text">蓝牙装置名称</string>
+    <string name="messag_dowload">云端同步下载</string>
+    <string name="text_navi_personal">个人轨迹</string>
 </resources>
 
 
