@@ -47,11 +47,6 @@ class SettingActivity : AppCompatActivity() {
 
         uiSetListener()
 
-        val mCycleAdapter: ArrayAdapter<CharSequence> = ArrayAdapter.createFromResource(
-                this, R.array.pickCycle, android.R.layout.simple_spinner_item)
-        mCycleAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        spCycle.adapter = mCycleAdapter
-
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
 
@@ -95,13 +90,10 @@ class SettingActivity : AppCompatActivity() {
         //20180227
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
 
-        spCycle.setSelection(spCycleVal)
 
         swMessage.isChecked = swMessageVal
         swVibrate.isChecked = swViberateVal
         swSound.isChecked = swSoundVal
-        swRunInBg.isChecked = swRunInBgVal
-        swTotalNotify.isChecked = swTotalNotifyVal
         //20180130
         //swPump.isChecked = swPumpVal
         //20180206
@@ -130,16 +122,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun uiSetListener() {
-        spCycle.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                mPreference!!.edit().putInt(SavePreferences.SETTING_TEST_CYCLE,
-                        position).apply()
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>) {
-
-            }
-        }
 
         swMessage.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -178,29 +160,7 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
         }
-
-        swRunInBg.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_run_bg_stat.text = getString(R.string.text_setting_on)
-            } else {
-                text_run_bg_stat.text = getString(R.string.text_setting_off)
-            }
-
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG,
-                    isChecked).apply()
-        }
-
-        //20180227
-        swTotalNotify.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_total_notify_stat.text = getString(R.string.text_setting_on)
-            } else {
-                text_total_notify_stat.text = getString(R.string.text_setting_off)
-            }
-
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY,
-                    isChecked).apply()
-        }
+        
         //20180129
 //        swPump.setOnCheckedChangeListener { _, isChecked ->
 //            if (isChecked) {

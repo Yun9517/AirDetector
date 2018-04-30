@@ -1,543 +1,352 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/settingPageBackground"
     android:orientation="vertical"
     android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_test_cycle"
-            android:textSize="18sp" />
-
-        <Spinner
-            android:id="@+id/spCycle"
-            android:layout_width="100dp"
-            android:layout_height="45dp"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/setting_button_style" />
-
-    </LinearLayout>
-
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone"
-        android:background="#484848" />
-
-
     <TextView
-        android:id="@+id/textView6"
+        android:id="@+id/textAllowNotify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
+        android:paddingStart="20dp"
         android:text="@string/text_setting_allow_notification"
         android:textSize="18sp"
         android:textStyle="bold" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+
+    <android.support.constraint.Group
+        android:id="@+id/cgMessage"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:constraint_referenced_ids="textView8, swMessage, text_msg_stat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textAllowNotify" />
 
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_notify_message"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_msg_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_notify_viberation"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swVibrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_vibrate_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_notify_sound"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_sound_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/bat_switch"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/batSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_bat_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:visibility="visible"
-        android:background="#484848" />
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/auto_sync"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/auto_sync"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swCloud"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_cloud_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone">
     <TextView
-        android:id="@+id/allow_3G"
+        android:id="@+id/textView8"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:text="@string/text_setting_notify_message"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swMessage" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/swMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/cgMessage" />
+
+    <TextView
+        android:id="@+id/text_msg_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/swMessage"
+        app:layout_constraintTop_toTopOf="@+id/swMessage" />
+
+
+    <android.support.constraint.Group
+        android:id="@+id/cgVibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:constraint_referenced_ids="textView10, swVibrate, text_vibrate_stat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swMessage" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:text="@string/text_setting_notify_viberation"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swVibrate" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/swVibrate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
+
+    <TextView
+        android:id="@+id/text_vibrate_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/swVibrate"
+        app:layout_constraintTop_toTopOf="@+id/swVibrate" />
+
+
+    <android.support.constraint.Group
+        android:id="@+id/cgSound"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:constraint_referenced_ids="textView12, swSound, text_sound_stat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
+
+    <TextView
+        android:id="@+id/textView12"
         android:layout_width="135dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/allow_3G"
-        android:textSize="18sp" />
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:text="@string/text_setting_notify_sound"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swSound" />
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/sw3G"
+        android:id="@+id/swSound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="2dp"
+        android:layout_marginStart="8dp"
         android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme" />
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/cgSound" />
 
     <TextView
-        android:id="@+id/text_3G_stat"
+        android:id="@+id/text_sound_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/swSound"
+        app:layout_constraintTop_toTopOf="@+id/swSound" />
+
+
+    <android.support.constraint.Group
+        android:id="@+id/cgLowBatt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swSound" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="135dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:text="@string/bat_switch"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/batSound" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/batSound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
+
+    <TextView
+        android:id="@+id/text_bat_stat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
-        android:textSize="18sp" />
-    </LinearLayout>
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/batSound"
+        app:layout_constraintTop_toTopOf="@+id/batSound" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="#484848"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/batSound" />
+
+
+    <TextView
+        android:id="@+id/text_cloud_fun"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="0dp"
+        android:text="@string/cloud_fun"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swClouudFun" />
 
-        <TextView
-            android:id="@+id/text_cloud_fun"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/cloud_fun"
-            android:textSize="18sp" />
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/swClouudFun"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/text_cloud_fun"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swClouudFun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_clouud_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/text_clouud_stat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/swClouudFun"
+        app:layout_constraintTop_toTopOf="@+id/swClouudFun" />
 
     <TextView
         android:id="@+id/text_label_uuid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_label_local_uuid"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swClouudFun" />
 
     <TextView
         android:id="@+id/text_local_uuid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:text="00000000-0000-0000-0000-000000000000"
-        android:textSize="18sp" />
+        android:textAlignment="center"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_label_uuid" />
 
     <ImageView
-        android:layout_width="fill_parent"
+        android:id="@+id/imageView3"
+        android:layout_width="0dp"
         android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:background="#484848"
         android:visibility="visible"
-        android:background="#484848" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_local_uuid" />
 
     <TextView
         android:id="@+id/text_device_ver"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_label_device_version"
-        android:textSize="18sp" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="135dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/led_light"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/ledPower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_led_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <TextView
-        android:id="@+id/textView24"
-        android:layout_width="match_parent"
+        android:id="@+id/textView15"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/text_setting_notify_comment_1"
-        android:textSize="14sp" />
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:paddingEnd="0dp"
+        android:paddingStart="20dp"
+        android:text="@string/led_light"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ledPower" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/ledPower"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintStart_toEndOf="@+id/textView15"
+        app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
 
     <TextView
-        android:id="@+id/textView25"
-        android:layout_width="match_parent"
+        android:id="@+id/text_led_stat"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/text_setting_notify_comment_2"
-        android:textSize="14sp" />
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#484848" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_history"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/btn_clean"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:background="@drawable/setting_button_style"
-            android:text="@string/text_setting_history_clean"
-            android:textSize="18sp" />
-
-        <Button
-            android:id="@+id/btn_export"
-            android:layout_width="75dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="5dp"
-            android:background="@drawable/setting_button_style"
-            android:text="@string/text_setting_history_export"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#484848" />
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_off"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/ledPower"
+        app:layout_constraintTop_toTopOf="@+id/ledPower" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_allow_in_background"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swRunInBg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_run_bg_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:background="#484848" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/textView19"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingLeft="20dp"
-            android:text="@string/text_setting_pollution_total_notification"
-            android:textSize="18sp" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swTotalNotify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/setting_switch_style"
-            android:theme="@style/SwitchCompatTheme" />
-
-        <TextView
-            android:id="@+id/text_total_notify_stat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="10dp"
-            android:text="@string/text_setting_off"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/text_setting_pollution_comment_1"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/text_setting_pollution_comment_2"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:paddingLeft="20dp"
-        android:text="@string/text_setting_pollution_comment_3"
-        android:textSize="14sp" />
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
