@@ -16,6 +16,7 @@ object SavePreferences {
     // 偏好設定中儲存設定參數的KEY
     const val SETTING_TEST_CYCLE = "airqi2.settings.SETTING_TEST_CYCLE"
     const val SETTING_ALLOW_NOTIFY = "airqi2.settings.SETTING_ALLOW_NOTIFY"
+    const val SETTING_ALLOW_MESSAGE = "airqi2.settings.SETTING_ALLOW_MESSAGE"
     const val SETTING_ALLOW_VIBERATION = "airqi2.settings.SETTING_ALLOW_VIBERATION"
     const val SETTING_ALLOW_SOUND = "airqi2.settings.SETTING_ALLOW_SOUND"
     const val SETTING_ALLOW_RUN_IN_BG = "airqi2.settings.SETTING_ALLOW_RUN_IN_BG"

@@ -241,7 +241,7 @@ class WarningClass {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun sendNotification(DateTypeId: Int,icon: Int, title: Int, message: Int, value: Int) {
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)) {
             if (isAppIsInBackground(m_context!!)) {
                 try {
                     var titleShowType = ""

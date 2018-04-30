@@ -10,13 +10,29 @@
 
     <TextView
         android:id="@+id/textAllowNotify"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:paddingStart="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="@string/text_setting_allow_notification"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swAllowNotify" />
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/swAllowNotify"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/setting_switch_style"
+        android:theme="@style/SwitchCompatTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
     <android.support.constraint.Group
@@ -29,16 +45,18 @@
         app:constraint_referenced_ids="textView8, swMessage, text_msg_stat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textAllowNotify" />
+        app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
 
     <TextView
         android:id="@+id/textView8"
-        android:layout_width="135dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
         android:text="@string/text_setting_notify_message"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/swMessage"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swMessage" />
 
@@ -46,21 +64,21 @@
         android:id="@+id/swMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/setting_switch_style"
         android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintEnd_toStartOf="@+id/text_msg_stat"
         app:layout_constraintTop_toBottomOf="@+id/cgMessage" />
 
     <TextView
         android:id="@+id/text_msg_stat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/swMessage"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swMessage" />
 
 
@@ -78,13 +96,14 @@
 
     <TextView
         android:id="@+id/textView10"
-        android:layout_width="135dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="0dp"
         android:text="@string/text_setting_notify_viberation"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/swVibrate"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swVibrate" />
 
@@ -92,21 +111,21 @@
         android:id="@+id/swVibrate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/setting_switch_style"
         android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintEnd_toStartOf="@+id/text_vibrate_stat"
         app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
 
     <TextView
         android:id="@+id/text_vibrate_stat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/swVibrate"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swVibrate" />
 
 
@@ -124,14 +143,15 @@
 
     <TextView
         android:id="@+id/textView12"
-        android:layout_width="135dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="0dp"
         android:text="@string/text_setting_notify_sound"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/swSound"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swSound" />
 
@@ -139,21 +159,21 @@
         android:id="@+id/swSound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/setting_switch_style"
         android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/textView12"
+        app:layout_constraintEnd_toStartOf="@+id/text_sound_stat"
         app:layout_constraintTop_toBottomOf="@+id/cgSound" />
 
     <TextView
         android:id="@+id/text_sound_stat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/swSound"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swSound" />
 
 
@@ -171,14 +191,15 @@
 
     <TextView
         android:id="@+id/textView14"
-        android:layout_width="135dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="0dp"
         android:text="@string/bat_switch"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/batSound"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/batSound" />
 
@@ -186,10 +207,10 @@
         android:id="@+id/batSound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/setting_switch_style"
         android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/textView14"
+        app:layout_constraintEnd_toStartOf="@+id/text_bat_stat"
         app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
 
     <TextView
@@ -197,11 +218,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/batSound"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/batSound" />
 
     <ImageView
@@ -220,27 +241,27 @@
 
     <TextView
         android:id="@+id/text_cloud_fun"
-        android:layout_width="125dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:paddingStart="20dp"
-        android:paddingEnd="0dp"
         android:text="@string/cloud_fun"
         android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/swCloudFun"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swClouudFun" />
+        app:layout_constraintTop_toTopOf="@+id/swCloudFun" />
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swClouudFun"
+        android:id="@+id/swCloudFun"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:background="@drawable/setting_switch_style"
         android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/text_cloud_fun"
+        app:layout_constraintEnd_toStartOf="@+id/text_clouud_stat"
         app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
     <TextView
@@ -248,12 +269,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginTop="8dp"
         android:text="@string/text_setting_off"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/swClouudFun"
-        app:layout_constraintTop_toTopOf="@+id/swClouudFun" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/swCloudFun" />
 
     <TextView
         android:id="@+id/text_label_uuid"
@@ -267,7 +288,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swClouudFun" />
+        app:layout_constraintTop_toBottomOf="@+id/swCloudFun" />
 
     <TextView
         android:id="@+id/text_local_uuid"

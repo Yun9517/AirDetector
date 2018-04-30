@@ -1,19 +1,15 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.LocationManager
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
-import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
@@ -29,6 +25,7 @@ class SettingActivity : AppCompatActivity() {
     private var mPreference: SharedPreferences? = null
 
     private var spCycleVal: Int = 0
+    private var swAllowNotifyVal: Boolean = false
     private var swMessageVal: Boolean = false
     private var swViberateVal: Boolean = false
     private var swSoundVal: Boolean = false
@@ -74,8 +71,8 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun readPreferences() {
-        spCycleVal = mPreference!!.getInt(SavePreferences.SETTING_TEST_CYCLE, 0)
-        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
         swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
         swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
         swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
@@ -91,6 +88,20 @@ class SettingActivity : AppCompatActivity() {
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
 
 
+        swAllowNotify.isChecked = swAllowNotifyVal
+
+        if (swAllowNotify.isChecked) {
+            cgMessage.visibility = View.VISIBLE
+            cgVibration.visibility = View.VISIBLE
+            cgSound.visibility = View.VISIBLE
+            cgLowBatt.visibility = View.VISIBLE
+        } else {
+            cgMessage.visibility = View.GONE
+            cgVibration.visibility = View.GONE
+            cgSound.visibility = View.GONE
+            cgLowBatt.visibility = View.GONE
+        }
+
         swMessage.isChecked = swMessageVal
         swVibrate.isChecked = swViberateVal
         swSound.isChecked = swSoundVal
@@ -101,7 +112,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.isChecked = swLedPowerVal
 
-        swClouudFun.isChecked = swCloudVal
+        swCloudFun.isChecked = swCloudVal
 
         //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
 
@@ -123,6 +134,35 @@ class SettingActivity : AppCompatActivity() {
 
     private fun uiSetListener() {
 
+        swAllowNotify.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cgMessage.visibility = View.VISIBLE
+                cgVibration.visibility = View.VISIBLE
+                cgSound.visibility = View.VISIBLE
+                cgLowBatt.visibility = View.VISIBLE
+            } else {
+                cgMessage.visibility = View.GONE
+                cgVibration.visibility = View.GONE
+                cgSound.visibility = View.GONE
+                cgLowBatt.visibility = View.GONE
+
+                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
+                        isChecked).apply()
+
+                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
+                        isChecked).apply()
+
+                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
+                        isChecked).apply()
+
+                mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
+                        isChecked).apply()
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
+                    isChecked).apply()
+        }
+
         swMessage.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 text_msg_stat.text = getString(R.string.text_setting_on)
@@ -135,7 +175,7 @@ class SettingActivity : AppCompatActivity() {
                 text_msg_stat.text = getString(R.string.text_setting_off)
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
                     isChecked).apply()
         }
 
@@ -160,31 +200,7 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
         }
-        
-        //20180129
-//        swPump.setOnCheckedChangeListener { _, isChecked ->
-//            if (isChecked) {
-//                text_pump_stat!!.text = getString(R.string.text_setting_on)
-//                //20180130
-//                //************************************************************************************************************************************
-//                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-//                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
-//                sendBroadcast(intent)
-//                Log.i("幹我按下了!!",text_pump_stat!!.text.toString())
-//                //************************************************************************************************************************************
-//            } else {
-//                text_pump_stat!!.text = getString(R.string.text_setting_off)
-//                //************************************************************************************************************************************
-//                val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-//                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
-//                sendBroadcast(intent)
-//                Log.i("幹我不按了!!",text_pump_stat!!.text.toString())
-//                //************************************************************************************************************************************
-//            }
-//
-//            mPreference!!.edit().putBoolean(SavePreferences.SETTING_PUMP_MUNUAL,
-//                    isChecked).apply()
-//        }
+
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -197,17 +213,6 @@ class SettingActivity : AppCompatActivity() {
         }
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
-
-            /*val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-
-            if (isChecked) {
-                text_led_stat!!.text = getString(R.string.text_setting_on)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_ON)
-            } else {
-                text_led_stat.text = getString(R.string.text_setting_off)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_OFF)
-            }*/
-
             val intent: Intent? = Intent(
                     if (isChecked) {
                         BroadcastActions.INTENT_KEY_LED_ON
@@ -223,16 +228,13 @@ class SettingActivity : AppCompatActivity() {
         }
 
         //20180227  CloudFun
-        swClouudFun.setOnCheckedChangeListener { _, isChecked ->
+        swCloudFun.setOnCheckedChangeListener { _, isChecked ->
 
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
             if (isChecked) {
                 text_clouud_stat!!.text = getString(R.string.text_setting_on)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
-                //updateData()
-                //text_bat_stat!!.text = getString(R.string.text_setting_on)
-                //getLocation()
             } else {
                 text_clouud_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
