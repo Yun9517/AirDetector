@@ -19,6 +19,7 @@ object SavePreferences {
     const val SETTING_ALLOW_MESSAGE = "airqi2.settings.SETTING_ALLOW_MESSAGE"
     const val SETTING_ALLOW_VIBERATION = "airqi2.settings.SETTING_ALLOW_VIBERATION"
     const val SETTING_ALLOW_SOUND = "airqi2.settings.SETTING_ALLOW_SOUND"
+    const val SETTING_NOTIFY_VALUE = "airqi2.settings.SETTING_NOTIFY_VALUE"
     const val SETTING_ALLOW_RUN_IN_BG = "airqi2.settings.SETTING_ALLOW_RUN_IN_BG"
     const val SETTING_TOTAL_POLLUTION_NOTIFY = "airqi2.settings.SETTING_TOTAL_POLLUTION_NOTIFY"
     //20180129

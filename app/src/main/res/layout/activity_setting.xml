@@ -6,7 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/settingPageBackground"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:paddingEnd="8dp"
+    android:paddingStart="8dp"
+    android:scrollbars="vertical">
 
     <TextView
         android:id="@+id/textAllowNotify"
@@ -176,6 +178,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swSound" />
 
+    <TextView
+        android:id="@+id/textSeekBarLabel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/text_setting_value"
+        android:textAlignment="viewStart"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swSound" />
+
+    <com.warkiz.widget.IndicatorSeekBar
+        android:id="@+id/seekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:isb_indicator_color="@color/actionBarColorDark"
+        app:isb_max="20000"
+        app:isb_min="220"
+        app:isb_progress="220"
+        app:isb_progress_value_float="false"
+        app:isb_seek_bar_type="continuous"
+        app:isb_show_indicator="true"
+        app:isb_thumb_color="@color/actionBarColorDark"
+        app:isb_thumb_progress_stay="false"
+        app:isb_thumb_width="20dp"
+        app:isb_tick_on_thumb_left_hide="false"
+        app:isb_track_background_bar_size="10dp"
+        app:isb_track_progress_bar_color="@color/actionBarColor"
+        app:isb_track_progress_bar_size="10dp"
+        app:isb_track_rounded_corners="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textSeekBarLabel" />
+
 
     <android.support.constraint.Group
         android:id="@+id/cgLowBatt"
@@ -183,11 +225,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="10dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swSound" />
+        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
 
     <TextView
         android:id="@+id/textView14"
@@ -249,12 +291,12 @@
         android:layout_marginTop="8dp"
         android:text="@string/cloud_fun"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/swCloudFun"
+        app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swCloudFun" />
+        app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
 
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swCloudFun"
+        android:id="@+id/swCloudFunc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
@@ -274,7 +316,7 @@
         android:text="@string/text_setting_off"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swCloudFun" />
+        app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
 
     <TextView
         android:id="@+id/text_label_uuid"
@@ -288,7 +330,7 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swCloudFun" />
+        app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
 
     <TextView
         android:id="@+id/text_local_uuid"

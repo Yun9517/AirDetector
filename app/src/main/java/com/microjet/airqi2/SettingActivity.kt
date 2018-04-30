@@ -3,18 +3,19 @@ package com.microjet.airqi2
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.PackageManager
+import android.graphics.PixelFormat
 import android.os.Bundle
-import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.widget.SeekBar
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
-import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_setting.*
+import com.warkiz.widget.IndicatorSeekBar
+
+
 
 /**
  * Created by B00174 on 2017/11/29.
@@ -24,7 +25,6 @@ class SettingActivity : AppCompatActivity() {
 
     private var mPreference: SharedPreferences? = null
 
-    private var spCycleVal: Int = 0
     private var swAllowNotifyVal: Boolean = false
     private var swMessageVal: Boolean = false
     private var swViberateVal: Boolean = false
@@ -37,6 +37,7 @@ class SettingActivity : AppCompatActivity() {
     //20180227
     private var swCloudVal: Boolean = true
 
+    private var seekBarVal: Int = 660
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,20 +46,8 @@ class SettingActivity : AppCompatActivity() {
         uiSetListener()
 
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-        //20171202   Andy ACtivity載入時讀取偏好設定並設定資料庫相關參數Time
-
-        //測試資料庫讀是否成功
-        /*
-        var realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-        query.equalTo("TVOCValue", "16")
-        val result1 = query.findAllAsync()
-        Toast.makeText(this,result1.first()?.created_time.toString(),Toast.LENGTH_SHORT).show()
-        */
 
         initActionBar()
-
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -77,8 +66,6 @@ class SettingActivity : AppCompatActivity() {
         swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
         swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
         swTotalNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY, false)
-        //20180130
-        //swPumpVal = mPreference!!.getBoolean(SavePreferences.SETTING_PUMP_MUNUAL, false)
         //20180206
         batSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
 
@@ -86,6 +73,8 @@ class SettingActivity : AppCompatActivity() {
 
         //20180227
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+
+        seekBarVal = mPreference!!.getInt(SavePreferences.SETTING_NOTIFY_VALUE, 660)
 
 
         swAllowNotify.isChecked = swAllowNotifyVal
@@ -112,24 +101,9 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.isChecked = swLedPowerVal
 
-        swCloudFun.isChecked = swCloudVal
+        swCloudFunc.isChecked = swCloudVal
 
-        //** 2017/12/27 Not the Best Solution to Fix Toggle button **//
-
-        /*swViberate?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
-        if (swViberate.isChecked) {
-            text_vibe_stat?.text = getString(R.string.text_setting_on)
-        } else {
-            text_vibe_stat?.text = getString(R.string.text_setting_off)
-        }
-
-        swSound?.setOnTouchListener{ v, event -> event.actionMasked == MotionEvent.ACTION_MOVE }
-        if (swSound.isChecked) {
-            text_sound_stat.text = getString(R.string.text_setting_on)
-        } else {
-            text_sound_stat.text = getString(R.string.text_setting_off)
-        }*/
-
+        seekBar.setProgress(seekBarVal.toFloat())
     }
 
     private fun uiSetListener() {
@@ -139,11 +113,13 @@ class SettingActivity : AppCompatActivity() {
                 cgMessage.visibility = View.VISIBLE
                 cgVibration.visibility = View.VISIBLE
                 cgSound.visibility = View.VISIBLE
+                seekBar.visibility = View.VISIBLE
                 cgLowBatt.visibility = View.VISIBLE
             } else {
                 cgMessage.visibility = View.GONE
                 cgVibration.visibility = View.GONE
                 cgSound.visibility = View.GONE
+                seekBar.visibility = View.GONE
                 cgLowBatt.visibility = View.GONE
 
                 mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
@@ -201,6 +177,22 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
+        seekBar.setOnSeekChangeListener(object : IndicatorSeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: IndicatorSeekBar, progress: Int, progressFloat: Float, fromUserTouch: Boolean) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_NOTIFY_VALUE,
+                        progress).apply()
+            }
+
+            override fun onSectionChanged(seekBar: IndicatorSeekBar, thumbPosOnTick: Int, textBelowTick: String, fromUserTouch: Boolean) {
+                //這個回調僅在分段系列`discrete`的SeekBar生效，當為連續系列`continuous`則不回調。
+            }
+
+            override fun onStartTrackingTouch(seekBar: IndicatorSeekBar, thumbPosOnTick: Int) {}
+
+            override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {}
+        })
+
+
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
@@ -228,7 +220,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         //20180227  CloudFun
-        swCloudFun.setOnCheckedChangeListener { _, isChecked ->
+        swCloudFunc.setOnCheckedChangeListener { _, isChecked ->
 
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
@@ -267,77 +259,4 @@ class SettingActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-    private fun updateData() {
-        //拉取資料加上傳搞定
-        val realm = Realm.getDefaultInstance()
-        val result = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findFirst()
-        Log.d("SETTCLOUD", result.toString())
-
-        //對資料庫做操作的方法
-        /*
-        realm.executeTransactionAsync {
-            val realm1 = Realm.getDefaultInstance()
-            for (i in 601..1000) {
-                val dataId = i
-                val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
-                user!!.upLoaded = "1"
-            }
-        }
-        realm.executeTransactionAsync {
-            val realm1 = Realm.getDefaultInstance()
-            val dataId = 1453
-            val user = realm1.where(AsmDataModel::class.java).equalTo("id", dataId).findFirst()
-            user?.deleteFromRealm()
-        }
-        realm.executeTransactionAsync {
-            val realm1 = Realm.getDefaultInstance()
-            val num = realm1.where(AsmDataModel::class.java).max("id")
-            val nextID: Int
-            if (num == null) {
-                nextID = 1
-            } else {
-                nextID = num.toInt() + 1
-            }
-            Log.d("REALMAPPID",nextID.toString())
-            val user = realm1.createObject(AsmDataModel::class.java,nextID)
-            user.tempValue = "400"
-            user.humiValue = "400"
-            user.tvocValue = "800"
-            user.ecO2Value = "400"
-            user.pM25Value = "400"
-            user.created_time = 1520429700000
-        }
-        */
-
-
-        val result1 = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findFirst()
-        Log.d("SETTCLOUD", result1.toString())
-
-        //val result2 = realm.where(AsmDataModel::class.java).equalTo("Created_time",1520332440000).findAll()
-        val result2 = realm.where(AsmDataModel::class.java).between("Created_time", 1520424060000, 1520424060000).findAll()
-
-        Log.d("SETTCLOUD", result2.toString())
-
-    }
-
-    private fun getLocation() {
-        /*
-        // checkGPSPermisstion()
-        val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        //val locationListener = MyLocationListener()
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, 5000, 10f, locationListener)
-        }
-        */
-    }
-
-    private fun checkGPSPermisstion() {
-        val permission = ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
-        Log.d("UARTPER", permission.toString())
-        val permission1 = PackageManager.PERMISSION_GRANTED
-        Log.d("UARTPER", permission1.toString())
-    }
-
 }
