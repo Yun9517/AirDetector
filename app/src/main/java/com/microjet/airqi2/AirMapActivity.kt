@@ -153,8 +153,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         super.onResume()
         if(MyApplication.getSharePreferenceMapPanelStat()) {
             valuePanel.visibility = View.VISIBLE
+            imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
         } else {
             valuePanel.visibility = View.GONE
+            imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
         }
     }
 
