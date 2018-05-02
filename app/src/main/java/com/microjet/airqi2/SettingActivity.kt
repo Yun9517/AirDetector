@@ -11,8 +11,10 @@ import android.view.View
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
-import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_setting.*
+import com.jaygoo.widget.RangeSeekBar
+
+
 
 
 /**
@@ -106,8 +108,8 @@ class SettingActivity : AppCompatActivity() {
 
         swCloudFunc.isChecked = swCloudVal
 
-        tvocSeekBar.setProgress(tvocSeekBarVal.toFloat())
-        pm25SeekBar.setProgress(pm25SeekBarVal.toFloat())
+        tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
+        pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
     }
 
     private fun uiSetListener() {
@@ -181,31 +183,33 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
-        tvocSeekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener {
-            override fun onProgressChanged(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
-                mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, progress).apply()
+        tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
             }
 
-            override fun getProgressOnActionUp(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float) {
-
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
             }
 
-            override fun getProgressOnFinally(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
             }
-        }
+        })
 
-        pm25SeekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener {
-            override fun onProgressChanged(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
-                mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, progress).apply()
-            }
-
-            override fun getProgressOnActionUp(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float) {
-
+        pm25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
             }
 
-            override fun getProgressOnFinally(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
             }
-        }
+
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+        })
 
 
         //20180206

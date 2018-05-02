@@ -16,14 +16,15 @@
 
     <string-array name="tvocArray">
         <item>660</item>
-        <item>20000</item>
+        <item>2200</item>
+        <item>5500</item>
     </string-array>
 
-    <string-array name="pm25Arra6">
+    <string-array name="pm25Array">
         <item>16</item>
         <item>35</item>
         <item>55</item>
-        <item>151</item>
+        <item>150</item>
         <item>250</item>
     </string-array>
 </resources>

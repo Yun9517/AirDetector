@@ -1,445 +1,466 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/settingPageBackground"
-    android:isScrollContainer="true"
-    android:orientation="vertical"
-    android:paddingEnd="8dp"
-    android:paddingStart="8dp"
     android:scrollbars="vertical">
 
-    <TextView
-        android:id="@+id/textAllowNotify"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_allow_notification"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swAllowNotify" />
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swAllowNotify"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
-    <android.support.constraint.Group
-        android:id="@+id/cgMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        app:constraint_referenced_ids="textView8, swMessage, text_msg_stat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_notify_message"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/swMessage"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swMessage" />
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swMessage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toStartOf="@+id/text_msg_stat"
-        app:layout_constraintTop_toBottomOf="@+id/cgMessage" />
-
-    <TextView
-        android:id="@+id/text_msg_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swMessage" />
-
-
-    <android.support.constraint.Group
-        android:id="@+id/cgVibration"
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        app:constraint_referenced_ids="textView10, swVibrate, text_vibrate_stat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swMessage" />
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:paddingEnd="8dp"
+        android:paddingStart="8dp"
+        android:scrollbars="vertical">
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_notify_viberation"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/swVibrate"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swVibrate" />
+        <TextView
+            android:id="@+id/textAllowNotify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_allow_notification"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllowNotify" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swVibrate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toStartOf="@+id/text_vibrate_stat"
-        app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
-
-    <TextView
-        android:id="@+id/text_vibrate_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swVibrate" />
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-    <android.support.constraint.Group
-        android:id="@+id/cgSound"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        app:constraint_referenced_ids="textView12, swSound, text_sound_stat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
+        <android.support.constraint.Group
+            android:id="@+id/cgMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textView8, swMessage, text_msg_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
 
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_notify_sound"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/swSound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swSound" />
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_message"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swMessage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swMessage" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swSound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toStartOf="@+id/text_sound_stat"
-        app:layout_constraintTop_toBottomOf="@+id/cgSound" />
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toStartOf="@+id/text_msg_stat"
+            app:layout_constraintTop_toBottomOf="@+id/cgMessage" />
 
-    <TextView
-        android:id="@+id/text_sound_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swSound" />
-
-
-    <android.support.constraint.Group
-        android:id="@+id/cgSeekbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        app:constraint_referenced_ids="textSeekBarLabel, tvocSeekBar, pm25SeekBar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swSound" />
-
-    <TextView
-        android:id="@+id/textSeekBarLabel"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_value"
-        android:textAlignment="viewStart"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
-
-    <com.xw.repo.BubbleSeekBar
-        android:id="@+id/tvocSeekBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:bsb_is_float_type="false"
-        app:bsb_max="5500"
-        app:bsb_min="660"
-        app:bsb_progress="1000"
-        app:bsb_section_count="5"
-        app:bsb_section_text_position="bottom_sides"
-        app:bsb_show_progress_in_float="false"
-        app:bsb_show_section_mark="true"
-        app:bsb_show_section_text="true"
-        app:bsb_show_thumb_text="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textSeekBarLabel" />
-
-    <com.xw.repo.BubbleSeekBar
-        android:id="@+id/pm25SeekBar"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        app:bsb_is_float_type="false"
-        app:bsb_max="250"
-        app:bsb_min="16"
-        app:bsb_progress="20"
-        app:bsb_section_count="5"
-        app:bsb_section_text_position="bottom_sides"
-        app:bsb_show_progress_in_float="false"
-        app:bsb_show_section_mark="true"
-        app:bsb_show_section_text="true"
-        app:bsb_show_thumb_text="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
+        <TextView
+            android:id="@+id/text_msg_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swMessage" />
 
 
-    <android.support.constraint.Group
-        android:id="@+id/cgLowBatt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="16dp"
-        app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />
+        <android.support.constraint.Group
+            android:id="@+id/cgVibration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textView10, swVibrate, text_vibrate_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swMessage" />
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/bat_switch"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/batSound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/batSound" />
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_viberation"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swVibrate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swVibrate" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/batSound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toStartOf="@+id/text_bat_stat"
-        app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swVibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toStartOf="@+id/text_vibrate_stat"
+            app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
 
-    <TextView
-        android:id="@+id/text_bat_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/batSound" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:background="#484848"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/batSound" />
+        <TextView
+            android:id="@+id/text_vibrate_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swVibrate" />
 
 
-    <TextView
-        android:id="@+id/text_cloud_fun"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/cloud_fun"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
+        <android.support.constraint.Group
+            android:id="@+id/cgSound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textView12, swSound, text_sound_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/swCloudFunc"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintEnd_toStartOf="@+id/text_clouud_stat"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_sound"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swSound"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swSound" />
 
-    <TextView
-        android:id="@+id/text_clouud_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="32dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swSound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toStartOf="@+id/text_sound_stat"
+            app:layout_constraintTop_toBottomOf="@+id/cgSound" />
 
-    <TextView
-        android:id="@+id/text_label_uuid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_label_local_uuid"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
-
-    <TextView
-        android:id="@+id/text_local_uuid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:text="00000000-0000-0000-0000-000000000000"
-        android:textAlignment="center"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_label_uuid" />
-
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="0dp"
-        android:layout_height="2dp"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:background="#484848"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_local_uuid" />
-
-    <TextView
-        android:id="@+id/text_device_ver"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_label_device_version"
-        android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="125dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="8dp"
-        android:paddingEnd="0dp"
-        android:paddingStart="20dp"
-        android:text="@string/led_light"
-        android:textSize="18sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ledPower" />
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/ledPower"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@drawable/setting_switch_style"
-        android:theme="@style/SwitchCompatTheme"
-        app:layout_constraintStart_toEndOf="@+id/textView15"
-        app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
-
-    <TextView
-        android:id="@+id/text_led_stat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="@string/text_setting_off"
-        android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/ledPower"
-        app:layout_constraintTop_toTopOf="@+id/ledPower" />
+        <TextView
+            android:id="@+id/text_sound_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swSound" />
 
 
-</android.support.constraint.ConstraintLayout>
+        <android.support.constraint.Group
+            android:id="@+id/cgSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, textPM25SeekBarLabel, pm25SeekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swSound" />
+
+        <TextView
+            android:id="@+id/textTvocSeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_tvoc_value"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/tvocSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTvocSeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/tvocArray"
+            app:rsb_max="5500"
+            app:rsb_min="660"
+            app:rsb_seekBarHeight="20dp"
+            app:rsb_seekBarMode="single"
+            app:rsb_textPadding="10dp" />
+
+        <TextView
+            android:id="@+id/textPM25SeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_pm25_value"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/pm25SeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textPM25SeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/pm25Array"
+            app:rsb_max="250"
+            app:rsb_min="16"
+            app:rsb_seekBarHeight="20dp"
+            app:rsb_seekBarMode="single" />
+
+
+        <android.support.constraint.Group
+            android:id="@+id/cgLowBatt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />
+
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/bat_switch"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/batSound"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/batSound" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/batSound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toStartOf="@+id/text_bat_stat"
+            app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
+
+        <TextView
+            android:id="@+id/text_bat_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/batSound" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batSound" />
+
+
+        <TextView
+            android:id="@+id/text_cloud_fun"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/cloud_fun"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swCloudFunc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toStartOf="@+id/text_clouud_stat"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/text_clouud_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="32dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swCloudFunc" />
+
+        <TextView
+            android:id="@+id/text_label_uuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_label_local_uuid"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
+
+        <TextView
+            android:id="@+id/text_local_uuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:text="00000000-0000-0000-0000-000000000000"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_label_uuid" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_local_uuid" />
+
+        <TextView
+            android:id="@+id/text_device_ver"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_label_device_version"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <TextView
+            android:id="@+id/textView15"
+            android:layout_width="125dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="0dp"
+            android:paddingStart="20dp"
+            android:text="@string/led_light"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ledPower" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/ledPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView15"
+            app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
+
+        <TextView
+            android:id="@+id/text_led_stat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_off"
+            android:textSize="18sp"
+            app:layout_constraintStart_toEndOf="@+id/ledPower"
+            app:layout_constraintTop_toTopOf="@+id/ledPower" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

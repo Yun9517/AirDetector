@@ -72,7 +72,7 @@ dependencies {
 
     implementation 'me.dm7.barcodescanner:zxing:1.9.8'
 
-    implementation 'com.xw.repo:bubbleseekbar:3.17-lite'
+    implementation 'com.github.Jay-Goo:RangeSeekBar:v1.2.2'
 }
 
 repositories {
