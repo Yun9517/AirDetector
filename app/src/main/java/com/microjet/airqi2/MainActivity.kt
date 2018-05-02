@@ -516,14 +516,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                }
 //            }
 
-            R.id.bleStatus -> {
-                if(clickCount > 10) {
-                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
-                    clickCount = 0
-                } else {
-                    clickCount++
-                }
-            }
+//            R.id.bleStatus -> {
+//                if(clickCount > 10) {
+//                    startActivity(Intent(this@MainActivity, EngineerModeActivity::class.java))
+//                    clickCount = 0
+//                } else {
+//                    clickCount++
+//                }
+//            }
 
         //點選ActionBAR會返回
             android.R.id.home -> {
@@ -1249,7 +1249,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun checkRTCSetted(rtcTime: Long) {
         val now = (System.currentTimeMillis() / 1000)
-        val secondOffset = abs(rtcTime - now)
+        val secondOffset = Math.abs(rtcTime - now)
         Log.d("RTCOffSet", secondOffset.toString())
         if (secondOffset > 5) { //如果rtc秒數offset大於5秒才重set
             Log.d("NowTime", now.toString())

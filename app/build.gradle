@@ -11,9 +11,10 @@ android {
         applicationId 'com.microjet.airqi2'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.2.5"
+        versionCode 5
+        versionName "1.2.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
     }
     buildTypes {
         release {
@@ -79,3 +80,4 @@ repositories {
     maven { url "https://jitpack.io" }
 }
 apply plugin: 'com.google.gms.google-services'
+
