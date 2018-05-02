@@ -3,18 +3,16 @@ package com.microjet.airqi2
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.SharedPreferences
-import android.graphics.PixelFormat
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.*
-import android.widget.SeekBar
+import android.view.MenuItem
+import android.view.View
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
+import com.xw.repo.BubbleSeekBar
 import kotlinx.android.synthetic.main.activity_setting.*
-import com.warkiz.widget.IndicatorSeekBar
-
 
 
 /**
@@ -37,7 +35,8 @@ class SettingActivity : AppCompatActivity() {
     //20180227
     private var swCloudVal: Boolean = true
 
-    private var seekBarVal: Int = 660
+    private var tvocSeekBarVal: Int = 660
+    private var pm25SeekBarVal: Int = 16
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,20 +73,24 @@ class SettingActivity : AppCompatActivity() {
         //20180227
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
 
-        seekBarVal = mPreference!!.getInt(SavePreferences.SETTING_NOTIFY_VALUE, 660)
+        tvocSeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
+        pm25SeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+        //pm25SeekBarVal = 100
 
 
         swAllowNotify.isChecked = swAllowNotifyVal
 
-        if (swAllowNotify.isChecked) {
+        if (swAllowNotifyVal) {
             cgMessage.visibility = View.VISIBLE
             cgVibration.visibility = View.VISIBLE
             cgSound.visibility = View.VISIBLE
+            cgSeekbar.visibility = View.VISIBLE
             cgLowBatt.visibility = View.VISIBLE
         } else {
             cgMessage.visibility = View.GONE
             cgVibration.visibility = View.GONE
             cgSound.visibility = View.GONE
+            cgSeekbar.visibility = View.GONE
             cgLowBatt.visibility = View.GONE
         }
 
@@ -103,7 +106,8 @@ class SettingActivity : AppCompatActivity() {
 
         swCloudFunc.isChecked = swCloudVal
 
-        seekBar.setProgress(seekBarVal.toFloat())
+        tvocSeekBar.setProgress(tvocSeekBarVal.toFloat())
+        pm25SeekBar.setProgress(pm25SeekBarVal.toFloat())
     }
 
     private fun uiSetListener() {
@@ -113,13 +117,13 @@ class SettingActivity : AppCompatActivity() {
                 cgMessage.visibility = View.VISIBLE
                 cgVibration.visibility = View.VISIBLE
                 cgSound.visibility = View.VISIBLE
-                seekBar.visibility = View.VISIBLE
+                cgSeekbar.visibility = View.VISIBLE
                 cgLowBatt.visibility = View.VISIBLE
             } else {
                 cgMessage.visibility = View.GONE
                 cgVibration.visibility = View.GONE
                 cgSound.visibility = View.GONE
-                seekBar.visibility = View.GONE
+                cgSeekbar.visibility = View.GONE
                 cgLowBatt.visibility = View.GONE
 
                 mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
@@ -177,20 +181,31 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
-        seekBar.setOnSeekChangeListener(object : IndicatorSeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: IndicatorSeekBar, progress: Int, progressFloat: Float, fromUserTouch: Boolean) {
-                mPreference!!.edit().putInt(SavePreferences.SETTING_NOTIFY_VALUE,
-                        progress).apply()
+        tvocSeekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener {
+            override fun onProgressChanged(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, progress).apply()
             }
 
-            override fun onSectionChanged(seekBar: IndicatorSeekBar, thumbPosOnTick: Int, textBelowTick: String, fromUserTouch: Boolean) {
-                //這個回調僅在分段系列`discrete`的SeekBar生效，當為連續系列`continuous`則不回調。
+            override fun getProgressOnActionUp(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float) {
+
             }
 
-            override fun onStartTrackingTouch(seekBar: IndicatorSeekBar, thumbPosOnTick: Int) {}
+            override fun getProgressOnFinally(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+            }
+        }
 
-            override fun onStopTrackingTouch(seekBar: IndicatorSeekBar) {}
-        })
+        pm25SeekBar.onProgressChangedListener = object : BubbleSeekBar.OnProgressChangedListener {
+            override fun onProgressChanged(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+                mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, progress).apply()
+            }
+
+            override fun getProgressOnActionUp(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float) {
+
+            }
+
+            override fun getProgressOnFinally(signSeekBar: BubbleSeekBar, progress: Int, progressFloat: Float, fromUser: Boolean) {
+            }
+        }
 
 
         //20180206

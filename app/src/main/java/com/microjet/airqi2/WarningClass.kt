@@ -35,6 +35,9 @@ class WarningClass {
     private var mVibrator: Vibrator? = null
     private var mPreference: SharedPreferences? = null
 
+    private var tvocAlertValue = 660
+    private var pm25AlertValue = 16
+
     //Test
     private var soundsMap: HashMap<Int, Int> =HashMap<Int,Int>()
     private var soundPool: SoundPool? =null
@@ -47,55 +50,64 @@ class WarningClass {
         //Test
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 0)
         soundPool!!.setOnLoadCompleteListener(soundPoolOnLoadCompleteListener)
+
+        tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
+        pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     fun judgeValue(tvocValue: Int,pm25Value: Int) {
         //20180403
         //TVOC
-        when (tvocValue) {
-            in 660..2200 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over660,
-                        2000L,
-                        R.drawable.history_face_icon_03,
-                        R.string.warning_title_Orange,//+tvocValue,
-                        R.string.text_message_air_Medium_Orange,
-                        tvocValue)  //中度汙染
-            }
-            in 2201..5500 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over2200,
-                        3000L,
-                        R.drawable.history_face_icon_04,
-                        R.string.warning_title_Red,//+tvocValue,
-                        R.string.text_message_air_bad,
-                        tvocValue)  //重度汙染
-            }
-            in 5501..20000 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over5500,
-                        4000L,
-                        R.drawable.history_face_icon_05,
-                        R.string.warning_title_Purple,//+tvocValue,
-                        R.string.text_message_air_Serious_Purple,
-                        tvocValue) //嚴重汙染
-            }
-            in 20001..60000 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over20000,
-                        5000L,
-                        R.drawable.history_face_icon_06,
-                        R.string.warning_title_Brown,//+tvocValue,
-                        R.string.text_message_air_Extreme_Dark_Purple,
-                        tvocValue)  //非常嚴重汙染
+
+        if(tvocValue >= tvocAlertValue) {
+            when (tvocValue) {
+                in 660..2200 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over660,
+                            2000L,
+                            R.drawable.history_face_icon_03,
+                            R.string.warning_title_Orange,//+tvocValue,
+                            R.string.text_message_air_Medium_Orange,
+                            tvocValue)  //中度汙染
+                }
+                in 2201..5500 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over2200,
+                            3000L,
+                            R.drawable.history_face_icon_04,
+                            R.string.warning_title_Red,//+tvocValue,
+                            R.string.text_message_air_bad,
+                            tvocValue)  //重度汙染
+                }
+                in 5501..20000 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over5500,
+                            4000L,
+                            R.drawable.history_face_icon_05,
+                            R.string.warning_title_Purple,//+tvocValue,
+                            R.string.text_message_air_Serious_Purple,
+                            tvocValue) //嚴重汙染
+                }
+                in 20001..60000 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over20000,
+                            5000L,
+                            R.drawable.history_face_icon_06,
+                            R.string.warning_title_Brown,//+tvocValue,
+                            R.string.text_message_air_Extreme_Dark_Purple,
+                            tvocValue)  //非常嚴重汙染
+                }
             }
         }
 
+
+
         //20180409
         //PM2.5
-        when (pm25Value) {
-            in 0..15 -> {
+        if(pm25Value >= pm25AlertValue) {
+            when (pm25Value) {
+                in 0..15 -> {
 //                warningFunction(REQUEST_PM25_CODE,
 //                        R.raw.low_power,
 //                        0L,
@@ -103,8 +115,8 @@ class WarningClass {
 //                        R.string.label_pm25_Green,
 //                        R.string.message_pm25_Green,
 //                        pm25Value)  //5
-            }
-            in 16..34 -> {
+                }
+                in 16..34 -> {
 //                warningFunction(REQUEST_PM25_CODE,
 //                        R.raw.low_power,
 //                        1000L,
@@ -112,44 +124,46 @@ class WarningClass {
 //                        R.string.label_pm25_Yellow,//+pm25Value,
 //                        R.string.message_pm25_Yellow,
 //                        pm25Value)  //輕度汙染
-            }
-            in 35..54 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over660,
-                        2000L,
-                        R.drawable.history_face_icon_03,
-                        R.string.label_pm25_Orange,//+pm25Value,
-                        R.string.message_pm25_Orange,
-                        pm25Value)  //中度汙染
-            }
-            in 55..150 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over2200,
-                        3000L,
-                        R.drawable.history_face_icon_04,
-                        R.string.label_pm25_Red,//+pm25Value,
-                        R.string.message_pm25_Red,
-                        pm25Value)  //重度汙染
-            }
-            in 151..250 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over5500,
-                        4000L,
-                        R.drawable.history_face_icon_05,
-                        R.string.label_pm25_Purple,//+pm25Value,
-                        R.string.message_pm25_Purple,
-                        pm25Value) //嚴重汙染
-            }
-            else -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over20000,
-                        5000L,
-                        R.drawable.history_face_icon_06,
-                        R.string.label_pm25_Brown,//+pm25Value,
-                        R.string.message_pm25_Brown,
-                        pm25Value)  //非常嚴重汙染
+                }
+                in 35..54 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.tvoc_over660,
+                            2000L,
+                            R.drawable.history_face_icon_03,
+                            R.string.label_pm25_Orange,//+pm25Value,
+                            R.string.message_pm25_Orange,
+                            pm25Value)  //中度汙染
+                }
+                in 55..150 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.tvoc_over2200,
+                            3000L,
+                            R.drawable.history_face_icon_04,
+                            R.string.label_pm25_Red,//+pm25Value,
+                            R.string.message_pm25_Red,
+                            pm25Value)  //重度汙染
+                }
+                in 151..250 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.tvoc_over5500,
+                            4000L,
+                            R.drawable.history_face_icon_05,
+                            R.string.label_pm25_Purple,//+pm25Value,
+                            R.string.message_pm25_Purple,
+                            pm25Value) //嚴重汙染
+                }
+                else -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.tvoc_over20000,
+                            5000L,
+                            R.drawable.history_face_icon_06,
+                            R.string.label_pm25_Brown,//+pm25Value,
+                            R.string.message_pm25_Brown,
+                            pm25Value)  //非常嚴重汙染
+                }
             }
         }
+
     }
 
     //20180402   Andy

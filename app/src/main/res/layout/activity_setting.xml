@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/settingPageBackground"
+    android:isScrollContainer="true"
     android:orientation="vertical"
     android:paddingEnd="8dp"
     android:paddingStart="8dp"
@@ -178,6 +179,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/swSound" />
 
+
+    <android.support.constraint.Group
+        android:id="@+id/cgSeekbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        app:constraint_referenced_ids="textSeekBarLabel, tvocSeekBar, pm25SeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swSound" />
+
     <TextView
         android:id="@+id/textSeekBarLabel"
         android:layout_width="0dp"
@@ -190,33 +204,49 @@
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/swSound" />
+        app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
 
-    <com.warkiz.widget.IndicatorSeekBar
-        android:id="@+id/seekBar"
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/tvocSeekBar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:isb_indicator_color="@color/actionBarColorDark"
-        app:isb_max="20000"
-        app:isb_min="220"
-        app:isb_progress="220"
-        app:isb_progress_value_float="false"
-        app:isb_seek_bar_type="continuous"
-        app:isb_show_indicator="true"
-        app:isb_thumb_color="@color/actionBarColorDark"
-        app:isb_thumb_progress_stay="false"
-        app:isb_thumb_width="20dp"
-        app:isb_tick_on_thumb_left_hide="false"
-        app:isb_track_background_bar_size="10dp"
-        app:isb_track_progress_bar_color="@color/actionBarColor"
-        app:isb_track_progress_bar_size="10dp"
-        app:isb_track_rounded_corners="false"
+        app:bsb_is_float_type="false"
+        app:bsb_max="5500"
+        app:bsb_min="660"
+        app:bsb_progress="1000"
+        app:bsb_section_count="5"
+        app:bsb_section_text_position="bottom_sides"
+        app:bsb_show_progress_in_float="false"
+        app:bsb_show_section_mark="true"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textSeekBarLabel" />
+
+    <com.xw.repo.BubbleSeekBar
+        android:id="@+id/pm25SeekBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:bsb_is_float_type="false"
+        app:bsb_max="250"
+        app:bsb_min="16"
+        app:bsb_progress="20"
+        app:bsb_section_count="5"
+        app:bsb_section_text_position="bottom_sides"
+        app:bsb_show_progress_in_float="false"
+        app:bsb_show_section_mark="true"
+        app:bsb_show_section_text="true"
+        app:bsb_show_thumb_text="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
 
 
     <android.support.constraint.Group
@@ -229,7 +259,7 @@
         app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />
 
     <TextView
         android:id="@+id/textView14"
