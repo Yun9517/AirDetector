@@ -227,7 +227,7 @@
             app:rsb_lineColorSelected="@color/colorAccent"
             app:rsb_markTextArray="@array/tvocArray"
             app:rsb_max="5500"
-            app:rsb_min="660"
+            app:rsb_min="220"
             app:rsb_seekBarHeight="16dp"
             app:rsb_seekBarMode="single"
             app:rsb_textPadding="20dp"

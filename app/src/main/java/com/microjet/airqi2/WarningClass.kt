@@ -65,6 +65,15 @@ class WarningClass {
 
         if (allowNotify && tvocValue >= tvocAlertValue) {
             when (tvocValue) {
+                in 220..659 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            1000L,
+                            R.drawable.history_face_icon_02,
+                            R.string.warning_title_Yellow,//+tvocValue,
+                            R.string.text_message_air_mid,
+                            tvocValue)  //中度汙染
+                }
                 in 660..2200 -> {
                     warningFunction(REQUEST_TVOC_CODE,
                             R.raw.tvoc_over,
@@ -119,13 +128,13 @@ class WarningClass {
 //                        pm25Value)  //5
                 }
                 in 16..34 -> {
-//                warningFunction(REQUEST_PM25_CODE,
-//                        R.raw.low_power,
-//                        1000L,
-//                        R.drawable.history_face_icon_02,
-//                        R.string.label_pm25_Yellow,//+pm25Value,
-//                        R.string.message_pm25_Yellow,
-//                        pm25Value)  //輕度汙染
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.low_power,
+                            1000L,
+                            R.drawable.history_face_icon_02,
+                            R.string.label_pm25_Yellow,//+pm25Value,
+                            R.string.message_pm25_Yellow,
+                            pm25Value)  //輕度汙染
                 }
                 in 35..54 -> {
                     warningFunction(REQUEST_PM25_CODE,
