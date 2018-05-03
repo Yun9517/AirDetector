@@ -2,6 +2,7 @@ package com.microjet.airqi2
 
 import android.os.AsyncTask
 import android.util.Log
+import com.google.firebase.iid.FirebaseInstanceId
 import io.realm.Realm
 import okhttp3.*
 import org.json.JSONArray
@@ -90,7 +91,7 @@ class UploadTask: AsyncTask<String, Void, String>() {
             }
             packJsonFinalObj.put("uuid", UUID)
             packJsonFinalObj.put("mac_address", DeviceAddress)
-            packJsonFinalObj.put("registration_id", "qooo123457")
+            packJsonFinalObj.put("registration_id", FirebaseInstanceId.getInstance().getToken())
             //再來將JSON陣列設定key丟進JSON物件
             packJsonFinalObj.put("weather", packJsonBigArry)
             Log.e("全部資料", packJsonFinalObj.toString())
