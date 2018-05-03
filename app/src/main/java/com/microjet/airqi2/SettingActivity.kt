@@ -13,8 +13,7 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
 import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
-
-
+import com.microjet.airqi2.Definition.Colors
 
 
 /**
@@ -108,6 +107,9 @@ class SettingActivity : AppCompatActivity() {
 
         tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
         pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
+
+        setSeekBarColor(tvocSeekBar, tvocSeekBarVal.toFloat(), true)
+        setSeekBarColor(pm25SeekBar, pm25SeekBarVal.toFloat(), false)
     }
 
     private fun uiSetListener() {
@@ -171,6 +173,7 @@ class SettingActivity : AppCompatActivity() {
 
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                setSeekBarColor(view, min, true)
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
                 Log.e("SeekBar", "Min: $min")
             }
@@ -186,6 +189,7 @@ class SettingActivity : AppCompatActivity() {
 
         pm25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                setSeekBarColor(view, min, false)
                 mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
             }
 
@@ -245,6 +249,28 @@ class SettingActivity : AppCompatActivity() {
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
                     isChecked).apply()
 
+        }
+    }
+
+    private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {
+        if(isTVOC) {
+            view.setLineColor(R.color.colorSeekBarDefault, when (min) {
+                in 0..219 -> Colors.tvocCO2Colors[0]
+                in 220..659 -> Colors.tvocCO2Colors[1]
+                in 660..2199 -> Colors.tvocCO2Colors[2]
+                in 2200..5499 -> Colors.tvocCO2Colors[3]
+                in 5500..20000 -> Colors.tvocCO2Colors[4]
+                else -> Colors.tvocCO2Colors[5]
+            })
+        } else {
+            view.setLineColor(R.color.colorSeekBarDefault, when (min) {
+                in 0..15 -> Colors.tvocCO2Colors[0]
+                in 16..34 -> Colors.tvocCO2Colors[1]
+                in 35..54 -> Colors.tvocCO2Colors[2]
+                in 55..150 -> Colors.tvocCO2Colors[3]
+                in 151..250 -> Colors.tvocCO2Colors[4]
+                else -> Colors.tvocCO2Colors[5]
+            })
         }
     }
 

@@ -15,6 +15,7 @@
     </string-array>
 
     <string-array name="tvocArray">
+        <item>220</item>
         <item>660</item>
         <item>2200</item>
         <item>5500</item>
