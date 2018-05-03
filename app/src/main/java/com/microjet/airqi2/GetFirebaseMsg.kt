@@ -35,10 +35,10 @@ class GetFirebaseMsg : FirebaseMessagingService(){
 
         val notBuilder= NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("測試君")
+                .setContentTitle("")//等Firebase設定Title
                 .setContentText(body)
                 .setAutoCancel(true)
-                .setSound(Not_sound)
+                .setSound(Not_sound)//由Firebase設定鈴聲
                 .setContentIntent(pend_intent)
 
         val notMangger=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
