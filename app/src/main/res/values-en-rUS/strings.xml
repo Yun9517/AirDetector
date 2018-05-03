@@ -98,6 +98,8 @@
     <string name="Loading_Completely">Loading Completely</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
     <string name="Number_of_data">Data NO. </string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
     <string name="Loading_fail">Loading Fail</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
+    <string name="text_navi_title_map">Map</string>
+    <string name="text_navi_title_help">Help</string>
 
     <!-- Add website for about page-->
     <string name="MicroJetWeb">http://www.curiejet.com/zh-tw/about</string>

@@ -30,6 +30,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.widget.ExpandableListView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -53,6 +54,8 @@ import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import layout.ExpandableListAdapter
+import layout.ExpandedMenuModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -180,6 +183,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //20180423
     private var points = java.util.ArrayList<ImageView>()
 
+    // 2018/05/03 ExpandableListView
+    var mMenuAdapter: ExpandableListAdapter? = null
+    var expandableList: ExpandableListView? = null
+    var listDataHeader: ArrayList<ExpandedMenuModel> ? = null
+    var listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>>? = null
+    var navigationView: NavigationView ? = null
+    val item1 =  ExpandedMenuModel()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -189,6 +200,94 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
 
+        // 2018/05/03 ExpandableListView
+        navigationView =  findViewById(R.id.naviView) as NavigationView
+
+        val navigationView = findViewById<View>(R.id.naviView) as NavigationView
+
+        if (navigationView != null) {
+            setupDrawerContent(navigationView)
+        }
+
+        prepareListData()
+
+        mMenuAdapter = ExpandableListAdapter(this, listDataHeader!!, listDataChild!!, navigationmenu!!)
+        navigationmenu!!.setAdapter(mMenuAdapter)
+        navigationmenu!!.setOnChildClickListener(object : ExpandableListView.OnChildClickListener {
+
+            override fun onChildClick(expandableListView: ExpandableListView, view: View, groupPosition: Int, childPosition: Int, l: Long): Boolean {
+
+                when (groupPosition)
+                {
+                    0 -> {
+                        val hp = ExpandedMenuModel()
+                        hp.iconImg =  R.drawable.ic_bluetooth_searching_black_24dp
+                        if (connState == BleConnection.CONNECTED) {
+                            hp.iconName = getString(R.string.UART_Disconnecting)
+                            blueToothDisconnect()
+                        } else {
+                            hp.iconName = getString(R.string.text_navi_add_device)
+                            blueToothConnect()
+                        }
+                        listDataHeader?.set(0,hp)
+                    }
+                    1 -> {accountShow()}
+                    2 -> {
+                        when(childPosition) {
+                            0 -> {airmapShow()}
+                            1 -> {publicMapShow()}
+                        }
+                    }
+                    3 -> {
+                        when(childPosition) {
+                            0 -> {knowledgeShow()}
+                            1 -> {qandaShow()}
+                            2 -> {tourShow()}
+                        }
+                    }
+                    4 -> { settingShow()}
+                    5 -> { aboutShow()}
+                }
+                Log.d("DEBUG", "submenu item clicked" + childPosition.toString())
+                return false
+            }
+        })
+
+        navigationmenu!!.setOnGroupClickListener(object : ExpandableListView.OnGroupClickListener {
+            override fun onGroupClick(expandableListView: ExpandableListView, view: View, groupPosition: Int, childPosition: Long): Boolean {
+                when (groupPosition)
+                {
+                    0 -> {
+                        val hp = ExpandedMenuModel()
+                        hp.iconImg =  R.drawable.ic_bluetooth_searching_black_24dp
+                        when(connState) {
+                            BleConnection.CONNECTED -> {
+                                hp.iconName = getString(R.string.UART_Disconnecting)
+                                listDataHeader?.set(0,hp)
+                                blueToothDisconnect()}
+                            BleConnection.DISCONNECTED -> {
+                                hp.iconName = getString(R.string.text_navi_add_device)
+                                blueToothConnect()}
+                        }
+                        /*
+                        if (connState == BleConnection.CONNECTED) {
+                            hp.iconName = getString(R.string.UART_Disconnecting)
+                            blueToothDisconnect()
+                        } else {
+                            hp.iconName = getString(R.string.text_navi_add_device)
+                            blueToothConnect()
+                        }*/
+
+                    }
+                    1 -> { accountShow()}
+                    4 -> { settingShow()}
+                    5 -> { aboutShow()}
+                }
+                Log.d("DEBUG", "heading clicked")
+                return false
+            }
+        })
+
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -197,7 +296,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
             mIsReceiverRegistered = true
         }
-        setupDrawerContent(naviView)
+        //setupDrawerContent(naviView)
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
 
         //20180209
@@ -607,7 +706,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
-
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
@@ -938,6 +1036,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
+
+        val hp = ExpandedMenuModel()
+        when(connState) {
+            BleConnection.CONNECTED -> {
+                hp.iconName = getString(R.string.UART_Disconnecting)
+                listDataHeader?.set(0,hp)
+                 }
+            BleConnection.DISCONNECTED -> {
+                hp.iconName = getString(R.string.text_navi_add_device)
+                listDataHeader?.set(0,hp)
+                }
+            }
+
         if (connState == BleConnection.CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
@@ -966,6 +1077,84 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
         Log.d("MAINcheckUIState", connState.toString())
+    }
+
+    // 2018/05/03 ExpandableListView
+    private fun prepareListData() {
+        listDataHeader =  ArrayList<ExpandedMenuModel>()
+        listDataChild = HashMap<ExpandedMenuModel, ArrayList<String>>()
+
+        val  item1 =  ExpandedMenuModel()
+        when(connState) {
+            BleConnection.DISCONNECTED -> {
+                //item1.iconName = getString(R.string.text_navi_add_device)
+                listDataHeader?.add(item1)
+            }
+            BleConnection.CONNECTED -> {
+                item1.iconName = getString(R.string.UART_Disconnecting)
+                listDataHeader?.add(item1)
+            }
+        }
+        /*if (connState == BleConnection.DISCONNECTED) {
+            item1.iconName = getString(R.string.text_navi_add_device)
+        } else {
+            item1.iconName = getString(R.string.UART_Disconnecting)
+        }*/
+
+        //item1.iconName = getString(R.string.text_navi_add_device)
+        item1.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
+        // Adding data header
+        //listDataHeader?.add(item1)
+
+        val item2 = ExpandedMenuModel()
+        item2.iconName = getString(R.string.text_navi_accountManagement)
+        item2.iconImg = R.drawable.ic_account_box_black_24dp
+        listDataHeader?.add(item2)
+
+        val item3 = ExpandedMenuModel()
+        item3.iconName = getString(R.string.text_navi_title_map)
+        item3.iconImg = R.drawable.ic_place_black_24dp
+        listDataHeader?.add(item3)
+
+        val item4 = ExpandedMenuModel()
+        item4.iconName = getString(R.string.text_navi_title_help)
+        item4.iconImg = R.drawable.ic_help_black_24dp
+        listDataHeader?.add(item4)
+
+        val item5 = ExpandedMenuModel()
+        item5.iconName = getString(R.string.text_navi_setting)
+        item5.iconImg = R.drawable.ic_settings_black_24dp
+        listDataHeader?.add(item5)
+
+        val item6 = ExpandedMenuModel()
+        item6.iconName = getString(R.string.text_navi_about)
+        item6.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader?.add(item6)
+
+        // Adding child data
+        /*val  heading1 =  ArrayList<String>()
+        heading1.add("Submenu of item 1")
+
+        val heading2 = ArrayList<String>()
+        heading2.add("Submenu of item 2")
+        heading2.add("Submenu of item 2")
+        heading2.add("Submenu of item 2")*/
+
+        val heading3 = ArrayList<String>()
+        heading3.add(getString(R.string.text_navi_personal))
+        heading3.add(getString(R.string.text_navi_air_map))
+
+        val heading4 = ArrayList<String>()
+        heading4.add(getString(R.string.text_navi_knowledge))
+        heading4.add(getString(R.string.text_navi_q_and_a))
+        heading4.add(getString(R.string.text_navi_tour))
+
+
+        //listDataChild?.put(listDataHeader!!.get(0), heading1) // Header, Child data
+        //listDataChild?.put(listDataHeader!!.get(1), heading2)
+        listDataChild?.put(listDataHeader!!.get(2), heading3)
+        listDataChild?.put(listDataHeader!!.get(3), heading4)
+
     }
 
     private fun makeBluetoothStateIntentFilter(): IntentFilter {
@@ -1101,7 +1290,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         connectionInitMethod(now)
                     }
                     0xB1.toByte() -> {
-                        var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                        val hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
                         MyApplication.putDeviceVersion(hashMap["FW"].toString())
                         MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
                         CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
@@ -1109,7 +1298,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xB2.toByte() -> {
 
-                        var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
+                        val hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
                         checkSampleRate(hashMap)
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
                         Log.d("0xB2", hashMap.toString())
@@ -1140,18 +1329,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         Log.e("0xBA", "Manual Disconnect from Device.........")
                     }
                     0xE0.toByte() -> {
-                        var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
+                        val hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
                         if (hashMap[TvocNoseData.PM25SR] != "5" || hashMap[TvocNoseData.PM25GST] != "30") {
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
                         }
                         Log.d("0xE0", hashMap.toString())
                     }
                     0xBB.toByte() -> {
-                        var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
+                        val hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
                         Log.d("0xBB", hashMap.toString())
                     }
                     0xC0.toByte() -> {
-                        var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                        val hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
                         heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
                         displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
                         val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
@@ -1167,7 +1356,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             isFirstC6 = false
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
-                        var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
+                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
                         warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(),hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
@@ -1190,7 +1379,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     private fun getMaxItems(tx: ByteArray) {
-        var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
         var sampleRateTime = 0
         var correctTime = 0
         sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
@@ -1294,7 +1483,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun putC5ToObject(tx: ByteArray) {
-        var hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
             if (!lock) {
@@ -1449,7 +1638,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
-              var dfup= DFUProcessClass(this)
+              val dfup= DFUProcessClass(this)
                 dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
             }
         }
