@@ -35,12 +35,14 @@ class WarningClass {
     private var mVibrator: Vibrator? = null
     private var mPreference: SharedPreferences? = null
 
+    private var allowNotify = false
     private var tvocAlertValue = 660
     private var pm25AlertValue = 16
 
     //Test
-    private var soundsMap: HashMap<Int, Int> =HashMap<Int,Int>()
-    private var soundPool: SoundPool? =null
+    private var soundsMap: HashMap<Int, Int> = HashMap<Int, Int>()
+    private var soundPool: SoundPool? = null
+
     constructor (MustInputContext: Context) {
         m_context = MustInputContext
         mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -50,21 +52,22 @@ class WarningClass {
         //Test
         soundPool = SoundPool(1, AudioManager.STREAM_MUSIC, 0)
         soundPool!!.setOnLoadCompleteListener(soundPoolOnLoadCompleteListener)
-
-        tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
-        pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun judgeValue(tvocValue: Int,pm25Value: Int) {
+    fun judgeValue(tvocValue: Int, pm25Value: Int) {
         //20180403
         //TVOC
 
-        if(tvocValue >= tvocAlertValue) {
+        allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
+        pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+
+        if (allowNotify && tvocValue >= tvocAlertValue) {
             when (tvocValue) {
                 in 660..2200 -> {
                     warningFunction(REQUEST_TVOC_CODE,
-                            R.raw.tvoc_over660,
+                            R.raw.tvoc_over,
                             2000L,
                             R.drawable.history_face_icon_03,
                             R.string.warning_title_Orange,//+tvocValue,
@@ -73,7 +76,7 @@ class WarningClass {
                 }
                 in 2201..5500 -> {
                     warningFunction(REQUEST_TVOC_CODE,
-                            R.raw.tvoc_over2200,
+                            R.raw.tvoc_over,
                             3000L,
                             R.drawable.history_face_icon_04,
                             R.string.warning_title_Red,//+tvocValue,
@@ -82,7 +85,7 @@ class WarningClass {
                 }
                 in 5501..20000 -> {
                     warningFunction(REQUEST_TVOC_CODE,
-                            R.raw.tvoc_over5500,
+                            R.raw.tvoc_over,
                             4000L,
                             R.drawable.history_face_icon_05,
                             R.string.warning_title_Purple,//+tvocValue,
@@ -91,7 +94,7 @@ class WarningClass {
                 }
                 in 20001..60000 -> {
                     warningFunction(REQUEST_TVOC_CODE,
-                            R.raw.tvoc_over20000,
+                            R.raw.tvoc_over,
                             5000L,
                             R.drawable.history_face_icon_06,
                             R.string.warning_title_Brown,//+tvocValue,
@@ -102,10 +105,9 @@ class WarningClass {
         }
 
 
-
         //20180409
         //PM2.5
-        if(pm25Value >= pm25AlertValue) {
+        if (allowNotify && pm25Value >= pm25AlertValue) {
             when (pm25Value) {
                 in 0..15 -> {
 //                warningFunction(REQUEST_PM25_CODE,
@@ -127,7 +129,7 @@ class WarningClass {
                 }
                 in 35..54 -> {
                     warningFunction(REQUEST_PM25_CODE,
-                            R.raw.tvoc_over660,
+                            R.raw.pm25_over,
                             2000L,
                             R.drawable.history_face_icon_03,
                             R.string.label_pm25_Orange,//+pm25Value,
@@ -136,7 +138,7 @@ class WarningClass {
                 }
                 in 55..150 -> {
                     warningFunction(REQUEST_PM25_CODE,
-                            R.raw.tvoc_over2200,
+                            R.raw.pm25_over,
                             3000L,
                             R.drawable.history_face_icon_04,
                             R.string.label_pm25_Red,//+pm25Value,
@@ -145,7 +147,7 @@ class WarningClass {
                 }
                 in 151..250 -> {
                     warningFunction(REQUEST_PM25_CODE,
-                            R.raw.tvoc_over5500,
+                            R.raw.pm25_over,
                             4000L,
                             R.drawable.history_face_icon_05,
                             R.string.label_pm25_Purple,//+pm25Value,
@@ -154,7 +156,7 @@ class WarningClass {
                 }
                 else -> {
                     warningFunction(REQUEST_PM25_CODE,
-                            R.raw.tvoc_over20000,
+                            R.raw.pm25_over,
                             5000L,
                             R.drawable.history_face_icon_06,
                             R.string.label_pm25_Brown,//+pm25Value,
@@ -168,12 +170,12 @@ class WarningClass {
 
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private fun warningFunction(showDateTypeId:Int,soundResNo: Int,
+    private fun warningFunction(showDateTypeId: Int, soundResNo: Int,
                                 vibratorSecond: Long,
                                 iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
         soundPool!!.load(m_context, soundResNo, 1)
         sendVibrator(vibratorSecond)
-        sendNotification(showDateTypeId,iconSelect,titleSelect,messageSelect,tvoc)
+        sendNotification(showDateTypeId, iconSelect, titleSelect, messageSelect, tvoc)
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -202,7 +204,7 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(DateType:Int,iconID: Bitmap, title: String, text: String?, dataValue: Int) {
+    private fun makeNotificationShow(DateType: Int, iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
         @SuppressLint("ResourceAsColor")
@@ -225,9 +227,9 @@ class WarningClass {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(dataValue)
-            val NB = notificationHelper!!.getNotification1(title, text.toString())
-            notificationHelper!!.notify(DateType, NB)
+            notificationHelper.set_TCOC_Value(dataValue)
+            val NB = notificationHelper.getNotification1(title, text.toString())
+            notificationHelper.notify(DateType, NB)
         } else {
             try {
                 //送到手機的通知欄
@@ -254,17 +256,17 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(DateTypeId: Int,icon: Int, title: Int, message: Int, value: Int) {
+    private fun sendNotification(DateTypeId: Int, icon: Int, title: Int, message: Int, value: Int) {
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)) {
             if (isAppIsInBackground(m_context!!)) {
                 try {
                     var titleShowType = ""
                     when (DateTypeId) {
                         REQUEST_TVOC_CODE -> {
-                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_tvoc) + ":"+value+" ppb "
+                            titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_tvoc) + ":" + value + " ppb "
                         }
                         REQUEST_PM25_CODE -> {
-                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_pm25) + ":"+value+" μg/m³ "
+                            titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                         }
                     }
                     makeNotificationShow(
@@ -279,13 +281,13 @@ class WarningClass {
             }
         }
     }
+
     private var soundPoolOnLoadCompleteListener: SoundPool.OnLoadCompleteListener = SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
-            if(status == 0) {
+            if (status == 0) {
                 soundPool.play(sampleId, 1.0f, 1.0f, 0, 0, 1f)
-            }
-            else{
-                Log.e("SoundPoolErroCode",status.toString())
+            } else {
+                Log.e("SoundPoolErroCode", status.toString())
             }
         }
     }

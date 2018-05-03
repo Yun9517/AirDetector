@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //20180411   建立警告物件
         warningClass = WarningClass(this)
-        alertId = soundPool2!!.load(this, R.raw.low_power, 1)
+        alertId = soundPool2.load(this, R.raw.low_power, 1)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -877,9 +877,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                 //20180206
                 val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+                val allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+                val useLowBattNotify = mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
                 //20180206
                 lowPowerCont++
-                if (mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false) && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
+                if (allowNotify && useLowBattNotify && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
                 {
                     lowPowerCont = 0
                     soundPool2!!.play(alertId, 1F, 1F, 0, 0, 1F)

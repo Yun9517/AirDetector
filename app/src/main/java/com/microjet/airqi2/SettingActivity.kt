@@ -44,23 +44,21 @@ class SettingActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
+        readPreferences()   // 載入設定值
         uiSetListener()
-
-        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-
         initActionBar()
     }
 
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
-        readPreferences()   // 當Activity onResume時載入設定值
 
         text_local_uuid.text = MyApplication.getPsuedoUniqueID()
         text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
     }
 
     private fun readPreferences() {
+        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
         swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
         swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
@@ -127,18 +125,6 @@ class SettingActivity : AppCompatActivity() {
                 cgSound.visibility = View.GONE
                 cgSeekbar.visibility = View.GONE
                 cgLowBatt.visibility = View.GONE
-
-                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
-                        isChecked).apply()
-
-                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
-                        isChecked).apply()
-
-                mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
-                        isChecked).apply()
-
-                mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
-                        isChecked).apply()
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
@@ -186,6 +172,7 @@ class SettingActivity : AppCompatActivity() {
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
+                Log.e("SeekBar", "Min: $min")
             }
 
             override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
