@@ -267,7 +267,7 @@
         <ImageView
             android:id="@+id/imgExpand"
             android:layout_width="20dp"
-            android:layout_height="148dp"
+            android:layout_height="171dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/airmap_infodrawer_close" />
 

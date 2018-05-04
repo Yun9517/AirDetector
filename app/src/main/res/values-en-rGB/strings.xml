@@ -81,7 +81,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">Contact Us</string>
     <string name="Contact_mail">Service Mail</string>
-    <string name="show_app_version">TVOC NOSE Version v%s</string>
+    <string name="show_app_version">Mobile Nose Version v%s</string>
     <string name="Blue_Tooth">Blue Tooth</string>
     <string name="Broadcast">Broadcast Notification</string>
     <string name="Auto_measure">Auto Detect</string>
@@ -233,10 +233,14 @@
     <string name="expectName">Decide a new name</string>
     <string name="title_tvoc">TVOC_Data</string>
     <string name="title_eco2">Eco2_Data</string>
-    <string name="title_humidy">Humidy_Data</string>
-    <string name="title_temperatur">Temperatur_Data</string>
+    <string name="title_humidy">Humidity_Data</string>
+    <string name="title_temperature">Temperature_Data</string>
     <string name="title_pm25">PM2.5</string>
     <string name="map_result_title">Information</string>
-
     <string name="getStarted">Get Started</string>
+
+    <!--    雲端下載視窗    -->
+    <string name="messag_text">Device Name</string>
+    <string name="messag_dowload">Data Sync</string>
+    <string name="text_navi_personal">Personal trail</string>
 </resources>

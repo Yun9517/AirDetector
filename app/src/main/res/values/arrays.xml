@@ -13,4 +13,19 @@
         <item>週</item>
         <item>月</item>
     </string-array>
+
+    <string-array name="tvocArray">
+        <item>220</item>
+        <item>660</item>
+        <item>2200</item>
+        <item>5500</item>
+    </string-array>
+
+    <string-array name="pm25Array">
+        <item>16</item>
+        <item>35</item>
+        <item>55</item>
+        <item>150</item>
+        <item>250</item>
+    </string-array>
 </resources>

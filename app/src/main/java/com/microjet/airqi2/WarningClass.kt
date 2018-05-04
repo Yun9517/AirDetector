@@ -19,6 +19,7 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
+import io.realm.Realm
 
 
 /**
@@ -35,9 +36,14 @@ class WarningClass {
     private var mVibrator: Vibrator? = null
     private var mPreference: SharedPreferences? = null
 
+    private var allowNotify = false
+    private var tvocAlertValue = 660
+    private var pm25AlertValue = 16
+
     //Test
-    private var soundsMap: HashMap<Int, Int> =HashMap<Int,Int>()
-    private var soundPool: SoundPool? =null
+    private var soundsMap: HashMap<Int, Int> = HashMap<Int, Int>()
+    private var soundPool: SoundPool? = null
+
     constructor (MustInputContext: Context) {
         m_context = MustInputContext
         mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -50,116 +56,145 @@ class WarningClass {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    fun judgeValue(tvocValue: Int,pm25Value: Int) {
+    fun judgeValue(tvocValue: Int, pm25Value: Int) {
         //20180403
         //TVOC
-        when (tvocValue) {
-            in 660..2200 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over660,
-                        2000L,
-                        R.drawable.history_face_icon_03,
-                        R.string.warning_title_Orange,//+tvocValue,
-                        R.string.text_message_air_Medium_Orange,
-                        tvocValue)  //中度汙染
-            }
-            in 2201..5500 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over2200,
-                        3000L,
-                        R.drawable.history_face_icon_04,
-                        R.string.warning_title_Red,//+tvocValue,
-                        R.string.text_message_air_bad,
-                        tvocValue)  //重度汙染
-            }
-            in 5501..20000 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over5500,
-                        4000L,
-                        R.drawable.history_face_icon_05,
-                        R.string.warning_title_Purple,//+tvocValue,
-                        R.string.text_message_air_Serious_Purple,
-                        tvocValue) //嚴重汙染
-            }
-            in 20001..60000 -> {
-                warningFunction(REQUEST_TVOC_CODE,
-                        R.raw.tvoc_over20000,
-                        5000L,
-                        R.drawable.history_face_icon_06,
-                        R.string.warning_title_Brown,//+tvocValue,
-                        R.string.text_message_air_Extreme_Dark_Purple,
-                        tvocValue)  //非常嚴重汙染
+
+        allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
+        pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+
+        if (allowNotify && tvocValue >= tvocAlertValue) {
+            when (tvocValue) {
+                in 0..219 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            500L,
+                            R.drawable.history_face_icon_02,
+                            R.string.warning_title_Yellow,//+tvocValue,
+                            R.string.text_message_air_mid,
+                            tvocValue)  //中度汙染
+                }
+                in 220..659 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            1000L,
+                            R.drawable.history_face_icon_02,
+                            R.string.warning_title_Yellow,//+tvocValue,
+                            R.string.text_message_air_mid,
+                            tvocValue)  //中度汙染
+                }
+                in 660..2200 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            2000L,
+                            R.drawable.history_face_icon_03,
+                            R.string.warning_title_Orange,//+tvocValue,
+                            R.string.text_message_air_Medium_Orange,
+                            tvocValue)  //中度汙染
+                }
+                in 2201..5500 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            3000L,
+                            R.drawable.history_face_icon_04,
+                            R.string.warning_title_Red,//+tvocValue,
+                            R.string.text_message_air_bad,
+                            tvocValue)  //重度汙染
+                }
+                in 5501..20000 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            4000L,
+                            R.drawable.history_face_icon_05,
+                            R.string.warning_title_Purple,//+tvocValue,
+                            R.string.text_message_air_Serious_Purple,
+                            tvocValue) //嚴重汙染
+                }
+                in 20001..60000 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            5000L,
+                            R.drawable.history_face_icon_06,
+                            R.string.warning_title_Brown,//+tvocValue,
+                            R.string.text_message_air_Extreme_Dark_Purple,
+                            tvocValue)  //非常嚴重汙染
+                }
             }
         }
 
+
         //20180409
         //PM2.5
-        when (pm25Value) {
-            in 0..15 -> {
-//                warningFunction(REQUEST_PM25_CODE,
-//                        R.raw.low_power,
-//                        0L,
-//                        R.drawable.history_face_icon_01,
-//                        R.string.label_pm25_Green,
-//                        R.string.message_pm25_Green,
-//                        pm25Value)  //5
-            }
-            in 16..34 -> {
-//                warningFunction(REQUEST_PM25_CODE,
-//                        R.raw.low_power,
-//                        1000L,
-//                        R.drawable.history_face_icon_02,
-//                        R.string.label_pm25_Yellow,//+pm25Value,
-//                        R.string.message_pm25_Yellow,
-//                        pm25Value)  //輕度汙染
-            }
-            in 35..54 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over660,
-                        2000L,
-                        R.drawable.history_face_icon_03,
-                        R.string.label_pm25_Orange,//+pm25Value,
-                        R.string.message_pm25_Orange,
-                        pm25Value)  //中度汙染
-            }
-            in 55..150 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over2200,
-                        3000L,
-                        R.drawable.history_face_icon_04,
-                        R.string.label_pm25_Red,//+pm25Value,
-                        R.string.message_pm25_Red,
-                        pm25Value)  //重度汙染
-            }
-            in 151..250 -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over5500,
-                        4000L,
-                        R.drawable.history_face_icon_05,
-                        R.string.label_pm25_Purple,//+pm25Value,
-                        R.string.message_pm25_Purple,
-                        pm25Value) //嚴重汙染
-            }
-            else -> {
-                warningFunction(REQUEST_PM25_CODE,
-                        R.raw.tvoc_over20000,
-                        5000L,
-                        R.drawable.history_face_icon_06,
-                        R.string.label_pm25_Brown,//+pm25Value,
-                        R.string.message_pm25_Brown,
-                        pm25Value)  //非常嚴重汙染
+        if (allowNotify && pm25Value >= pm25AlertValue) {
+            when (pm25Value) {
+                in 0..15 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            500L,
+                            R.drawable.history_face_icon_01,
+                            R.string.label_pm25_Green,
+                            R.string.message_pm25_Green,
+                            pm25Value)  //5
+                }
+                in 16..34 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            1000L,
+                            R.drawable.history_face_icon_02,
+                            R.string.label_pm25_Yellow,//+pm25Value,
+                            R.string.message_pm25_Yellow,
+                            pm25Value)  //輕度汙染
+                }
+                in 35..54 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            2000L,
+                            R.drawable.history_face_icon_03,
+                            R.string.label_pm25_Orange,//+pm25Value,
+                            R.string.message_pm25_Orange,
+                            pm25Value)  //中度汙染
+                }
+                in 55..150 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            3000L,
+                            R.drawable.history_face_icon_04,
+                            R.string.label_pm25_Red,//+pm25Value,
+                            R.string.message_pm25_Red,
+                            pm25Value)  //重度汙染
+                }
+                in 151..250 -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            4000L,
+                            R.drawable.history_face_icon_05,
+                            R.string.label_pm25_Purple,//+pm25Value,
+                            R.string.message_pm25_Purple,
+                            pm25Value) //嚴重汙染
+                }
+                else -> {
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            5000L,
+                            R.drawable.history_face_icon_06,
+                            R.string.label_pm25_Brown,//+pm25Value,
+                            R.string.message_pm25_Brown,
+                            pm25Value)  //非常嚴重汙染
+                }
             }
         }
+
     }
 
     //20180402   Andy
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private fun warningFunction(showDateTypeId:Int,soundResNo: Int,
+    private fun warningFunction(showDateTypeId: Int, soundResNo: Int,
                                 vibratorSecond: Long,
                                 iconSelect: Int, titleSelect: Int, messageSelect: Int, tvoc: Int) {
         soundPool!!.load(m_context, soundResNo, 1)
         sendVibrator(vibratorSecond)
-        sendNotification(showDateTypeId,iconSelect,titleSelect,messageSelect,tvoc)
+        sendNotification(showDateTypeId, iconSelect, titleSelect, messageSelect, tvoc)
     }
 
     @SuppressLint("ObsoleteSdkInt")
@@ -188,7 +223,7 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(DateType:Int,iconID: Bitmap, title: String, text: String?, dataValue: Int) {
+    private fun makeNotificationShow(DateType: Int, iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
         @SuppressLint("ResourceAsColor")
@@ -211,9 +246,9 @@ class WarningClass {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
-            notificationHelper!!.set_TCOC_Value(dataValue)
-            val NB = notificationHelper!!.getNotification1(title, text.toString())
-            notificationHelper!!.notify(DateType, NB)
+            notificationHelper.set_TCOC_Value(dataValue)
+            val NB = notificationHelper.getNotification1(title, text.toString())
+            notificationHelper.notify(DateType, NB)
         } else {
             try {
                 //送到手機的通知欄
@@ -240,17 +275,17 @@ class WarningClass {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(DateTypeId: Int,icon: Int, title: Int, message: Int, value: Int) {
-        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)) {
+    private fun sendNotification(DateTypeId: Int, icon: Int, title: Int, message: Int, value: Int) {
+        if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)) {
             if (isAppIsInBackground(m_context!!)) {
                 try {
                     var titleShowType = ""
                     when (DateTypeId) {
                         REQUEST_TVOC_CODE -> {
-                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_tvoc) + ":"+value+" ppb "
+                            titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_tvoc) + ":" + value + " ppb "
                         }
                         REQUEST_PM25_CODE -> {
-                            titleShowType = m_context!!.getString(title) +" "+ m_context!!.getString(R.string.title_pm25) + ":"+value+" μg/m³ "
+                            titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                         }
                     }
                     makeNotificationShow(
@@ -265,13 +300,13 @@ class WarningClass {
             }
         }
     }
+
     private var soundPoolOnLoadCompleteListener: SoundPool.OnLoadCompleteListener = SoundPool.OnLoadCompleteListener { soundPool, sampleId, status ->
         if (mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)) {
-            if(status == 0) {
+            if (status == 0) {
                 soundPool.play(sampleId, 1.0f, 1.0f, 0, 0, 1f)
-            }
-            else{
-                Log.e("SoundPoolErroCode",status.toString())
+            } else {
+                Log.e("SoundPoolErroCode", status.toString())
             }
         }
     }

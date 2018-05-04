@@ -251,8 +251,6 @@ class AccountActiveActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        dialog?.dismiss()
-        download?.cancel(true)
     }
 
     private fun dbData2CVSAsyncTasks( ){//TS: TvocNoseData) {
@@ -406,6 +404,7 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
+          download?.cancel(true)
           download=DownloadTask(this, download_Bar!!,download_min!!,download_text!!).execute(list[position], token)
           dialog?.dismiss()//結束小視窗
         }

@@ -153,8 +153,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         super.onResume()
         if(MyApplication.getSharePreferenceMapPanelStat()) {
             valuePanel.visibility = View.VISIBLE
+            imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
         } else {
             valuePanel.visibility = View.GONE
+            imgExpand.setImageResource(R.drawable.airmap_infodrawer_open)
         }
     }
 
@@ -507,7 +509,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         // set graph mode
         // --------------
 		//	lineChart.SetMode(MJGraphView.MODE_MONTHLY)
-		//	lineChart.SetMode(MJGraphView.MODE_WEEKLY)
+        //	lineChart.SetMode(MJGraphView.MODE_WEEKLY)
         lineChart.SetMode(MJGraphView.MODE_DAILY)
 
         // set callback to handle updates on scroll or pinch
@@ -578,6 +580,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     // 圖表滑動時的callback
     @SuppressLint("SimpleDateFormat")
     override fun OnUpdate(_index: Int, _data: MJGraphData) {
+        if(lineChart.Mode() != MJGraphView.MODE_DAILY) {
+            lineChart.SetMode(MJGraphView.MODE_DAILY)
+        }
+
         val data = if (rbTVOC.isChecked) {
             filter[_index].tvocValue!!.toInt()
         } else {

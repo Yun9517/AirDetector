@@ -82,7 +82,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">联络我们</string>
     <string name="Contact_mail">客服信箱</string>
-    <string name="show_app_version">TVOC NOSE 版本 v.%s</string>
+    <string name="show_app_version">Mobile Nose 版本 v.%s</string>
     <string name="Blue_Tooth">蓝芽连线</string>
     <string name="Broadcast">推播通知</string>
     <string name="Auto_measure">自动测试</string>
@@ -235,7 +235,6 @@
     <string name="title_tvoc">TVOC_Data</string>
     <string name="title_eco2">Eco2_Data</string>
     <string name="title_humidy">Humidy_Data</string>
-    <string name="title_temperatur">Temperatur_Data</string>
     <string name="title_pm25">PM2.5</string>
     <string name="map_result_title">情报</string>
     <string name="title_activity_tour">TourActivity</string>
@@ -376,7 +375,6 @@
     <string name="normal_font_path">fonts/trebuc.ttf</string>
     <string name="Accept">Yes</string>
     <string name="Reject">NO</string>
-
     <string name="getStarted">开始体验</string>
     <string name="messag_text">蓝牙装置名称</string>
     <string name="messag_dowload">云端同步下载</string>
@@ -384,6 +382,10 @@
     <string name="download_text">下载进度:</string>
     <string name="download_min">喝杯茶</string>
     <string name="text_navi_personal">个人轨迹</string>
+
+    <string name="text_setting_tvoc_value">TVOC 通知数值</string>
+    <string name="text_setting_pm25_value">PM2.5 通知数值</string>
+    <string name="title_temperature">Temperature_Data</string>
 </resources>
 
 

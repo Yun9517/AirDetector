@@ -205,7 +205,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //20180411   建立警告物件
         warningClass = WarningClass(this)
-        alertId = soundPool2!!.load(this, R.raw.low_power, 1)
+        alertId = soundPool2.load(this, R.raw.low_power, 1)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -549,8 +549,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
+        //萬一DFU失敗時為Preference的Address加1
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val realAddress = share.getString("mac", "noValue")
+        val dfuFailAddress = realAddress.dropLast(1) + (realAddress[realAddress.lastIndex].toByte() + 1).toChar().toString()// +   realAddress.substring()
+
         val i: Intent? = Intent(this, AboutActivity::class.java)
-                .putExtra("ADDRESS",show_Dev_address?.text.toString())
+                .putExtra("ADDRESS", dfuFailAddress)
                 .putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
         startActivity(i)
     }
@@ -877,9 +882,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                 //20180206
                 val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+                val allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+                val useLowBattNotify = mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
                 //20180206
                 lowPowerCont++
-                if (mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false) && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
+                if (allowNotify && useLowBattNotify && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
                 {
                     lowPowerCont = 0
                     soundPool2!!.play(alertId, 1F, 1F, 0, 0, 1F)
