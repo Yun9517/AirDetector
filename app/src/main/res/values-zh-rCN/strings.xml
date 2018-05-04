@@ -82,7 +82,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">联络我们</string>
     <string name="Contact_mail">客服信箱</string>
-    <string name="show_app_version">TVOC NOSE 版本 v.%s</string>
+    <string name="show_app_version">Mobile Nose 版本 v.%s</string>
     <string name="Blue_Tooth">蓝芽连线</string>
     <string name="Broadcast">推播通知</string>
     <string name="Auto_measure">自动测试</string>

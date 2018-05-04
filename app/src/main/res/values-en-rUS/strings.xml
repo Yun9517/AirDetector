@@ -82,7 +82,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">Contact Us</string>
     <string name="Contact_mail">Service Mail</string>
-    <string name="show_app_version">TVOC NOSE Version v%s</string>
+    <string name="show_app_version">Mobile Nose Version v%s</string>
     <string name="Blue_Tooth">Blue Tooth</string>
     <string name="Broadcast">Broadcast Notification</string>
     <string name="Auto_measure">Auto Detect</string>
