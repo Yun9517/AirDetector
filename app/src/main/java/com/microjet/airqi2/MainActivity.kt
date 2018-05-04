@@ -52,6 +52,7 @@ import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_fetch_data_main.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import layout.ExpandableListAdapter
@@ -186,8 +187,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 2018/05/03 ExpandableListView
     var mMenuAdapter: ExpandableListAdapter? = null
     var expandableList: ExpandableListView? = null
-    var listDataHeader: ArrayList<ExpandedMenuModel> ? = null
-    var listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>>? = null
+    private val listDataHeader: ArrayList<ExpandedMenuModel> = ArrayList<ExpandedMenuModel>()
+    private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap<ExpandedMenuModel, ArrayList<String>>()
     var navigationView: NavigationView ? = null
     val item1 =  ExpandedMenuModel()
 
@@ -205,90 +206,47 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         val navigationView = findViewById<View>(R.id.naviView) as NavigationView
 
-        if (navigationView != null) {
             setupDrawerContent(navigationView)
-        }
 
         prepareListData()
 
-        mMenuAdapter = ExpandableListAdapter(this, listDataHeader!!, listDataChild!!, navigationmenu!!)
+        mMenuAdapter = ExpandableListAdapter(this, listDataHeader, listDataChild, navigationmenu!!)
         navigationmenu!!.setAdapter(mMenuAdapter)
-        navigationmenu!!.setOnChildClickListener(object : ExpandableListView.OnChildClickListener {
 
-            override fun onChildClick(expandableListView: ExpandableListView, view: View, groupPosition: Int, childPosition: Int, l: Long): Boolean {
-
-                when (groupPosition)
-                {
-                    0 -> {
-                        val hp = ExpandedMenuModel()
-                        hp.iconImg =  R.drawable.ic_bluetooth_searching_black_24dp
-                        if (connState == BleConnection.CONNECTED) {
-                            hp.iconName = getString(R.string.UART_Disconnecting)
-                            blueToothDisconnect()
-                        } else {
-                            hp.iconName = getString(R.string.text_navi_add_device)
-                            blueToothConnect()
-                        }
-                        listDataHeader?.set(0,hp)
+        navigationmenu.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { parent, v, groupPosition, id ->
+            when (groupPosition) {
+                0 -> {
+                    when(connState) {
+                        BleConnection.CONNECTED -> { blueToothDisconnect() }
+                        BleConnection.DISCONNECTED -> { blueToothConnect() }
                     }
-                    1 -> {accountShow()}
-                    2 -> {
-                        when(childPosition) {
-                            0 -> {airmapShow()}
-                            1 -> {publicMapShow()}
-                        }
-                    }
-                    3 -> {
-                        when(childPosition) {
-                            0 -> {knowledgeShow()}
-                            1 -> {qandaShow()}
-                            2 -> {tourShow()}
-                        }
-                    }
-                    4 -> { settingShow()}
-                    5 -> { aboutShow()}
                 }
-                Log.d("DEBUG", "submenu item clicked" + childPosition.toString())
-                return false
-            }
-        })
-
-        navigationmenu!!.setOnGroupClickListener(object : ExpandableListView.OnGroupClickListener {
-            override fun onGroupClick(expandableListView: ExpandableListView, view: View, groupPosition: Int, childPosition: Long): Boolean {
-                when (groupPosition)
-                {
-                    0 -> {
-                        val hp = ExpandedMenuModel()
-                        hp.iconImg =  R.drawable.ic_bluetooth_searching_black_24dp
-                        when(connState) {
-                            BleConnection.CONNECTED -> {
-                                hp.iconName = getString(R.string.text_navi_add_device)
-                                listDataHeader?.set(0,hp)
-                                blueToothDisconnect()
-                            }
-                            BleConnection.DISCONNECTED -> {
-                                hp.iconName = getString(R.string.UART_Disconnecting)
-                                blueToothConnect()
-                                listDataHeader?.set(0,hp)
-                            }
+                1 -> { accountShow() }
+                2 -> {
+                    parent.expandGroup(groupPosition)
+                    parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                        when (childPosition) {
+                            0 -> { airmapShow() }
+                            1 -> { publicMapShow() }
                         }
-                        /*
-                        if (connState == BleConnection.CONNECTED) {
-                            hp.iconName = getString(R.string.UART_Disconnecting)
-                            blueToothDisconnect()
-                        } else {
-                            hp.iconName = getString(R.string.text_navi_add_device)
-                            blueToothConnect()
-                        }*/
-
-                    }
-                    1 -> { accountShow()}
-                    4 -> { settingShow()}
-                    5 -> { aboutShow()}
+                        parent.collapseGroup(groupPosition)
+                    })
                 }
-                Log.d("DEBUG", "heading clicked")
-                return false
+                3 -> {
+                    parent.expandGroup(groupPosition)
+                    parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                        when (childPosition) {
+                            0 -> { knowledgeShow() }
+                            1 -> { qandaShow() }
+                            2 -> { tourShow() }
+                        }
+                        parent.collapseGroup(groupPosition)
+                    })
+                }
+                4 -> { settingShow() }
+                5 -> { aboutShow() }
             }
+            true
         })
 
         val dm = DisplayMetrics()
@@ -1039,22 +997,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
-
-        val hp = ExpandedMenuModel()
-        when(connState) {
-            BleConnection.CONNECTED -> {
-                //hp.iconName = getString(R.string.UART_Disconnecting)
-                item1.iconName = getString(R.string.UART_Disconnecting)
-                //listDataHeader?.set(0,hp)
-                 }
-            BleConnection.DISCONNECTED -> {
-                //hp.iconName = getString(R.string.text_navi_add_device)
-                item1.iconName = getString(R.string.text_navi_add_device)
-                //listDataHeader?.set(0,hp)
-                }
-            }
-
         if (connState == BleConnection.CONNECTED) {
+            listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
@@ -1063,78 +1007,61 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             show_Device_Name?.text = share.getString("name", "")
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             text_Account_status?.text = shareMSG.getString("name", "")
-            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+/*            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
         } else {
+            listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
-            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+/*            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             heatingPanelHide()
         }
-
-
+        // 2018/05/03 ExpandableListView - use notify to change drawer text
+        mMenuAdapter!!.notifyDataSetInvalidated()
+        // **************************************************************** //
         Log.d("MAINcheckUIState", connState.toString())
     }
 
     // 2018/05/03 ExpandableListView
     private fun prepareListData() {
-        listDataHeader =  ArrayList<ExpandedMenuModel>()
-        listDataChild = HashMap<ExpandedMenuModel, ArrayList<String>>()
-
-        val  item1 =  ExpandedMenuModel()
-        when(connState) {
-            BleConnection.DISCONNECTED -> {
-                item1.iconName = getString(R.string.UART_Disconnecting)
-                listDataHeader?.add(item1)
-            }
-            BleConnection.CONNECTED -> {
-                item1.iconName = getString(R.string.text_navi_add_device)
-                listDataHeader?.add(item1)
-            }
-        }
-        /*if (connState == BleConnection.DISCONNECTED) {
-            item1.iconName = getString(R.string.text_navi_add_device)
-        } else {
-            item1.iconName = getString(R.string.UART_Disconnecting)
-        }*/
-
-        //item1.iconName = getString(R.string.text_navi_add_device)
+        val item1 =  ExpandedMenuModel()
+        item1.iconName = getString(R.string.text_navi_add_device)
         item1.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
         // Adding data header
-        //listDataHeader?.add(item1)
+        listDataHeader.add(item1)
 
         val item2 = ExpandedMenuModel()
         item2.iconName = getString(R.string.text_navi_accountManagement)
         item2.iconImg = R.drawable.ic_account_box_black_24dp
-        listDataHeader?.add(item2)
+        listDataHeader.add(item2)
 
         val item3 = ExpandedMenuModel()
         item3.iconName = getString(R.string.text_navi_title_map)
         item3.iconImg = R.drawable.ic_place_black_24dp
-        listDataHeader?.add(item3)
+        listDataHeader.add(item3)
 
         val item4 = ExpandedMenuModel()
         item4.iconName = getString(R.string.text_navi_title_help)
         item4.iconImg = R.drawable.ic_help_black_24dp
-        listDataHeader?.add(item4)
+        listDataHeader.add(item4)
 
         val item5 = ExpandedMenuModel()
         item5.iconName = getString(R.string.text_navi_setting)
         item5.iconImg = R.drawable.ic_settings_black_24dp
-        listDataHeader?.add(item5)
+        listDataHeader.add(item5)
 
         val item6 = ExpandedMenuModel()
         item6.iconName = getString(R.string.text_navi_about)
         item6.iconImg = R.drawable.ic_phone_android_black_24dp
-        listDataHeader?.add(item6)
+        listDataHeader.add(item6)
 
         // Adding child data
         /*val  heading1 =  ArrayList<String>()
