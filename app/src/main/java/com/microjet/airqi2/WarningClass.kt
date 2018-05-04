@@ -19,6 +19,7 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
+import io.realm.Realm
 
 
 /**
@@ -65,6 +66,15 @@ class WarningClass {
 
         if (allowNotify && tvocValue >= tvocAlertValue) {
             when (tvocValue) {
+                in 0..219 -> {
+                    warningFunction(REQUEST_TVOC_CODE,
+                            R.raw.tvoc_over,
+                            500L,
+                            R.drawable.history_face_icon_02,
+                            R.string.warning_title_Yellow,//+tvocValue,
+                            R.string.text_message_air_mid,
+                            tvocValue)  //中度汙染
+                }
                 in 220..659 -> {
                     warningFunction(REQUEST_TVOC_CODE,
                             R.raw.tvoc_over,
@@ -119,17 +129,17 @@ class WarningClass {
         if (allowNotify && pm25Value >= pm25AlertValue) {
             when (pm25Value) {
                 in 0..15 -> {
-//                warningFunction(REQUEST_PM25_CODE,
-//                        R.raw.low_power,
-//                        0L,
-//                        R.drawable.history_face_icon_01,
-//                        R.string.label_pm25_Green,
-//                        R.string.message_pm25_Green,
-//                        pm25Value)  //5
+                    warningFunction(REQUEST_PM25_CODE,
+                            R.raw.pm25_over,
+                            500L,
+                            R.drawable.history_face_icon_01,
+                            R.string.label_pm25_Green,
+                            R.string.message_pm25_Green,
+                            pm25Value)  //5
                 }
                 in 16..34 -> {
                     warningFunction(REQUEST_PM25_CODE,
-                            R.raw.low_power,
+                            R.raw.pm25_over,
                             1000L,
                             R.drawable.history_face_icon_02,
                             R.string.label_pm25_Yellow,//+pm25Value,
