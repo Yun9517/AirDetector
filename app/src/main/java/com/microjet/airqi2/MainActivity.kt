@@ -10,6 +10,7 @@ import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
@@ -52,8 +53,10 @@ import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_feature_dfu.*
 import kotlinx.android.synthetic.main.activity_fetch_data_main.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
@@ -185,12 +188,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var points = java.util.ArrayList<ImageView>()
 
     // 2018/05/03 ExpandableListView
-    var mMenuAdapter: ExpandableListAdapter? = null
-    var expandableList: ExpandableListView? = null
+    private var mMenuAdapter: ExpandableListAdapter? = null
     private val listDataHeader: ArrayList<ExpandedMenuModel> = ArrayList<ExpandedMenuModel>()
     private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap<ExpandedMenuModel, ArrayList<String>>()
-    var navigationView: NavigationView ? = null
-    val item1 =  ExpandedMenuModel()
+    var set_NavigationView: NavigationView ? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -201,12 +202,28 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
 
+        val dm = DisplayMetrics()
+        this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
+        Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
+        Log.e("Conn", MyApplication.getConnectStatus())
+        if (!mIsReceiverRegistered) {
+            LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
+            mIsReceiverRegistered = true
+        }
+        //setupDrawerContent(naviView)
+        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
+
+        //20180209
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+
+        //20180411   建立警告物件
+        warningClass = WarningClass(this)
+        alertId = soundPool2.load(this, R.raw.low_power, 1)
+
         // 2018/05/03 ExpandableListView
-        navigationView =  findViewById(R.id.naviView) as NavigationView
+        set_NavigationView =  findViewById<View>(R.id.naviView) as NavigationView
 
-        val navigationView = findViewById<View>(R.id.naviView) as NavigationView
-
-            setupDrawerContent(navigationView)
+        setupDrawerContent(set_NavigationView)
 
         prepareListData()
 
@@ -248,24 +265,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-
-        val dm = DisplayMetrics()
-        this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
-        Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
-        Log.e("Conn", MyApplication.getConnectStatus())
-        if (!mIsReceiverRegistered) {
-            LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
-            mIsReceiverRegistered = true
-        }
-        //setupDrawerContent(naviView)
-        registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
-
-        //20180209
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-        //20180411   建立警告物件
-        warningClass = WarningClass(this)
-        alertId = soundPool2.load(this, R.raw.low_power, 1)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -998,7 +997,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     @Synchronized
     private fun checkUIState() {
         if (connState == BleConnection.CONNECTED) {
-            listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
@@ -1007,22 +1005,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             show_Device_Name?.text = share.getString("name", "")
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             text_Account_status?.text = shareMSG.getString("name", "")
-/*            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+            /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
+            // 2018/05/03 ExpandableListView - Modify text by BLE status
+            listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
         } else {
-            listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
-/*            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+            /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             heatingPanelHide()
+            // 2018/05/03 ExpandableListView - Modify text by BLE status
+            listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
         }
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()
@@ -1032,62 +1033,53 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 2018/05/03 ExpandableListView
     private fun prepareListData() {
-        val item1 =  ExpandedMenuModel()
-        item1.iconName = getString(R.string.text_navi_add_device)
-        item1.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
+        val drawer_AddADDWII_01 =  ExpandedMenuModel()
+        drawer_AddADDWII_01.iconName = getString(R.string.text_navi_add_device)
+        drawer_AddADDWII_01.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
         // Adding data header
-        listDataHeader.add(item1)
+        listDataHeader.add(drawer_AddADDWII_01)
 
-        val item2 = ExpandedMenuModel()
-        item2.iconName = getString(R.string.text_navi_accountManagement)
-        item2.iconImg = R.drawable.ic_account_box_black_24dp
-        listDataHeader.add(item2)
+        val drawer_Account_02 = ExpandedMenuModel()
+        drawer_Account_02.iconName = getString(R.string.text_navi_accountManagement)
+        drawer_Account_02.iconImg = R.drawable.ic_account_box_black_24dp
+        listDataHeader.add(drawer_Account_02)
 
-        val item3 = ExpandedMenuModel()
-        item3.iconName = getString(R.string.text_navi_title_map)
-        item3.iconImg = R.drawable.ic_place_black_24dp
-        listDataHeader.add(item3)
+        val drawer_Map_03 = ExpandedMenuModel()
+        drawer_Map_03.iconName = getString(R.string.text_navi_title_map)
+        drawer_Map_03.iconImg = R.drawable.ic_place_black_24dp
+        listDataHeader.add(drawer_Map_03)
 
-        val item4 = ExpandedMenuModel()
-        item4.iconName = getString(R.string.text_navi_title_help)
-        item4.iconImg = R.drawable.ic_help_black_24dp
-        listDataHeader.add(item4)
+        val drawer_Help_04 = ExpandedMenuModel()
+        drawer_Help_04.iconName = getString(R.string.text_navi_title_help)
+        drawer_Help_04.iconImg = R.drawable.ic_help_black_24dp
+        listDataHeader.add(drawer_Help_04)
 
-        val item5 = ExpandedMenuModel()
-        item5.iconName = getString(R.string.text_navi_setting)
-        item5.iconImg = R.drawable.ic_settings_black_24dp
-        listDataHeader.add(item5)
+        val drawer_Setting_05 = ExpandedMenuModel()
+        drawer_Setting_05.iconName = getString(R.string.text_navi_setting)
+        drawer_Setting_05.iconImg = R.drawable.ic_settings_black_24dp
+        listDataHeader.add(drawer_Setting_05)
 
-        val item6 = ExpandedMenuModel()
-        item6.iconName = getString(R.string.text_navi_about)
-        item6.iconImg = R.drawable.ic_phone_android_black_24dp
-        listDataHeader.add(item6)
+        val drawer_About_06 = ExpandedMenuModel()
+        drawer_About_06.iconName = getString(R.string.text_navi_about)
+        drawer_About_06.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader.add(drawer_About_06)
 
         // Adding child data
-        /*val  heading1 =  ArrayList<String>()
-        heading1.add("Submenu of item 1")
 
-        val heading2 = ArrayList<String>()
-        heading2.add("Submenu of item 2")
-        heading2.add("Submenu of item 2")
-        heading2.add("Submenu of item 2")*/
+        val child_Map_03 = ArrayList<String>()
+        child_Map_03.add(getString(R.string.text_navi_personal))
+        child_Map_03.add(getString(R.string.text_navi_air_map))
 
-        val heading3 = ArrayList<String>()
-        heading3.add(getString(R.string.text_navi_personal))
-        heading3.add(getString(R.string.text_navi_air_map))
+        val child_Help_04 = ArrayList<String>()
+        child_Help_04.add(getString(R.string.text_navi_knowledge))
+        child_Help_04.add(getString(R.string.text_navi_q_and_a))
+        child_Help_04.add(getString(R.string.text_navi_tour))
 
-        val heading4 = ArrayList<String>()
-        heading4.add(getString(R.string.text_navi_knowledge))
-        heading4.add(getString(R.string.text_navi_q_and_a))
-        heading4.add(getString(R.string.text_navi_tour))
-
-
-        //listDataChild?.put(listDataHeader!!.get(0), heading1) // Header, Child data
-        //listDataChild?.put(listDataHeader!!.get(1), heading2)
-        listDataChild?.put(listDataHeader!!.get(2), heading3)
-        listDataChild?.put(listDataHeader!!.get(3), heading4)
-
+        listDataChild.put(listDataHeader.get(2), child_Map_03)
+        listDataChild.put(listDataHeader.get(3), child_Help_04)
+        //navigationmenu.expandableListAdapter.getGroupView(0).scrollIndicators = 0
     }
+
 
     private fun makeBluetoothStateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
@@ -1222,7 +1214,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         connectionInitMethod(now)
                     }
                     0xB1.toByte() -> {
-                        val hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
+                        var hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
                         MyApplication.putDeviceVersion(hashMap["FW"].toString())
                         MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
                         CheckFWversion("20"+hashMap["FW"].toString()+hashMap["FWSerial"].toString(),"00"+hashMap["DEV"].toString())
@@ -1230,7 +1222,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xB2.toByte() -> {
 
-                        val hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
+                        var hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
                         checkSampleRate(hashMap)
                         mUartService?.writeRXCharacteristic(BLECallingTranslate.GetHistorySampleItems())
                         Log.d("0xB2", hashMap.toString())

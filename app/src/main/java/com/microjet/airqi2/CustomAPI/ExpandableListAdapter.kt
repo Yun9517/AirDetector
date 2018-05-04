@@ -70,8 +70,7 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.listheader, null)
         }
-        val lblListHeader = convertView!!
-                .findViewById(R.id.submenu) as TextView
+        val lblListHeader = convertView!!.findViewById(R.id.submenu) as TextView
         val headerIcon = convertView!!.findViewById(R.id.iconimage) as ImageView
         lblListHeader.setTypeface(null, Typeface.NORMAL)
         lblListHeader.text = headerTitle.iconName
