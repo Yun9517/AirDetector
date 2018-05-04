@@ -549,8 +549,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
+        //萬一DFU失敗時為Preference的Address加1
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val realAddress = share.getString("mac", "noValue")
+        val dfuFailAddress = realAddress.dropLast(1) + (realAddress[realAddress.lastIndex].toByte() + 1).toChar().toString()// +   realAddress.substring()
+
         val i: Intent? = Intent(this, AboutActivity::class.java)
-                .putExtra("ADDRESS",show_Dev_address?.text.toString())
+                .putExtra("ADDRESS", dfuFailAddress)
                 .putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
         startActivity(i)
     }
