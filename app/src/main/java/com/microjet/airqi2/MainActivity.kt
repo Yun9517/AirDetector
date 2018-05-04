@@ -1261,18 +1261,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         Log.e("0xBA", "Manual Disconnect from Device.........")
                     }
                     0xE0.toByte() -> {
-                        val hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
+                        var hashMap = BLECallingTranslate.getPM25KeyValue(txValue)
                         if (hashMap[TvocNoseData.PM25SR] != "5" || hashMap[TvocNoseData.PM25GST] != "30") {
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.setPM25Rate(5))
                         }
                         Log.d("0xE0", hashMap.toString())
                     }
                     0xBB.toByte() -> {
-                        val hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
+                        var hashMap = BLECallingTranslate.parserGetRTCKeyValue(txValue)
                         Log.d("0xBB", hashMap.toString())
                     }
                     0xC0.toByte() -> {
-                        val hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
+                        var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
                         heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
                         displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
                         val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
@@ -1288,7 +1288,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             isFirstC6 = false
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
-                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
+                        var hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
                         warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(),hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
@@ -1311,7 +1311,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     private fun getMaxItems(tx: ByteArray) {
-        val hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
+        var hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
         var sampleRateTime = 0
         var correctTime = 0
         sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
@@ -1415,7 +1415,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun putC5ToObject(tx: ByteArray) {
-        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
+        var hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
             if (!lock) {
@@ -1570,7 +1570,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
-              val dfup= DFUProcessClass(this)
+              var dfup= DFUProcessClass(this)
                 dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
             }
         }
