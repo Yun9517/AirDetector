@@ -262,12 +262,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         hp.iconImg =  R.drawable.ic_bluetooth_searching_black_24dp
                         when(connState) {
                             BleConnection.CONNECTED -> {
-                                hp.iconName = getString(R.string.UART_Disconnecting)
-                                listDataHeader?.set(0,hp)
-                                blueToothDisconnect()}
-                            BleConnection.DISCONNECTED -> {
                                 hp.iconName = getString(R.string.text_navi_add_device)
-                                blueToothConnect()}
+                                listDataHeader?.set(0,hp)
+                                blueToothDisconnect()
+                            }
+                            BleConnection.DISCONNECTED -> {
+                                hp.iconName = getString(R.string.UART_Disconnecting)
+                                blueToothConnect()
+                                listDataHeader?.set(0,hp)
+                            }
                         }
                         /*
                         if (connState == BleConnection.CONNECTED) {
@@ -1040,12 +1043,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val hp = ExpandedMenuModel()
         when(connState) {
             BleConnection.CONNECTED -> {
-                hp.iconName = getString(R.string.UART_Disconnecting)
-                listDataHeader?.set(0,hp)
+                //hp.iconName = getString(R.string.UART_Disconnecting)
+                item1.iconName = getString(R.string.UART_Disconnecting)
+                //listDataHeader?.set(0,hp)
                  }
             BleConnection.DISCONNECTED -> {
-                hp.iconName = getString(R.string.text_navi_add_device)
-                listDataHeader?.set(0,hp)
+                //hp.iconName = getString(R.string.text_navi_add_device)
+                item1.iconName = getString(R.string.text_navi_add_device)
+                //listDataHeader?.set(0,hp)
                 }
             }
 
@@ -1087,11 +1092,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val  item1 =  ExpandedMenuModel()
         when(connState) {
             BleConnection.DISCONNECTED -> {
-                //item1.iconName = getString(R.string.text_navi_add_device)
+                item1.iconName = getString(R.string.UART_Disconnecting)
                 listDataHeader?.add(item1)
             }
             BleConnection.CONNECTED -> {
-                item1.iconName = getString(R.string.UART_Disconnecting)
+                item1.iconName = getString(R.string.text_navi_add_device)
                 listDataHeader?.add(item1)
             }
         }
