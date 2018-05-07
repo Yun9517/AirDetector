@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -177,8 +178,11 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val mDeviceAddress = share.getString("mac", "00:00:00:00:00:00")
+
         listener = RealmChangeListener {
-            filter = it.filter { it.latitude < 255f && it.latitude != null }
+            filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             drawMapPolyLine(filter)
             drawLineChart(filter)
             Log.e("Realm Listener", "Update Map...")
@@ -194,6 +198,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     // 讀取線圖資料
     @SuppressLint("SimpleDateFormat")
     private fun drawLineChart(datas: List<AsmDataModel>) {
+
         aResult.clear()
 
         if (datas.isNotEmpty()) {
