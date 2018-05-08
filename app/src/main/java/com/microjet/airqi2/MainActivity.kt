@@ -238,27 +238,42 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         BleConnection.DISCONNECTED -> { blueToothConnect() }
                     }
                 }
-                1 -> { accountShow() }
+                1 -> {
+                    accountShow()
+                }
                 2 -> {
-                    parent.expandGroup(groupPosition)
-                    parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
-                        when (childPosition) {
-                            0 -> { airmapShow() }
-                            1 -> { publicMapShow() }
-                        }
+                    if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
-                    })
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                            when (childPosition) {
+                                0 -> {
+                                    airmapShow()
+                                }
+                                1 -> {
+                                    publicMapShow()
+                                }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
                 }
                 3 -> {
-                    parent.expandGroup(groupPosition)
-                    parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
-                        when (childPosition) {
-                            0 -> { knowledgeShow() }
-                            1 -> { qandaShow() }
-                            2 -> { tourShow() }
-                        }
+                    if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
-                    })
+                    }
+                    else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                            when (childPosition) {
+                                0 -> { knowledgeShow() }
+                                1 -> { qandaShow() }
+                                2 -> { tourShow() }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
                 }
                 4 -> { settingShow() }
                 5 -> { aboutShow() }
