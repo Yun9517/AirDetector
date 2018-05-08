@@ -1,6 +1,5 @@
 package com.microjet.airqi2.GestureLock;
 
-import android.content.res.Resources;
 import android.text.TextUtils;
 
 import com.microjet.airqi2.MyApplication;
@@ -9,18 +8,17 @@ import com.microjet.airqi2.R;
 import java.util.List;
 
 public class PatternHelper {
-    public static final int MAX_SIZE = 4;
-    public static final int MAX_TIMES = 5;
+    private static final int MAX_SIZE = 4;
+    private static final int MAX_TIMES = 5;
     private static final String GESTURE_PWD_KEY = "gesture_pwd_key";
 
     private String message;
-    private String storagePwd;
     private String tmpPwd;
     private int times;
     private boolean isFinish;
     private boolean isOk;
 
-    public void validateForSetting(List<Integer> hitList) {
+    void validateForSetting(List<Integer> hitList) {
         this.isFinish = false;
         this.isOk = false;
 
@@ -50,7 +48,7 @@ public class PatternHelper {
         }
     }
 
-    public void validateForChecking(List<Integer> hitList) {
+    void validateForChecking(List<Integer> hitList) {
         this.isOk = false;
 
         if ((hitList == null) || (hitList.size() < MAX_SIZE)) {
@@ -60,8 +58,8 @@ public class PatternHelper {
             return;
         }
 
-        this.storagePwd = getFromStorage();
-        if (!TextUtils.isEmpty(this.storagePwd) && this.storagePwd.equals(convert2String(hitList))) {
+        String storagePwd = getFromStorage();
+        if (!TextUtils.isEmpty(storagePwd) && storagePwd.equals(convert2String(hitList))) {
             this.message = getCheckingSuccessMsg();
             this.isOk = true;
             this.isFinish = true;
@@ -85,27 +83,27 @@ public class PatternHelper {
     }
 
     private String getReDrawMsg() {
-        return Resources.getSystem().getString(R.string.text_set_pattern_again);
+        return MyApplication.Companion.applicationResText(R.string.text_set_pattern_again);
     }
 
     private String getSettingSuccessMsg() {
-        return Resources.getSystem().getString(R.string.text_set_pattern_success);
+        return MyApplication.Companion.applicationResText(R.string.text_set_pattern_success);
     }
 
     private String getCheckingSuccessMsg() {
-        return Resources.getSystem().getString(R.string.text_unlock_success);
+        return MyApplication.Companion.applicationResText(R.string.text_unlock_success);
     }
 
     private String getSizeErrorMsg() {
-        return String.format(Resources.getSystem().getString(R.string.text_redraw_again), MAX_SIZE);
+        return String.format(MyApplication.Companion.applicationResText(R.string.text_redraw_again), MAX_SIZE);
     }
 
     private String getDiffPreErrorMsg() {
-        return Resources.getSystem().getString(R.string.text_redraw_again1);
+        return MyApplication.Companion.applicationResText(R.string.text_redraw_again1);
     }
 
     private String getPwdErrorMsg() {
-        return String.format(Resources.getSystem().getString(R.string.text_pw_error), getRemainTimes());
+        return String.format(MyApplication.Companion.applicationResText(R.string.text_pw_error), getRemainTimes());
     }
 
     private String convert2String(List<Integer> hitList) {

@@ -175,10 +175,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SettingActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".TourActivity"
