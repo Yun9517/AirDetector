@@ -134,7 +134,11 @@
 
         <activity
             android:name=".BlueTooth.DFU.DFUActivity"
-            android:label="DFU" />
+            android:label="DFU"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
         <!--
         android:icon="@drawable/ic_dfu_feature"
         <intent-filter>
