@@ -37,4 +37,7 @@ object SavePreferences {
     //20180423
     const val SETTING_MAP_PANEL_STATUS = "airqi2.settings.SETTING_MAP_PANEL_STATUS"
 
+    //20180508
+    const val SETTING_MAP_PRIVACY = "airqi2.settings.SETTING_MAP_PRIVACY"
+
 }

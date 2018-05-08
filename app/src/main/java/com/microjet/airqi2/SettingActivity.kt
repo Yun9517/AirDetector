@@ -15,6 +15,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import java.text.DecimalFormat
 import java.util.logging.SimpleFormatter
 
@@ -41,6 +42,8 @@ class SettingActivity : AppCompatActivity() {
 
     private var tvocSeekBarVal: Int = 660
     private var pm25SeekBarVal: Int = 16
+
+    private var isPrivacy: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +80,8 @@ class SettingActivity : AppCompatActivity() {
 
         tvocSeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
         pm25SeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+
+        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
         //pm25SeekBarVal = 100
 
 
@@ -116,6 +121,8 @@ class SettingActivity : AppCompatActivity() {
 
         setSeekBarColor(tvocSeekBar, tvocSeekBarVal.toFloat(), true)
         setSeekBarColor(pm25SeekBar, pm25SeekBarVal.toFloat(), false)
+
+        swAllowPrivacy.isChecked = isPrivacy
     }
 
     private fun uiSetListener() {
@@ -262,6 +269,15 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
 
         }
+
+        swAllowPrivacy.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                DefaultPatternSettingActivity.startAction(this@SettingActivity)
+            } else {
+
+            }
+        }
+
     }
 
     private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {

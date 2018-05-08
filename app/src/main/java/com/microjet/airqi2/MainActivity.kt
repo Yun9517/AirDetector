@@ -48,6 +48,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
@@ -559,13 +560,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-    private fun parseDfuFailDevice(address: String) {
-        //val
-    }
-
     private fun airmapShow() {
-        val i: Intent? = Intent(this, AirMapActivity::class.java)
-        startActivity(i)
+        val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+        val isPrivacy = share.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+        if(isPrivacy) {
+            DefaultPatternCheckingActivity.startAction(this@MainActivity)
+        } else {
+            val i: Intent? = Intent(this, AirMapActivity::class.java)
+            startActivity(i)
+        }
     }
 
     // 20171127 Raymond 新增：知識庫activity

@@ -210,7 +210,9 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".engieeringMode.EngineerModeActivity" />
-        <activity android:name=".engieeringMode.ScanActivity"></activity>
+        <activity android:name=".engieeringMode.ScanActivity" />
+        <activity android:name=".GestureLock.DefaultPatternSettingActivity" />
+        <activity android:name=".GestureLock.DefaultPatternCheckingActivity" />
     </application>
 
 </manifest>

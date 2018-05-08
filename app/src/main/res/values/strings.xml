@@ -144,6 +144,7 @@
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
     <string name="text_setting_allow_notification">允許通知</string>
+    <string name="text_setting_allow_privacy">個人軌跡密碼</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>

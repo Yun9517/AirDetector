@@ -327,6 +327,57 @@
             app:layout_constraintTop_toBottomOf="@+id/batSound" />
 
 
+        <android.support.constraint.Group
+            android:id="@+id/cgPrivacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <TextView
+            android:id="@+id/textAllowPrivacy"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_allow_privacy"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllowPrivacy" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowPrivacy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllowPrivacy" />
+
+
         <TextView
             android:id="@+id/text_cloud_fun"
             android:layout_width="0dp"
@@ -350,7 +401,7 @@
             android:background="@drawable/setting_switch_style"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toStartOf="@+id/text_clouud_stat"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <TextView
             android:id="@+id/text_clouud_stat"
@@ -394,7 +445,7 @@
             app:layout_constraintTop_toBottomOf="@+id/text_label_uuid" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView4"
             android:layout_width="0dp"
             android:layout_height="2dp"
             android:layout_marginEnd="10dp"
@@ -418,7 +469,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
         <TextView
             android:id="@+id/textView15"
