@@ -552,7 +552,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //萬一DFU失敗時為Preference的Address加1
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         val realAddress = share.getString("mac", "noValue")
-        //val dfuFailAddress = realAddress.dropLast(1) + (realAddress[realAddress.lastIndex].toByte() + 1).toChar().toString()// +   realAddress.substring()
 
         val i: Intent? = Intent(this, AboutActivity::class.java)
                 .putExtra("ADDRESS", realAddress)
