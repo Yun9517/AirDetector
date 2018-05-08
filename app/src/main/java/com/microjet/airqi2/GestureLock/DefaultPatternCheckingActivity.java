@@ -2,6 +2,7 @@ package com.microjet.airqi2.GestureLock;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -11,20 +12,27 @@ import com.github.ihsg.patternlocker.OnPatternChangeListener;
 import com.github.ihsg.patternlocker.PatternIndicatorView;
 import com.github.ihsg.patternlocker.PatternLockerView;
 import com.microjet.airqi2.AirMapActivity;
+import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.R;
 
 import java.util.List;
 
 
 public class DefaultPatternCheckingActivity extends AppCompatActivity {
-    private PatternLockerView patternLockerView;
     private PatternIndicatorView patternIndicatorView;
     private TextView textMsg;
     private PatternHelper patternHelper;
 
-    public static void startAction(Context context) {
+    private static int actionMode = 0;
+
+    public static final int START_ACTION_MODE_NORMAL = 0;
+    public static final int START_ACTION_MODE_DISABLE = 1;
+
+    public static void startAction(Context context, int mode) {
         Intent intent = new Intent(context, DefaultPatternCheckingActivity.class);
         context.startActivity(intent);
+
+        actionMode = mode;
     }
 
     @Override
@@ -32,11 +40,11 @@ public class DefaultPatternCheckingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_default_pattern_checking);
 
-        this.patternIndicatorView = (PatternIndicatorView) findViewById(R.id.pattern_indicator_view);
-        this.patternLockerView = (PatternLockerView) findViewById(R.id.pattern_lock_view);
-        this.textMsg = (TextView) findViewById(R.id.text_msg);
+        this.patternIndicatorView = findViewById(R.id.pattern_indicator_view);
+        PatternLockerView patternLockerView = findViewById(R.id.pattern_lock_view);
+        this.textMsg = findViewById(R.id.text_msg);
 
-        this.patternLockerView.setOnPatternChangedListener(new OnPatternChangeListener() {
+        patternLockerView.setOnPatternChangedListener(new OnPatternChangeListener() {
             @Override
             public void onStart(PatternLockerView view) {
             }
@@ -53,7 +61,16 @@ public class DefaultPatternCheckingActivity extends AppCompatActivity {
                 updateMsg();
 
                 if(!isError) {
-                    callCompletePage();
+                    switch (actionMode) {
+                        case START_ACTION_MODE_DISABLE:
+                            SharedPreferences share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE);
+                            share.edit().putBoolean(SavePreferences.SETTING_MAP_PRIVACY, false).apply();
+                            break;
+
+                        case START_ACTION_MODE_NORMAL:
+                            callCompletePage();
+                            break;
+                    }
                 }
                 Log.e("Pattern", "Error: " + isError);
             }
@@ -64,7 +81,7 @@ public class DefaultPatternCheckingActivity extends AppCompatActivity {
             }
         });
 
-        this.textMsg.setText("绘制解锁图案");
+        this.textMsg.setText(getResources().getText(R.string.text_draw_pattern));
         this.patternHelper = new PatternHelper();
     }
 

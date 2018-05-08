@@ -1,12 +1,12 @@
 package com.microjet.airqi2.GestureLock;
 
+import android.content.res.Resources;
 import android.text.TextUtils;
 
-import java.util.List;
+import com.microjet.airqi2.MyApplication;
+import com.microjet.airqi2.R;
 
-/**
- * Created by hsg on 14/10/2017.
- */
+import java.util.List;
 
 public class PatternHelper {
     public static final int MAX_SIZE = 4;
@@ -85,27 +85,27 @@ public class PatternHelper {
     }
 
     private String getReDrawMsg() {
-        return "请再次绘制解锁图案";
+        return Resources.getSystem().getString(R.string.text_set_pattern_again);
     }
 
     private String getSettingSuccessMsg() {
-        return "手势解锁图案设置成功！";
+        return Resources.getSystem().getString(R.string.text_set_pattern_success);
     }
 
     private String getCheckingSuccessMsg() {
-        return "解锁成功！";
+        return Resources.getSystem().getString(R.string.text_unlock_success);
     }
 
     private String getSizeErrorMsg() {
-        return String.format("至少连接个%d点，请重新绘制", MAX_SIZE);
+        return String.format(Resources.getSystem().getString(R.string.text_redraw_again), MAX_SIZE);
     }
 
     private String getDiffPreErrorMsg() {
-        return "与上次绘制不一致，请重新绘制";
+        return Resources.getSystem().getString(R.string.text_redraw_again1);
     }
 
     private String getPwdErrorMsg() {
-        return String.format("密码错误，还剩%d次机会", getRemainTimes());
+        return String.format(Resources.getSystem().getString(R.string.text_pw_error), getRemainTimes());
     }
 
     private String convert2String(List<Integer> hitList) {

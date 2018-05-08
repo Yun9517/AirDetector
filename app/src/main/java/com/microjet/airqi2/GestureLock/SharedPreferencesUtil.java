@@ -5,10 +5,6 @@ import android.preference.PreferenceManager;
 
 import com.microjet.airqi2.MyApplication;
 
-/**
- * Created by hsg on 14/10/2017.
- */
-
 public class SharedPreferencesUtil {
     private static SharedPreferencesUtil instance;
 

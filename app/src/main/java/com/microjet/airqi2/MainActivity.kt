@@ -564,7 +564,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
         val isPrivacy = share.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
         if(isPrivacy) {
-            DefaultPatternCheckingActivity.startAction(this@MainActivity)
+            DefaultPatternCheckingActivity.startAction(this@MainActivity,
+                    DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
         } else {
             val i: Intent? = Intent(this, AirMapActivity::class.java)
             startActivity(i)

@@ -395,4 +395,13 @@
     <string name="messag_text">藍牙裝置名稱</string>
     <string name="messag_dowload">雲端同步下載</string>
     <string name="text_navi_personal">個人軌跡</string>
+
+    <string name="text_draw_pattern">請輸入解鎖圖形</string>
+    <string name="text_set_pattern">請設定解鎖圖形</string>
+    <string name="text_set_pattern_again">請再設定一次解鎖圖形</string>
+    <string name="text_set_pattern_success">解鎖圖形設定成功</string>
+    <string name="text_unlock_success">解鎖成功</string>
+    <string name="text_redraw_again">至少連結%d個點，請重新設定</string>
+    <string name="text_redraw_again1">與第一次設定的不一樣，請重新設定</string>
+    <string name="text_pw_error">密碼錯誤，還剩%d次機會</string>
 </resources>

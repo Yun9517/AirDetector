@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,6 +16,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import java.text.DecimalFormat
 import java.util.logging.SimpleFormatter
@@ -274,7 +276,8 @@ class SettingActivity : AppCompatActivity() {
             if(isChecked) {
                 DefaultPatternSettingActivity.startAction(this@SettingActivity)
             } else {
-
+                DefaultPatternCheckingActivity.startAction(this@SettingActivity,
+                        DefaultPatternCheckingActivity.START_ACTION_MODE_DISABLE)
             }
         }
 

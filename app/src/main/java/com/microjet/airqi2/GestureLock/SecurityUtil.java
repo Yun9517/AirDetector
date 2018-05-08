@@ -5,10 +5,6 @@ import java.io.UnsupportedEncodingException;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * AES encrypt/decrypt utility
- * Created by hsg on 14/10/2017.
- */
 public class SecurityUtil {
     private static final String CIPHER_MODE = "AES/ECB/PKCS5Padding";
     private static final String MASTER_PASSWORD = "Test123454321";

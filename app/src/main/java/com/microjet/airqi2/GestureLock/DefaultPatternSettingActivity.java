@@ -17,7 +17,6 @@ import java.util.List;
 
 public class DefaultPatternSettingActivity extends AppCompatActivity {
 
-    private PatternLockerView patternLockerView;
     private PatternIndicatorView patternIndicatorView;
     private TextView textMsg;
     private PatternHelper patternHelper;
@@ -33,10 +32,10 @@ public class DefaultPatternSettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_default_pattern_setting);
 
         this.patternIndicatorView = findViewById(R.id.pattern_indicator_view);
-        this.patternLockerView = findViewById(R.id.pattern_lock_view);
+        PatternLockerView patternLockerView = findViewById(R.id.pattern_lock_view);
         this.textMsg = findViewById(R.id.text_msg);
 
-        this.patternLockerView.setOnPatternChangedListener(new OnPatternChangeListener() {
+        patternLockerView.setOnPatternChangedListener(new OnPatternChangeListener() {
             @Override
             public void onStart(PatternLockerView view) {
             }
@@ -59,7 +58,7 @@ public class DefaultPatternSettingActivity extends AppCompatActivity {
             }
         });
 
-        this.textMsg.setText("设置解锁图案");
+        this.textMsg.setText(getResources().getText(R.string.text_set_pattern));
         this.patternHelper = new PatternHelper();
     }
 
