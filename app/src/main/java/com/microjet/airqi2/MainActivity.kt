@@ -1458,8 +1458,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
-              var dfup= DFUProcessClass(this)
-                dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
+                var dfup= DFUProcessClass(this)
+                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+                val mDeviceAddress = share.getString("mac", "noValue")
+                dfup.DFUAction("",mDeviceAddress)
             }
         }
     }
