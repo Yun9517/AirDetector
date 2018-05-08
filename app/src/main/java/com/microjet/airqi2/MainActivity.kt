@@ -1461,7 +1461,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 var dfup= DFUProcessClass(this)
                 val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
                 val mDeviceAddress = share.getString("mac", "noValue")
-                dfup.DFUAction("",mDeviceAddress)
+                if (mDeviceAddress!= "noValue") {
+                    dfup.DFUAction("", mDeviceAddress)
+                }
             }
         }
     }
