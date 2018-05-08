@@ -193,7 +193,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, textPM25SeekBarLabel, pm25SeekBar"
+            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swSound" />
@@ -219,7 +219,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTvocSeekBarLabel"
             app:rsb_cellMode="number"
@@ -254,7 +254,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/pm25SeekValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPM25SeekBarLabel"
             app:rsb_cellMode="number"
@@ -462,6 +462,32 @@
             android:textSize="18sp"
             app:layout_constraintStart_toEndOf="@+id/ledPower"
             app:layout_constraintTop_toTopOf="@+id/ledPower" />
+
+        <TextView
+            android:id="@+id/tvocSeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="60000"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/tvocSeekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tvocSeekBar" />
+
+        <TextView
+            android:id="@+id/pm25SeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:text="250"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="@+id/pm25SeekBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/pm25SeekBar" />
 
 
     </android.support.constraint.ConstraintLayout>

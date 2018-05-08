@@ -8,12 +8,15 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
 import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.Definition.Colors
+import java.text.DecimalFormat
+import java.util.logging.SimpleFormatter
 
 
 /**
@@ -108,6 +111,9 @@ class SettingActivity : AppCompatActivity() {
         tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
         pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
 
+        tvocSeekValue.text = tvocSeekBarVal.toString()
+        pm25SeekValue.text = pm25SeekBarVal.toString()
+
         setSeekBarColor(tvocSeekBar, tvocSeekBarVal.toFloat(), true)
         setSeekBarColor(pm25SeekBar, pm25SeekBarVal.toFloat(), false)
     }
@@ -174,6 +180,9 @@ class SettingActivity : AppCompatActivity() {
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
                 setSeekBarColor(view, min, true)
+
+                setSeekBarValue(tvocSeekValue, min)
+
                 mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
                 Log.e("SeekBar", "Min: $min")
             }
@@ -190,6 +199,9 @@ class SettingActivity : AppCompatActivity() {
         pm25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
                 setSeekBarColor(view, min, false)
+
+                setSeekBarValue(pm25SeekValue, min)
+
                 mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
             }
 
@@ -272,6 +284,11 @@ class SettingActivity : AppCompatActivity() {
                 else -> Colors.tvocCO2Colors[5]
             })
         }
+    }
+
+    private fun setSeekBarValue(view: TextView, min: Float) {
+        val format = DecimalFormat("###")
+        view.text = format.format(min).toString()
     }
 
     private fun initActionBar() {
