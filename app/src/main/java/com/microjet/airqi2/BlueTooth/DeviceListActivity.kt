@@ -46,6 +46,7 @@ import java.util.*
 //選單按下去的後跳出的視窗及連線資料
 class DeviceListActivity : Activity() {
     private var targetUUID = ParcelUuid(UUID.fromString("6e400001-b5a3-f393-e0a9-e50e24dcca9e"))
+    private var targetDfuUUID = ParcelUuid(UUID.fromString("0000fe59-0000-1000-8000-00805f9b34fb"))
 
     private var listBT: ListView? = null
     private var cancelButton: Button? = null
@@ -277,10 +278,13 @@ class DeviceListActivity : Activity() {
             //mBluetoothLeScanner.startScan(scanCallback);
 
             //scan specified devices only with ScanFilter
-            val scanFilter = ScanFilter.Builder()
-                    .setServiceUuid(targetUUID).build()
             val scanFilters = ArrayList<ScanFilter>()
+
+            val scanFilter = ScanFilter.Builder().setServiceUuid(targetUUID).build()
+            val scanFilterDFU = ScanFilter.Builder().setServiceUuid(targetDfuUUID).build()
+
             scanFilters.add(scanFilter)
+            scanFilters.add(scanFilterDFU)
 
             val scanSettings = ScanSettings.Builder().setScanMode(SCAN_MODE_BALANCED).build()
 
