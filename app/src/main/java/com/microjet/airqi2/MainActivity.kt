@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDrawerToggle: ActionBarDrawerToggle? = null
 
     // 電池電量數值
-    //private var batValue : Int = 0
+    private var batValue : Int = 0
 
     // 藍芽icon in actionbar
     private var bleIcon: MenuItem? = null
@@ -1161,6 +1161,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xC0.toByte() -> {
                         var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
                         heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
+                        batValue = hashMap[TvocNoseData.C0BATT]!!.toInt()
                         displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
                         val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
                         connectionInitMethod(rtcTime)
@@ -1467,7 +1468,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
         Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage(msg+"\twant to update?")
+        Dialog.setMessage(msg+"\t請確定裝置與電源連接正常，手機儘量接近裝置，以利FW更新。")
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
 
@@ -1489,9 +1490,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     fun CheckFWversion(Version:String,DeviceType:String) {
-        val aat = AirActionTask(this.mContext, Version, DeviceType)
-        val myResponse = aat.execute("postFWVersion")
-        Log.v("AirActionTask", "OVER")
+        if (batValue > 100) {
+            val aat = AirActionTask(this.mContext, Version, DeviceType)
+            val myResponse = aat.execute("postFWVersion")
+            Log.v("AirActionTask", "OVER")
+        }
     }
 
 
