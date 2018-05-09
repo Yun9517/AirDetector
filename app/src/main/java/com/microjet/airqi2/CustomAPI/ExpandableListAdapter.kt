@@ -4,9 +4,11 @@ import android.content.Context
 import android.widget.TextView
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.content.Intent
+import android.database.Cursor
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.graphics.Typeface
+import android.support.v4.content.ContextCompat.getDrawable
 import android.support.v4.content.ContextCompat.startActivity
 import android.util.Log
 import android.view.View
@@ -72,9 +74,22 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         }
         val lblListHeader = convertView!!.findViewById(R.id.submenu) as TextView
         val headerIcon = convertView!!.findViewById(R.id.iconimage) as ImageView
+        // 2018/05/09 Expandable View, Indicator right
+        val headerIndicator = convertView.findViewById(R.id.indicatorImage) as ImageView
         lblListHeader.setTypeface(null, Typeface.NORMAL)
         lblListHeader.text = headerTitle.iconName
         headerIcon.setImageResource(headerTitle.iconImg)
+        // 2018/05/09 Expandable View, Indicator status
+        if (getChildrenCount( groupPosition ) == 0) {
+            headerIndicator.visibility = View.GONE
+        } else {
+            headerIndicator.visibility = View.VISIBLE
+            if (isExpanded) {
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_black_18dp))
+            } else {
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_right_black_18dp))
+            }
+        }
         return convertView
     }
 

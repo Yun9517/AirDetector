@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.drm.DrmStore
 import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.Drawable
 import android.location.LocationListener
@@ -229,7 +230,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         mMenuAdapter = ExpandableListAdapter(this, listDataHeader, listDataChild, navigationmenu!!)
         navigationmenu!!.setAdapter(mMenuAdapter)
-
+        // 2018/05/09 Expandable View, hide original indicator
+        navigationmenu.setGroupIndicator(null)
+        //*****************************************************//
         navigationmenu.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { parent, v, groupPosition, id ->
             when (groupPosition) {
                 0 -> {
