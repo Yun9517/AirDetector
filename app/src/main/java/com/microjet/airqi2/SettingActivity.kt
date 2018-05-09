@@ -1,7 +1,6 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -19,7 +18,6 @@ import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import java.text.DecimalFormat
-import java.util.logging.SimpleFormatter
 
 
 /**
@@ -34,8 +32,6 @@ class SettingActivity : AppCompatActivity() {
     private var swMessageVal: Boolean = false
     private var swViberateVal: Boolean = false
     private var swSoundVal: Boolean = false
-    private var swRunInBgVal: Boolean = false
-    private var swTotalNotifyVal: Boolean = false
     //20180130
     private var batSoundVal: Boolean = false
     private var swLedPowerVal: Boolean = true
@@ -62,69 +58,17 @@ class SettingActivity : AppCompatActivity() {
 
         text_local_uuid.text = MyApplication.getPsuedoUniqueID()
         text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
+
+        getPrivacySettings()
     }
 
     private fun readPreferences() {
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-        swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
-        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
-        swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
-        swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
-        swRunInBgVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_RUN_IN_BG, false)
-        swTotalNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_TOTAL_POLLUTION_NOTIFY, false)
-        //20180206
-        batSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
 
-        swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
-
-        //20180227
-        swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
-
-        tvocSeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
-        pm25SeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
-
-        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
-        //pm25SeekBarVal = 100
-
-
-        swAllowNotify.isChecked = swAllowNotifyVal
-
-        if (swAllowNotifyVal) {
-            cgMessage.visibility = View.VISIBLE
-            cgVibration.visibility = View.VISIBLE
-            cgSound.visibility = View.VISIBLE
-            cgSeekbar.visibility = View.VISIBLE
-            cgLowBatt.visibility = View.VISIBLE
-        } else {
-            cgMessage.visibility = View.GONE
-            cgVibration.visibility = View.GONE
-            cgSound.visibility = View.GONE
-            cgSeekbar.visibility = View.GONE
-            cgLowBatt.visibility = View.GONE
-        }
-
-        swMessage.isChecked = swMessageVal
-        swVibrate.isChecked = swViberateVal
-        swSound.isChecked = swSoundVal
-        //20180130
-        //swPump.isChecked = swPumpVal
-        //20180206
-        batSound.isChecked = batSoundVal
-
-        ledPower.isChecked = swLedPowerVal
-
-        swCloudFunc.isChecked = swCloudVal
-
-        tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
-        pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
-
-        tvocSeekValue.text = tvocSeekBarVal.toString()
-        pm25SeekValue.text = pm25SeekBarVal.toString()
-
-        setSeekBarColor(tvocSeekBar, tvocSeekBarVal.toFloat(), true)
-        setSeekBarColor(pm25SeekBar, pm25SeekBarVal.toFloat(), false)
-
-        swAllowPrivacy.isChecked = isPrivacy
+        getNotificationSettings()
+        getCloudSettings()
+        getPrivacySettings()
+        getDeviceLedSettings()
     }
 
     private fun uiSetListener() {
@@ -149,15 +93,15 @@ class SettingActivity : AppCompatActivity() {
         }
 
         swMessage.setOnCheckedChangeListener { _, isChecked ->
+
+            setSwitchLabelValue(text_msg_stat, isChecked)
+
             if (isChecked) {
-                text_msg_stat.text = getString(R.string.text_setting_on)
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
                 sendBroadcast(mainintent)
 
                 Log.d("message", "messageSETTING")
-            } else {
-                text_msg_stat.text = getString(R.string.text_setting_off)
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
@@ -165,22 +109,16 @@ class SettingActivity : AppCompatActivity() {
         }
 
         swVibrate.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_vibrate_stat.text = getString(R.string.text_setting_on)
-            } else {
-                text_vibrate_stat.text = getString(R.string.text_setting_off)
-            }
+
+            setSwitchLabelValue(text_vibrate_stat, isChecked)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
                     isChecked).apply()
         }
 
         swSound.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_sound_stat.text = getString(R.string.text_setting_on)
-            } else {
-                text_sound_stat.text = getString(R.string.text_setting_off)
-            }
+
+            setSwitchLabelValue(text_sound_stat, isChecked)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
@@ -226,22 +164,21 @@ class SettingActivity : AppCompatActivity() {
 
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                text_bat_stat!!.text = getString(R.string.text_setting_on)
-            } else {
-                text_bat_stat!!.text = getString(R.string.text_setting_off)
-            }
+
+            setSwitchLabelValue(text_bat_stat, isChecked)
+
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
                     isChecked).apply()
         }
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
+
+            setSwitchLabelValue(text_led_stat, isChecked)
+
             val intent: Intent? = Intent(
                     if (isChecked) {
-                        text_led_stat!!.text = getString(R.string.text_setting_on)
                         BroadcastActions.INTENT_KEY_LED_ON
                     } else {
-                        text_led_stat.text = getString(R.string.text_setting_off)
                         BroadcastActions.INTENT_KEY_LED_OFF
                     }
             )
@@ -255,13 +192,13 @@ class SettingActivity : AppCompatActivity() {
         //20180227  CloudFun
         swCloudFunc.setOnCheckedChangeListener { _, isChecked ->
 
+            setSwitchLabelValue(text_cloud_stat, isChecked)
+
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
             if (isChecked) {
-                text_clouud_stat!!.text = getString(R.string.text_setting_on)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
             } else {
-                text_clouud_stat.text = getString(R.string.text_setting_off)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
             }
 
@@ -279,6 +216,11 @@ class SettingActivity : AppCompatActivity() {
                 DefaultPatternCheckingActivity.startAction(this@SettingActivity,
                         DefaultPatternCheckingActivity.START_ACTION_MODE_DISABLE)
             }
+        }
+
+        btnChangePassword.setOnClickListener {
+            DefaultPatternCheckingActivity.startAction(this@SettingActivity,
+                    DefaultPatternCheckingActivity.START_ACTION_MODE_CHANGE_PASSWOPRD)
         }
 
     }
@@ -308,6 +250,90 @@ class SettingActivity : AppCompatActivity() {
     private fun setSeekBarValue(view: TextView, min: Float) {
         val format = DecimalFormat("###")
         view.text = format.format(min).toString()
+    }
+
+    private fun setSwitchLabelValue(view: TextView, value: Boolean) {
+        if (value) {
+            view.text = getString(R.string.text_setting_on)
+        } else {
+            view.text = getString(R.string.text_setting_off)
+        }
+    }
+
+    private fun getNotificationSettings() {
+        swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
+        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
+        swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
+        swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
+        batSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
+
+        tvocSeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
+        pm25SeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+
+        swAllowNotify.isChecked = swAllowNotifyVal
+
+        if (swAllowNotifyVal) {
+            cgMessage.visibility = View.VISIBLE
+            cgVibration.visibility = View.VISIBLE
+            cgSound.visibility = View.VISIBLE
+            cgSeekbar.visibility = View.VISIBLE
+            cgLowBatt.visibility = View.VISIBLE
+        } else {
+            cgMessage.visibility = View.GONE
+            cgVibration.visibility = View.GONE
+            cgSound.visibility = View.GONE
+            cgSeekbar.visibility = View.GONE
+            cgLowBatt.visibility = View.GONE
+        }
+
+        swMessage.isChecked = swMessageVal
+        swVibrate.isChecked = swViberateVal
+        swSound.isChecked = swSoundVal
+
+        batSound.isChecked = batSoundVal
+
+        setSwitchLabelValue(text_msg_stat, swMessageVal)
+        setSwitchLabelValue(text_vibrate_stat, swViberateVal)
+        setSwitchLabelValue(text_sound_stat, swSoundVal)
+        setSwitchLabelValue(text_bat_stat, batSoundVal)
+
+        tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
+        pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
+
+        tvocSeekValue.text = tvocSeekBarVal.toString()
+        pm25SeekValue.text = pm25SeekBarVal.toString()
+
+        setSeekBarColor(tvocSeekBar, tvocSeekBarVal.toFloat(), true)
+        setSeekBarColor(pm25SeekBar, pm25SeekBarVal.toFloat(), false)
+    }
+
+    private fun getPrivacySettings() {
+        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+
+        swAllowPrivacy.isChecked = isPrivacy
+
+        if(isPrivacy) {
+            btnChangePassword.visibility = View.VISIBLE
+        } else {
+            btnChangePassword.visibility = View.GONE
+        }
+    }
+
+    private fun getCloudSettings() {
+        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+
+        swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        swCloudFunc.isChecked = swCloudVal
+
+        setSwitchLabelValue(text_cloud_stat, swCloudVal)
+    }
+
+    private fun getDeviceLedSettings() {
+        swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
+
+        ledPower.isChecked = swLedPowerVal
+
+        setSwitchLabelValue(text_led_stat, swLedPowerVal)
     }
 
     private fun initActionBar() {

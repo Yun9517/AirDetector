@@ -333,8 +333,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
-            app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textAllowPrivacy, swAllowPrivacy"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView2" />
@@ -349,7 +349,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_allow_privacy"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
+            app:layout_constraintEnd_toEndOf="@+id/btnChangePassword"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/swAllowPrivacy" />
 
@@ -358,11 +358,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="0dp"
             android:background="@drawable/setting_switch_style"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/cgPrivacy" />
 
         <ImageView
             android:id="@+id/imageView3"
@@ -370,7 +370,7 @@
             android:layout_height="2dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:background="#484848"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -400,11 +400,11 @@
             android:layout_marginTop="8dp"
             android:background="@drawable/setting_switch_style"
             android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toStartOf="@+id/text_clouud_stat"
+            app:layout_constraintEnd_toStartOf="@+id/text_cloud_stat"
             app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
         <TextView
-            android:id="@+id/text_clouud_stat"
+            android:id="@+id/text_cloud_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -537,6 +537,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textPM25SeekBarLabel"
             app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
+
+        <Button
+            android:id="@+id/btnChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/setting_button_style"
+            android:text="更改密碼"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textAllowPrivacy"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
+            app:layout_constraintTop_toTopOf="@+id/textAllowPrivacy" />
 
 
     </android.support.constraint.ConstraintLayout>

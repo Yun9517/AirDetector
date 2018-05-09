@@ -14,6 +14,7 @@ import com.github.ihsg.patternlocker.PatternLockerView;
 import com.microjet.airqi2.AirMapActivity;
 import com.microjet.airqi2.Definition.SavePreferences;
 import com.microjet.airqi2.R;
+import com.microjet.airqi2.SettingActivity;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class DefaultPatternCheckingActivity extends AppCompatActivity {
 
     public static final int START_ACTION_MODE_NORMAL = 0;
     public static final int START_ACTION_MODE_DISABLE = 1;
+    public static final int START_ACTION_MODE_CHANGE_PASSWOPRD = 2;
 
     public static void startAction(Context context, int mode) {
         Intent intent = new Intent(context, DefaultPatternCheckingActivity.class);
@@ -69,6 +71,10 @@ public class DefaultPatternCheckingActivity extends AppCompatActivity {
 
                         case START_ACTION_MODE_NORMAL:
                             callCompletePage();
+                            break;
+
+                        case START_ACTION_MODE_CHANGE_PASSWOPRD:
+                            DefaultPatternSettingActivity.startAction(DefaultPatternCheckingActivity.this);
                             break;
                     }
                 }
