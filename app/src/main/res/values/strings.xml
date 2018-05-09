@@ -146,11 +146,12 @@
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
     <string name="text_setting_allow_notification">允許通知</string>
+    <string name="text_setting_allow_privacy">個人軌跡密碼</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
-    <string name="text_setting_tvoc_value">TVOC 通知數值</string>
-    <string name="text_setting_pm25_value">PM2.5 通知數值</string>
+    <string name="text_setting_tvoc_value">TVOC 通知數值：</string>
+    <string name="text_setting_pm25_value">PM2.5 通知數值：</string>
     <string name="text_setting_on">開啟</string>
     <string name="text_setting_off">關閉</string>
     <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
@@ -229,7 +230,6 @@
     <string name="rememberID">記住帳號</string>
     <string name="syncData">雲端同步</string>
     <string name="download_text">下載進度:</string>
-    <string name="download_max">/請稍後</string>
     <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
@@ -396,4 +396,13 @@
     <string name="messag_text">藍牙裝置名稱</string>
     <string name="messag_dowload">雲端同步下載</string>
     <string name="text_navi_personal">個人軌跡</string>
+
+    <string name="text_draw_pattern">請輸入解鎖圖形</string>
+    <string name="text_set_pattern">請設定解鎖圖形</string>
+    <string name="text_set_pattern_again">請再設定一次解鎖圖形</string>
+    <string name="text_set_pattern_success">解鎖圖形設定成功</string>
+    <string name="text_unlock_success">解鎖成功</string>
+    <string name="text_redraw_again">至少連結%d個點，請重新設定</string>
+    <string name="text_redraw_again1">與第一次設定的不一樣，請重新設定</string>
+    <string name="text_pw_error">密碼錯誤，還剩%d次機會</string>
 </resources>

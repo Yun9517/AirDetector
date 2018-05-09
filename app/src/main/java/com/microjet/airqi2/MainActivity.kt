@@ -51,6 +51,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
@@ -92,7 +93,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mDrawerToggle: ActionBarDrawerToggle? = null
 
     // 電池電量數值
-    //private var batValue : Int = 0
+    private var batValue : Int = 0
 
     // 藍芽icon in actionbar
     private var bleIcon: MenuItem? = null
@@ -629,17 +630,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //萬一DFU失敗時為Preference的Address加1
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         val realAddress = share.getString("mac", "noValue")
-        val dfuFailAddress = realAddress.dropLast(1) + (realAddress[realAddress.lastIndex].toByte() + 1).toChar().toString()// +   realAddress.substring()
 
         val i: Intent? = Intent(this, AboutActivity::class.java)
-                .putExtra("ADDRESS", dfuFailAddress)
+                .putExtra("ADDRESS", realAddress)
                 .putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
         startActivity(i)
     }
 
     private fun airmapShow() {
-        val i: Intent? = Intent(this, AirMapActivity::class.java)
-        startActivity(i)
+        val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+        val isPrivacy = share.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+        if(isPrivacy) {
+            DefaultPatternCheckingActivity.startAction(this@MainActivity,
+                    DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
+        } else {
+            val i: Intent? = Intent(this, AirMapActivity::class.java)
+            startActivity(i)
+        }
     }
 
     // 20171127 Raymond 新增：知識庫activity
@@ -1289,6 +1296,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xC0.toByte() -> {
                         var hashMap = BLECallingTranslate.getAllSensorC0KeyValue(txValue)
                         heatingPanelControl(hashMap[TvocNoseData.C0PREH]!!)
+                        batValue = hashMap[TvocNoseData.C0BATT]!!.toInt()
                         displayConnetedBatteryLife(hashMap[TvocNoseData.C0BATT]!!.toInt())
                         val rtcTime = hashMap[TvocNoseData.C0TIME]!!.toLong()
                         connectionInitMethod(rtcTime)
@@ -1585,8 +1593,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
-              var dfup= DFUProcessClass(this)
-                dfup.DFUAction(show_Device_Name?.text.toString(),show_Dev_address?.text.toString())
+                var dfup= DFUProcessClass(this)
+                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+                val mDeviceAddress = share.getString("mac", "noValue")
+                if (mDeviceAddress!= "noValue") {
+                    dfup.DFUAction("", mDeviceAddress)
+                }
             }
         }
     }
@@ -1595,7 +1607,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
         Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage(msg+"\twant to update?")
+        Dialog.setMessage(msg+"\t請確定裝置與電源連接正常，手機儘量接近裝置，以利FW更新。")
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
 
@@ -1607,6 +1619,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         { dialog, _ ->
 
             dialog.dismiss()
+
+            val fwVer = ""
+
             val aat = AirActionTask(this.mContext)
             aat.execute("downloadFWFile")
         }
@@ -1614,9 +1629,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     fun CheckFWversion(Version:String,DeviceType:String) {
-        val aat = AirActionTask(this.mContext, Version, DeviceType)
-        val myResponse = aat.execute("postFWVersion")
-        Log.v("AirActionTask", "OVER")
+        if (batValue > 100) {
+            val aat = AirActionTask(this.mContext, Version, DeviceType)
+            val myResponse = aat.execute("postFWVersion")
+            Log.v("AirActionTask", "OVER")
+        }
     }
 
 

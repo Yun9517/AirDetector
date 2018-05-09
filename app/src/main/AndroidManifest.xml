@@ -134,7 +134,11 @@
 
         <activity
             android:name=".BlueTooth.DFU.DFUActivity"
-            android:label="DFU" />
+            android:label="DFU"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
         <!--
         android:icon="@drawable/ic_dfu_feature"
         <intent-filter>
@@ -175,10 +179,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SettingActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
-            android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".TourActivity"
@@ -210,7 +211,9 @@
             android:value="@string/google_maps_key" />
 
         <activity android:name=".engieeringMode.EngineerModeActivity" />
-        <activity android:name=".engieeringMode.ScanActivity"></activity>
+        <activity android:name=".engieeringMode.ScanActivity" />
+        <activity android:name=".GestureLock.DefaultPatternSettingActivity" />
+        <activity android:name=".GestureLock.DefaultPatternCheckingActivity" />
     </application>
 
 </manifest>

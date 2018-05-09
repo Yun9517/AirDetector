@@ -18,8 +18,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import java.util.*
 import android.app.Activity
 import android.content.SharedPreferences
-
-
+import android.content.res.Resources
 
 
 /**
@@ -54,6 +53,11 @@ class MyApplication : Application() {
                 "DISCONNECT"
             }
         }
+
+        fun applicationResText(id: Int): String {
+            return instance!!.getString(id)
+        }
+
 
         /**
          * Return pseudo unique ID
