@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.github.ihsg.patternlocker.PatternIndicatorView
-        android:id="@+id/pattern_indicator_view"
+        android:id="@+id/patternIndicatorView"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
@@ -31,7 +31,7 @@
         app:layout_constraintTop_toBottomOf="@+id/text_msg" />
 
     <com.github.ihsg.patternlocker.PatternLockerView
-        android:id="@+id/pattern_lock_view"
+        android:id="@+id/patternLockerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginEnd="48dp"
@@ -40,7 +40,7 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/pattern_indicator_view" />
+        app:layout_constraintTop_toBottomOf="@+id/patternIndicatorView" />
 
     <Button
         android:id="@+id/button"

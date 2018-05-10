@@ -1,5 +1,7 @@
 package com.microjet.airqi2.GestureLock;
 
+import android.annotation.SuppressLint;
+
 import java.io.UnsupportedEncodingException;
 
 import javax.crypto.Cipher;
@@ -16,7 +18,7 @@ public class SecurityUtil {
             password = "";
         }
 
-        StringBuffer sb = new StringBuffer(32);
+        StringBuilder sb = new StringBuilder(32);
 
         sb.append(password);
 
@@ -41,20 +43,20 @@ public class SecurityUtil {
         return encrypt(content, MASTER_PASSWORD);
     }
 
-    public static byte[] encrypt(byte[] content, String password) {
+    @SuppressLint("GetInstance")
+    private static byte[] encrypt(byte[] content, String password) {
         try {
             SecretKeySpec key = createKey(password);
             Cipher cipher = Cipher.getInstance(CIPHER_MODE);
             cipher.init(Cipher.ENCRYPT_MODE, key);
-            byte[] result = cipher.doFinal(content);
-            return result;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static String encrypt(String content, String password) {
+    private static String encrypt(String content, String password) {
         byte[] data = null;
 
         try {
@@ -65,29 +67,27 @@ public class SecurityUtil {
 
         data = encrypt(data, password);
 
-        String result = byte2hex(data);
-
-        return result;
+        return byte2hex(data);
     }
 
     public static String decrypt(final String content) {
         return decrypt(content, MASTER_PASSWORD);
     }
 
-    public static byte[] decrypt(byte[] content, String password) {
+    @SuppressLint("GetInstance")
+    private static byte[] decrypt(byte[] content, String password) {
         try {
             SecretKeySpec key = createKey(password);
             Cipher cipher = Cipher.getInstance(CIPHER_MODE);
             cipher.init(Cipher.DECRYPT_MODE, key);
-            byte[] result = cipher.doFinal(content);
-            return result;
+            return cipher.doFinal(content);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public static String decrypt(String content, String password) {
+    private static String decrypt(String content, String password) {
         byte[] data = null;
 
         try {
@@ -113,19 +113,19 @@ public class SecurityUtil {
         return result;
     }
 
-    public static String byte2hex(byte[] b) { // 一个字节的数，
-        StringBuffer sb = new StringBuffer(b.length * 2);
-        String tmp = "";
+    private static String byte2hex(byte[] b) { // 一個字節的數，
+        StringBuilder sb = new StringBuilder(b.length * 2);
+        String tmp;
 
-        for (int n = 0; n < b.length; n++) {
-            // 整数转成十六进制表示
-            tmp = (Integer.toHexString(b[n] & 0XFF));
+        for (byte aB : b) {
+            // 整數轉成十六進制表示
+            tmp = (Integer.toHexString(aB & 0XFF));
             if (tmp.length() == 1) {
                 sb.append("0");
             }
             sb.append(tmp);
         }
-        return sb.toString().toUpperCase(); // 转成大写
+        return sb.toString().toUpperCase(); // 轉成大寫
     }
 
     private static byte[] hex2byte(String inputString) {
@@ -146,3 +146,4 @@ public class SecurityUtil {
         return result;
     }
 }
+
