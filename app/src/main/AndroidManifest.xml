@@ -19,7 +19,7 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".MyApplication"
@@ -172,6 +172,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AirMapActivity"
+            android:label="@string/text_navi_personal"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -191,11 +192,10 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
-            android:theme="@style/AppTheme"
-            />
-
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".PublicMapActivity"
+            android:label="@string/app_name_air_map"
             android:theme="@style/AppTheme" />
 
         <!--
@@ -206,14 +206,28 @@
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
+
+        <activity
+            android:name=".engieeringMode.EngineerModeActivity" />
+
+        <activity
+            android:name=".engieeringMode.ScanActivity" />
+
+        <activity
+            android:name=".GestureLock.DefaultPatternSettingActivity"
+            android:label="@string/text_pattern_lock" />
+
+        <activity
+            android:name=".GestureLock.DefaultPatternCheckingActivity"
+            android:label="@string/text_pattern_lock" />
+
+        <activity
+            android:name=".GestureLock.UsePasswordActivity"
+            android:label="@string/text_pw_lock" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
-        <activity android:name=".engieeringMode.EngineerModeActivity" />
-        <activity android:name=".engieeringMode.ScanActivity" />
-        <activity android:name=".GestureLock.DefaultPatternSettingActivity" />
-        <activity android:name=".GestureLock.DefaultPatternCheckingActivity" />
     </application>
 
 </manifest>

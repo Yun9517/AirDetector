@@ -12,9 +12,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:padding="20dp"
+        android:padding="10dp"
         android:text="msg"
-        android:textSize="16dp"
+        android:textSize="24sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,7 +44,7 @@
         app:layout_constraintTop_toBottomOf="@+id/patternIndicatorView" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnUsePW"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"

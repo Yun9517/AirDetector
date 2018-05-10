@@ -32,6 +32,7 @@ import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
+import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.Closeable
@@ -77,6 +78,7 @@ class AccountActiveActivity : AppCompatActivity() {
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             shareToKen.edit().putString("token", "").apply()
+            shareToKen.edit().putString("LoginPassword", "").apply()
 //            shareToKen.edit().putString("name","") .apply()
 //            shareToKen.edit().putString("email","") .apply()
             //shareToKen.edit().clear().apply()

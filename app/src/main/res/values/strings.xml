@@ -395,6 +395,8 @@
     <string name="messag_dowload">雲端同步下載</string>
     <string name="text_navi_personal">個人軌跡</string>
 
+    <string name="text_pattern_lock">圖形鎖</string>
+    <string name="text_pw_lock">密碼鎖</string>
     <string name="text_draw_pattern">請輸入解鎖圖形</string>
     <string name="text_set_pattern">請設定解鎖圖形</string>
     <string name="text_set_pattern_again">請再設定一次解鎖圖形</string>

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.github.ihsg.patternlocker.OnPatternChangeListener
 import com.github.ihsg.patternlocker.PatternIndicatorView
 import com.github.ihsg.patternlocker.PatternLockerView
@@ -20,6 +21,20 @@ class DefaultPatternCheckingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_default_pattern_checking)
+
+        val pref = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val userPW = pref.getString("LoginPassword", "")
+
+        if(userPW == "") {
+            btnUsePW.visibility = View.GONE
+        } else {
+            btnUsePW.visibility = View.VISIBLE
+        }
+
+        btnUsePW.setOnClickListener {
+            UsePasswordActivity.startAction(this@DefaultPatternCheckingActivity, actionMode)
+            finish()
+        }
 
         patternLockerView.setOnPatternChangedListener(object : OnPatternChangeListener {
             override fun onStart(view: PatternLockerView) {}

@@ -208,6 +208,8 @@ class AccountManagementActivity : AppCompatActivity() {
                             share.edit().putBoolean("rememberID", false).apply()
                             share.edit().putString("LoginEmail", "").apply()
                         }
+
+                        share.edit().putString("LoginPassword", password!!.text.toString()).apply()
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
