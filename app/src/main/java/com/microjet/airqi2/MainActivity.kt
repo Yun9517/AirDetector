@@ -9,7 +9,9 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.drm.DrmStore
 import android.graphics.drawable.AnimationDrawable
+import android.graphics.drawable.Drawable
 import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
@@ -30,6 +32,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.widget.ExpandableListView
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -52,8 +55,13 @@ import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
+import kotlinx.android.synthetic.main.activity_feature_dfu.*
+import kotlinx.android.synthetic.main.activity_fetch_data_main.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.view.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import layout.ExpandableListAdapter
+import layout.ExpandedMenuModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -181,6 +189,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //20180423
     private var points = java.util.ArrayList<ImageView>()
 
+    // 2018/05/03 ExpandableListView
+    private var mMenuAdapter: ExpandableListAdapter? = null
+    private val listDataHeader: ArrayList<ExpandedMenuModel> = ArrayList<ExpandedMenuModel>()
+    private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap<ExpandedMenuModel, ArrayList<String>>()
+    var set_NavigationView: NavigationView ? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -198,7 +212,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             LocalBroadcastManager.getInstance(mContext).registerReceiver(myBroadcastReceiver, makeGattUpdateIntentFilter())
             mIsReceiverRegistered = true
         }
-        setupDrawerContent(naviView)
+        //setupDrawerContent(naviView)
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
 
         //20180209
@@ -207,6 +221,69 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180411   建立警告物件
         warningClass = WarningClass(this)
         alertId = soundPool2.load(this, R.raw.low_power, 1)
+
+        // 2018/05/03 ExpandableListView
+        set_NavigationView =  findViewById<View>(R.id.naviView) as NavigationView
+
+        setupDrawerContent(set_NavigationView)
+
+        prepareListData()
+
+        mMenuAdapter = ExpandableListAdapter(this, listDataHeader, listDataChild, navigationmenu!!)
+        navigationmenu!!.setAdapter(mMenuAdapter)
+        // 2018/05/09 Expandable View, hide original indicator
+        navigationmenu.setGroupIndicator(null)
+        //*****************************************************//
+        navigationmenu.setOnGroupClickListener(ExpandableListView.OnGroupClickListener { parent, v, groupPosition, id ->
+            when (groupPosition) {
+                0 -> {
+                    when(connState) {
+                        BleConnection.CONNECTED -> { blueToothDisconnect() }
+                        BleConnection.DISCONNECTED -> { blueToothConnect() }
+                    }
+                }
+                1 -> {
+                    accountShow()
+                }
+                2 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                            when (childPosition) {
+                                0 -> {
+                                    airmapShow()
+                                }
+                                1 -> {
+                                    publicMapShow()
+                                }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                3 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    }
+                    else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener(ExpandableListView.OnChildClickListener { parent, v, groupPosition, childPosition, id ->
+                            when (childPosition) {
+                                0 -> { knowledgeShow() }
+                                1 -> { qandaShow() }
+                                2 -> { tourShow() }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                4 -> { settingShow() }
+                5 -> { aboutShow() }
+            }
+            true
+        })
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -619,7 +696,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }
 
-
     private fun setupDrawerContent(navigationView: NavigationView?) {
         navigationView?.setNavigationItemSelectedListener { menuItem ->
             selectDrawerItem(menuItem)
@@ -959,26 +1035,81 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             show_Device_Name?.text = share.getString("name", "")
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             text_Account_status?.text = shareMSG.getString("name", "")
-            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
-            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true
+            /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
+            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
+            // 2018/05/03 ExpandableListView - Modify text by BLE status
+            listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
         } else {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
-            naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
-            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false
+            /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
+            naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = false*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             heatingPanelHide()
+            // 2018/05/03 ExpandableListView - Modify text by BLE status
+            listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
         }
-
-
+        // 2018/05/03 ExpandableListView - use notify to change drawer text
+        mMenuAdapter!!.notifyDataSetInvalidated()
+        // **************************************************************** //
         Log.d("MAINcheckUIState", connState.toString())
     }
+
+    // 2018/05/03 ExpandableListView
+    private fun prepareListData() {
+        val drawer_AddADDWII_01 =  ExpandedMenuModel()
+        drawer_AddADDWII_01.iconName = getString(R.string.text_navi_add_device)
+        drawer_AddADDWII_01.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
+        // Adding data header
+        listDataHeader.add(drawer_AddADDWII_01)
+
+        val drawer_Account_02 = ExpandedMenuModel()
+        drawer_Account_02.iconName = getString(R.string.text_navi_accountManagement)
+        drawer_Account_02.iconImg = R.drawable.ic_account_box_black_24dp
+        listDataHeader.add(drawer_Account_02)
+
+        val drawer_Map_03 = ExpandedMenuModel()
+        drawer_Map_03.iconName = getString(R.string.text_navi_title_map)
+        drawer_Map_03.iconImg = R.drawable.ic_place_black_24dp
+        listDataHeader.add(drawer_Map_03)
+
+        val drawer_Help_04 = ExpandedMenuModel()
+        drawer_Help_04.iconName = getString(R.string.text_navi_title_help)
+        drawer_Help_04.iconImg = R.drawable.ic_help_black_24dp
+        listDataHeader.add(drawer_Help_04)
+
+        val drawer_Setting_05 = ExpandedMenuModel()
+        drawer_Setting_05.iconName = getString(R.string.text_navi_setting)
+        drawer_Setting_05.iconImg = R.drawable.ic_settings_black_24dp
+        listDataHeader.add(drawer_Setting_05)
+
+        val drawer_About_06 = ExpandedMenuModel()
+        drawer_About_06.iconName = getString(R.string.text_navi_about)
+        drawer_About_06.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader.add(drawer_About_06)
+
+        // Adding child data
+
+        val child_Map_03 = ArrayList<String>()
+        child_Map_03.add(getString(R.string.text_navi_personal))
+        child_Map_03.add(getString(R.string.text_navi_air_map))
+
+        val child_Help_04 = ArrayList<String>()
+        child_Help_04.add(getString(R.string.text_navi_knowledge))
+        child_Help_04.add(getString(R.string.text_navi_q_and_a))
+        child_Help_04.add(getString(R.string.text_navi_tour))
+
+        listDataChild.put(listDataHeader.get(2), child_Map_03)
+        listDataChild.put(listDataHeader.get(3), child_Help_04)
+        //navigationmenu.expandableListAdapter.getGroupView(0).scrollIndicators = 0
+    }
+
 
     private fun makeBluetoothStateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()

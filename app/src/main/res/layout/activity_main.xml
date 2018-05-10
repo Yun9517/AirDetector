@@ -142,7 +142,15 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/drawer_header"
-        app:menu="@menu/drawer_menu" />
+        app:headerLayout="@layout/drawer_header">
+        <!--app:menu="@menu/drawer_menu">-->
+        <ExpandableListView
+            android:id="@+id/navigationmenu"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="151dp"
+            android:background="@android:color/white">
+        </ExpandableListView>
+    </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>
