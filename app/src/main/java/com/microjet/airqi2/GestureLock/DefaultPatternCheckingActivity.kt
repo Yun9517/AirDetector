@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import com.github.ihsg.patternlocker.OnPatternChangeListener
-import com.github.ihsg.patternlocker.PatternIndicatorView
 import com.github.ihsg.patternlocker.PatternLockerView
 import com.microjet.airqi2.AirMapActivity
 import com.microjet.airqi2.Definition.SavePreferences
