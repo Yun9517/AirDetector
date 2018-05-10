@@ -41,5 +41,10 @@
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/patternIndicatorView" />
+        app:layout_constraintTop_toBottomOf="@+id/patternIndicatorView"
+        app:plv_color="@color/Main_textResult_Blue"
+        app:plv_errorColor="@color/Main_textResult_Bad"
+        app:plv_fillColor="@color/Main_remind_background"
+        app:plv_hitColor="@color/Main_textResult_Good"
+        app:plv_lineWidth="3dp" />
 </android.support.constraint.ConstraintLayout>

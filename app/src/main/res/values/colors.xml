@@ -29,13 +29,13 @@
     <!-- Color for Main Page -->
     <color name="Main_frame_background">#b0e2bc</color> <!-- 主頁圓圈內 秀出數值與文字的框框底色 -->
     <color name="Main_remind_background">#E2FCF4</color> <!-- 主頁圓圈下 秀出提醒文字的框框底色 -->
-    <color name="Main_textResult_Good">#34B934</color> <!-- 主頁圓圈內 測量結果 "良好" 用色 -->
+    <color name="Main_textResult_Good">#34b934</color> <!-- 主頁圓圈內 測量結果 "良好" 用色 -->
     <color name="Main_textResult_Moderate">#FFFA78</color> <!-- 主頁圓圈內 測量結果 "不佳" 用色 -->
     <color name="Main_textResult_Orange">#FF6E46</color>
-    <color name="Main_textResult_Bad">#FA3C3C</color> <!-- 主頁圓圈內 測量結果 "差" 用色 -->
+    <color name="Main_textResult_Bad">#fa3c3c</color> <!-- 主頁圓圈內 測量結果 "差" 用色 -->
     <color name="Main_textResult_Purple">#B464EE</color>
     <color name="Main_textResult_Unhealthy">#762A2A</color> <!-- 主頁圓圈內 測量結果 "極差" 用色 -->
-    <color name="Main_textResult_Blue">#3296FF</color>
+    <color name="Main_textResult_Blue">#3296ff</color>
     <color name="Test_Unhealthy">#F50057</color>
 
     <!-- 直方圖點選後變色 -->
@@ -81,6 +81,6 @@
     <color name="headerTextColor">#FFFFFF</color>
     <color name="actionBarColor">#009cde</color>
     <color name="darkGray">#AAABAF</color>
-    <color name="actionBarColorDark">#0081b7</color>
+    <color name="actionBarColorDark">#404446</color>
 
 </resources>
