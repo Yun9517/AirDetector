@@ -3,6 +3,7 @@ package com.microjet.airqi2.GestureLock
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.github.ihsg.patternlocker.OnPatternChangeListener
 import com.github.ihsg.patternlocker.PatternIndicatorView
@@ -48,9 +49,9 @@ class DefaultPatternSettingActivity : AppCompatActivity() {
     private fun updateMsg() {
         text_msg.text = this.patternHelper!!.message
         text_msg.setTextColor(if (this.patternHelper!!.isOk)
-            resources.getColor(R.color.colorPrimary)
+            ContextCompat.getColor(this, R.color.Main_textResult_Good)
         else
-            resources.getColor(R.color.colorAccent))
+            ContextCompat.getColor(this, R.color.Main_textResult_Bad))
     }
 
     private fun finishIfNeeded() {
