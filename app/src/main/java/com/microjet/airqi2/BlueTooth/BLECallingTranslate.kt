@@ -352,6 +352,28 @@ object BLECallingTranslate {
         return byteArrayOf(BLECommand.WriteCmd, BLECommand.PumpOnLens, BLECommand.PumpOn, b[2], b[3], checkSum)
     }
 
+    // 2018/05/08
+    fun PM25FanCall(inPut: Int): ByteArray {
+        var input = inPut
+        val b = ByteArray(5)
+        if (input > 65535)
+            input = 65535
+        b[0] = (input and -0x1000000).ushr(24).toByte()//big
+        b[1] = (input and 0x00ff0000).ushr(16).toByte()
+        b[2] = (input and 0x0000ff00).ushr(8).toByte()
+        b[3] = (input and 0x000000ff).toByte()//little
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.PM25_On, b[2], b[3], b[4])
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.PM25_On, b[2], b[3], b[4], checkSum)
+
+        /*var input1 = inPut.toByte()
+        var input2 = 0.toByte()
+        var input3 = 30.toByte()
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.PM25_On, input1, input2, input3)
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteThreeBytesLens, BLECommand.PM25_On, input1, input2, input3, checkSum)*/
+    }
+
 
     fun Parser(bytes: ByteArray): ArrayList<String> {
         // String[] ReturnValue=new String[];

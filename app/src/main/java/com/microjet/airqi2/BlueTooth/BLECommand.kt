@@ -12,6 +12,8 @@ object BLECommand {
     val DeviceID: Byte = 0x50.toByte()
     val SelfTest: Byte = 0x51.toByte()
     val PumpOn: Byte = 0x52.toByte()
+    // 2018/05/10
+    val PM25_On: Byte =0x54.toByte()
     val Temperature: Byte = 0xA1.toByte()
     val Humidity: Byte = 0xA2.toByte()
     val TVOC: Byte = 0xA3.toByte()
