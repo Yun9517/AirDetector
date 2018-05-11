@@ -16,6 +16,7 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.support.design.widget.NavigationView
@@ -204,6 +205,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         viewPagerInit()
         initActionBar()
         initpoint()
+        CheckSWversion()
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -1598,6 +1600,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val mDeviceAddress = share.getString("mac", "noValue")
                 if (mDeviceAddress!= "noValue") {
                     dfup.DFUAction("", mDeviceAddress)
+                }
+            }
+            "new SW version"->{
+                val  appPackageName = packageName
+                try {
+                    startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                } catch (anfe:android.content.ActivityNotFoundException ) {
+                    startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
                 }
             }
         }

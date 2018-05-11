@@ -3,9 +3,11 @@ package com.microjet.airqi2.URL
 import android.app.Application
 import android.os.AsyncTask
 import android.util.Log
+import com.microjet.airqi2.BleEvent
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
 /**
@@ -27,6 +29,7 @@ class AppVersion (release:Int,internal:Int,external:Int ):AsyncTask<String, Long
     override fun onPostExecute(result: Boolean) {
         if (result)//has new swVersion
         {
+            EventBus.getDefault().post(BleEvent("new SW version"))
             Log.d(javaClass.simpleName,"has new sw")
         }
         else {
