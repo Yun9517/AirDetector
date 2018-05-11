@@ -11,11 +11,15 @@ import android.content.DialogInterface
 import android.os.Build
 import android.os.Handler
 import android.preference.PreferenceManager
+import android.util.Log
 import android.webkit.MimeTypeMap
 import android.widget.ProgressBar
 import android.widget.Toast
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.R
+import com.microjet.airqi2.SettingActivity
 import no.nordicsemi.android.dfu.*
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 class DFUProcessClass (){
@@ -50,7 +54,6 @@ class DFUProcessClass (){
             mProgressBar!!.isIndeterminate = true
             mProgressBar?.setMessage("Device disconnecting")
             //mTextPercentage!!.setText(R.string.dfu_status_disconnecting)
-
         }
 
         override fun onDfuCompleted(deviceAddress: String?) {
@@ -68,8 +71,11 @@ class DFUProcessClass (){
             } else {
                 // Save that the DFU process has finished
                 mDfuCompleted = true
-                mProgressBar!!.dismiss()
             }
+
+            EventBus.getDefault().post(BleEvent("dfu complete"))//使用event 通知
+
+            Log.d("AirAction", "Dfu Completed")
         }
         /*
         private fun showDownloadDialog(msg: String) {

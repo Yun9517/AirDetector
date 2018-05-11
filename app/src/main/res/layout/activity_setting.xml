@@ -459,29 +459,33 @@
 
         <TextView
             android:id="@+id/text_device_ver"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_label_device_version"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCheckFW"
+            app:layout_constraintEnd_toStartOf="@+id/btnCheckFW"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+            app:layout_constraintTop_toTopOf="@+id/btnCheckFW" />
 
         <TextView
             android:id="@+id/textView15"
-            android:layout_width="125dp"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:paddingEnd="0dp"
             android:paddingStart="20dp"
             android:text="@string/led_light"
             android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/ledPower"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ledPower" />
 
@@ -490,24 +494,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/setting_switch_style"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textView15"
-            app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
+            app:layout_constraintEnd_toStartOf="@+id/text_led_stat"
+            app:layout_constraintTop_toBottomOf="@+id/btnCheckFW" />
 
         <TextView
             android:id="@+id/text_led_stat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="32dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_off"
             android:textSize="18sp"
-            app:layout_constraintStart_toEndOf="@+id/ledPower"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/ledPower" />
 
         <TextView
@@ -549,6 +553,17 @@
             app:layout_constraintBottom_toBottomOf="@+id/textAllowPrivacy"
             app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
             app:layout_constraintTop_toTopOf="@+id/textAllowPrivacy" />
+
+        <Button
+            android:id="@+id/btnCheckFW"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_button_style"
+            android:text="檢查更新"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
 
     </android.support.constraint.ConstraintLayout>

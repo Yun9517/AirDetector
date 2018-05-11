@@ -1,6 +1,8 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -14,9 +16,13 @@ import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.SavePreferences
 import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
+import com.microjet.airqi2.URL.AirActionTask
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
 
 
@@ -60,6 +66,13 @@ class SettingActivity : AppCompatActivity() {
         text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
 
         getPrivacySettings()
+
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun readPreferences() {
@@ -210,7 +223,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         swAllowPrivacy.setOnCheckedChangeListener { _, isChecked ->
-            if(isChecked) {
+            if (isChecked) {
                 DefaultPatternSettingActivity.startAction(this@SettingActivity)
             } else {
                 DefaultPatternCheckingActivity.startAction(this@SettingActivity,
@@ -223,10 +236,21 @@ class SettingActivity : AppCompatActivity() {
                     DefaultPatternCheckingActivity.START_ACTION_MODE_CHANGE_PASSWOPRD)
         }
 
+        btnCheckFW.setOnClickListener {
+            if(MyApplication.getDeviceChargeStatus()) {
+                val fwVer = MyApplication.getDeviceVersion()
+                val fwSerial = MyApplication.getDeviceSerial()
+                val fwType = MyApplication.getDeviceType()
+                checkFwVersion("20$fwVer$fwSerial", "00$fwType")
+            } else {
+                showNotChargingDialog()
+            }
+        }
+
     }
 
     private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {
-        if(isTVOC) {
+        if (isTVOC) {
             view.setLineColor(R.color.colorSeekBarDefault, when (min) {
                 in 0..219 -> Colors.tvocCO2Colors[0]
                 in 220..659 -> Colors.tvocCO2Colors[1]
@@ -312,7 +336,7 @@ class SettingActivity : AppCompatActivity() {
 
         swAllowPrivacy.isChecked = isPrivacy
 
-        if(isPrivacy) {
+        if (isPrivacy) {
             btnChangePassword.visibility = View.VISIBLE
         } else {
             btnChangePassword.visibility = View.GONE
@@ -354,5 +378,115 @@ class SettingActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "version latest" -> {
+                showFwLatestDialog()
+            }
+            "New FW Arrival " -> {
+                showDownloadDialog(bleEvent.message!!)
+            }
+            "Download Success" -> {
+                /*
+                val intent = Intent()
+                intent.putExtra("ADDRESS",show_Dev_address?.text.toString())
+                intent.putExtra("DEVICE_NAME",show_Device_Name?.text.toString())
+                intent.setClass(this, DFUActivity::class.java)
+                startActivity(intent)*/
+                val dfup = DFUProcessClass(this)
+                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+                val mDeviceAddress = share.getString("mac", "noValue")
+                if (mDeviceAddress != "noValue") {
+                    dfup.DFUAction("", mDeviceAddress)
+                }
+            }
+            "dfu complete" -> {
+                showDfuCompleteDialog()
+            }
+        }
+    }
+
+    private fun checkFwVersion(Version: String, DeviceType: String) {
+        //if (batValue > 100) {
+        val aat = AirActionTask(this@SettingActivity, Version, DeviceType)
+        val myResponse = aat.execute("postFWVersion")
+        Log.v("AirActionTask", "OVER")
+        //}
+    }
+
+    private fun showDownloadDialog(msg: String) {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage("$msg\t請確定裝置與電源連接正常，手機儘量接近裝置，以利FW更新。")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        { dialog, _ ->
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+
+            dialog.dismiss()
+
+            val fwVer = ""
+
+            val aat = AirActionTask(this@SettingActivity)
+            aat.execute("downloadFWFile")
+        }
+        Dialog.show()
+    }
+
+    private fun showFwLatestDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage("您的Mobile Nose已是最新版本。")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
+
+    private fun showNotChargingDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage("請將您的Mobile Nose插上充電線。")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
+
+    private fun showDfuCompleteDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+            dialog.dismiss()
+            finish()
+        }
+        Dialog.show()
     }
 }

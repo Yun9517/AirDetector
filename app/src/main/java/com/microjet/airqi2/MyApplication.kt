@@ -36,7 +36,9 @@ class MyApplication : Application() {
     companion object {
         private var instance: MyApplication? = null
         private var deviceVer: String = ""
-        private var deviceSerial: String=""
+        private var deviceSerial: String = ""
+        private var deviceType: String = ""
+        private var deviceChargeStatus: Boolean = false
         //var isPM25: String = "000000000000"
 
         fun applicationContext(): Context {
@@ -115,8 +117,30 @@ class MyApplication : Application() {
         fun getDeviceVersion(): String {
             return deviceVer
         }
-        fun putDeviceSerial(value:String) {deviceSerial=value}
-       // fun getDeviceSerial() : String {return deviceSerial}
+
+        fun putDeviceSerial(value: String) {
+            deviceSerial = value
+        }
+
+        fun getDeviceSerial(): String {
+            return deviceSerial
+        }
+
+        fun putDeviceType(value: String) {
+            deviceType = value
+        }
+
+        fun getDeviceType(): String {
+            return deviceType
+        }
+
+        fun putDeviceChargeStatus(value: Boolean) {
+            deviceChargeStatus = value
+        }
+
+        fun getDeviceChargeStatus(): Boolean {
+            return deviceChargeStatus
+        }
 
         fun getSharePreferenceManualDisconn(): Boolean {
             val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
@@ -131,7 +155,7 @@ class MyApplication : Application() {
         // ****** 2018/04/17 Identify the App is first time initial or not ************//
         fun saveIsFirstUsed() {
             val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
-            share.edit().putBoolean("isFirstUsed", false).commit()
+            share.edit().putBoolean("isFirstUsed", false).apply()
         }
 
         fun getIsFirstUsed(): Boolean {
