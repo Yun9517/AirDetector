@@ -1604,11 +1604,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             "new SW version"->{
                 val  appPackageName = packageName
-                try {
-                    startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                } catch (anfe:android.content.ActivityNotFoundException ) {
-                    startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                val Dialog = android.app.AlertDialog.Builder(this).create()
+                Dialog.setTitle(getString(R.string.remind))
+                Dialog.setMessage("有新版軟體可更新。")
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+                { dialog, _ ->
+                    dialog.dismiss()
                 }
+                Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+                { dialog, _ ->
+                    dialog.dismiss()
+                    try {
+                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                    } catch (anfe:android.content.ActivityNotFoundException ) {
+                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                    }
+                }
+                Dialog.show()
+
             }
         }
     }
@@ -1637,6 +1651,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         Dialog.show()
     }
+
 
     fun CheckFWversion(Version:String,DeviceType:String) {
         if (batValue > 100) {
