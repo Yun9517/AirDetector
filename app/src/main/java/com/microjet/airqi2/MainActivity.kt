@@ -53,6 +53,7 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_feature_dfu.*
@@ -203,7 +204,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         viewPagerInit()
         initActionBar()
         initpoint()
-
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -1681,6 +1681,31 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun publicMapShow() {
         val i: Intent? = Intent(this, PublicMapActivity::class.java)
         startActivity(i)
+    }
+    private fun CheckSWversion(){
+        val check=BuildConfig.VERSION_NAME
+        var release=0
+        var internal=0
+        var external=0
+        var temp=0
+        var string=""
+        val spot:Char="."[0]
+        check.forEach {
+            if (it==spot) {
+                when (temp){
+                    0->{release=string.toInt()}
+                    1->{internal=string.toInt()}
+                }
+                string=""
+                temp++
+            }
+            else {
+                string+=Character.toString(it)
+            }
+        }
+        external=string.toInt()
+        val apv= AppVersion(release,internal,external)
+        apv.execute()
     }
 }
 
