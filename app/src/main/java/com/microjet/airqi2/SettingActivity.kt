@@ -70,8 +70,8 @@ class SettingActivity : AppCompatActivity() {
         EventBus.getDefault().register(this)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onPause() {
+        super.onPause()
         EventBus.getDefault().unregister(this)
     }
 
