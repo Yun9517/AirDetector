@@ -13,4 +13,5 @@ object MjAQIUrl{
     val postForgetPassword:String="https://mjairql.com/api/v1/forgotPassword"
     val postEditUserData:String="https://mjairql.com/api/v1/editUserData"
     val postFWversion:String="https://mjairql.com/api/v1/fwCheck"//deviceType=0000&version=201803150004
+    val getSWversion:String="https://mjairql.com/api/v1/app_version?platform=android"
 }

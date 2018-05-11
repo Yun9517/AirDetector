@@ -13,6 +13,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.support.design.widget.NavigationView
@@ -47,11 +48,16 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
+import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.URL.AppVersion
+import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.nio.ByteBuffer
@@ -190,7 +196,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         viewPagerInit()
         initActionBar()
         initpoint()
-
+        CheckSWversion()
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -309,6 +315,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onResume() {
         super.onResume()
+        EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
             connState = BleConnection.DISCONNECTED
@@ -319,6 +326,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onPause() {
         super.onPause()
         Log.e(TAG, "call onPause")
+        EventBus.getDefault().unregister(this)
     }
 
     override fun onStop() {
@@ -1576,6 +1584,36 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         realm.close()
     }
 
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent ){
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "new SW version"->{
+                val  appPackageName = packageName
+                val Dialog = android.app.AlertDialog.Builder(this).create()
+                Dialog.setTitle(getString(R.string.remind))
+                Dialog.setMessage("有新版軟體可更新。")
+                Dialog.setCancelable(false)//讓返回鍵與空白無效
+                Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+                { dialog, _ ->
+                    dialog.dismiss()
+                }
+                Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+                { dialog, _ ->
+                    dialog.dismiss()
+                    try {
+                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
+                    } catch (anfe:android.content.ActivityNotFoundException ) {
+                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                    }
+                }
+                Dialog.show()
+
+            }
+        }
+    }
+
     //初始化導航圓點的方法
     private fun initpoint() {
         val count = indicator.childCount//獲取布局中圓點數量
@@ -1619,6 +1657,32 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun publicMapShow() {
         val i: Intent? = Intent(this, PublicMapActivity::class.java)
         startActivity(i)
+    }
+
+    private fun CheckSWversion(){
+        val check=BuildConfig.VERSION_NAME
+        var release=0
+        var internal=0
+        var external=0
+        var temp=0
+        var string=""
+        val spot:Char="."[0]
+        check.forEach {
+            if (it==spot) {
+                when (temp){
+                    0->{release=string.toInt()}
+                    1->{internal=string.toInt()}
+                }
+                string=""
+                temp++
+            }
+            else {
+                string+=Character.toString(it)
+            }
+        }
+        external=string.toInt()
+        val apv= AppVersion(release,internal,external)
+        apv.execute()
     }
 }
 
