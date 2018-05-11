@@ -181,7 +181,7 @@
     //20180227
     <string name="cloud_fun">雲端功能</string>
     //2018/03/06
-    <string name="not_yetDetected">尚未偵測</string>
+    <string name="not_yetDetected">偵測中</string>
     <string name="text_label_device_version">侦测器固件版号：</string>
     <string name="text_label_local_uuid">手机 UUID</string>
 
@@ -388,6 +388,20 @@
     <string name="text_setting_tvoc_value">TVOC 通知数值</string>
     <string name="text_setting_pm25_value">PM2.5 通知数值</string>
     <string name="title_temperature">Temperature_Data</string>
+
+    <string name="text_setting_allow_privacy">个人轨迹密码</string>
+    <string name="text_pattern_lock">图形锁</string>
+    <string name="text_pw_lock">密码锁</string>
+    <string name="text_draw_pattern">请输入解锁图形</string>
+    <string name="text_set_pattern">请设定解锁图形</string>
+    <string name="text_set_pattern_again">请再设定一次解锁图形</string>
+    <string name="text_set_pattern_success">解锁图形设定成功</string>
+    <string name="text_unlock_success">解锁成功</string>
+    <string name="text_redraw_again">至少连结%d个点，请重新设定</string>
+    <string name="text_redraw_again1">与第一次设定的不一样，请重新设定</string>
+    <string name="text_pw_error">密码错误，还剩%d次机会</string>
+    <string name="text_use_login_pw">改用密码登入</string>
+
 </resources>
 
 
