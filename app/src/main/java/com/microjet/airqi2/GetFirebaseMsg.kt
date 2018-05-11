@@ -26,38 +26,39 @@ class GetFirebaseMsg : FirebaseMessagingService(){
         }
         if(getMessage!!.notification != null){
             Log.d(TAG,"Medssage body"+getMessage!!.notification!!.body)
-            sendnotfication(getMessage!!.notification!!.body!!)
+            sendnotfication(getMessage!!.notification!!.body!!,getMessage!!.notification!!.title!!)
         }
     }
-    private fun sendnotfication(body: String){
+    private fun sendnotfication(body: String, title: String){
+        val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val channelId: String = "給程式辨認，使用者看不到"
+        val channelName: String = "ADDWII"
+        var notiFication_ID: Int = 8
+
         val intent = Intent()
         intent.setClass(this,MainActivity::class.java)
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pend_intent = PendingIntent.getActivity(this,0,intent,PendingIntent.FLAG_ONE_SHOT)
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
-        val channelId: String = "給程式辨認，使用者看不到"
-        val channelName: String = "ADDWII"
-        val newNotBuilder = notificationChannel(channelId, channelName)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val newNotBuilder =  NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
+            notfiMangger.createNotificationChannel(newNotBuilder)
+        }
 
         val notBuilder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("")//等Firebase設定Title
+                .setContentTitle(title)//等Firebase設定Title
                 .setContentText(body)
                 .setAutoCancel(true)
                 .setSound(Not_sound)//由Firebase設定鈴聲
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
 
-        val notMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notMangger.createNotificationChannel(newNotBuilder)
-        notMangger.notify(0,notBuilder.build())
+        notfiMangger.notify(1,notBuilder.build())
+
     }
 
-    private fun notificationChannel(channelId: String, channelName: String) =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+
 }
