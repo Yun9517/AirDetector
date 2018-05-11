@@ -17,7 +17,7 @@ import com.google.firebase.messaging.RemoteMessage
 /**
  * Created by B00190 on 2018/5/2.
  */
-class GetFirebaseMsg : FirebaseMessagingService(){
+class GetfirebasemsgService : FirebaseMessagingService(){
     private val TAG = "MyFirebaseMessaging"
     override fun onMessageReceived(getMessage: RemoteMessage?) {
         super.onMessageReceived(getMessage)

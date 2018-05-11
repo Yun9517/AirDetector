@@ -32,6 +32,7 @@ import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.google.firebase.iid.FirebaseInstanceId
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
@@ -190,6 +191,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         viewPagerInit()
         initActionBar()
         initpoint()
+        Log.e("偷啃",FirebaseInstanceId.getInstance().getToken())
 
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
