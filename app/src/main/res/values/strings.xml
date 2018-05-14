@@ -247,10 +247,10 @@
     <string name="expectName">請輸入欲更改的名稱</string>
 
 
-    <string name="scanner_title">Select device:</string>
-    <string name="scanner_empty">No device found</string>
-    <string name="scanner_action_scan">Scan</string>
-    <string name="scanner_action_cancel">Cancel</string>
+    <string name="scanner_title">選擇裝置：</string>
+    <string name="scanner_empty">找不到裝置</string>
+    <string name="scanner_action_scan">掃描</string>
+    <string name="scanner_action_cancel">取消</string>
     <string name="scanner_subtitle_bonded">BONDED DEVICES:</string>
     <string name="scanner_subtitle_not_bonded">AVAILABLE DEVICES:</string>
     <string name="scanner_permission_rationale">Since Android 6.0 Marshmallow system requires granting access to device\'s location in order to scan for Bluetooth Smart devices. Bluetooth beacons may be used to determine the phone\'s and user\'s location.</string>
@@ -284,17 +284,17 @@
     <string name="dfu_example_new_files_created">New example HEX files were copied to /sdcard/Nordic Semiconductor.</string>
     <string name="dfu_scripts_created">DFU script files were copied to /sdcard/Nordic Semiconductor.</string>
 
-    <string name="dfu_section_application_header">APPLICATION</string>
-    <string name="dfu_file_name_label">File name:</string>
-    <string name="dfu_file_type_label">Type:</string>
-    <string name="dfu_file_size_label">Size:</string>
+    <string name="dfu_section_application_header">應用程式</string>
+    <string name="dfu_file_name_label">檔名:</string>
+    <string name="dfu_file_type_label">類型:</string>
+    <string name="dfu_file_size_label">大小:</string>
     <string name="dfu_file_scope_label">Scope:</string>
-    <string name="dfu_file_status_label">Status:</string>
+    <string name="dfu_file_status_label">狀態:</string>
     <string name="dfu_file_size_text">%d bytes</string>
     <string name="dfu_file_status_ok">OK</string>
     <string name="dfu_file_status_ok_with_init">OK (Init file selected)</string>
-    <string name="dfu_file_status_no_file">File not loaded</string>
-    <string name="dfu_file_status_invalid">Invalid file</string>
+    <string name="dfu_file_status_no_file">檔案沒有載入</string>
+    <string name="dfu_file_status_invalid">無效的檔案</string>
     <string name="dfu_file_status_error">Reading file failed</string>
     <string name="dfu_file_status_invalid_message">Please, select valid HEX file</string>
     <string name="dfu_file_info">Info</string>
@@ -316,8 +316,8 @@
         <item>market://search?q=file manager</item>
     </string-array>
 
-    <string name="dfu_section_dfu_header">DEVICE FIRMWARE UPDATE</string>
-    <string name="dfu_action_upload">UPLOAD</string>
+    <string name="dfu_section_dfu_header">裝置更新</string>
+    <string name="dfu_action_upload">上傳</string>
     <string name="dfu_action_upload_cancel">CANCEL</string>
 
     <string name="dfu_settings_dfu">DFU options</string>
@@ -359,7 +359,7 @@
     <string name="dfu_unknown_name">unnamed device</string>
     <string name="dfu_uploading_percentage_label">0%</string>
     <string name="dfu_uploading_percentage">%d%%</string>
-    <string name="dfu_default_name">DEFAULT DFU</string>
+    <string name="dfu_default_name">工程模式</string>
     <string name="dfu_confirmation_dialog_title">Application Uploading</string>
     <string name="dfu_upload_dialog_cancel_message">Are you sure to cancel upload?</string>
     <string name="dfu_success">Application has been transferred successfully.</string>
@@ -373,18 +373,11 @@
 		\n\nSince <b>Android KitKat</b> you may use the preinstalled document picker application. Ensure <i>Display advanced devices</i> option is enabled in settings to use the <i>Internal storage</i>.
 		\n\nSample applications were copied to <i>Nordic Semiconductor</i> folder in the internal storage.</string>
 
-    <string name="dfu_zip_info_text">Starting from nRF Toolbox v1.12 the new Distribution packet (ZIP) is the recommended method for distributing firmware upgrades.
-		You can create the ZIP file using the <b>nrf utility</b> tool, which is part of Master Control Panel 3.8.0+. For more detailed information, see the DFU documentation.
-		\n\n<b>Backward compatibility</b>
-		\nThe nRF Toolbox also supports all old file formats: HEX and BIN files, separate DAT files and ZIP files without a manifest file but with a fixed naming convention:
-</string>
-    <string name="dfu_about_text">The Device Firmware Update (DFU) app allows you to update the firmware of your Bluetooth Smart device over-the-air (OTA).
-		It is compatible with Nordic Semiconductor nRF51822 or nRF51422 devices with S110 SoftDevice and DFU bootloader enabled. With SoftDevice s110 7.0.0+,
-		the SoftDevice itself and/or a bootloader may also be updated.
-		\n\nFor more information about the DFU, see the About DFU section in Settings.</string>
+    <string name="dfu_zip_info_text">"Starting from nRF Toolbox v1.12 the new Distribution packet (ZIP) is the recommended method for distributing firmware upgrades. \t\tYou can create the ZIP file using the <b>nrf utility</b> tool, which is part of Master Control Panel 3.8.0+. For more detailed information, see the DFU documentation. \t\t  <b>Backward compatibility</b> \t\t The nRF Toolbox also supports all old file formats: HEX and BIN files, separate DAT files and ZIP files without a manifest file but with a fixed naming convention: "</string>
+    <string name="dfu_about_text">411/5000 設備固件更新（DFU）應用程序允許您通過無線（OTA）更新Bluetooth Smart設備的固件。 它與啟用了S110 SoftDevice和DFU引導加載程序的北歐半導體nRF51822或nRF51422器件兼容。 使用SoftDevice s110 7.0.0+，SoftDevice本身和/或引導程序也可能被更新。 有關DFU的更多信息，請參閱設置中的關於DFU部分。</string>
 
-    <string name="Accept">Yes</string>
-    <string name="Reject">NO</string>
+    <string name="Accept">是</string>
+    <string name="Reject">否</string>
     <string name="title_tvoc">TVOC</string>
     <string name="title_eco2">Eco2_Data</string>
     <string name="title_humidy">Humidity_Data</string>

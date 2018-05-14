@@ -47,7 +47,7 @@
     <string name="text_label_temperature_full">温度</string>
     <string name="text_label_humidity_full">湿度</string>
     <string name="text_default_value">----</string>
-    <string name="text_label_tvoc_detect">自动侦测\n总挥发性有机化合物</string>
+    <string name="text_label_tvoc_detect">TVOC\n总挥发性有机化合物</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">轻度污染</string>
     <string name="text_label_status_medium_Orange">中度污染</string>
@@ -369,10 +369,7 @@
 		\n\n<b>Backward compatibility</b>
 		\nThe nRF Toolbox also supports all old file formats: HEX and BIN files, separate DAT files and ZIP files without a manifest file but with a fixed naming convention:
 </string>
-    <string name="dfu_about_text">The Device Firmware Update (DFU) app allows you to update the firmware of your Bluetooth Smart device over-the-air (OTA).
-		It is compatible with Nordic Semiconductor nRF51822 or nRF51422 devices with S110 SoftDevice and DFU bootloader enabled. With SoftDevice s110 7.0.0+,
-		the SoftDevice itself and/or a bootloader may also be updated.
-		\n\nFor more information about the DFU, see the About DFU section in Settings.</string>
+    <string name="dfu_about_text">设备固件更新（DFU）应用程序允许您通过无线（OTA）更新Bluetooth Smart设备的固件。 它与启用了S110 SoftDevice和DFU引导加载程序的北欧半导体nRF51822或nRF51422器件兼容。 使用SoftDevice s110 7.0.0+，SoftDevice本身和/或引导程序也可能被更新。 有关DFU的更多信息，请参阅设置中的关于DFU部分。</string>
     <string name="font_path">fonts/trebucbd.ttf</string>
     <string name="normal_font_path">fonts/trebuc.ttf</string>
     <string name="Accept">Yes</string>
@@ -388,6 +385,18 @@
     <string name="text_setting_tvoc_value">TVOC 通知数值</string>
     <string name="text_setting_pm25_value">PM2.5 通知数值</string>
     <string name="title_temperature">Temperature_Data</string>
+    <string name="text_setting_allow_privacy">个人轨迹密码</string>
+    <string name="text_pattern_lock">图形锁</string>
+    <string name="text_pw_lock">密码锁</string>
+    <string name="text_draw_pattern">请输入解锁图形</string>
+    <string name="text_set_pattern">请设定解锁图形</string>
+    <string name="text_set_pattern_again">请再设定一次解锁图形</string>
+    <string name="text_set_pattern_success">解锁图形设定成功</string>
+    <string name="text_unlock_success">解锁成功</string>
+    <string name="text_redraw_again">至少连结%d个点，请重新设定</string>
+    <string name="text_redraw_again1">与第一次设定的不一样，请重新设定</string>
+    <string name="text_pw_error">密码错误，还剩%d次机会</string>
+    <string name="text_use_login_pw">改用密码登入</string>
 </resources>
 
 
