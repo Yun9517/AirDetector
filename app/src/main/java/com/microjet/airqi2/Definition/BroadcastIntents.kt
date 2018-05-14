@@ -11,5 +11,6 @@ object BroadcastIntents {
 
     const val MAIN_FRAGMENT = "com.microjet.airqi.MAIN_FRAGMENT"
     const val TVOC_FRAGMENT = "com.microjet.airqi.TVOC_FRAGMENT"
+    const val NotificationButton="com.microjet.airqi.NButton"
 
 }

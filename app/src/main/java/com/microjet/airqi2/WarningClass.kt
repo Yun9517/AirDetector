@@ -1,10 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
@@ -19,7 +16,7 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
-import io.realm.Realm
+import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
 
 
 /**
@@ -226,28 +223,61 @@ class WarningClass {
     private fun makeNotificationShow(DateType: Int, iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
+        //20180109   Andy
+        val intent = Intent(m_context!!, MainActivity::class.java)
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        val stackBuilder = TaskStackBuilder.create(m_context)
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity::class.java)
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(intent)
+        //val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        //當使用者點擊通知Bar時，切換回MainActivity
+        //This is the intent of PendingIntent
+
+        val intentAction = Intent(m_context!!, NotificationButtonReceiver::class.java)
+
+        //This is optional if you have more than one buttons and want to differentiate between two
+        //  intentAction?.putExtra("action","action1")
+        intentAction.action="action1"
+        val pi = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
+        val intentAction2 = Intent(m_context!!, NotificationButtonReceiver::class.java)
+        //    intentAction2?.putExtra("action","action2")
+        intentAction2.action="action2"
+        val pi2= PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
+
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(iconID)
                 .setContentTitle(title)
-                .setStyle(bigStyle)
-                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setStyle(bigStyle)
+                .setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(title))
+                //.setPriority(Notification.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .addAction (R.drawable.dismiss, "Dismiss", pi)
+                .addAction (R.drawable.snooze, "Snooze", pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
-
-        //20180109   Andy
-        val intent = Intent(m_context!!, MainActivity::class.java)
-        //當使用者點擊通知Bar時，切換回MainActivity
-        val pi = PendingIntent.getActivity(m_context!!, DateType,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
         notification.contentIntent = pi
 
+        //notification.contentIntent = pi2
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
+            val action1 = Notification.Action(R.drawable.dismiss, "Dismiss", pi)
+            val action2 = Notification.Action(R.drawable.snooze, "snooze", pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
+                    .addAction(action1)
+                    .addAction(action2)
+                    .setAutoCancel(true)
             notificationHelper.notify(DateType, NB)
         } else {
             try {
