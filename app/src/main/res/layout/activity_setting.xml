@@ -523,7 +523,9 @@
             android:layout_marginTop="8dp"
             android:text="60000"
             android:textAlignment="textStart"
+            android:textColor="@color/Main_textResult_Blue"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textTvocSeekBarLabel"
             app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
@@ -537,7 +539,9 @@
             android:layout_marginTop="8dp"
             android:text="250"
             android:textAlignment="textStart"
+            android:textColor="@color/Main_textResult_Blue"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/textPM25SeekBarLabel"
             app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />

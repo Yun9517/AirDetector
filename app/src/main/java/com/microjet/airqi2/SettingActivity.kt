@@ -6,10 +6,13 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.TextView
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -139,12 +142,12 @@ class SettingActivity : AppCompatActivity() {
 
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
-                setSeekBarColor(view, min, true)
-
-                setSeekBarValue(tvocSeekValue, min)
-
-                mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
-                Log.e("SeekBar", "Min: $min")
+                if(isFromUser) {
+                    setSeekBarColor(view, min, true)
+                    setSeekBarValue(tvocSeekValue, min)
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
 
             override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
@@ -158,11 +161,12 @@ class SettingActivity : AppCompatActivity() {
 
         pm25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
-                setSeekBarColor(view, min, false)
-
-                setSeekBarValue(pm25SeekValue, min)
-
-                mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
+                if(isFromUser) {
+                    setSeekBarColor(view, min, false)
+                    setSeekBarValue(pm25SeekValue, min)
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
 
             override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
@@ -245,6 +249,54 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 showNotChargingDialog()
             }
+        }
+
+        tvocSeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 220..2200) {
+                    tvocSeekBar.setValue(value.toFloat())
+                    setSeekBarColor(tvocSeekBar, value.toFloat(), true)
+                    setSeekBarValue(tvocSeekValue, value.toFloat())
+
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, value.toInt()).apply()
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
+        }
+
+        pm25SeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 16..150) {
+                    pm25SeekBar.setValue(value.toFloat())
+                    setSeekBarColor(pm25SeekBar, value.toFloat(), false)
+                    setSeekBarValue(pm25SeekValue, value.toFloat())
+
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, value.toInt()).apply()
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
         }
 
     }
