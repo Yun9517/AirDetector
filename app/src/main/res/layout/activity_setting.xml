@@ -44,6 +44,17 @@
             app:layout_constraintTop_toTopOf="parent" />
 
 
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowFirebaseNotif"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_switch_style"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
         <android.support.constraint.Group
             android:id="@+id/cgMessage"
             android:layout_width="0dp"
@@ -493,12 +504,10 @@
             android:id="@+id/ledPower"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/setting_switch_style"
             android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/text_led_stat"
             app:layout_constraintTop_toBottomOf="@+id/btnCheckFW" />
 
@@ -564,6 +573,93 @@
             android:text="檢查更新"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ledPower" />
+
+        <TextView
+            android:id="@+id/textAllowFirebaseNotif"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_allow_firebase_notification"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/swAllowFirebaseNotif"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowFirebaseNotif"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllowFirebaseNotif" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cgFirebase"
+            android:layout_width="784dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textView4,btnCheckFW2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllowFirebaseNotif" />
+
+        <TextView
+            android:id="@+id/tvFirebaseNotifTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_allow_firebase_settime"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnFirebaseTimeNotifSetting"
+            app:layout_constraintEnd_toStartOf="@+id/btnFirebaseTimeNotifSetting"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnFirebaseTimeNotifSetting" />
+
+        <Button
+            android:id="@+id/btnFirebaseTimeNotifSetting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/setting_button_style"
+            android:text="12"
+            app:layout_constraintBottom_toTopOf="@+id/btnFirebaseNotifSave"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllowFirebaseNotif" />
+
+        <Button
+            android:id="@+id/btnFirebaseNotifSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:background="@drawable/setting_button_style"
+            android:text="@string/text_setting_allow_firebase_save"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
     </android.support.constraint.ConstraintLayout>

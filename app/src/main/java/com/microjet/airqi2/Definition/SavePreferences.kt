@@ -40,4 +40,7 @@ object SavePreferences {
     //20180508
     const val SETTING_MAP_PRIVACY = "airqi2.settings.SETTING_MAP_PRIVACY"
 
+    //20180517
+    const  val SETTING_FIREBASE  = "airqi2.settings.SETTING_FIREBASE_ALLOW"
+
 }

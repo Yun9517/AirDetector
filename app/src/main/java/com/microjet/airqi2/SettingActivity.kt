@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.app.TimePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -24,6 +25,7 @@ import com.microjet.airqi2.URL.AirActionTask
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
+import java.util.*
 
 
 /**
@@ -48,6 +50,9 @@ class SettingActivity : AppCompatActivity() {
     private var pm25SeekBarVal: Int = 16
 
     private var isPrivacy: Boolean = false
+
+    //20180514 by 白告
+    private var swAllFirebase : Boolean =true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +87,7 @@ class SettingActivity : AppCompatActivity() {
         getCloudSettings()
         getPrivacySettings()
         getDeviceLedSettings()
+        getFirebaseSettings()
     }
 
     private fun uiSetListener() {
@@ -102,6 +108,20 @@ class SettingActivity : AppCompatActivity() {
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
+                    isChecked).apply()
+        }
+
+        swAllowFirebaseNotif.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                tvFirebaseNotifTime.visibility = View.VISIBLE
+                btnFirebaseTimeNotifSetting.visibility = View.VISIBLE
+                btnFirebaseNotifSave.visibility = View.VISIBLE
+            } else {
+                tvFirebaseNotifTime.visibility = View.GONE
+                btnFirebaseTimeNotifSetting.visibility = View.GONE
+                btnFirebaseNotifSave.visibility = View.GONE
+            }
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_FIREBASE,
                     isChecked).apply()
         }
 
@@ -245,6 +265,14 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 showNotChargingDialog()
             }
+        }
+
+        btnFirebaseTimeNotifSetting.setOnClickListener {
+            var hourSetting = Calendar.getInstance()
+            var hour = hourSetting.get(Calendar.HOUR_OF_DAY)
+            var hourView = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->  }
+
+
         }
 
     }
@@ -489,4 +517,23 @@ class SettingActivity : AppCompatActivity() {
         }
         Dialog.show()
     }
+
+    //20180514 Firebase setting by 白告
+    private fun getFirebaseSettings() {
+        swAllFirebase = mPreference!!.getBoolean(SavePreferences.SETTING_FIREBASE, true)
+
+        swAllowFirebaseNotif.isChecked = swAllFirebase
+
+        if (swAllFirebase) {
+            tvFirebaseNotifTime.visibility = View.VISIBLE
+            btnFirebaseTimeNotifSetting.visibility = View.VISIBLE
+            btnFirebaseNotifSave.visibility = View.VISIBLE
+        } else {
+            tvFirebaseNotifTime.visibility = View.GONE
+            btnFirebaseTimeNotifSetting.visibility = View.GONE
+            btnFirebaseNotifSave.visibility = View.GONE
+        }
+
+    }
+
 }

@@ -171,6 +171,10 @@
     <string name="title_activity_tour">TourActivity</string>
     <string name="text_message_heating">請稍候...</string>
     <string name="title_activity_air_map1">Map</string>
+    <string name="text_setting_allow_firebase_notification">雲端通知允許</string>
+    <string name="text_setting_allow_firebase_settime">設定時間</string>
+    <string name="text_setting_allow_firebase_save">儲存推播設定</string>
+
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>

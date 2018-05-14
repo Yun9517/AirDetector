@@ -286,6 +286,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
+
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        FirebaseNotifTask().execute(myToken)
+
     }
 
     @SuppressLint("WifiManagerLeak")
