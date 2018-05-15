@@ -90,7 +90,6 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_allow_notification"
             android:textSize="18sp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/swAllowNotify"
             app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
             app:layout_constraintStart_toStartOf="parent"
