@@ -1,7 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.app.TimePickerDialog
+import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.NumberPicker
 import android.widget.TextView
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -61,6 +62,9 @@ class SettingActivity : AppCompatActivity() {
         readPreferences()   // 載入設定值
         uiSetListener()
         initActionBar()
+
+        //20180515 by 白告
+        btnFirebaseTimeNotifSetting.text=TvocNoseData.firebaseNotiftime.toString()
     }
 
     @SuppressLint("SetTextI18n")
@@ -267,12 +271,9 @@ class SettingActivity : AppCompatActivity() {
             }
         }
 
+        //20180515 by 白告
         btnFirebaseTimeNotifSetting.setOnClickListener {
-            var hourSetting = Calendar.getInstance()
-            var hour = hourSetting.get(Calendar.HOUR_OF_DAY)
-            var hourView = TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->  }
-
-
+            numberPickerDialog()
         }
 
     }
@@ -534,6 +535,27 @@ class SettingActivity : AppCompatActivity() {
             btnFirebaseNotifSave.visibility = View.GONE
         }
 
+    }
+
+    private fun numberPickerDialog(){
+        var newNum: Int = 0
+        val myHourPicker = NumberPicker(this)
+        myHourPicker.maxValue = 23
+        myHourPicker.minValue = 0
+        val myHourPickerListen = object : NumberPicker.OnValueChangeListener {
+            override fun onValueChange(picker: NumberPicker, oldVal: Int, newVal: Int) {
+               newNum=newVal
+            }
+        }
+        myHourPicker.setOnValueChangedListener(myHourPickerListen)
+        val builder = AlertDialog.Builder(this).setView(myHourPicker)
+        builder.setTitle("時間設定")
+        builder.setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
+            override fun onClick(dialog: DialogInterface, which: Int) {
+                btnFirebaseTimeNotifSetting.text=newNum.toString()
+            }
+        })
+        builder.show()
     }
 
 }
