@@ -52,6 +52,9 @@ class SettingActivity : AppCompatActivity() {
 
     private var isPrivacy: Boolean = false
 
+    //20180515
+    private var swCloudNotifyVal: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -286,6 +289,17 @@ class SettingActivity : AppCompatActivity() {
             dialog.show()
         }
 
+        swAllowCloudNotify.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cgCloudNotify.visibility = View.VISIBLE
+            } else {
+                cgCloudNotify.visibility = View.GONE
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY,
+                    isChecked).apply()
+        }
+
     }
 
     private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {
@@ -370,10 +384,17 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getCloudSettings() {
-        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
-
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, false)
+
         swCloudFunc.isChecked = swCloudVal
+        swAllowCloudNotify.isChecked = swCloudNotifyVal
+
+        if(swCloudNotifyVal) {
+            cgCloudNotify.visibility = View.VISIBLE
+        } else {
+            cgCloudNotify.visibility = View.GONE
+        }
     }
 
     private fun getDeviceLedSettings() {

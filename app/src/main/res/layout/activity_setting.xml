@@ -56,8 +56,8 @@
             android:id="@+id/btnChangePassword"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/style_login_button"
             android:text="@string/change_Password_Title"
@@ -369,7 +369,7 @@
             app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageView7"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
@@ -378,6 +378,100 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/batSound" />
+
+        <TextView
+            android:id="@+id/textAllowCloudNotify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_cloud_notify"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/swAllowCloudNotify"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowCloudNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllowCloudNotify" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowCloudNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cgCloudNotify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="16dp"
+            app:constraint_referenced_ids="text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify" />
+
+        <TextView
+            android:id="@+id/text_cloud_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_cloud_notify_time"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
+            app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnCloudNotify" />
+
+        <Button
+            android:id="@+id/btnCloudNotify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_login_button"
+            android:text="@string/text_cloud_set_minute"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudNotify" />
+
+        <Button
+            android:id="@+id/btnSaveCloudSetting"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_login_button"
+            android:text="@string/text_save_cloud_setting"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
 
         <TextView
             android:id="@+id/text_cloud_fun"
