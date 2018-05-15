@@ -65,7 +65,6 @@ class SettingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        text_local_uuid.text = MyApplication.getPsuedoUniqueID()
         text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
 
         getPrivacySettings()
@@ -110,8 +109,6 @@ class SettingActivity : AppCompatActivity() {
 
         swMessage.setOnCheckedChangeListener { _, isChecked ->
 
-            setSwitchLabelValue(text_msg_stat, isChecked)
-
             if (isChecked) {
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
                 mainintent.putExtra("status", "message")
@@ -126,15 +123,11 @@ class SettingActivity : AppCompatActivity() {
 
         swVibrate.setOnCheckedChangeListener { _, isChecked ->
 
-            setSwitchLabelValue(text_vibrate_stat, isChecked)
-
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
                     isChecked).apply()
         }
 
         swSound.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_sound_stat, isChecked)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
@@ -182,15 +175,11 @@ class SettingActivity : AppCompatActivity() {
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
 
-            setSwitchLabelValue(text_bat_stat, isChecked)
-
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
                     isChecked).apply()
         }
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_led_stat, isChecked)
 
             val intent: Intent? = Intent(
                     if (isChecked) {
@@ -208,8 +197,6 @@ class SettingActivity : AppCompatActivity() {
 
         //20180227  CloudFun
         swCloudFunc.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_cloud_stat, isChecked)
 
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
@@ -328,14 +315,6 @@ class SettingActivity : AppCompatActivity() {
         view.text = format.format(min).toString()
     }
 
-    private fun setSwitchLabelValue(view: TextView, value: Boolean) {
-        if (value) {
-            view.text = getString(R.string.text_setting_on)
-        } else {
-            view.text = getString(R.string.text_setting_off)
-        }
-    }
-
     private fun getNotificationSettings() {
         swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
         swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
@@ -368,11 +347,6 @@ class SettingActivity : AppCompatActivity() {
 
         batSound.isChecked = batSoundVal
 
-        setSwitchLabelValue(text_msg_stat, swMessageVal)
-        setSwitchLabelValue(text_vibrate_stat, swViberateVal)
-        setSwitchLabelValue(text_sound_stat, swSoundVal)
-        setSwitchLabelValue(text_bat_stat, batSoundVal)
-
         tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
         pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
 
@@ -400,16 +374,12 @@ class SettingActivity : AppCompatActivity() {
 
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
         swCloudFunc.isChecked = swCloudVal
-
-        setSwitchLabelValue(text_cloud_stat, swCloudVal)
     }
 
     private fun getDeviceLedSettings() {
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
         ledPower.isChecked = swLedPowerVal
-
-        setSwitchLabelValue(text_led_stat, swLedPowerVal)
     }
 
     private fun initActionBar() {
