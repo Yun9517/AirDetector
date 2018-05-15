@@ -203,16 +203,6 @@
 
     </LinearLayout>
 
-    <!--
-        <ImageView
-            android:id="@+id/imgPanel"
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:layout_alignParentBottom="true"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/temp_main" />
-            -->
-
     <LinearLayout
         android:id="@+id/bottom_panel"
         android:layout_width="0dp"
@@ -420,4 +410,30 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/slideMore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/textview_corner_radius"
+        android:text="往下滑更多"
+        android:textColor="@color/whiteColor"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--
+        <ImageView
+            android:id="@+id/imgPanel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/temp_main" />
+            -->
+
 </android.support.constraint.ConstraintLayout>
