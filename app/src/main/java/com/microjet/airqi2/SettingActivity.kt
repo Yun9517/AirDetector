@@ -55,6 +55,7 @@ class SettingActivity : AppCompatActivity() {
     //20180514 by 白告
     private var swAllFirebase : Boolean =true
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -64,7 +65,8 @@ class SettingActivity : AppCompatActivity() {
         initActionBar()
 
         //20180515 by 白告
-        btnFirebaseTimeNotifSetting.text=TvocNoseData.firebaseNotiftime.toString()
+        btnFirebaseTimeNotifSetting.text = TvocNoseData.firebaseNotiftime.toString()
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -273,7 +275,11 @@ class SettingActivity : AppCompatActivity() {
 
         //20180515 by 白告
         btnFirebaseTimeNotifSetting.setOnClickListener {
-            numberPickerDialog()
+          numberPickerDialog()
+        }
+
+        btnFirebaseNotifSave.setOnClickListener{
+            updataSetting()
         }
 
     }
@@ -538,24 +544,25 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun numberPickerDialog(){
-        var newNum: Int = 0
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
         myHourPicker.minValue = 0
-        val myHourPickerListen = object : NumberPicker.OnValueChangeListener {
-            override fun onValueChange(picker: NumberPicker, oldVal: Int, newVal: Int) {
-               newNum=newVal
-            }
-        }
-        myHourPicker.setOnValueChangedListener(myHourPickerListen)
-        val builder = AlertDialog.Builder(this).setView(myHourPicker)
-        builder.setTitle("時間設定")
-        builder.setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
-            override fun onClick(dialog: DialogInterface, which: Int) {
-                btnFirebaseTimeNotifSetting.text=newNum.toString()
-            }
-        })
-        builder.show()
+        myHourPicker.value = TvocNoseData.firebaseNotiftime
+        val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
+                .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        TvocNoseData.firebaseNotiftime = myHourPicker.value
+                        btnFirebaseTimeNotifSetting.text = TvocNoseData.firebaseNotiftime.toString()
+                        Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
+                    }
+                }).show()
+    }
+
+    private fun   updataSetting(){
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),"","")
+        btnFirebaseTimeNotifSetting.text=TvocNoseData.firebaseNotiftime.toString()
     }
 
 }

@@ -16,12 +16,25 @@ class FirebaseNotifTask : AsyncTask<String, Int, String>() {
     override fun doInBackground(vararg params: String?): String? {
         val token = params[0]
         val phpToken = "Bearer " + token
+        val mediaTime: String?
+        val mediaPM25: String?
+        val mediaTVOC: String?
+
+        if(params.size == 4){
+            mediaTime = params[1]
+            mediaPM25 = ""
+            mediaTVOC = ""
+        }else{
+            mediaTime = ""
+            mediaPM25 = ""
+            mediaTVOC = ""
+        }
 
         val client = OkHttpClient()
         val urlBuilder = HttpUrl.parse("https://mjairql.com/api/v1/notificationSetting")!!.newBuilder()
 
         val mediaType = MediaType.parse("application/x-www-form-urlencoded")
-        val body = RequestBody.create(mediaType, "time"+ "" + "pm25=" + "" + "tvoc" + "")
+        val body = RequestBody.create(mediaType, "time"+ mediaTime + "pm25=" + mediaPM25 + "tvoc" + mediaTVOC )
         val url = urlBuilder.build().toString()
         val request = Request.Builder()
                 .url(url)

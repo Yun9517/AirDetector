@@ -109,7 +109,7 @@ object TvocNoseData {
     var arrTimeMonth: ArrayList<String> = arrayListOf()
 
     var firebaseNotifSwitch: Boolean? = null
-    var firebaseNotiftime: Int? = null
+    var firebaseNotiftime: Int = 0
     var firebaseNotifPM25: Int? = null
     var firebaseNotifTVOC: Int? = null
 
