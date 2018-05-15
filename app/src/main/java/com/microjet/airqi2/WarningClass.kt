@@ -3,6 +3,7 @@ package com.microjet.airqi2
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -17,6 +18,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
+import java.util.*
 
 
 /**
@@ -40,7 +42,7 @@ class WarningClass {
     //Test
     private var soundsMap: HashMap<Int, Int> = HashMap<Int, Int>()
     private var soundPool: SoundPool? = null
-
+    private var mPreferenceNotification: SharedPreferences? = null
     constructor (MustInputContext: Context) {
         m_context = MustInputContext
         mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -60,7 +62,28 @@ class WarningClass {
         allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
         tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
         pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+        mPreferenceNotification=m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+        val mycondition= mPreferenceNotification!!.getString("nextNotification","none")
+        when (mycondition){
+            "none"->{
 
+            }
+            "tomorrow"->{
+                val setTime=mPreferenceNotification!!.getString("now time","0")
+                val date = Date().time
+                val time=setTime.toLong()
+                if ((date-time)<86400000){
+                    return
+                }
+            }
+            "5min"->{
+                val setTime=mPreferenceNotification!!.getString("now time","0")
+                val date = Date().time
+                val time=setTime.toLong()
+                if ((date-time)<300000)
+                    return
+            }
+        }
         if (allowNotify && tvocValue >= tvocAlertValue) {
             when (tvocValue) {
                 in 0..219 -> {
@@ -272,8 +295,8 @@ class WarningClass {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
-            val action1 = Notification.Action(R.drawable.dismiss, "Dismiss", pi)
-            val action2 = Notification.Action(R.drawable.snooze, "snooze", pi2)
+            val action1 = Notification.Action(R.drawable.dismiss, "一天後通知", pi)
+            val action2 = Notification.Action(R.drawable.snooze, "五分鐘後通知", pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
                     .addAction(action1)
                     .addAction(action2)
@@ -318,6 +341,9 @@ class WarningClass {
                             titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                         }
                     }
+                    mPreferenceNotification=m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+                    mPreferenceNotification!!.edit().clear().apply()
+
                     makeNotificationShow(
                             DateTypeId,
                             BitmapFactory.decodeResource(m_context!!.resources, icon),
