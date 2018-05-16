@@ -110,8 +110,8 @@ object TvocNoseData {
 
     var firebaseNotifSwitch: Boolean? = null
     var firebaseNotiftime: Int = 0
-    var firebaseNotifPM25: Int? = null
-    var firebaseNotifTVOC: Int? = null
+    var firebaseNotifPM25: Int = 35
+    var firebaseNotifTVOC: Int = 660
 
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()

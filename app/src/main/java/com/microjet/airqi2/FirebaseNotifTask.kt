@@ -25,8 +25,8 @@ class FirebaseNotifTask : AsyncTask<String, Int, String>() {
 
         if(params.size == 4){
             mediaTime = params[1]
-            mediaPM25 = ""
-            mediaTVOC = ""
+            mediaPM25 = params[2]
+            mediaTVOC = params[3]
         }else{
             mediaTime = ""
             mediaPM25 = ""
@@ -58,8 +58,8 @@ class FirebaseNotifTask : AsyncTask<String, Int, String>() {
                 if(returnResult != null && returnResult !=""){
                     val jsonObj1 = JSONObject(returnResult)
                     TvocNoseData.firebaseNotiftime = jsonObj1.getInt("time")
-                    TvocNoseData.firebaseNotifPM25 = jsonObj1.getInt("pm25")
                     TvocNoseData.firebaseNotifTVOC = jsonObj1.getInt("tvoc")
+                    TvocNoseData.firebaseNotifPM25 = jsonObj1.getInt("pm25")
                     Log.e("抓取設定", "_"+TvocNoseData.firebaseNotiftime+"_"+ TvocNoseData.firebaseNotifPM25+"_" +TvocNoseData.firebaseNotifTVOC )
                     return "FirebaseSetting_success"
 

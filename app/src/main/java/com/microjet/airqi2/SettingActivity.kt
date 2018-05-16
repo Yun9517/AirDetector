@@ -83,11 +83,12 @@ class SettingActivity : AppCompatActivity() {
 
     private fun readPreferences() {
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-        btnCloudNotify.text=TvocNoseData.firebaseNotiftime.toString()
         getNotificationSettings()
         getCloudSettings()
         getPrivacySettings()
         getDeviceLedSettings()
+        //20180516 by 白~~~~~~~~~~~~~~~~~~~告
+        getFirebaseNotifSettings()
     }
 
     private fun uiSetListener() {
@@ -301,6 +302,93 @@ class SettingActivity : AppCompatActivity() {
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY,
                     isChecked).apply()
+        }
+
+        //20180516 BY 白~~~~~~~~~~~~~~告
+        cloudTvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                if(isFromUser) {
+                    setSeekBarColor(view, min, true)
+                    setSeekBarValue(cloudTvocSeekValue, min)
+                    TvocNoseData.firebaseNotifTVOC = min.toInt()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
+            }
+
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+        })
+
+        cloudPM25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                if(isFromUser) {
+                    setSeekBarColor(view, min, false)
+                    setSeekBarValue(cloudPM25SeekValue, min)
+                    TvocNoseData.firebaseNotifPM25 = min.toInt()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
+            }
+
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+        })
+
+        cloudTvocSeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 220..2200) {
+                    cloudTvocSeekBar.setValue(value.toFloat())
+                    setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
+                    setSeekBarValue( cloudTvocSeekValue, value.toFloat())
+                    TvocNoseData.firebaseNotifTVOC = value.toInt()
+
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
+        }
+
+        cloudPM25SeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 16..150) {
+                    pm25SeekBar.setValue(value.toFloat())
+                    setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
+                    setSeekBarValue( cloudPM25SeekValue, value.toFloat())
+                    TvocNoseData.firebaseNotifPM25 = value.toInt()
+
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
         }
 
         btnCloudNotify.setOnClickListener {
@@ -546,7 +634,20 @@ class SettingActivity : AppCompatActivity() {
         Dialog.show()
     }
 
-    //2018515 by HAO
+    //2018515 by 白~~~~~~~~~~~~~~~~告
+
+    private fun  getFirebaseNotifSettings() {
+        if (TvocNoseData.firebaseNotiftime < 10){
+            btnCloudNotify.text = "0"+TvocNoseData.firebaseNotiftime.toString()+":00"
+        }else{
+            btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()+":00"
+        }
+        cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
+        cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
+        cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
+        cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
+    }
+
     private fun numberPickerDialog(){
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
@@ -556,7 +657,11 @@ class SettingActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
                         TvocNoseData.firebaseNotiftime = myHourPicker.value
-                        btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()
+                        if (TvocNoseData.firebaseNotiftime < 10){
+                            btnCloudNotify.text = "0"+TvocNoseData.firebaseNotiftime.toString()+":00"
+                        }else{
+                            btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()+":00"
+                        }
                         Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
                     }
                 }).setTitle("Time setting").show()
@@ -565,8 +670,9 @@ class SettingActivity : AppCompatActivity() {
     private fun   updataSetting(){
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),"","")
+        FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
 
     }
+
 
 }

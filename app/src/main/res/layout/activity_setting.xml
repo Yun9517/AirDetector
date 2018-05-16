@@ -379,7 +379,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/batSound" />
 
-
         <TextView
             android:id="@+id/textAllowCloudNotify"
             android:layout_width="0dp"
