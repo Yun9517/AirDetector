@@ -398,8 +398,9 @@
     <string name="text_navi_personal">個人軌跡</string>
 
     <!-- 2018/05/15 -->
-    <string name="remindAfter_5_Mins">五分鐘後通知</string>
-    <string name="remindAfterA_Day">一天後通知</string>
+    <string name="remindAfter_5_Mins">五分鐘後再提醒</string>
+    <string name="remindAfterA_Day">一天後再提醒</string>
+    <string name="remindDismiss">知道了</string>
 
     <string name="text_pattern_lock">圖形鎖</string>
     <string name="text_pw_lock">密碼鎖</string>

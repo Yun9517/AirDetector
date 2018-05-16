@@ -69,17 +69,17 @@ class WarningClass {
 
             }
             "tomorrow"-> {
-                val setTime=mPreferenceNotification!!.getString("now time","0")
+                /*val setTime = mPreferenceNotification!!.getString("now time","0")
                 val date = Date().time
-                val time=setTime.toLong()
+                val time = setTime.toLong()
                 if ((date-time) < 86400000){
                     return
-                }
+                }*/
             }
             "5min"-> {
-                val setTime=mPreferenceNotification!!.getString("now time","0")
+                val setTime = mPreferenceNotification!!.getString("now time","0")
                 val date = Date().time
-                val time=setTime.toLong()
+                val time = setTime.toLong()
                 if ((date-time) < 300000)
                     return
             }
@@ -271,7 +271,7 @@ class WarningClass {
         val intentAction2 = Intent(m_context!!, NotificationButtonReceiver::class.java)
         //    intentAction2?.putExtra("action","action2")
         intentAction2.action = "action2"
-        val pi2= PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
+        val pi2 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
 
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
@@ -284,8 +284,8 @@ class WarningClass {
                 //.setPriority(Notification.PRIORITY_DEFAULT)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction (0, m_context!!.getString(R.string.remindAfterA_Day), pi)
-                .addAction (R.drawable.snooze, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
+                .addAction (0, m_context!!.getString(R.string.remindDismiss), pi)
+                .addAction (0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
         notification.contentIntent = pi
@@ -295,8 +295,8 @@ class WarningClass {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
-            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindAfterA_Day), pi)
-            val action2 = Notification.Action(R.drawable.snooze, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
+            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindDismiss), pi)
+            val action2 = Notification.Action(0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
                     .addAction(action1)
                     .addAction(action2)

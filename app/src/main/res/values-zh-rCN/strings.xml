@@ -392,8 +392,9 @@
     <string name="text_navi_personal">个人轨迹</string>
 
     <!-- 2018/05/15 -->
-    <string name="remindAfter_5_Mins">五分鐘後通知</string>
-    <string name="remindAfterA_Day">一天後通知</string>
+    <string name="remindAfter_5_Mins">五分鐘後再提醒</string>
+    <string name="remindAfterA_Day">一天後再提醒</string>
+    <string name="remindDismiss">知道了</string>
 </resources>
 
 
