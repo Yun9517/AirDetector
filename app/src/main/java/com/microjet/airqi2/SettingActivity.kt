@@ -1,32 +1,33 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
+import android.text.InputType
 import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
-import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.BroadcastIntents
-import com.microjet.airqi2.Definition.SavePreferences
-import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
+import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import com.microjet.airqi2.URL.AirActionTask
+import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
-import java.util.*
 
 
 /**
@@ -52,9 +53,8 @@ class SettingActivity : AppCompatActivity() {
 
     private var isPrivacy: Boolean = false
 
-    //20180514 by 白告
-    private var swAllFirebase : Boolean =true
-
+    //20180515
+    private var swCloudNotifyVal: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,17 +63,12 @@ class SettingActivity : AppCompatActivity() {
         readPreferences()   // 載入設定值
         uiSetListener()
         initActionBar()
-
-        //20180515 by 白告
-        btnFirebaseTimeNotifSetting.text = TvocNoseData.firebaseNotiftime.toString()
-
     }
 
     @SuppressLint("SetTextI18n")
     override fun onResume() {
         super.onResume()
 
-        text_local_uuid.text = MyApplication.getPsuedoUniqueID()
         text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
 
         getPrivacySettings()
@@ -88,12 +83,11 @@ class SettingActivity : AppCompatActivity() {
 
     private fun readPreferences() {
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-
+        btnCloudNotify.text=TvocNoseData.firebaseNotiftime.toString()
         getNotificationSettings()
         getCloudSettings()
         getPrivacySettings()
         getDeviceLedSettings()
-        getFirebaseSettings()
     }
 
     private fun uiSetListener() {
@@ -117,23 +111,7 @@ class SettingActivity : AppCompatActivity() {
                     isChecked).apply()
         }
 
-        swAllowFirebaseNotif.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                tvFirebaseNotifTime.visibility = View.VISIBLE
-                btnFirebaseTimeNotifSetting.visibility = View.VISIBLE
-                btnFirebaseNotifSave.visibility = View.VISIBLE
-            } else {
-                tvFirebaseNotifTime.visibility = View.GONE
-                btnFirebaseTimeNotifSetting.visibility = View.GONE
-                btnFirebaseNotifSave.visibility = View.GONE
-            }
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_FIREBASE,
-                    isChecked).apply()
-        }
-
         swMessage.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_msg_stat, isChecked)
 
             if (isChecked) {
                 val mainintent = Intent(BroadcastIntents.PRIMARY)
@@ -149,15 +127,11 @@ class SettingActivity : AppCompatActivity() {
 
         swVibrate.setOnCheckedChangeListener { _, isChecked ->
 
-            setSwitchLabelValue(text_vibrate_stat, isChecked)
-
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
                     isChecked).apply()
         }
 
         swSound.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_sound_stat, isChecked)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
                     isChecked).apply()
@@ -165,12 +139,12 @@ class SettingActivity : AppCompatActivity() {
 
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
-                setSeekBarColor(view, min, true)
-
-                setSeekBarValue(tvocSeekValue, min)
-
-                mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
-                Log.e("SeekBar", "Min: $min")
+                if(isFromUser) {
+                    setSeekBarColor(view, min, true)
+                    setSeekBarValue(tvocSeekValue, min)
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
 
             override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
@@ -184,11 +158,12 @@ class SettingActivity : AppCompatActivity() {
 
         pm25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
             override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
-                setSeekBarColor(view, min, false)
-
-                setSeekBarValue(pm25SeekValue, min)
-
-                mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
+                if(isFromUser) {
+                    setSeekBarColor(view, min, false)
+                    setSeekBarValue(pm25SeekValue, min)
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
 
             override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
@@ -204,15 +179,11 @@ class SettingActivity : AppCompatActivity() {
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
 
-            setSwitchLabelValue(text_bat_stat, isChecked)
-
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
                     isChecked).apply()
         }
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_led_stat, isChecked)
 
             val intent: Intent? = Intent(
                     if (isChecked) {
@@ -230,8 +201,6 @@ class SettingActivity : AppCompatActivity() {
 
         //20180227  CloudFun
         swCloudFunc.setOnCheckedChangeListener { _, isChecked ->
-
-            setSwitchLabelValue(text_cloud_stat, isChecked)
 
             val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 
@@ -273,12 +242,72 @@ class SettingActivity : AppCompatActivity() {
             }
         }
 
-        //20180515 by 白告
-        btnFirebaseTimeNotifSetting.setOnClickListener {
-          numberPickerDialog()
+        tvocSeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 220..2200) {
+                    tvocSeekBar.setValue(value.toFloat())
+                    setSeekBarColor(tvocSeekBar, value.toFloat(), true)
+                    setSeekBarValue(tvocSeekValue, value.toFloat())
+
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, value.toInt()).apply()
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
         }
 
-        btnFirebaseNotifSave.setOnClickListener{
+        pm25SeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 16..150) {
+                    pm25SeekBar.setValue(value.toFloat())
+                    setSeekBarColor(pm25SeekBar, value.toFloat(), false)
+                    setSeekBarValue(pm25SeekValue, value.toFloat())
+
+                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, value.toInt()).apply()
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
+        }
+
+        swAllowCloudNotify.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                cgCloudNotify.visibility = View.VISIBLE
+                cgCloudSeekbar.visibility = View.VISIBLE
+            } else {
+                cgCloudNotify.visibility = View.GONE
+                cgCloudSeekbar.visibility = View.GONE
+            }
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY,
+                    isChecked).apply()
+        }
+
+        btnCloudNotify.setOnClickListener {
+            numberPickerDialog()
+        }
+
+        btnSaveCloudSetting.setOnClickListener {
             updataSetting()
         }
 
@@ -309,14 +338,6 @@ class SettingActivity : AppCompatActivity() {
     private fun setSeekBarValue(view: TextView, min: Float) {
         val format = DecimalFormat("###")
         view.text = format.format(min).toString()
-    }
-
-    private fun setSwitchLabelValue(view: TextView, value: Boolean) {
-        if (value) {
-            view.text = getString(R.string.text_setting_on)
-        } else {
-            view.text = getString(R.string.text_setting_off)
-        }
     }
 
     private fun getNotificationSettings() {
@@ -351,11 +372,6 @@ class SettingActivity : AppCompatActivity() {
 
         batSound.isChecked = batSoundVal
 
-        setSwitchLabelValue(text_msg_stat, swMessageVal)
-        setSwitchLabelValue(text_vibrate_stat, swViberateVal)
-        setSwitchLabelValue(text_sound_stat, swSoundVal)
-        setSwitchLabelValue(text_bat_stat, batSoundVal)
-
         tvocSeekBar.setValue(tvocSeekBarVal.toFloat())
         pm25SeekBar.setValue(pm25SeekBarVal.toFloat())
 
@@ -379,20 +395,25 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getCloudSettings() {
-        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
-
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
-        swCloudFunc.isChecked = swCloudVal
+        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
 
-        setSwitchLabelValue(text_cloud_stat, swCloudVal)
+        swCloudFunc.isChecked = swCloudVal
+        swAllowCloudNotify.isChecked = swCloudNotifyVal
+
+        if(swCloudNotifyVal) {
+            cgCloudNotify.visibility = View.VISIBLE
+            cgCloudSeekbar.visibility = View.VISIBLE
+        } else {
+            cgCloudNotify.visibility = View.GONE
+            cgCloudSeekbar.visibility = View.GONE
+        }
     }
 
     private fun getDeviceLedSettings() {
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
 
         ledPower.isChecked = swLedPowerVal
-
-        setSwitchLabelValue(text_led_stat, swLedPowerVal)
     }
 
     private fun initActionBar() {
@@ -525,24 +546,7 @@ class SettingActivity : AppCompatActivity() {
         Dialog.show()
     }
 
-    //20180514 Firebase setting by 白告
-    private fun getFirebaseSettings() {
-        swAllFirebase = mPreference!!.getBoolean(SavePreferences.SETTING_FIREBASE, true)
-
-        swAllowFirebaseNotif.isChecked = swAllFirebase
-
-        if (swAllFirebase) {
-            tvFirebaseNotifTime.visibility = View.VISIBLE
-            btnFirebaseTimeNotifSetting.visibility = View.VISIBLE
-            btnFirebaseNotifSave.visibility = View.VISIBLE
-        } else {
-            tvFirebaseNotifTime.visibility = View.GONE
-            btnFirebaseTimeNotifSetting.visibility = View.GONE
-            btnFirebaseNotifSave.visibility = View.GONE
-        }
-
-    }
-
+    //2018515 by HAO
     private fun numberPickerDialog(){
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
@@ -552,17 +556,17 @@ class SettingActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
                         TvocNoseData.firebaseNotiftime = myHourPicker.value
-                        btnFirebaseTimeNotifSetting.text = TvocNoseData.firebaseNotiftime.toString()
+                        btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()
                         Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
                     }
-                }).show()
+                }).setTitle("Time setting").show()
     }
 
     private fun   updataSetting(){
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),"","")
-        btnFirebaseTimeNotifSetting.text=TvocNoseData.firebaseNotiftime.toString()
+
     }
 
 }

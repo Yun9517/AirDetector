@@ -190,7 +190,7 @@
     <string name="allow_3G">允許行動網路</string>
 
     //20180227
-    <string name="cloud_fun">雲端功能</string>
+    <string name="cloud_fun">雲端上傳</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
     <string name="text_label_device_version">偵測器韌體版本：</string>
@@ -412,4 +412,14 @@
     <string name="text_redraw_again1">與第一次設定的不一樣，請重新設定</string>
     <string name="text_pw_error">密碼錯誤，還剩%d次機會</string>
     <string name="text_use_login_pw">改用密碼登入</string>
+
+    //20180516
+    <string name="text_cloud_notify">雲端推播</string>
+    <string name="text_save_cloud_setting">儲存設定</string>
+    <string name="text_cloud_set_minute">定時</string>
+    <string name="text_cloud_notify_time">推播時間</string>
+    <string name="text_check_device_update">檢查更新</string>
+    <string name="text_click_to_adjust">（按一下數值可微調）</string>
+
+
 </resources>
