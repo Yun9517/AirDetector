@@ -397,6 +397,10 @@
     <string name="messag_dowload">雲端同步下載</string>
     <string name="text_navi_personal">個人軌跡</string>
 
+    <!-- 2018/05/15 -->
+    <string name="remindAfter_5_Mins">五分鐘後通知</string>
+    <string name="remindAfterA_Day">一天後通知</string>
+
     <string name="text_pattern_lock">圖形鎖</string>
     <string name="text_pw_lock">密碼鎖</string>
     <string name="text_draw_pattern">請輸入解鎖圖形</string>

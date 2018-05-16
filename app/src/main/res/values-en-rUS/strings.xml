@@ -246,4 +246,8 @@
     <string name="messag_text">Device Name</string>
     <string name="messag_dowload">Data Sync</string>
     <string name="text_navi_personal">Personal trail</string>
+
+    <!-- 2018/05/15 -->
+    <string name="remindAfter_5_Mins">After 5 mins</string>
+    <string name="remindAfterA_Day">Next day</string>
 </resources>

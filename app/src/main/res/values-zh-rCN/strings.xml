@@ -378,16 +378,22 @@
     <string name="Accept">Yes</string>
     <string name="Reject">NO</string>
     <string name="getStarted">开始体验</string>
-    <string name="messag_text">蓝牙装置名称</string>
-    <string name="messag_dowload">云端同步下载</string>
     <string name="text_label_time">时间</string>
     <string name="download_text">下载进度:</string>
     <string name="download_min">喝杯茶</string>
-    <string name="text_navi_personal">个人轨迹</string>
 
     <string name="text_setting_tvoc_value">TVOC 通知数值</string>
     <string name="text_setting_pm25_value">PM2.5 通知数值</string>
     <string name="title_temperature">Temperature_Data</string>
+
+    <!--    雲端下載視窗    -->
+    <string name="messag_text">蓝牙装置名称</string>
+    <string name="messag_dowload">云端同步下载</string>
+    <string name="text_navi_personal">个人轨迹</string>
+
+    <!-- 2018/05/15 -->
+    <string name="remindAfter_5_Mins">五分鐘後通知</string>
+    <string name="remindAfterA_Day">一天後通知</string>
 </resources>
 
 

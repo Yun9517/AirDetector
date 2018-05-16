@@ -62,25 +62,25 @@ class WarningClass {
         allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
         tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
         pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
-        mPreferenceNotification=m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
-        val mycondition= mPreferenceNotification!!.getString("nextNotification","none")
-        when (mycondition){
+        mPreferenceNotification = m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+        val myCondition = mPreferenceNotification!!.getString("nextNotification","none")
+        when (myCondition){
             "none"->{
 
             }
-            "tomorrow"->{
+            "tomorrow"-> {
                 val setTime=mPreferenceNotification!!.getString("now time","0")
                 val date = Date().time
                 val time=setTime.toLong()
-                if ((date-time)<86400000){
+                if ((date-time) < 86400000){
                     return
                 }
             }
-            "5min"->{
+            "5min"-> {
                 val setTime=mPreferenceNotification!!.getString("now time","0")
                 val date = Date().time
                 val time=setTime.toLong()
-                if ((date-time)<300000)
+                if ((date-time) < 300000)
                     return
             }
         }
@@ -266,11 +266,11 @@ class WarningClass {
 
         //This is optional if you have more than one buttons and want to differentiate between two
         //  intentAction?.putExtra("action","action1")
-        intentAction.action="action1"
+        intentAction.action = "action1"
         val pi = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
         val intentAction2 = Intent(m_context!!, NotificationButtonReceiver::class.java)
         //    intentAction2?.putExtra("action","action2")
-        intentAction2.action="action2"
+        intentAction2.action = "action2"
         val pi2= PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
 
         @SuppressLint("ResourceAsColor")
@@ -284,8 +284,8 @@ class WarningClass {
                 //.setPriority(Notification.PRIORITY_DEFAULT)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction (R.drawable.dismiss, "Dismiss", pi)
-                .addAction (R.drawable.snooze, "Snooze", pi2)
+                .addAction (0, m_context!!.getString(R.string.remindAfterA_Day), pi)
+                .addAction (R.drawable.snooze, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
         notification.contentIntent = pi
@@ -295,8 +295,8 @@ class WarningClass {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
-            val action1 = Notification.Action(R.drawable.dismiss, "一天後通知", pi)
-            val action2 = Notification.Action(R.drawable.snooze, "五分鐘後通知", pi2)
+            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindAfterA_Day), pi)
+            val action2 = Notification.Action(R.drawable.snooze, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
                     .addAction(action1)
                     .addAction(action2)
@@ -341,7 +341,7 @@ class WarningClass {
                             titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                         }
                     }
-                    mPreferenceNotification=m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+                    mPreferenceNotification = m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
                     mPreferenceNotification!!.edit().clear().apply()
 
                     makeNotificationShow(
