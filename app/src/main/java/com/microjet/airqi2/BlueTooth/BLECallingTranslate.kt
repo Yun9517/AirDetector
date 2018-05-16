@@ -863,40 +863,55 @@ object BLECallingTranslate {
             if (bytes[i] == BLECommand.StopCmd) {
                 i++//point to DataLength
                 val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //var rawData = ""
                 i++//point to CMD;
                 for (j in 0 until dataLength - 2) {
-                    i = i + 1//Point to DataValue
-                    stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
+                    i++//Point to DataValue
+                    //stringHex += Integer.toString((bytes[i] and 0xff.toByte()) + 0x100, 16).substring(1)
+                    stringHex += String.format("%02X", bytes[i])
+                    //rawData += String.format("%02X ", bytes[i])
                     when (j) {
-                        5//MAC Address
+                        0//is PM25
                         -> {
-                            returnValue.put(TvocNoseData.MAC, stringHex)
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.PM25] = stringHex
+                            stringHex = ""
+                        }
+                        4//Reserved
+                        -> {
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.MAC] = stringHex
                             stringHex = ""
                         }
                         6//Device
                         -> {
-                            returnValue.put(TvocNoseData.DEVICE, stringHex)
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.DEVICE] = stringHex
                             stringHex = ""
                         }
                         7//VOC sensor
                         -> {
-                            returnValue.put(TvocNoseData.TVOCSENOR, stringHex)
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.TVOCSENOR] = stringHex
                             stringHex = ""
                         }
                         10//FW Version
                         -> {
-                            returnValue.put(TvocNoseData.FW, stringHex)
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.FW] = stringHex
                             stringHex = ""
                         }
                         12//FW Serial
                         ->{
-                            returnValue.put(TvocNoseData.FWSerial, stringHex)
+                            Log.e("ParceDeviceInfo", "String Index: $stringHex")
+                            returnValue[TvocNoseData.FWSerial] = stringHex
                             stringHex = ""
                         }
                         else -> {
                         }
                     }
                 }
+                //Log.e("ParceDeviceInfo", "Raw Data: $rawData")
                 i++//Point to Cmd's CheckSum;
             }
             i++

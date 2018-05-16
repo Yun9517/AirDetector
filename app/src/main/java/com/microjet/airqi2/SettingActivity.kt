@@ -235,7 +235,8 @@ class SettingActivity : AppCompatActivity() {
                 val fwVer = MyApplication.getDeviceVersion()
                 val fwSerial = MyApplication.getDeviceSerial()
                 val fwType = MyApplication.getDeviceType()
-                checkFwVersion("20$fwVer$fwSerial", "00$fwType")
+                //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
+                checkFwVersion("20$fwVer$fwSerial", fwType)
             } else {
                 showNotChargingDialog()
             }

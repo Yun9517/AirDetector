@@ -20,6 +20,7 @@ object TvocNoseData {
     val B0BATT = "B0BATT"
     val B0PREH = "B0PREH"
     //B1 GetInfo
+    val PM25 = "PM25"
     val MAC = "MAC"
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
