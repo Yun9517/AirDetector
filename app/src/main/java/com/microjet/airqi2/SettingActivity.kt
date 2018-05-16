@@ -292,8 +292,10 @@ class SettingActivity : AppCompatActivity() {
         swAllowCloudNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cgCloudNotify.visibility = View.VISIBLE
+                cgCloudSeekbar.visibility = View.VISIBLE
             } else {
                 cgCloudNotify.visibility = View.GONE
+                cgCloudSeekbar.visibility = View.GONE
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY,
@@ -392,8 +394,10 @@ class SettingActivity : AppCompatActivity() {
 
         if(swCloudNotifyVal) {
             cgCloudNotify.visibility = View.VISIBLE
+            cgCloudSeekbar.visibility = View.VISIBLE
         } else {
             cgCloudNotify.visibility = View.GONE
+            cgCloudSeekbar.visibility = View.GONE
         }
     }
 

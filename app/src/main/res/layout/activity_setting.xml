@@ -447,6 +447,117 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgCloudNotify" />
 
+        <android.support.constraint.Group
+            android:id="@+id/cgCloudSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
+
+        <TextView
+            android:id="@+id/textCloudTvocSeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_tvoc_value"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/cloudTvocSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCloudTvocSeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/tvocArray"
+            app:rsb_max="2200"
+            app:rsb_min="220"
+            app:rsb_seekBarHeight="16dp"
+            app:rsb_seekBarMode="single"
+            app:rsb_textPadding="20dp"
+            app:rsb_thumbSize="30dp" />
+
+        <TextView
+            android:id="@+id/cloudTvocSeekValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:text="60000"
+            android:textAlignment="textStart"
+            android:textColor="@color/Main_textResult_Blue"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
+
+        <TextView
+            android:id="@+id/textCloudPM25SeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_pm25_value"
+            android:textAlignment="viewStart"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/cloudTvocSeekValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/cloudPM25SeekBar"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCloudPM25SeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/pm25Array"
+            app:rsb_max="150"
+            app:rsb_min="16"
+            app:rsb_seekBarHeight="16dp"
+            app:rsb_seekBarMode="single"
+            app:rsb_textPadding="20dp"
+            app:rsb_thumbSize="30dp" />
+
+
+        <TextView
+            android:id="@+id/cloudPM25SeekValue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:text="250"
+            android:textAlignment="textStart"
+            android:textColor="@color/Main_textResult_Blue"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
+
         <Button
             android:id="@+id/btnSaveCloudSetting"
             android:layout_width="0dp"
@@ -460,7 +571,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
+            app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
 
         <ImageView
             android:id="@+id/imageView2"
