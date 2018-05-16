@@ -248,7 +248,7 @@
     <string name="text_navi_personal">Personal trail</string>
 
     <!-- 2018/05/15 -->
-    <string name="remindAfter_5_Mins">Inform me later</string>
+    <string name="remindAfter_5_Mins">Snooze</string>
     <string name="remindAfterA_Day">Inform  me next day</string>
     <string name="remindDismiss">OK</string>
 </resources>
