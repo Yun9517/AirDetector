@@ -56,6 +56,11 @@ class SettingActivity : AppCompatActivity() {
     //20180515
     private var swCloudNotifyVal: Boolean = false
 
+    //20180517
+    private var cloudTVOC: Int = 0
+    private var cloudPM25: Int = 0
+    private var cloudTime: Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -310,7 +315,7 @@ class SettingActivity : AppCompatActivity() {
                 if(isFromUser) {
                     setSeekBarColor(view, min, true)
                     setSeekBarValue(cloudTvocSeekValue, min)
-                    TvocNoseData.firebaseNotifTVOC = min.toInt()
+                   cloudTVOC = min.toInt()
                 }
                 Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
@@ -329,7 +334,7 @@ class SettingActivity : AppCompatActivity() {
                 if(isFromUser) {
                     setSeekBarColor(view, min, false)
                     setSeekBarValue(cloudPM25SeekValue, min)
-                    TvocNoseData.firebaseNotifPM25 = min.toInt()
+                    cloudPM25 = min.toInt()
                 }
                 Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
@@ -656,11 +661,11 @@ class SettingActivity : AppCompatActivity() {
         val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
                 .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
-                        TvocNoseData.firebaseNotiftime = myHourPicker.value
+                        cloudTime = myHourPicker.value
                         if (TvocNoseData.firebaseNotiftime < 10){
-                            btnCloudNotify.text = "0"+TvocNoseData.firebaseNotiftime.toString()+":00"
+                            btnCloudNotify.text = "0"+cloudTime.toString()+":00"
                         }else{
-                            btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()+":00"
+                            btnCloudNotify.text = cloudTime.toString()+":00"
                         }
                         Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
                     }
@@ -670,6 +675,9 @@ class SettingActivity : AppCompatActivity() {
     private fun   updataSetting(){
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
+        TvocNoseData.firebaseNotiftime = cloudTime
+        TvocNoseData.firebaseNotifTVOC = cloudTVOC
+        TvocNoseData.firebaseNotifPM25 = cloudPM25
         FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
 
     }
