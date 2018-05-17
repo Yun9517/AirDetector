@@ -198,7 +198,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
         CheckSWversion()
-        Log.e("偷啃",FirebaseInstanceId.getInstance().getToken())
+        Log.e("偷啃", FirebaseInstanceId.getInstance().getToken())
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -292,6 +292,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
+
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        if(myToken != ""){
+            FirebaseNotifTask().execute(myToken)
+        }
+
     }
 
     @SuppressLint("WifiManagerLeak")

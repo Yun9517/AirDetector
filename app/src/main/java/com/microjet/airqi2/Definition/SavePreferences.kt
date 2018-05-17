@@ -1,7 +1,5 @@
 package com.microjet.airqi2.Definition
 
-import com.microjet.airqi2.URL.AirActionTask
-
 /**
  * Created by ray650128 on 2017/11/30.
  */
@@ -32,8 +30,6 @@ object SavePreferences {
     const val SETTING_LED_SWITCH = "airqi2.settings.SETTING_LED_SWITCH"
     //20180227
     const val SETTING_CLOUD_FUN = "airqi2.settings.SETTING_CLOUD_FUN"
-    //20180515
-    const val SETTING_CLOUD_NOTIFY = "airqi2.settings.SETTING_CLOUD_NOTIFY"
     //20180330
     const val SETTING_MANUAL_DISCONNECT = "airqi2.settings.SETTING_MANUAL_DISCONNECT"
     //20180423
@@ -42,4 +38,9 @@ object SavePreferences {
     //20180508
     const val SETTING_MAP_PRIVACY = "airqi2.settings.SETTING_MAP_PRIVACY"
 
+    //20180515
+    const val SETTING_CLOUD_NOTIFY = "airqi2.settings.SETTING_CLOUD_NOTIFY"
+
+    //20180517
+    const val SETTING_FIREBASE  = "airqi2.settings.SETTING_FIREBASE_ALLOW"
 }

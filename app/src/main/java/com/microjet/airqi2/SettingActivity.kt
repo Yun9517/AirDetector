@@ -13,17 +13,18 @@ import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
+import android.widget.NumberPicker
 import android.widget.TextView
-import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.BroadcastIntents
-import com.microjet.airqi2.Definition.SavePreferences
-import kotlinx.android.synthetic.main.activity_setting.*
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
+import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import com.microjet.airqi2.URL.AirActionTask
+import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
@@ -55,6 +56,11 @@ class SettingActivity : AppCompatActivity() {
     //20180515
     private var swCloudNotifyVal: Boolean = false
 
+    //20180517
+    private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
+    private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
+    private var cloudTime: Int = TvocNoseData.firebaseNotiftime
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -82,15 +88,15 @@ class SettingActivity : AppCompatActivity() {
 
     private fun readPreferences() {
         mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-
         getNotificationSettings()
         getCloudSettings()
         getPrivacySettings()
         getDeviceLedSettings()
+        //20180516 by 白~~~~~~~~~~~~~~~~~~~告
+        getFirebaseNotifSettings()
     }
 
     private fun uiSetListener() {
-
         swAllowNotify.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 cgMessage.visibility = View.VISIBLE
@@ -299,8 +305,102 @@ class SettingActivity : AppCompatActivity() {
                 cgCloudSeekbar.visibility = View.GONE
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY,
-                    isChecked).apply()
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, isChecked).apply()
+        }
+
+        //20180516 BY 白~~~~~~~~~~~~~~告
+        cloudTvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                if(isFromUser) {
+                    setSeekBarColor(view, min, true)
+                    setSeekBarValue(cloudTvocSeekValue, min)
+                   cloudTVOC = min.toInt()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
+            }
+
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+        })
+
+        cloudPM25SeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
+            override fun onRangeChanged(view: RangeSeekBar, min: Float, max: Float, isFromUser: Boolean) {
+                if(isFromUser) {
+                    setSeekBarColor(view, min, false)
+                    setSeekBarValue(cloudPM25SeekValue, min)
+                    cloudPM25 = min.toInt()
+                }
+                Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
+            }
+
+            override fun onStartTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+
+            override fun onStopTrackingTouch(view: RangeSeekBar, isLeft: Boolean) {
+                //do what you want!!
+            }
+        })
+
+        cloudTvocSeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 220..2200) {
+                    cloudTvocSeekBar.setValue(value.toFloat())
+                    setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
+                    setSeekBarValue( cloudTvocSeekValue, value.toFloat())
+                    TvocNoseData.firebaseNotifTVOC = value.toInt()
+
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
+        }
+
+        cloudPM25SeekValue.setOnClickListener {
+            val editText = EditText(this)
+            editText.inputType = InputType.TYPE_CLASS_NUMBER
+
+            val dialog = AlertDialog.Builder(this)
+
+            dialog.setTitle("請輸入數值")
+            dialog.setView(editText)
+            dialog.setPositiveButton("OK", { _, _ ->
+                val value = editText.text.toString()
+
+                if(value.toInt() in 16..150) {
+                    pm25SeekBar.setValue(value.toFloat())
+                    setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
+                    setSeekBarValue( cloudPM25SeekValue, value.toFloat())
+                    TvocNoseData.firebaseNotifPM25 = value.toInt()
+
+                }
+            })
+
+            dialog.setNegativeButton("取消", null)
+            dialog.show()
+        }
+
+        btnCloudNotify.setOnClickListener {
+            numberPickerDialog()
+        }
+
+        btnSaveCloudSetting.setOnClickListener {
+            updataSetting()
         }
 
     }
@@ -388,8 +488,7 @@ class SettingActivity : AppCompatActivity() {
 
     private fun getCloudSettings() {
         swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
-        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, false)
-
+        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
         swCloudFunc.isChecked = swCloudVal
         swAllowCloudNotify.isChecked = swCloudNotifyVal
 
@@ -537,4 +636,49 @@ class SettingActivity : AppCompatActivity() {
         }
         Dialog.show()
     }
+
+    //2018515 by 白~~~~~~~~~~~~~~~~告
+
+    private fun  getFirebaseNotifSettings() {
+        if (TvocNoseData.firebaseNotiftime < 10){
+            btnCloudNotify.text = "0"+TvocNoseData.firebaseNotiftime.toString()+":00"
+        }else{
+            btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()+":00"
+        }
+        cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
+        cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
+        cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
+        cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
+    }
+
+    private fun numberPickerDialog(){
+        val myHourPicker = NumberPicker(this)
+        myHourPicker.maxValue = 23
+        myHourPicker.minValue = 0
+        myHourPicker.value = TvocNoseData.firebaseNotiftime
+        val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
+                .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface, which: Int) {
+                        cloudTime = myHourPicker.value
+                        if (cloudTime < 10){
+                            btnCloudNotify.text = "0"+cloudTime.toString()+":00"
+                        }else{
+                            btnCloudNotify.text = cloudTime.toString()+":00"
+                        }
+                        Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
+                    }
+                }).setTitle("Time setting").show()
+    }
+
+    private fun   updataSetting(){
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        TvocNoseData.firebaseNotiftime = cloudTime
+        TvocNoseData.firebaseNotifTVOC = cloudTVOC
+        TvocNoseData.firebaseNotifPM25 = cloudPM25
+        FirebaseNotifTask().execute(myToken,TvocNoseData.firebaseNotiftime.toString(),TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
+
+    }
+
+
 }
