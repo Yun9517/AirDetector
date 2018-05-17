@@ -57,9 +57,9 @@ class SettingActivity : AppCompatActivity() {
     private var swCloudNotifyVal: Boolean = false
 
     //20180517
-    private var cloudTVOC: Int = 0
-    private var cloudPM25: Int = 0
-    private var cloudTime: Int = 0
+    private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
+    private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
+    private var cloudTime: Int = TvocNoseData.firebaseNotiftime
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -662,7 +662,7 @@ class SettingActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
                     override fun onClick(dialog: DialogInterface, which: Int) {
                         cloudTime = myHourPicker.value
-                        if (TvocNoseData.firebaseNotiftime < 10){
+                        if (cloudTime < 10){
                             btnCloudNotify.text = "0"+cloudTime.toString()+":00"
                         }else{
                             btnCloudNotify.text = cloudTime.toString()+":00"
