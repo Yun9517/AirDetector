@@ -1,6 +1,5 @@
 package com.microjet.airqi2
 
-import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.content.IntentFilter
@@ -8,17 +7,17 @@ import android.util.Log
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import com.microjet.airqi2.BroadReceiver.PrimaryReceiver
+import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
+
 import com.microjet.airqi2.Definition.BroadcastIntents
 import android.net.ConnectivityManager
 
 
 import android.os.Build
-import android.os.Handler
 import com.microjet.airqi2.Definition.SavePreferences
 import java.util.*
 import android.app.Activity
-import android.content.SharedPreferences
-import android.content.res.Resources
+import android.app.Notification
 
 
 /**
@@ -28,6 +27,8 @@ import android.content.res.Resources
 class MyApplication : Application() {
 
     var mPrimaryReceiver: PrimaryReceiver? = null
+    var mNotificationButtonReceiver: NotificationButtonReceiver?=null
+    //var mNotificationButtonReceiver: NotificationButtonReceiver?=null
 
     init {
         instance = this
@@ -215,5 +216,9 @@ class MyApplication : Application() {
         mPrimaryReceiver = PrimaryReceiver()
         val filter = IntentFilter(BroadcastIntents.PRIMARY)
         this.registerReceiver(mPrimaryReceiver, filter)
+
+        mNotificationButtonReceiver = NotificationButtonReceiver()
+        val filter2 =IntentFilter(BroadcastIntents.NotificationButton)
+        this.registerReceiver(mNotificationButtonReceiver,filter2)
     }
 }

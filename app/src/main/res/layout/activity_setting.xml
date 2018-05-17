@@ -112,7 +112,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="textView8, swMessage, text_msg_stat"
+            app:constraint_referenced_ids="textView8, swMessage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
@@ -150,7 +150,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="textView10, swVibrate, text_vibrate_stat"
+            app:constraint_referenced_ids="textView10, swVibrate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swMessage" />
@@ -188,7 +188,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="textView12, swSound, text_sound_stat"
+            app:constraint_referenced_ids="textView12, swSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
@@ -227,7 +227,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue, textView4, textView5"
+            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swSound" />
@@ -338,7 +338,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
-            app:constraint_referenced_ids="textView14, batSound, text_bat_stat"
+            app:constraint_referenced_ids="textView14, batSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />

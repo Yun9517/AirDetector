@@ -55,7 +55,14 @@ class AppVersion (release:Int,internal:Int,external:Int ):AsyncTask<String, Long
                 val jsonObj = JSONObject(res)
                 val returnResult = jsonObj.getJSONObject("app_version")
 
-                if( returnResult.getInt("release_version")>release_version)
+                val onlineVersion = returnResult.getInt("release_version") * 100 +
+                        returnResult.getInt("internal_version") * 10 +
+                        returnResult.getInt("external_version")
+                val apkVersion = release_version * 100 + internal_version * 10 + external_version
+                if (onlineVersion > apkVersion) {
+                    hasNewSW = true
+                }
+/*                if( returnResult.getInt("release_version")>release_version)
                 { hasNewSW=true }
                 else{
                     if (returnResult.getInt("internal_version")>internal_version)
@@ -66,7 +73,7 @@ class AppVersion (release:Int,internal:Int,external:Int ):AsyncTask<String, Long
                         else
                         { }//do nothing because hasNewSW default is false
                     }
-                }
+                }*/
             }
         } catch (e: Exception) {
             e.printStackTrace()

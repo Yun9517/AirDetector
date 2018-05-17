@@ -259,7 +259,7 @@ class SettingActivity : AppCompatActivity() {
             dialog.setPositiveButton("OK", { _, _ ->
                 val value = editText.text.toString()
 
-                if(value.toInt() in 220..2200) {
+                if(value.isNotEmpty() && value.toInt() in 220..2200) {
                     tvocSeekBar.setValue(value.toFloat())
                     setSeekBarColor(tvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(tvocSeekValue, value.toFloat())
@@ -283,7 +283,7 @@ class SettingActivity : AppCompatActivity() {
             dialog.setPositiveButton("OK", { _, _ ->
                 val value = editText.text.toString()
 
-                if(value.toInt() in 16..150) {
+                if(value.isNotEmpty() && value.toInt() in 16..150) {
                     pm25SeekBar.setValue(value.toFloat())
                     setSeekBarColor(pm25SeekBar, value.toFloat(), false)
                     setSeekBarValue(pm25SeekValue, value.toFloat())
@@ -358,7 +358,7 @@ class SettingActivity : AppCompatActivity() {
             dialog.setPositiveButton("OK", { _, _ ->
                 val value = editText.text.toString()
 
-                if(value.toInt() in 220..2200) {
+                if(value.isNotEmpty() && value.toInt() in 220..2200) {
                     cloudTvocSeekBar.setValue(value.toFloat())
                     setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
                     setSeekBarValue( cloudTvocSeekValue, value.toFloat())
@@ -382,7 +382,7 @@ class SettingActivity : AppCompatActivity() {
             dialog.setPositiveButton("OK", { _, _ ->
                 val value = editText.text.toString()
 
-                if(value.toInt() in 16..150) {
+                if(value.isNotEmpty() && value.toInt() in 16..150) {
                     pm25SeekBar.setValue(value.toFloat())
                     setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue( cloudPM25SeekValue, value.toFloat())

@@ -309,4 +309,8 @@
     <string name="dfu_file_scope_label">Scope:</string>
     <string name="dfu_file_status_label">Status:</string>
 
+    <!-- 2018/05/15 -->
+    <string name="remindAfter_5_Mins">Snooze</string>
+    <string name="remindAfterA_Day">Inform  me next day</string>
+    <string name="remindDismiss">OK</string>
 </resources>
