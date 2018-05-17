@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -20,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -155,6 +157,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
         // 初始化inCircleTitle文字大小
         fixInCircleTextSize()
+        //下滑更多
+        slideMoreAnimation()
     }
 
 
@@ -863,5 +867,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
         var checkSumByte = checkSum.toByte()
         return checkSumByte == max
 
+    }
+
+    private fun slideMoreAnimation() {
+        val animShake = AnimationUtils.loadAnimation(mContext, R.anim.textview_shake)
+        slideMore.startAnimation(animShake)
+        Handler().postDelayed(Runnable { slideMore.visibility = View.GONE }, 6000)
     }
 }
