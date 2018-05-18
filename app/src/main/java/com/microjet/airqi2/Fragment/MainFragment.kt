@@ -886,7 +886,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun slideMoreAnimation() {
         val animShake = AnimationUtils.loadAnimation(mContext, R.anim.textview_shake)
-        slideMore.startAnimation(animShake)
-        Handler().postDelayed(Runnable { slideMore.visibility = View.GONE }, 6000)
+        slideMore?.startAnimation(animShake)
+        Handler().postDelayed(Runnable { slideMore?.visibility = View.GONE }, 6000)
     }
 }
