@@ -259,19 +259,18 @@ class WarningClass {
         stackBuilder.addNextIntent(intent)
         //val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        //當使用者點擊通知Bar時，切換回MainActivity
+
         //This is the intent of PendingIntent
-
         val intentAction = Intent(m_context!!, NotificationButtonReceiver::class.java)
-
-        //This is optional if you have more than one buttons and want to differentiate between two
-        //  intentAction?.putExtra("action","action1")
-        intentAction.action = "action1"
-        val pi = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
         val intentAction2 = Intent(m_context!!, NotificationButtonReceiver::class.java)
-        //    intentAction2?.putExtra("action","action2")
+        //This is optional if you have more than one buttons and want to differentiate between two
+        intentAction.action = "action1"
         intentAction2.action = "action2"
+        val pi = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
         val pi2 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
+        //當使用者點擊通知Bar時，切換回MainActivity
+        val pi3 = PendingIntent.getActivity(m_context!!, DateType,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
@@ -288,9 +287,7 @@ class WarningClass {
                 .addAction (0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
-        notification.contentIntent = pi
-
-        //notification.contentIntent = pi2
+        notification.contentIntent = pi3
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
