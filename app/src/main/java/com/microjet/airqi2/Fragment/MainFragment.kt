@@ -127,7 +127,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             checkUIState()
         }*/
         imgLight.setOnTouchListener { view, motionEvent ->
-            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2 || dataForState == DetectionData.PM25) {
+            if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
                 when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {//.ACTION_BUTTON_PRESS
@@ -149,6 +149,21 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         view.isPressed = false
                         isPumpOn = false
                         //************************************************************************************************************************************
+                    }
+                }
+            }
+            else if (dataForState == DetectionData.PM25) {
+                when(motionEvent.action) {
+                    MotionEvent.ACTION_DOWN -> {
+                        view.parent.requestDisallowInterceptTouchEvent(true)
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_ON)
+                        view.isPressed = true
+                        isPumpOn = true
+                    }
+                    MotionEvent.ACTION_UP -> {
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
+                        view.isPressed = false
+                        isPumpOn = false
                     }
                 }
             }

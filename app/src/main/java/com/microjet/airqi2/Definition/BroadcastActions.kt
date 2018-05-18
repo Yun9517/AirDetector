@@ -92,4 +92,7 @@ object BroadcastActions {
     //20180308
     const val INTENT_KEY_SET_PM25_ON = "airqi2.intent.SET_PM25_ON"
     const val INTENT_KEY_SET_PM25_OFF = "airqi2.intent.SET_PM25_OFF"
+    // 2018/05/08
+    const val INTENT_KEY_PM25_FAN_ON = "airqi2.intent.PM25_FAN_ON"
+    const val INTENT_KEY_PM25_FAN_OFF = "airqi2.intent.PM25_FAN_OFF"
 }

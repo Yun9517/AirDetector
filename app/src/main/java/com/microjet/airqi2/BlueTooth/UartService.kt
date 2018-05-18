@@ -385,6 +385,9 @@ class UartService : Service() {
         intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_ON)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_ON)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_OFF)
+        // 2018/05/08
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PM25_FAN_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
         return intentFilter
     }
 
@@ -395,6 +398,9 @@ class UartService : Service() {
                 BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
                 BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
                 BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
+                // 2018/05/08
+                BroadcastActions.INTENT_KEY_PM25_FAN_ON -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(65537))
+                BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(1))
             }
         }
     }
