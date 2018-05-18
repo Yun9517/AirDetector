@@ -33,7 +33,6 @@ import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.google.firebase.iid.FirebaseInstanceId
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
@@ -49,9 +48,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
-import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -292,11 +289,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         })
 
-        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val myToken = shareToken.getString("token", "")
-        if(myToken != ""){
-            FirebaseNotifTask().execute(myToken)
-        }
+
 
     }
 
@@ -318,6 +311,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             if (!MyApplication.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
+        }
+        //20180518
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        if(myToken != ""){
+            FirebaseNotifTask().execute(myToken)
         }
     }
 
