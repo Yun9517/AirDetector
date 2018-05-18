@@ -1,11 +1,9 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
+import android.app.*
 import android.content.Context
+import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Bitmap
@@ -19,7 +17,8 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
-import io.realm.Realm
+import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
+import java.util.*
 
 
 /**
@@ -43,7 +42,7 @@ class WarningClass {
     //Test
     private var soundsMap: HashMap<Int, Int> = HashMap<Int, Int>()
     private var soundPool: SoundPool? = null
-
+    private var mPreferenceNotification: SharedPreferences? = null
     constructor (MustInputContext: Context) {
         m_context = MustInputContext
         mPreference = m_context!!.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
@@ -63,7 +62,28 @@ class WarningClass {
         allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
         tvocAlertValue = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
         pm25AlertValue = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+        mPreferenceNotification = m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+        val myCondition = mPreferenceNotification!!.getString("nextNotification","none")
+        when (myCondition){
+            "none"->{
 
+            }
+            "tomorrow"-> {
+                /*val setTime = mPreferenceNotification!!.getString("now time","0")
+                val date = Date().time
+                val time = setTime.toLong()
+                if ((date-time) < 86400000){
+                    return
+                }*/
+            }
+            "5min"-> {
+                val setTime = mPreferenceNotification!!.getString("now time","0")
+                val date = Date().time
+                val time = setTime.toLong()
+                if ((date-time) < 300000)
+                    return
+            }
+        }
         if (allowNotify && tvocValue >= tvocAlertValue) {
             when (tvocValue) {
                 in 0..219 -> {
@@ -226,28 +246,57 @@ class WarningClass {
     private fun makeNotificationShow(DateType: Int, iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
+        //20180109   Andy
+        val intent = Intent(m_context!!, MainActivity::class.java)
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        val stackBuilder = TaskStackBuilder.create(m_context)
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity::class.java)
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(intent)
+        //val pi = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+        //This is the intent of PendingIntent
+        val intentAction = Intent(m_context!!, NotificationButtonReceiver::class.java)
+        val intentAction2 = Intent(m_context!!, NotificationButtonReceiver::class.java)
+        //This is optional if you have more than one buttons and want to differentiate between two
+        intentAction.action = "action1"
+        intentAction2.action = "action2"
+        //當使用者點擊通知Bar時，切換回MainActivity
+        val pi0 = PendingIntent.getActivity(m_context!!, DateType, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi1 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
+        val pi2 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
+
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(iconID)
                 .setContentTitle(title)
-                .setStyle(bigStyle)
-                .setPriority(Notification.PRIORITY_DEFAULT)
+                //.setStyle(bigStyle)
+                .setStyle(NotificationCompat.BigTextStyle()
+                        .bigText(title))
+                //.setPriority(Notification.PRIORITY_DEFAULT)
+                .setPriority(NotificationCompat.PRIORITY_MAX)
+                .setCategory(NotificationCompat.CATEGORY_ALARM)
+                .addAction (0, m_context!!.getString(R.string.remindDismiss), pi1)
+                .addAction (0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
-
-        //20180109   Andy
-        val intent = Intent(m_context!!, MainActivity::class.java)
-        //當使用者點擊通知Bar時，切換回MainActivity
-        val pi = PendingIntent.getActivity(m_context!!, DateType,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        notification.contentIntent = pi
-
+        notification.contentIntent = pi0
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
+            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindDismiss), pi1)
+            val action2 = Notification.Action(0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
+                    .addAction(action1)
+                    .addAction(action2)
+                    .setAutoCancel(true)
             notificationHelper.notify(DateType, NB)
         } else {
             try {
@@ -288,6 +337,9 @@ class WarningClass {
                             titleShowType = m_context!!.getString(title) + " " + m_context!!.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                         }
                     }
+                    mPreferenceNotification = m_context!!.getSharedPreferences("NotificationAction",MODE_PRIVATE)
+                    mPreferenceNotification!!.edit().clear().apply()
+
                     makeNotificationShow(
                             DateTypeId,
                             BitmapFactory.decodeResource(m_context!!.resources, icon),

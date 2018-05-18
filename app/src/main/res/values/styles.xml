@@ -26,7 +26,7 @@
     </style>
 
     <style name="SwitchCompatTheme">
-        <item name="colorControlActivated">@color/whiteColor</item>
+        <item name="colorControlActivated">@color/colorAccent</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

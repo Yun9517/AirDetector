@@ -852,8 +852,12 @@ public class UartService1 extends Service {
                     break;
                 case BroadcastActions.INTENT_KEY_SET_PM25_OFF:
                     writeRXCharacteristic(BLECallingTranslate.INSTANCE.setPM25Rate(15));
+                // 2018/05/08
+                case BroadcastActions.INTENT_KEY_PM25_FAN_ON:
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PM25FanCall(65537));
+                case BroadcastActions.INTENT_KEY_PM25_FAN_OFF:
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.PM25FanCall(1));
                     break;
-
             }
         }
     }

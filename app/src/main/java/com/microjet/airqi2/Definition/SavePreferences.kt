@@ -1,7 +1,5 @@
 package com.microjet.airqi2.Definition
 
-import com.microjet.airqi2.URL.AirActionTask
-
 /**
  * Created by ray650128 on 2017/11/30.
  */
@@ -40,4 +38,9 @@ object SavePreferences {
     //20180508
     const val SETTING_MAP_PRIVACY = "airqi2.settings.SETTING_MAP_PRIVACY"
 
+    //20180515
+    const val SETTING_CLOUD_NOTIFY = "airqi2.settings.SETTING_CLOUD_NOTIFY"
+
+    //20180517
+    const val SETTING_FIREBASE  = "airqi2.settings.SETTING_FIREBASE_ALLOW"
 }

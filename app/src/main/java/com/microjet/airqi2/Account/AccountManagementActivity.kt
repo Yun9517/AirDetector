@@ -11,17 +11,18 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
+import com.microjet.airqi2.FirebaseNotifTask
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
-import org.json.JSONArray
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -239,6 +240,9 @@ class AccountManagementActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             if (result == "成功登入") {
+                val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                val myToken = shareToken.getString("token", "")
+                FirebaseNotifTask().execute(myToken)
                 val intent = Intent(mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()
