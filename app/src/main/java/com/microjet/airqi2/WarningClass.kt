@@ -266,11 +266,10 @@ class WarningClass {
         //This is optional if you have more than one buttons and want to differentiate between two
         intentAction.action = "action1"
         intentAction2.action = "action2"
-        val pi = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
-        val pi2 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
         //當使用者點擊通知Bar時，切換回MainActivity
-        val pi3 = PendingIntent.getActivity(m_context!!, DateType,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi0 = PendingIntent.getActivity(m_context!!, DateType, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi1 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
+        val pi2 = PendingIntent.getBroadcast(m_context!!, DateType, intentAction2, 0)
 
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(m_context)
@@ -283,16 +282,16 @@ class WarningClass {
                 //.setPriority(Notification.PRIORITY_DEFAULT)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .addAction (0, m_context!!.getString(R.string.remindDismiss), pi)
+                .addAction (0, m_context!!.getString(R.string.remindDismiss), pi1)
                 .addAction (0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
                 .setAutoCancel(true) // 點擊完notification自動消失
                 .build()
-        notification.contentIntent = pi3
+        notification.contentIntent = pi0
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationHelper = NotificationHelper(m_context!!)
             notificationHelper.set_TCOC_Value(dataValue)
-            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindDismiss), pi)
+            val action1 = Notification.Action(0, m_context!!.getString(R.string.remindDismiss), pi1)
             val action2 = Notification.Action(0, m_context!!.getString(R.string.remindAfter_5_Mins), pi2)
             val NB = notificationHelper.getNotification1(title, text.toString())
                     .addAction(action1)
