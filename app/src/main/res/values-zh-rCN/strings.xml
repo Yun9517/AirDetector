@@ -351,6 +351,8 @@
     <string name="dfu_uploading_percentage_label">0%</string>
     <string name="dfu_uploading_percentage">%d%%</string>
     <string name="dfu_default_name">DEFAULT DFU</string>
+    <!--2018/05/21 Add title -->
+    <string name="dfu_title">Fixed mode</string>
     <string name="dfu_confirmation_dialog_title">Application Uploading</string>
     <string name="dfu_upload_dialog_cancel_message">Are you sure to cancel upload?</string>
     <string name="dfu_success">Application has been transferred successfully.</string>
