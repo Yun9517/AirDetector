@@ -191,6 +191,7 @@
 
     //20180227
     <string name="cloud_fun">自動同步雲端</string>
+    <string name="cloud_func_comment">開啟本功能後即可上傳偵測器空氣品質的數據。</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
     <string name="text_label_device_version">偵測器韌體版本：</string>

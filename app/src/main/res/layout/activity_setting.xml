@@ -112,6 +112,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView8, swMessage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -150,6 +151,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView10, swVibrate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -188,6 +190,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView12, swSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -227,6 +230,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -338,6 +342,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView14, batSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -412,6 +417,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -454,6 +460,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -622,6 +629,29 @@
             app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
 
         <TextView
+            android:id="@+id/text_cloud_func_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/cloud_func_comment"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+        <ImageView
+            android:id="@+id/imageView9"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="80dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cloud_func_comment" />
+
+        <TextView
             android:id="@+id/textView15"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -645,7 +675,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView9" />
 
         <ImageView
             android:id="@+id/imageView8"
