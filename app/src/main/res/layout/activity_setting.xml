@@ -648,7 +648,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imageView8"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
@@ -659,18 +659,55 @@
             app:layout_constraintTop_toBottomOf="@+id/ledPower" />
 
         <TextView
+            android:id="@+id/textView16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/led_light_disconnect"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ledDisconnectPower"
+            app:layout_constraintEnd_toStartOf="@+id/ledDisconnectPower"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ledDisconnectPower" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/ledDisconnectPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#484848"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ledDisconnectPower" />
+
+        <TextView
             android:id="@+id/text_device_ver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:text="@string/text_label_device_version"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ledPower" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
 
         <ImageView
             android:id="@+id/imageView6"

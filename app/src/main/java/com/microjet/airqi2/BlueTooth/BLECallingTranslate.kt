@@ -219,15 +219,21 @@ object BLECallingTranslate {
     }
 
     // Device led control
-    fun SetLedOn(value: Boolean): ByteArray {
-        val setVal = if (value) {
+    fun SetLedOn(value1: Boolean, value2: Boolean): ByteArray {
+        val setVal1 = if (value1) {
             BLECommand.LedOn
         } else {
             BLECommand.LedOff
         }
-        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteOneByteLens, BLECommand.SetLedOnOff, setVal)
+
+        val setVal2 = if (value2) {
+            BLECommand.LedOn
+        } else {
+            BLECommand.LedOff
+        }
+        val valueHandler = byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteTwoBytesLens, BLECommand.SetLedOnOff, setVal1, setVal2)
         val checkSum = getCheckSum(valueHandler)
-        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteOneByteLens, BLECommand.SetLedOnOff, setVal, checkSum)
+        return byteArrayOf(BLECommand.WriteCmd, BLECommand.WriteTwoBytesLens, BLECommand.SetLedOnOff, setVal1, setVal2, checkSum)
     }
 
     /**

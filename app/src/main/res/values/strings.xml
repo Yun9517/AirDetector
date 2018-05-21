@@ -145,8 +145,8 @@
     <string name="averageHumidity_Daily">平均濕度</string>
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
-    <string name="text_setting_allow_notification">允許通知</string>
-    <string name="text_setting_allow_privacy">個人軌跡密碼</string>
+    <string name="text_setting_allow_notification">偵測器通知</string>
+    <string name="text_setting_allow_privacy">隱私設定</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
@@ -182,14 +182,15 @@
 
     <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
-    <string name="led_light">LED指示燈</string>
+    <string name="led_light">偵測器指示燈</string>
+    <string name="led_light_disconnect">斷線藍芽閃燈</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
     <string name="allow_3G">允許行動網路</string>
 
     //20180227
-    <string name="cloud_fun">雲端上傳</string>
+    <string name="cloud_fun">自動同步雲端</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
     <string name="text_label_device_version">偵測器韌體版本：</string>
@@ -411,7 +412,7 @@
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">雲端推播</string>
+    <string name="text_cloud_notify">公眾資訊通知</string>
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播時間</string>

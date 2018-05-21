@@ -45,6 +45,8 @@ class SettingActivity : AppCompatActivity() {
     //20180130
     private var batSoundVal: Boolean = false
     private var swLedPowerVal: Boolean = true
+    private var swLedOffLinePowerVal: Boolean = true
+
     //20180227
     private var swCloudVal: Boolean = true
 
@@ -192,15 +194,31 @@ class SettingActivity : AppCompatActivity() {
 
             val intent: Intent? = Intent(
                     if (isChecked) {
-                        BroadcastActions.INTENT_KEY_LED_ON
+                        BroadcastActions.INTENT_KEY_ONLINE_LED_ON
                     } else {
-                        BroadcastActions.INTENT_KEY_LED_OFF
+                        BroadcastActions.INTENT_KEY_ONLINE_LED_OFF
                     }
             )
 
             sendBroadcast(intent)
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                    isChecked).apply()
+        }
+
+        ledDisconnectPower.setOnCheckedChangeListener { _, isChecked ->
+
+            val intent: Intent? = Intent(
+                    if (isChecked) {
+                        BroadcastActions.INTENT_KEY_OFFLINE_LED_ON
+                    } else {
+                        BroadcastActions.INTENT_KEY_OFFLINE_LED_OFF
+                    }
+            )
+
+            sendBroadcast(intent)
+
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
                     isChecked).apply()
         }
 
@@ -503,8 +521,10 @@ class SettingActivity : AppCompatActivity() {
 
     private fun getDeviceLedSettings() {
         swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
+        swLedOffLinePowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE, true)
 
         ledPower.isChecked = swLedPowerVal
+        ledDisconnectPower.isChecked = swLedOffLinePowerVal
     }
 
     private fun initActionBar() {
@@ -639,11 +659,12 @@ class SettingActivity : AppCompatActivity() {
 
     //2018515 by 白~~~~~~~~~~~~~~~~告
 
+    @SuppressLint("SetTextI18n")
     private fun  getFirebaseNotifSettings() {
         if (TvocNoseData.firebaseNotiftime < 10){
-            btnCloudNotify.text = "0"+TvocNoseData.firebaseNotiftime.toString()+":00"
+            btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
         }else{
-            btnCloudNotify.text = TvocNoseData.firebaseNotiftime.toString()+":00"
+            btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
         }
         cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
         cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
@@ -651,23 +672,24 @@ class SettingActivity : AppCompatActivity() {
         cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
     }
 
+    @SuppressLint("SetTextI18n")
     private fun numberPickerDialog(){
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
         myHourPicker.minValue = 0
         myHourPicker.value = TvocNoseData.firebaseNotiftime
         val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
-                .setPositiveButton(android.R.string.ok, object : DialogInterface.OnClickListener {
-                    override fun onClick(dialog: DialogInterface, which: Int) {
-                        cloudTime = myHourPicker.value
-                        if (cloudTime < 10){
-                            btnCloudNotify.text = "0"+cloudTime.toString()+":00"
-                        }else{
-                            btnCloudNotify.text = cloudTime.toString()+":00"
-                        }
-                        Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    cloudTime = myHourPicker.value
+                    if (cloudTime < 10){
+                        btnCloudNotify.text = "0$cloudTime:00"
+                    }else{
+                        btnCloudNotify.text = "$cloudTime:00"
                     }
-                }).setTitle("Time setting").show()
+                    Log.e("TvocNoseData",TvocNoseData.firebaseNotiftime.toString())
+                }.setTitle("Time setting")
+
+        alertBuilder.show()
     }
 
     private fun   updataSetting(){

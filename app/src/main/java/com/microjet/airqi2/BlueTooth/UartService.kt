@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.TvocNoseData
 import org.greenrobot.eventbus.EventBus
 import java.util.*
@@ -381,8 +382,10 @@ class UartService : Service() {
 
     private fun makeServiceIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
-        intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_OFF)
-        intentFilter.addAction(BroadcastActions.INTENT_KEY_LED_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_ONLINE_LED_OFF)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_ONLINE_LED_ON)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_OFFLINE_LED_OFF)
+        intentFilter.addAction(BroadcastActions.INTENT_KEY_OFFLINE_LED_ON)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_ON)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_PUMP_OFF)
         // 2018/05/08
@@ -394,8 +397,26 @@ class UartService : Service() {
     private val mServiceReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, p1: Intent?) {
             when (p1!!.action) {
-                BroadcastActions.INTENT_KEY_LED_OFF -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(false))
-                BroadcastActions.INTENT_KEY_LED_ON -> writeRXCharacteristic(BLECallingTranslate.SetLedOn(true))
+                BroadcastActions.INTENT_KEY_ONLINE_LED_OFF -> {
+                    writeRXCharacteristic(BLECallingTranslate.SetLedOn(false, MyApplication.isOfflineLedOn))
+
+                    MyApplication.isOnlineLedOn = false
+                }
+                BroadcastActions.INTENT_KEY_ONLINE_LED_ON -> {
+                    writeRXCharacteristic(BLECallingTranslate.SetLedOn(true, MyApplication.isOfflineLedOn))
+
+                    MyApplication.isOnlineLedOn = true
+                }
+                BroadcastActions.INTENT_KEY_OFFLINE_LED_OFF -> {
+                    writeRXCharacteristic(BLECallingTranslate.SetLedOn(MyApplication.isOnlineLedOn, false))
+
+                    MyApplication.isOfflineLedOn = true
+                }
+                BroadcastActions.INTENT_KEY_OFFLINE_LED_ON -> {
+                    writeRXCharacteristic(BLECallingTranslate.SetLedOn(MyApplication.isOnlineLedOn, true))
+
+                    MyApplication.isOfflineLedOn = true
+                }
                 BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
                 BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
                 // 2018/05/08

@@ -80,8 +80,10 @@ object BroadcastActions {
     const val INTENT_KEY_PUMP_ON = "airqi2.intent.PUMP_ON"
     const val INTENT_KEY_PUMP_OFF = "airqi2.intent.PUMP_OFF"
     //20180222
-    const val INTENT_KEY_LED_OFF = "airqi2.intent.LED_OFF"
-    const val INTENT_KEY_LED_ON = "airqi2.intent.LED_ON"
+    const val INTENT_KEY_ONLINE_LED_OFF = "airqi2.intent.INTENT_KEY_ONLINE_LED_OFF"
+    const val INTENT_KEY_ONLINE_LED_ON = "airqi2.intent.INTENT_KEY_ONLINE_LED_ON"
+    const val INTENT_KEY_OFFLINE_LED_OFF = "airqi2.intent.INTENT_KEY_OFFLINE_LED_OFF"
+    const val INTENT_KEY_OFFLINE_LED_ON = "airqi2.intent.INTENT_KEY_OFFLINE_LED_ON"
 
     //20180227
     const val INTENT_KEY_CLOUD_ON = "airqi2.intent.CLOUD_ON"

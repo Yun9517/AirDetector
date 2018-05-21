@@ -1279,12 +1279,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xB9.toByte() -> {
                         val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
                         val ledState = txValue[3].toInt()
+                        val ledState2 = txValue[4].toInt()
                         if (txValue.size > 5) {
                             if (ledState == 1) {
+                                MyApplication.isOnlineLedOn = false
                                 mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                         false).apply()
                             } else {
+                                MyApplication.isOnlineLedOn = true
                                 mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                        true).apply()
+                            }
+
+                            if (ledState2 == 1) {
+                                MyApplication.isOfflineLedOn = false
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
+                                        false).apply()
+                            } else {
+                                MyApplication.isOfflineLedOn = true
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
                                         true).apply()
                             }
                             Log.e(TAG, "LED Status: $ledState")

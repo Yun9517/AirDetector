@@ -837,11 +837,11 @@ public class UartService1 extends Service {
                 case BroadcastActions.INTENT_KEY_PUMP_OFF:
                     writeRXCharacteristic(BLECallingTranslate.INSTANCE.PumpOnCall(1));
                     break;
-                case BroadcastActions.INTENT_KEY_LED_OFF:
-                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(false));
+                case BroadcastActions.INTENT_KEY_ONLINE_LED_OFF:
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(false, true));
                     break;
-                case BroadcastActions.INTENT_KEY_LED_ON:
-                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(true));
+                case BroadcastActions.INTENT_KEY_ONLINE_LED_ON:
+                    writeRXCharacteristic(BLECallingTranslate.INSTANCE.SetLedOn(true, true));
                     break;
                 /*case BroadcastActions.INTENT_KEY_LOCATION_VALUE:
                     lati = intent.getBundleExtra("TwoValueBundle").getFloat(BroadcastActions.INTENT_KEY_LATITUDE_VALUE);

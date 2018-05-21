@@ -42,6 +42,9 @@ class MyApplication : Application() {
         private var deviceChargeStatus: Boolean = false
         //var isPM25: String = "000000000000"
 
+        var isOnlineLedOn = false
+        var isOfflineLedOn = false
+
         fun applicationContext(): Context {
             return instance!!.applicationContext
         }
