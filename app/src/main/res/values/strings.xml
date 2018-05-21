@@ -415,4 +415,8 @@
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播時間</string>
+
+    //20180521
+    <string name="text_scrollingText">測試跑馬燈，會不會從左跑到右邊，只是測試喔。測試跑馬燈，會不會從左跑到右邊，只是測試。測試跑馬燈，會不會從左跑到右邊，只是測試。</string>
+    <string name="text_scrollingTitle">走馬燈</string>
 </resources>

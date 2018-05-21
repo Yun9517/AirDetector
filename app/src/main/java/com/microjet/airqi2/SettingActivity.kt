@@ -383,7 +383,7 @@ class SettingActivity : AppCompatActivity() {
                 val value = editText.text.toString()
 
                 if(value.isNotEmpty() && value.toInt() in 16..150) {
-                    pm25SeekBar.setValue(value.toFloat())
+                    cloudPM25SeekBar.setValue(value.toFloat())
                     setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue( cloudPM25SeekValue, value.toFloat())
                     TvocNoseData.firebaseNotifPM25 = value.toInt()

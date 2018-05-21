@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
+import com.microjet.airqi2.CustomAPI.OnMultipleClickListener
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
@@ -93,6 +94,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_Temp.setOnTouchListener(this)
         show_RH.setOnTouchListener(this)
         show_PM.setOnTouchListener(this)
+
+        //20180521 白~~~~~~~~~~~~~~~~~~告藏的彩蛋
+        scrollingTitle!!.setOnClickListener(object : OnMultipleClickListener(10, 500) {
+            override fun onMultipleClick(v: View) {
+
+                scrollingTitle.text ="邊緣人APP"
+                scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，助你早日擺脫邊緣人症狀，回歸正常人生活。"
+            }
+        })
 
         /*show_TVOC?.setOnClickListener {
             it.parent.requestDisallowInterceptTouchEvent(true)
