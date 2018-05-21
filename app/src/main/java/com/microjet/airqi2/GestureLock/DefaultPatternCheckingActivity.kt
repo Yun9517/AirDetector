@@ -44,7 +44,7 @@ class DefaultPatternCheckingActivity : AppCompatActivity() {
             override fun onComplete(view: PatternLockerView, hitList: List<Int>) {
                 val isError = !isPatternOk(hitList)
                 view.updateStatus(isError)
-                patternIndicatorView!!.updateState(hitList, isError)
+                //patternIndicatorView!!.updateState(hitList, isError)
                 updateMsg()
 
                 if (!isError) {
