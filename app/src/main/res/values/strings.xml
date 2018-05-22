@@ -365,6 +365,7 @@
     <string name="dfu_default_name">工程模式</string>
     <!--2018/05/21 Add title -->
     <string name="dfu_title">修復模式</string>
+    <string name="dfu_update_failure">修復更新失敗</string>
     <string name="dfu_confirmation_dialog_title">Application Uploading</string>
     <string name="dfu_upload_dialog_cancel_message">Are you sure to cancel upload?</string>
     <string name="dfu_success">Application has been transferred successfully.</string>

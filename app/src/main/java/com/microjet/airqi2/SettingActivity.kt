@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -15,8 +16,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
+import com.crashlytics.android.Crashlytics.setString
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
+import com.microjet.airqi2.BlueTooth.DFU.DFUActivity
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
@@ -25,6 +28,7 @@ import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import com.microjet.airqi2.URL.AirActionTask
 import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.android.synthetic.main.drawer_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
@@ -235,16 +239,30 @@ class SettingActivity : AppCompatActivity() {
             DefaultPatternCheckingActivity.startAction(this@SettingActivity,
                     DefaultPatternCheckingActivity.START_ACTION_MODE_CHANGE_PASSWOPRD)
         }
-
-        btnCheckFW.setOnClickListener {
-            if(MyApplication.getDeviceChargeStatus()) {
-                val fwVer = MyApplication.getDeviceVersion()
-                val fwSerial = MyApplication.getDeviceSerial()
-                val fwType = MyApplication.getDeviceType()
-                //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
-                checkFwVersion("20$fwVer$fwSerial", fwType)
-            } else {
-                showNotChargingDialog()
+        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - start
+        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+        val mDeviceAddress = share.getString("mac", "noValue")
+        val buttonName = share.getString("name", "")
+        if (buttonName == "DfuTarg") {
+            btnCheckFW?.text =getString(R.string.dfu_update_failure)
+            btnCheckFW.setOnClickListener {
+                val intent = Intent(this, DFUActivity::class.java)
+                        .putExtra("ADDRESS", mDeviceAddress)
+                        .putExtra("DEVICE_NAME", buttonName)
+                startActivity(intent)
+            }
+        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - end
+        } else {
+            btnCheckFW.setOnClickListener {
+                if (MyApplication.getDeviceChargeStatus()) {
+                    val fwVer = MyApplication.getDeviceVersion()
+                    val fwSerial = MyApplication.getDeviceSerial()
+                    val fwType = MyApplication.getDeviceType()
+                    //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
+                    checkFwVersion("20$fwVer$fwSerial", fwType)
+                } else {
+                    showNotChargingDialog()
+                }
             }
         }
 
