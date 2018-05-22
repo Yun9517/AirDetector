@@ -145,8 +145,8 @@
     <string name="averageHumidity_Daily">平均濕度</string>
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
-    <string name="text_setting_allow_notification">偵測器通知</string>
-    <string name="text_setting_allow_privacy">隱私設定</string>
+    <string name="text_setting_allow_notification">偵測通知</string>
+    <string name="text_setting_allow_privacy">個人軌跡密碼設定</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
@@ -182,7 +182,7 @@
 
     <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
-    <string name="led_light">偵測器指示燈</string>
+    <string name="led_light">偵測器提示燈</string>
     <string name="led_light_disconnect">斷線藍芽閃燈</string>
 
     <!-- 2018/03/02 -->
@@ -194,7 +194,7 @@
     <string name="cloud_func_comment">開啟本功能後即可上傳偵測器空氣品質的數據。</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
-    <string name="text_label_device_version">偵測器韌體版本：</string>
+    <string name="text_label_device_version">偵測器韌體版本 </string>
     <string name="text_label_local_uuid">手機 UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
@@ -206,7 +206,7 @@
     <string name="forget_Check_Password_Title">忘記密碼 - 變更密碼</string>
     <string name="forget_Password_Description">我們將寄送驗證信至您的電子郵件，點入信中的驗證連結網址後，即可更便您的密碼。</string>
     <string name="change_Password">修改密碼？</string>
-    <string name="change_Password_Title">修改密碼</string>
+    <string name="change_Password_Title">變更密碼</string>
     <string name="check_Password">請輸入新密碼</string>
     <string name="double_check_Password">再次確認新密碼</string>
     <string name="no_Account">我還沒有註冊帳號  我想</string>

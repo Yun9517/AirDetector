@@ -31,7 +31,6 @@ import com.microjet.airqi2.TvocNoseData.calObject
 import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_account_active.*
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -64,6 +63,7 @@ class SettingActivity : AppCompatActivity() {
 
     //20180227
     private var swCloudVal: Boolean = true
+    private var swCloud3GVal: Boolean = true
 
     private var tvocSeekBarVal: Int = 660
     private var pm25SeekBarVal: Int = 16
@@ -240,19 +240,24 @@ class SettingActivity : AppCompatActivity() {
         //20180227  CloudFun
         swCloudFunc.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
-
             if (isChecked) {
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_ON)
+                cgAllow3G.visibility = View.VISIBLE
+
+                swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
+
+                if(swCloud3GVal) {
+                    swAllow3G.isChecked = swCloud3GVal
+                }
             } else {
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_CLOUD_OFF)
+                cgAllow3G.visibility = View.GONE
             }
 
-            sendBroadcast(intent)
+            MyApplication.setSharePreferenceCloudUploadStat(isChecked)
+        }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN,
-                    isChecked).apply()
+        swAllow3G.setOnCheckedChangeListener { _, isChecked ->
 
+            MyApplication.setSharePreferenceCloudUpload3GStat(isChecked)
         }
 
         swAllowPrivacy.setOnCheckedChangeListener { _, isChecked ->
@@ -530,9 +535,22 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getCloudSettings() {
-        swCloudVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        swCloudVal = MyApplication.getSharePreferenceCloudUploadStat()
+        swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
+
         swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
         swCloudFunc.isChecked = swCloudVal
+
+        if(swCloudVal) {
+            cgAllow3G.visibility = View.VISIBLE
+
+            if(swCloud3GVal) {
+                swAllow3G.isChecked = swCloud3GVal
+            }
+        } else {
+            cgAllow3G.visibility = View.GONE
+        }
+
         swAllowCloudNotify.isChecked = swCloudNotifyVal
 
         if (swCloudNotifyVal) {

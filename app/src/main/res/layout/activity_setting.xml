@@ -22,7 +22,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="gone"
-            app:constraint_referenced_ids="imageView1, btnChangePassword"
+            app:constraint_referenced_ids="btnChangePassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -54,33 +54,25 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgPrivacy" />
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#d1d1d3"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowPrivacy" />
-
         <Button
             android:id="@+id/btnChangePassword"
             android:layout_width="0dp"
-            android:layout_height="42dp"
+            android:layout_height="26dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/style_setting_button_long"
             android:text="@string/change_Password_Title"
             android:textColor="#f32091"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" />
+            app:layout_constraintTop_toBottomOf="@+id/swAllowPrivacy" />
 
         <ImageView
             android:id="@+id/imageView1"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginTop="8dp"
             android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -270,7 +262,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTvocSeekBarLabel"
@@ -321,7 +313,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPM25SeekBarLabel"
@@ -506,7 +498,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCloudTvocSeekBarLabel"
@@ -557,7 +549,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCloudPM25SeekBarLabel"
@@ -664,6 +656,46 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
+        <android.support.constraint.Group
+            android:id="@+id/cgAllow3G"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:constraint_referenced_ids="text_allow_3g, swAllow3G"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
+
+        <TextView
+            android:id="@+id/text_allow_3g"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/allow_3G"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/swAllow3G"
+            app:layout_constraintEnd_toStartOf="@+id/swAllow3G"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllow3G" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllow3G"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgAllow3G" />
+
         <ImageView
             android:id="@+id/imageView5"
             android:layout_width="0dp"
@@ -673,7 +705,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
+            app:layout_constraintTop_toBottomOf="@+id/swAllow3G" />
 
         <TextView
             android:id="@+id/text_cloud_func_comment"
@@ -833,8 +865,10 @@
             android:id="@+id/imageView10"
             android:layout_width="0dp"
             android:layout_height="1dp"
+            android:layout_marginBottom="100dp"
             android:background="#d1d1d3"
             android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dataExport" />
