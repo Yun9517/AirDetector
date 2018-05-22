@@ -4,7 +4,6 @@ import android.os.AsyncTask
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
 import io.realm.Realm
-import io.realm.Sort
 import okhttp3.*
 import org.json.JSONArray
 import org.json.JSONException
@@ -12,59 +11,56 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.*
 import java.util.concurrent.TimeUnit
-import okhttp3.OkHttpClient
-
-
 /**
  * Created by B00175 on 2018/3/30.
  */
 // 上傳非同步執行類別
-class UploadTask: AsyncTask<String, Void, String>() {
+class UploadTask1: AsyncTask<String, Void, String>() {
 
-    private val realm = Realm.getDefaultInstance()
-    private val query = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findAll().sort("Created_time", Sort.ASCENDING)
-    private val itemCount = query.size
+    private var mDeviceAddress: String? = null// params[0]
+    private var apiToken: String? = null//params[1]
 
+    /*
     override fun doInBackground(vararg params: String): String? {
 
-        if (itemCount > 0) {
-            try {
-                val client = OkHttpClient()
-                val mediaType = MediaType.parse("application/x-www-form-urlencoded")
-                val UUID = MyApplication.getPsuedoUniqueID()
-                val mDeviceAddress = params[0]
-                val uploadToken = "Bearer " + params[1]
-                val resistraionID = FirebaseInstanceId.getInstance().token
-                val weather = query.toArray()
+        mDeviceAddress = params[0]
+        apiToken = params[1]
 
-                val body = RequestBody.create(mediaType, "data=" + weather.toString())
-
-                val request = Request.Builder()
-                        .url("https://mjairql.com/api/v1/upUserData")
-                        .post(body)
-                        .addHeader("authorization", uploadToken)
-                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
-                        .build()
-
-                val response = client.newCall(request).execute()
-                if (!response.isSuccessful) {
-
-                } else {
-                    query.forEach {
-                        it.upLoaded = "1"
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("return_body_erro", e.toString())
+        try {
+            //取得上傳資料
+            var upLoadData = prepareData(mDeviceAddress)
+            if (upLoadData!!.contentLength() <= 0) {
+                Log.e("幹太少筆啦!", upLoadData.contentLength().toString())
+                recordChangDataId.clear()
+                return  null
             }
+            var getResponeResult = sendDataToClound(upLoadData, token)
+            if (getResponeResult == false) {
+                Log.e("幹改失敗拉!!", getResponeResult.toString())
+                recordChangDataId.clear()
+                return null
+            }
+            //呼叫updateDB_UpLoaded方法更改此次傳輸的資料庫資料欄位UpLoaded
+            val changResult = changeDBstatus()
+            if (changResult) {
+                Log.e("幹改進去", changResult.toString())
+            }
+            recordChangDataId.clear()
+
+        } catch (e: Exception) {
+            Log.e("return_body_erro", e.toString())
         }
-
-
         return null
     }
 
+    override fun onPostExecute(result: String?) {
+        super.onPostExecute(result)
+    }
+
+
+
+
     //取得資料庫資料並封裝上傳資料
-    /*
     private fun prepareData(DeviceAddress: String): RequestBody? {
         //首先將要丟進陣列內的JSON物件存好內容後丟進陣列
         val unUpLoadedRealm = Realm.getDefaultInstance()
@@ -181,4 +177,5 @@ class UploadTask: AsyncTask<String, Void, String>() {
         return dbChangStatus
     }
     */
+
 }
