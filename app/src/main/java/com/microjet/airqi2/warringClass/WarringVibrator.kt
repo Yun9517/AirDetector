@@ -19,14 +19,8 @@ class WarringVibrator(context: Context,initValue:Int){
         vicSet.add(4000)
         vicSet.add(5000)
     }
-//    private var callback: OnVibratorThreadHoldValueChangedListener? = null
-/*
-    fun setOnVibratorThreadHoldValueChangedListener(listener:OnVibratorThreadHoldValueChangedListener) {
-        callback = listener
-    }*/
-
     fun sendVibrator(vicSec: Int) {
-        if (vicSec>warringValue) {
+        if (vicSec>=warringValue) {
             when (vicSec) {
                 in points[0]+1..points[1]-> {
                     vibrator.vibrate(vicSet[0])
@@ -55,8 +49,4 @@ class WarringVibrator(context: Context,initValue:Int){
     fun setArrayPoint(input:ArrayList<Int>){
         points=input
     }
-/*
-     interface OnVibratorThreadHoldValueChangedListener{
-        fun setThead(threadHoldValue:Int)
-    }*/
 }
