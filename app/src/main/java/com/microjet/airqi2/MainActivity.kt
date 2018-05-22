@@ -49,6 +49,7 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
+import com.microjet.airqi2.MainActivity.BleConnection.*
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
@@ -96,7 +97,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //private var menuItem: MenuItem? = null
     private var lightIcon: ImageView? = null
 
-    private var connState = BleConnection.DISCONNECTED
+    private var connState = DISCONNECTED
 
     // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
@@ -232,10 +233,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        BleConnection.CONNECTED -> {
+                        CONNECTED -> {
                             blueToothDisconnect()
                         }
-                        BleConnection.DISCONNECTED -> {
+                        DISCONNECTED -> {
                             blueToothConnect()
                         }
                     }
@@ -312,7 +313,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
         mDeviceAddress = share.getString("mac", "noValue")
-        if (mDeviceAddress != "noValue" && connState == BleConnection.DISCONNECTED) {
+        if (mDeviceAddress != "noValue" && connState == DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             if (!MyApplication.getSharePreferenceManualDisconn()) {
@@ -326,7 +327,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
-            connState = BleConnection.DISCONNECTED
+            connState = DISCONNECTED
         }
         checkUIState()
     }
@@ -678,6 +679,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun settingShow() {
         val i: Intent? = Intent(this, SettingActivity::class.java)
+
+        i!!.putExtra("CONN", connState == CONNECTED)
+
         startActivityForResult(i, REQUEST_SELECT_SAMPLE)
         //startActivity(i)
     }
@@ -758,7 +762,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothDisconnect() {
-        if (connState == BleConnection.CONNECTED) {
+        if (connState == CONNECTED) {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
@@ -839,7 +843,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (connState == BleConnection.DISCONNECTED) {
+                    if (connState == DISCONNECTED) {
                         mDeviceAddress = data.extras.getString("MAC")
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
@@ -999,12 +1003,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = BleConnection.CONNECTED
+                    connState = CONNECTED
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = BleConnection.DISCONNECTED
+                    connState = DISCONNECTED
                     isFirstC0 = true
                     isFirstC6 = true
                     arr1.clear()
@@ -1040,7 +1044,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
-        if (connState == BleConnection.CONNECTED) {
+        if (connState == CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)

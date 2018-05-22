@@ -731,6 +731,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_cloud_func_comment" />
 
+        <android.support.constraint.Group
+            android:id="@+id/cgDeviceControl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:constraint_referenced_ids="textView15, ledPower, imageView7, textView16, ledDisconnectPower, imageView8, text_device_ver, btnCheckFW, imageView9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+
         <TextView
             android:id="@+id/textView15"
             android:layout_width="0dp"

@@ -85,6 +85,12 @@ class SettingActivity : AppCompatActivity() {
         readPreferences()   // 載入設定值
         uiSetListener()
         initActionBar()
+
+        if(intent.getBooleanExtra("CONN", false)) {
+            cgDeviceControl.visibility = View.VISIBLE
+        } else {
+            cgDeviceControl.visibility = View.GONE
+        }
     }
 
     @SuppressLint("SetTextI18n")
