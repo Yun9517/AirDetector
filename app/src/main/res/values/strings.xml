@@ -150,8 +150,8 @@
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
-    <string name="text_setting_tvoc_value">TVOC 通知數值：</string>
-    <string name="text_setting_pm25_value">PM2.5 通知數值：</string>
+    <string name="text_setting_tvoc_value">總揮發性有機化合物(TVOC)</string>
+    <string name="text_setting_pm25_value">懸浮微粒(PM2.5)</string>
     <string name="text_setting_on">開啟</string>
     <string name="text_setting_off">關閉</string>
     <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
@@ -232,6 +232,7 @@
     <string name="fetchData">查看</string>
     <string name="downloadData">下載</string>
     <string name="shareData">分享</string>
+    <string name="dataExport">數據輸出</string>
     <string name="rememberID">記住帳號</string>
     <string name="syncData">雲端同步</string>
     <string name="download_text">下載進度:</string>
@@ -413,7 +414,8 @@
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">公眾資訊通知</string>
+    <string name="text_cloud_notify">推播通知</string>
+    <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播時間</string>
