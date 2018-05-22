@@ -186,6 +186,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap()
     private var setNavigationView: NavigationView? = null
 
+    // 2018/05/22   scrollingText
+    private var scrollingTextTask: AsyncTask<String, Int, String>? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -289,6 +292,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         })
 
+        scrollingTextTask= ScrollingTextTask().execute()
 
 
     }

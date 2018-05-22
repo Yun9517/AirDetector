@@ -109,11 +109,15 @@ object TvocNoseData {
     var arrHumiMonth: ArrayList<String> = arrayListOf()
     var arrTimeMonth: ArrayList<String> = arrayListOf()
 
+    // 20180518 setting by 白~~~~~~~~~~~~~~~~~~~~~告
     var firebaseNotifSwitch: Boolean? = null
     var firebaseNotiftime: Int = 0
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
 
+    // 20180522 ScrollingTextTask
+    var scrollingTitle: ArrayList<String> = arrayListOf()
+    var scrollingUrl: ArrayList<String> = arrayListOf()
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()
     //val arrTime3: ArrayList<String> = arrayListOf()
