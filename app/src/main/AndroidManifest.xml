@@ -180,6 +180,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SettingActivity"
+            android:label="@string/text_navi_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
