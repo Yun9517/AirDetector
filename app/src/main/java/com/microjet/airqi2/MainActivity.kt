@@ -52,6 +52,7 @@ import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
+import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -189,6 +190,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap()
     private var setNavigationView: NavigationView? = null
 
+    private var mywarningclass:WarringClass?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -198,6 +200,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
         CheckSWversion()
+        mywarningclass=WarringClass(mContext)
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -213,9 +216,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         //20180411   建立警告物件
-        warningClass = WarningClass(this)
+      //  warningClass = WarningClass(this)
         alertId = soundPool2.load(this, R.raw.low_power, 1)
 
+      //  mywarningclass=WarringClass(this)
         // 2018/05/03 ExpandableListView
         setNavigationView = findViewById<View>(R.id.naviView) as NavigationView
 
@@ -1329,7 +1333,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         saveToRealmC6(hashMap)
-                        warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
+                        mywarningclass?.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
+                       // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
                 }
             } else {
