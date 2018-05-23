@@ -289,6 +289,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 5 -> {
                     aboutShow()
                 }
+                6 -> {
+                    aboutShow()
+                }
+                7 -> {
+                    aboutShow()
+                }
+                8 -> {
+                    aboutShow()
+                }
             }
             true
         })
@@ -1111,6 +1120,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         drawerAbout06.iconName = getString(R.string.text_navi_about)
         drawerAbout06.iconImg = R.drawable.ic_phone_android_black_24dp
         listDataHeader.add(drawerAbout06)
+
+        val drawerAbout07 = ExpandedMenuModel()
+        drawerAbout07.iconName = "產品介紹"
+        drawerAbout07.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader.add(drawerAbout07)
+
+        val drawerAbout08 = ExpandedMenuModel()
+        drawerAbout08.iconName = "用戶體驗"
+        drawerAbout08.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader.add(drawerAbout08)
+
+        val drawerAbout09 = ExpandedMenuModel()
+        drawerAbout09.iconName = "購買連結"
+        drawerAbout09.iconImg = R.drawable.ic_phone_android_black_24dp
+        listDataHeader.add(drawerAbout09)
 
         // Adding child data
 
