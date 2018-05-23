@@ -116,7 +116,7 @@ object TvocNoseData {
     var firebaseNotifTVOC: Int = 660
 
     // 20180522 ScrollingTextTask
-    var scrollingText: ArrayList<HashMap<String,String>> = arrayListOf()
+    var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
 
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()

@@ -98,10 +98,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         //20180521 白~~~~~~~~~~~~~~~~~~告藏的彩蛋
         scrollingTitle!!.setOnClickListener(object : OnMultipleClickListener(10, 500) {
             override fun onMultipleClick(v: View) {
-
-                scrollingTitle.text ="邊緣人APP"
-                scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，助你早日擺脫邊緣人症狀，回歸正常人生活。"
-                showScrollingText()
+            showScrollingText()
             }
         })
 
@@ -903,10 +900,16 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     var scrollindex = 0
     private fun showScrollingText(){
-        scrollingText.text = TvocNoseData.scrollingText[scrollindex]["title"].toString()
-        scrollingTitle.text ="  用戶體驗  "
-        scrollindex++
-        if (scrollindex > 2) { scrollindex = 0}
-        Log.d("WWWW",scrollindex.toString())
+        if( TvocNoseData.scrollingList.size !=0 && TvocNoseData.scrollingList.size != null){
+            scrollingText.text = TvocNoseData.scrollingList[scrollindex]["title"].toString()
+            scrollingTitle.text ="用戶體驗"
+            scrollindex++
+            if (scrollindex > 2) { scrollindex = 0}
+            Log.d("WWWW",scrollindex.toString())
+        }else{
+            scrollingTitle.text ="邊緣人APP"
+            scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，助你早日擺脫邊緣人症狀，回歸正常人生活。"
+
+        }
     }
 }

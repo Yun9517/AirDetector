@@ -443,6 +443,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
             android:text="@string/text_scrollingTitle"
             android:textColor="#FFFFFF"
             android:textSize="16sp" />
@@ -452,6 +454,7 @@
             android:layout_width="329dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="5dp"
             android:ellipsize="marquee"
             android:focusable="true"
             android:focusableInTouchMode="true"

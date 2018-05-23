@@ -37,9 +37,9 @@ class ScrollingTextTask : AsyncTask<String, Int, String>() {
                     val hashMap = HashMap<String,String>()
                     hashMap["title"] = jsonObjScrolling["title"].toString()
                     hashMap["url"] = jsonObjScrolling["url"].toString()
-                    TvocNoseData.scrollingText.add(hashMap)
+                    TvocNoseData.scrollingList.add(hashMap)
                 }
-                Log.e("scrollingText的內容",  TvocNoseData.scrollingText.toString())
+                Log.e("scrollingText的內容",  TvocNoseData.scrollingList.toString())
            }
         } catch (e: Exception) {
             e.printStackTrace()
