@@ -295,12 +295,14 @@ class SettingActivity : AppCompatActivity() {
         tvocSeekValue.setOnClickListener {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.textSize = 40f
+            editText.textAlignment = EditText.TEXT_ALIGNMENT_CENTER
 
             val dialog = AlertDialog.Builder(this)
 
-            dialog.setTitle("請輸入數值")
+            dialog.setTitle(resources.getString(R.string.text_setting_tvoc_value))
             dialog.setView(editText)
-            dialog.setPositiveButton("OK", { _, _ ->
+            dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
                 if (value.isNotEmpty() && value.toInt() in 220..2200) {
@@ -312,19 +314,21 @@ class SettingActivity : AppCompatActivity() {
                 }
             })
 
-            dialog.setNegativeButton("取消", null)
+            dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
 
         pm25SeekValue.setOnClickListener {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.textSize = 40f
+            editText.textAlignment = EditText.TEXT_ALIGNMENT_CENTER
 
             val dialog = AlertDialog.Builder(this)
 
-            dialog.setTitle("請輸入數值")
+            dialog.setTitle(resources.getString(R.string.text_setting_pm25_value))
             dialog.setView(editText)
-            dialog.setPositiveButton("OK", { _, _ ->
+            dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
                 if (value.isNotEmpty() && value.toInt() in 16..150) {
@@ -336,7 +340,7 @@ class SettingActivity : AppCompatActivity() {
                 }
             })
 
-            dialog.setNegativeButton("取消", null)
+            dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
 
@@ -394,12 +398,14 @@ class SettingActivity : AppCompatActivity() {
         cloudTvocSeekValue.setOnClickListener {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.textSize = 40f
+            editText.textAlignment = EditText.TEXT_ALIGNMENT_CENTER
 
             val dialog = AlertDialog.Builder(this)
 
-            dialog.setTitle("請輸入數值")
+            dialog.setTitle(resources.getString(R.string.text_setting_tvoc_value))
             dialog.setView(editText)
-            dialog.setPositiveButton("OK", { _, _ ->
+            dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
                 if (value.isNotEmpty() && value.toInt() in 220..2200) {
@@ -411,19 +417,21 @@ class SettingActivity : AppCompatActivity() {
                 }
             })
 
-            dialog.setNegativeButton("取消", null)
+            dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
 
         cloudPM25SeekValue.setOnClickListener {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_NUMBER
+            editText.textSize = 40f
+            editText.textAlignment = EditText.TEXT_ALIGNMENT_CENTER
 
             val dialog = AlertDialog.Builder(this)
 
-            dialog.setTitle("請輸入數值")
+            dialog.setTitle(resources.getString(R.string.text_setting_pm25_value))
             dialog.setView(editText)
-            dialog.setPositiveButton("OK", { _, _ ->
+            dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
                 if (value.isNotEmpty() && value.toInt() in 16..150) {
@@ -435,7 +443,7 @@ class SettingActivity : AppCompatActivity() {
                 }
             })
 
-            dialog.setNegativeButton("取消", null)
+            dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
 
@@ -736,7 +744,7 @@ class SettingActivity : AppCompatActivity() {
                         btnCloudNotify.text = "$cloudTime:00"
                     }
                     Log.e("TvocNoseData", TvocNoseData.firebaseNotiftime.toString())
-                }.setTitle("Time setting")
+                }.setTitle(getString(R.string.text_cloud_notify_time))
 
         alertBuilder.show()
     }
