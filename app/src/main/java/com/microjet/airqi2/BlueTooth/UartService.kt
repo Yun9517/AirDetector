@@ -399,8 +399,8 @@ class UartService : Service() {
                 BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
                 BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
                 // 2018/05/08
-                BroadcastActions.INTENT_KEY_PM25_FAN_ON -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(65537))
-                BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(1))
+                BroadcastActions.INTENT_KEY_PM25_FAN_ON -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(10))
+                //BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(0))
             }
         }
     }

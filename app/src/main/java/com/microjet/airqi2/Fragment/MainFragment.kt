@@ -161,7 +161,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         isPumpOn = true
                     }
                     MotionEvent.ACTION_UP -> {
-                        sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
+                        //sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
                         view.isPressed = false
                         isPumpOn = false
                     }
