@@ -16,23 +16,30 @@ class WarringClass (context:Context)
 {
     private val REQUEST_TVOC_CODE=0x01
     private val REQUEST_PM25_CODE=0x02
-    private val mContext=context
-    private val mPreference= mContext.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-    private var tvocSound=WarringSound(context, R.raw.tvoc_over)
-    private var pm25Sound=WarringSound(context, R.raw.pm25_over)
-    private var tvocNotification=WarringNotification(context,REQUEST_TVOC_CODE)
-    private var pm25Notification=WarringNotification(context,REQUEST_PM25_CODE)
-    private var tvocVibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660))
-    private var pm25Vibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16))
-
     private var allowNotify = false
     private var allowVibrator = false
     private var allowSound = false
     private var allowNotification=false
     private var tvocAlertValue = 660
     private var pm25AlertValue = 16
-    private var tvocArrayAlertValue=ArrayList<Int>()
-    private var pm25ArrayAlertValue=ArrayList<Int>()
+    private val tvocChannel="tvocChannel"
+    private val pm25Channel="pm25Channel"
+    private val tvocChannelName="TVOC"
+    private val pm25ChannelName="PM25"
+    private val mContext=context
+    private val mPreference= mContext.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+    private var tvocSound=WarringSound(context, R.raw.tvoc_over)
+    private var pm25Sound=WarringSound(context, R.raw.pm25_over)
+    private var tvocNotification=WarringNotification(context,REQUEST_TVOC_CODE,tvocAlertValue,tvocChannel,tvocChannelName)
+    private var pm25Notification=WarringNotification(context,REQUEST_PM25_CODE,pm25AlertValue,pm25Channel,pm25ChannelName)
+    private var tvocVibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660))
+    private var pm25Vibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16))
+
+    private val tvocArrayAlertValue=ArrayList<Int>()
+    private val tvocArrayStringList=ArrayList<Int>()
+    private val pm25ArrayAlertValue=ArrayList<Int>()
+    private val pm25ArrayStringList=ArrayList<Int>()
+    var callback:onChangeListener?=null
     init {
         tvocArrayAlertValue.add(0)
         tvocArrayAlertValue.add(219)
@@ -41,7 +48,16 @@ class WarringClass (context:Context)
         tvocArrayAlertValue.add(5499)
         tvocArrayAlertValue.add(19999)
         tvocArrayAlertValue.add(60000)
+        tvocArrayStringList.add(R.string.warning_title_Yellow)
+        tvocArrayStringList.add(R.string.warning_title_Yellow)
+        tvocArrayStringList.add(R.string.warning_title_Orange)
+        tvocArrayStringList.add(R.string.warning_title_Red)
+        tvocArrayStringList.add(R.string.warning_title_Purple)
+        tvocArrayStringList.add(R.string.warning_title_Brown)
         tvocVibrator.setArrayPoint(tvocArrayAlertValue)
+        tvocNotification.setArrayPoint(tvocArrayAlertValue)
+        tvocNotification.setArrayTitle(tvocArrayStringList)
+
         pm25ArrayAlertValue.add(0)
         pm25ArrayAlertValue.add(14)
         pm25ArrayAlertValue.add(34)
@@ -49,7 +65,15 @@ class WarringClass (context:Context)
         pm25ArrayAlertValue.add(149)
         pm25ArrayAlertValue.add(249)
         pm25ArrayAlertValue.add(500)
+        pm25ArrayStringList.add(R.string.label_pm25_Green)
+        pm25ArrayStringList.add(R.string.label_pm25_Yellow)
+        pm25ArrayStringList.add(R.string.label_pm25_Orange)
+        pm25ArrayStringList.add(R.string.label_pm25_Red)
+        pm25ArrayStringList.add(R.string.label_pm25_Purple)
+        pm25ArrayStringList.add(R.string.label_pm25_Brown)
         pm25Vibrator.setArrayPoint(pm25ArrayAlertValue)
+        pm25Notification.setArrayPoint(pm25ArrayStringList)
+
     }
     fun judgeValue(tvocValue: Int, pm25Value: Int){
         allowNotify = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
@@ -132,5 +156,12 @@ class WarringClass (context:Context)
             }
         }
         return isInBackground
+    }
+    interface onChangeListener{
+        fun allowNotifyChange()
+        fun allowVibratorChange()
+        fun allowSoundChange()
+        fun allowNotification()
+
     }
 }

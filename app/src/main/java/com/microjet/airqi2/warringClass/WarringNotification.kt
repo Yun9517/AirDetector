@@ -1,10 +1,7 @@
 package com.microjet.airqi2.warringClass
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.NotificationManager
-import android.app.PendingIntent
-import android.app.TaskStackBuilder
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -15,7 +12,6 @@ import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
-import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.NotificationHelper
 import com.microjet.airqi2.R
@@ -23,11 +19,18 @@ import com.microjet.airqi2.R
 /**
  * Created by B00055 on 2018/5/21.
  */
-class WarringNotification(context:Context,RequestCode:Int){
-    private var notificationManager: NotificationManager? = null
+class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelID:String,channelName:CharSequence){
+    private val mContext=context
+    private val notfiMangger = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     private val REQUEST_CODE = RequestCode
-    val mContext=context
-    val IconSet=ArrayList<Int>()
+    private val REQUEST_TVOC_CODE=0x01
+    private val REQUEST_PM25_CODE=0x02
+    private val mChannelID=channelID
+    private val mChannelName=channelName
+    var warringValue=initValue
+    private val IconSet=ArrayList<Int>()
+    private var points=ArrayList<Int>()
+    private var titleSet=ArrayList<Int>()
     init {
         IconSet.add(R.drawable.history_face_icon_02)//可移除一個，不過暫時先以andy原裝來try
         IconSet.add(R.drawable.history_face_icon_02)
@@ -36,39 +39,52 @@ class WarringNotification(context:Context,RequestCode:Int){
         IconSet.add(R.drawable.history_face_icon_05)
         IconSet.add(R.drawable.history_face_icon_06)
     }
-    fun showNotification(inputValue:Int){
-
+    fun setArrayPoint(input:ArrayList<Int>){
+        points=input
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun sendNotification(DateTypeId: Int, icon: Int, title: Int, message: Int, value: Int) {
+    fun setArrayTitle(input:ArrayList<Int>)
+    {
+        titleSet=input
+    }
+
+    fun showNotification(inputValue:Int){
+        if (inputValue>=warringValue) {
+            when (inputValue){
+                in points [0]+1..points[1]->{ sendNotification(IconSet[0],titleSet[0],R.string.text_message_air_mid,inputValue)}
+                in points [1]+1..points[2]->{ sendNotification(IconSet[1],titleSet[1],R.string.text_message_air_mid,inputValue)}
+                in points [2]+1..points[3]->{ sendNotification(IconSet[2],titleSet[2],R.string.text_message_air_Medium_Orange,inputValue)}
+                in points [3]+1..points[4]->{ sendNotification(IconSet[3],titleSet[3],R.string.text_message_air_bad,inputValue)}
+                in points [4]+1..points[5]->{ sendNotification(IconSet[4],titleSet[4],R.string.text_message_air_Serious_Purple,inputValue)}
+                in points [5]+1..points[6]->{ sendNotification(IconSet[5],titleSet[5],R.string.text_message_air_Extreme_Dark_Purple,inputValue)}
+                else->{}
+            }
+        }
+    }
+
+    private fun sendNotification( icon: Int, title: Int, message: Int, value: Int) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val newNotBuilder =  NotificationChannel(mChannelID, mChannelName, NotificationManager.IMPORTANCE_HIGH)
+            notfiMangger.createNotificationChannel(newNotBuilder)
+        }
          try {
              var titleShowType = ""
-             when (DateTypeId) {
+             when (REQUEST_CODE) {
                  REQUEST_TVOC_CODE -> {
                      titleShowType = mContext.getString(title) + " " + mContext.getString(R.string.title_tvoc) + ":" + value + " ppb "
                  }
                  REQUEST_PM25_CODE -> {
                      titleShowType = mContext.getString(title) + " " + mContext.getString(R.string.title_pm25) + ":" + value + " μg/m³ "
                  }
-                 REQUEST_BOTH->{
-
-                 }
              }
             // mPreferenceNotification = m_context!!.getSharedPreferences("NotificationAction", Context.MODE_PRIVATE)
            // mPreferenceNotification!!.edit().clear().apply()
-
-             makeNotificationShow(
-                     DateTypeId,
-                     BitmapFactory.decodeResource(mContext.resources, icon),
-                     titleShowType,
-                     mContext.getString(message),
-                     value)
+             makeNotificationShow( BitmapFactory.decodeResource(mContext.resources, icon), titleShowType, mContext.getString(message), value)
          } catch (e: Exception) {
              e.printStackTrace()
          }
     }
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun makeNotificationShow(DateType: Int, iconID: Bitmap, title: String, text: String?, dataValue: Int) {
+    private fun makeNotificationShow( iconID: Bitmap, title: String, text: String?, dataValue: Int) {
         val bigStyle = NotificationCompat.BigTextStyle()
         bigStyle.bigText(text)//m_context!!.getString(R.string.text_message_air_Extreme_Dark_Purple))
         //20180109   Andy
@@ -92,9 +108,9 @@ class WarringNotification(context:Context,RequestCode:Int){
         intentAction.action = "action1"
         intentAction2.action = "action2"
         //當使用者點擊通知Bar時，切換回MainActivity
-        val pi0 = PendingIntent.getActivity(mContext, DateType, intent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val pi1 = PendingIntent.getBroadcast(mContext, DateType, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
-        val pi2 = PendingIntent.getBroadcast(mContext, DateType, intentAction2, 0)
+        val pi0 = PendingIntent.getActivity(mContext, REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pi1 = PendingIntent.getBroadcast(mContext, REQUEST_CODE, intentAction,0 )//PendingIntent.FLAG_CANCEL_CURRENT
+        val pi2 = PendingIntent.getBroadcast(mContext, REQUEST_CODE, intentAction2, 0)
 
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(mContext)
@@ -122,11 +138,11 @@ class WarringNotification(context:Context,RequestCode:Int){
                     .addAction(action1)
                     .addAction(action2)
                     .setAutoCancel(true)
-            notificationHelper.notify(DateType, NB)
+            notificationHelper.notify(REQUEST_CODE, NB)
         } else {
             try {
                 //送到手機的通知欄
-                notificationManager!!.notify(DateType, notification)
+                notfiMangger.notify(REQUEST_CODE, notification)
                 //20180209
                 val powerManager = mContext.getSystemService(Context.POWER_SERVICE) as PowerManager
                 //獲取電源管理器對象
