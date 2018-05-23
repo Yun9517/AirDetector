@@ -51,6 +51,7 @@ import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.MainActivity.BleConnection.*
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.URL.AppMenu
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
@@ -181,6 +182,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
+    private var buyURL = ""
+    private var experienceURL = ""
+
     //20180423
     private var points = java.util.ArrayList<ImageView>()
 
@@ -199,6 +203,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
         CheckSWversion()
+
+        checkUrl()
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -255,7 +261,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     airmapShow()
                                 }
                                 1 -> {
-                                    publicMapShow()
+                                    publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map))
                                 }
                             }
                             parent.collapseGroup(groupPosition)
@@ -290,13 +296,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     aboutShow()
                 }
                 6 -> {
-                    aboutShow()
+                    publicMapShow("https://mjairql.com/marketing?id=2", getString(R.string.text_product_introduction))
                 }
                 7 -> {
-                    aboutShow()
+                    if (experienceURL.isNotEmpty()) {
+                        val uri = Uri.parse(experienceURL)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(intent)
+                    }
                 }
                 8 -> {
-                    aboutShow()
+                    if (buyURL.isNotEmpty()) {
+                        val uri = Uri.parse(buyURL)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(intent)
+                    }
                 }
             }
             true
@@ -304,7 +318,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        if(myToken != ""){
+        if (myToken != "") {
             FirebaseNotifTask().execute(myToken)
         }
 
@@ -739,7 +753,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
-            R.id.nav_air_map -> publicMapShow()
+            R.id.nav_air_map -> publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map))
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
@@ -1122,18 +1136,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         listDataHeader.add(drawerAbout06)
 
         val drawerAbout07 = ExpandedMenuModel()
-        drawerAbout07.iconName = "產品介紹"
-        drawerAbout07.iconImg = R.drawable.ic_phone_android_black_24dp
+        drawerAbout07.iconName = getString(R.string.text_product_introduction)
+        drawerAbout07.iconImg = R.drawable.baseline_bookmarks_24
         listDataHeader.add(drawerAbout07)
 
         val drawerAbout08 = ExpandedMenuModel()
-        drawerAbout08.iconName = "用戶體驗"
-        drawerAbout08.iconImg = R.drawable.ic_phone_android_black_24dp
+        drawerAbout08.iconName = getString(R.string.text_user_experience)
+        drawerAbout08.iconImg = R.drawable.baseline_touch_app_24
         listDataHeader.add(drawerAbout08)
 
         val drawerAbout09 = ExpandedMenuModel()
-        drawerAbout09.iconName = "購買連結"
-        drawerAbout09.iconImg = R.drawable.ic_phone_android_black_24dp
+        drawerAbout09.iconName = getString(R.string.text_buy_link)
+        drawerAbout09.iconImg = R.drawable.baseline_credit_card_24
         listDataHeader.add(drawerAbout09)
 
         // Adding child data
@@ -1634,12 +1648,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     @Subscribe
-    fun onEvent(bleEvent: BleEvent ){
+    fun onEvent(bleEvent: BleEvent) {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "new SW version"->{
-                val  appPackageName = packageName
+            "new SW version" -> {
+                val appPackageName = packageName
                 val Dialog = android.app.AlertDialog.Builder(this).create()
                 Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage("有新版軟體可更新。")
@@ -1652,13 +1666,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 { dialog, _ ->
                     dialog.dismiss()
                     try {
-                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                    } catch (anfe:android.content.ActivityNotFoundException ) {
-                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                    } catch (anfe: android.content.ActivityNotFoundException) {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
                     }
                 }
                 Dialog.show()
 
+            }
+            "new URL get" -> {
+                buyURL = bleEvent.buyProduct!!
+                experienceURL = bleEvent.userExp!!
             }
         }
     }
@@ -1703,35 +1721,44 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         indicator.startAnimation(fadeOut)
     }
 
-    private fun publicMapShow() {
+    private fun publicMapShow(url: String, title: String) {
         val i: Intent? = Intent(this, PublicMapActivity::class.java)
+        i!!.putExtra("URL", url)
+        i!!.putExtra("TITLE", title)
         startActivity(i)
     }
 
-    private fun CheckSWversion(){
-        val check=BuildConfig.VERSION_NAME
-        var release=0
-        var internal=0
-        var external=0
-        var temp=0
-        var string=""
-        val spot:Char="."[0]
+    private fun CheckSWversion() {
+        val check = BuildConfig.VERSION_NAME
+        var release = 0
+        var internal = 0
+        var external = 0
+        var temp = 0
+        var string = ""
+        val spot: Char = "."[0]
         check.forEach {
-            if (it==spot) {
-                when (temp){
-                    0->{release=string.toInt()}
-                    1->{internal=string.toInt()}
+            if (it == spot) {
+                when (temp) {
+                    0 -> {
+                        release = string.toInt()
+                    }
+                    1 -> {
+                        internal = string.toInt()
+                    }
                 }
-                string=""
+                string = ""
                 temp++
-            }
-            else {
-                string+=Character.toString(it)
+            } else {
+                string += Character.toString(it)
             }
         }
-        external=string.toInt()
-        val apv= AppVersion(release,internal,external)
+        external = string.toInt()
+        val apv = AppVersion(release, internal, external)
         apv.execute()
+    }
+
+    private fun checkUrl() {
+        val menu = AppMenu().execute().get()
     }
 }
 
