@@ -1581,14 +1581,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
-                //為了發版先將UploadTask要用的東西先放這
-                val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-                val token = shareToken.getString("token", "")
-                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-                val macAddressForDB = share.getString("mac", "noValue")
-                if (token != "") {
-                    Thread(Runnable { UploadTask().execute(macAddressForDB, token) }).start()
-                }
             }
         }
         SaveRealmTask().execute()
@@ -1614,6 +1606,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
         realm.close()
+        uploadData()
     }
 
     @Subscribe
@@ -1715,6 +1708,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         external=string.toInt()
         val apv= AppVersion(release,internal,external)
         apv.execute()
+    }
+
+    private fun uploadData() {
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val token = shareToken.getString("token", "")
+        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+        val macAddressForDB = share.getString("mac", "noValue")
+        if (token != "") {
+            UploadTask().execute(macAddressForDB, token)
+        }
     }
 }
 
