@@ -31,16 +31,15 @@ class ScrollingTextTask : AsyncTask<String, Int, String>() {
                 val jsonObj = JSONObject(res)
                 //取出posts內容
                 val resultArray = jsonObj.getJSONArray("posts")
+
                 for(i in 0 until resultArray.length()){
                     val jsonObjScrolling = resultArray.getJSONObject(i)
-                    TvocNoseData.scrollingTitle.add(jsonObjScrolling.getString("title"))
-                    TvocNoseData.scrollingUrl.add(jsonObjScrolling.getString("url"))
+                    val hashMap = HashMap<String,String>()
+                    hashMap["title"] = jsonObjScrolling["title"].toString()
+                    hashMap["url"] = jsonObjScrolling["url"].toString()
+                    TvocNoseData.scrollingText.add(hashMap)
                 }
-                //查看內容
-                for (e in TvocNoseData.scrollingTitle) {
-                    Log.e("scrollingTitle的內容",e + "\t")
-                }
-
+                Log.e("scrollingText的內容",  TvocNoseData.scrollingText.toString())
            }
         } catch (e: Exception) {
             e.printStackTrace()

@@ -35,7 +35,7 @@ import java.util.*
 
 
 class MainFragment : Fragment(), View.OnTouchListener {
-
+    private var scroTextall: String? =""
     private val TAG = this.javaClass.simpleName
 
     enum class DetectionData(val range1: Long, val range2: Long) {
@@ -101,6 +101,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
                 scrollingTitle.text ="邊緣人APP"
                 scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，助你早日擺脫邊緣人症狀，回歸正常人生活。"
+                showScrollingText()
             }
         })
 
@@ -898,5 +899,14 @@ class MainFragment : Fragment(), View.OnTouchListener {
         val animShake = AnimationUtils.loadAnimation(mContext, R.anim.textview_shake)
         slideMore?.startAnimation(animShake)
         Handler().postDelayed(Runnable { slideMore?.visibility = View.GONE }, 6000)
+    }
+
+    var scrollindex = 0
+    private fun showScrollingText(){
+        scrollingText.text = TvocNoseData.scrollingText[scrollindex]["title"].toString()
+        scrollingTitle.text ="  用戶體驗  "
+        scrollindex++
+        if (scrollindex > 2) { scrollindex = 0}
+        Log.d("WWWW",scrollindex.toString())
     }
 }
