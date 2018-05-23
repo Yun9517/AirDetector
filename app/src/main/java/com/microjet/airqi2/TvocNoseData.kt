@@ -117,7 +117,7 @@ object TvocNoseData {
 
     // 20180522 ScrollingTextTask
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
-
+    var scrollingNUM: Int = 0
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()
     //val arrTime3: ArrayList<String> = arrayListOf()

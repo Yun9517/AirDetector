@@ -38,6 +38,7 @@ class ScrollingTextTask : AsyncTask<String, Int, String>() {
                     hashMap["title"] = jsonObjScrolling["title"].toString()
                     hashMap["url"] = jsonObjScrolling["url"].toString()
                     TvocNoseData.scrollingList.add(hashMap)
+                    TvocNoseData.scrollingNUM = i
                 }
                 Log.e("scrollingText的內容",  TvocNoseData.scrollingList.toString())
            }

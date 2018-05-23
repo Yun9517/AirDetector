@@ -6,6 +6,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.net.Uri
+import android.os.AsyncTask
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.support.v4.app.Fragment
@@ -22,12 +25,14 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.CustomAPI.OnMultipleClickListener
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.R
+import com.microjet.airqi2.ScrollingTextTask
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
@@ -37,6 +42,7 @@ import java.util.*
 class MainFragment : Fragment(), View.OnTouchListener {
     private var scroTextall: String? =""
     private val TAG = this.javaClass.simpleName
+    private var scrollingTextTask: AsyncTask<String, Int, String>? = null
 
     enum class DetectionData(val range1: Long, val range2: Long) {
         TVOC(220, 660),
@@ -95,14 +101,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_RH.setOnTouchListener(this)
         show_PM.setOnTouchListener(this)
 
-        //20180521 白~~~~~~~~~~~~~~~~~~告藏的彩蛋
-        scrollingTitle!!.setOnClickListener(object : OnMultipleClickListener(10, 500) {
-            override fun onMultipleClick(v: View) {
-            showScrollingText()
-            }
-        })
-
-        /*show_TVOC?.setOnClickListener {
+         /*show_TVOC?.setOnClickListener {
             it.parent.requestDisallowInterceptTouchEvent(true)
             val beforeState = dataForState
             dataForState = DetectionData.TVOC
@@ -182,6 +181,18 @@ class MainFragment : Fragment(), View.OnTouchListener {
         fixInCircleTextSize()
         //下滑更多
         slideMoreAnimation()
+        //跑馬燈
+        scrollingMission()
+        //20180521 白~~~~~~~~~~~~~~~~~~告藏的彩蛋
+        scrollingTitle?.setOnClickListener(object : OnMultipleClickListener(15, 500) {
+            override fun onMultipleClick(v: View) {
+                showScrollingFUN()
+            }
+        })
+        //20180521 白~~~~~~~~~~~~~~~~告，跑馬燈點擊事件
+        scrollingText?.setOnClickListener(){
+            showScrollingText()
+        }
     }
 
 
@@ -898,18 +909,50 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable { slideMore?.visibility = View.GONE }, 6000)
     }
 
-    var scrollindex = 0
-    private fun showScrollingText(){
-        if( TvocNoseData.scrollingList.size !=0 && TvocNoseData.scrollingList.size != null){
-            scrollingText.text = TvocNoseData.scrollingList[scrollindex]["title"].toString()
-            scrollingTitle.text ="用戶體驗"
-            scrollindex++
-            if (scrollindex > 2) { scrollindex = 0}
-            Log.d("WWWW",scrollindex.toString())
-        }else{
-            scrollingTitle.text ="邊緣人APP"
-            scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，助你早日擺脫邊緣人症狀，回歸正常人生活。"
 
-        }
+    private fun  showScrollingFUN(){
+            scrollingTitle.text ="糟糕"
+            scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，早日加入ADDWII。"
     }
+
+    var scrollindex = 0
+    private fun scrollingMission() {
+        val scrollingHandler = Handler()
+        val scroRun = Runnable{
+           run(){
+               if( TvocNoseData.scrollingList.size !=0 && TvocNoseData.scrollingList.size != null){
+                   scrollingTitle.text ="用戶體驗"
+                   scrollingText.text = TvocNoseData.scrollingList[scrollindex]["title"].toString()
+                   scrollindex++
+                   if (scrollindex > TvocNoseData.scrollingNUM) { scrollindex = 0}
+                   scrollingMission()
+                   Log.d("WWWW",scrollindex.toString())
+               }else{
+                   scrollingTitle.text ="用戶體驗"
+                   scrollingText.text ="尚未連上網路"
+                   scrollindex++
+                   if (scrollindex > TvocNoseData.scrollingNUM) { scrollindex = 0}
+                   scrollingTextTask= ScrollingTextTask().execute()
+                   scrollingMission()
+               }
+           }
+       }
+        scrollingHandler.postDelayed(scroRun, 6000);
+
+    }
+
+    private fun showScrollingText(){
+        if(TvocNoseData.scrollingList.size != 0 ){
+            val uri = Uri.parse(TvocNoseData.scrollingList[scrollindex]["url"].toString())
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        }else{
+            if (Build.BRAND != "OPPO") {
+                Toast.makeText(mContext, "尚未有連結", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+
+    }
+
 }

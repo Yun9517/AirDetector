@@ -461,7 +461,7 @@
             android:marqueeRepeatLimit="marquee_forever"
             android:singleLine="true"
             android:text="@string/text_scrollingText"
-            android:textColor="#FFFFFF"
+            android:textColor="#0000CC"
             android:textSize="12sp" />
     </LinearLayout>
 
