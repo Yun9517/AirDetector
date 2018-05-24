@@ -242,8 +242,8 @@ class SettingActivity : AppCompatActivity() {
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - start
         val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
         val mDeviceAddress = share.getString("mac", "noValue")
-        val buttonName = share.getString("name", "")
-        if (buttonName == "DfuTarg") {
+        val deviceName = share.getString("name", "")
+        if (deviceName == "DfuTarg") {
             btnCheckFW?.text = getString(R.string.dfu_update_failure)
             btnCheckFW.setOnClickListener {
                 EventBus.getDefault().post(BleEvent("Download Success"))
