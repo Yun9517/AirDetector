@@ -33,7 +33,6 @@ import android.view.animation.AlphaAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import com.google.firebase.iid.FirebaseInstanceId
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
@@ -50,10 +49,8 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.MainActivity.BleConnection.*
-import com.microjet.airqi2.URL.AirActionTask
-import com.microjet.airqi2.URL.AppMenu
+import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
@@ -1612,14 +1609,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
-                //為了發版先將UploadTask要用的東西先放這
-                val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-                val token = shareToken.getString("token", "")
-                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-                val macAddressForDB = share.getString("mac", "noValue")
-                if (token != "") {
-                    Thread(Runnable { UploadTask().execute(macAddressForDB, token) }).start()
-                }
             }
         }
         SaveRealmTask().execute()
@@ -1645,6 +1634,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
         realm.close()
+        uploadData()
     }
 
     @Subscribe
@@ -1758,7 +1748,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun checkUrl() {
-        val menu = AppMenu().execute().get()
+        AppMenuTask().execute()
+    }
+
+    private fun uploadData() {
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val token = shareToken.getString("token", "")
+        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+        val macAddressForDB = share.getString("mac", "noValue")
+        if (token != "") {
+            UploadTask().execute(macAddressForDB, token)
+        }
     }
 }
 

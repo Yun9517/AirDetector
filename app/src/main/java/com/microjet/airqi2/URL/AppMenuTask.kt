@@ -12,7 +12,7 @@ import org.json.JSONObject
 /**
  * Created by B00055 on 2018/5/11.
  */
-class AppMenu : AsyncTask<String, Long, ArrayList<String>>() {
+class AppMenuTask : AsyncTask<String, Long, ArrayList<String>>() {
 
     override fun onPreExecute() {
 
