@@ -22,6 +22,7 @@
   -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/settingPageBackground"
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
@@ -45,7 +46,8 @@
 			android:text="@string/dfu_feature_title_long"
 			android:textColor="@color/darkGray"
 			android:textSize="32dp"
-			android:textStyle="bold" />
+			android:textStyle="bold"
+            android:visibility="invisible"/>
 		<com.microjet.airqi2.CustomAPI.TrebuchetTextView
 			android:id="@+id/device_name"
 			android:layout_width="wrap_content"
@@ -55,7 +57,7 @@
 			android:ellipsize="end"
 			android:freezesText="true"
 			android:maxLines="1"
-			android:text="@string/dfu_default_name"
+			android:text="@string/dfu_title"
 			android:textAllCaps="true"
 			android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -76,6 +78,7 @@
 			android:layout_alignParentBottom="true"
 			android:layout_centerHorizontal="true"
 			android:layout_marginBottom="6dp"
+            android:visibility="invisible"
 			android:src="@drawable/background_title"/>
 
 		<LinearLayout
@@ -94,7 +97,7 @@
 				android:layout_height="wrap_content"
 				android:layout_marginLeft="@dimen/feature_horizontal_margin"
 				android:layout_marginRight="@dimen/feature_horizontal_margin"
-				android:layout_marginTop="@dimen/feature_vertical_margin_top"
+				android:layout_marginTop="60dp"
 				android:orientation="vertical">
 
 				<com.microjet.airqi2.CustomAPI.TrebuchetBoldTextView
@@ -285,6 +288,7 @@
 				android:layout_marginRight="@dimen/feature_horizontal_margin"
 				android:layout_gravity="right"
 				android:text="@string/dfu_lib_version"
+                android:visibility="invisible"
 				android:textSize="12sp"/>
 		</LinearLayout>
 	</com.microjet.airqi2.CustomAPI.ForegroundRelativeLayout>

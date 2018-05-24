@@ -32,6 +32,7 @@ import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
+import kotlinx.android.synthetic.main.drawer_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONException
@@ -280,18 +281,6 @@ class SettingActivity : AppCompatActivity() {
                     DefaultPatternCheckingActivity.START_ACTION_MODE_CHANGE_PASSWOPRD)
         }
 
-        btnCheckFW.setOnClickListener {
-            if (MyApplication.getDeviceChargeStatus()) {
-                val fwVer = MyApplication.getDeviceVersion()
-                val fwSerial = MyApplication.getDeviceSerial()
-                val fwType = MyApplication.getDeviceType()
-                //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
-                checkFwVersion("20$fwVer$fwSerial", fwType)
-            } else {
-                showNotChargingDialog()
-            }
-        }
-
         tvocSeekValue.setOnClickListener {
             val editText = EditText(this)
             editText.inputType = InputType.TYPE_CLASS_NUMBER
@@ -464,6 +453,29 @@ class SettingActivity : AppCompatActivity() {
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
             dpd.setMessage("請選擇日期")
             dpd.show()
+        }
+
+        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - start
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val deviceName = share.getString("name", "")
+        if (deviceName == "DfuTarg") {
+            btnCheckFW?.text = getString(R.string.dfu_update_failure)
+            btnCheckFW.setOnClickListener {
+                EventBus.getDefault().post(BleEvent("Download Success"))
+            }
+            // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - end
+        } else {
+            btnCheckFW.setOnClickListener {
+                if (MyApplication.getDeviceChargeStatus()) {
+                    val fwVer = MyApplication.getDeviceVersion()
+                    val fwSerial = MyApplication.getDeviceSerial()
+                    val fwType = MyApplication.getDeviceType()
+                    //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
+                    checkFwVersion("20$fwVer$fwSerial", fwType)
+                } else {
+                    showNotChargingDialog()
+                }
+            }
         }
     }
 
