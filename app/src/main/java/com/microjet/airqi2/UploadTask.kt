@@ -23,7 +23,7 @@ class UploadTask: AsyncTask<String, Void, String>() {
     override fun doInBackground(vararg params: String): String? {
 
         val realm = Realm.getDefaultInstance()
-        val result: List<AsmDataModel> = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").findAll()
+        val result: List<AsmDataModel> = realm.where(AsmDataModel::class.java).equalTo("UpLoaded", "0").equalTo("MACAddress", params[0]).findAll()
                 .sort("Created_time", Sort.ASCENDING)
                 .take(5000)
 
