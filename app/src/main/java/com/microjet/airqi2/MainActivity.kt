@@ -49,7 +49,9 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
+import com.microjet.airqi2.MainActivity.BleConnection.*
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.URL.AppMenu
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import io.realm.Realm
@@ -96,7 +98,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     //private var menuItem: MenuItem? = null
     private var lightIcon: ImageView? = null
 
-    private var connState = BleConnection.DISCONNECTED
+    private var connState = DISCONNECTED
 
     // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
@@ -180,6 +182,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
+    private var buyURL = ""
+    private var experienceURL = ""
+
     //20180423
     private var points = java.util.ArrayList<ImageView>()
 
@@ -198,6 +203,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initActionBar()
         initpoint()
         CheckSWversion()
+
+        checkUrl()
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -232,10 +239,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        BleConnection.CONNECTED -> {
+                        CONNECTED -> {
                             blueToothDisconnect()
                         }
-                        BleConnection.DISCONNECTED -> {
+                        DISCONNECTED -> {
                             blueToothConnect()
                         }
                     }
@@ -254,7 +261,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     airmapShow()
                                 }
                                 1 -> {
-                                    publicMapShow()
+                                    publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map))
                                 }
                             }
                             parent.collapseGroup(groupPosition)
@@ -288,13 +295,30 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 5 -> {
                     aboutShow()
                 }
+                6 -> {
+                    publicMapShow("https://mjairql.com/marketing?id=2", getString(R.string.text_product_introduction))
+                }
+                7 -> {
+                    if (experienceURL.isNotEmpty()) {
+                        val uri = Uri.parse(experienceURL)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(intent)
+                    }
+                }
+                8 -> {
+                    if (buyURL.isNotEmpty()) {
+                        val uri = Uri.parse(buyURL)
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        startActivity(intent)
+                    }
+                }
             }
             true
         })
 
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        if(myToken != ""){
+        if (myToken != "") {
             FirebaseNotifTask().execute(myToken)
         }
 
@@ -312,7 +336,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
         mDeviceAddress = share.getString("mac", "noValue")
-        if (mDeviceAddress != "noValue" && connState == BleConnection.DISCONNECTED) {
+        if (mDeviceAddress != "noValue" && connState == DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             if (!MyApplication.getSharePreferenceManualDisconn()) {
@@ -326,7 +350,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
-            connState = BleConnection.DISCONNECTED
+            connState = DISCONNECTED
         }
         checkUIState()
     }
@@ -678,6 +702,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun settingShow() {
         val i: Intent? = Intent(this, SettingActivity::class.java)
+
+        i!!.putExtra("CONN", connState == CONNECTED)
+
         startActivityForResult(i, REQUEST_SELECT_SAMPLE)
         //startActivity(i)
     }
@@ -726,7 +753,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
-            R.id.nav_air_map -> publicMapShow()
+            R.id.nav_air_map -> publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map))
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
@@ -758,7 +785,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothDisconnect() {
-        if (connState == BleConnection.CONNECTED) {
+        if (connState == CONNECTED) {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
@@ -839,7 +866,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (connState == BleConnection.DISCONNECTED) {
+                    if (connState == DISCONNECTED) {
                         mDeviceAddress = data.extras.getString("MAC")
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
@@ -999,12 +1026,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = BleConnection.CONNECTED
+                    connState = CONNECTED
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = BleConnection.DISCONNECTED
+                    connState = DISCONNECTED
                     isFirstC0 = true
                     isFirstC6 = true
                     arr1.clear()
@@ -1040,7 +1067,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
-        if (connState == BleConnection.CONNECTED) {
+        if (connState == CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
@@ -1107,6 +1134,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         drawerAbout06.iconName = getString(R.string.text_navi_about)
         drawerAbout06.iconImg = R.drawable.ic_phone_android_black_24dp
         listDataHeader.add(drawerAbout06)
+
+        val drawerAbout07 = ExpandedMenuModel()
+        drawerAbout07.iconName = getString(R.string.text_product_introduction)
+        drawerAbout07.iconImg = R.drawable.baseline_bookmarks_24
+        listDataHeader.add(drawerAbout07)
+
+        val drawerAbout08 = ExpandedMenuModel()
+        drawerAbout08.iconName = getString(R.string.text_user_experience)
+        drawerAbout08.iconImg = R.drawable.baseline_touch_app_24
+        listDataHeader.add(drawerAbout08)
+
+        val drawerAbout09 = ExpandedMenuModel()
+        drawerAbout09.iconName = getString(R.string.text_buy_link)
+        drawerAbout09.iconImg = R.drawable.baseline_credit_card_24
+        listDataHeader.add(drawerAbout09)
 
         // Adding child data
 
@@ -1279,12 +1321,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xB9.toByte() -> {
                         val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
                         val ledState = txValue[3].toInt()
+                        val ledState2 = txValue[4].toInt()
                         if (txValue.size > 5) {
                             if (ledState == 1) {
+                                MyApplication.isOnlineLedOn = false
                                 mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
                                         false).apply()
                             } else {
+                                MyApplication.isOnlineLedOn = true
                                 mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
+                                        true).apply()
+                            }
+
+                            if (ledState2 == 1) {
+                                MyApplication.isOfflineLedOn = false
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
+                                        false).apply()
+                            } else {
+                                MyApplication.isOfflineLedOn = true
+                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
                                         true).apply()
                             }
                             Log.e(TAG, "LED Status: $ledState")
@@ -1593,12 +1648,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     @Subscribe
-    fun onEvent(bleEvent: BleEvent ){
+    fun onEvent(bleEvent: BleEvent) {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "new SW version"->{
-                val  appPackageName = packageName
+            "new SW version" -> {
+                val appPackageName = packageName
                 val Dialog = android.app.AlertDialog.Builder(this).create()
                 Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage("有新版軟體可更新。")
@@ -1611,13 +1666,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 { dialog, _ ->
                     dialog.dismiss()
                     try {
-                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)))
-                    } catch (anfe:android.content.ActivityNotFoundException ) {
-                        startActivity( Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)))
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$appPackageName")))
+                    } catch (anfe: android.content.ActivityNotFoundException) {
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")))
                     }
                 }
                 Dialog.show()
 
+            }
+            "new URL get" -> {
+                buyURL = bleEvent.buyProduct!!
+                experienceURL = bleEvent.userExp!!
             }
         }
     }
@@ -1662,35 +1721,44 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         indicator.startAnimation(fadeOut)
     }
 
-    private fun publicMapShow() {
+    private fun publicMapShow(url: String, title: String) {
         val i: Intent? = Intent(this, PublicMapActivity::class.java)
+        i!!.putExtra("URL", url)
+        i!!.putExtra("TITLE", title)
         startActivity(i)
     }
 
-    private fun CheckSWversion(){
-        val check=BuildConfig.VERSION_NAME
-        var release=0
-        var internal=0
-        var external=0
-        var temp=0
-        var string=""
-        val spot:Char="."[0]
+    private fun CheckSWversion() {
+        val check = BuildConfig.VERSION_NAME
+        var release = 0
+        var internal = 0
+        var external = 0
+        var temp = 0
+        var string = ""
+        val spot: Char = "."[0]
         check.forEach {
-            if (it==spot) {
-                when (temp){
-                    0->{release=string.toInt()}
-                    1->{internal=string.toInt()}
+            if (it == spot) {
+                when (temp) {
+                    0 -> {
+                        release = string.toInt()
+                    }
+                    1 -> {
+                        internal = string.toInt()
+                    }
                 }
-                string=""
+                string = ""
                 temp++
-            }
-            else {
-                string+=Character.toString(it)
+            } else {
+                string += Character.toString(it)
             }
         }
-        external=string.toInt()
-        val apv= AppVersion(release,internal,external)
+        external = string.toInt()
+        val apv = AppVersion(release, internal, external)
         apv.execute()
+    }
+
+    private fun checkUrl() {
+        val menu = AppMenu().execute().get()
     }
 }
 

@@ -28,7 +28,7 @@ class DefaultPatternSettingActivity : AppCompatActivity() {
             override fun onComplete(view: PatternLockerView, hitList: List<Int>) {
                 val isOk = isPatternOk(hitList)
                 view.updateStatus(!isOk)
-                patternIndicatorView!!.updateState(hitList, !isOk)
+                //patternIndicatorView!!.updateState(hitList, !isOk)
                 updateMsg()
             }
 

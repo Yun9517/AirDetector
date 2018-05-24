@@ -42,6 +42,9 @@ class MyApplication : Application() {
         private var deviceChargeStatus: Boolean = false
         //var isPM25: String = "000000000000"
 
+        var isOnlineLedOn = false
+        var isOfflineLedOn = false
+
         fun applicationContext(): Context {
             return instance!!.applicationContext
         }
@@ -172,6 +175,26 @@ class MyApplication : Application() {
         fun setSharePreferenceMapPanelStat(value: Boolean) {
             val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
             share.edit().putBoolean(SavePreferences.SETTING_MAP_PANEL_STATUS, value).apply()
+        }
+
+        fun getSharePreferenceCloudUploadStat(): Boolean {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            return share.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        }
+
+        fun setSharePreferenceCloudUploadStat(value: Boolean) {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            share.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN, value).apply()
+        }
+
+        fun getSharePreferenceCloudUpload3GStat(): Boolean {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            return share.getBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, true)
+        }
+
+        fun setSharePreferenceCloudUpload3GStat(value: Boolean) {
+            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+            share.edit().putBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, value).apply()
         }
     }
 

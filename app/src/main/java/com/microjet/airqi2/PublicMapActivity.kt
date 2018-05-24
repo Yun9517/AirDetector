@@ -19,7 +19,12 @@ class PublicMapActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_publicmap)
         initActionBar()
-        wvMap.loadUrl("http://mjairql.com/air_map/")
+
+        val target = intent.getStringExtra("URL")
+
+        wvMap.loadUrl(target)
+
+        //wvMap.loadUrl("http://mjairql.com/air_map/")
         wvMap.webViewClient = object : WebViewClient() {
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
                 super.onReceivedError(view, request, error)
@@ -58,6 +63,9 @@ class PublicMapActivity: AppCompatActivity() {
     private fun initActionBar() {
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
+
+        val title = intent.getStringExtra("TITLE")
+        actionBar.title = title
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

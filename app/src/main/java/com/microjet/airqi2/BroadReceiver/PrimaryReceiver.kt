@@ -210,14 +210,14 @@ class PrimaryReceiver : BroadcastReceiver() {
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
                 context.sendBroadcast(intent)
             }
-            BroadcastActions.INTENT_KEY_LED_OFF -> {
+            BroadcastActions.INTENT_KEY_ONLINE_LED_OFF -> {
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_OFF)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_ONLINE_LED_OFF)
                 context.sendBroadcast(intent)
             }
-            BroadcastActions.INTENT_KEY_LED_ON -> {
+            BroadcastActions.INTENT_KEY_ONLINE_LED_ON -> {
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
-                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_LED_ON)
+                intent!!.putExtra("status", BroadcastActions.INTENT_KEY_ONLINE_LED_ON)
                 context.sendBroadcast(intent)
             }
             // 2018/05/09

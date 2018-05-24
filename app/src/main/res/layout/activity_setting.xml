@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/settingPageBackground"
+    android:background="#f5f5f5"
     android:scrollbars="vertical">
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -21,7 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            app:constraint_referenced_ids="textAllowPrivacy, swAllowPrivacy"
+            android:visibility="gone"
+            app:constraint_referenced_ids="btnChangePassword"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -36,6 +37,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_allow_privacy"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swAllowPrivacy"
             app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
@@ -55,24 +57,23 @@
         <Button
             android:id="@+id/btnChangePassword"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
+            android:layout_height="26dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_login_button"
+            android:background="@drawable/style_setting_button_long"
             android:text="@string/change_Password_Title"
-            android:textColor="@color/whiteColor"
+            android:textColor="#f32091"
             android:textSize="18sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swAllowPrivacy" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView1"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#484848"
+            android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -88,6 +89,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_allow_notification"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swAllowNotify"
             app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
@@ -102,7 +104,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView1" />
 
 
         <android.support.constraint.Group
@@ -112,6 +114,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView8, swMessage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -126,6 +129,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_notify_message"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swMessage"
             app:layout_constraintEnd_toStartOf="@+id/swMessage"
@@ -150,6 +154,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView10, swVibrate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -164,6 +169,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_notify_viberation"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swVibrate"
             app:layout_constraintEnd_toStartOf="@+id/swVibrate"
@@ -188,6 +194,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView12, swSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -203,6 +210,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_notify_sound"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swSound"
             app:layout_constraintEnd_toStartOf="@+id/swSound"
@@ -227,6 +235,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -241,6 +250,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_tvoc_value"
             android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
@@ -252,7 +262,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textTvocSeekBarLabel"
@@ -269,14 +279,15 @@
 
         <TextView
             android:id="@+id/tvocSeekValue"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
-            android:text="60000"
-            android:textAlignment="textStart"
-            android:textColor="@color/Main_textResult_Blue"
-            android:textSize="18sp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="2200"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
@@ -290,6 +301,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_pm25_value"
             android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/pm25SeekValue"
             app:layout_constraintStart_toStartOf="parent"
@@ -301,7 +313,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textPM25SeekBarLabel"
@@ -310,7 +322,7 @@
             app:rsb_lineColorSelected="@color/colorAccent"
             app:rsb_markTextArray="@array/pm25Array"
             app:rsb_max="150"
-            app:rsb_min="16"
+            app:rsb_min="15"
             app:rsb_seekBarHeight="16dp"
             app:rsb_seekBarMode="single"
             app:rsb_textPadding="20dp"
@@ -319,14 +331,15 @@
 
         <TextView
             android:id="@+id/pm25SeekValue"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_1"
             android:text="250"
-            android:textAlignment="textStart"
-            android:textColor="@color/Main_textResult_Blue"
-            android:textSize="18sp"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
@@ -338,6 +351,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textView14, batSound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -353,6 +367,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:text="@string/bat_switch"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/batSound"
             app:layout_constraintEnd_toStartOf="@+id/batSound"
@@ -369,11 +384,11 @@
             app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
 
         <ImageView
-            android:id="@+id/imageView7"
+            android:id="@+id/imageView2"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#484848"
+            android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -389,6 +404,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_cloud_notify"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swAllowCloudNotify"
             app:layout_constraintEnd_toStartOf="@+id/swAllowCloudNotify"
@@ -403,7 +419,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
         <android.support.constraint.Group
             android:id="@+id/cgCloudNotify"
@@ -412,6 +428,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="16dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -427,6 +444,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/text_cloud_notify_time"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
             app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
@@ -438,9 +456,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_login_button"
+            android:background="@drawable/style_setting_button"
             android:text="@string/text_cloud_set_minute"
             android:textColor="@color/whiteColor"
             android:textSize="18sp"
@@ -454,6 +471,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
+            android:visibility="gone"
             app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -468,6 +486,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_tvoc_value"
             android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
@@ -479,7 +498,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCloudTvocSeekBarLabel"
@@ -496,14 +515,15 @@
 
         <TextView
             android:id="@+id/cloudTvocSeekValue"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
-            android:text="60000"
-            android:textAlignment="textStart"
-            android:textColor="@color/Main_textResult_Blue"
-            android:textSize="18sp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="2200"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
@@ -517,6 +537,7 @@
             android:layout_marginTop="8dp"
             android:text="@string/text_setting_pm25_value"
             android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/cloudTvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
@@ -528,7 +549,7 @@
             android:layout_height="80dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textCloudPM25SeekBarLabel"
@@ -537,7 +558,7 @@
             app:rsb_lineColorSelected="@color/colorAccent"
             app:rsb_markTextArray="@array/pm25Array"
             app:rsb_max="150"
-            app:rsb_min="16"
+            app:rsb_min="15"
             app:rsb_seekBarHeight="16dp"
             app:rsb_seekBarMode="single"
             app:rsb_textPadding="20dp"
@@ -546,14 +567,15 @@
 
         <TextView
             android:id="@+id/cloudPM25SeekValue"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_1"
             android:text="250"
-            android:textAlignment="textStart"
-            android:textColor="@color/Main_textResult_Blue"
-            android:textSize="18sp"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
@@ -562,27 +584,50 @@
             android:id="@+id/btnSaveCloudSetting"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_login_button"
+            android:background="@drawable/style_setting_button_long"
             android:text="@string/text_save_cloud_setting"
-            android:textColor="@color/whiteColor"
+            android:textColor="#f32091"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageView3"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#484848"
+            android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
+
+        <TextView
+            android:id="@+id/text_cloud_notification_func_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_cloud_notify_comment"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
 
         <TextView
             android:id="@+id/text_cloud_fun"
@@ -594,6 +639,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/cloud_fun"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swCloudFunc"
             app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
@@ -608,18 +654,95 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
-        <ImageView
-            android:id="@+id/imageView4"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
+        <android.support.constraint.Group
+            android:id="@+id/cgAllow3G"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            android:background="#484848"
-            android:visibility="visible"
+            android:visibility="gone"
+            app:constraint_referenced_ids="text_allow_3g, swAllow3G"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swCloudFunc" />
+
+        <TextView
+            android:id="@+id/text_allow_3g"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/allow_3G"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/swAllow3G"
+            app:layout_constraintEnd_toStartOf="@+id/swAllow3G"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/swAllow3G" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllow3G"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgAllow3G" />
+
+        <ImageView
+            android:id="@+id/imageView5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swAllow3G" />
+
+        <TextView
+            android:id="@+id/text_cloud_func_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/cloud_func_comment"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <ImageView
+            android:id="@+id/imageView6"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="30dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cloud_func_comment" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cgDeviceControl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            app:constraint_referenced_ids="textView15, ledPower, imageView7, textView16, ledDisconnectPower, imageView8, text_device_ver, btnCheckFW, imageView9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
         <TextView
             android:id="@+id/textView15"
@@ -631,6 +754,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:text="@string/led_light"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/ledPower"
             app:layout_constraintEnd_toStartOf="@+id/ledPower"
@@ -645,61 +769,122 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
 
         <ImageView
-            android:id="@+id/imageView5"
+            android:id="@+id/imageView7"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="#484848"
+            android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ledPower" />
 
         <TextView
+            android:id="@+id/textView16"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/led_light_disconnect"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/ledDisconnectPower"
+            app:layout_constraintEnd_toStartOf="@+id/ledDisconnectPower"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/ledDisconnectPower" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/ledDisconnectPower"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+
+        <ImageView
+            android:id="@+id/imageView8"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ledDisconnectPower" />
+
+        <TextView
             android:id="@+id/text_device_ver"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:text="@string/text_label_device_version"
+            android:textColor="@color/blackColor"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnCheckFW"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ledPower" />
+            app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+
+        <Button
+            android:id="@+id/btnCheckFW"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginBottom="6dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/style_setting_button"
+            android:text="@string/text_check_device_update"
+            android:textColor="@color/whiteColor"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toTopOf="@+id/imageView9"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView8" />
 
         <ImageView
-            android:id="@+id/imageView6"
+            android:id="@+id/imageView9"
             android:layout_width="0dp"
             android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#484848"
+            android:layout_marginTop="10dp"
+            android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
 
         <Button
-            android:id="@+id/btnCheckFW"
+            android:id="@+id/dataExport"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:layout_marginEnd="32dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/style_login_button"
-            android:text="@string/text_check_device_update"
-            android:textColor="@color/whiteColor"
+            android:layout_height="42dp"
+            android:background="@drawable/style_setting_button_long"
+            android:text="@string/dataExport"
+            android:textColor="#f32091"
             android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView9" />
+
+        <ImageView
+            android:id="@+id/imageView10"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginBottom="64dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView6" />
-
+            app:layout_constraintTop_toBottomOf="@+id/dataExport" />
 
     </android.support.constraint.ConstraintLayout>
 

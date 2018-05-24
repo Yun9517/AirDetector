@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">ADDWII</string>
-    <string name="app_name_air_map">空氣地圖</string>
+    <string name="app_name_air_map">ADDWII空氣地圖</string>
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">空氣品質一般，請保持空氣流通。\n揮發性有機物濃度低，沒有刺激或不適風險</string>
@@ -145,13 +145,13 @@
     <string name="averageHumidity_Daily">平均濕度</string>
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
-    <string name="text_setting_allow_notification">允許通知</string>
-    <string name="text_setting_allow_privacy">個人軌跡密碼</string>
+    <string name="text_setting_allow_notification">偵測通知</string>
+    <string name="text_setting_allow_privacy">個人軌跡密碼設定</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
-    <string name="text_setting_tvoc_value">TVOC 通知數值：</string>
-    <string name="text_setting_pm25_value">PM2.5 通知數值：</string>
+    <string name="text_setting_tvoc_value">總揮發性有機化合物(TVOC)</string>
+    <string name="text_setting_pm25_value">懸浮微粒(PM2.5)</string>
     <string name="text_setting_on">開啟</string>
     <string name="text_setting_off">關閉</string>
     <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
@@ -182,17 +182,19 @@
 
     <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
-    <string name="led_light">LED指示燈</string>
+    <string name="led_light">偵測器提示燈</string>
+    <string name="led_light_disconnect">斷線藍芽閃燈</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
     <string name="allow_3G">允許行動網路</string>
 
     //20180227
-    <string name="cloud_fun">雲端上傳</string>
+    <string name="cloud_fun">自動同步雲端</string>
+    <string name="cloud_func_comment">開啟本功能後即可上傳偵測器空氣品質的數據。</string>
     //2018/03/06
     <string name="not_yetDetected">尚未偵測</string>
-    <string name="text_label_device_version">偵測器韌體版本：</string>
+    <string name="text_label_device_version">偵測器韌體版本 </string>
     <string name="text_label_local_uuid">手機 UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
@@ -204,7 +206,7 @@
     <string name="forget_Check_Password_Title">忘記密碼 - 變更密碼</string>
     <string name="forget_Password_Description">我們將寄送驗證信至您的電子郵件，點入信中的驗證連結網址後，即可更便您的密碼。</string>
     <string name="change_Password">修改密碼？</string>
-    <string name="change_Password_Title">修改密碼</string>
+    <string name="change_Password_Title">變更密碼</string>
     <string name="check_Password">請輸入新密碼</string>
     <string name="double_check_Password">再次確認新密碼</string>
     <string name="no_Account">我還沒有註冊帳號  我想</string>
@@ -230,6 +232,7 @@
     <string name="fetchData">查看</string>
     <string name="downloadData">下載</string>
     <string name="shareData">分享</string>
+    <string name="dataExport">數據輸出</string>
     <string name="rememberID">記住帳號</string>
     <string name="syncData">雲端同步</string>
     <string name="download_text">下載進度:</string>
@@ -411,8 +414,12 @@
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">雲端推播</string>
+    <string name="text_cloud_notify">推播通知</string>
+    <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播時間</string>
+    <string name="text_product_introduction">產品介紹</string>
+    <string name="text_user_experience">用戶體驗</string>
+    <string name="text_buy_link">購買連結</string>
 </resources>
