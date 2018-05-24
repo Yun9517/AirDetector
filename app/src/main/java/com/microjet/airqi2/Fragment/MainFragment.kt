@@ -25,6 +25,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.CustomAPI.OnMultipleClickListener
@@ -34,13 +36,15 @@ import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.R
 import com.microjet.airqi2.ScrollingTextTask
 import com.microjet.airqi2.TvocNoseData
+import io.realm.internal.SyncObjectServerFacade.getApplicationContext
 import kotlinx.android.synthetic.main.frg_main.*
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainFragment : Fragment(), View.OnTouchListener {
-    private var scroTextall: String? =""
+    private var scroTextall: String? = ""
     private val TAG = this.javaClass.simpleName
     private var scrollingTextTask: AsyncTask<String, Int, String>? = null
 
@@ -73,7 +77,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private var errorTime = 0
 
-
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity)
@@ -101,38 +104,38 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_RH.setOnTouchListener(this)
         show_PM.setOnTouchListener(this)
 
-         /*show_TVOC?.setOnClickListener {
-            it.parent.requestDisallowInterceptTouchEvent(true)
-            val beforeState = dataForState
-            dataForState = DetectionData.TVOC
-            pumpOnStatus(beforeState, dataForState)
-            checkUIState()
-        }
+        /*show_TVOC?.setOnClickListener {
+           it.parent.requestDisallowInterceptTouchEvent(true)
+           val beforeState = dataForState
+           dataForState = DetectionData.TVOC
+           pumpOnStatus(beforeState, dataForState)
+           checkUIState()
+       }
 
-        show_eCO2?.setOnClickListener {
-            it.parent.requestDisallowInterceptTouchEvent(true)
-            val beforeState = dataForState
-            dataForState = DetectionData.CO2
-            pumpOnStatus(beforeState, dataForState)
-            checkUIState()
-        }
+       show_eCO2?.setOnClickListener {
+           it.parent.requestDisallowInterceptTouchEvent(true)
+           val beforeState = dataForState
+           dataForState = DetectionData.CO2
+           pumpOnStatus(beforeState, dataForState)
+           checkUIState()
+       }
 
 
-        show_Temp?.setOnClickListener {
-            it.parent.requestDisallowInterceptTouchEvent(true)
-            val beforeState = dataForState
-            dataForState = DetectionData.Temp
-            pumpOnStatus(beforeState, dataForState)
-            checkUIState()
-        }
+       show_Temp?.setOnClickListener {
+           it.parent.requestDisallowInterceptTouchEvent(true)
+           val beforeState = dataForState
+           dataForState = DetectionData.Temp
+           pumpOnStatus(beforeState, dataForState)
+           checkUIState()
+       }
 
-        show_RH?.setOnClickListener {
-            it.parent.requestDisallowInterceptTouchEvent(true)
-            val beforeState = dataForState
-            dataForState = DetectionData.Humi
-            pumpOnStatus(beforeState, dataForState)
-            checkUIState()
-        }*/
+       show_RH?.setOnClickListener {
+           it.parent.requestDisallowInterceptTouchEvent(true)
+           val beforeState = dataForState
+           dataForState = DetectionData.Humi
+           pumpOnStatus(beforeState, dataForState)
+           checkUIState()
+       }*/
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
                 //Log.wtf("幹我怎麼了!!",motionEvent.action.toString()+ actionToSring(motionEvent.action))
@@ -158,9 +161,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         //************************************************************************************************************************************
                     }
                 }
-            }
-            else if (dataForState == DetectionData.PM25) {
-                when(motionEvent.action) {
+            } else if (dataForState == DetectionData.PM25) {
+                when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {
                         view.parent.requestDisallowInterceptTouchEvent(true)
                         sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_ON)
@@ -183,16 +185,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         slideMoreAnimation()
         //跑馬燈
         scrollingMission()
-        //20180521 白~~~~~~~~~~~~~~~~~~告藏的彩蛋
-        scrollingTitle?.setOnClickListener(object : OnMultipleClickListener(15, 500) {
-            override fun onMultipleClick(v: View) {
-                showScrollingFUN()
-            }
-        })
-        //20180521 白~~~~~~~~~~~~~~~~告，跑馬燈點擊事件
-        scrollingText?.setOnClickListener(){
-            showScrollingText()
-        }
+
     }
 
 
@@ -690,6 +683,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
     @Synchronized
     private fun checkUIState() {
         if (connState && preHeat == "255") {
+
+            setNewsPanelShow(true)
             //setThresholdValue(dataForState)
             //setBarMaxValue(dataForState)
             when (dataForState) {
@@ -804,6 +799,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
             tvLastDetectTime.text = " "
             inCircleBar.setCurrentValues(0f)
             imgLight?.setImageResource(R.drawable.app_android_icon_light)
+
+            setNewsPanelShow(false)
         }
     }
 
@@ -909,50 +906,61 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable { slideMore?.visibility = View.GONE }, 6000)
     }
 
-
-    private fun  showScrollingFUN(){
-            scrollingTitle.text ="糟糕"
-            scrollingText.text ="沒有任何內容進入，快去買\"ㄟ兒弄斯\"加上\"愛德威\"，一定愛配溫開水，早日加入ADDWII。"
-    }
-
     var scrollindex = 0
     private fun scrollingMission() {
         val scrollingHandler = Handler()
-        val scroRun = Runnable{
-           run(){
-               if( TvocNoseData.scrollingList.size !=0 && TvocNoseData.scrollingList.size != null){
-                   scrollingTitle.text ="用戶體驗"
-                   scrollingText.text = TvocNoseData.scrollingList[scrollindex]["title"].toString()
-                   scrollindex++
-                   if (scrollindex > TvocNoseData.scrollingNUM) { scrollindex = 0}
-                   scrollingMission()
-                   Log.d("WWWW",scrollindex.toString())
-               }else{
-                   scrollingTitle.text ="用戶體驗"
-                   scrollingText.text ="尚未連上網路"
-                   scrollindex++
-                   if (scrollindex > TvocNoseData.scrollingNUM) { scrollindex = 0}
-                   scrollingTextTask= ScrollingTextTask().execute()
-                   scrollingMission()
-               }
-           }
-       }
-        scrollingHandler.postDelayed(scroRun, 6000);
-
-    }
-
-    private fun showScrollingText(){
-        if(TvocNoseData.scrollingList.size != 0 ){
-            val uri = Uri.parse(TvocNoseData.scrollingList[scrollindex]["url"].toString())
-            val intent = Intent(Intent.ACTION_VIEW, uri)
-            startActivity(intent)
-        }else{
-            if (Build.BRAND != "OPPO") {
-                Toast.makeText(mContext, "尚未有連結", Toast.LENGTH_SHORT).show()
+        val scroRun = Runnable {
+            run() {
+                if (TvocNoseData.scrollingList.size != 0 && TvocNoseData.scrollingList.size != null) {
+                    setViewSingleLine()
+                    upview1.setViews(views2)
+                } else {
+                    scrollindex++
+                    if (scrollindex > TvocNoseData.scrollingNUM) {
+                        scrollindex = 0
+                    }
+                    scrollingTextTask = ScrollingTextTask().execute()
+                    scrollingMission()
+                }
             }
         }
-
-
+        scrollingHandler.postDelayed(scroRun, 6000);
     }
 
+    private var views2 = ArrayList<View>()
+
+    @SuppressLint("SetTextI18n")
+    private fun setViewSingleLine() {
+        views2.clear();//记得加这句话，不然可能会产生重影现象
+        for (i in 0 until TvocNoseData.scrollingList.size) {
+            //设置滚动的单个布局
+            val moreView = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
+            //初始化布局的控件
+            val tv1 = moreView.findViewById(R.id.tv1) as TextView
+            /**
+             * 设置监听
+             */
+            val relativeLayout = moreView.findViewById(R.id.rl) as RelativeLayout
+            relativeLayout.setOnClickListener {
+                val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
+                val i = Intent(Intent.ACTION_VIEW, url)
+                startActivity(i)
+            }
+
+            //进行对控件赋值
+            tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
+            Log.e("HAO", TvocNoseData.scrollingList[i]["title"].toString())
+
+            //添加到循环滚动数组里面去
+            views2.add(moreView)
+        }
+    }
+
+    fun setNewsPanelShow(enable: Boolean) {
+        if(enable) {
+            upview1.visibility = View.VISIBLE
+        } else {
+            upview1.visibility = View.INVISIBLE
+        }
+    }
 }

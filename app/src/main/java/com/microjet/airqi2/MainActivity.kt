@@ -291,9 +291,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-
+        //2018524 白~~~~告新聞抓取
         scrollingTextTask= ScrollingTextTask().execute()
-
 
     }
 
