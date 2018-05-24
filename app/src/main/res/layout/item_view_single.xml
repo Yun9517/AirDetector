@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/rlScroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/title_tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_scrollingTitle"
+            android:textColor="@color/whiteColor"
+            android:textSize="16sp"
+            android:padding="3dp"
+            android:layout_marginEnd="6dp" />
+
+        <TextView
+            android:id="@+id/tvScrollContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/title_tv1"
+            android:layout_alignBottom="@+id/title_tv1"
+            android:layout_toEndOf="@+id/title_tv1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:text="@string/text_scrollingText"
+            android:textColor="@color/whiteColor"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+
+</LinearLayout>

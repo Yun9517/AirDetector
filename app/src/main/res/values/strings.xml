@@ -193,8 +193,8 @@
     <string name="cloud_fun">自動同步雲端</string>
     <string name="cloud_func_comment">開啟本功能後即可上傳偵測器空氣品質的數據。</string>
     //2018/03/06
-    <string name="not_yetDetected">尚未偵測</string>
-    <string name="text_label_device_version">偵測器韌體版本 </string>
+    <string name="not_yetDetected">偵測中</string>
+    <string name="text_label_device_version">偵測器韌體版本：</string>
     <string name="text_label_local_uuid">手機 UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
@@ -425,4 +425,7 @@
     <string name="text_product_introduction">產品介紹</string>
     <string name="text_user_experience">用戶體驗</string>
     <string name="text_buy_link">購買連結</string>
+    //20180521
+    <string name="text_scrollingText">連結中請稍後，喝一杯茶，休息一下。有聽過安麗嗎~? 先別提安麗~，你有聽過ADDWII嗎?</string>
+    <string name="text_scrollingTitle">用戶體驗</string>
 </resources>

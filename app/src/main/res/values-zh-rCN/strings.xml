@@ -181,7 +181,7 @@
     //20180227
     <string name="cloud_fun">雲端功能</string>
     //2018/03/06
-    <string name="not_yetDetected">尚未偵測</string>
+    <string name="not_yetDetected">侦测中</string>
     <string name="text_label_device_version">侦测器固件版号：</string>
     <string name="text_label_local_uuid">手机 UUID</string>
 
@@ -381,7 +381,6 @@
     <string name="text_label_time">时间</string>
     <string name="download_text">下载进度:</string>
     <string name="download_min">喝杯茶</string>
-
     <string name="text_setting_tvoc_value">TVOC 通知数值</string>
     <string name="text_setting_pm25_value">PM2.5 通知数值</string>
     <string name="title_temperature">Temperature_Data</string>
@@ -414,7 +413,6 @@
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播時間</string>
-
 </resources>
 
 

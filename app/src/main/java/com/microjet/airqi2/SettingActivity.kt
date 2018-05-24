@@ -422,11 +422,10 @@ class SettingActivity : AppCompatActivity() {
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
-
-                if (value.isNotEmpty() && value.toInt() in 16..150) {
-                    pm25SeekBar.setValue(value.toFloat())
-                    setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
-                    setSeekBarValue(cloudPM25SeekValue, value.toFloat())
+                if(value.isNotEmpty() && value.toInt() in 16..150) {
+                    cloudPM25SeekBar.setValue(value.toFloat())
+                    setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
+                    setSeekBarValue( cloudPM25SeekValue, value.toFloat())
                     TvocNoseData.firebaseNotifPM25 = value.toInt()
 
                 }

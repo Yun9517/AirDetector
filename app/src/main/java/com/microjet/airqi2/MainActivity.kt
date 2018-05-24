@@ -312,13 +312,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-
-        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val myToken = shareToken.getString("token", "")
-        if (myToken != "") {
-            FirebaseNotifTask().execute(myToken)
-        }
-
+        //2018524 白~~~~告新聞抓取
+        ScrollingTextTask().execute()
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -339,6 +334,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             if (!MyApplication.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
+        }
+        //20180518
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val myToken = shareToken.getString("token", "")
+        if(myToken != ""){
+            FirebaseNotifTask().execute(myToken)
         }
     }
 
