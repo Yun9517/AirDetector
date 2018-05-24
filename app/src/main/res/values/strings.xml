@@ -151,7 +151,7 @@
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
     <string name="text_setting_tvoc_value">總揮發性有機化合物(TVOC)</string>
-    <string name="text_setting_pm25_value">懸浮微粒(PM2.5)</string>
+    <string name="text_setting_pm25_value">細懸浮微粒(PM2.5)</string>
     <string name="text_setting_on">開啟</string>
     <string name="text_setting_off">關閉</string>
     <string name="text_setting_notify_comment_1">濃度高於220 ppb通知/首次通知/每小時一次</string>
