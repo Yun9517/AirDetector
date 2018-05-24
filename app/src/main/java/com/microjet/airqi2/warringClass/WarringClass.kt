@@ -7,6 +7,7 @@ import android.os.Build
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.R
+import java.util.*
 
 /**
  * Created by B00055 on 2018/5/21.
@@ -28,18 +29,19 @@ class WarringClass (context:Context)
     private val pm25ChannelName="PM25"
     private val mContext=context
     private val mPreference= mContext.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+    private val mPreferenceNotification=mContext.getSharedPreferences("NotificationAction", 0)
     private var tvocSound=WarringSound(context, R.raw.tvoc_over)
     private var pm25Sound=WarringSound(context, R.raw.pm25_over)
     private var tvocNotification=WarringNotification(context,REQUEST_TVOC_CODE,tvocAlertValue,tvocChannel,tvocChannelName)
     private var pm25Notification=WarringNotification(context,REQUEST_PM25_CODE,pm25AlertValue,pm25Channel,pm25ChannelName)
     private var tvocVibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660))
     private var pm25Vibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16))
+    private var myCondition="none"
 
     private val tvocArrayAlertValue=ArrayList<Int>()
     private val tvocArrayStringList=ArrayList<Int>()
     private val pm25ArrayAlertValue=ArrayList<Int>()
     private val pm25ArrayStringList=ArrayList<Int>()
-    var callback:onChangeListener?=null
     init {
         tvocArrayAlertValue.add(0)
         tvocArrayAlertValue.add(219)
@@ -82,12 +84,38 @@ class WarringClass (context:Context)
         allowNotification = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
         tvocAlertValue = mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
         pm25AlertValue = mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+        myCondition= mPreferenceNotification.getString("nextNotification","none")
 
+        when (myCondition){
+            "none"->{
+
+            }
+            "tomorrow"-> {
+                /*val setTime = mPreferenceNotification!!.getString("now time","0")
+                val date = Date().time
+                val time = setTime.toLong()
+                if ((date-time) < 86400000){
+                    return
+                }*/
+            }
+            "5min"-> {
+                val setTime = mPreferenceNotification.getString("now time","0")//取得存放於NotificationAction.xml的時間
+                val date = Date().time
+                val time = setTime.toLong()
+                if ((date-time) < 300000) {
+                    Log.v(this.javaClass.simpleName,"date:$date time:$time")
+                    return//5分鐘內所有通知當放屁
+                }
+                mPreferenceNotification.edit().clear().apply()//將NotificationAction.xml中的訊息清空
+            }
+        }
         tvocVibrator.warringValue = tvocAlertValue
-        pm25Vibrator.warringValue = pm25AlertValue
         tvocSound.warringValue = tvocAlertValue
+        tvocNotification.warringValue = tvocAlertValue
+        pm25Vibrator.warringValue = pm25AlertValue
         pm25Sound.warringValue = pm25AlertValue
-        when (allowNotify){
+        pm25Notification.warringValue = pm25AlertValue
+                when (allowNotify){
             true->{
                 checkVibrator(tvocValue,pm25Value)
                 checkSound(tvocValue,pm25Value)
