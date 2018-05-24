@@ -800,7 +800,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
             inCircleBar.setCurrentValues(0f)
             imgLight?.setImageResource(R.drawable.app_android_icon_light)
 
-            setNewsPanelShow(false)
+            if(connState) {
+                setNewsPanelShow(false)
+            } else {
+                setNewsPanelShow(true)
+            }
         }
     }
 
