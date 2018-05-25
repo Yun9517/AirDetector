@@ -30,7 +30,6 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
-            android:text="@string/text_scrollingText"
             android:textColor="@color/whiteColor"
             android:textSize="12sp" />
     </RelativeLayout>

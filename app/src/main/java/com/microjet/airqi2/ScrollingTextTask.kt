@@ -28,7 +28,7 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
                 Log.e(TAG,"ERROR")
             } else {
                 val res = response.body()?.string()
-                Log.e("TAG",res)
+                Log.e(TAG,res)
                 val jsonObj = JSONObject(res)
                 //取出posts內容
                 val resultArray = jsonObj.getJSONArray("posts")

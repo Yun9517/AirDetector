@@ -401,18 +401,26 @@
     <string name="messag_dowload">云端同步下载</string>
     <string name="text_navi_personal">个人轨迹</string>
     <!-- 2018/05/15 -->
-    <string name="remindAfter_5_Mins">五分鐘後再提醒</string>
-    <string name="remindAfterA_Day">一天後再提醒</string>
+    <string name="remindAfter_5_Mins">五分钟后再提醒</string>
+    <string name="remindAfterA_Day">一天后再提醒</string>
     <string name="remindDismiss">知道了</string>
-    <string name="text_setting_allow_firebase_notification">雲端通知允許</string>
-    <string name="text_setting_allow_firebase_settime">設定時間</string>
-    <string name="text_setting_allow_firebase_save">儲存推播設定</string>
-    <string name="text_check_device_update">檢查更新</string>
-    <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">雲端推播</string>
-    <string name="text_save_cloud_setting">儲存設定</string>
+    <string name="text_setting_allow_firebase_notification">云端通知允许</string>
+    <string name="text_setting_allow_firebase_settime">设定时间</string>
+    <string name="text_setting_allow_firebase_save">储存推播设定</string>
+    <string name="text_check_device_update">检查更新</string>
+    <string name="text_click_to_adjust">（按一下数值可微调）</string>
+    <string name="text_cloud_notify">云端推播</string>
+    <string name="text_save_cloud_setting">储存设定</string>
     <string name="text_cloud_set_minute">%d分</string>
-    <string name="text_cloud_notify_time">推播時間</string>
+    <string name="text_cloud_notify_time">推播时间</string>
+    <string name="led_light_disconnect">断线蓝芽闪灯</string>
+    <string name="cloud_func_comment">开启本功能后即可上传侦测器空气品质的数据。</string>
+    <string name="dataExport">数据输出</string>
+    <string name="text_cloud_notify_comment">前24小时侦测空气品质的平均数据。</string>
+    <string name="text_product_introduction">产品介绍</string>
+    <string name="text_user_experience">用户体验</string>
+    <string name="text_buy_link">购买连结</string>
+    <string name="text_scrollingTitle">用戶體驗</string>
 </resources>
 
 

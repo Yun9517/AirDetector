@@ -425,7 +425,6 @@
     <string name="text_product_introduction">產品介紹</string>
     <string name="text_user_experience">用戶體驗</string>
     <string name="text_buy_link">購買連結</string>
-    //20180521
-    <string name="text_scrollingText">連結中請稍後，喝一杯茶，休息一下。有聽過安麗嗎~? 先別提安麗~，你有聽過ADDWII嗎?</string>
+    <!--20180521-->
     <string name="text_scrollingTitle">用戶體驗</string>
 </resources>

@@ -1758,11 +1758,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun uploadData() {
+        val swCloudVal: Boolean = MyApplication.getSharePreferenceCloudUploadStat()
+        val swCloud3GVal: Boolean = MyApplication.getSharePreferenceCloudUpload3GStat()
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val token = shareToken.getString("token", "")
         val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
         val macAddressForDB = share.getString("mac", "noValue")
-        if (token != "") {
+        if (token != "" && swCloudVal && swCloud3GVal) {
             UploadTask().execute(macAddressForDB, token)
         }
     }
