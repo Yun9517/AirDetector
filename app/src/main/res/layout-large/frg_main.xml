@@ -8,6 +8,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
+    <com.sunsky.marqueeview.MarqueeView
+        android:id="@+id/upview1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:background="#FF7800"
+        android:padding="3dp"
+        android:visibility="invisible"
+        app:animDuration="1000"
+        app:interval="5000"
+        app:isSetAlphaAnim="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.constraint.ConstraintLayout
         android:id="@+id/PrimaryPanel"
         android:layout_width="0dp"
@@ -15,7 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginEnd="40dp"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,7 +73,7 @@
             app:layout_constraintDimensionRatio="1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/inCircleTitle"
@@ -165,8 +180,7 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/PrimaryPanel">
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageButton
             android:id="@+id/imgLight"
