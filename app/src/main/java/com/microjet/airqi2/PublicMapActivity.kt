@@ -60,6 +60,11 @@ class PublicMapActivity: AppCompatActivity() {
         //ws.useWideViewPort = false
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        wvMap.clearCache(true)
+    }
+
     private fun initActionBar() {
         val actionBar = supportActionBar
         actionBar!!.setDisplayHomeAsUpEnabled(true)
