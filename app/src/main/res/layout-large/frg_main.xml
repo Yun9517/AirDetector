@@ -23,41 +23,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/PrimaryPanel"
+    <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
+        android:id="@+id/inCircleBar"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginEnd="40dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintDimensionRatio="1:1"
+        android:layout_centerInParent="true"
+        android:layout_marginEnd="64dp"
+        android:layout_marginStart="64dp"
+        app:bg_arc_color="@color/whiteTransparentColor_80"
+        app:bg_arc_width="40dp"
+        app:front_color1="@color/progressBarStartColor"
+        app:front_color2="@color/progressBarMidColor"
+        app:front_color3="@color/progressBarEndColor"
+        app:front_width="30dp"
+        app:is_need_content="false"
+        app:is_need_title="false"
+        app:is_need_unit="false"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.microjet.airqi2.CustomAPI.ColorArcProgressBar
-            android:id="@+id/inCircleBar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            app:bg_arc_color="@color/whiteTransparentColor_80"
-            app:bg_arc_width="40dp"
-            app:front_color1="@color/progressBarStartColor"
-            app:front_color2="@color/progressBarMidColor"
-            app:front_color3="@color/progressBarEndColor"
-            app:front_width="30dp"
-            app:is_need_content="false"
-            app:is_need_title="false"
-            app:is_need_unit="false"
-            app:layout_constraintDimensionRatio="w,1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:max_value="100"
-            app:string_title="TVOC"
-            app:string_unit=""
-            app:sweep_angle="270" />
+        app:layout_constraintTop_toBottomOf="@+id/upview1"
+        app:max_value="100"
+        app:string_title="TVOC"
+        app:string_unit=""
+        app:sweep_angle="270" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/relativeLayout"
@@ -71,9 +60,9 @@
             android:background="@drawable/circle_transparent"
             app:layout_constraintBottom_toBottomOf="@+id/inCircleBar"
             app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintEnd_toEndOf="@+id/inCircleBar"
+            app:layout_constraintStart_toStartOf="@+id/inCircleBar"
+            app:layout_constraintTop_toTopOf="@+id/inCircleBar">
 
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/inCircleTitle"
@@ -116,12 +105,12 @@
             <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/inCircleState"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:layout_below="@+id/inCircleValue"
                 android:layout_gravity="center"
                 android:layout_marginEnd="32dp"
                 android:layout_marginStart="32dp"
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="24dp"
                 android:background="@android:color/transparent"
                 android:gravity="center"
                 android:text="@string/text_default_value"
@@ -131,6 +120,7 @@
                 app:autoSizeMaxTextSize="26sp"
                 app:autoSizeMinTextSize="18sp"
                 app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/inCircleValue" />
@@ -166,29 +156,27 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottom_panel"
-        android:layout_marginBottom="115dp"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
+        android:layout_marginTop="96dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_panel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayout">
 
         <ImageButton
             android:id="@+id/imgLight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:scaleType="fitXY"
             android:background="@null"
-            android:contentDescription="@null" />
+            android:contentDescription="@null"
+            android:scaleType="fitXY" />
 
         <LinearLayout
             android:layout_width="wrap_content"
