@@ -1760,12 +1760,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun uploadData() {
         val swCloudVal: Boolean = MyApplication.getSharePreferenceCloudUploadStat()
         val swCloud3GVal: Boolean = MyApplication.getSharePreferenceCloudUpload3GStat()
-        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-        val token = shareToken.getString("token", "")
-        val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-        val macAddressForDB = share.getString("mac", "noValue")
-        if (token != "" && swCloudVal && swCloud3GVal) {
-            UploadTask().execute(macAddressForDB, token)
+        if (swCloudVal) {
+            val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+            val token = shareToken.getString("token", "")
+            val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+            val macAddressForDB = share.getString("mac", "noValue")
+            val networkStat = MyApplication.getConnectStatus()
+            when (networkStat) {
+                "MOBILE" -> {
+                    if (swCloud3GVal) {
+                        if (token != "") {
+                            UploadTask().execute(macAddressForDB, token)
+                        }
+                    }
+                }
+                "WIFI" -> {
+                    if (token != "") {
+                        UploadTask().execute(macAddressForDB, token)
+                    }
+                }
+                else -> {
+                    Log.d(TAG, networkStat)
+                }
+            }
         }
     }
 }
