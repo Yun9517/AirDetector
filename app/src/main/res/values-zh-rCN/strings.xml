@@ -421,6 +421,24 @@
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
     <string name="text_scrollingTitle">用戶體驗</string>
+
+    <!--2018/05/28 new drawer -->
+    <string name="text_drawer_01_add_device">新增装置</string>
+    <string name="text_drawer_02_mobile_nose">随身空污鼻</string>
+    <string name="text_drawer_02_1_user_experience">用户体验</string>
+    <string name="text_drawer_02_2_introduction">产品介绍</string>
+    <string name="text_drawer_02_3_purchase">产品购买</string>
+    <string name="text_drawer_02_4_our_story">关于我们</string>
+    <string name="text_drawer_03_air_map">空气地图</string>
+    <string name="text_drawer_04_personal_trail">个人轨迹图</string>
+    <string name="text_drawer_05_knowledge">空污知识库</string>
+    <string name="text_drawer_06_QA">Q&amp;A</string>
+    <string name="text_drawer_06_1_FAQ">常见问题</string>
+    <string name="text_drawer_06_2_guide_tour">操作导览</string>
+    <string name="text_drawer_07_setting">设定</string>
+    <string name="text_drawer_07_1_account_setting">账号设定</string>
+    <string name="text_drawer_07_2_general_setting">一般设定</string>
+
 </resources>
 
 

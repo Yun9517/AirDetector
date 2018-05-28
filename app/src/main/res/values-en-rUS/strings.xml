@@ -312,4 +312,22 @@
     <string name="remindAfter_5_Mins">Snooze</string>
     <string name="remindAfterA_Day">Inform  me next day</string>
     <string name="remindDismiss">OK</string>
+
+    <!--2018/05/28 new drawer -->
+    <string name="text_drawer_01_add_device">Add Device</string>
+    <string name="text_drawer_02_mobile_nose">Mobile Nose</string>
+    <string name="text_drawer_02_1_user_experience">User Experience</string>
+    <string name="text_drawer_02_2_introduction">Introduction</string>
+    <string name="text_drawer_02_3_purchase">How to Buy</string>
+    <string name="text_drawer_02_4_our_story">Our Story</string>
+    <string name="text_drawer_03_air_map">Air Map</string>
+    <string name="text_drawer_04_personal_trail">Personal Trail</string>
+    <string name="text_drawer_05_knowledge">Knowledge Info.</string>
+    <string name="text_drawer_06_QA">Q&amp;A</string>
+    <string name="text_drawer_06_1_FAQ">F.A.Q</string>
+    <string name="text_drawer_06_2_guide_tour">Guide Tour</string>
+    <string name="text_drawer_07_setting">Setting</string>
+    <string name="text_drawer_07_1_account_setting">Account Setting</string>
+    <string name="text_drawer_07_2_general_setting">General Setting</string>
+
 </resources>
