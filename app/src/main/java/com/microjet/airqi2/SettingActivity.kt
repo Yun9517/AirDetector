@@ -32,7 +32,6 @@ import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
-import kotlinx.android.synthetic.main.drawer_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONException
@@ -399,9 +398,10 @@ class SettingActivity : AppCompatActivity() {
 
                 if (value.isNotEmpty() && value.toInt() in 220..2200) {
                     cloudTvocSeekBar.setValue(value.toFloat())
+                    cloudTVOC = value.toInt()
                     setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(cloudTvocSeekValue, value.toFloat())
-                    TvocNoseData.firebaseNotifTVOC = value.toInt()
+
 
                 }
             })
@@ -424,9 +424,10 @@ class SettingActivity : AppCompatActivity() {
                 val value = editText.text.toString()
                 if(value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
+                    cloudPM25 = value.toInt()
                     setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue( cloudPM25SeekValue, value.toFloat())
-                    TvocNoseData.firebaseNotifPM25 = value.toInt()
+
 
                 }
             })
