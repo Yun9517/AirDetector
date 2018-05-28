@@ -766,7 +766,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView15, ledPower, imageView7, textView16, ledDisconnectPower, imageView8, text_device_ver, btnCheckFW, imageView9"
+            app:constraint_referenced_ids="textView15, ledPower, mainDivider5, textView16, ledDisconnectPower, mainDivider6, text_device_ver, btnCheckFW, mainDivider7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainDivider4" />
