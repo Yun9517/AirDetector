@@ -8,7 +8,6 @@ package com.microjet.airqi2.Account
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.app.Dialog
-import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -32,7 +31,6 @@ import com.microjet.airqi2.*
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
-import kotlinx.android.synthetic.main.activity_login.*
 import org.json.JSONArray
 import org.json.JSONException
 import java.io.Closeable
@@ -248,7 +246,6 @@ class AccountActiveActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         dialog?.dismiss()
-        download?.cancel(true)
     }
 
     override fun onDestroy() {
