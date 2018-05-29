@@ -241,6 +241,9 @@
             </intent-filter>
         </service>
 
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="0623ea9fad451f1b1c0c5884e38c9e28" />
+        <activity android:name=".GoldenMapActivity" />
+
     </application>
 
 </manifest>
