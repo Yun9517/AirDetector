@@ -85,9 +85,9 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         } else {
             headerIndicator.visibility = View.VISIBLE
             if (isExpanded) {
-                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_black_18dp))
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_grey_400_18dp))
             } else {
-                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_right_black_18dp))
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_right_grey_400_18dp))
             }
         }
         return convertView
