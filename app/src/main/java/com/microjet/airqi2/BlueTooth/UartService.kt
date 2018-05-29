@@ -344,12 +344,14 @@ class UartService : Service() {
                 if (location != null) {
                     TvocNoseData.lati = location.latitude.toFloat()
                     TvocNoseData.longi = location.longitude.toFloat()
-                } else {
-                    TvocNoseData.lati = 255f
-                    TvocNoseData.longi = 255f
-                }
 
-                Log.e("LOCATION", "Get Location from OnCompleteListener: $lati, $longi")
+                    Log.e("LOCATION", "Get Location from OnCompleteListener: ${TvocNoseData.lati}, ${TvocNoseData.longi}")
+                } else {
+                    TvocNoseData.lati = lati
+                    TvocNoseData.longi = longi
+
+                    Log.e("LOCATION", "Get Location from OnCompleteListener: null (set default 255, 255)")
+                }
             }
         }
 
@@ -362,12 +364,14 @@ class UartService : Service() {
                 if (location != null) {
                     TvocNoseData.lati = location.latitude.toFloat()
                     TvocNoseData.longi = location.longitude.toFloat()
-                } else {
-                    TvocNoseData.lati = 255f
-                    TvocNoseData.longi = 255f
-                }
 
-                Log.e("LOCATION", "Get Location from LocationCallback: $lati, $longi")
+                    Log.e("LOCATION", "Get Location from OnCompleteListener: ${TvocNoseData.lati}, ${TvocNoseData.longi}")
+                } else {
+                    TvocNoseData.lati = lati
+                    TvocNoseData.longi = longi
+
+                    Log.e("LOCATION", "Get Location from OnCompleteListener: null (set default 255, 255)")
+                }
             }
         },
                 Looper.myLooper())
