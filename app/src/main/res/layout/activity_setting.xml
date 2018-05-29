@@ -672,10 +672,18 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="true"
+            android:singleLine="true"
             android:text="@string/cloud_func_comment"
             android:textColor="#6d6d72"
             android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_cloud_fun" />
 
@@ -888,6 +896,32 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
 
+        <TextView
+            android:id="@+id/text_app_ver"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/show_app_version"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/btnCheckFW"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider7" />
+
+        <ImageView
+            android:id="@+id/mainDivider8"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="#d1d1d3"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_app_ver" />
+
         <Button
             android:id="@+id/dataExport"
             android:layout_width="0dp"
@@ -899,10 +933,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider7" />
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
 
         <ImageView
-            android:id="@+id/mainDivider8"
+            android:id="@+id/mainDivider9"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginBottom="64dp"

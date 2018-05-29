@@ -98,7 +98,8 @@ class SettingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
+        text_device_ver.text = String.format(resources.getString(R.string.text_label_device_version), MyApplication.getDeviceVersion())
+        text_app_ver.text = String.format(resources.getString(R.string.show_app_version), BuildConfig.VERSION_NAME)
 
         getPrivacySettings()
 
