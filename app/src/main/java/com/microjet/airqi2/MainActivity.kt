@@ -181,8 +181,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
-    private var buyURL = ""
+    // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
     private var experienceURL = ""
+    private var introductionURL = ""
+    private var buyURL = ""
+    private var ourStoryURL = ""
 
     //20180423
     private var points = java.util.ArrayList<ImageView>()
@@ -262,7 +265,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                         startActivity(intent)
                                     }
                                 }
-                                1 -> {}
+                                1 -> {
+                                    if (introductionURL.isNotEmpty()) {
+                                        val uri = Uri.parse(introductionURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
                                 2 -> {
                                     if (buyURL.isNotEmpty()) {
                                         val uri = Uri.parse(buyURL)
@@ -270,7 +279,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                         startActivity(intent)
                                     }
                                 }
-                                3 -> {}
+                                3 -> {
+                                    if (ourStoryURL.isNotEmpty()) {
+                                        val uri = Uri.parse(ourStoryURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -1799,9 +1814,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 Dialog.show()
 
             }
+        // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
             "new URL get" -> {
                 buyURL = bleEvent.buyProduct!!
+                introductionURL = bleEvent.introduction!!
                 experienceURL = bleEvent.userExp!!
+                ourStoryURL = bleEvent.ourStory!!
             }
         }
     }

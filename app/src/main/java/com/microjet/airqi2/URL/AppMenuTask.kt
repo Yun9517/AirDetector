@@ -27,8 +27,12 @@ class AppMenuTask : AsyncTask<String, Long, ArrayList<String>>() {
     override fun onPostExecute(result: ArrayList<String>) {
         if (result.isNotEmpty()) {
             val urlEvent = BleEvent("new URL get")
+            // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
             urlEvent.userExp = result[0]
-            urlEvent.buyProduct = result[1]
+            urlEvent.introduction = result[1]
+            urlEvent.buyProduct = result[2]
+            urlEvent.ourStory = result[3]
+
 
             EventBus.getDefault().post(urlEvent)
             Log.d(javaClass.simpleName, "has new url")
@@ -59,13 +63,18 @@ class AppMenuTask : AsyncTask<String, Long, ArrayList<String>>() {
                 val returnResult = jsonObj.getJSONArray("menu")
                 Log.e("JSON Parser", "Return Result: $returnResult")
 
+                // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
                 val userExperience = JSONObject(returnResult[0].toString())["url"].toString()
-                val productBuy = JSONObject(returnResult[1].toString())["url"].toString()
+                val introduction = JSONObject(returnResult[1].toString())["url"].toString()
+                val productBuy = JSONObject(returnResult[2].toString())["url"].toString()
+                val ourStory = JSONObject(returnResult[3].toString())["url"].toString()
 
                 stringUrl.add(userExperience)
+                stringUrl.add(introduction)
                 stringUrl.add(productBuy)
+                stringUrl.add(ourStory)
 
-                Log.e("JSON Parser", "User Experience: $userExperience, Product Buy: $productBuy")
+                Log.e("JSON Parser", "User Experience: $userExperience, Product Buy: $productBuy, Introduction: $introduction, Our Story: $ourStory")
             }
         } catch (e: Exception) {
             e.printStackTrace()
