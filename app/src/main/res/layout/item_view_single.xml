@@ -42,8 +42,10 @@
             android:layout_alignBaseline="@+id/tvScrollContent"
             android:layout_alignBottom="@+id/tvScrollContent"
             android:layout_alignParentEnd="true"
+            android:gravity="center"
             android:background="@drawable/style_setting_button_2"
-            android:text="X" />
+            android:textColor="@color/whiteColor"
+            android:text="x" />
     </RelativeLayout>
 
 
