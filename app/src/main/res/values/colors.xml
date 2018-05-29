@@ -84,4 +84,7 @@
     <color name="darkGray">#AAABAF</color>
     <color name="actionBarColorDark">#404446</color>
 
+    <!--GoldenMap-->
+    <color name="myLocationRange">#80009cde</color>
+
 </resources>

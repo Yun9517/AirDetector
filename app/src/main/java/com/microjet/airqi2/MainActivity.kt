@@ -684,7 +684,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             DefaultPatternCheckingActivity.startAction(this@MainActivity,
                     DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
         } else {
-            val i: Intent? = Intent(this, AirMapActivity::class.java)
+            //val i: Intent? = Intent(this, AirMapActivity::class.java)
+            val i: Intent? = Intent(this, GoldenMapActivity::class.java)
             startActivity(i)
         }
     }
