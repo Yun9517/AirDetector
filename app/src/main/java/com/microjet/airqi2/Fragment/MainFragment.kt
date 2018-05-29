@@ -23,7 +23,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
@@ -898,14 +897,19 @@ class MainFragment : Fragment(), View.OnTouchListener {
             val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
             //初始化布局的控件
             val tv1 = vScrollivs.findViewById<TextView>(R.id.tvScrollContent)
+            val tv2 = vScrollivs.findViewById<TextView>(R.id.tvClose)
             /**
              * 設置監聽
              */
-            val relativeLayout = vScrollivs.findViewById(R.id.rlScroll) as RelativeLayout
-            relativeLayout.setOnClickListener {
+
+            tv1.setOnClickListener {
                 val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
                 val i = Intent(Intent.ACTION_VIEW, url)
                 startActivity(i)
+            }
+
+            tv2.setOnClickListener {
+                upview1.visibility = View.GONE
             }
             //进行对控件赋值
             tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
