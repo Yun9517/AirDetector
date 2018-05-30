@@ -15,6 +15,7 @@ public class AsmDataModel extends RealmObject {
     private String TVOCValue;
     private String ECO2Value;
     private String PM25Value;
+    private Integer PM10Value = 0;
     private Long Created_time;
     private String UpLoaded = "0";
     private Float Longitude = 255f;
@@ -70,6 +71,14 @@ public class AsmDataModel extends RealmObject {
 
     public void setPM25Value(String PM25Value) {
         this.PM25Value = PM25Value;
+    }
+
+    public Integer getPM10Value() {
+        return PM10Value;
+    }
+
+    public void setPM10Value(Integer PM10Value) {
+        this.PM10Value = PM10Value;
     }
 
     public Long getCreated_time() {

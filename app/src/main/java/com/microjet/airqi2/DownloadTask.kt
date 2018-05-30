@@ -45,6 +45,7 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
     private val Created_time = "timestamp"
     private val Longitude = "longitude"
     private val Latitude = "latitude"
+    private val PM10Value = "PM10"
     //private val UpLoaded = "UpLoaded"
     //private val MACAddress = "MACAddress"
     private var mContext: Context = input
@@ -110,6 +111,7 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
                                 asmData.tempValue = jsonArr.getJSONObject(i).getString(TEMPValue)
                                 asmData.humiValue = jsonArr.getJSONObject(i).getString(HUMIValue)
                                 asmData.pM25Value = jsonArr.getJSONObject(i).getString(PM25Value)
+                                asmData.pM10Value = jsonArr.getJSONObject(i).getInt(PM10Value)
                                 asmData.created_time = jsonArr.getJSONObject(i).getString(Created_time).toLong()
                                 asmData.latitude = jsonArr.getJSONObject(i).getString(Latitude).toFloat()
                                 asmData.longitude = jsonArr.getJSONObject(i).getString(Longitude).toFloat()
