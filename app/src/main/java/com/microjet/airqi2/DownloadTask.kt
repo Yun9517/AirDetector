@@ -42,10 +42,10 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
     private val TVOCValue = "tvoc"
     private val ECO2Value = "eco2"
     private val PM25Value = "pm25"
+    private val PM10Value = "pm10"
     private val Created_time = "timestamp"
     private val Longitude = "longitude"
     private val Latitude = "latitude"
-    private val PM10Value = "pm10"
     //private val UpLoaded = "UpLoaded"
     //private val MACAddress = "MACAddress"
     private var mContext: Context = input

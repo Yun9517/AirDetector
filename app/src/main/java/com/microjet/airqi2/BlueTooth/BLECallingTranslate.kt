@@ -1556,6 +1556,39 @@ object BLECallingTranslate {
         return byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySampleD5, b[2], b[3], checkSum)
     }
 
+    fun ParserGetAutoSendDataKeyValueD6(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1 -> {//PM10
+                            returnValue.put(TvocNoseData.D6PM10, value.toString())
+                            value = 0
+                        }
+                        15 -> { //D6Time
+                            returnValue.put(TvocNoseData.D6TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
 
     fun Byte.toPositiveInt() = toInt() and 0xFF
 }

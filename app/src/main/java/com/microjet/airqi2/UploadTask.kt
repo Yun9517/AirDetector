@@ -89,6 +89,7 @@ class UploadTask: AsyncTask<String, Void, String>() {
             jsonObj.put("temperature", it.tempValue)
             jsonObj.put("humidity", it.humiValue)
             jsonObj.put("pm25", it.pM25Value)
+            jsonObj.put("pm10", it.pM10Value)
             jsonObj.put("longitude", it.longitude.toString())
             jsonObj.put("latitude", it.latitude.toString())
             jsonObj.put("timestamp", it.created_time)

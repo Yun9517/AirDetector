@@ -1404,6 +1404,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         putD5ToObject(txValue)
                     }
                     0xD6.toByte() -> {
+                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueD6(txValue)
+                        saveToRealmD6(hashMap)
                     }
                 }
             } else {
@@ -1873,6 +1875,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(C5D5Count))
         }
         Log.d("C5D5ARR", arr1.toString())
+    }
+
+    private fun saveToRealmD6(hashmap: HashMap<String, String>) {
+        val realm = Realm.getDefaultInstance()
+        val pm10 = hashmap[TvocNoseData.D6PM10]?.toInt()
+        val time = hashmap[TvocNoseData.D6TIME]!!.toLong() * 1000
+        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
+        if (query.isNotEmpty() && time > 1514736000000) {
+            realm.executeTransaction {
+                query.forEach {
+                    it.pM10Value = pm10
+                    Log.d(TAG, "SUCCESSD6" + it.toString())
+                }
+            }
+        }
+        realm.close()
     }
 }
 
