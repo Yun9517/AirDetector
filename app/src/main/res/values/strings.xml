@@ -428,4 +428,6 @@
     //20180521
     <string name="text_scrollingText">連結中請稍後，喝一杯茶，休息一下。有聽過安麗嗎~? 先別提安麗~，你有聽過ADDWII嗎?</string>
     <string name="text_scrollingTitle">用戶體驗</string>
+    //20180530
+    <string name="text_check_fragment">有下載正在進行，要停止並開始新的下載?</string>
 </resources>

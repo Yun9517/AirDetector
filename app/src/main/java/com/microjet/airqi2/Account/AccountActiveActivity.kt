@@ -28,6 +28,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.microjet.airqi2.*
+import com.microjet.airqi2.Fragment.CheckFragment
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
@@ -63,6 +64,9 @@ class AccountActiveActivity : AppCompatActivity() {
     var download_Bar: ProgressBar? = null
     var download_min: TextView? = null
     var download_text: TextView? = null
+
+    //20180530
+    private var cloudDeviceListItem: String? =""
 
     @SuppressLint("SdCardPath", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -403,13 +407,32 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-          download?.cancel(true)
-          download=DownloadTask(this, download_Bar!!,download_min!!,download_text!!).execute(list[position], token)
-          dialog?.dismiss()//結束小視窗
+            if (download?.status == AsyncTask.Status.RUNNING) {
+                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment)
+                newFrage.show(fragmentManager,"dialog")
+                cloudDeviceListItem = list[position]
+            } else {
+                download = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(list[position], token)
+                dialog?.dismiss()//結束小視窗
+            }
         }
         bt_cancel.setOnClickListener {
             dialog?.dismiss()//結束小視窗
         }
+    }
+
+    fun doPositiveClick() {
+        download?.cancel(true)
+        val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        val token = share_token.getString("token", "")
+        download = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(cloudDeviceListItem, token)
+        dialog?.dismiss()//結束小視窗
+    }
+
+    fun doNegativeClick() {
+        // Do stuff here.
+        Log.i("FragmentAlertDialog", "按下取消")
+        dialog?.dismiss()//結束小視窗
     }
 }
 
