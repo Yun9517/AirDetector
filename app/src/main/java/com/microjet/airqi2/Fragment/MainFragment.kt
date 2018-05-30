@@ -897,7 +897,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
             val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
             //初始化布局的控件
             val tv1 = vScrollivs.findViewById<TextView>(R.id.tvScrollContent)
-            val tv2 = vScrollivs.findViewById<TextView>(R.id.tvClose)
             /**
              * 設置監聽
              */
@@ -908,9 +907,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 startActivity(i)
             }
 
-            tv2.setOnClickListener {
-                upview1.visibility = View.GONE
-            }
             //进行对控件赋值
             tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
             Log.e("HAO", TvocNoseData.scrollingList[i]["title"].toString())

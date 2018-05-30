@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="12dp">
 
     <RelativeLayout
         android:id="@+id/rlScroll"
@@ -11,23 +12,9 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/title_tv1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:padding="3dp"
-            android:text="@string/text_scrollingTitle"
-            android:textColor="@color/whiteColor"
-            android:textSize="16sp" />
-
-        <TextView
             android:id="@+id/tvScrollContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/title_tv1"
-            android:layout_alignBottom="@+id/title_tv1"
-            android:layout_toEndOf="@+id/title_tv1"
-            android:layout_toStartOf="@+id/tvClose"
             android:ellipsize="end"
             android:maxLines="1"
             android:singleLine="true"
@@ -35,17 +22,6 @@
             android:textColor="@color/whiteColor"
             android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/tvClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tvScrollContent"
-            android:layout_alignBottom="@+id/tvScrollContent"
-            android:layout_alignParentEnd="true"
-            android:gravity="center"
-            android:background="@drawable/style_setting_button_2"
-            android:textColor="@color/whiteColor"
-            android:text="x" />
     </RelativeLayout>
 
 

@@ -408,7 +408,7 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
             if (download?.status == AsyncTask.Status.RUNNING) {
-                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment)
+                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this)
                 newFrage.show(fragmentManager,"dialog")
                 cloudDeviceListItem = list[position]
             } else {
@@ -429,11 +429,6 @@ class AccountActiveActivity : AppCompatActivity() {
         dialog?.dismiss()//結束小視窗
     }
 
-    fun doNegativeClick() {
-        // Do stuff here.
-        Log.i("FragmentAlertDialog", "按下取消")
-        dialog?.dismiss()//結束小視窗
-    }
 }
 
 
