@@ -69,46 +69,9 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
+            android:divider="@drawable/spacer_medium"
+            android:showDividers="middle"
             android:orientation="horizontal">
-
-            <LinearLayout
-                android:id="@+id/show_TVOC"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvBtmTVOCTitle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/text_label_tvoc"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvBtmTVOCValue"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/text_default_value"
-                    android:textAlignment="center"
-                    android:textColor="@color/whiteColor"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgDivider1"
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@color/whiteColor" />
 
             <LinearLayout
                 android:id="@+id/show_PM"
@@ -140,6 +103,66 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/show_TVOC"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvBtmTVOCTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_label_tvoc"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBtmTVOCValue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_default_value"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/show_PM10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tvBtmPM10Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_label_pm10"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBtmPM10Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_default_value"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -147,6 +170,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
+            android:divider="@drawable/spacer_medium"
+            android:showDividers="middle"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -179,16 +204,6 @@
 
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/imgDivider2"
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@color/whiteColor" />
-
             <LinearLayout
                 android:id="@+id/show_Temp"
                 android:layout_width="match_parent"
@@ -218,16 +233,6 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgDivider3"
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@color/whiteColor" />
 
             <LinearLayout
                 android:id="@+id/show_RH"
