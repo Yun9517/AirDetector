@@ -89,6 +89,9 @@ object TvocNoseData {
     //D0
     val D0PM10 = "D0PM10"
     val D0TIME = "D0TIME"
+    //D5
+    val D5PM10 = "D5PM10"
+    val D5TIME = "D5TIME"
 
 
     var spinnerPosition: Int = 0

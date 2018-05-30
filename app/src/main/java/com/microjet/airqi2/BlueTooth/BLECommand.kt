@@ -55,4 +55,5 @@ object BLECommand {
     val GetSetPM25: Byte = 0xE0.toByte()
     val GetSetRTC: Byte = 0xBB.toByte()
     val GetHistorySampleC5: Byte = 0xC5.toByte()
+    val GetHistorySampleD5: Byte = 0xD5.toByte()
 }

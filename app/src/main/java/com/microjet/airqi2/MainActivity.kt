@@ -196,6 +196,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var setNavigationView: NavigationView? = null
 
     private var mywarningclass:WarringClass?=null
+    private var C5D5Count: Int =1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -1381,7 +1383,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                     }
                     0xC5.toByte() -> {
-                        putC5ToObject(txValue)
+                        val pmType = MyApplication.getDevicePMType().toInt()
+                        if (pmType < 2) {
+                            putC5ToObject(txValue)
+                        } else { // 當Type有PM10跑另一個多型
+                            putC5ToObject(txValue, pmType)
+                        }
                     }
                     0xC6.toByte() -> {
                         if (isFirstC6) {
@@ -1392,6 +1399,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         saveToRealmC6(hashMap)
                         mywarningclass?.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                        // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
+                    }
+                    0xD5.toByte() -> {
+                        putD5ToObject(txValue)
+                    }
+                    0xD6.toByte() -> {
                     }
                 }
             } else {
@@ -1598,6 +1610,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
                                     asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
                                     asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
+                                    asmData.pM10Value = arrIndexMap[y][TvocNoseData.D5PM10]?.toInt()
                                     asmData.created_time = time //(arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
                                     asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
                                     asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
@@ -1800,8 +1813,66 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } catch (e: Exception) {
             Log.d(TAG,e.toString())
         }
+    }
+    //多型代入PM10TYPE,一筆C5一筆D5
+    private fun putC5ToObject(tx: ByteArray, pm10type: Int) {
+        Log.d(TAG,"putC5ToObject---$pm10type")
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
+            if (!lock) {
+                indexMap.put("UTCBlockHead", hashMap[TvocNoseData.C5II]!!.toInt())
+                lock = true
+            }
+        }
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() == 0L) {
+            if (lock) {
+                indexMap["UTCBlockEnd"] = hashMap[TvocNoseData.C5II]!!.toInt()
+                val indexCopy = indexMap.clone() as HashMap<String, Int>
+                arr1.add(indexCopy)
+                indexMap.clear()
+                lock = false
+            }
+        }
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        mDeviceAddress = share.getString("mac", "noValue")
+        hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
+        hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
+        arrIndexMap.add(hashMap)
 
+        C5D5Count = hashMap[TvocNoseData.C5II]!!.toInt()
+        Log.d("C5ToObject", C5D5Count.toString())
+        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(C5D5Count))
+    }
 
+    private fun putD5ToObject(tx: ByteArray) {
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueD5(tx)
+        val d5TIME = hashMap[TvocNoseData.D5TIME]
+        val arrIndex = C5D5Count - 1
+        if (arrIndexMap[arrIndex][TvocNoseData.C5TIME] == d5TIME) { //有點沒必要的判斷，不過還是加上去了，聊勝於無
+            arrIndexMap[arrIndex][TvocNoseData.D5PM10] = hashMap[TvocNoseData.D5PM10]!!.toString()
+        } else {
+            Log.e(TAG, "putD5ToObject時間不準就慘啦")
+        }
+        C5D5Count++
+        if (C5D5Count > maxItem) { //|| nowItem == countForItem) {
+            if (lock) {
+                indexMap["UTCBlockEnd"] = maxItem
+                val indexCopy = indexMap.clone() as HashMap<String, Int>
+                arr1.add(indexCopy)
+                indexMap.clear()
+                lock = false
+            }
+            C5D5Count = 1
+            saveToRealmC5()
+        } else {
+            val mainIntent = Intent(BroadcastIntents.PRIMARY)
+            mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA)
+            mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(C5D5Count))
+            sendBroadcast(mainIntent)
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(C5D5Count))
+        }
+        Log.d("C5D5ARR", arr1.toString())
     }
 }
 
