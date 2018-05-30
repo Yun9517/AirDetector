@@ -31,6 +31,7 @@ import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.Account.AccountActiveActivity
@@ -56,6 +57,7 @@ import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
+import kotlinx.android.synthetic.main.frg_main.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
 import org.greenrobot.eventbus.EventBus
@@ -1303,10 +1305,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xB1.toByte() -> {
                         val hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
-                        MyApplication.putDeviceVersion(hashMap["FW"].toString())
-                        MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
-                        MyApplication.putDeviceType(hashMap["DEV"].toString())
+                        MyApplication.putDevicePMType(hashMap[TvocNoseData.ISPM25].toString())
+                        MyApplication.putDeviceVersion(hashMap[TvocNoseData.FW].toString())
+                        MyApplication.putDeviceSerial(hashMap[TvocNoseData.FWSerial].toString())
+                        MyApplication.putDeviceType(hashMap[TvocNoseData.DEVICE].toString())
                         Log.d("PARSERB1", hashMap.toString())
+                        showPm10OrNot()
                     }
                     0xB2.toByte() -> {
                         val hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
@@ -1784,6 +1788,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
         }
+    }
+
+
+    private fun showPm10OrNot() {
+        try {
+            val pmType = MyApplication.getDevicePMType().toInt()
+            if (pmType < 2) {
+                mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.show_PM10)?.visibility = View.GONE
+            }
+        } catch (e: Exception) {
+            Log.d(TAG,e.toString())
+        }
+
+
     }
 }
 

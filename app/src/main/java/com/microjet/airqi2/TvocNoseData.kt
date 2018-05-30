@@ -20,7 +20,7 @@ object TvocNoseData {
     val B0BATT = "B0BATT"
     val B0PREH = "B0PREH"
     //B1 GetInfo
-    val PM25 = "PM25"
+    val ISPM25 = "PM25"
     val MAC = "MAC"
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
@@ -86,6 +86,9 @@ object TvocNoseData {
     val C6MACA = "C6MAC"
     val C6LATI = "C6LATI"
     val C6LONGI = "C6LONGI"
+    //D0
+    val D0PM10 = "D0PM10"
+    val D0TIME = "D0TIME"
 
 
     var spinnerPosition: Int = 0

@@ -40,7 +40,7 @@ class MyApplication : Application() {
         private var deviceSerial: String = ""
         private var deviceType: String = ""
         private var deviceChargeStatus: Boolean = false
-        //var isPM25: String = "000000000000"
+        private var isPM25: String = "0"
 
         var isOnlineLedOn = false
         var isOfflineLedOn = false
@@ -196,6 +196,16 @@ class MyApplication : Application() {
             val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
             share.edit().putBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, value).apply()
         }
+
+        fun putDevicePMType(value: String) {
+            isPM25 = value
+        }
+
+        fun getDevicePMType(): String {
+            return isPM25
+        }
+
+
     }
 
     override fun onCreate() {

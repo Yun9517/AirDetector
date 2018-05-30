@@ -29,6 +29,7 @@ import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import com.microjet.airqi2.ScrollingTextTask
 import com.microjet.airqi2.TvocNoseData
@@ -59,6 +60,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
     private var pm25DataFloat = 0f
+    private var pm10DataFloat = 0f
     private var preHeat = "0"
     //20180207
     private var isPumpOn = false
@@ -317,6 +319,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
+        tvBtmPM10Value.text = pm10DataFloat.toInt().toString() + " μg/m³"
     }
 
     @SuppressLint("SetTextI18n")
@@ -850,6 +853,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     co2DataFloat = hashMap[TvocNoseData.C0ECO2]!!.toFloat()
                     pm25DataFloat = hashMap[TvocNoseData.C0PM25]!!.toFloat()
                     preHeat = (hashMap[TvocNoseData.C0PREH]!!)
+                }
+                0xD0.toByte() -> {
+                    val hashMap = BLECallingTranslate.getAllSensorD0KeyValue(txValue)
+                    pm10DataFloat = hashMap[TvocNoseData.D0PM10]!!.toFloat()
+                    Log.d("0xD0", hashMap.toString())
                 }
             }
         }

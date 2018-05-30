@@ -902,7 +902,7 @@ object BLECallingTranslate {
                         0//is PM25
                         -> {
                             Log.e("ParceDeviceInfo", "String Index: $stringHex")
-                            returnValue[TvocNoseData.PM25] = stringHex
+                            returnValue[TvocNoseData.ISPM25] = stringHex
                             stringHex = ""
                         }
                         4//Reserved
@@ -1468,6 +1468,40 @@ object BLECallingTranslate {
                     }
                 }
                 i++
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getAllSensorD0KeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1 -> {//TVOC
+                            returnValue.put(TvocNoseData.D0PM10, value.toString())
+                            value = 0
+                        }
+                        15 -> {
+                            returnValue.put(TvocNoseData.D0TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
             }
             i++
         }
