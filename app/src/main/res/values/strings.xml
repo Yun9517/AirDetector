@@ -427,4 +427,6 @@
     <string name="text_buy_link">購買連結</string>
     <!--20180521-->
     <string name="text_scrollingTitle">用戶體驗</string>
+    <!-- 2018/05/30 setting dialog -->
+    <string name="text_Enable3GDialog">是否開啟行動網路來傳輸資料?(使用行動網路可能產生額外費用)</string>
 </resources>

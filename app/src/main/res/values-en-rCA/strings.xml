@@ -313,4 +313,7 @@
     <string name="remindAfter_5_Mins">Snooze</string>
     <string name="remindAfterA_Day">Inform  me next day</string>
     <string name="remindDismiss">OK</string>
+
+    <!-- 2018/05/30 setting dialog -->
+    <string name="text_Enable3GDialog">Enable 3G for transfer data? (Using mobile data while roaming may result in additional charges)</string>
 </resources>

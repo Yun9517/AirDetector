@@ -250,6 +250,8 @@ class SettingActivity : AppCompatActivity() {
             if (isChecked) {
                 cgAllow3G.visibility = View.VISIBLE
 
+                showEnable3GDialog()
+
                 swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
 
                 if(swCloud3GVal) {
@@ -721,6 +723,27 @@ class SettingActivity : AppCompatActivity() {
         { dialog, _ ->
             dialog.dismiss()
             finish()
+        }
+        Dialog.show()
+    }
+
+    // 2018/05/30 show enable 3G dialog
+    private fun showEnable3GDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle(getString(R.string.remind))
+        Dialog.setMessage(getString(R.string.text_Enable3GDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        { dialog, _ ->
+            swAllow3G.isChecked = false
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+            swAllow3G.isChecked = true
+            dialog.dismiss()
         }
         Dialog.show()
     }

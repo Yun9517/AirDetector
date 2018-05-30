@@ -421,6 +421,8 @@
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
     <string name="text_scrollingTitle">用戶體驗</string>
+    <!-- 2018/05/30 setting dialog -->
+    <string name="text_Enable3GDialog">是否开启行动网络来传输数据?(使用行动网络可能产生额外费用)</string>
 </resources>
 
 
