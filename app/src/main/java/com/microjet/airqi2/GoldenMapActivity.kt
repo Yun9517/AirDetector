@@ -1,7 +1,6 @@
 package com.microjet.airqi2
 
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
@@ -72,7 +71,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         mCal = Calendar.getInstance()
 
         initActionBar()
-        init()
+        initGoldenMap()
 
         initLineChart()
 
@@ -234,7 +233,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         }
 
         val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
-        Log.e("Scroll", "Time: ${dateFormat.format(filter[_index].created_time)}, " +
+        Log.e("Scroll", "Index:$_index Time: ${dateFormat.format(filter[_index].created_time)}, " +
                 "Timestamp: ${filter[_index].created_time}, Value: $data, " +
                 "Lat: ${filter[_index].latitude}, Lng: ${filter[_index].longitude}")
     }
@@ -327,6 +326,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         if (pgLoading.visibility == View.VISIBLE) {
             pgLoading.visibility = View.GONE
         }
+
+        lineChart.invalidate()
     }
 
     // 畫軌跡
@@ -529,15 +530,6 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     private fun putMarker(latitude: Double, longitude: Double) {
         val latLng = LatLng(latitude, longitude)
 
-        // 移動畫面到目前的標記
-
-        Log.e("GoldenMap", "Zoom Level: ${aMap!!.cameraPosition.zoom}")
-        if(aMap!!.cameraPosition.zoom > 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
-            aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
-        } else {
-            aMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        }
-
         if (currentMarker != null) {
             currentMarker!!.remove()
             currentMarker = null
@@ -546,12 +538,20 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         if (currentMarker == null) {
             currentMarker = aMap!!.addMarker(MarkerOptions().position(latLng))
         }
+
+        // 移動畫面到目前的標記
+        Log.e("GoldenMap", "Zoom Level: ${aMap!!.cameraPosition.zoom}")
+        if(aMap!!.cameraPosition.zoom < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+            aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
+        } else {
+            aMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        }
     }
 
     /**
      * 初始化AMap对象
      */
-    private fun init() {
+    private fun initGoldenMap() {
         if (aMap == null) {
             aMap = goldenMap.map
             val uiSettings = aMap?.uiSettings
@@ -561,8 +561,12 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             myLocationStyle = MyLocationStyle()
             myLocationStyle.interval(2000)
             myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW)
-            myLocationStyle.strokeColor(ContextCompat.getColor(MyApplication.applicationContext(), R.color.myLocationRange))//设置定位蓝点精度圆圈的边框颜色的方法。
-            myLocationStyle.radiusFillColor(ContextCompat.getColor(MyApplication.applicationContext(), R.color.myLocationRange))//设置定位蓝点精度圆圈的填充颜色的方法。
+            myLocationStyle.strokeColor(
+                    ContextCompat.getColor(MyApplication.applicationContext(),
+                            R.color.myLocationRange))//设置定位蓝点精度圆圈的边框颜色的方法。
+            myLocationStyle.radiusFillColor(
+                    ContextCompat.getColor(MyApplication.applicationContext(),
+                            R.color.myLocationRange))//设置定位蓝点精度圆圈的填充颜色的方法。
             aMap!!.setMyLocationStyle(myLocationStyle)
             aMap!!.isMyLocationEnabled = true
 
