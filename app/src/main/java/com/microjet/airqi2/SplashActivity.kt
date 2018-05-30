@@ -40,7 +40,7 @@ class SplashActivity : AppCompatActivity() {
                 finish()
             } else {
                 //val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
-                val i = Intent(this@SplashActivity, GoldenMapActivity::class.java) //放你想跳過去的頁面
+                val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
                 startActivity(i)
                 finish()
             }

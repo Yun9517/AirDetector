@@ -68,13 +68,14 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activicy_goldenmap)
         goldenMap.onCreate(savedInstanceState)
-        
+
+        mCal = Calendar.getInstance()
+
         initActionBar()
         init()
 
         initLineChart()
 
-        mCal = Calendar.getInstance()
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
         datePicker.text = setBtnText("DATE $mDate")
 
@@ -131,8 +132,6 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             drawLineChart(result)
             drawMapPolyLine(result)
         }
-
-        runRealmQueryData()
     }
 
     // 初始化 lineChart
@@ -180,6 +179,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         // set callback to handle updates on scroll or pinch
         // -------------------------------------------------
         lineChart.SetOnUpdateCallback(this)
+
+        runRealmQueryData()
     }
 
     // 初始化ActionBar
