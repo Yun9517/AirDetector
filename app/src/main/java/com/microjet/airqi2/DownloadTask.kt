@@ -45,7 +45,7 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
     private val Created_time = "timestamp"
     private val Longitude = "longitude"
     private val Latitude = "latitude"
-    private val PM10Value = "PM10"
+    private val PM10Value = "pm10"
     //private val UpLoaded = "UpLoaded"
     //private val MACAddress = "MACAddress"
     private var mContext: Context = input
