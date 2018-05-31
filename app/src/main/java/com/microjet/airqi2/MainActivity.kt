@@ -700,7 +700,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171127 Raymond 新增：知識庫activity
     private fun knowledgeShow() {
         //blueToothDisconnect()
-        val i: Intent? = Intent(this, GoldenMapActivity::class.java)
+        val i: Intent? = Intent(this, KnowledgeActivity::class.java)
         startActivity(i)
     }
 

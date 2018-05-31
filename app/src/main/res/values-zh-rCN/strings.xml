@@ -240,8 +240,8 @@
 
     <string name="title_activity_splash">SplashActivity</string>
     <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
-    <string name="text_label_latitude">纬度：</string>
-    <string name="text_label_longitude">经度：</string>
+    <string name="text_label_latitude">纬度</string>
+    <string name="text_label_longitude">经度</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">请不要点太快</string>

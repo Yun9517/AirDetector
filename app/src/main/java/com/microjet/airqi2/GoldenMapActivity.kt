@@ -225,7 +225,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
             updateValuePanel(filter[_index].created_time, filter[_index].tvocValue,
                     filter[_index].pM25Value, filter[_index].ecO2Value,
-                    filter[_index].tempValue, filter[_index].humiValue)
+                    filter[_index].tempValue, filter[_index].humiValue,
+                    filter[_index].latitude.toString(), filter[_index].longitude.toString())
         } catch (_e: IllegalArgumentException) {
             _e.printStackTrace()
         } catch (_e: NullPointerException) {
@@ -313,7 +314,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             }
 
             val nullDataText = "-----"
-            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
+            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
         }
 
         lineChart.SetData(aResult)
@@ -504,7 +505,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     // 更新左上角空汙數值面板
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
-                                 tempVal: String, humiVal: String) {
+                                 tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
         val dateFormat = SimpleDateFormat("HH:mm")
 
         textTIMEvalue.text = if(timeVal != 0L) {
@@ -524,6 +525,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         textECO2value.text = "$eco2Val ppm"
         textTEMPvalue.text = "$tempVal °C"
         textHUMIvalue.text = "$humiVal %"
+        textLATIvalue.text = latiVal
+        textLNGIvalue.text = longiVal
     }
 
     // 放入地圖圖釘

@@ -53,7 +53,8 @@
                 android:layout_width="170dp"
                 android:layout_height="wrap_content"
                 android:background="@drawable/map_value_background"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="visible">
 
                 <TextView
                     android:id="@+id/textView"
@@ -261,13 +262,77 @@
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textLATItitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_longitude"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
+
+                    <TextView
+                        android:id="@+id/textLATIvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="----"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="1dp"
+                    android:layout_marginEnd="5dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/textLNGItitle"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/map_text_background"
+                        android:singleLine="true"
+                        android:text="@string/text_label_latitude"
+                        android:textAlignment="center"
+                        android:textColor="@color/whiteColor" />
+
+                    <TextView
+                        android:id="@+id/textLNGIvalue"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:singleLine="true"
+                        android:text="----"
+                        android:textAlignment="center"
+                        android:textColor="@color/AboutHyperLink" />
+
+                </LinearLayout>
+
             </LinearLayout>
         </ScrollView>
 
         <ImageView
             android:id="@+id/imgExpand"
             android:layout_width="20dp"
-            android:layout_height="171dp"
+            android:layout_height="217dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/airmap_infodrawer_close" />
 
