@@ -243,7 +243,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             }
 
             val nullDataText = "-----"
-            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
+            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
         }
 
         lineChart.SetData(aResult)
@@ -432,7 +432,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     // 更新左上角空汙數值面板
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
-                                 tempVal: String, humiVal: String) {
+                                 tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
         val dateFormat = SimpleDateFormat("HH:mm")
 
         textTIMEvalue.text = if(timeVal != 0L) {
@@ -452,6 +452,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         textECO2value.text = "$eco2Val ppm"
         textTEMPvalue.text = "$tempVal °C"
         textHUMIvalue.text = "$humiVal %"
+        textLATIvalue.text = latiVal
+        textLNGIvalue.text = longiVal
     }
 
     // 放入地圖圖釘
@@ -469,11 +471,11 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // 移動畫面到目前的標記
         val zoomValue = mMap.cameraPosition.zoom
-        //if(mMap.cameraPosition.zoom == 2.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+        if(zoomValue < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+        } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
-        //} else {
-        //    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        //}
+        }
     }
 
     // 初始化 lineChart
@@ -604,7 +606,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
             updateValuePanel(filter[_index].created_time, filter[_index].tvocValue,
                     filter[_index].pM25Value, filter[_index].ecO2Value,
-                    filter[_index].tempValue, filter[_index].humiValue)
+                    filter[_index].tempValue, filter[_index].humiValue,
+                    filter[_index].latitude.toString(), filter[_index].longitude.toString())
         } catch (_e: IllegalArgumentException) {
             _e.printStackTrace()
         } catch (_e: NullPointerException) {
