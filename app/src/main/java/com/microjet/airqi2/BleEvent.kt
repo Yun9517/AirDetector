@@ -8,8 +8,11 @@ import android.bluetooth.BluetoothGattCharacteristic
 class BleEvent(input: String) {
     var char: BluetoothGattCharacteristic? = null
     var message: String? = null
+    // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
     var userExp: String? = null
+    var introduction: String? = null
     var buyProduct: String? = null
+    var ourStory: String? = null
 
     init {
         message = input

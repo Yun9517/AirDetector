@@ -181,8 +181,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
-    private var buyURL = ""
+    // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
     private var experienceURL = ""
+    private var introductionURL = ""
+    private var buyURL = ""
+    private var ourStoryURL = ""
 
     //20180423
     private var points = java.util.ArrayList<ImageView>()
@@ -237,6 +240,92 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         navigationmenu.setGroupIndicator(null)
         //*****************************************************//
         navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
+            when (groupPosition) {
+                0 -> {
+                    when (connState) {
+                        CONNECTED -> {
+                            blueToothDisconnect()
+                        }
+                        DISCONNECTED -> {
+                            blueToothConnect()
+                        }
+                    }
+                }
+                1 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
+                            when(childPosition) {
+                                0 -> {
+                                    if (experienceURL.isNotEmpty()) {
+                                        val uri = Uri.parse(experienceURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                                1 -> {
+                                    if (introductionURL.isNotEmpty()) {
+                                        val uri = Uri.parse(introductionURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                                2 -> {
+                                    if (buyURL.isNotEmpty()) {
+                                        val uri = Uri.parse(buyURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                                3 -> {
+                                    if (ourStoryURL.isNotEmpty()) {
+                                        val uri = Uri.parse(ourStoryURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                2 -> { publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map)) }
+                3 -> { airmapShow() }
+                4 -> { knowledgeShow() }
+                5 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
+                            when(childPosition) {
+                                0 -> { qandaShow() }
+                                1 -> { tourShow() }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                6 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
+                            when(childPosition) {
+                                0 -> { accountShow() }
+                                1 -> { settingShow() }
+                            }
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+            }
+            true
+        })
+        /*navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
             when (groupPosition) {
                 0 -> {
                     when (connState) {
@@ -315,7 +404,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
             true
-        })
+        })*/
         //2018524 白~~~~告新聞抓取
         ScrollingTextTask().execute()
     }
@@ -1106,7 +1195,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 2018/05/03 ExpandableListView
     private fun prepareListData() {
-        val drawerAddADDWII01 = ExpandedMenuModel()
+        /*val drawerAddADDWII01 = ExpandedMenuModel()
         drawerAddADDWII01.iconName = getString(R.string.text_navi_add_device)
         drawerAddADDWII01.iconImg = R.drawable.ic_bluetooth_searching_black_24dp
         // Adding data header
@@ -1165,7 +1254,62 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         listDataChild[listDataHeader[2]] = childMap03
         listDataChild[listDataHeader[3]] = childHelp04
-        //navigationmenu.expandableListAdapter.getGroupView(0).scrollIndicators = 0
+        //navigationmenu.expandableListAdapter.getGroupView(0).scrollIndicators = 0*/
+
+        // Group List
+        val drawer_01_Add_Device = ExpandedMenuModel()
+        drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
+        drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
+        listDataHeader.add(drawer_01_Add_Device)
+
+        val drawer_02_mobile_nose = ExpandedMenuModel()
+        drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
+        drawer_02_mobile_nose.iconImg = R.drawable.drawer02_mobile_nose
+        listDataHeader.add(drawer_02_mobile_nose)
+
+        val drawer_03_air_map = ExpandedMenuModel()
+        drawer_03_air_map.iconName = getString(R.string.text_drawer_03_air_map)
+        drawer_03_air_map.iconImg = R.drawable.drawer03_air_map
+        listDataHeader.add(drawer_03_air_map)
+
+        val drawer_04_personal_trail = ExpandedMenuModel()
+        drawer_04_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail)
+        drawer_04_personal_trail.iconImg = R.drawable.drawer04_personal_track
+        listDataHeader.add(drawer_04_personal_trail)
+
+        val drawer_05_knowledge = ExpandedMenuModel()
+        drawer_05_knowledge.iconName = getString(R.string.text_drawer_05_knowledge)
+        drawer_05_knowledge.iconImg = R.drawable.drawer05_knowledge_info
+        listDataHeader.add(drawer_05_knowledge)
+
+        val drawer_06_QA = ExpandedMenuModel()
+        drawer_06_QA.iconName = getString(R.string.text_drawer_06_QA)
+        drawer_06_QA.iconImg = R.drawable.drawer06_qa
+        listDataHeader.add(drawer_06_QA)
+
+        val drawer_07_setting = ExpandedMenuModel()
+        drawer_07_setting.iconName = getString(R.string.text_drawer_07_setting)
+        drawer_07_setting.iconImg = R.drawable.drawer07_setting
+        listDataHeader.add(drawer_07_setting)
+
+        // Child List
+        val child_02_mobile_nose = ArrayList<String>()
+        child_02_mobile_nose.add(getString(R.string.text_drawer_02_1_user_experience))
+        child_02_mobile_nose.add(getString(R.string.text_drawer_02_2_introduction))
+        child_02_mobile_nose.add(getString(R.string.text_drawer_02_3_purchase))
+        child_02_mobile_nose.add(getString(R.string.text_drawer_02_4_our_story))
+
+        val child_06_QA = ArrayList<String>()
+        child_06_QA.add(getString(R.string.text_drawer_06_1_FAQ))
+        child_06_QA.add(getString(R.string.text_drawer_06_2_guide_tour))
+
+        val child_07_setting = ArrayList<String>()
+        child_07_setting.add(getString(R.string.text_drawer_07_1_account_setting))
+        child_07_setting.add(getString(R.string.text_drawer_07_2_general_setting))
+
+        listDataChild[listDataHeader[1]] = child_02_mobile_nose
+        listDataChild[listDataHeader[5]] = child_06_QA
+        listDataChild[listDataHeader[6]] = child_07_setting
     }
 
 
@@ -1670,9 +1814,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 Dialog.show()
 
             }
+        // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
             "new URL get" -> {
                 buyURL = bleEvent.buyProduct!!
+                introductionURL = bleEvent.introduction!!
                 experienceURL = bleEvent.userExp!!
+                ourStoryURL = bleEvent.ourStory!!
             }
         }
     }

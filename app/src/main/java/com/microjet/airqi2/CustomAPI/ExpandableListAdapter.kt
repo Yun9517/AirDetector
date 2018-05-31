@@ -37,7 +37,7 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
 
     override fun getChildrenCount(groupPosition: Int): Int {
         var childCount = 0
-        if (groupPosition == 2 || groupPosition == 3) {
+        if (groupPosition == 1 || groupPosition == 5 || groupPosition == 6) {
             childCount = this.mListDataChild[this.mListDataHeader[groupPosition]]!!.size
         }
         return childCount
@@ -85,9 +85,9 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         } else {
             headerIndicator.visibility = View.VISIBLE
             if (isExpanded) {
-                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_black_18dp))
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_grey_400_18dp))
             } else {
-                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_right_black_18dp))
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_down_grey_400_18dp))
             }
         }
         return convertView
