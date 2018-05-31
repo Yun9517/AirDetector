@@ -540,12 +540,13 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         }
 
         // 移動畫面到目前的標記
-        Log.e("GoldenMap", "Zoom Level: ${aMap!!.cameraPosition.zoom}")
-        if(aMap!!.cameraPosition.zoom < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
-            aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
-        } else {
-            aMap!!.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-        }
+        val zoomValue = aMap!!.cameraPosition.zoom
+        Log.e("GoldenMap", "Zoom Level: $zoomValue")
+        //if(aMap!!.cameraPosition.zoom < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+        //    aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
+        //} else {
+            aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
+        //}
     }
 
     /**
