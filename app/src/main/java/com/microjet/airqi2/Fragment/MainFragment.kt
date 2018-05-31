@@ -876,7 +876,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable {
             if (TvocNoseData.scrollingList.isNotEmpty()) {
                 setViewSingleLine()
-                upview1.setViews(scrollViewsArr)
+                upview1?.setViews(scrollViewsArr)
             } else {
                 scrollindex++
                 if (scrollindex < 10) {
@@ -917,9 +917,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     fun setNewsPanelShow(enable: Boolean) {
         if(enable) {
-            upview1.visibility = View.VISIBLE
+            upview1?.visibility = View.VISIBLE
         } else {
-            upview1.visibility = View.INVISIBLE
+            upview1?.visibility = View.INVISIBLE
         }
     }
 }
