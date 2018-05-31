@@ -262,9 +262,9 @@ class SettingActivity : AppCompatActivity() {
 
                 swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
 
-                if(swCloud3GVal) {
+                /*if(swCloud3GVal) {
                     swAllow3G.isChecked = swCloud3GVal
-                }
+                }*/
             } else {
                 cgAllow3G.visibility = View.GONE
             }

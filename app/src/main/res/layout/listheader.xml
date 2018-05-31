@@ -18,9 +18,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:contentDescription="TODO"
-            tools:ignore="ContentDescription,HardcodedText" />
+            android:layout_marginBottom="10dp"/>
 
         <TextView
             android:id="@+id/submenu"
@@ -43,9 +41,7 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="6dp"
-                android:contentDescription="TODO"
-                tools:ignore="ContentDescription,HardcodedText" />
+                android:layout_marginEnd="6dp"/>
 
         </LinearLayout>
 

@@ -84,7 +84,7 @@
     <string name="ADDWII">ADDWII</string>
     <string name="Contact_us">聯絡我們</string>
     <string name="Contact_mail">客服信箱</string>
-    <string name="show_app_version">Mobile Nose 版本 v.%s</string>
+    <string name="show_app_version">APP 版本 v.%s</string>
     <string name="Blue_Tooth">藍芽連線</string>
     <string name="Broadcast">推播通知</string>
     <string name="Auto_measure">自動測試</string>
@@ -145,8 +145,8 @@
     <string name="averageHumidity_Daily">平均濕度</string>
 
     <string name="text_setting_test_cycle">測試週期選擇</string>
-    <string name="text_setting_allow_notification">偵測通知</string>
-    <string name="text_setting_allow_privacy">個人軌跡密碼設定</string>
+    <string name="text_setting_allow_notification">裝置偵測通知</string>
+    <string name="text_setting_allow_privacy">隱私設定</string>
     <string name="text_setting_notify_message">訊息</string>
     <string name="text_setting_notify_viberation">震動</string>
     <string name="text_setting_notify_sound">提示音</string>
@@ -182,7 +182,7 @@
 
     <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
-    <string name="led_light">偵測器提示燈</string>
+    <string name="led_light">空氣品質提示燈</string>
     <string name="led_light_disconnect">斷線藍芽閃燈</string>
 
     <!-- 2018/03/02 -->
@@ -417,7 +417,7 @@
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">推播通知</string>
+    <string name="text_cloud_notify">日平均推播通知</string>
     <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
