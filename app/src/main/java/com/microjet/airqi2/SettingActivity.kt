@@ -74,9 +74,9 @@ class SettingActivity : AppCompatActivity() {
     private var swCloudNotifyVal: Boolean = false
 
     //20180517
-    private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
-    private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
     private var cloudTime: Int = TvocNoseData.firebaseNotiftime
+    private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
+    private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,6 +85,8 @@ class SettingActivity : AppCompatActivity() {
         readPreferences()   // 載入設定值
         uiSetListener()
         initActionBar()
+        //20180516 by 白~~~~~~~~~~~~~~~~~~~告
+        setFCMSettingView()
 
         if(intent.getBooleanExtra("CONN", false)) {
             cgDeviceControl.visibility = View.VISIBLE
@@ -123,8 +125,7 @@ class SettingActivity : AppCompatActivity() {
         getCloudSettings()
         getPrivacySettings()
         getDeviceLedSettings()
-        //20180516 by 白~~~~~~~~~~~~~~~~~~~告
-        getFirebaseNotifSettings()
+        getFCMSettings()
     }
 
     private fun uiSetListener() {
@@ -349,10 +350,10 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
-                closeFirebaseNotifcation()
+                updateCloudSetting(25, 35, 660)
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, isChecked).apply()
+            mPreference!!.edit().putBoolean(SavePreferences.SETTING_FIREBASE, isChecked).apply()
         }
 
         //20180516 BY 白~~~~~~~~~~~~~~告
@@ -452,7 +453,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         btnSaveCloudSetting.setOnClickListener {
-            updataSetting()
+            updateCloudSetting(cloudTime,cloudPM25,cloudTVOC)
         }
 
         dataExport.setOnClickListener {
@@ -581,7 +582,18 @@ class SettingActivity : AppCompatActivity() {
             cgAllow3G.visibility = View.GONE
         }
 
-        swAllowCloudNotify.isChecked = swCloudNotifyVal
+    }
+
+    private fun getFCMSettings() {
+        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_FIREBASE, true)
+        swAllowCloudNotify?.isChecked = swCloudNotifyVal
+        if (swCloudNotifyVal) {
+            cgCloudNotify.visibility = View.VISIBLE
+            cgCloudSeekbar.visibility = View.VISIBLE
+        } else {
+            cgCloudNotify.visibility = View.GONE
+            cgCloudSeekbar.visibility = View.GONE
+        }
     }
 
     private fun getDeviceLedSettings() {
@@ -746,29 +758,25 @@ class SettingActivity : AppCompatActivity() {
     //2018515 by 白~~~~~~~~~~~~~~~~告
 
     @SuppressLint("SetTextI18n")
-    private fun getFirebaseNotifSettings() {
-
-        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
-        if (swCloudNotifyVal) {
-            cgCloudNotify.visibility = View.VISIBLE
-            cgCloudSeekbar.visibility = View.VISIBLE
-        } else {
-            cgCloudNotify.visibility = View.GONE
-            cgCloudSeekbar.visibility = View.GONE
+    private fun setFCMSettingView() {
+        when (TvocNoseData.firebaseNotiftime) {
+            in 0..9 -> {
+                btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
+            }
+            25 -> {
+                btnCloudNotify.text = "00:00"
+            }
+            else -> {
+                btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
+            }
         }
-
-        if (TvocNoseData.firebaseNotiftime < 10) {
-            btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
-        }else if(TvocNoseData.firebaseNotiftime == 25){
-            btnCloudNotify.text = "00:00"
-        }else {
-            btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
-        }
+        //TVOC TEXTVIEW VALUE
         cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
         cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
+        //PM25 TEXTVIEW VALUE
         cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
         cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
-
+        //SEEKBARCOLOR
         setSeekBarColor(cloudTvocSeekBar, TvocNoseData.firebaseNotifTVOC.toFloat(), true)
         setSeekBarColor(cloudPM25SeekBar, TvocNoseData.firebaseNotifPM25.toFloat(), false)
     }
@@ -793,14 +801,14 @@ class SettingActivity : AppCompatActivity() {
         alertBuilder.show()
     }
 
-    private fun updataSetting() {
+    private fun updateCloudSetting(argTime: Int, argPm25: Int, argTvoc: Int) {
+        TvocNoseData.firebaseNotiftime = argTime
+        TvocNoseData.firebaseNotifPM25 = argPm25
+        TvocNoseData.firebaseNotifTVOC = argTvoc
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        TvocNoseData.firebaseNotiftime = cloudTime
-        TvocNoseData.firebaseNotifTVOC = cloudTVOC
-        TvocNoseData.firebaseNotifPM25 = cloudPM25
-        FirebaseNotifTask().execute(myToken, TvocNoseData.firebaseNotiftime.toString(), TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
-
+        FirebaseNotifTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
+        setFCMSettingView()
     }
 
 
@@ -907,13 +915,4 @@ class SettingActivity : AppCompatActivity() {
             Log.e("Exception", "File write failed: " + e.toString())
         }
     }
-
-    private fun closeFirebaseNotifcation(){
-            cloudTime = 25
-            cloudPM25 = 35
-            cloudTVOC = 660
-            updataSetting()
-            getFirebaseNotifSettings()
-    }
-
 }
