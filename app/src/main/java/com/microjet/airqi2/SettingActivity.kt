@@ -92,6 +92,13 @@ class SettingActivity : AppCompatActivity() {
         } else {
             cgDeviceControl.visibility = View.GONE
         }
+
+        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part one
+        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val deviceName = share.getString("name", "")
+        if (deviceName == "DfuTarg") {
+            btnCheckFW?.text = getString(R.string.dfu_update_failure)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -454,17 +461,11 @@ class SettingActivity : AppCompatActivity() {
             dpd.show()
         }
 
-        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - start
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val deviceName = share.getString("name", "")
-        if (deviceName == "DfuTarg") {
-            btnCheckFW?.text = getString(R.string.dfu_update_failure)
-            btnCheckFW.setOnClickListener {
+        // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
+        btnCheckFW.setOnClickListener {
+            if (btnCheckFW.text == getString(R.string.dfu_update_failure)) {
                 EventBus.getDefault().post(BleEvent("Download Success"))
-            }
-            // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - end
-        } else {
-            btnCheckFW.setOnClickListener {
+            } else {
                 if (MyApplication.getDeviceChargeStatus()) {
                     val fwVer = MyApplication.getDeviceVersion()
                     val fwSerial = MyApplication.getDeviceSerial()
