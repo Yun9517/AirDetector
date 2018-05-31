@@ -422,7 +422,9 @@
     <string name="text_buy_link">购买连结</string>
     <string name="text_scrollingTitle">用戶體驗</string>
     <!-- 2018/05/30 setting dialog -->
-    <string name="text_Enable3GDialog">是否开启行动网络来传输数据?(使用行动网络可能产生额外费用)</string>
+    <string name="text_open">打开</string>
+    <string name="text_close">关闭</string>
+    <string name="text_Enable3GDialog">打开的话，会透过手机行动网络上传数据到云端；关闭的话，数据上传到云端不会使用手机行动网络</string>
 </resources>
 
 

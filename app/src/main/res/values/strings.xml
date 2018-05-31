@@ -428,5 +428,7 @@
     <!--20180521-->
     <string name="text_scrollingTitle">用戶體驗</string>
     <!-- 2018/05/30 setting dialog -->
-    <string name="text_Enable3GDialog">是否開啟行動網路來傳輸資料?(使用行動網路可能產生額外費用)</string>
+    <string name="text_open">打開</string>
+    <string name="text_close">關閉</string>
+    <string name="text_Enable3GDialog">打開的話，會透過手機行動網路上傳資料到雲端；關閉的話，數據上傳到雲端不會使用手機行動網路</string>
 </resources>

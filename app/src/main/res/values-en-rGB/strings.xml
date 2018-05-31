@@ -315,5 +315,7 @@
     <string name="remindDismiss">OK</string>
 
     <!-- 2018/05/30 setting dialog -->
-    <string name="text_Enable3GDialog">Enable 3G for transfer data? (Using mobile data while roaming may result in additional charges)</string>
+    <string name="text_open">Open</string>
+    <string name="text_close">Close</string>
+    <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
 </resources>
