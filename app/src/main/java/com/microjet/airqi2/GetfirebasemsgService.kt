@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -21,6 +22,7 @@ class GetfirebasemsgService : FirebaseMessagingService(){
     private val TAG = "MyFirebaseMessaging"
     override fun onMessageReceived(getMessage: RemoteMessage?) {
         super.onMessageReceived(getMessage)
+        FirebaseMessaging.getInstance().subscribeToTopic("all");
         if(getMessage!!.data!!.size > 0){
             Log.d(TAG,"Message data"+getMessage.data!!)
         }

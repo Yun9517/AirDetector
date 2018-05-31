@@ -1,5 +1,6 @@
 package com.microjet.airqi2
 
+import android.os.AsyncTask
 import android.util.Log
 import io.realm.Realm
 import io.realm.Sort
@@ -114,7 +115,8 @@ object TvocNoseData {
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
-    var scrollingNUM: Int = 0
+
+    var download_AsynTask: AsyncTask<String, Int, String>? = null
 
     //val arrTvoc3: ArrayList<String> = arrayListOf()
     //val arrTime3: ArrayList<String> = arrayListOf()

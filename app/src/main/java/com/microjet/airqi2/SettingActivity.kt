@@ -32,7 +32,6 @@ import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
-import kotlinx.android.synthetic.main.drawer_header.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONException
@@ -349,6 +348,7 @@ class SettingActivity : AppCompatActivity() {
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
+                closeFirebaseNotifcation()
             }
 
             mPreference!!.edit().putBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, isChecked).apply()
@@ -408,9 +408,10 @@ class SettingActivity : AppCompatActivity() {
 
                 if (value.isNotEmpty() && value.toInt() in 220..2200) {
                     cloudTvocSeekBar.setValue(value.toFloat())
+                    cloudTVOC = value.toInt()
                     setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(cloudTvocSeekValue, value.toFloat())
-                    TvocNoseData.firebaseNotifTVOC = value.toInt()
+
 
                 }
             })
@@ -433,9 +434,10 @@ class SettingActivity : AppCompatActivity() {
                 val value = editText.text.toString()
                 if(value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
+                    cloudPM25 = value.toInt()
                     setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue( cloudPM25SeekValue, value.toFloat())
-                    TvocNoseData.firebaseNotifPM25 = value.toInt()
+
 
                 }
             })
@@ -755,7 +757,9 @@ class SettingActivity : AppCompatActivity() {
     private fun getFirebaseNotifSettings() {
         if (TvocNoseData.firebaseNotiftime < 10) {
             btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
-        } else {
+        }else if(TvocNoseData.firebaseNotiftime == 25){
+            btnCloudNotify.text = "00:00"
+        }else {
             btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
         }
         cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
@@ -898,4 +902,13 @@ class SettingActivity : AppCompatActivity() {
             Log.e("Exception", "File write failed: " + e.toString())
         }
     }
+
+    private fun closeFirebaseNotifcation(){
+            cloudTime = 25
+            cloudPM25 = 35
+            cloudTVOC = 660
+            updataSetting()
+            getFirebaseNotifSettings()
+    }
+
 }

@@ -23,7 +23,6 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import android.widget.TextView
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
@@ -877,7 +876,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable {
             if (TvocNoseData.scrollingList.isNotEmpty()) {
                 setViewSingleLine()
-                upview1.setViews(scrollViewsArr)
+                upview1?.setViews(scrollViewsArr)
             } else {
                 scrollindex++
                 if (scrollindex < 10) {
@@ -901,12 +900,13 @@ class MainFragment : Fragment(), View.OnTouchListener {
             /**
              * 設置監聽
              */
-            val relativeLayout = vScrollivs.findViewById(R.id.rlScroll) as RelativeLayout
-            relativeLayout.setOnClickListener {
+
+            tv1.setOnClickListener {
                 val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
                 val i = Intent(Intent.ACTION_VIEW, url)
                 startActivity(i)
             }
+
             //进行对控件赋值
             tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
             Log.e("HAO", TvocNoseData.scrollingList[i]["title"].toString())
@@ -917,9 +917,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     fun setNewsPanelShow(enable: Boolean) {
         if(enable) {
-            upview1.visibility = View.VISIBLE
+            upview1?.visibility = View.VISIBLE
         } else {
-            upview1.visibility = View.INVISIBLE
+            upview1?.visibility = View.INVISIBLE
         }
     }
 }

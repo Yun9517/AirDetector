@@ -447,4 +447,6 @@
     <string name="text_open">打開</string>
     <string name="text_close">關閉</string>
     <string name="text_Enable3GDialog">打開的話，會透過手機行動網路上傳資料到雲端；關閉的話，數據上傳到雲端不會使用手機行動網路</string>
+    <!--20180530-->
+    <string name="text_check_fragment">有下載正在進行，要停止並開始新的下載?</string>
 </resources>
