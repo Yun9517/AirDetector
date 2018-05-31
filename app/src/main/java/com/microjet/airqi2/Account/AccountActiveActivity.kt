@@ -60,7 +60,6 @@ class AccountActiveActivity : AppCompatActivity() {
     var useFor = 0
     var calObject = Calendar.getInstance()
     var dialog: Dialog? =null
-    private var download: AsyncTask<String, Int, String>? = null
     var download_Bar: ProgressBar? = null
     var download_min: TextView? = null
     var download_text: TextView? = null
@@ -407,25 +406,26 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setVerticalScrollBarEnabled(true)//滾動條存在->true
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
-            if (download?.status == AsyncTask.Status.RUNNING) {
+            if (TvocNoseData.download_AsynTask?.status == AsyncTask.Status.RUNNING) {
                 val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this)
                 newFrage.show(fragmentManager,"dialog")
                 cloudDeviceListItem = list[position]
             } else {
-                download = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(list[position], token)
+                TvocNoseData.download_AsynTask = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(list[position], token)
                 dialog?.dismiss()//結束小視窗
             }
         }
         bt_cancel.setOnClickListener {
+            Log.e("download_AsynTask",TvocNoseData.download_AsynTask?.status.toString())
             dialog?.dismiss()//結束小視窗
         }
     }
 
     fun doPositiveClick() {
-        download?.cancel(true)
+        TvocNoseData.download_AsynTask?.cancel(true)
         val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val token = share_token.getString("token", "")
-        download = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(cloudDeviceListItem, token)
+        TvocNoseData.download_AsynTask = DownloadTask(this, download_Bar!!, download_min!!, download_text!!).execute(cloudDeviceListItem, token)
         dialog?.dismiss()//結束小視窗
     }
 
