@@ -1524,6 +1524,10 @@ object BLECallingTranslate {
                     value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
                     when (j) {
                         1 -> {//PM10
+                            returnValue.put(TvocNoseData.D5INDEX, value.toString())
+                            value = 0
+                        }
+                        3 -> {
                             returnValue.put(TvocNoseData.D5PM10, value.toString())
                             value = 0
                         }

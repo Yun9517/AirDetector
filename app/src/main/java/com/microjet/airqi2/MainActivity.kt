@@ -52,12 +52,10 @@ import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.MainActivity.BleConnection.*
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_header.*
-import kotlinx.android.synthetic.main.frg_main.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
 import org.greenrobot.eventbus.EventBus
@@ -196,7 +194,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var setNavigationView: NavigationView? = null
 
     private var mywarningclass:WarringClass?=null
-    private var C5D5Count: Int =1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1816,6 +1813,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.d(TAG,e.toString())
         }
     }
+
     //多型代入PM10TYPE,一筆C5一筆D5
     private fun putC5ToObject(tx: ByteArray, pm10type: Int) {
         Log.d(TAG,"putC5ToObject---$pm10type")
@@ -1842,22 +1840,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
         arrIndexMap.add(hashMap)
 
-        C5D5Count = hashMap[TvocNoseData.C5II]!!.toInt()
-        Log.d("C5ToObject", C5D5Count.toString())
-        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(C5D5Count))
+        var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
+        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))
+        Log.d("C5ToObjectINDEX", nowItem.toString())
     }
 
     private fun putD5ToObject(tx: ByteArray) {
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueD5(tx)
+        //原來有INDEX!!
+        var d5Index = hashMap[TvocNoseData.D5INDEX]!!.toInt()
+        val d5PM10 = hashMap[TvocNoseData.D5PM10]
         val d5TIME = hashMap[TvocNoseData.D5TIME]
-        val arrIndex = C5D5Count - 1
+        val arrIndex = d5Index - 1
         if (arrIndexMap[arrIndex][TvocNoseData.C5TIME] == d5TIME) { //有點沒必要的判斷，不過還是加上去了，聊勝於無
-            arrIndexMap[arrIndex][TvocNoseData.D5PM10] = hashMap[TvocNoseData.D5PM10]!!.toString()
+            arrIndexMap[arrIndex][TvocNoseData.D5PM10] = d5PM10.toString()
+            Log.d("D5PM10", "$d5Index + $d5PM10")
         } else {
             Log.e(TAG, "putD5ToObject時間不準就慘啦")
         }
-        C5D5Count++
-        if (C5D5Count > maxItem) { //|| nowItem == countForItem) {
+        d5Index++
+        if (d5Index > maxItem) { //|| nowItem == countForItem) {
             if (lock) {
                 indexMap["UTCBlockEnd"] = maxItem
                 val indexCopy = indexMap.clone() as HashMap<String, Int>
@@ -1865,14 +1867,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 indexMap.clear()
                 lock = false
             }
-            C5D5Count = 1
             saveToRealmC5()
         } else {
             val mainIntent = Intent(BroadcastIntents.PRIMARY)
             mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA)
-            mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(C5D5Count))
+            mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(d5Index))
             sendBroadcast(mainIntent)
-            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(C5D5Count))
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(d5Index))
         }
         Log.d("C5D5ARR", arr1.toString())
     }
