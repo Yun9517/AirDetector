@@ -308,12 +308,10 @@
     <string name="dfu_file_size_label">Size:</string>
     <string name="dfu_file_scope_label">Scope:</string>
     <string name="dfu_file_status_label">Status:</string>
-
     <!-- 2018/05/15 -->
     <string name="remindAfter_5_Mins">Snooze</string>
     <string name="remindAfterA_Day">Inform  me next day</string>
     <string name="remindDismiss">OK</string>
-
     <!--2018/05/28 new drawer -->
     <string name="text_drawer_01_add_device">Add Device</string>
     <string name="text_drawer_02_mobile_nose">Mobile Nose</string>
@@ -330,5 +328,8 @@
     <string name="text_drawer_07_setting">Setting</string>
     <string name="text_drawer_07_1_account_setting">Account Setting</string>
     <string name="text_drawer_07_2_general_setting">General Setting</string>
-
+    <!-- 2018/05/30 setting dialog -->
+    <string name="text_open">Open</string>
+    <string name="text_close">Close</string>
+    <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
 </resources>

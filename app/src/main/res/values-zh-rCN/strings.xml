@@ -421,7 +421,6 @@
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
     <string name="text_scrollingTitle">用戶體驗</string>
-
     <!--2018/05/28 new drawer -->
     <string name="text_drawer_01_add_device">新增装置</string>
     <string name="text_drawer_02_mobile_nose">随身空污鼻</string>
@@ -438,7 +437,10 @@
     <string name="text_drawer_07_setting">设定</string>
     <string name="text_drawer_07_1_account_setting">账号设定</string>
     <string name="text_drawer_07_2_general_setting">一般设定</string>
-
+    <!-- 2018/05/30 setting dialog -->
+    <string name="text_open">打开</string>
+    <string name="text_close">关闭</string>
+    <string name="text_Enable3GDialog">打开的话，会透过手机行动网络上传数据到云端；关闭的话，数据上传到云端不会使用手机行动网络</string>
 </resources>
 
 
