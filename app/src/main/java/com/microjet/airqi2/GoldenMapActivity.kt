@@ -361,20 +361,20 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                             rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 220..659 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 660..2199 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 2200..5499 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 5500..19999 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         else -> {
                             rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
@@ -388,24 +388,24 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                             rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 16..34 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 35..54 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 55..150 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         in 151..250 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                         else -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions6.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
+                            rectOptions6.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
                         }
                     }
                 }
