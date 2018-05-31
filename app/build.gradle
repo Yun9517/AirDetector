@@ -77,6 +77,8 @@ dependencies {
     implementation 'com.github.Jay-Goo:RangeSeekBar:v1.2.2' // SeekBar
     implementation 'com.github.ihsg:PatternLocker:2.0.0'    // 圖形鎖
     implementation 'com.github.sun-sky:Marquee:1.0.0'  //跑馬燈
+    implementation 'com.amap.api:location:4.0.1'
+    implementation 'com.amap.api:map2d:5.2.0'
 }
 
 repositories {

@@ -104,7 +104,8 @@ class SettingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
 
-        text_device_ver.text = resources.getString(R.string.text_label_device_version) + MyApplication.getDeviceVersion()
+        text_device_ver.text = String.format(resources.getString(R.string.text_label_device_version), MyApplication.getDeviceVersion())
+        text_app_ver.text = String.format(resources.getString(R.string.show_app_version), BuildConfig.VERSION_NAME)
 
         getPrivacySettings()
 
@@ -568,7 +569,6 @@ class SettingActivity : AppCompatActivity() {
         swCloudVal = MyApplication.getSharePreferenceCloudUploadStat()
         swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
 
-        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
         swCloudFunc.isChecked = swCloudVal
 
         if(swCloudVal) {
@@ -582,14 +582,6 @@ class SettingActivity : AppCompatActivity() {
         }
 
         swAllowCloudNotify.isChecked = swCloudNotifyVal
-
-        if (swCloudNotifyVal) {
-            cgCloudNotify.visibility = View.VISIBLE
-            cgCloudSeekbar.visibility = View.VISIBLE
-        } else {
-            cgCloudNotify.visibility = View.GONE
-            cgCloudSeekbar.visibility = View.GONE
-        }
     }
 
     private fun getDeviceLedSettings() {
@@ -755,6 +747,16 @@ class SettingActivity : AppCompatActivity() {
 
     @SuppressLint("SetTextI18n")
     private fun getFirebaseNotifSettings() {
+
+        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_CLOUD_NOTIFY, true)
+        if (swCloudNotifyVal) {
+            cgCloudNotify.visibility = View.VISIBLE
+            cgCloudSeekbar.visibility = View.VISIBLE
+        } else {
+            cgCloudNotify.visibility = View.GONE
+            cgCloudSeekbar.visibility = View.GONE
+        }
+
         if (TvocNoseData.firebaseNotiftime < 10) {
             btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
         }else if(TvocNoseData.firebaseNotiftime == 25){
@@ -766,6 +768,9 @@ class SettingActivity : AppCompatActivity() {
         cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
         cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
         cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
+
+        setSeekBarColor(cloudTvocSeekBar, TvocNoseData.firebaseNotifTVOC.toFloat(), true)
+        setSeekBarColor(cloudPM25SeekBar, TvocNoseData.firebaseNotifPM25.toFloat(), false)
     }
 
     @SuppressLint("SetTextI18n")

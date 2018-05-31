@@ -9,6 +9,7 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
@@ -55,6 +56,7 @@ import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_qanda.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
@@ -773,7 +775,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             DefaultPatternCheckingActivity.startAction(this@MainActivity,
                     DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
         } else {
-            val i: Intent? = Intent(this, AirMapActivity::class.java)
+            val mLang = Locale.getDefault().language + "-" + Locale.getDefault().country
+
+            val i: Intent? = Intent(this, if (mLang == "zh-CN") {
+                GoldenMapActivity::class.java
+            } else {
+                AirMapActivity::class.java
+            })
             startActivity(i)
         }
     }

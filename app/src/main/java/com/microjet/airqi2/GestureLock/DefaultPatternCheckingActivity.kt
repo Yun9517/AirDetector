@@ -11,8 +11,10 @@ import com.github.ihsg.patternlocker.OnPatternChangeListener
 import com.github.ihsg.patternlocker.PatternLockerView
 import com.microjet.airqi2.AirMapActivity
 import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.GoldenMapActivity
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_default_pattern_checking.*
+import java.util.*
 
 
 class DefaultPatternCheckingActivity : AppCompatActivity() {
@@ -91,7 +93,12 @@ class DefaultPatternCheckingActivity : AppCompatActivity() {
     }
 
     private fun callCompletePage() {
-        val i = Intent(this, AirMapActivity::class.java)
+        val mLang = Locale.getDefault().language + "-" + Locale.getDefault().country
+        val i: Intent? = Intent(this, if (mLang == "zh-CN") {
+            GoldenMapActivity::class.java
+        } else {
+            AirMapActivity::class.java
+        })
         startActivity(i)
     }
 

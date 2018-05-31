@@ -1,16 +1,15 @@
 <resources>
     <string name="app_name">ADDWII</string>
-    <string name="app_name_air_map">空气地图</string>
+    <string name="app_name_air_map">ADDWII空气地图</string>
     <string name="app_name_knowledge">知识库</string>
     <string name="app_name_about">关于APP</string>
-    <string name="text_message_air_good">空气质量一般，请保持空气流通。\n挥发性有机物浓度低，没有刺激或不适风险</string>
-    <string name="text_message_air_mid">空气质量轻度污染\n避免长时间待在此环境下(十二个月)\n建议改善通风。</string>
-    <string name="text_message_air_Medium_Orange">空气质量不佳\n避免长时间待在此环境下(一个月)\n建议加强通风。</string>
-    <string name="text_message_air_bad">空气质量不健康，避免长时间待在此环境下(数小时)\n必需加强通风。</string>
-    <string name="text_message_air_Serious_Purple">空气质量非常不健康。\n请离开并务必加强通风。</string>
-    <string name="text_message_air_Extreme_Dark_Purple">空气质量非常危险。\n请立即离开并务必加强通风。</string>
-    <string name="text_message_humidity">一般来说，湿度维持在45%~65％，不仅凉爽舒适，也不会因为过度干燥、潮湿而影响健康。</string> <!-- 2018/01/04 -->
-    <string name="text_message_temperature">一般来说，人体在室内感觉最舒适的温度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <string name="text_message_air_good">空气品质一般，请保持空气流通。\n挥发性有机物浓度低，没有刺激或不适风险</string>
+    <string name="text_message_air_mid">空气品质轻度污染\n避免长时间呆在此环境下(十二个月)\n建议改善通风。</string>
+    <string name="text_message_air_Medium_Orange">空气品质不佳\n避免长时间呆在此环境下(一个月)\n建议加强通风。</string>
+    <string name="text_message_air_bad">空气品质不健康。避免长时间呆在此环境下(数小时)。\n必需加强通风。</string>
+    <string name="text_message_air_Serious_Purple">空气品质非常不健康。\n请离开并务必加强通风。</string>
+    <string name="text_message_air_Extreme_Dark_Purple">空气品质非常危险。\n请立即离开并务必加强通风。</string>
+    <string name="text_message_humidity">一般来说，湿度维持在45%~65％，不仅凉爽舒适，也不会因为过度乾燥、潮湿而影响健康。</string> <!-- 2018/01/04 -->
     <!-- eCO2 message -->
     <string name="label_eCO2_Green">正常</string>
     <string name="label_eCO2_Yellow">浓度中等</string>
@@ -18,12 +17,12 @@
     <string name="label_eCO2_Red">有害健康</string>
     <string name="label_eCO2_Purple">非常有害健康</string>
     <string name="label_eCO2_Brown">极度危害健康</string>
-    <string name="message_eCO2_Green">空气质量一般</string>
-    <string name="message_eCO2_Yellow">空气质量中等，可能感觉不舒适\n建议改善通风</string>
-    <string name="message_eCO2_Orange">空气质量不佳，避免长时间待在此环境下\n建议加强通风。</string>
-    <string name="message_eCO2_Red">空气质量不健康，避免长时间待在此环境下\n必需加强通风</string>
-    <string name="message_eCO2_Purple">空气质量非常不健康，请离开并务必加强通风</string>
-    <string name="message_eCO2_Brown">空气质量极度危害健康，请立即离开并务必加强通风</string>
+    <string name="message_eCO2_Green">空气品质一般</string>
+    <string name="message_eCO2_Yellow">空气品质中等，可能感觉不舒适\n建议改善通风</string>
+    <string name="message_eCO2_Orange">空气品质不佳，避免长时间呆在此环境下\n建议加强通风。</string>
+    <string name="message_eCO2_Red">空气品质不健康，避免长时间呆在此环境下\n必需加强通风</string>
+    <string name="message_eCO2_Purple">空气品质非常不健康，请离开并务必加强通风</string>
+    <string name="message_eCO2_Brown">空气品质极度危害健康，请立即离开并务必加强通风</string>
 
     <!-- pm2.5 message -->
     <string name="label_pm25_Green">正常</string>
@@ -32,13 +31,15 @@
     <string name="label_pm25_Red">有害健康</string>
     <string name="label_pm25_Purple">非常有害健康</string>
     <string name="label_pm25_Brown">极度危害健康</string>
-    <string name="message_pm25_Green">空气质量正常。</string>
-    <string name="message_pm25_Yellow">空气质量中等。</string>
-    <string name="message_pm25_Orange">空气质量不佳，避免长时间待在此环境。体质敏感者可能感到不适。</string>
-    <string name="message_pm25_Red">空气质量不健康，避免长时间待在此环境。</string>
-    <string name="message_pm25_Purple">空气质量非常不健康，请离开此地。</string>
-    <string name="message_pm25_Brown">空气质量极度危害健康，请立即离开。停留过久恐影响肺功能或心律不整。</string>
+    <string name="message_pm25_Green">空气品质正常。</string>
+    <string name="message_pm25_Yellow">空气品质中等。</string>
+    <string name="message_pm25_Orange">空气品质不佳，避免长时间呆在此环境。体质敏感者可能感到不适。</string>
+    <string name="message_pm25_Red">空气品质不健康，避免长时间呆在此环境。</string>
+    <string name="message_pm25_Purple">空气品质非常不健康，请离开此地。</string>
+    <string name="message_pm25_Brown">空气品质极度危害健康，请立即离开。停留过久恐影响肺功能或心律不整。</string>
 
+    <string name="text_message_temperature">一般来说，人体在室内感觉最舒适的温度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <string name="text_label_time">时间</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
@@ -50,23 +51,24 @@
     <string name="text_label_tvoc_detect">TVOC\n总挥发性有机化合物</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">轻度污染</string>
-    <string name="text_label_status_medium_Orange">中度污染</string>
+    <string name="text_label_status_medium_Orange">中度汙染</string>
     <string name="text_label_status_bad">重度污染</string>
-    <string name="text_label_status_Serious_Purple">严重污染</string>
-    <string name="text_label_status_Extreme_Dark_Purple">非常严重污染</string>
+    <string name="text_label_status_Serious_Purple">严重汙染</string>
+    <string name="text_label_status_Extreme_Dark_Purple">非常严重汙染</string>
     <string name="text_battery_value">电池电量：</string>
     <string name="text_battery_title">装置电量</string>
     <string name="button_label_ok">确认</string>
     <string name="text_drawer_open">OPEN</string>
     <string name="text_drawer_close">CLOSE</string>
+
+    <string name="text_drawer_device_name">Device</string>
     <string name="text_navi_setting">设定</string>
     <string name="text_navi_about">关于APP</string>
+    <string name="text_navi_knowledge">知识库</string>
     <string name="text_navi_air_map">空气地图</string>
     <string name="text_navi_add_device">新增装置</string>
-    <string name="text_drawer_device_name">Device</string>
-    <string name="text_navi_knowledge">知识库</string>
     <string name="text_navi_getData">读取装置资料</string>
-    <string name="text_navi_accountManagement">账号管理</string>
+    <string name="text_navi_accountManagement">帐号管理</string>
 
     <string name="ble_not_supported">蓝牙未支援</string>
     <string name="select_device">选择装置</string>
@@ -87,18 +89,18 @@
     <string name="Broadcast">推播通知</string>
     <string name="Auto_measure">自动测试</string>
     <string name="About_App">关于APP</string>
-    <string name="Already_Pair">已自动配对: </string>
-    <string name="Already_Connected">已连线 </string> <!-- 2017/12/03 改文字 原 已手动连线: -->
-    <string name="No_Device_Connect">蓝芽未连线</string>
+    <string name="Already_Pair">已自动配对</string>
+    <string name="Already_Connected">已连线</string> <!-- 2017/12/03 改文字 原 已手动连线 -->
+    <string name="No_Device_Connect">尚未连接装置</string> <!-- 2017/11/30 改抽屉标题 -->
     <string name="UART_Connecting">连线中</string>
     <string name="UART_Disconnecting">装置断线</string> <!-- 2017/12/03 改文字 原 断开装置中 -->
-    <string name="Loading_Data">读取数据中请稍候</string> <!-- 2017/12/03 新增文字 -->
-    <string name="Total_Data">共有资料</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
-    <string name="Total_Data_Finish">笔</string> <!-- 2017/12/03 新增文字 讀取裝置資料的Toast-->
-    <string name="Loading_Completely">读取完成</string> <!-- 2017/12/04 新增文字 讀取裝置資料的Toast-->
-    <string name="Number_of_data">读取第</string> <!-- 2017/12/04 新增文字 读取装置数据的Toast-->
-    <string name="Loading_fail">笔资料</string> <!-- 2017/12/04 新增文字 读取装置数据的Toast-->
-    <string name="text_navi_title_map">地圖</string>
+    <string name="Loading_Data">读取资料中请稍候</string> <!-- 2017/12/03 新增文字 -->
+    <string name="Total_Data">共有资料</string> <!-- 2017/12/03 新增文字 读取装置资料的Toast-->
+    <string name="Total_Data_Finish">笔</string> <!-- 2017/12/03 新增文字 读取装置资料的Toast-->
+    <string name="Loading_Completely">读取完成</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
+    <string name="Number_of_data">读取第</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
+    <string name="Loading_fail">笔资料</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
+    <string name="text_navi_title_map">地图</string>
     <string name="text_navi_title_help">求助</string>
 
     <!-- Add website for about page-->
@@ -117,40 +119,43 @@
 
     <!-- Add Calendar String -->
     <string name="week_First_Word">第</string>
-    <string name="week_Last_Word">周</string>
+    <string name="week_Last_Word">週</string>
 
     <!-- Add Unit for use
     <string name="TVOCUnit">ppb</string>
-    <string name="frg_tvocRadioButtonHour">時</string>
+    <string name="frg_tvocRadioButtonHour">时</string>
     <string name="frg_tvocRadioButtonDay">日</string>
     <string name="frg_tvocRadioButtonWeek">週</string>
     <string name="frg_tvocRadioButtonMonth">月</string>
     -->
 
-    <!-- 2017/12/12 直方圖 暫時 改 -->
+    <!-- 2017/12/12 直方图 暂时 改 -->
     <string name="TVOCUnit">ppb</string>
-    <string name="frg_tvocRadioButtonHour">即時</string>
+    <string name="frg_tvocRadioButtonHour">即时</string>
     <string name="frg_tvocRadioButtonDay">4hr平均</string>
     <string name="frg_tvocRadioButtonWeek">8hr平均</string>
     <string name="frg_tvocRadioButtonMonth">12hr平均</string>
 
     <!-- 2018/01/17 Average Exposure -->
     <string name="averageExposure_Daily">日平均曝露浓度</string>
-    <string name="averageExposure_Week">周平均曝露浓度</string>
+    <string name="averageExposure_Week">週平均曝露浓度</string>
     <string name="averageExposure_Month">月平均曝露浓度</string>
 
     <string name="averageTemperature_Daily">平均温度</string>
     <string name="averageHumidity_Daily">平均湿度</string>
 
-    <string name="text_setting_test_cycle">测试周期选择</string>
-    <string name="text_setting_allow_notification">允许通知</string>
+    <string name="text_setting_test_cycle">测试週期选择</string>
+    <string name="text_setting_allow_notification">侦测通知</string>
+    <string name="text_setting_allow_privacy">个人轨迹密码设定</string>
     <string name="text_setting_notify_message">讯息</string>
     <string name="text_setting_notify_viberation">震动</string>
     <string name="text_setting_notify_sound">提示音</string>
+    <string name="text_setting_tvoc_value">总挥发性有机化合物(TVOC)</string>
+    <string name="text_setting_pm25_value">细悬浮微粒(PM2.5)</string>
     <string name="text_setting_on">开启</string>
     <string name="text_setting_off">关闭</string>
     <string name="text_setting_notify_comment_1">浓度高于220 ppb通知/首次通知/每小时一次</string>
-    <string name="text_setting_notify_comment_2">浓度高于660 ppb通知/首次通知/每10分钟一次</string>
+    <string name="text_setting_notify_comment_2">浓度高于660 ppb通知/首次通知/每10分鐘一次</string>
     <string name="text_setting_history">历史资料</string>
     <string name="text_setting_history_clean">清除</string>
     <string name="text_setting_history_export">汇出</string>
@@ -163,7 +168,12 @@
     <string name="text_tvoc_meter_660ppb">660</string>
     <string name="text_navi_q_and_a">常见问题</string>
     <string name="text_navi_tour">操作导览</string>
-    <string name="text_message_heating">Please wait...</string>
+    <string name="title_activity_tour">TourActivity</string>
+    <string name="text_message_heating">请稍候...</string>
+    <string name="title_activity_air_map1">Map</string>
+    <string name="text_setting_allow_firebase_notification">云端通知允许</string>
+    <string name="text_setting_allow_firebase_settime">设定时间</string>
+    <string name="text_setting_allow_firebase_save">储存推播设定</string>
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
@@ -172,21 +182,23 @@
 
     <!-- 2018/02/06 -->
     <string name="bat_switch">低电警告</string>
-    <string name="led_light">LED指示灯</string>
+    <string name="led_light">侦测器提示灯</string>
+    <string name="led_light_disconnect">断线蓝芽闪灯</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">自动同步云端</string>
-    <string name="allow_3G">允许行动网络</string>
+    <string name="allow_3G">允许行动网路</string>
 
     //20180227
-    <string name="cloud_fun">雲端功能</string>
+    <string name="cloud_fun">自动同步云端</string>
+    <string name="cloud_func_comment">开启本功能后即可上传侦测器空气品质的数据。</string>
     //2018/03/06
     <string name="not_yetDetected">侦测中</string>
-    <string name="text_label_device_version">侦测器固件版号：</string>
+    <string name="text_label_device_version">侦测器韧体版本：</string>
     <string name="text_label_local_uuid">手机 UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
-    <string name="account_Login">账号登入</string>
+    <string name="account_Login">帐号登入</string>
     <string name="login">登入</string>
     <string name="enter_Password">请输入密码</string>
     <string name="forget_Password">忘记密码？</string>
@@ -194,24 +206,24 @@
     <string name="forget_Check_Password_Title">忘记密码 - 变更密码</string>
     <string name="forget_Password_Description">我们将寄送验证信至您的电子邮件，点入信中的验证连结网址后，即可更便您的密码。</string>
     <string name="change_Password">修改密码？</string>
-    <string name="change_Password_Title">修改密码</string>
+    <string name="change_Password_Title">变更密码</string>
     <string name="check_Password">请输入新密码</string>
     <string name="double_check_Password">再次确认新密码</string>
-    <string name="no_Account">我还没有注册账号 我想</string>
-    <string name="create_New_account">建立新账号</string>
-    <string name="create_Account">建立账号</string>
+    <string name="no_Account">我还没有註册帐号  我想</string>
+    <string name="create_New_account">建立新帐号</string>
+    <string name="create_Account">建立帐号</string>
     <string name="enter_Email">请输入电子邮件</string>
     <string name="next_Step">下一步</string>
     <string name="enter_Verification_code">请输入验证码</string>
     <string name="cannot_Receive_mail">没收到认证信？</string>
     <string name="resend_Mail">补发认证信</string>
     <string name="confirm">确认</string>
-    <string name="active">账号已激活</string>
-    <string name="logout">注销</string>
-    <string name="account_Activation">账号已激活</string>
-    <string name="account_Deactivation">账号未激活</string>
-    <string name="create_Description">系统将会寄送默认密码至您的信箱，首次请以默认密码登入，登入后可自行变更密码。</string>
-    <string name="nick_Name">昵称 : </string>
+    <string name="active">帐号已启用</string>
+    <string name="logout">登出</string>
+    <string name="account_Activation">帐号已启用</string>
+    <string name="account_Deactivation">帐号尚未启用</string>
+    <string name="create_Description">系统将会寄送预设密码至您的信箱，首次请以预设密码登入，登入后可自行变更密码。</string>
+    <string name="nick_Name">暱称 : </string>
     <string name="email">信箱 : </string>
     <string name="edit">编辑</string>
     <string name="nameReplace">改名字</string>
@@ -220,33 +232,31 @@
     <string name="fetchData">查看</string>
     <string name="downloadData">下载</string>
     <string name="shareData">分享</string>
-    <string name="rememberID">记住账号</string>
+    <string name="dataExport">数据输出</string>
+    <string name="rememberID">记住帐号</string>
     <string name="syncData">云端同步</string>
+    <string name="download_text">下载进度:</string>
+    <string name="download_min">喝杯茶</string>
 
-    <string name="text_label_latitude">緯度：</string>
-    <string name="text_label_longitude">經度：</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
+    <string name="text_label_latitude">纬度：</string>
+    <string name="text_label_longitude">经度：</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">请不要点太快</string>
-    <string name="checkConnection">请连接网络</string>
+    <string name="checkConnection">请连接网路</string>
     <string name="errorMail_form">信箱输入不正确</string>
     <string name="errorMail_address">请输入正确的信箱位置</string>
     <string name="errorPassword">密码输入不正确</string>
     <string name="remind">提示</string>
     <string name="expectName">请输入欲更改的名称</string>
-    <string name="title_tvoc">TVOC_Data</string>
-    <string name="title_eco2">Eco2_Data</string>
-    <string name="title_humidy">Humidy_Data</string>
-    <string name="title_pm25">PM2.5</string>
-    <string name="map_result_title">情报</string>
-    <string name="title_activity_tour">TourActivity</string>
-    <string name="title_activity_air_map1">Map</string>
-    <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
-    <string name="scanner_title">Select device:</string>
-    <string name="scanner_empty">No device found</string>
-    <string name="scanner_action_scan">Scan</string>
-    <string name="scanner_action_cancel">Cancel</string>
+
+
+    <string name="scanner_title">选择装置：</string>
+    <string name="scanner_empty">找不到装置</string>
+    <string name="scanner_action_scan">扫描</string>
+    <string name="scanner_action_cancel">取消</string>
     <string name="scanner_subtitle_bonded">BONDED DEVICES:</string>
     <string name="scanner_subtitle_not_bonded">AVAILABLE DEVICES:</string>
     <string name="scanner_permission_rationale">Since Android 6.0 Marshmallow system requires granting access to device\'s location in order to scan for Bluetooth Smart devices. Bluetooth beacons may be used to determine the phone\'s and user\'s location.</string>
@@ -254,6 +264,7 @@
     <string name="action_select">SELECT DEVICE</string>
     <string name="not_available">n/a</string>
     <string name="not_available_value">" - "</string>
+
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
@@ -264,6 +275,10 @@
     <string name="no_ble">Device doesn\'t have BLE support!</string>
     <string name="action_about">About</string>
     <string name="action_settings">Settings</string>
+
+    <string name="font_path">fonts/trebucbd.ttf</string>
+    <string name="normal_font_path">fonts/trebuc.ttf</string>
+
     <string name="dfu_feature_title">DFU</string>
     <string name="dfu_service_title">nRF Toolbox DFU Proxy</string>
     <string name="dfu_settings_title">DFU Settings</string>
@@ -275,17 +290,17 @@
     <string name="dfu_example_new_files_created">New example HEX files were copied to /sdcard/Nordic Semiconductor.</string>
     <string name="dfu_scripts_created">DFU script files were copied to /sdcard/Nordic Semiconductor.</string>
 
-    <string name="dfu_section_application_header">APPLICATION</string>
-    <string name="dfu_file_name_label">File name:</string>
-    <string name="dfu_file_type_label">Type:</string>
-    <string name="dfu_file_size_label">Size:</string>
+    <string name="dfu_section_application_header">应用程式</string>
+    <string name="dfu_file_name_label">档名:</string>
+    <string name="dfu_file_type_label">类型:</string>
+    <string name="dfu_file_size_label">大小:</string>
     <string name="dfu_file_scope_label">Scope:</string>
-    <string name="dfu_file_status_label">Status:</string>
+    <string name="dfu_file_status_label">状态:</string>
     <string name="dfu_file_size_text">%d bytes</string>
     <string name="dfu_file_status_ok">OK</string>
     <string name="dfu_file_status_ok_with_init">OK (Init file selected)</string>
-    <string name="dfu_file_status_no_file">File not loaded</string>
-    <string name="dfu_file_status_invalid">Invalid file</string>
+    <string name="dfu_file_status_no_file">档案没有载入</string>
+    <string name="dfu_file_status_invalid">无效的档案</string>
     <string name="dfu_file_status_error">Reading file failed</string>
     <string name="dfu_file_status_invalid_message">Please, select valid HEX file</string>
     <string name="dfu_file_info">Info</string>
@@ -307,8 +322,8 @@
         <item>market://search?q=file manager</item>
     </string-array>
 
-    <string name="dfu_section_dfu_header">DEVICE FIRMWARE UPDATE</string>
-    <string name="dfu_action_upload">UPLOAD</string>
+    <string name="dfu_section_dfu_header">装置更新</string>
+    <string name="dfu_action_upload">上传</string>
     <string name="dfu_action_upload_cancel">CANCEL</string>
 
     <string name="dfu_settings_dfu">DFU options</string>
@@ -350,10 +365,10 @@
     <string name="dfu_unknown_name">unnamed device</string>
     <string name="dfu_uploading_percentage_label">0%</string>
     <string name="dfu_uploading_percentage">%d%%</string>
-    <string name="dfu_default_name">DEFAULT DFU</string>
+    <string name="dfu_default_name">工程模式</string>
     <!--2018/05/21 Add title -->
-    <string name="dfu_title">修復模式</string>
-    <string name="dfu_update_failure">修復更新失敗</string>
+    <string name="dfu_title">修复模式</string>
+    <string name="dfu_update_failure">修复更新失败</string>
     <string name="dfu_confirmation_dialog_title">Application Uploading</string>
     <string name="dfu_upload_dialog_cancel_message">Are you sure to cancel upload?</string>
     <string name="dfu_success">Application has been transferred successfully.</string>
@@ -367,24 +382,28 @@
 		\n\nSince <b>Android KitKat</b> you may use the preinstalled document picker application. Ensure <i>Display advanced devices</i> option is enabled in settings to use the <i>Internal storage</i>.
 		\n\nSample applications were copied to <i>Nordic Semiconductor</i> folder in the internal storage.</string>
 
-    <string name="dfu_zip_info_text">Starting from nRF Toolbox v1.12 the new Distribution packet (ZIP) is the recommended method for distributing firmware upgrades.
-		You can create the ZIP file using the <b>nrf utility</b> tool, which is part of Master Control Panel 3.8.0+. For more detailed information, see the DFU documentation.
-		\n\n<b>Backward compatibility</b>
-		\nThe nRF Toolbox also supports all old file formats: HEX and BIN files, separate DAT files and ZIP files without a manifest file but with a fixed naming convention:
-</string>
-    <string name="dfu_about_text">设备固件更新（DFU）应用程序允许您通过无线（OTA）更新Bluetooth Smart设备的固件。 它与启用了S110 SoftDevice和DFU引导加载程序的北欧半导体nRF51822或nRF51422器件兼容。 使用SoftDevice s110 7.0.0+，SoftDevice本身和/或引导程序也可能被更新。 有关DFU的更多信息，请参阅设置中的关于DFU部分。</string>
-    <string name="font_path">fonts/trebucbd.ttf</string>
-    <string name="normal_font_path">fonts/trebuc.ttf</string>
-    <string name="Accept">Yes</string>
-    <string name="Reject">NO</string>
-    <string name="getStarted">开始体验</string>
-    <string name="text_label_time">时间</string>
-    <string name="download_text">下载进度:</string>
-    <string name="download_min">喝杯茶</string>
-    <string name="text_setting_tvoc_value">TVOC 通知数值</string>
-    <string name="text_setting_pm25_value">PM2.5 通知数值</string>
+    <string name="dfu_zip_info_text">"Starting from nRF Toolbox v1.12 the new Distribution packet (ZIP) is the recommended method for distributing firmware upgrades. \t\tYou can create the ZIP file using the <b>nrf utility</b> tool, which is part of Master Control Panel 3.8.0+. For more detailed information, see the DFU documentation. \t\t  <b>Backward compatibility</b> \t\t The nRF Toolbox also supports all old file formats: HEX and BIN files, separate DAT files and ZIP files without a manifest file but with a fixed naming convention: "</string>
+    <string name="dfu_about_text">411/5000 设备固件更新（DFU）应用程序允许您通过无线（OTA）更新Bluetooth Smart设备的固件。 它与启用了S110 SoftDevice和DFU引导加载程序的北欧半导体nRF51822或nRF51422器件兼容。 使用SoftDevice s110 7.0.0+，SoftDevice本身和/或引导程序也可能被更新。 有关DFU的更多信息，请参阅设置中的关于DFU部分。</string>
+
+    <string name="Accept">是</string>
+    <string name="Reject">否</string>
+    <string name="title_tvoc">TVOC</string>
+    <string name="title_eco2">Eco2_Data</string>
+    <string name="title_humidy">Humidity_Data</string>
     <string name="title_temperature">Temperature_Data</string>
-    <string name="text_setting_allow_privacy">个人轨迹密码</string>
+    <string name="title_pm25">PM2.5</string>
+    <string name="map_result_title">情报</string>
+    <string name="getStarted">开始体验</string>
+    <!--    云端下载视窗    -->
+    <string name="messag_text">蓝牙装置名称</string>
+    <string name="messag_dowload">云端同步下载</string>
+    <string name="text_navi_personal">个人轨迹</string>
+
+    <!-- 2018/05/15 -->
+    <string name="remindAfter_5_Mins">五分鐘后再提醒</string>
+    <string name="remindAfterA_Day">一天后再提醒</string>
+    <string name="remindDismiss">知道了</string>
+
     <string name="text_pattern_lock">图形锁</string>
     <string name="text_pw_lock">密码锁</string>
     <string name="text_draw_pattern">请输入解锁图形</string>
@@ -396,31 +415,16 @@
     <string name="text_redraw_again1">与第一次设定的不一样，请重新设定</string>
     <string name="text_pw_error">密码错误，还剩%d次机会</string>
     <string name="text_use_login_pw">改用密码登入</string>
-    <!--    雲端下載視窗    -->
-    <string name="messag_text">蓝牙装置名称</string>
-    <string name="messag_dowload">云端同步下载</string>
-    <string name="text_navi_personal">个人轨迹</string>
-    <!-- 2018/05/15 -->
-    <string name="remindAfter_5_Mins">五分钟后再提醒</string>
-    <string name="remindAfterA_Day">一天后再提醒</string>
-    <string name="remindDismiss">知道了</string>
-    <string name="text_setting_allow_firebase_notification">云端通知允许</string>
-    <string name="text_setting_allow_firebase_settime">设定时间</string>
-    <string name="text_setting_allow_firebase_save">储存推播设定</string>
     <string name="text_check_device_update">检查更新</string>
     <string name="text_click_to_adjust">（按一下数值可微调）</string>
-    <string name="text_cloud_notify">云端推播</string>
+    <string name="text_cloud_notify">推播通知</string>
+    <string name="text_cloud_notify_comment">前24小时侦测空气品质的平均数据。</string>
     <string name="text_save_cloud_setting">储存设定</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">推播时间</string>
-    <string name="led_light_disconnect">断线蓝芽闪灯</string>
-    <string name="cloud_func_comment">开启本功能后即可上传侦测器空气品质的数据。</string>
-    <string name="dataExport">数据输出</string>
-    <string name="text_cloud_notify_comment">前24小时侦测空气品质的平均数据。</string>
     <string name="text_product_introduction">产品介绍</string>
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
-    <string name="text_scrollingTitle">用戶體驗</string>
     <!--2018/05/28 new drawer -->
     <string name="text_drawer_01_add_device">新增装置</string>
     <string name="text_drawer_02_mobile_nose">随身空污鼻</string>
@@ -441,6 +445,6 @@
     <string name="text_open">打开</string>
     <string name="text_close">关闭</string>
     <string name="text_Enable3GDialog">打开的话，会透过手机行动网络上传数据到云端；关闭的话，数据上传到云端不会使用手机行动网络</string>
+    <!--20180521-->
+    <string name="text_scrollingTitle">用户体验</string>
 </resources>
-
-

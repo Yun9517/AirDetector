@@ -21,6 +21,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- 高德地圖需要權限 -->
+    <!--uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /-->
+    <!--uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /-->
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -58,7 +62,7 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".Account.AccountManagementActivity"
-            android:label="ADDWII帳號管理"
+            android:label="ADDWII 帳號管理"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -118,7 +122,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".KnowledgeActivity"
-            android:label="ADDWII知識庫"
+            android:label="ADDWII 知識庫"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -126,7 +130,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".QandAActivity"
-            android:label="ADDWIIQ&amp;A"
+            android:label="ADDWII Q&amp;A"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -175,7 +179,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AirMapActivity"
-            android:label="ADDWII個人軌跡"
+            android:label="ADDWII 個人軌跡"
             android:excludeFromRecents="true"
             android:noHistory="true"
             android:screenOrientation="portrait"
@@ -183,7 +187,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".SettingActivity"
-            android:label="ADDWII個人設定"
+            android:label="ADDWII 個人設定"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
@@ -199,7 +203,7 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".PublicMapActivity"
-            android:label="ADDWII空氣地圖"
+            android:label="ADDWII 空氣地圖"
             android:theme="@style/AppTheme" />
 
         <!--
@@ -240,6 +244,17 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+
+        <meta-data android:name="com.amap.api.v2.apikey" android:value="0623ea9fad451f1b1c0c5884e38c9e28" />
+
+        <activity
+            android:name=".GoldenMapActivity"
+            android:label="ADDWII 个人軌跡"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
 
     </application>
 
