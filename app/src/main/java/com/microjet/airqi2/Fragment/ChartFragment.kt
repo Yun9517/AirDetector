@@ -35,6 +35,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import com.microjet.airqi2.R.id.chart_line
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
@@ -50,10 +51,11 @@ import kotlin.collections.ArrayList
 
 class ChartFragment : Fragment() {
     private val DEFINE_FRAGMENT_TVOC = 1
-    private val DEFINE_FRAGMENT_ECO2 = 2
-    private val DEFINE_FRAGMENT_TEMPERATURE = 3
-    private val DEFINE_FRAGMENT_HUMIDITY = 4
-    private val DEFINE_FRAGMENT_PM25 = 5
+    private val DEFINE_FRAGMENT_PM25 = 2
+    private val DEFINE_FRAGMENT_ECO2 = 3
+    private val DEFINE_FRAGMENT_TEMPERATURE = 4
+    private val DEFINE_FRAGMENT_HUMIDITY = 5
+
 
     private var mContext: Context? = null
 
@@ -104,13 +106,11 @@ class ChartFragment : Fragment() {
 
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
-        chart_line.yChartInterval.size
-        var j = 1
-        val lineRectFArray = ArrayList<RectF>()
-        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {//取得有標籤的數值位置，從最小值放至最大值
-            lineRectFArray.add(chart_line.getBarBounds(BarEntry(i.toFloat(), j)))
-            j++
-        }
+        val lineRectFArray = chart_line.getLabelRectLocation()
+    //    for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {//取得有標籤的數值位置，從最小值放至最大值
+    //        lineRectFArray.add(chart_line.getBarBounds(BarEntry(i.toFloat(), j)))
+    //        j++
+    //    }
         for (i in lineRectFArray.indices) {//放置標籤
             labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f)
             labelTextViewArray[i].x = chart_line.x - labelTextViewArray[i].width.toFloat()
@@ -120,7 +120,7 @@ class ChartFragment : Fragment() {
             labelTextViewArray[0].visibility = View.INVISIBLE
         }
 
-        //視Radio id畫圖
+        //視Radio id畫圖 放置完textView後將原本的繪圖清空
         chart_line.clear()
     }
 
@@ -186,71 +186,72 @@ class ChartFragment : Fragment() {
     }
 
     // 20171128 Added by Raymond
-    private fun configChartView() {
-        val xAxis: XAxis = chart_line.xAxis
-        val leftAxis: YAxis = chart_line.axisLeft
-        val rightAxis: YAxis = chart_line.axisRight
-
-        chart_line.isScaleXEnabled = false
-        chart_line.isScaleYEnabled = false
-        leftAxis.setLabelCount(chartLabelYCount, true)
-        leftAxis.setAxisMaxValue(chartMax) // the axis maximum is 1500
-        leftAxis.setAxisMinValue(chartMin) // start at zero
-        leftAxis.setDrawLabels(false) // no axis labels
-        leftAxis.setDrawAxisLine(false) // no axis line
-        leftAxis.setDrawGridLines(true) // no grid lines
-        leftAxis.gridColor = Color.WHITE
-
-        xAxis.setDrawGridLines(false)
-
-        xAxis.position = XAxis.XAxisPosition.BOTTOM
-        val nums = ArrayList<Float>()
-
-        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep) {
-            nums.add(i.toFloat())
-        }
-        chart_line.legend.isEnabled = false
-        chart_line.yChartInterval = nums
-        chart_line.setDrawValueAboveBar(false)
-        rightAxis.isEnabled = false
-        chart_line.setDescription("")// clear default string
-    }
+//    private fun configChartView() {
+//        val xAxis: XAxis = chart_line.xAxis
+//        val leftAxis: YAxis = chart_line.axisLeft
+//        val rightAxis: YAxis = chart_line.axisRight
+//
+//        chart_line.isScaleXEnabled = false
+//        chart_line.isScaleYEnabled = false
+//        leftAxis.setLabelCount(chartLabelYCount, true)
+//        leftAxis.setAxisMaxValue(chartMax)  // the axis maximum is 1500
+//        leftAxis.setAxisMinValue(chartMin) // start at zero
+//        leftAxis.setDrawLabels(false) // no axis labels
+//        leftAxis.setDrawAxisLine(false) // no axis line
+//        leftAxis.setDrawGridLines(true) // no grid lines
+//        leftAxis.gridColor = Color.WHITE
+//
+//        xAxis.setDrawGridLines(false)
+//
+//        xAxis.position = XAxis.XAxisPosition.BOTTOM
+//        val nums = ArrayList<Float>()
+//
+//        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep) {
+//            nums.add(i.toFloat())
+//        }
+//        chart_line.legend.isEnabled = false
+//        chart_line.yChartInterval = nums
+//        chart_line.setDrawValueAboveBar(false)
+//        rightAxis.isEnabled = false
+//        chart_line.setDescription("")// clear default string
+//    }
 
     override fun onSaveInstanceState(outState: Bundle) {
 
-        outState?.putInt("useFor", useFor)
-        outState?.putInt("chartIntervalStep", chartIntervalStep)
-        outState?.putFloat("chartMin", chartMin)
-        outState?.putFloat("chartMax", chartMax)
-        outState?.putInt("chartIntervalStart", chartIntervalStart)
-        outState?.putInt("chartIntervalEnd", chartIntervalEnd)
-        outState?.putInt("chartLabelYCount", chartLabelYCount)
-        outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
-        outState?.putString("chartLabelUnit", chartLabelUnit)
-        outState?.putString("chartLabel", chartLabel)
+        outState.putInt("useFor", useFor)
+//        outState?.putInt("chartIntervalStep", chartIntervalStep)
+//        outState?.putFloat("chartMin", chartMin)
+//        outState?.putFloat("chartMax", chartMax)
+//        outState?.putInt("chartIntervalStart", chartIntervalStart)
+//        outState?.putInt("chartIntervalEnd", chartIntervalEnd)
+//        outState?.putInt("chartLabelYCount", chartLabelYCount)
+//        outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
+//        outState?.putString("chartLabelUnit", chartLabelUnit)
+//        outState?.putString("chartLabel", chartLabel)
         super.onSaveInstanceState(outState!!)
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             useFor = savedInstanceState.getInt("useFor")
-            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
-            chartMin = savedInstanceState.getFloat("chartMin")
-            chartMax = savedInstanceState.getFloat("chartMax")
-            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
-            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
-            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
-            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
-            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
-            chartLabel = savedInstanceState.getString("chartLabel")
+//            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
+//            chartMin = savedInstanceState.getFloat("chartMin")
+//            chartMax = savedInstanceState.getFloat("chartMax")
+//            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
+//            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
+//            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
+//            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
+//            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
+//            chartLabel = savedInstanceState.getString("chartLabel")
 
         } else {
             // Probably initialize members with default values for a new instance
         }
-
+        chart_line.configBar(useFor)
         for ((j, i) in (chartMin.toInt()..chartMax.toInt() step chartIntervalStep).withIndex()) {
             val textView = TextView(this.context)
             textView.width = 200
@@ -439,7 +440,7 @@ class ChartFragment : Fragment() {
             }
         }
 
-        configChartView()
+    //    configChartView()
         //chart_line.setOnChartValueSelectedListener(this)
     }
 

@@ -1,0 +1,62 @@
+[
+  {
+    "define": 1,
+    "chartLabel": "TVOC",
+    "chartMin": 0.0,
+    "chartMax": 1500.0,
+    "chartIntervalStep": 500,
+    "chartIntervalStart": 500,
+    "chartIntervalEnd": 1000,
+    "chartLabelYCount": 16,
+    "chartIsShowMinTextView": false,
+    "chartLabelUnit": "(ppb)"
+  },
+  {
+    "define": 2,
+    "chartLabel": "PM2.5",
+    "chartMin": 0.0,
+    "chartMax": 100.0,
+    "chartIntervalStep": 20,
+    "chartIntervalStart": 20,
+    "chartIntervalEnd": 80,
+    "chartLabelYCount": 11,
+    "chartIsShowMinTextView": false,
+    "chartLabelUnit": "(μg/m³)"
+  },
+  {
+    "define": 3,
+    "chartLabel": "ECO2",
+    "chartMin": 0.0,
+    "chartMax": 1500.0,
+    "chartIntervalStep": 500,
+    "chartIntervalStart": 500,
+    "chartIntervalEnd": 1000,
+    "chartLabelYCount": 16,
+    "chartIsShowMinTextView": false,
+    "chartLabelUnit": "(ppm)"
+  },
+  {
+    "define": 4,
+    "chartLabel": "Temp",
+    "chartMin": 0.0,
+    "chartMax": 60.0,
+    "chartIntervalStep": 5,
+    "chartIntervalStart": 5,
+    "chartIntervalEnd": 55,
+    "chartLabelYCount": 13,
+    "chartIsShowMinTextView": false,
+    "chartLabelUnit": "(°C)"
+  },
+  {
+    "define": 5,
+    "chartLabel": "Humi",
+    "chartMin": 0.0,
+    "chartMax": 100.0,
+    "chartIntervalStep": 20,
+    "chartIntervalStart": 20,
+    "chartIntervalEnd": 80,
+    "chartLabelYCount": 11,
+    "chartIsShowMinTextView": false,
+    "chartLabelUnit": "( %)"
+  }
+]

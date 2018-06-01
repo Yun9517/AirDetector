@@ -72,10 +72,10 @@ import kotlin.collections.HashMap
 class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val TAG = MainActivity::class.java.simpleName
     private val DEFINE_FRAGMENT_TVOC = 1
-    private val DEFINE_FRAGMENT_CO2 = 2
-    private val DEFINE_FRAGMENT_TEMPERATURE = 3
-    private val DEFINE_FRAGMENT_HUMIDITY = 4
-    private val DEFINE_FRAGMENT_PM25 = 5
+    private val DEFINE_FRAGMENT_PM25 = 2
+    private val DEFINE_FRAGMENT_ECO2 = 3
+    private val DEFINE_FRAGMENT_TEMPERATURE = 4
+    private val DEFINE_FRAGMENT_HUMIDITY = 5
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -496,7 +496,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mPM25Fg = ChartFragment()
 
         mTvocFg.configFragment(DEFINE_FRAGMENT_TVOC)
-        mEco2Fg.configFragment(DEFINE_FRAGMENT_CO2)
+        mEco2Fg.configFragment(DEFINE_FRAGMENT_ECO2)
         mTempFg.configFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.configFragment(DEFINE_FRAGMENT_HUMIDITY)
         mPM25Fg.configFragment(DEFINE_FRAGMENT_PM25)
