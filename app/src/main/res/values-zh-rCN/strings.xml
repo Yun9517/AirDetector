@@ -194,7 +194,8 @@
     <string name="cloud_func_comment">开启本功能后即可上传侦测器空气品质的数据。</string>
     //2018/03/06
     <string name="not_yetDetected">侦测中</string>
-    <string name="text_label_device_version">侦测器韧体版本：</string>
+    <string name="text_label_device_version">侦测器韧体版本</string>
+    <string name="text_label_device_version_detail">%1$s%2$s%3$s</string>
     <string name="text_label_local_uuid">手机 UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
@@ -447,4 +448,5 @@
     <string name="text_Enable3GDialog">打开的话，会透过手机行动网络上传数据到云端；关闭的话，数据上传到云端不会使用手机行动网络</string>
     <!--20180521-->
     <string name="text_scrollingTitle">用户体验</string>
+    <string name="text_check_fragment">有下载正在进行，要停止并开始新的下载?</string>
 </resources>

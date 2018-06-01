@@ -182,7 +182,8 @@
     <string name="cloud_fun">Cloud</string>
     //2018/03/06
     <string name="not_yetDetected">Not yet detected</string>
-    <string name="text_label_device_version">Device Firmware Version: </string>
+    <string name="text_label_device_version">Device Firmware Version</string>
+    <string name="text_label_device_version_detail">%1$s%2$s%3$s</string>
     <string name="text_label_local_uuid">Cellphone UUID</string>
 
     <!-- 2018/03/02 Register & Cloud String-->
