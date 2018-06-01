@@ -330,7 +330,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         })
         //2018524 白~~~~告新聞抓取
         ScrollingTextTask().execute()
-        FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        //FirebaseMessaging.getInstance().subscribeToTopic("addwiinews") 先拿掉待測試
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -406,7 +406,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             unbindService(mServiceConnection)
         }
         //EventBus.getDefault().unregister(this)
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
     }
 
     // 20171130 add by Raymond 增加權限 Request
