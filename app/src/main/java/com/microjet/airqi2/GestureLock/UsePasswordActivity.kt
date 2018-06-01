@@ -2,18 +2,22 @@ package com.microjet.airqi2.GestureLock
 
 import android.content.Context
 import android.content.Intent
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import com.microjet.airqi2.AirMapActivity
-import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_use_password.*
 
 class UsePasswordActivity : AppCompatActivity() {
 
+    private lateinit var myPref: PrefObjects
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_use_password)
+
+        myPref = PrefObjects(this)
 
         btnUnlock.setOnClickListener {
             val pref = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -22,8 +26,7 @@ class UsePasswordActivity : AppCompatActivity() {
             if (textPW.text!!.toString() == userPW) {
                 when (actionMode) {
                     START_ACTION_MODE_DISABLE -> {
-                        val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-                        share.edit().putBoolean(SavePreferences.SETTING_MAP_PRIVACY, false).apply()
+                        myPref.setSharePreferencePrivacy(false)
                     }
 
                     START_ACTION_MODE_NORMAL -> {

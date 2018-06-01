@@ -10,19 +10,24 @@ import android.view.View
 import com.github.ihsg.patternlocker.OnPatternChangeListener
 import com.github.ihsg.patternlocker.PatternLockerView
 import com.microjet.airqi2.AirMapActivity
-import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.GoldenMapActivity
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_default_pattern_checking.*
 import java.util.*
 
 
 class DefaultPatternCheckingActivity : AppCompatActivity() {
+
     private var patternHelper: PatternHelper? = null
+
+    private lateinit var myPref: PrefObjects
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_default_pattern_checking)
+
+        myPref = PrefObjects(this)
 
         val pref = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val userPW = pref.getString("LoginPassword", "")
@@ -52,8 +57,7 @@ class DefaultPatternCheckingActivity : AppCompatActivity() {
                 if (!isError) {
                     when (actionMode) {
                         START_ACTION_MODE_DISABLE -> {
-                            val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-                            share.edit().putBoolean(SavePreferences.SETTING_MAP_PRIVACY, false).apply()
+                            myPref.setSharePreferencePrivacy(false)
                         }
 
                         START_ACTION_MODE_NORMAL -> callCompletePage()

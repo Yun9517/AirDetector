@@ -27,8 +27,11 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.le.*
-import android.bluetooth.le.ScanSettings.*
-import android.content.*
+import android.bluetooth.le.ScanSettings.SCAN_MODE_BALANCED
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
@@ -39,7 +42,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
-import com.microjet.airqi2.MyApplication
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import java.util.*
 
@@ -65,20 +68,21 @@ class DeviceListActivity : Activity() {
     private var scanProgress: ProgressBar? = null
 
     private var devScanningPanel: LinearLayout? = null
+    
+    private lateinit var myPref: PrefObjects
 
     // ListView 項目點選監聽器
-    internal var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
+    private var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
         val device = parent.getItemAtPosition(position) as BluetoothDevice
 
-        val share = getSharedPreferences("MACADDRESS", MODE_PRIVATE)
-        share.edit().clear().putString("mac", device.address).apply()
-        share.edit().putString("name", device.name).apply()
+        myPref.setSharePreferenceMAC(device.address)
+        myPref.setSharePreferenceName(device.name)
 
 
         scanLeDevice(false)
 
         // 20180330 Add Manual Disconnect
-        MyApplication.setSharePreferenceManualDisconn(false)
+        myPref.setSharePreferenceManualDisconn(false)
 
 //            val intent: Intent? = Intent(BroadcastIntents.PRIMARY)
 //            intent!!.putExtra("status", BroadcastActions.ACTION_CONNECT_DEVICE)
@@ -139,6 +143,8 @@ class DeviceListActivity : Activity() {
         requestWindowFeature(Window.FEATURE_NO_TITLE)
 
         setContentView(R.layout.device_list)
+        
+        myPref = PrefObjects(this)
 
         scanProgress = findViewById(R.id.scanProgress)
         scanProgress!!.bringToFront()

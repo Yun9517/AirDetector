@@ -5,7 +5,6 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.FileProvider
@@ -24,7 +23,6 @@ import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import com.microjet.airqi2.TvocNoseData.calObject
@@ -49,8 +47,6 @@ import java.util.concurrent.TimeUnit
  *
  */
 class SettingActivity : AppCompatActivity() {
-
-    private var mPreference: SharedPreferences? = null
 
     private var swAllowNotifyVal: Boolean = false
     private var swMessageVal: Boolean = false
@@ -78,9 +74,13 @@ class SettingActivity : AppCompatActivity() {
     private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
     private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
 
+    private lateinit var myPref: PrefObjects
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
+
+        myPref = PrefObjects(this)
 
         readPreferences()   // 載入設定值
         uiSetListener()
@@ -95,8 +95,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part one
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val deviceName = share.getString("name", "")
+        val deviceName = myPref.getSharePreferenceName()
         if (deviceName == "DfuTarg") {
             btnCheckFW?.text = getString(R.string.dfu_update_failure)
         }
@@ -120,7 +119,6 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun readPreferences() {
-        mPreference = getSharedPreferences(SavePreferences.SETTING_KEY, 0)
         getNotificationSettings()
         getCloudSettings()
         getPrivacySettings()
@@ -144,8 +142,7 @@ class SettingActivity : AppCompatActivity() {
                 cgLowBatt.visibility = View.GONE
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_NOTIFY,
-                    isChecked).apply()
+           myPref.setSharePreferenceAllowNotify(isChecked)
         }
 
         swMessage.setOnCheckedChangeListener { _, isChecked ->
@@ -158,20 +155,17 @@ class SettingActivity : AppCompatActivity() {
                 Log.d("message", "messageSETTING")
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_MESSAGE,
-                    isChecked).apply()
+            myPref.setSharePreferenceAllowNotifyMessage(isChecked)
         }
 
         swVibrate.setOnCheckedChangeListener { _, isChecked ->
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,
-                    isChecked).apply()
+            myPref.setSharePreferenceAllowNotifyVibrate(isChecked)
         }
 
         swSound.setOnCheckedChangeListener { _, isChecked ->
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_ALLOW_SOUND,
-                    isChecked).apply()
+            myPref.setSharePreferenceAllowNotifySound(isChecked)
         }
 
         tvocSeekBar.setOnRangeChangedListener(object : RangeSeekBar.OnRangeChangedListener {
@@ -179,7 +173,7 @@ class SettingActivity : AppCompatActivity() {
                 if (isFromUser) {
                     setSeekBarColor(view, min, true)
                     setSeekBarValue(tvocSeekValue, min)
-                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, min.toInt()).apply()
+                    myPref.setSharePreferenceAllowNotifyTvocValue(min.toInt())
                 }
                 Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
@@ -198,7 +192,7 @@ class SettingActivity : AppCompatActivity() {
                 if (isFromUser) {
                     setSeekBarColor(view, min, false)
                     setSeekBarValue(pm25SeekValue, min)
-                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, min.toInt()).apply()
+                    myPref.setSharePreferenceAllowNotifyPM25Value(min.toInt())
                 }
                 Log.e("SeekBar", "Min: $min, IsFromUser: $isFromUser")
             }
@@ -216,8 +210,7 @@ class SettingActivity : AppCompatActivity() {
         //20180206
         batSound.setOnCheckedChangeListener { _, isChecked ->
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_BATTERY_SOUND,
-                    isChecked).apply()
+            myPref.setSharePreferenceAllowNotifyLowBattery(isChecked)
         }
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
@@ -232,8 +225,7 @@ class SettingActivity : AppCompatActivity() {
 
             sendBroadcast(intent)
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                    isChecked).apply()
+            myPref.setSharePreferenceLedOn(isChecked)
         }
 
         ledDisconnectPower.setOnCheckedChangeListener { _, isChecked ->
@@ -248,8 +240,7 @@ class SettingActivity : AppCompatActivity() {
 
             sendBroadcast(intent)
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
-                    isChecked).apply()
+            myPref.setSharePreferenceDisconnectLedOn(isChecked)
         }
 
         //20180227  CloudFun
@@ -260,7 +251,7 @@ class SettingActivity : AppCompatActivity() {
 
                 showEnable3GDialog()
 
-                swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
+                swCloud3GVal = myPref.getSharePreferenceCloudUpload3GStat()
 
                 /*if(swCloud3GVal) {
                     swAllow3G.isChecked = swCloud3GVal
@@ -269,12 +260,12 @@ class SettingActivity : AppCompatActivity() {
                 cgAllow3G.visibility = View.GONE
             }
 
-            MyApplication.setSharePreferenceCloudUploadStat(isChecked)
+            myPref.setSharePreferenceCloudUploadStat(isChecked)
         }
 
         swAllow3G.setOnCheckedChangeListener { _, isChecked ->
 
-            MyApplication.setSharePreferenceCloudUpload3GStat(isChecked)
+            myPref.setSharePreferenceCloudUpload3GStat(isChecked)
         }
 
         swAllowPrivacy.setOnCheckedChangeListener { _, isChecked ->
@@ -309,7 +300,7 @@ class SettingActivity : AppCompatActivity() {
                     setSeekBarColor(tvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(tvocSeekValue, value.toFloat())
 
-                    mPreference!!.edit().putInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, value.toInt()).apply()
+                    myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
                 }
             })
 
@@ -335,7 +326,7 @@ class SettingActivity : AppCompatActivity() {
                     setSeekBarColor(pm25SeekBar, value.toFloat(), false)
                     setSeekBarValue(pm25SeekValue, value.toFloat())
 
-                    mPreference!!.edit().putInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, value.toInt()).apply()
+                    myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
                 }
             })
 
@@ -353,7 +344,7 @@ class SettingActivity : AppCompatActivity() {
                 updateCloudSetting(25, 35, 660)
             }
 
-            mPreference!!.edit().putBoolean(SavePreferences.SETTING_FIREBASE, isChecked).apply()
+            myPref.setSharePreferenceFirebase(isChecked)
         }
 
         //20180516 BY 白~~~~~~~~~~~~~~告
@@ -513,14 +504,14 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getNotificationSettings() {
-        swAllowNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
-        swMessageVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
-        swViberateVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION, false)
-        swSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_SOUND, false)
-        batSoundVal = mPreference!!.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
+        swAllowNotifyVal = myPref.getSharePreferenceAllowNotify()
+        swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
+        swViberateVal = myPref.getSharePreferenceAllowNotifyVibrate()
+        swSoundVal = myPref.getSharePreferenceAllowNotifySound()
+        batSoundVal = myPref.getSharePreferenceAllowNotifyLowBattery()
 
-        tvocSeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
-        pm25SeekBarVal = mPreference!!.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
+        tvocSeekBarVal = myPref.getSharePreferenceAllowNotifyTvocValue()
+        pm25SeekBarVal = myPref.getSharePreferenceAllowNotifyPM25Value()
 
         swAllowNotify.isChecked = swAllowNotifyVal
 
@@ -555,7 +546,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getPrivacySettings() {
-        isPrivacy = mPreference!!.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+        isPrivacy = myPref.getSharePreferencePrivacy()
 
         swAllowPrivacy.isChecked = isPrivacy
 
@@ -567,8 +558,8 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getCloudSettings() {
-        swCloudVal = MyApplication.getSharePreferenceCloudUploadStat()
-        swCloud3GVal = MyApplication.getSharePreferenceCloudUpload3GStat()
+        swCloudVal = myPref.getSharePreferenceCloudUploadStat()
+        swCloud3GVal = myPref.getSharePreferenceCloudUpload3GStat()
 
         swCloudFunc.isChecked = swCloudVal
 
@@ -585,7 +576,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getFCMSettings() {
-        swCloudNotifyVal = mPreference!!.getBoolean(SavePreferences.SETTING_FIREBASE, true)
+        swCloudNotifyVal = myPref.getSharePreferenceFirebase()
         swAllowCloudNotify?.isChecked = swCloudNotifyVal
         if (swCloudNotifyVal) {
             cgCloudNotify.visibility = View.VISIBLE
@@ -597,8 +588,8 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun getDeviceLedSettings() {
-        swLedPowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH, true)
-        swLedOffLinePowerVal = mPreference!!.getBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE, true)
+        swLedPowerVal = myPref.getSharePreferenceLedOn()
+        swLedOffLinePowerVal = myPref.getSharePreferenceDisconnectLedOn()
 
         ledPower.isChecked = swLedPowerVal
         ledDisconnectPower.isChecked = swLedOffLinePowerVal
@@ -643,8 +634,7 @@ class SettingActivity : AppCompatActivity() {
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
                 val dfup = DFUProcessClass(this)
-                val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-                val mDeviceAddress = share.getString("mac", "noValue")
+                val mDeviceAddress = myPref.getSharePreferenceMAC()
                 if (mDeviceAddress != "noValue") {
                     dfup.DFUAction("", mDeviceAddress)
                 }

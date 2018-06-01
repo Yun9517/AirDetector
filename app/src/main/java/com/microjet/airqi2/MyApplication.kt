@@ -109,11 +109,6 @@ class MyApplication : Application() {
             return UUID(m_szDevIDShort.hashCode().toLong(), serial!!.hashCode().toLong()).toString()
         }
 
-        fun getSharePreferenceMAC(): String {
-            val share = applicationContext().getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-            return share.getString("mac", "11:22:33:44:55:66")
-        }
-
         fun putDeviceVersion(value: String) {
             deviceVer = value
         }
@@ -144,57 +139,6 @@ class MyApplication : Application() {
 
         fun getDeviceChargeStatus(): Boolean {
             return deviceChargeStatus
-        }
-
-        fun getSharePreferenceManualDisconn(): Boolean {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            return share.getBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, false)
-        }
-
-        fun setSharePreferenceManualDisconn(value: Boolean) {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            share.edit().putBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, value).apply()
-        }
-
-        // ****** 2018/04/17 Identify the App is first time initial or not ************//
-        fun saveIsFirstUsed() {
-            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
-            share.edit().putBoolean("isFirstUsed", false).apply()
-        }
-
-        fun getIsFirstUsed(): Boolean {
-            val share = applicationContext().getSharedPreferences("GetSharedPreferences", Activity.MODE_PRIVATE)
-            return share.getBoolean("isFirstUsed", true)
-        }
-
-        fun getSharePreferenceMapPanelStat(): Boolean {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            return share.getBoolean(SavePreferences.SETTING_MAP_PANEL_STATUS, false)
-        }
-
-        fun setSharePreferenceMapPanelStat(value: Boolean) {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            share.edit().putBoolean(SavePreferences.SETTING_MAP_PANEL_STATUS, value).apply()
-        }
-
-        fun getSharePreferenceCloudUploadStat(): Boolean {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            return share.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
-        }
-
-        fun setSharePreferenceCloudUploadStat(value: Boolean) {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            share.edit().putBoolean(SavePreferences.SETTING_CLOUD_FUN, value).apply()
-        }
-
-        fun getSharePreferenceCloudUpload3GStat(): Boolean {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            return share.getBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, true)
-        }
-
-        fun setSharePreferenceCloudUpload3GStat(value: Boolean) {
-            val share = applicationContext().getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            share.edit().putBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, value).apply()
         }
     }
 

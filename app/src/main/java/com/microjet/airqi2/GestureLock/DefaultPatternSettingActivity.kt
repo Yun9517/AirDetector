@@ -6,9 +6,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import com.github.ihsg.patternlocker.OnPatternChangeListener
-import com.github.ihsg.patternlocker.PatternIndicatorView
 import com.github.ihsg.patternlocker.PatternLockerView
-import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_default_pattern_setting.*
 
@@ -16,9 +15,13 @@ class DefaultPatternSettingActivity : AppCompatActivity() {
 
     private var patternHelper: PatternHelper? = null
 
+    private lateinit var myPref: PrefObjects
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_default_pattern_setting)
+
+        myPref = PrefObjects(this)
 
         patternLockerView.setOnPatternChangedListener(object : OnPatternChangeListener {
             override fun onStart(view: PatternLockerView) {}
@@ -58,8 +61,7 @@ class DefaultPatternSettingActivity : AppCompatActivity() {
         if (this.patternHelper!!.isFinish) {
             finish()
 
-            val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-            share.edit().putBoolean(SavePreferences.SETTING_MAP_PRIVACY, true).apply()
+            myPref.setSharePreferencePrivacy(true)
         }
     }
 

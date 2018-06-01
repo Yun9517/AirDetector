@@ -3,7 +3,6 @@ package com.microjet.airqi2
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.graphics.Typeface
@@ -73,10 +72,14 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         var aResult = java.util.ArrayList<MJGraphData>()
     }
 
+    private lateinit var myPref: PrefObjects
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_airmap)
+
+        myPref = PrefObjects(this)
 
         initActionBar()
         initGoogleMapFragment()
@@ -121,7 +124,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 valuePanel.visibility = View.GONE
 
                 // 將面板顯示狀態放到偏好設定中
-                MyApplication.setSharePreferenceMapPanelStat(false)
+                myPref.setSharePreferenceMapPanelStat(false)
             } else {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
 
@@ -130,7 +133,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 valuePanel.visibility = View.VISIBLE
 
                 // 將面板顯示狀態放到偏好設定中
-                MyApplication.setSharePreferenceMapPanelStat(true)
+                myPref.setSharePreferenceMapPanelStat(true)
             }
         }
 
@@ -152,7 +155,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     override fun onResume() {
         super.onResume()
-        if(MyApplication.getSharePreferenceMapPanelStat()) {
+        if(myPref.getSharePreferenceMapPanelStat()) {
             valuePanel.visibility = View.VISIBLE
             imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
         } else {
@@ -178,8 +181,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val mDeviceAddress = share.getString("mac", "00:00:00:00:00:00")
+        val mDeviceAddress = myPref.getSharePreferenceMAC()
 
         listener = RealmChangeListener {
             filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }

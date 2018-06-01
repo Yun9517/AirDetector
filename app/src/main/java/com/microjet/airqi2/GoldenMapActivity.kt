@@ -3,7 +3,6 @@ package com.microjet.airqi2
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
-import android.content.Context
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
@@ -62,12 +61,16 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     var aResult = java.util.ArrayList<MJGraphData>()
 
     private lateinit var myLocationStyle: MyLocationStyle
+    
+    private lateinit var myPref: PrefObjects
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activicy_goldenmap)
         goldenMap.onCreate(savedInstanceState)
 
+        myPref = PrefObjects(this)
+        
         mCal = Calendar.getInstance()
 
         initActionBar()
@@ -110,7 +113,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                 valuePanel.visibility = View.GONE
 
                 // 將面板顯示狀態放到偏好設定中
-                MyApplication.setSharePreferenceMapPanelStat(false)
+                myPref.setSharePreferenceMapPanelStat(false)
             } else {
                 imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
 
@@ -119,7 +122,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                 valuePanel.visibility = View.VISIBLE
 
                 // 將面板顯示狀態放到偏好設定中
-                MyApplication.setSharePreferenceMapPanelStat(true)
+                myPref.setSharePreferenceMapPanelStat(true)
             }
         }
 
@@ -249,8 +252,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val mDeviceAddress = share.getString("mac", "00:00:00:00:00:00")
+        val mDeviceAddress = myPref.getSharePreferenceMAC()
 
         listener = RealmChangeListener {
             filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }

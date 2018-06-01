@@ -31,8 +31,8 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
 
 
     //取MAC
-    //private val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-    //private val mDeviceAddress = share.getString("mac", "noValue")
+    //private val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
+    //private val mDeviceAddress = share.getString(SavePreferences.SETTING_SAVED_BT_ADDR, "noValue")
     //private val share_token = getSharedPreferences("TOKEN", AppCompatActivity.MODE_PRIVATE)
     //private val token = share_token.getString("token","")
 
