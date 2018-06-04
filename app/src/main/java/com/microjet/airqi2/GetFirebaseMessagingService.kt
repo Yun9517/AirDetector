@@ -1,6 +1,6 @@
 package com.microjet.airqi2
 
-import android.app.Notification
+import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -11,27 +11,27 @@ import android.net.Uri
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
-import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
 /**
  * Created by B00190 on 2018/5/2.
  */
-class GetfirebasemsgService : FirebaseMessagingService(){
+class GetFirebaseMessagingService : FirebaseMessagingService(){
     private val TAG = "MyFirebaseMessaging"
     override fun onMessageReceived(getMessage: RemoteMessage?) {
         super.onMessageReceived(getMessage)
-        FirebaseMessaging.getInstance().subscribeToTopic("all");
-        if(getMessage!!.data!!.size > 0){
-            Log.d(TAG,"Message data"+getMessage.data!!)
+
+        if(getMessage?.data!!.size > 0){
+            Log.d(TAG,"Message data"+getMessage.data)
         }
-        if(getMessage!!.notification != null){
-            Log.d(TAG,"Medssage body"+getMessage!!.notification!!.body)
-            sendnotfication(getMessage!!.notification!!.body!!,getMessage!!.notification!!.title!!)
-        }
+
+        if(getMessage?.notification != null){
+            Log.d(TAG,"Medssage body"+getMessage?.notification?.body)
+            sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
+                }
     }
-    private fun sendnotfication(body: String, title: String){
+    private fun sendnotfication(body: String?, title: String?){
         val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
@@ -60,6 +60,21 @@ class GetfirebasemsgService : FirebaseMessagingService(){
 
         notfiMangger.notify(1,notBuilder.build())
 
+    }
+
+    private fun isAppAlive(content: Context, packageName: String): Boolean{
+        val activityManager = content.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        val processInfos = activityManager.runningAppProcesses
+        for (i in 0 until processInfos.size) {
+            if (processInfos[i].processName.equals(packageName)) {
+                Log.i("NotificationLaunch",
+                        String.format("the %s is running, isAppAlive return true", packageName))
+                return true
+            }
+        }
+        Log.i("NotificationLaunch",
+                String.format("the %s is not running, isAppAlive return false", packageName));
+        return false
     }
 
 
