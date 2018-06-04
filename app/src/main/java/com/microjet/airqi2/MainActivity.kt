@@ -48,6 +48,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.MainActivity.BleConnection.*
 import com.microjet.airqi2.URL.AppMenuTask
@@ -474,7 +475,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun uiFindViewById() {
-        viewPager.offscreenPageLimit = 5
+        viewPager.offscreenPageLimit = 6
         naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
         lightIcon?.setImageResource(R.drawable.app_android_icon_light)
     }
@@ -495,12 +496,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mEco2Fg = ChartFragment()
         val mTempFg = ChartFragment()
         val mPM25Fg = ChartFragment()
+        val mPM10Fg = Pm10Fragment()
 
         mTvocFg.configFragment(DEFINE_FRAGMENT_TVOC)
         mEco2Fg.configFragment(DEFINE_FRAGMENT_CO2)
         mTempFg.configFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.configFragment(DEFINE_FRAGMENT_HUMIDITY)
         mPM25Fg.configFragment(DEFINE_FRAGMENT_PM25)
+        mPM10Fg.configFragment(DEFINE_FRAGMENT_PM25)
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
@@ -508,6 +511,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
         mFragmentList.add(mPM25Fg)
+        mFragmentList.add(mPM10Fg)
 
         mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 
