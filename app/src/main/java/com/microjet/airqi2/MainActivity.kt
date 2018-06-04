@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val DEFINE_FRAGMENT_TEMPERATURE = 3
     private val DEFINE_FRAGMENT_HUMIDITY = 4
     private val DEFINE_FRAGMENT_PM25 = 5
+    private val DEFINE_FRAGMENT_PM10 = 6
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -503,7 +504,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mTempFg.configFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.configFragment(DEFINE_FRAGMENT_HUMIDITY)
         mPM25Fg.configFragment(DEFINE_FRAGMENT_PM25)
-        mPM10Fg.configFragment(DEFINE_FRAGMENT_PM25)
+        mPM10Fg.configFragment(DEFINE_FRAGMENT_PM10)
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)

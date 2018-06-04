@@ -35,6 +35,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
@@ -49,37 +50,20 @@ import kotlin.collections.ArrayList
  */
 
 class Pm10Fragment : Fragment() {
-    private val DEFINE_FRAGMENT_PM25 = 5
-
+    private val DEFINE_FRAGMENT_PM25 = 6
     private var mContext: Context? = null
-
     private var mDataCount: Int = 60
-
     private var mConnectStatus: Boolean = false
 
-    //試Realm拉資料
-    private var arrTime = ArrayList<String>()
-    private var arrData = ArrayList<String>()
-    //20180122
 
     private var animationCount = 0
     private var downloadingData = false
 
-    private var preHeat = "0"
-    private var getDataCycle = 15
-
     private val calObject = Calendar.getInstance()
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
-    //private var chartHandler = Handler()
-    private var downloadComplete = false
-
 
     var counter = 0
-    var valueIntAVG = 0
-    var valueFloatAVG = 0.0
-    //Andy
-    //private val arrayAvgData = ArrayList<String>()
     var useFor = 0
 
     private var chartIntervalStep = 0
@@ -95,8 +79,6 @@ class Pm10Fragment : Fragment() {
     private var intArray: IntArray? = null
     private var chartLabel: String = ""
 
-
-    private var errorTime = 0
 
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
@@ -124,7 +106,7 @@ class Pm10Fragment : Fragment() {
         useFor = input
         when (input) {
             DEFINE_FRAGMENT_PM25 -> {
-                chartLabel = "PM2.5"
+                chartLabel = "PM10"
                 chartMin = 0.0f
                 chartMax = 100.0f
                 chartIntervalStep = 20
@@ -169,7 +151,6 @@ class Pm10Fragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-
         outState?.putInt("useFor", useFor)
         outState?.putInt("chartIntervalStep", chartIntervalStep)
         outState?.putFloat("chartMin", chartMin)
@@ -213,11 +194,7 @@ class Pm10Fragment : Fragment() {
                     textView.text = chartLabelUnit
                 }
                 else -> {
-                    when (useFor) {
-                        else -> {
-                            textView.text = (chartMin + (j) * chartIntervalStep).toInt().toString()
-                        }
-                    }
+                    textView.text = (chartMin + (j) * chartIntervalStep).toInt().toString()
                 }
             }
             RelativeLayoutForLabelTextView.addView(textView)
@@ -388,8 +365,10 @@ class Pm10Fragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart" + useFor.toString(), calObject.toString())
                 }
-                getRealmDay()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                TvocNoseData.getRealmDay()
+                chart_line?.data = getBarData3(TvocNoseData.arrPm10Day, TvocNoseData.arrTimeDay, position)
+/*                getRealmDay()
+                chart_line.data = getBarData3(arrData, arrTime, position)*/
                 chart_line.data?.setDrawValues(false)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
                 //chart_line.setVisibleXRangeMinimum(20.0f)
@@ -404,7 +383,7 @@ class Pm10Fragment : Fragment() {
                 chart_line.highlightValue(l, y - 1)
                 //Log.v("Highligh:",l.toString())
             }
-            1 -> {
+/*            1 -> {
                 getRealmWeek()
                 chart_line.data = getBarData3(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
@@ -420,7 +399,7 @@ class Pm10Fragment : Fragment() {
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
 
-            }
+            }*/
         }
 
     }
@@ -489,7 +468,7 @@ class Pm10Fragment : Fragment() {
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
-    private fun getRealmDay() {
+    /*private fun getRealmDay() {
         arrTime.clear()
         arrData.clear()
         //現在時間實體毫秒
@@ -677,6 +656,7 @@ class Pm10Fragment : Fragment() {
         }
 
     }
+    */
 
     private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
@@ -696,7 +676,7 @@ class Pm10Fragment : Fragment() {
                 val dateFormat = SimpleDateFormat("HH:mm")
                 val dateLabelFormat = SimpleDateFormat("MM/dd HH:mm")
                 labelArray.clear()
-                for (i in 0 until arrTime.size) {
+                for (i in 0 until input.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -704,7 +684,7 @@ class Pm10Fragment : Fragment() {
                     //Log.v("Label Array", "index $i: $dateLabel")
                 }
             }
-            1 -> {
+/*            1 -> {
                 val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
@@ -733,7 +713,7 @@ class Pm10Fragment : Fragment() {
                 result_Yesterday.text = getString(R.string.text_default_value)
                 show_Today.text = getString(R.string.text_default_value)
                 show_Yesterday!!.text = getString(R.string.text_default_value)
-            }
+            }*/
         }
         Log.d("TVOCGETLABEL3" + useFor.toString(), chartLabels.lastIndex.toString())
         return chartLabels
@@ -741,7 +721,7 @@ class Pm10Fragment : Fragment() {
 
     private fun getChartData3(input: ArrayList<String>): List<BarEntry> {
         val chartData = ArrayList<BarEntry>()
-        for (i in 0 until arrTime.size) {
+        for (i in 0 until input.size) {
             chartData.add(BarEntry(input[i].toFloat(), i))
         }
         return chartData
@@ -764,17 +744,6 @@ class Pm10Fragment : Fragment() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             when (action) {
-                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    //執行斷線後的事
-                    counter = 0
-                    mConnectStatus = false
-                }
-                BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    //執行連線後的事
-                    counter = 0
-                    mConnectStatus = true
-                    downloadComplete = false
-                }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
@@ -785,50 +754,6 @@ class Pm10Fragment : Fragment() {
                     val bundle = intent.extras
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgressBarNow(nowData.toInt())
-                }
-                BroadcastActions.ACTION_GET_NEW_DATA -> {
-                    if (!downloadingData && !downloadComplete) {
-                        downloadingData = true
-                    }
-                    val bundle = intent.extras
-                    var tvocVal = "0"
-                    var eco2Val = "0"
-                    var tempVal = "0"
-                    var humiVal = "0"
-                    var pm25Val = "0"
-                    when (useFor) {
-                        DEFINE_FRAGMENT_PM25 -> {
-                            pm25Val = bundle.getString(BroadcastActions.INTENT_KEY_PM25_VALUE)
-                        }
-                    }
-
-                    //    val humiVal = bundle.getString(BroadcastActions.INTENT_KEY_HUMI_VALUE)
-                    preHeat = bundle.getString(BroadcastActions.INTENT_KEY_PREHEAT_COUNT)
-                    if (preHeat == "255") {
-                        //新增AnimationCount
-                        animationCount++
-                        counter++
-                        when (useFor) {
-                            DEFINE_FRAGMENT_PM25 -> {
-                                valueIntAVG += pm25Val.toInt()
-                            }
-                        }
-
-                        if (counter % getDataCycle == 0) {
-                            counter = 0
-                                    valueIntAVG /= getDataCycle
-                                    valueIntAVG = 0
-                        }
-                    }
-                }
-                BroadcastActions.ACTION_SAVE_INSTANT_DATA -> {
-                    if (spinnerPositon == 0) {
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
-                    }
-                }
-                BroadcastActions.ACTION_DATA_AVAILABLE -> {
-                    dataAvaliable(intent)
                 }
             }
             checkUIState()
@@ -875,95 +800,6 @@ class Pm10Fragment : Fragment() {
             }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
             tpd.setMessage("請選擇時間")
             tpd.show()
-        }
-    }
-
-
-
-
-    private fun dataAvaliable(intent: Intent) {
-        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
-        when (txValue[0]) {
-            0xE0.toByte() -> {
-            }
-            0xE1.toByte() -> {
-            }
-            0xEA.toByte() -> {
-            }
-            else -> {
-            }
-        }
-        when (txValue[2]) {
-            0xB1.toByte() -> Log.d("AirMapAC", "cmd:0xB1 feedback")
-            0xB2.toByte() -> Log.d("AirMapAC", "cmd:0xB2 feedback")
-            0xB4.toByte() -> Log.d("AirMapAC", "cmd:0xB4 feedback")
-            0xB5.toByte() -> Log.d("AirMapAC", "cmd:0xB5 feedback")
-            0xB9.toByte() -> Log.d("AirMapAC", "cmd:0xB9 feedback")
-        }
-        when (txValue[3]) {
-            0xE0.toByte() -> {
-                Log.d("AirMapAC feeback", "ok"); }
-            0xE1.toByte() -> {
-                Log.d("AirMapAC feedback", "Couldn't write in device"); return
-            }
-            0xE2.toByte() -> {
-                Log.d("AirMapAC feedback", "Temperature sensor fail"); return
-            }
-            0xE3.toByte() -> {
-                Log.d("AirMapAC feedback", "B0TVOC sensor fail"); return
-            }
-            0xE4.toByte() -> {
-                Log.d("AirMapAC feedback", "Pump power fail"); return
-            }
-            0xE5.toByte() -> {
-                Log.d("AirMapAC feedback", "Invalid value"); return
-            }
-            0xE6.toByte() -> {
-                Log.d("AirMapAC feedback", "Unknown command"); return
-            }
-            0xE7.toByte() -> {
-                Log.d("AirMapAC feedback", "Waiting timeout"); return
-            }
-            0xE8.toByte() -> {
-                Log.d("AirMapAC feedback", "Checksum error"); return
-            }
-        }
-
-        if (errorTime >= 3) {
-            errorTime = 0
-        }
-        if (!Utils.checkCheckSum(txValue)) {
-            errorTime += 1
-        } else {
-            when (txValue[2]) {
-                0xB0.toByte() -> {
-                }
-                0xB1.toByte() -> {
-                }
-                0xB2.toByte() -> {
-                }
-                0xB4.toByte() -> {
-                }
-                0xB5.toByte() -> {
-                }
-                0xB9.toByte() -> {
-                }
-                0xE0.toByte() -> {
-                }
-                0xBB.toByte() -> {
-                }
-                0xC0.toByte() -> {
-                }
-                0xC5.toByte() -> {
-                }
-                0xC6.toByte() -> {
-                    if (spinnerPositon == 0) {
-                        btnTextChanged(spinnerPositon)
-                        drawChart(spinnerPositon)
-                    }
-                    Log.e("ChartFrg", "Now Starting Load Data.........")
-                }
-            }
         }
     }
 }

@@ -105,18 +105,24 @@ object TvocNoseData {
     var arrEco2Day: ArrayList<String> = arrayListOf()
     var arrTempDay: ArrayList<String> = arrayListOf()
     var arrHumiDay: ArrayList<String> = arrayListOf()
+    var arrPm25Day: ArrayList<String> = arrayListOf()
+    var arrPm10Day: ArrayList<String> = arrayListOf()
     var arrTimeDay: ArrayList<String> = arrayListOf()
 
     var arrTvocWeek: ArrayList<String> = arrayListOf()
     var arrEco2Week: ArrayList<String> = arrayListOf()
     var arrTempWeek: ArrayList<String> = arrayListOf()
     var arrHumiWeek: ArrayList<String> = arrayListOf()
+    var arrPm25Week: ArrayList<String> = arrayListOf()
+    var arrPm10Week: ArrayList<String> = arrayListOf()
     var arrTimeWeek: ArrayList<String> = arrayListOf()
 
     var arrTvocMonth: ArrayList<String> = arrayListOf()
     var arrEco2Month: ArrayList<String> = arrayListOf()
     var arrTempMonth: ArrayList<String> = arrayListOf()
     var arrHumiMonth: ArrayList<String> = arrayListOf()
+    var arrPm25Month: ArrayList<String> = arrayListOf()
+    var arrPm10Month: ArrayList<String> = arrayListOf()
     var arrTimeMonth: ArrayList<String> = arrayListOf()
 
     // 20180518 setting by 白~~~~~~~~~~~~~~~~~~~~~告
@@ -136,20 +142,16 @@ object TvocNoseData {
         arrEco2Day.clear()
         arrTempDay.clear()
         arrHumiDay.clear()
-        arrTimeDay.clear()
+        arrPm25Day.clear()
+        arrPm10Day.clear()
 
-        //現在時間實體毫秒
-        //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm", calObject.get(Calendar.DAY_OF_MONTH).toString())
+        arrTimeDay.clear()
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
-        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-        //設定時間區間
-        val endTime = endDayLast
-        val startTime = endDay
         //一天共有2880筆
         val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
@@ -163,7 +165,8 @@ object TvocNoseData {
             arrEco2Day.add("0")
             arrTempDay.add("0")
             arrHumiDay.add("0")
-            arrTimeDay.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
+            arrPm10Day.add("0")
+            arrTimeDay.add((startTime + y * 60 * 1000).toString())
         }
         var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
@@ -174,6 +177,7 @@ object TvocNoseData {
                 arrEco2Day[count] = asmDataModel.ecO2Value.toString()
                 arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
                 arrHumiDay[count] = asmDataModel.humiValue.toString()
+                arrPm10Day[count] = asmDataModel.pM10Value.toString()
                 //20180122
                 sumTvoc += arrTvocDay[count].toInt()
                 //Log.v("hilightCount:", count.toString())
