@@ -502,7 +502,7 @@
         <Button
             android:id="@+id/btnCloudNotify"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="36dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/style_setting_button"
@@ -536,6 +536,7 @@
             android:textAlignment="viewStart"
             android:textColor="@color/blackColor"
             android:textSize="18sp"
+            android:singleLine="false"
             app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
@@ -645,7 +646,7 @@
         <ImageView
             android:id="@+id/mainDivider3"
             android:layout_width="0dp"
-            android:layout_height="1dp"
+            android:layout_height="20dp"
             android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -678,8 +679,8 @@
             android:focusable="true"
             android:focusableInTouchMode="true"
             android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="true"
-            android:singleLine="true"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
             android:text="@string/cloud_func_comment"
             android:textColor="#6d6d72"
             android:textSize="14sp"
@@ -759,7 +760,7 @@
         <ImageView
             android:id="@+id/mainDivider4"
             android:layout_width="0dp"
-            android:layout_height="1dp"
+            android:layout_height="20dp"
             android:background="#d1d1d3"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
@@ -774,7 +775,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView15, ledPower, mainDivider5, textView16, ledDisconnectPower, mainDivider6, text_device_ver, btnCheckFW, mainDivider7"
+            app:constraint_referenced_ids="textView15, ledPower, mainDivider5, textView16, ledDisconnectPower, mainDivider6, text_device_ver, text_device_ver_detail, btnCheckFW, mainDivider7"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainDivider4" />
@@ -862,7 +863,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:text="@string/text_label_device_version"
             android:textColor="@color/blackColor"
             android:textSize="18sp"
@@ -870,10 +871,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainDivider6" />
 
+        <TextView
+            android:id="@+id/text_device_ver_detail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:text="@string/text_label_device_version_detail"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
+
         <Button
             android:id="@+id/btnCheckFW"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="36dp"
             android:layout_marginBottom="6dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="6dp"
@@ -894,7 +907,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
+            app:layout_constraintTop_toBottomOf="@+id/text_device_ver_detail" />
 
         <TextView
             android:id="@+id/text_app_ver"
