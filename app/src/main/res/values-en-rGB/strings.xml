@@ -170,18 +170,20 @@
     <string name="permission_required_toast">Location permission is required for this demo.</string>
 
     <!-- 2018/02/06 -->
-    <string name="bat_switch">L-Battery</string>
-    <string name="led_light">LED</string>
+    <string name="bat_switch">Low-Power Alert</string>
+    <string name="led_light">Air quality indicator</string>
+    <string name="led_light_disconnect">Standby indicator</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">Enable auto-sync</string>
     <string name="allow_3G">Cellular Data</string>
 
     //20180227
-    <string name="cloud_fun">Cloud</string>
+    <string name="cloud_fun">Data upload</string>
+    <string name="cloud_func_comment">Enable to allow data upload to cloud</string>
     //2018/03/06
-    <string name="not_yetDetected">Not yet detected</string>
-    <string name="text_label_device_version">Device Firmware Version</string>
+    <string name="not_yetDetected">Detecting</string>
+    <string name="text_label_device_version">Firmware Version</string>
     <string name="text_label_device_version_detail">%1$s%2$s%3$s</string>
     <string name="text_label_local_uuid">Cellphone UUID</string>
 
@@ -220,8 +222,11 @@
     <string name="fetchData">Check</string>
     <string name="downloadData">Download</string>
     <string name="shareData">Share</string>
+    <string name="dataExport">Data Export</string>
     <string name="rememberID">Remember user ID</string>
     <string name="syncData">Sync</string>
+
+    <string name="download_min">Have a cup of tea</string>
 
     <string name="text_label_latitude">Latitude:</string>
     <string name="text_label_longitude">Longitude:</string>
@@ -265,9 +270,9 @@
     <string name="ok">OK</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
-    <string name="text_setting_allow_privacy">Personal trail Password</string>
-    <string name="text_setting_tvoc_value">TVOC Notification Value</string>
-    <string name="text_setting_pm25_value">PM2.5 Notification Value</string>
+    <string name="text_setting_allow_privacy">Privacy Setting</string>
+    <string name="text_setting_tvoc_value">TVOC Value</string>
+    <string name="text_setting_pm25_value">PM2.5 Value</string>
     <string name="title_activity_tour">TourActivity</string>
     <string name="title_activity_air_map1">Map</string>
     <string name="no_application">Web Browser application is not available.</string>
@@ -297,6 +302,15 @@
     <string name="text_unlock_success">Unlock Success.</string>
     <string name="text_pw_error">Password wrong, %d Chances remaining.</string>
     <string name="text_use_login_pw">Use Password</string>
+
+    <string name="text_check_device_update">Check</string>
+    <string name="text_click_to_adjust">（Click number can modify）</string>
+    <string name="text_cloud_notify">Broadcast Notification</string>
+    <string name="text_cloud_notify_comment">Previous 24hrs average of air quality</string>
+    <string name="text_save_cloud_setting">Save</string>
+    <string name="text_cloud_set_minute">%d分</string>
+    <string name="text_cloud_notify_time">Notify time</string>
+
     <string name="text_redraw_again">Link at least %d points, please reset</string>
     <string name="text_redraw_again1">Not the same as the first time, please reset</string>
     <string name="Accept">Yes</string>
@@ -334,4 +348,12 @@
     <string name="text_open">Open</string>
     <string name="text_close">Close</string>
     <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
+
+    <!-- 2018/06/04 Title for Manifest -->
+    <string name="text_title_Manifest_AirMap">ADDWII Air map</string>
+    <string name="text_title_Manifest_PersonTrail">ADDWII Personal Trail</string>
+    <string name="text_title_Manifest_Knowledge">ADDWII Knowledge Info.</string>
+    <string name="text_Title_Manifest_FAQ">ADDWII F.A.Q</string>
+    <string name="text_Title_Manifest_account_setting">ADDWII Account Setting</string>
+    <string name="text_Title_Manifest_general_setting">ADDWII General Setting</string>
 </resources>

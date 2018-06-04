@@ -183,7 +183,7 @@
     <!-- 2018/02/06 -->
     <string name="bat_switch">低电警告</string>
     <string name="led_light">空氣品質提示灯</string>
-    <string name="led_light_disconnect">断线蓝芽闪灯</string>
+    <string name="led_light_disconnect">待机配对灯</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">自动同步云端</string>
@@ -449,4 +449,12 @@
     <!--20180521-->
     <string name="text_scrollingTitle">用户体验</string>
     <string name="text_check_fragment">有下载正在进行，要停止并开始新的下载?</string>
+
+    <!-- 2018/06/04 Title for Manifest -->
+    <string name="text_title_Manifest_AirMap">ADDWII 空气地图</string>
+    <string name="text_title_Manifest_PersonTrail">ADDWII 个人轨迹图</string>
+    <string name="text_title_Manifest_Knowledge">ADDWII 空污知识库</string>
+    <string name="text_Title_Manifest_FAQ">ADDWII 常见问题</string>
+    <string name="text_Title_Manifest_account_setting">ADDWII 账号设定</string>
+    <string name="text_Title_Manifest_general_setting">ADDWII 一般设定</string>
 </resources>

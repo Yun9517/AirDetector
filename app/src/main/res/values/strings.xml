@@ -183,7 +183,7 @@
     <!-- 2018/02/06 -->
     <string name="bat_switch">低電警告</string>
     <string name="led_light">空氣品質提示燈</string>
-    <string name="led_light_disconnect">斷線藍芽閃燈</string>
+    <string name="led_light_disconnect">待機配對燈</string>
 
     <!-- 2018/03/02 -->
     <string name="auto_sync">自動同步雲端</string>
@@ -450,4 +450,12 @@
     <string name="text_Enable3GDialog">打開的話，會透過手機行動網路上傳資料到雲端；關閉的話，數據上傳到雲端不會使用手機行動網路</string>
     <!--20180530-->
     <string name="text_check_fragment">有下載正在進行，要停止並開始新的下載?</string>
+
+    <!-- 2018/06/04 Title for Manifest -->
+    <string name="text_title_Manifest_AirMap">ADDWII 空氣地圖</string>
+    <string name="text_title_Manifest_PersonTrail">ADDWII 個人軌跡圖</string>
+    <string name="text_title_Manifest_Knowledge">ADDWII 空污知識庫</string>
+    <string name="text_Title_Manifest_FAQ">ADDWII 常見問題</string>
+    <string name="text_Title_Manifest_account_setting">ADDWII 帳號設定</string>
+    <string name="text_Title_Manifest_general_setting">ADDWII 一般設定</string>
 </resources>
