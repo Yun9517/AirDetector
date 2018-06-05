@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import org.json.JSONObject
 
 /**
  * Created by B00190 on 2018/5/2.
@@ -23,13 +24,18 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
         super.onMessageReceived(getMessage)
 
         if(getMessage?.data!!.size > 0){
-            Log.d(TAG,"Message data"+getMessage.data)
+            Log.d(TAG,"Message data= "+getMessage.data)
+            if(isAppAlive(this,"com.microjet.airqi2") == true){
+                val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
+                Log.e("TAG","Message Topic= "+firebaseScorllingText)
+                firebaseScrollingToic(firebaseScorllingText)
+            }
         }
 
         if(getMessage?.notification != null){
             Log.d(TAG,"Medssage body"+getMessage?.notification?.body)
             sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
-                }
+        }
     }
     private fun sendnotfication(body: String?, title: String?){
         val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -75,6 +81,21 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
         Log.i("NotificationLaunch",
                 String.format("the %s is not running, isAppAlive return false", packageName));
         return false
+    }
+
+    private fun  firebaseScrollingToic(firebaseScorllingText: String){
+        val jsonObj = JSONObject(firebaseScorllingText)
+        //取出posts內容
+        val resultArray = jsonObj.getJSONArray("posts")
+        for(i in 0 until resultArray.length()){
+            val jsonObjScrolling = resultArray.getJSONObject(i)
+            val hashMap = HashMap<String,String>()
+            hashMap["title"] = jsonObjScrolling["title"].toString()
+            hashMap["url"] = jsonObjScrolling["url"].toString()
+            TvocNoseData.scrollingList.add(hashMap)
+            Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
+
+        }
     }
 
 
