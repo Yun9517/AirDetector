@@ -150,6 +150,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         slideMoreAnimation()
         //跑馬燈
         scrollingMission()
+        TvocNoseData.mainFragmentContext = mContext
     }
 
 
@@ -876,7 +877,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable {
             if (TvocNoseData.scrollingList.isNotEmpty()) {
                 setViewSingleLine()
-                upview1?.setViews(scrollViewsArr)
             } else {
                 scrollindex++
                 if (scrollindex < 10) {
@@ -890,11 +890,13 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     @SuppressLint("SetTextI18n")
-    private fun setViewSingleLine() {
+    public fun setViewSingleLine() {
         scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
-            val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
+            val vScrollivs = LayoutInflater.from(TvocNoseData.mainFragmentContext).inflate(R.layout.item_view_single, null)
+            Log.e("HAO", mContext.toString())
+            Log.e("HAO", TvocNoseData.mainFragmentContext.toString())
             //初始化布局的控件
             val tv1 = vScrollivs.findViewById<TextView>(R.id.tvScrollContent)
             /**
@@ -909,10 +911,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
             //进行对控件赋值
             tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
-            Log.e("HAO", TvocNoseData.scrollingList[i]["title"].toString())
+            Log.e("HAO_TvocNoseData.scrollingList[i][\"title\"]", TvocNoseData.scrollingList[i]["title"].toString())
             //添加到循环滚动数组里面去
             scrollViewsArr.add(vScrollivs)
         }
+        upview1?.setViews(scrollViewsArr)
     }
 
     fun setNewsPanelShow(enable: Boolean) {

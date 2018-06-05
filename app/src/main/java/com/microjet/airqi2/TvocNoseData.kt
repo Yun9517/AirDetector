@@ -1,5 +1,6 @@
 package com.microjet.airqi2
 
+import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import io.realm.Realm
@@ -115,6 +116,7 @@ object TvocNoseData {
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
+    var mainFragmentContext: Context? = null
 
     var download_AsynTask: AsyncTask<String, Int, String>? = null
 

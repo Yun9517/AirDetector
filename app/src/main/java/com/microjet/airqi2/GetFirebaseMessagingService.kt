@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.microjet.airqi2.Fragment.MainFragment
 import org.json.JSONObject
 
 /**
@@ -24,17 +25,19 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
         super.onMessageReceived(getMessage)
 
         if(getMessage?.data!!.size > 0){
-            Log.d(TAG,"Message data= "+getMessage.data)
-            if(isAppAlive(this,"com.microjet.airqi2") == true){
-                val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
-                Log.e("TAG","Message Topic= "+firebaseScorllingText)
-                firebaseScrollingToic(firebaseScorllingText)
-            }
+            Log.d(TAG,"Message data"+getMessage.data)
+
         }
 
         if(getMessage?.notification != null){
             Log.d(TAG,"Medssage body"+getMessage?.notification?.body)
             sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
+        }else{
+            if(isAppAlive(this,"com.microjet.airqi2") == true ){
+                val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
+                Log.e("TAG","Message Topic= "+firebaseScorllingText)
+                firebaseScrollingToic(firebaseScorllingText)
+            }
         }
     }
     private fun sendnotfication(body: String?, title: String?){
@@ -84,6 +87,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
     }
 
     private fun  firebaseScrollingToic(firebaseScorllingText: String){
+        TvocNoseData.scrollingList= arrayListOf()
         val jsonObj = JSONObject(firebaseScorllingText)
         //取出posts內容
         val resultArray = jsonObj.getJSONArray("posts")
@@ -96,6 +100,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
 
         }
+        MainFragment().setViewSingleLine()
     }
 
 
