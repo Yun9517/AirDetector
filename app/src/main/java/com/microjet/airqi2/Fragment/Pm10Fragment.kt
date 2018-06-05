@@ -20,7 +20,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -29,19 +28,14 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
-import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
-import io.realm.Realm
-import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 /**
@@ -50,7 +44,7 @@ import kotlin.collections.ArrayList
  */
 
 class Pm10Fragment : Fragment() {
-    private val DEFINE_FRAGMENT_PM25 = 6
+    private val DEFINE_FRAGMENT_PM10 = 6
     private var mContext: Context? = null
     private var mDataCount: Int = 60
     private var mConnectStatus: Boolean = false
@@ -105,7 +99,7 @@ class Pm10Fragment : Fragment() {
     fun configFragment(input: Int) {
         useFor = input
         when (input) {
-            DEFINE_FRAGMENT_PM25 -> {
+            DEFINE_FRAGMENT_PM10 -> {
                 chartLabel = "PM10"
                 chartMin = 0.0f
                 chartMax = 100.0f
@@ -209,7 +203,7 @@ class Pm10Fragment : Fragment() {
             override fun onValueSelected(e: Entry?, dataSetIndex: Int, h: Highlight?) {
                 ChartSelectDetectionTime.text = labelArray[h!!.xIndex]
                 when (useFor) {
-                    DEFINE_FRAGMENT_PM25 -> {
+                    DEFINE_FRAGMENT_PM10 -> {
                         val temp = e?.`val`
                         if (temp == 65538f) {
                             ChartSelectDetectionValue.text = getString(R.string.not_yetDetected)
@@ -277,8 +271,8 @@ class Pm10Fragment : Fragment() {
         }
 
         when (useFor) {
-            DEFINE_FRAGMENT_PM25 -> {
-                ChartLabel.text = getString(R.string.text_label_pm25)
+            DEFINE_FRAGMENT_PM10 -> {
+                ChartLabel.text = getString(R.string.text_label_pm10)
                 faceBar.setImageResource(R.drawable.face_bar_pm25)
                 intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
@@ -299,7 +293,7 @@ class Pm10Fragment : Fragment() {
 
     private fun changeBackground(input: Int) {
         when (useFor) {
-            DEFINE_FRAGMENT_PM25 -> {
+            DEFINE_FRAGMENT_PM10 -> {
                 when (input) {
                     in 0..15 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
@@ -502,7 +496,7 @@ class Pm10Fragment : Fragment() {
             result1.forEachIndexed { _, asmDataModel ->
                 val count = ((asmDataModel.created_time - endDay) / (60 * 1000)).toInt()
                 when (useFor) {
-                    DEFINE_FRAGMENT_PM25 -> {
+                    DEFINE_FRAGMENT_PM10 -> {
                         val count = ((asmDataModel.created_time - endDay) / (60 * 1000 * 5)).toInt()
                         arrData[count] = asmDataModel.pM25Value.toString()
                         sumValueInt += arrData[count].toInt()
@@ -543,7 +537,7 @@ class Pm10Fragment : Fragment() {
             var sumYesterday = 0.0F
             for (i in result2) {
                 when (useFor) {
-                    DEFINE_FRAGMENT_PM25 -> {
+                    DEFINE_FRAGMENT_PM10 -> {
                         sumYesterday += i.pM25Value.toInt()
                     }
                 }
@@ -554,7 +548,7 @@ class Pm10Fragment : Fragment() {
         }
         //}
         when (useFor) {
-            DEFINE_FRAGMENT_PM25 -> {
+            DEFINE_FRAGMENT_PM10 -> {
                 result_Today.text = avgValueInt.toString() + " μg/m³"
                 result_Yesterday.text = avgTVOC3.toInt().toString() + " μg/m³"
             }
@@ -592,7 +586,7 @@ class Pm10Fragment : Fragment() {
                 var sumThisAndLastWeek = 0f
                 for (i in result1) {
                     when (useFor) {
-                        DEFINE_FRAGMENT_PM25 -> {
+                        DEFINE_FRAGMENT_PM10 -> {
                             sumThisAndLastWeek += i.pM25Value.toInt()
                         }
                     }
@@ -639,7 +633,7 @@ class Pm10Fragment : Fragment() {
                 var sumMonth = 0f
                 for (i in result1) {
                     when (useFor) {
-                        DEFINE_FRAGMENT_PM25 -> {
+                        DEFINE_FRAGMENT_PM10 -> {
                             sumMonth += i.pM25Value.toInt()
                         }
                     }

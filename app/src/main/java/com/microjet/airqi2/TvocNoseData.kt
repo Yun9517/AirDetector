@@ -130,12 +130,7 @@ object TvocNoseData {
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
-    var scrollingNUM: Int = 0
 
-    //val arrTvoc3: ArrayList<String> = arrayListOf()
-    //val arrTime3: ArrayList<String> = arrayListOf()
-    val arrChartLabels: ArrayList<String> = arrayListOf()
-    val arrTvLabeles = ArrayList<String>()
 
     fun getRealmDay() {
         arrTvocDay.clear()
@@ -152,23 +147,22 @@ object TvocNoseData {
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-        //一天共有2880筆
+        //一天共有1440筆
         val dataCount = (endTime - startTime) / (60 * 1000)
-        Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
+        Log.d("TimePeriod", (dataCount.toString() + "Count"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
-        var sumTvoc = 0
-        //先生出2880筆值為0的陣列
+        //先生出1440筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvocDay.add("0")
             arrEco2Day.add("0")
             arrTempDay.add("0")
             arrHumiDay.add("0")
+            arrPm25Day.add("0")
             arrPm10Day.add("0")
             arrTimeDay.add((startTime + y * 60 * 1000).toString())
         }
-        var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
@@ -177,52 +171,10 @@ object TvocNoseData {
                 arrEco2Day[count] = asmDataModel.ecO2Value.toString()
                 arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
                 arrHumiDay[count] = asmDataModel.humiValue.toString()
+                arrPm25Day[count] = asmDataModel.pM25Value.toString()
                 arrPm10Day[count] = asmDataModel.pM10Value.toString()
-                //20180122
-                sumTvoc += arrTvocDay[count].toInt()
-                //Log.v("hilightCount:", count.toString())
             }
-            Log.d("getRealmDay", result1.last().toString())
-            //20180122
-            aveTvoc = (sumTvoc / result1.size)
         }
-
-        //前一天的０點起
-        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
-        // Show Date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-
-        //show_Today!!.text = dateFormat.format(startTime)
-        //show_Yesterday!!.text =  dateFormat.format(startTime - TimeUnit.DAYS.toMillis((1).toLong()))
-
-        //第一筆為日 00:00
-        val sqlStartDate = sqlWeekBase//+TimeUnit.DAYS.toMillis()
-        //結束點為日 23:59
-        val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        //val realm= Realm.getDefaultInstance()
-        val query1 = realm.where(AsmDataModel::class.java)
-        //20180122
-        var AVGTvoc3: Float = 0F
-        Log.d("getRealmWeek", sqlStartDate.toString())
-        Log.d("getRealmWeek", sqlEndDate.toString())
-        query1.between("Created_time", sqlStartDate, sqlEndDate)
-        val result2 = query1.findAll()
-        Log.d("getRealmWeek", result2.size.toString())
-        if (result2.size != 0) {
-            var sumTvocYesterday = 0F
-            for (i in result2) {
-                sumTvocYesterday += i.tvocValue.toInt()
-            }
-            AVGTvoc3 = (sumTvocYesterday / result2.size)
-        } else {
-            AVGTvoc3 = 0F
-        }
-
-        //}
-        //result_Today!!.text = aveTvoc.toInt().toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-        //result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
-
     }
 
     fun getRealmWeek() {
