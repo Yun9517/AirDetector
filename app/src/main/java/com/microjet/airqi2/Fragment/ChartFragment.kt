@@ -1353,6 +1353,8 @@ class ChartFragment : Fragment() {
         }
 
         writeCSV.close()
+
+        Utils.toastMakeTextAndShow(context!!, "Exported data to your storage card.", Toast.LENGTH_SHORT)
     }
 
     private fun checkPermissions() {
