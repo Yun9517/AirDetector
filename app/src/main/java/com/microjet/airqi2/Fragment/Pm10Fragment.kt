@@ -370,7 +370,7 @@ class Pm10Fragment : Fragment() {
                 chart_line?.data = getBarData3(TvocNoseData.arrPm10Day, TvocNoseData.arrTimeDay, position)
                 chart_line?.data?.setDrawValues(false)
                 chart_line?.setVisibleXRange(14.0f, 14.0f)
-                chart_line?.centerViewToAnimated(l.toFloat(), 0F, YAxis.AxisDependency.LEFT, 1000)
+                chart_line?.centerViewToAnimated(l.toFloat() / 5, 0F, YAxis.AxisDependency.LEFT, 1000)
                 val y = chart_line?.data!!.dataSetCount
                 chart_line?.highlightValue(l, y - 1)
             }
@@ -405,7 +405,6 @@ class Pm10Fragment : Fragment() {
         super.onResume()
         //btnTextChanged(spinnerPositon)
         //drawChart(spinnerPositon)
-        pullData(spinnerPositon)
     }
 
     override fun onDestroy() {
@@ -613,7 +612,7 @@ class Pm10Fragment : Fragment() {
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         pm10Result = query.findAll()
         //先生出1440筆值為0的陣列
-        for (y in 0..dataCount) {
+        for (y in 0..dataCount step 5) {
             TvocNoseData.arrTvocDay.add("0")
             TvocNoseData.arrEco2Day.add("0")
             TvocNoseData.arrTempDay.add("0")
@@ -625,7 +624,7 @@ class Pm10Fragment : Fragment() {
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         //pm10Realm.addChangeListener(RealmChangeListener {
             pm10Result?.forEach { asmDataModel ->
-                val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
+                val count = ((asmDataModel.created_time - startTime) / (60 * 1000 * 5)).toInt()
                 TvocNoseData.arrTvocDay[count] = asmDataModel.tvocValue.toString()
                 TvocNoseData.arrEco2Day[count] = asmDataModel.ecO2Value.toString()
                 TvocNoseData.arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
