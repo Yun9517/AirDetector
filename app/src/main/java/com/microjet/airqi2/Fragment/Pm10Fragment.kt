@@ -20,6 +20,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
+import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.data.BarData
@@ -28,14 +29,20 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
+import io.realm.Realm
+import io.realm.RealmChangeListener
+import io.realm.RealmResults
+import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 /**
@@ -57,7 +64,6 @@ class Pm10Fragment : Fragment() {
     private var spinnerPositon = 0
     private var datepickerHandler = Handler()
 
-    var counter = 0
     var useFor = 0
 
     private var chartIntervalStep = 0
@@ -72,6 +78,9 @@ class Pm10Fragment : Fragment() {
     private var labelArray = ArrayList<String>()
     private var intArray: IntArray? = null
     private var chartLabel: String = ""
+
+    private val pm10Realm = Realm.getDefaultInstance()
+    private var pm10Result: RealmResults<AsmDataModel>? = null
 
 
     private fun setImageBarPosition() {
@@ -320,8 +329,8 @@ class Pm10Fragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver,
-                makeMainFragmentUpdateIntentFilter())
+        LocalBroadcastManager.getInstance(mContext!!).registerReceiver(mGattUpdateReceiver, makeMainFragmentUpdateIntentFilter())
+        //pullData(spinnerPositon)
     }
 
     @SuppressLint("SimpleDateFormat", "SetTextI18n")
@@ -348,7 +357,6 @@ class Pm10Fragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun drawChart(position: Int?) {
         setImageBarPosition()
-
         when (position) {
             0 -> {
                 val p = Calendar.getInstance().get(Calendar.HOUR_OF_DAY) * 60 * 60 +
@@ -359,27 +367,15 @@ class Pm10Fragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart" + useFor.toString(), calObject.toString())
                 }
-                TvocNoseData.getRealmDay()
                 chart_line?.data = getBarData3(TvocNoseData.arrPm10Day, TvocNoseData.arrTimeDay, position)
-/*                getRealmDay()
-                chart_line.data = getBarData3(arrData, arrTime, position)*/
-                chart_line.data?.setDrawValues(false)
-                chart_line.setVisibleXRange(14.0f, 14.0f)
-                //chart_line.setVisibleXRangeMinimum(20.0f)
-                //chart_line.setVisibleXRangeMaximum(20.0f)//需要在设置数据源后生效
-                //chart_line.centerViewToAnimated((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 120F,0F, YAxis.AxisDependency.LEFT,1000)
-                    chart_line.centerViewToAnimated(l.toFloat(), 0F,
-                            YAxis.AxisDependency.LEFT, 1000)
-                //chart_line.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
-                //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
-                val y = chart_line.data!!.dataSetCount
-                chart_line.highlightValue(l, y - 1)
-                //Log.v("Highligh:",l.toString())
+                chart_line?.data?.setDrawValues(false)
+                chart_line?.setVisibleXRange(14.0f, 14.0f)
+                chart_line?.centerViewToAnimated(l.toFloat(), 0F, YAxis.AxisDependency.LEFT, 1000)
+                val y = chart_line?.data!!.dataSetCount
+                chart_line?.highlightValue(l, y - 1)
             }
-/*            1 -> {
-                getRealmWeek()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+            1 -> {
+                chart_line.data = getBarData3(TvocNoseData.arrPm10Week, TvocNoseData.arrTimeWeek, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(7.0f, 7.0f)
@@ -387,13 +383,11 @@ class Pm10Fragment : Fragment() {
                         0F, YAxis.AxisDependency.LEFT, 1000)
             }
             2 -> {
-                getRealmMonth()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = getBarData3(TvocNoseData.arrPm10Month, TvocNoseData.arrTimeMonth, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
-
-            }*/
+            }
         }
 
     }
@@ -404,20 +398,14 @@ class Pm10Fragment : Fragment() {
 
         // 將日期初始化成今天
         val calendar = Calendar.getInstance()
-
-        calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
-                calendar.get(Calendar.DAY_OF_MONTH))
-        //spinnerPositon = 0
-        //btnTextChanged(spinnerPositon)
-        //drawChart(spinnerPositon)
+        calObject.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH))
     }
 
     override fun onResume() {
         super.onResume()
-        //視Radio id畫圖
-        //dependRadioIDDrawChart(radioButtonID)
-        btnTextChanged(spinnerPositon)
-        drawChart(spinnerPositon)
+        //btnTextChanged(spinnerPositon)
+        //drawChart(spinnerPositon)
+        pullData(spinnerPositon)
     }
 
     override fun onDestroy() {
@@ -461,197 +449,6 @@ class Pm10Fragment : Fragment() {
         ChartSelectDetectionTime.text = ""
     }
 
-    @SuppressLint("SimpleDateFormat", "SetTextI18n")
-    /*private fun getRealmDay() {
-        arrTime.clear()
-        arrData.clear()
-        //現在時間實體毫秒
-        //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.HOUR).toString())
-        //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-        //一天共有2880筆
-        val dataCount = (endDayLast - endDay) / (60 * 1000)
-        Log.d("TimePeriod" + useFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
-        query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
-        val result1 = query.findAll()
-        Log.d("getRealmDay" + useFor.toString(), result1.size.toString())
-        var avgValueFloat = 0.0f
-        var avgValueInt = 0
-        var sumValueFloat = 0.0f
-        var sumValueInt = 0
-
-        //先生出2880筆值為0的陣列
-            for (y in 0..dataCount) {
-                arrData.add("65538")
-                arrTime.add((endDay + y * 60 * 1000).toString())
-            }
-
-        //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
-        if (result1.size != 0) {
-            result1.forEachIndexed { _, asmDataModel ->
-                val count = ((asmDataModel.created_time - endDay) / (60 * 1000)).toInt()
-                when (useFor) {
-                    DEFINE_FRAGMENT_PM10 -> {
-                        val count = ((asmDataModel.created_time - endDay) / (60 * 1000 * 5)).toInt()
-                        arrData[count] = asmDataModel.pM25Value.toString()
-                        sumValueInt += arrData[count].toInt()
-                    }
-                }
-                //Log.v("hilightCount:", count.toString())
-            }
-            Log.d("getRealmDay" + useFor.toString(), result1.last().toString())
-            //20180122
-            when (useFor) {
-                else -> {
-                    avgValueInt = (sumValueInt / result1.size)
-                }
-            }
-        }
-        //前一天的0點起
-        val sqlWeekBase = endDay - TimeUnit.DAYS.toMillis((1).toLong())
-        // Show Date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-        show_Today.text = dateFormat.format(endDay)
-        show_Yesterday!!.text = dateFormat.format(endDay - TimeUnit.DAYS.toMillis((1).toLong()))
-        //Log.d("getRealmWeek", sqlWeekBase.toString())
-        //跑七筆BarChart
-        // for (y in 0..1) {
-        //結束點為日 23:59
-        val sqlEndDate = sqlWeekBase + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        //val realm= Realm.getDefaultInstance()
-        val query1 = realm.where(AsmDataModel::class.java)
-        //20180122
-        val avgTVOC3: Float
-        val avgPM25 = 0.0F
-        Log.d("getRealmWeek" + useFor.toString(), sqlWeekBase.toString())
-        Log.d("getRealmWeek" + useFor.toString(), sqlEndDate.toString())
-        query1.between("Created_time", sqlWeekBase, sqlEndDate)
-        val result2 = query1.findAll()
-        Log.d("getRealmWeek" + useFor.toString(), result2.size.toString())
-        if (result2.size != 0) {
-            var sumYesterday = 0.0F
-            for (i in result2) {
-                when (useFor) {
-                    DEFINE_FRAGMENT_PM10 -> {
-                        sumYesterday += i.pM25Value.toInt()
-                    }
-                }
-            }
-            avgTVOC3 = (sumYesterday / result2.size)
-        } else {
-            avgTVOC3 = 0.0F
-        }
-        //}
-        when (useFor) {
-            DEFINE_FRAGMENT_PM10 -> {
-                result_Today.text = avgValueInt.toString() + " μg/m³"
-                result_Yesterday.text = avgTVOC3.toInt().toString() + " μg/m³"
-            }
-        }
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun getRealmWeek() {
-        arrTime.clear()
-        arrData.clear()
-        //拿到現在是星期幾的Int
-        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        //今天的00:00
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        //將星期幾退回到星期日為第一時間點
-        val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
-        var thisWeekAVETvoc: Float
-        //var aveLastWeekTvoc = 0
-        Log.d("getRealmWeek" + useFor.toString(), sqlWeekBase.toString())
-        //跑七筆BarChart
-        for (y in 0..6) {
-            //第一筆為日 00:00
-            val sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
-            //結束點為日 23:59
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            val realm = Realm.getDefaultInstance()
-            val query = realm.where(AsmDataModel::class.java)
-            Log.e("thisGetRealmWeekStart" + useFor.toString(), sqlStartDate.toString())
-            Log.e("thisGetRealmWeekEnd" + useFor.toString(), sqlEndDate.toString())
-            query.between("Created_time", sqlStartDate, sqlEndDate)
-            val result1 = query.findAll()
-            Log.d("getRealmWeek" + useFor.toString(), result1.size.toString())
-            if (result1.size != 0) {
-                var sumThisAndLastWeek = 0f
-                for (i in result1) {
-                    when (useFor) {
-                        DEFINE_FRAGMENT_PM10 -> {
-                            sumThisAndLastWeek += i.pM25Value.toInt()
-                        }
-                    }
-                }
-                thisWeekAVETvoc = (sumThisAndLastWeek / result1.size)
-                arrData.add(thisWeekAVETvoc.toString())
-                //依序加入時間
-                arrTime.add((sqlStartDate).toString())
-            } else {
-                //result_Today.text = "$lastWeekAVETvoc ppb"
-                arrData.add("65538")
-                arrTime.add((sqlStartDate).toString())
-            }
-        }
-    }
-
-    private fun getRealmMonth() {
-        arrTime.clear()
-        arrData.clear()
-        //拿到現在是星期幾的Int
-        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
-        val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        //將星期幾退回到星期日為第一時間點
-        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
-        Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
-        //跑七筆BarChart
-        for (y in 0..(monthCount - 1)) {
-            //第一筆為日 00:00
-            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
-            //結束點為日 23:59
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            val realm = Realm.getDefaultInstance()
-            val query = realm.where(AsmDataModel::class.java)
-            val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
-            Log.d("TimePeriod" + useFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
-            Log.d("getRealmMonth" + useFor.toString(), sqlStartDate.toString())
-            Log.d("getRealmMonth" + useFor.toString(), sqlEndDate.toString())
-            query.between("Created_time", sqlStartDate, sqlEndDate)
-            val result1 = query.findAll()
-            Log.d("getRealmMonth" + useFor.toString(), result1.size.toString())
-            if (result1.size != 0) {
-                var sumMonth = 0f
-                for (i in result1) {
-                    when (useFor) {
-                        DEFINE_FRAGMENT_PM10 -> {
-                            sumMonth += i.pM25Value.toInt()
-                        }
-                    }
-                }
-                val aveTvoc = (sumMonth / result1.size)
-                arrData.add(aveTvoc.toString())
-                //依序加入時間
-                arrTime.add(sqlStartDate.toString())
-                Log.d("getRealmMonth" + useFor.toString(), result1.last().toString())
-            } else {
-                arrData.add("65538")
-                arrTime.add((sqlStartDate).toString())
-            }
-        }
-
-    }
-    */
-
     private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
         dataSetA.setColors(intArray)
@@ -678,11 +475,11 @@ class Pm10Fragment : Fragment() {
                     //Log.v("Label Array", "index $i: $dateLabel")
                 }
             }
-/*            1 -> {
+            1 -> {
                 val dateFormat = SimpleDateFormat("EEEE")
                 val dateLabelFormat = SimpleDateFormat("MM/dd EEEE")
                 labelArray.clear()
-                for (i in 0 until arrTime.size) {
+                for (i in 0 until input.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -697,7 +494,7 @@ class Pm10Fragment : Fragment() {
                 val dateFormat = SimpleDateFormat("MM/dd")
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
                 labelArray.clear()
-                for (i in 0 until arrTime.size) {
+                for (i in 0 until input.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -707,7 +504,7 @@ class Pm10Fragment : Fragment() {
                 result_Yesterday.text = getString(R.string.text_default_value)
                 show_Today.text = getString(R.string.text_default_value)
                 show_Yesterday!!.text = getString(R.string.text_default_value)
-            }*/
+            }
         }
         Log.d("TVOCGETLABEL3" + useFor.toString(), chartLabels.lastIndex.toString())
         return chartLabels
@@ -741,7 +538,6 @@ class Pm10Fragment : Fragment() {
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                    //setProgressBarMax(1440)
                     setProgressBarMax(totalData.toInt())
                 }
                 BroadcastActions.ACTION_LOADING_DATA -> {
@@ -794,6 +590,180 @@ class Pm10Fragment : Fragment() {
             }, Calendar.getInstance().get(Calendar.HOUR_OF_DAY), Calendar.getInstance().get(Calendar.MINUTE), true)
             tpd.setMessage("請選擇時間")
             tpd.show()
+        }
+    }
+
+    private fun getRealmDay() {
+        TvocNoseData.arrTvocDay.clear()
+        TvocNoseData.arrEco2Day.clear()
+        TvocNoseData.arrTempDay.clear()
+        TvocNoseData.arrHumiDay.clear()
+        TvocNoseData.arrPm25Day.clear()
+        TvocNoseData.arrPm10Day.clear()
+
+        TvocNoseData.arrTimeDay.clear()
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //將日期設為今天日子加一天減1秒
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val query = pm10Realm.where(AsmDataModel::class.java)
+        //一天共有1440筆
+        val dataCount = (endTime - startTime) / (60 * 1000)
+        Log.d("TimePeriod", (dataCount.toString() + "Count"))
+        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
+        pm10Result = query.findAll()
+        //先生出1440筆值為0的陣列
+        for (y in 0..dataCount) {
+            TvocNoseData.arrTvocDay.add("0")
+            TvocNoseData.arrEco2Day.add("0")
+            TvocNoseData.arrTempDay.add("0")
+            TvocNoseData.arrHumiDay.add("0")
+            TvocNoseData.arrPm25Day.add("0")
+            TvocNoseData.arrPm10Day.add("0")
+            TvocNoseData.arrTimeDay.add((startTime + y * 60 * 1000).toString())
+        }
+        //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
+        //pm10Realm.addChangeListener(RealmChangeListener {
+            pm10Result?.forEach { asmDataModel ->
+                val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
+                TvocNoseData.arrTvocDay[count] = asmDataModel.tvocValue.toString()
+                TvocNoseData.arrEco2Day[count] = asmDataModel.ecO2Value.toString()
+                TvocNoseData.arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
+                TvocNoseData.arrHumiDay[count] = asmDataModel.humiValue.toString()
+                TvocNoseData.arrPm25Day[count] = asmDataModel.pM25Value.toString()
+                TvocNoseData.arrPm10Day[count] = asmDataModel.pM10Value.toString()
+            }
+        //})
+    }
+
+    private fun getRealmWeek() {
+        TvocNoseData.arrTvocWeek.clear()
+        TvocNoseData.arrEco2Week.clear()
+        TvocNoseData.arrTempWeek.clear()
+        TvocNoseData.arrHumiWeek.clear()
+        TvocNoseData.arrPm25Week.clear()
+        TvocNoseData.arrPm10Week.clear()
+        TvocNoseData.arrTimeWeek.clear()
+        //拿到現在是星期幾的Int
+        val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //今天的00:00
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        //將星期幾退回到星期日為第一時間點
+        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
+        //跑七筆BarChart
+        for (y in 0..6) {
+            //第一筆為日 00:00
+            val sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
+            //結束點為日 23:59
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmWeek" + useFor.toString(), result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                var sumEco2 = 0
+                var sumTemp = 0f
+                var sumHumi = 0
+                var sumPm25 = 0
+                var sumPm10 = 0
+                result1.forEach {
+                    sumTvoc += it.tvocValue.toInt()
+                    sumEco2 += it.ecO2Value.toInt()
+                    sumTemp += it.tempValue.toFloat()
+                    sumHumi += it.humiValue.toInt()
+                    sumPm25 += it.pM25Value.toInt()
+                    sumPm10 += it.pM10Value
+                }
+                TvocNoseData.arrTvocWeek.add((sumTvoc / result1.size).toString())
+                TvocNoseData.arrEco2Week.add((sumEco2 / result1.size).toString())
+                TvocNoseData.arrTempWeek.add((sumTemp / result1.size).toString())
+                TvocNoseData.arrHumiWeek.add((sumHumi / result1.size).toString())
+                TvocNoseData.arrPm25Week.add((sumPm25 / result1.size).toString())
+                TvocNoseData.arrPm10Week.add((sumPm10 / result1.size).toString())
+                //依序加入時間
+                TvocNoseData.arrTimeWeek.add((sqlStartDate).toString())
+            } else {
+                TvocNoseData.arrTvocWeek.add("65538")
+                TvocNoseData.arrEco2Week.add("65538")
+                TvocNoseData.arrTempWeek.add("65538")
+                TvocNoseData.arrHumiWeek.add("65538")
+                TvocNoseData.arrPm25Week.add("65538")
+                TvocNoseData.arrPm10Week.add("65538")
+                //依序加入時間
+                TvocNoseData.arrTimeWeek.add((sqlStartDate).toString())
+            }
+        }
+    }
+
+    private fun getRealmMonth() {
+        TvocNoseData.arrTvocMonth.clear()
+        TvocNoseData.arrEco2Month.clear()
+        TvocNoseData.arrTempMonth.clear()
+        TvocNoseData.arrHumiMonth.clear()
+        TvocNoseData.arrPm25Month.clear()
+        TvocNoseData.arrPm10Month.clear()
+        TvocNoseData.arrTimeMonth.clear()
+        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
+        val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        //將星期幾退回到星期日為第一時間點
+        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
+        for (y in 0..(monthCount - 1)) {
+            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmMonth" + useFor.toString(), result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                var sumEco2 = 0
+                var sumTemp = 0f
+                var sumHumi = 0
+                var sumPm25 = 0
+                var sumPm10 = 0
+                result1.forEach {
+                    sumTvoc += it.tvocValue.toInt()
+                    sumEco2 += it.ecO2Value.toInt()
+                    sumTemp += it.tempValue.toFloat()
+                    sumHumi += it.humiValue.toInt()
+                    sumPm25 += it.pM25Value.toInt()
+                    sumPm10 += it.pM10Value
+                }
+                TvocNoseData.arrTvocMonth.add((sumTvoc / result1.size).toString())
+                TvocNoseData.arrEco2Month.add((sumEco2 / result1.size).toString())
+                TvocNoseData.arrTempMonth.add((sumTemp / result1.size).toString())
+                TvocNoseData.arrHumiMonth.add((sumHumi / result1.size).toString())
+                TvocNoseData.arrPm25Month.add((sumPm25 / result1.size).toString())
+                TvocNoseData.arrPm10Month.add((sumPm10 / result1.size).toString())
+                //依序加入時間
+                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+            } else {
+                TvocNoseData.arrTvocMonth.add("65538")
+                TvocNoseData.arrEco2Month.add("65538")
+                TvocNoseData.arrTempMonth.add("65538")
+                TvocNoseData.arrHumiMonth.add("65538")
+                TvocNoseData.arrPm25Month.add("65538")
+                TvocNoseData.arrPm10Month.add("65538")
+                //依序加入時間
+                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+            }
+        }
+
+    }
+
+    private fun pullData(position: Int?) {
+        when (position) {
+            0 -> { getRealmDay() }
+            1 -> { getRealmWeek() }
+            2 -> { getRealmMonth() }
+            else -> {}
         }
     }
 }
