@@ -1310,10 +1310,10 @@ class ChartFragment : Fragment() {
 
 
     @SuppressLint("SimpleDateFormat")
-    private fun parceDataToCsv() {
+    private fun parseDataToCsv() {
         val foldeName = "ADDWII Mobile Nose"
         val date = SimpleDateFormat("yyyyMMdd")
-        val fileName = "${date.format(System.currentTimeMillis())}_Mobile_Nose"
+        val fileName = "${date.format(calObject.timeInMillis)}_Mobile_Nose"
 
         val writeCSV = CSVWriter(foldeName, fileName, CSVWriter.COMMA_SEPARATOR)
 
@@ -1364,7 +1364,7 @@ class ChartFragment : Fragment() {
                     arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
         } else {
             Log.e("DB", "PERMISSION GRANTED")
-            parceDataToCsv()
+            parseDataToCsv()
         }
     }
 }
