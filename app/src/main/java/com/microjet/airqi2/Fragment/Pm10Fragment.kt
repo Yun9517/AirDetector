@@ -367,6 +367,7 @@ class Pm10Fragment : Fragment() {
                     calObject.set(Calendar.DAY_OF_MONTH, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
                     Log.d("drawChart" + useFor.toString(), calObject.toString())
                 }
+                pullData(position)
                 chart_line?.data = getBarData3(TvocNoseData.arrPm10Day, TvocNoseData.arrTimeDay, position)
                 chart_line?.data?.setDrawValues(false)
                 chart_line?.setVisibleXRange(14.0f, 14.0f)
@@ -375,6 +376,7 @@ class Pm10Fragment : Fragment() {
                 chart_line?.highlightValue(l, y - 1)
             }
             1 -> {
+                pullData(position)
                 chart_line.data = getBarData3(TvocNoseData.arrPm10Week, TvocNoseData.arrTimeWeek, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
@@ -383,6 +385,7 @@ class Pm10Fragment : Fragment() {
                         0F, YAxis.AxisDependency.LEFT, 1000)
             }
             2 -> {
+                pullData(position)
                 chart_line.data = getBarData3(TvocNoseData.arrPm10Month, TvocNoseData.arrTimeMonth, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
