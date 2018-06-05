@@ -1,5 +1,6 @@
 package com.microjet.airqi2.Fragment
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -8,10 +9,14 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.RectF
+import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
@@ -30,6 +35,7 @@ import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.microjet.airqi2.AsmDataModel
+import com.microjet.airqi2.CustomAPI.CSVWriter
 import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
@@ -38,6 +44,10 @@ import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -441,6 +451,10 @@ class ChartFragment : Fragment() {
 
         configChartView()
         //chart_line.setOnChartValueSelectedListener(this)
+
+        btnExport.setOnClickListener {
+            checkPermissions()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -535,10 +549,13 @@ class ChartFragment : Fragment() {
         }
     }
 
+    private lateinit var mActivity: Activity
+
     @Suppress("OverridingDeprecatedMember", "DEPRECATION")
     override fun onAttach(activity: Activity?) {
         super.onAttach(activity!!)
         mContext = this.context!!.applicationContext
+        mActivity = activity
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -1205,8 +1222,6 @@ class ChartFragment : Fragment() {
     }
 
 
-
-
     private fun dataAvaliable(intent: Intent) {
         val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
         when (txValue[0]) {
@@ -1290,6 +1305,64 @@ class ChartFragment : Fragment() {
                     Log.e("ChartFrg", "Now Starting Load Data.........")
                 }
             }
+        }
+    }
+
+
+    @SuppressLint("SimpleDateFormat")
+    private fun parceDataToCsv() {
+        val foldeName = "ADDWII Mobile Nose"
+        val date = SimpleDateFormat("yyyyMMdd")
+        val fileName = "${date.format(System.currentTimeMillis())}_Mobile_Nose"
+
+        val writeCSV = CSVWriter(foldeName, fileName, CSVWriter.COMMA_SEPARATOR)
+
+        val timeFormat = SimpleDateFormat(when (spinnerPositon) {
+            0 -> "HH:mm"
+            1 -> "EE"
+            2 -> "MM/dd"
+            else -> "yyyyMM"
+        })
+
+        val timeUnit = when (spinnerPositon) {
+            0 -> "Time"
+            1 -> "Week"
+            2 -> "Day"
+            else -> "Month"
+        }
+
+        val dataUnit = when (useFor) {
+            1 -> "ppb"
+            2 -> "ppm"
+            3 -> "°C"
+            4 -> "%"
+            else -> "μg/m³"
+        }
+
+        val header = arrayOf("id", timeUnit, "Value")
+
+        writeCSV.writeLine(header)
+
+        for (i in 0 until arrData.size) {
+            val time = arrTime[i].toLong()
+            val dataVal = if (arrData[i] == "65538") "No Data" else "${arrData[i]} $dataUnit"
+
+            val textCSV = arrayOf((i + 1).toString(), timeFormat.format(time), dataVal)
+
+            writeCSV.writeLine(textCSV).toString()
+        }
+
+        writeCSV.close()
+    }
+
+    private fun checkPermissions() {
+
+        if (ActivityCompat.checkSelfPermission(context!!, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(activity!!,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
+        } else {
+            Log.e("DB", "PERMISSION GRANTED")
+            parceDataToCsv()
         }
     }
 }
