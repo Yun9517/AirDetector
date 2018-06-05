@@ -93,7 +93,7 @@ class WarningClass {
                             R.drawable.history_face_icon_02,
                             R.string.warning_title_Yellow,//+tvocValue,
                             R.string.text_message_air_mid,
-                            tvocValue)  //中度汙染
+                            tvocValue)  //中度污染
                 }
                 in 220..659 -> {
                     warningFunction(REQUEST_TVOC_CODE,
@@ -102,7 +102,7 @@ class WarningClass {
                             R.drawable.history_face_icon_02,
                             R.string.warning_title_Yellow,//+tvocValue,
                             R.string.text_message_air_mid,
-                            tvocValue)  //中度汙染
+                            tvocValue)  //中度污染
                 }
                 in 660..2200 -> {
                     warningFunction(REQUEST_TVOC_CODE,
@@ -111,7 +111,7 @@ class WarningClass {
                             R.drawable.history_face_icon_03,
                             R.string.warning_title_Orange,//+tvocValue,
                             R.string.text_message_air_Medium_Orange,
-                            tvocValue)  //中度汙染
+                            tvocValue)  //中度污染
                 }
                 in 2201..5500 -> {
                     warningFunction(REQUEST_TVOC_CODE,
@@ -120,7 +120,7 @@ class WarningClass {
                             R.drawable.history_face_icon_04,
                             R.string.warning_title_Red,//+tvocValue,
                             R.string.text_message_air_bad,
-                            tvocValue)  //重度汙染
+                            tvocValue)  //重度污染
                 }
                 in 5501..20000 -> {
                     warningFunction(REQUEST_TVOC_CODE,
@@ -129,7 +129,7 @@ class WarningClass {
                             R.drawable.history_face_icon_05,
                             R.string.warning_title_Purple,//+tvocValue,
                             R.string.text_message_air_Serious_Purple,
-                            tvocValue) //嚴重汙染
+                            tvocValue) //嚴重污染
                 }
                 in 20001..60000 -> {
                     warningFunction(REQUEST_TVOC_CODE,
@@ -138,7 +138,7 @@ class WarningClass {
                             R.drawable.history_face_icon_06,
                             R.string.warning_title_Brown,//+tvocValue,
                             R.string.text_message_air_Extreme_Dark_Purple,
-                            tvocValue)  //非常嚴重汙染
+                            tvocValue)  //非常嚴重污染
                 }
             }
         }
@@ -164,7 +164,7 @@ class WarningClass {
                             R.drawable.history_face_icon_02,
                             R.string.label_pm25_Yellow,//+pm25Value,
                             R.string.message_pm25_Yellow,
-                            pm25Value)  //輕度汙染
+                            pm25Value)  //輕度污染
                 }
                 in 35..54 -> {
                     warningFunction(REQUEST_PM25_CODE,
@@ -173,7 +173,7 @@ class WarningClass {
                             R.drawable.history_face_icon_03,
                             R.string.label_pm25_Orange,//+pm25Value,
                             R.string.message_pm25_Orange,
-                            pm25Value)  //中度汙染
+                            pm25Value)  //中度污染
                 }
                 in 55..150 -> {
                     warningFunction(REQUEST_PM25_CODE,
@@ -182,7 +182,7 @@ class WarningClass {
                             R.drawable.history_face_icon_04,
                             R.string.label_pm25_Red,//+pm25Value,
                             R.string.message_pm25_Red,
-                            pm25Value)  //重度汙染
+                            pm25Value)  //重度污染
                 }
                 in 151..250 -> {
                     warningFunction(REQUEST_PM25_CODE,
@@ -191,7 +191,7 @@ class WarningClass {
                             R.drawable.history_face_icon_05,
                             R.string.label_pm25_Purple,//+pm25Value,
                             R.string.message_pm25_Purple,
-                            pm25Value) //嚴重汙染
+                            pm25Value) //嚴重污染
                 }
                 else -> {
                     warningFunction(REQUEST_PM25_CODE,
@@ -200,7 +200,7 @@ class WarningClass {
                             R.drawable.history_face_icon_06,
                             R.string.label_pm25_Brown,//+pm25Value,
                             R.string.message_pm25_Brown,
-                            pm25Value)  //非常嚴重汙染
+                            pm25Value)  //非常嚴重污染
                 }
             }
         }

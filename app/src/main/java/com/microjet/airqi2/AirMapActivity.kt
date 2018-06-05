@@ -429,7 +429,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
     }
 
-    // 更新左上角空汙數值面板
+    // 更新左上角空污數值面板
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
