@@ -79,10 +79,6 @@ class Pm10Fragment : Fragment() {
     private var intArray: IntArray? = null
     private var chartLabel: String = ""
 
-    private val pm10Realm = Realm.getDefaultInstance()
-    private var pm10Result: RealmResults<AsmDataModel>? = null
-
-
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
         chart_line.yChartInterval.size
@@ -547,6 +543,9 @@ class Pm10Fragment : Fragment() {
                     val nowData = bundle.getString(BroadcastActions.INTENT_KEY_LOADING_DATA)
                     setProgressBarNow(nowData.toInt())
                 }
+                BroadcastActions.ACTION_DATA_AVAILABLE -> {
+                    dataAvaliable(intent)
+                }
             }
             checkUIState()
         }
@@ -584,7 +583,7 @@ class Pm10Fragment : Fragment() {
         if (spinnerPositon == 0) {
             val tpd = TimePickerDialog(context, TimePickerDialog.OnTimeSetListener { view, hourOfDay, minute ->
                 val p = hourOfDay * 60 + minute
-                chart_line.centerViewToAnimated(p.toFloat(), 0F, YAxis.AxisDependency.LEFT, 1000)
+                chart_line.centerViewToAnimated(p.toFloat() / 5, 0F, YAxis.AxisDependency.LEFT, 1000)
                 //chart_line.moveViewToX((Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
                 //        + Calendar.getInstance().get(Calendar.MINUTE) / 60F) * 118.5F) //移動視圖by x index
                 val y = chart_line.data!!.dataSetCount
@@ -604,6 +603,7 @@ class Pm10Fragment : Fragment() {
         TvocNoseData.arrPm10Day.clear()
 
         TvocNoseData.arrTimeDay.clear()
+        val pm10Realm = Realm.getDefaultInstance()
         val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
@@ -613,7 +613,10 @@ class Pm10Fragment : Fragment() {
         val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "Count"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
-        pm10Result = query.findAll()
+        val pm10Result = query.findAll()
+        var avgPM10Today = 0
+        var avgPM10Yesterday = 0
+
         //先生出1440筆值為0的陣列
         for (y in 0..dataCount step 5) {
             TvocNoseData.arrTvocDay.add("0")
@@ -624,8 +627,10 @@ class Pm10Fragment : Fragment() {
             TvocNoseData.arrPm10Day.add("0")
             TvocNoseData.arrTimeDay.add((startTime + y * 60 * 1000).toString())
         }
-        //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
-        //pm10Realm.addChangeListener(RealmChangeListener {
+
+        if (pm10Result.size != 0) {
+            //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
+            //pm10Realm.addChangeListener(RealmChangeListener {
             pm10Result?.forEach { asmDataModel ->
                 val count = ((asmDataModel.created_time - startTime) / (60 * 1000 * 5)).toInt()
                 TvocNoseData.arrTvocDay[count] = asmDataModel.tvocValue.toString()
@@ -635,7 +640,16 @@ class Pm10Fragment : Fragment() {
                 TvocNoseData.arrPm25Day[count] = asmDataModel.pM25Value.toString()
                 TvocNoseData.arrPm10Day[count] = asmDataModel.pM10Value.toString()
             }
-        //})
+            //})
+        }
+        avgPM10Today = pm10Result.average("PM10Value").toInt()
+        avgPM10Yesterday = pm10Realm.where(AsmDataModel::class.java)
+                .between("Created_time", startTime - TimeUnit.DAYS.toMillis(1), endTime - TimeUnit.DAYS.toMillis(1))
+                .findAll()
+                .average("PM10Value")
+                .toInt()
+        showAvg(startTime, avgPM10Today, avgPM10Yesterday)
+        pm10Realm.close()
     }
 
     private fun getRealmWeek() {
@@ -766,6 +780,28 @@ class Pm10Fragment : Fragment() {
             1 -> { getRealmWeek() }
             2 -> { getRealmMonth() }
             else -> {}
+        }
+    }
+
+    private fun showAvg(startDate: Long, avgValueToday: Int, avgValueYesterday: Int) {
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
+        show_Today?.text = dateFormat.format(startDate)
+        show_Yesterday?.text = dateFormat.format(startDate - TimeUnit.DAYS.toMillis(1))
+
+        result_Today?.text = avgValueToday.toString() + " μg/m³"
+        result_Yesterday?.text = avgValueYesterday.toString() + " μg/m³"
+    }
+
+    private fun dataAvaliable(intent: Intent) {
+        val txValue = intent.getByteArrayExtra(BroadcastActions.ACTION_EXTRA_DATA)
+        when (txValue[2]) {
+            0xC6.toByte() -> {
+                if (spinnerPositon == 0) {
+                    btnTextChanged(spinnerPositon)
+                    drawChart(spinnerPositon)
+                }
+                Log.e("Pm10Frag", "Now Starting Load Data.........")
+            }
         }
     }
 }
