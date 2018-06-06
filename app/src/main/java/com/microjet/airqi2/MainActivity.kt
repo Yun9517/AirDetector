@@ -36,6 +36,7 @@ import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.firebase.iid.FirebaseInstanceId
+import com.google.firebase.messaging.FirebaseMessaging
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
@@ -418,7 +419,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
 
-        //FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -444,7 +445,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         if(myToken != ""){
-            FirebaseNotifTask().execute(myToken)
+            FirebaseNotifSettingTask().execute(myToken)
         }
     }
 
@@ -494,7 +495,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             unbindService(mServiceConnection)
         }
 
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
     }
 
     // 20171130 add by Raymond 增加權限 Request

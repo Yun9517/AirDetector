@@ -13,7 +13,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.microjet.airqi2.Fragment.MainFragment
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
 /**
@@ -98,9 +98,10 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
             hashMap["url"] = jsonObjScrolling["url"].toString()
             TvocNoseData.scrollingList.add(hashMap)
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
-
         }
-        MainFragment().setViewSingleLine()
+        val urlEvent = BleEvent("new Topic get")
+
+        EventBus.getDefault().post(urlEvent)
     }
 
 

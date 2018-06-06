@@ -11,7 +11,7 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
-import com.microjet.airqi2.FirebaseNotifTask
+import com.microjet.airqi2.FirebaseNotifSettingTask
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType
@@ -242,7 +242,7 @@ class AccountManagementActivity : AppCompatActivity() {
             if (result == "成功登入") {
                 val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                 val myToken = shareToken.getString("token", "")
-                FirebaseNotifTask().execute(myToken)
+                FirebaseNotifSettingTask().execute(myToken)
                 val intent = Intent(mContext, AccountActiveActivity::class.java)
                 startActivity(intent)
                 finish()

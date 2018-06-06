@@ -794,7 +794,7 @@ class SettingActivity : AppCompatActivity() {
         TvocNoseData.firebaseNotiftime = cloudTime
         TvocNoseData.firebaseNotifTVOC = cloudTVOC
         TvocNoseData.firebaseNotifPM25 = cloudPM25
-        FirebaseNotifTask().execute(myToken, TvocNoseData.firebaseNotiftime.toString(), TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
+        FirebaseNotifSettingTask().execute(myToken, TvocNoseData.firebaseNotiftime.toString(), TvocNoseData.firebaseNotifPM25.toString(), TvocNoseData.firebaseNotifTVOC.toString())
 
     }
 
