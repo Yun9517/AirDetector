@@ -197,6 +197,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var mywarningclass:WarringClass?=null
 
+    private var c6d6map = HashMap<String, String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -1398,7 +1400,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
-                        saveToRealmC6(hashMap)
+                        val pmType = MyApplication.getDevicePMType().toInt()
+                        if (pmType < 2) {
+                            saveToRealmC6(hashMap)
+                        } else {
+                            c6d6map = hashMap
+                        }
+
                         mywarningclass?.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                        // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
@@ -1407,7 +1415,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xD6.toByte() -> {
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueD6(txValue)
-                        saveToRealmD6(hashMap)
+                        saveToRealmD6(c6d6map,hashMap)
                     }
                 }
             } else {
@@ -1883,20 +1891,32 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("C5D5ARR", arr1.toString())
     }
 
-    private fun saveToRealmD6(hashmap: HashMap<String, String>) {
-        val realm = Realm.getDefaultInstance()
-        val pm10 = hashmap[TvocNoseData.D6PM10]?.toInt()
-        val time = hashmap[TvocNoseData.D6TIME]!!.toLong() * 1000
-        val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", time).findAll()
-        if (query.isNotEmpty() && time > 1514736000000) {
-            realm.executeTransaction {
-                query.forEach {
-                    it.pM10Value = pm10
-                    Log.d(TAG, "SUCCESSD6" + it.toString())
+    private fun saveToRealmD6(hash1: HashMap<String,String>, hash2: HashMap<String, String>) {
+        var c6Time = if (hash1[TvocNoseData.C6TIME] != null) hash1[TvocNoseData.C6TIME]!!.toLong() * 1000 else 0L
+        var d6Time = if (hash2[TvocNoseData.D6TIME] != null) hash2[TvocNoseData.D6TIME]!!.toLong() * 1000 else 0L
+        if (c6Time == d6Time && d6Time != 0L) {
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", c6Time).findAll()
+            if (query.isEmpty() && d6Time > 1514736000000) {
+                realm.executeTransaction { r ->
+                    val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                    asmData.tempValue = hash1[TvocNoseData.C6TEMP].toString()
+                    asmData.humiValue = hash1[TvocNoseData.C6HUMI].toString()
+                    asmData.tvocValue = hash1[TvocNoseData.C6TVOC].toString()
+                    asmData.ecO2Value = hash1[TvocNoseData.C6ECO2].toString()
+                    asmData.pM25Value = hash1[TvocNoseData.C6PM25].toString()
+                    asmData.created_time = hash1[TvocNoseData.C6TIME]!!.toLong() * 1000//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                    asmData.pM10Value = hash2[TvocNoseData.D6PM10]?.toInt()
+                    asmData.macAddress = mDeviceAddress
+                    asmData.latitude = TvocNoseData.lati
+                    asmData.longitude = TvocNoseData.longi
+                    Log.d(TAG, "SUCCESSD6" + asmData.toString())
                 }
             }
+            realm.close()
+            uploadData()
         }
-        realm.close()
+        c6d6map.clear()
     }
 }
 
