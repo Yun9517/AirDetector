@@ -35,10 +35,13 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
-import com.microjet.airqi2.R.id.chart_line
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
+import org.json.JSONArray
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -106,11 +109,13 @@ class ChartFragment : Fragment() {
 
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
-        val lineRectFArray = chart_line.getLabelRectLocation()
-    //    for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {//取得有標籤的數值位置，從最小值放至最大值
-    //        lineRectFArray.add(chart_line.getBarBounds(BarEntry(i.toFloat(), j)))
-    //        j++
-    //    }
+        chart_line.yChartInterval.size
+        var j = 1
+        val lineRectFArray = ArrayList<RectF>()
+        for (i in chartMin.toInt()..chartMax.toInt() step chartIntervalStep) {//取得有標籤的數值位置，從最小值放至最大值
+            lineRectFArray.add(chart_line.getBarBounds(BarEntry(i.toFloat(), j)))
+            j++
+        }
         for (i in lineRectFArray.indices) {//放置標籤
             labelTextViewArray[i].y = lineRectFArray[i].top - (labelTextViewArray[i].height / 2f)
             labelTextViewArray[i].x = chart_line.x - labelTextViewArray[i].width.toFloat()
@@ -126,95 +131,38 @@ class ChartFragment : Fragment() {
 
     fun configFragment(input: Int) {
         useFor = input
-        when (input) {
-            DEFINE_FRAGMENT_TVOC -> {
-                chartLabel = "TVOC"
-                chartMin = 0.0f
-                chartMax = 1500.0f
-                chartIntervalStep = 500
-                chartIntervalStart = 500
-                chartIntervalEnd = 1000
-                chartLabelYCount = 16
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(ppb)"
-            }
-            DEFINE_FRAGMENT_ECO2 -> {
-                chartLabel = "ECO2"
-                chartMin = 0.0f
-                chartMax = 1500.0f
-                chartIntervalStep = 500
-                chartIntervalStart = 500
-                chartIntervalEnd = 1000
-                chartLabelYCount = 16
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(ppm)"
-            }
-            DEFINE_FRAGMENT_TEMPERATURE -> {
-                chartLabel = "Temp"
-                chartMin = 0.0f
-                chartMax = 60.0f
-                chartIntervalStep = 5
-                chartIntervalStart = 5
-                chartIntervalEnd = 55
-                chartLabelYCount = 13
-                chartIsShowMinTextView = true
-                chartLabelUnit = "(°C)"
-            }
-            DEFINE_FRAGMENT_HUMIDITY -> {
-                chartLabel = "Humi"
-                chartMin = 0.0f
-                chartMax = 100.0f
-                chartIntervalStep = 20
-                chartIntervalStart = 20
-                chartIntervalEnd = 80
-                chartLabelYCount = 11
-                chartIsShowMinTextView = false
-                chartLabelUnit = "( %)"
-            }
-            DEFINE_FRAGMENT_PM25 -> {
-                chartLabel = "PM2.5"
-                chartMin = 0.0f
-                chartMax = 100.0f
-                chartIntervalStep = 20
-                chartIntervalStart = 20
-                chartIntervalEnd = 80
-                chartLabelYCount = 11
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(μg/m³)"
-            }
-        }
     }
 
     // 20171128 Added by Raymond
-//    private fun configChartView() {
-//        val xAxis: XAxis = chart_line.xAxis
-//        val leftAxis: YAxis = chart_line.axisLeft
-//        val rightAxis: YAxis = chart_line.axisRight
-//
-//        chart_line.isScaleXEnabled = false
-//        chart_line.isScaleYEnabled = false
-//        leftAxis.setLabelCount(chartLabelYCount, true)
-//        leftAxis.setAxisMaxValue(chartMax)  // the axis maximum is 1500
-//        leftAxis.setAxisMinValue(chartMin) // start at zero
-//        leftAxis.setDrawLabels(false) // no axis labels
-//        leftAxis.setDrawAxisLine(false) // no axis line
-//        leftAxis.setDrawGridLines(true) // no grid lines
-//        leftAxis.gridColor = Color.WHITE
-//
-//        xAxis.setDrawGridLines(false)
-//
-//        xAxis.position = XAxis.XAxisPosition.BOTTOM
-//        val nums = ArrayList<Float>()
-//
-//        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep) {
-//            nums.add(i.toFloat())
-//        }
-//        chart_line.legend.isEnabled = false
-//        chart_line.yChartInterval = nums
-//        chart_line.setDrawValueAboveBar(false)
-//        rightAxis.isEnabled = false
-//        chart_line.setDescription("")// clear default string
-//    }
+    private fun configChartView() {
+        val xAxis: XAxis = chart_line.xAxis
+        val leftAxis: YAxis = chart_line.axisLeft
+        val rightAxis: YAxis = chart_line.axisRight
+
+        chart_line.isScaleXEnabled = false
+        chart_line.isScaleYEnabled = false
+        leftAxis.setLabelCount(chartLabelYCount, true)
+        leftAxis.setAxisMaxValue(chartMax)  // the axis maximum is 1500
+        leftAxis.setAxisMinValue(chartMin) // start at zero
+        leftAxis.setDrawLabels(false) // no axis labels
+        leftAxis.setDrawAxisLine(false) // no axis line
+        leftAxis.setDrawGridLines(true) // no grid lines
+        leftAxis.gridColor = Color.WHITE
+
+        xAxis.setDrawGridLines(false)
+
+        xAxis.position = XAxis.XAxisPosition.BOTTOM
+        val nums = ArrayList<Float>()
+
+        for (i in chartIntervalStart..chartIntervalEnd step chartIntervalStep) {
+            nums.add(i.toFloat())
+        }
+        chart_line.legend.isEnabled = false
+        chart_line.yChartInterval = nums
+        chart_line.setDrawValueAboveBar(false)
+        rightAxis.isEnabled = false
+        chart_line.setDescription("")// clear default string
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
 
@@ -234,7 +182,24 @@ class ChartFragment : Fragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-
+        val myJsonFile=GetJson()
+        val jsonArray = JSONArray(myJsonFile)
+        for (i in 0..(jsonArray.length() - 1)) {
+            val item = jsonArray.getJSONObject(i)
+            val define = item.getInt("define")
+            if (useFor == define)
+            {
+                chartLabel = item.getString("chartLabel")
+                chartMin = item.getDouble("chartMin").toFloat()
+                chartMax = item.getDouble("chartMax").toFloat()
+                chartIntervalStep = item.getInt("chartIntervalStep")
+                chartIntervalStart = item.getInt("chartIntervalStart")
+                chartIntervalEnd = item.getInt("chartIntervalEnd")
+                chartLabelYCount = item.getInt("chartLabelYCount")
+                chartIsShowMinTextView = item.getBoolean("chartIsShowMinTextView")
+                chartLabelUnit = item.getString("chartLabelUnit")
+            }
+        }
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             useFor = savedInstanceState.getInt("useFor")
@@ -251,7 +216,7 @@ class ChartFragment : Fragment() {
         } else {
             // Probably initialize members with default values for a new instance
         }
-        chart_line.configBar(useFor)
+
         for ((j, i) in (chartMin.toInt()..chartMax.toInt() step chartIntervalStep).withIndex()) {
             val textView = TextView(this.context)
             textView.width = 200
@@ -440,7 +405,7 @@ class ChartFragment : Fragment() {
             }
         }
 
-    //    configChartView()
+        configChartView()
         //chart_line.setOnChartValueSelectedListener(this)
     }
 
@@ -584,7 +549,7 @@ class ChartFragment : Fragment() {
                     Log.d("drawChart" + useFor.toString(), calObject.toString())
                 }
                 getRealmDay()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
                 //chart_line.setVisibleXRangeMinimum(20.0f)
@@ -606,7 +571,7 @@ class ChartFragment : Fragment() {
             }
             1 -> {
                 getRealmWeek()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(7.0f, 7.0f)
@@ -615,7 +580,7 @@ class ChartFragment : Fragment() {
             }
             2 -> {
                 getRealmMonth()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
@@ -971,7 +936,7 @@ class ChartFragment : Fragment() {
 
     }
 
-    private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
+    private fun buildBarData(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
         dataSetA.setColors(intArray)
 
@@ -1292,5 +1257,23 @@ class ChartFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun GetJson():String{
+        val `is` = resources.openRawResource(R.raw.range_standard)
+        val writer = StringWriter()
+        val buffer = CharArray(1024)
+        try {
+            val reader = BufferedReader(InputStreamReader(`is`, "UTF-8"))
+            var n:Int
+            n = reader.read(buffer)
+            while (n != -1) {
+                writer.write(buffer, 0, n)
+                n = reader.read(buffer)
+            }
+        } finally {
+            `is`.close()
+        }
+        return writer.toString()
+        //val jsonString = writer.toString()
     }
 }

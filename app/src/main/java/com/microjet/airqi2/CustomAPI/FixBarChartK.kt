@@ -22,22 +22,22 @@ import java.io.StringWriter
 
 
 class FixBarChartK: BarChart {
-    private val DEFINE_FRAGMENT_TVOC = 1
-    private val DEFINE_FRAGMENT_ECO2 = 2
-    private val DEFINE_FRAGMENT_TEMPERATURE = 3
-    private val DEFINE_FRAGMENT_HUMIDITY = 4
-    private val DEFINE_FRAGMENT_PM25 = 5
+//  private val DEFINE_FRAGMENT_TVOC = 1
+//  private val DEFINE_FRAGMENT_ECO2 = 2
+//  private val DEFINE_FRAGMENT_TEMPERATURE = 3
+//  private val DEFINE_FRAGMENT_HUMIDITY = 4
+//  private val DEFINE_FRAGMENT_PM25 = 5
 
-    private var define = 0
-    private var chartIntervalStep = 0
-    private var chartMin :Double= 0.0
-    private var chartMax :Double= 0.0
-    private var chartIntervalStart = 20
-    private var chartIntervalEnd = 20
-    private var chartLabelYCount = 6
-    private var chartIsShowMinTextView = false
-    private var chartLabelUnit = ""
-    private var chartLabel: String = ""
+//  private var define = 0
+//  private var chartIntervalStep = 0
+//  private var chartMin :Double= 0.0
+//  private var chartMax :Double= 0.0
+//  private var chartIntervalStart = 20
+//  private var chartIntervalEnd = 20
+//  private var chartLabelYCount = 6
+//  private var chartIsShowMinTextView = false
+//  private var chartLabelUnit = ""
+//  private var chartLabel: String = ""
 
     internal var downPoint = PointF()
 
@@ -63,7 +63,7 @@ class FixBarChartK: BarChart {
         }
         return super.onTouchEvent(evt)
     }
-
+/*
     fun configBar(input:Int) {
         val myJsonFile=GetJson()
         val jsonArray = JSONArray(myJsonFile)
@@ -135,4 +135,5 @@ class FixBarChartK: BarChart {
         }
         return lineRectFArray
     }
+    */
 }
