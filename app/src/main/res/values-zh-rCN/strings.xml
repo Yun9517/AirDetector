@@ -446,6 +446,7 @@
     <string name="text_open">开启</string>
     <string name="text_close">取消</string>
     <string name="text_Enable3GDialog">开启选项将会透过手机网络自动上传数据，关闭选项仅会在连接Wi-Fi时上传数据</string>
+    <string name="text_UploadDialog_Title">您尚未开启云端同步功能</string>
     <string name="text_UploadDialog">开启云端同步功能可实时将侦测数据上传至云端</string>
     <string name="text_CloseUploadDialog">数据将不会上传至云端，如需开启此功能，请至设定页面</string>
     <string name="text_gotIt">我知道了</string>

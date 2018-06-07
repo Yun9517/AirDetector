@@ -309,7 +309,7 @@ class AccountManagementActivity : AppCompatActivity() {
     // 2018/06/07 enable data upload dialog & use share preference
     private fun showEnableUploadDialog() {
         val Dialog = android.app.AlertDialog.Builder(this).create()
-        Dialog.setTitle("")
+        Dialog.setTitle(getString(R.string.text_UploadDialog_Title))
         Dialog.setMessage(getString(R.string.text_UploadDialog))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
