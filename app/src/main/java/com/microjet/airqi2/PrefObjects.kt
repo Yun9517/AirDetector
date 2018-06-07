@@ -12,12 +12,12 @@ class PrefObjects(context: Context) {
     private val share = context.getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
 
     // ****** 2018/04/17 Identify the App is first time initial or not ************//
-    fun setIsFirstUsed() {
-        share.edit().putBoolean(SavePreferences.SETTING_IS_FIRST_USED, false).apply()
+    fun setSharePreferenceNotShowTour(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_FIRST_USED, value).apply()
     }
 
-    fun getIsFirstUsed(): Boolean {
-        return share.getBoolean(SavePreferences.SETTING_IS_FIRST_USED, true)
+    fun getSharePreferenceNotShowTour(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_FIRST_USED, false)
     }
 
     // 通用

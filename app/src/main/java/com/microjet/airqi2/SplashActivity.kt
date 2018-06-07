@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.view.View
-import kotlinx.android.synthetic.main.activity_splash.*
 import android.content.Intent
 import android.view.WindowManager
 
@@ -38,7 +37,7 @@ class SplashActivity : AppCompatActivity() {
         {
             // This method will be executed once the timer is over
             // Start your app main activity
-            if (myPref.getIsFirstUsed()) {
+            if (!myPref.getSharePreferenceNotShowTour()) {
                 val i = Intent(this@SplashActivity, TourActivity::class.java) //放你想跳過去的頁面
                 startActivity(i)
                 finish()

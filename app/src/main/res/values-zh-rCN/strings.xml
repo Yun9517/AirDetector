@@ -457,4 +457,5 @@
     <string name="text_Title_Manifest_account_setting">ADDWII 账号设定</string>
     <string name="text_Title_Manifest_general_setting">ADDWII 一般设定</string>
     <string name="text_export_success_msg">已将数据导出至存储卡</string>
+    <string name="text_not_show">不再显示</string>
 </resources>

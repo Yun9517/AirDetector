@@ -460,4 +460,5 @@
     <string name="text_Title_Manifest_account_setting">ADDWII 帳號設定</string>
     <string name="text_Title_Manifest_general_setting">ADDWII 一般設定</string>
     <string name="text_export_success_msg">已將資料匯出至記憶卡</string>
+    <string name="text_not_show">不再顯示</string>
 </resources>

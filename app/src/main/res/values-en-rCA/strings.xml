@@ -355,4 +355,5 @@
     <string name="text_Title_Manifest_account_setting">ADDWII Account Setting</string>
     <string name="text_Title_Manifest_general_setting">ADDWII General Setting</string>
     <string name="text_export_success_msg">Exported data to your storage card.</string>
+    <string name="text_not_show">Do not show again</string>
 </resources>

@@ -1,96 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="fill_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
     <ImageSwitcher
         android:id="@+id/imgSwitcher"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1">
-    </ImageSwitcher>
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_weight="1"
+        app:layout_constraintBottom_toTopOf="@+id/point_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/skipTour"
-        android:background="@drawable/style_black_button"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="40dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="0dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="4dp"
-        android:text="@string/getStarted"
+        android:layout_gravity="center"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/style_black_button"
+        android:text="X"
         android:textColor="@color/AboutHyperLink"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        app:layout_constraintDimensionRatio="w,1:1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Switch
+        android:id="@+id/swNotShow"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/text_not_show"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/point_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
         android:id="@+id/point_layout"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@android:color/black"
         android:gravity="center"
         android:orientation="horizontal"
         android:paddingBottom="15dp"
-        android:paddingTop="15dp">
+        android:paddingTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_focused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
             android:layout_gravity="center"
-            android:layout_marginStart="5dp"
             android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
             app:srcCompat="@drawable/page_indicator_unfocused" />
     </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
