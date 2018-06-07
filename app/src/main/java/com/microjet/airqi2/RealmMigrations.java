@@ -38,5 +38,10 @@ public class RealmMigrations implements RealmMigration {
             userSchema.transform(obj -> obj.set("MACAddress", MACADDR));
             oldVersion++;
         }
+        if (oldVersion < 3L) {
+            RealmObjectSchema userSchema = schema.get("AsmDataModel");
+            userSchema.addField("PM10Value", Integer.class);
+            oldVersion++;
+        }
     }
 }

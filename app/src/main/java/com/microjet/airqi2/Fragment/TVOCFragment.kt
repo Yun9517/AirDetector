@@ -633,7 +633,7 @@ class TVOCFragment : Fragment() {
         //}
         result_Today!!.text = aveTvoc.toInt().toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
-
+        realm.close()
     }
 
     @SuppressLint("SetTextI18n")
@@ -679,6 +679,7 @@ class TVOCFragment : Fragment() {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
+            realm.close()
         }
 ///*
 //        //******************************************************************************************************************************************************************************************************************************************
@@ -767,6 +768,7 @@ class TVOCFragment : Fragment() {
                 arrTvoc3.add("0")
                 arrTime3.add((sqlStartDate - calObject.timeZone.rawOffset).toString())
             }
+            realm.close()
         }
 
     }

@@ -902,7 +902,7 @@ object BLECallingTranslate {
                         0//is PM25
                         -> {
                             Log.e("ParceDeviceInfo", "String Index: $stringHex")
-                            returnValue[TvocNoseData.PM25] = stringHex
+                            returnValue[TvocNoseData.ISPM25] = stringHex
                             stringHex = ""
                         }
                         4//Reserved
@@ -1474,6 +1474,125 @@ object BLECallingTranslate {
         return returnValue
     }
 
+    fun getAllSensorD0KeyValue(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("B0RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1 -> {//PM10
+                            returnValue.put(TvocNoseData.D0PM10, value.toString())
+                            value = 0
+                        }
+                        15 -> {
+                            returnValue.put(TvocNoseData.D0TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++//Point to Cmd's CheckSum;
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun parserGetHistorySampleItemKeyValueD5(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1 -> {//PM10
+                            returnValue.put(TvocNoseData.D5INDEX, value.toString())
+                            value = 0
+                        }
+                        3 -> {
+                            returnValue.put(TvocNoseData.D5PM10, value.toString())
+                            value = 0
+                        }
+                        15 -> {
+                            returnValue.put(TvocNoseData.D5TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
+
+    fun getHistorySampleD5(inPut: Int): ByteArray {
+        var input = inPut
+        val b = ByteArray(4)
+        if (input > 65535)
+            input = 65535
+        b[0] = (input and -0x1000000).ushr(24).toByte()//big
+        b[1] = (input and 0x00ff0000).ushr(16).toByte()
+        b[2] = (input and 0x0000ff00).ushr(8).toByte()
+        b[3] = (input and 0x000000ff).toByte()//little
+        val valueHandler = byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySampleD5, b[2], b[3])
+        val checkSum = getCheckSum(valueHandler)
+        return byteArrayOf(BLECommand.ReadCmd, BLECommand.WriteTwoBytesLens, BLECommand.GetHistorySampleD5, b[2], b[3], checkSum)
+    }
+
+    fun ParserGetAutoSendDataKeyValueD6(bytes: ByteArray): HashMap<String, String> {
+        val returnValue = HashMap<String, String>()
+        var i = 0
+        var value = 0
+        while (i < bytes.size) {
+            if (bytes[i] == BLECommand.StopCmd) {
+                i++//point to DataLength
+                val dataLength = bytes[i].toInt()//取得DataLength的Int數值
+                //Log.d("RawDataLength",dataLength.toString())
+                i++//point to CMD;
+                for (j in 0 until dataLength - 2) { // -2因為Data長度13要忽略StopCmd和ByteLength
+                    i++//Point to DataValue
+                    value = value.shl(8)
+                    value += bytes[i].toPositiveInt()//(bytes[i] and 0xFF.toByte())
+                    when (j) {
+                        1 -> {//PM10
+                            returnValue.put(TvocNoseData.D6PM10, value.toString())
+                            value = 0
+                        }
+                        15 -> { //D6Time
+                            returnValue.put(TvocNoseData.D6TIME, value.toString())
+                            value = 0
+                        }
+                        else -> {
+                        }
+                    }
+                }
+                i++
+            }
+            i++
+        }
+        return returnValue
+    }
 
     fun Byte.toPositiveInt() = toInt() and 0xFF
 }

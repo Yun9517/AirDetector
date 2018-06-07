@@ -21,7 +21,7 @@ object TvocNoseData {
     val B0BATT = "B0BATT"
     val B0PREH = "B0PREH"
     //B1 GetInfo
-    val PM25 = "PM25"
+    val ISPM25 = "PM25"
     val MAC = "MAC"
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
@@ -74,8 +74,8 @@ object TvocNoseData {
     val C5LATI = "C5LATI"
     val C5LONGI = "C5LONGI"
     //Location
-    var longi: Float? = 255f
-    var lati: Float? = 255f
+    var longi: Float = 255f
+    var lati: Float = 255f
     //C6
     val C6II = "C6Item_Index"
     val C6TEMP = "C6Temperature"
@@ -87,6 +87,16 @@ object TvocNoseData {
     val C6MACA = "C6MAC"
     val C6LATI = "C6LATI"
     val C6LONGI = "C6LONGI"
+    //D0
+    val D0PM10 = "D0PM10"
+    val D0TIME = "D0TIME"
+    //D5
+    val D5INDEX = "D5PM10INDEX"
+    val D5PM10 = "D5PM10"
+    val D5TIME = "D5TIME"
+    //D6
+    val D6PM10 = "D6PM10"
+    val D6TIME = "D6TIME"
 
 
     var spinnerPosition: Int = 0
@@ -96,18 +106,24 @@ object TvocNoseData {
     var arrEco2Day: ArrayList<String> = arrayListOf()
     var arrTempDay: ArrayList<String> = arrayListOf()
     var arrHumiDay: ArrayList<String> = arrayListOf()
+    var arrPm25Day: ArrayList<String> = arrayListOf()
+    var arrPm10Day: ArrayList<String> = arrayListOf()
     var arrTimeDay: ArrayList<String> = arrayListOf()
 
     var arrTvocWeek: ArrayList<String> = arrayListOf()
     var arrEco2Week: ArrayList<String> = arrayListOf()
     var arrTempWeek: ArrayList<String> = arrayListOf()
     var arrHumiWeek: ArrayList<String> = arrayListOf()
+    var arrPm25Week: ArrayList<String> = arrayListOf()
+    var arrPm10Week: ArrayList<String> = arrayListOf()
     var arrTimeWeek: ArrayList<String> = arrayListOf()
 
     var arrTvocMonth: ArrayList<String> = arrayListOf()
     var arrEco2Month: ArrayList<String> = arrayListOf()
     var arrTempMonth: ArrayList<String> = arrayListOf()
     var arrHumiMonth: ArrayList<String> = arrayListOf()
+    var arrPm25Month: ArrayList<String> = arrayListOf()
+    var arrPm10Month: ArrayList<String> = arrayListOf()
     var arrTimeMonth: ArrayList<String> = arrayListOf()
 
     // 20180518 setting by 白~~~~~~~~~~~~~~~~~~~~~告
@@ -115,49 +131,39 @@ object TvocNoseData {
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
-
     var download_AsynTask: AsyncTask<String, Int, String>? = null
-
-    //val arrTvoc3: ArrayList<String> = arrayListOf()
-    //val arrTime3: ArrayList<String> = arrayListOf()
-    val arrChartLabels: ArrayList<String> = arrayListOf()
-    val arrTvLabeles = ArrayList<String>()
 
     fun getRealmDay() {
         arrTvocDay.clear()
         arrEco2Day.clear()
         arrTempDay.clear()
         arrHumiDay.clear()
-        arrTimeDay.clear()
+        arrPm25Day.clear()
+        arrPm10Day.clear()
 
-        //現在時間實體毫秒
-        //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d("TVOCbtncallRealm", calObject.get(Calendar.DAY_OF_MONTH).toString())
+        arrTimeDay.clear()
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24)// - calObject.timeZone.rawOffset
-        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
-        //設定時間區間
-        val endTime = endDayLast
-        val startTime = endDay
-        //一天共有2880筆
+        //一天共有1440筆
         val dataCount = (endTime - startTime) / (60 * 1000)
-        Log.d("TimePeriod", (dataCount.toString() + "thirtySecondsCount"))
+        Log.d("TimePeriod", (dataCount.toString() + "Count"))
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val result1 = query.findAll()
         Log.d("getRealmDay", result1.size.toString())
-        var sumTvoc = 0
-        //先生出2880筆值為0的陣列
+        //先生出1440筆值為0的陣列
         for (y in 0..dataCount) {
             arrTvocDay.add("0")
             arrEco2Day.add("0")
             arrTempDay.add("0")
             arrHumiDay.add("0")
-            arrTimeDay.add(((startTime + y * 60 * 1000) - calObject.timeZone.rawOffset).toString())
+            arrPm25Day.add("0")
+            arrPm10Day.add("0")
+            arrTimeDay.add((startTime + y * 60 * 1000).toString())
         }
-        var aveTvoc = 0
         //關鍵!!利用取出的資料減掉抬頭時間除以30秒算出index換掉TVOC的值
         if (result1.size != 0) {
             result1.forEachIndexed { index, asmDataModel ->
@@ -166,51 +172,10 @@ object TvocNoseData {
                 arrEco2Day[count] = asmDataModel.ecO2Value.toString()
                 arrTempDay[count] = (asmDataModel.tempValue.toFloat() + 10f).toString()
                 arrHumiDay[count] = asmDataModel.humiValue.toString()
-                //20180122
-                sumTvoc += arrTvocDay[count].toInt()
-                //Log.v("hilightCount:", count.toString())
+                arrPm25Day[count] = asmDataModel.pM25Value.toString()
+                arrPm10Day[count] = asmDataModel.pM10Value.toString()
             }
-            Log.d("getRealmDay", result1.last().toString())
-            //20180122
-            aveTvoc = (sumTvoc / result1.size)
         }
-
-        //前一天的０點起
-        val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((1).toLong())
-        // Show Date
-        val dateFormat = SimpleDateFormat("yyyy-MM-dd")
-
-
-        //show_Today!!.text = dateFormat.format(startTime)
-        //show_Yesterday!!.text =  dateFormat.format(startTime - TimeUnit.DAYS.toMillis((1).toLong()))
-
-        //第一筆為日 00:00
-        val sqlStartDate = sqlWeekBase//+TimeUnit.DAYS.toMillis()
-        //結束點為日 23:59
-        val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        //val realm= Realm.getDefaultInstance()
-        val query1 = realm.where(AsmDataModel::class.java)
-        //20180122
-        var AVGTvoc3: Float = 0F
-        Log.d("getRealmWeek", sqlStartDate.toString())
-        Log.d("getRealmWeek", sqlEndDate.toString())
-        query1.between("Created_time", sqlStartDate, sqlEndDate)
-        val result2 = query1.findAll()
-        Log.d("getRealmWeek", result2.size.toString())
-        if (result2.size != 0) {
-            var sumTvocYesterday = 0F
-            for (i in result2) {
-                sumTvocYesterday += i.tvocValue.toInt()
-            }
-            AVGTvoc3 = (sumTvocYesterday / result2.size)
-        } else {
-            AVGTvoc3 = 0F
-        }
-
-        //}
-        //result_Today!!.text = aveTvoc.toInt().toString() + " ppb"        //arrTvoc3[1].toString()+" ppb"
-        //result_Yesterday!!.text = AVGTvoc3.toInt().toString()+ " ppb"
-
     }
 
     fun getRealmWeek() {

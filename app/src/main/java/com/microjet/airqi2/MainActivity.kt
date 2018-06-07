@@ -31,6 +31,7 @@ import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.messaging.FirebaseMessaging
@@ -48,6 +49,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
+import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
 import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
 import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
@@ -77,6 +79,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val DEFINE_FRAGMENT_ECO2 = 3
     private val DEFINE_FRAGMENT_TEMPERATURE = 4
     private val DEFINE_FRAGMENT_HUMIDITY = 5
+    private val DEFINE_FRAGMENT_PM10 = 6
 
     // Fragment 容器
     private val mFragmentList = ArrayList<Fragment>()
@@ -199,6 +202,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mywarningclass:WarringClass?=null
 
     private lateinit var myPref: PrefObjects
+    private var c6d6map = HashMap<String, String>()
+    private var lati = 255f  //TvocNoseData.lati
+    private var longi = 255f //TvocNoseData.longi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -488,7 +494,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
 
     private fun uiFindViewById() {
-        viewPager.offscreenPageLimit = 5
+        viewPager.offscreenPageLimit = 6
         naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
         lightIcon?.setImageResource(R.drawable.app_android_icon_light)
     }
@@ -509,12 +515,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mEco2Fg = ChartFragment()
         val mTempFg = ChartFragment()
         val mPM25Fg = ChartFragment()
+        val mPM10Fg = Pm10Fragment()
 
         mTvocFg.configFragment(DEFINE_FRAGMENT_TVOC)
         mEco2Fg.configFragment(DEFINE_FRAGMENT_ECO2)
         mTempFg.configFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.configFragment(DEFINE_FRAGMENT_HUMIDITY)
         mPM25Fg.configFragment(DEFINE_FRAGMENT_PM25)
+        mPM10Fg.configFragment(DEFINE_FRAGMENT_PM10)
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
@@ -522,6 +530,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
         mFragmentList.add(mPM25Fg)
+        mFragmentList.add(mPM10Fg)
 
         mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 
@@ -1315,10 +1324,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xB1.toByte() -> {
                         val hashMap = BLECallingTranslate.parserGetInfoKeyValue(txValue)
-                        MyApplication.putDeviceVersion(hashMap["FW"].toString())
-                        MyApplication.putDeviceSerial(hashMap["FWSerial"].toString())
-                        MyApplication.putDeviceType(hashMap["DEV"].toString())
+                        MyApplication.putDevicePMType(hashMap[TvocNoseData.ISPM25].toString())
+                        MyApplication.putDeviceVersion(hashMap[TvocNoseData.FW].toString())
+                        MyApplication.putDeviceSerial(hashMap[TvocNoseData.FWSerial].toString())
+                        MyApplication.putDeviceType(hashMap[TvocNoseData.DEVICE].toString())
                         Log.d("PARSERB1", hashMap.toString())
+                        showPm10OrNot()
                     }
                     0xB2.toByte() -> {
                         val hashMap = BLECallingTranslate.ParserGetSampleRateKeyValue(txValue)
@@ -1384,17 +1395,36 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
                     }
                     0xC5.toByte() -> {
-                        putC5ToObject(txValue)
+                        val pmType = MyApplication.getDevicePMType().toInt()
+                        if (pmType < 2) {
+                            putC5ToObject(txValue)
+                        } else { // 當Type有PM10跑另一個多型
+                            putC5ToObject(txValue, pmType)
+                        }
                     }
                     0xC6.toByte() -> {
                         if (isFirstC6) {
                             isFirstC6 = false
+                            setPublicLatiLongi() //將經緯度設為全域
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
-                        saveToRealmC6(hashMap)
+                        val pmType = MyApplication.getDevicePMType().toInt()
+                        if (pmType < 2) {
+                            saveToRealmC6(hashMap)
+                        } else {
+                            c6d6map = hashMap
+                        }
+
                         mywarningclass?.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                        // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
+                    }
+                    0xD5.toByte() -> {
+                        putD5ToObject(txValue)
+                    }
+                    0xD6.toByte() -> {
+                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueD6(txValue)
+                        saveToRealmD6(c6d6map,hashMap)
                     }
                 }
             } else {
@@ -1536,12 +1566,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
-
+        val realm = Realm.getDefaultInstance()
+        val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
+        if (latiLongiObj != null) {
+            lati = latiLongiObj.latitude
+            longi = latiLongiObj.longitude
+        }
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
-        hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
-        hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
+        hashMap.put(TvocNoseData.C5LATI, lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
+        realm.close()
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
@@ -1601,6 +1637,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
                                     asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
                                     asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
+                                    asmData.pM10Value = arrIndexMap[y][TvocNoseData.D5PM10]?.toInt()
                                     asmData.created_time = time //(arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
                                     asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
                                     asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()
@@ -1793,6 +1830,122 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
         }
+    }
+
+
+    private fun showPm10OrNot() {
+        try {
+            val pmType = MyApplication.getDevicePMType().toInt()
+            if (pmType < 2) {
+                mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.show_PM10)?.visibility = View.GONE
+            }
+            Log.d("EREWRAWR", viewPager.adapter?.count.toString())
+        } catch (e: Exception) {
+            Log.d(TAG,e.toString())
+        }
+    }
+
+    //多型代入PM10TYPE,一筆C5一筆D5
+    private fun putC5ToObject(tx: ByteArray, pm10type: Int) {
+        Log.d(TAG,"putC5ToObject---$pm10type")
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
+            if (!lock) {
+                indexMap.put("UTCBlockHead", hashMap[TvocNoseData.C5II]!!.toInt())
+                lock = true
+            }
+        }
+        if (hashMap[TvocNoseData.C5TIME]!!.toLong() == 0L) {
+            if (lock) {
+                indexMap["UTCBlockEnd"] = hashMap[TvocNoseData.C5II]!!.toInt()
+                val indexCopy = indexMap.clone() as HashMap<String, Int>
+                arr1.add(indexCopy)
+                indexMap.clear()
+                lock = false
+            }
+        }
+        val realm = Realm.getDefaultInstance()
+        val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
+        if (latiLongiObj != null) {
+            lati = latiLongiObj.latitude
+            longi = latiLongiObj.longitude
+        }
+        mDeviceAddress = myPref.getSharePreferenceMAC()
+        hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
+        hashMap.put(TvocNoseData.C5LATI, lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, longi.toString())
+        arrIndexMap.add(hashMap)
+        realm.close()
+
+        var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
+        mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))
+        Log.d("C5ToObjectINDEX", nowItem.toString())
+    }
+
+    private fun putD5ToObject(tx: ByteArray) {
+        val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueD5(tx)
+        //原來有INDEX!!
+        var d5Index = hashMap[TvocNoseData.D5INDEX]!!.toInt()
+        val d5PM10 = hashMap[TvocNoseData.D5PM10]
+        val d5TIME = hashMap[TvocNoseData.D5TIME]
+        val arrIndex = d5Index - 1
+        if (arrIndexMap[arrIndex][TvocNoseData.C5TIME] == d5TIME) { //有點沒必要的判斷，不過還是加上去了，聊勝於無
+            arrIndexMap[arrIndex][TvocNoseData.D5PM10] = d5PM10.toString()
+            Log.d("D5PM10", "$d5Index + $d5PM10")
+        } else {
+            Log.e(TAG, "putD5ToObject時間不準就慘啦")
+        }
+        d5Index++
+        if (d5Index > maxItem) { //|| nowItem == countForItem) {
+            if (lock) {
+                indexMap["UTCBlockEnd"] = maxItem
+                val indexCopy = indexMap.clone() as HashMap<String, Int>
+                arr1.add(indexCopy)
+                indexMap.clear()
+                lock = false
+            }
+            saveToRealmC5()
+        } else {
+            val mainIntent = Intent(BroadcastIntents.PRIMARY)
+            mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_LOADING_DATA)
+            mainIntent.putExtra(BroadcastActions.INTENT_KEY_LOADING_DATA, Integer.toString(d5Index))
+            sendBroadcast(mainIntent)
+            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(d5Index))
+        }
+        Log.d("C5D5ARR", arr1.toString())
+    }
+
+    private fun saveToRealmD6(hash1: HashMap<String,String>, hash2: HashMap<String, String>) {
+        var c6Time = if (hash1[TvocNoseData.C6TIME] != null) hash1[TvocNoseData.C6TIME]!!.toLong() * 1000 else 0L
+        var d6Time = if (hash2[TvocNoseData.D6TIME] != null) hash2[TvocNoseData.D6TIME]!!.toLong() * 1000 else 0L
+        if (c6Time == d6Time && d6Time != 0L) {
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java).equalTo("Created_time", c6Time).findAll()
+            if (query.isEmpty() && d6Time > 1514736000000) {
+                realm.executeTransaction { r ->
+                    val asmData = r.createObject(AsmDataModel::class.java, TvocNoseData.getMaxID())
+                    asmData.tempValue = hash1[TvocNoseData.C6TEMP].toString()
+                    asmData.humiValue = hash1[TvocNoseData.C6HUMI].toString()
+                    asmData.tvocValue = hash1[TvocNoseData.C6TVOC].toString()
+                    asmData.ecO2Value = hash1[TvocNoseData.C6ECO2].toString()
+                    asmData.pM25Value = hash1[TvocNoseData.C6PM25].toString()
+                    asmData.created_time = hash1[TvocNoseData.C6TIME]!!.toLong() * 1000//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
+                    asmData.pM10Value = hash2[TvocNoseData.D6PM10]?.toInt()
+                    asmData.macAddress = mDeviceAddress
+                    asmData.latitude = TvocNoseData.lati
+                    asmData.longitude = TvocNoseData.longi
+                    Log.d(TAG, "SUCCESSD6" + asmData.toString())
+                }
+            }
+            realm.close()
+            uploadData()
+        }
+        c6d6map.clear()
+    }
+
+    private fun setPublicLatiLongi() {
+        lati = TvocNoseData.lati
+        longi = TvocNoseData.longi
     }
 }
 

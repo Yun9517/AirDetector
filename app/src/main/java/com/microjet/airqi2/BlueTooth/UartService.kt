@@ -54,8 +54,8 @@ class UartService : Service() {
     //private val bleEventObj = BleEvent()
 
     // 20180328 Add Location Request to Service
-    private var longi: Float? = 255f
-    private var lati: Float? = 255f
+    private var longi: Float = 255f
+    private var lati: Float = 255f
 
     private lateinit var locationRequest: LocationRequest
 

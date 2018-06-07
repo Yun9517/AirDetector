@@ -46,7 +46,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
         CO2(700, 1000),
         Temp(18, 25),
         Humi(45, 65),
-        PM25(220, 660)
+        PM25(220, 660),
+        PM10(54, 125)
     }
 
     private var mContext: Context? = null
@@ -58,6 +59,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
     private var humiDataFloat = 0f
     private var co2DataFloat = 0f
     private var pm25DataFloat = 0f
+    private var pm10DataFloat = 0f
     private var preHeat = "0"
     //20180207
     private var isPumpOn = false
@@ -100,6 +102,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_Temp.setOnTouchListener(this)
         show_RH.setOnTouchListener(this)
         show_PM.setOnTouchListener(this)
+        show_PM10.setOnTouchListener(this)
 
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
@@ -175,6 +178,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     }
                     R.id.show_PM -> {
                         dataForState = DetectionData.PM25
+                    }
+                    R.id.show_PM10 -> {
+                        dataForState = DetectionData.PM10
                     }
                 }
                 pumpOnStatus(beforeState, dataForState)
@@ -298,6 +304,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
             DetectionData.PM25 -> {
                 inCircleBar.setMaxValues(1000f)
             }
+            DetectionData.PM10 -> {
+                inCircleBar.setMaxValues(500f)
+            }
         }
     }
 
@@ -316,6 +325,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
         tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
         tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
+        tvBtmPM10Value.text = pm10DataFloat.toInt().toString() + " μg/m³"
     }
 
     @SuppressLint("SetTextI18n")
@@ -634,6 +644,84 @@ class MainFragment : Fragment(), View.OnTouchListener {
         }
     }
 
+    private fun pm10StatusTextShow(currentValue: Float) {
+        when (currentValue) {
+            in 0..15 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Green)
+                inCircleState.text = getString(R.string.label_pm25_Green)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_01)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
+            }
+
+            in 16..34 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Yellow)
+                inCircleState.text = getString(R.string.label_pm25_Yellow)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_02)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 35..54 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Orange)
+                inCircleState.text = getString(R.string.label_pm25_Orange)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_03)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
+            }
+            in 55..150 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Red)
+                inCircleState.text = getString(R.string.label_pm25_Red)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_04)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            in 151..250 -> {
+                tvNotify?.text = getString(R.string.message_pm25_Purple)
+                inCircleState.text = getString(R.string.label_pm25_Purple)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_05)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+            else -> {
+                tvNotify?.text = getString(R.string.message_pm25_Brown)
+                inCircleState.text = getString(R.string.label_pm25_Brown)
+                inCircleValue.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
+                inCircleState.setTextColor(
+                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
+                //20180131
+                imgLight.setImageResource(R.drawable.face_icon_06)
+                //20180301
+                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
+            }
+        }
+    }
+
     private fun makeMainFragmentUpdateIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.ACTION_GATT_DISCONNECTED)
@@ -744,6 +832,24 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         val temp = pm25DataFloat.toInt().toString() + " μg/m³"
                         textSpannable(temp)
                     }
+                    DetectionData.PM10 -> {
+                        inCircleTitle.text = getString(R.string.text_label_pm10)
+                        setThresholdValue(dataForState)
+                        setBarMaxValue(dataForState)
+                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        //數值不等比顯示
+                        when (pm10DataFloat) {
+                            //in 0..700 -> inCircleBar.setCurrentValues(pm10DataFloat)
+                            //in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
+                            //in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)
+                            //in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 590)
+                            //else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)
+                        }
+                        inCircleBar.setCurrentValues(pm10DataFloat)
+                        pm10StatusTextShow(pm10DataFloat)
+                        val temp = pm10DataFloat.toInt().toString() + " μg/m³"
+                        textSpannable(temp)
+                    }
                 }
 
                 setBtmCurrentValue()
@@ -759,6 +865,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvBtmCO2Value?.text = "---"
                 tvBtmTEMPValue.text = "---"/*currentValue[0] + " ℃"*/
                 tvBtmHUMIValue.text = "---"/*currentValue[1] + " %"*/
+                tvBtmPM10Value.text = "---"
                 tvNotify?.text = " "
                 tvLastDetectTime.text = " "
                 inCircleBar.setCurrentValues(0f)
@@ -849,6 +956,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     co2DataFloat = hashMap[TvocNoseData.C0ECO2]!!.toFloat()
                     pm25DataFloat = hashMap[TvocNoseData.C0PM25]!!.toFloat()
                     preHeat = (hashMap[TvocNoseData.C0PREH]!!)
+                }
+                0xD0.toByte() -> {
+                    val hashMap = BLECallingTranslate.getAllSensorD0KeyValue(txValue)
+                    pm10DataFloat = hashMap[TvocNoseData.D0PM10]!!.toFloat()
+                    Log.d("0xD0", hashMap.toString())
                 }
             }
         }
