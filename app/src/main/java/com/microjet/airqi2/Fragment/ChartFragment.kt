@@ -38,6 +38,10 @@ import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
+import org.json.JSONArray
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.io.StringWriter
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -50,10 +54,11 @@ import kotlin.collections.ArrayList
 
 class ChartFragment : Fragment() {
     private val DEFINE_FRAGMENT_TVOC = 1
-    private val DEFINE_FRAGMENT_ECO2 = 2
-    private val DEFINE_FRAGMENT_TEMPERATURE = 3
-    private val DEFINE_FRAGMENT_HUMIDITY = 4
-    private val DEFINE_FRAGMENT_PM25 = 5
+    private val DEFINE_FRAGMENT_PM25 = 2
+    private val DEFINE_FRAGMENT_ECO2 = 3
+    private val DEFINE_FRAGMENT_TEMPERATURE = 4
+    private val DEFINE_FRAGMENT_HUMIDITY = 5
+
 
     private var mContext: Context? = null
 
@@ -120,69 +125,12 @@ class ChartFragment : Fragment() {
             labelTextViewArray[0].visibility = View.INVISIBLE
         }
 
-        //視Radio id畫圖
+        //視Radio id畫圖 放置完textView後將原本的繪圖清空
         chart_line.clear()
     }
 
     fun configFragment(input: Int) {
         useFor = input
-        when (input) {
-            DEFINE_FRAGMENT_TVOC -> {
-                chartLabel = "TVOC"
-                chartMin = 0.0f
-                chartMax = 1500.0f
-                chartIntervalStep = 500
-                chartIntervalStart = 500
-                chartIntervalEnd = 1000
-                chartLabelYCount = 16
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(ppb)"
-            }
-            DEFINE_FRAGMENT_ECO2 -> {
-                chartLabel = "ECO2"
-                chartMin = 0.0f
-                chartMax = 1500.0f
-                chartIntervalStep = 500
-                chartIntervalStart = 500
-                chartIntervalEnd = 1000
-                chartLabelYCount = 16
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(ppm)"
-            }
-            DEFINE_FRAGMENT_TEMPERATURE -> {
-                chartLabel = "Temp"
-                chartMin = 0.0f
-                chartMax = 60.0f
-                chartIntervalStep = 5
-                chartIntervalStart = 5
-                chartIntervalEnd = 55
-                chartLabelYCount = 13
-                chartIsShowMinTextView = true
-                chartLabelUnit = "(°C)"
-            }
-            DEFINE_FRAGMENT_HUMIDITY -> {
-                chartLabel = "Humi"
-                chartMin = 0.0f
-                chartMax = 100.0f
-                chartIntervalStep = 20
-                chartIntervalStart = 20
-                chartIntervalEnd = 80
-                chartLabelYCount = 11
-                chartIsShowMinTextView = false
-                chartLabelUnit = "( %)"
-            }
-            DEFINE_FRAGMENT_PM25 -> {
-                chartLabel = "PM2.5"
-                chartMin = 0.0f
-                chartMax = 100.0f
-                chartIntervalStep = 20
-                chartIntervalStart = 20
-                chartIntervalEnd = 80
-                chartLabelYCount = 11
-                chartIsShowMinTextView = false
-                chartLabelUnit = "(μg/m³)"
-            }
-        }
     }
 
     // 20171128 Added by Raymond
@@ -194,7 +142,7 @@ class ChartFragment : Fragment() {
         chart_line.isScaleXEnabled = false
         chart_line.isScaleYEnabled = false
         leftAxis.setLabelCount(chartLabelYCount, true)
-        leftAxis.setAxisMaxValue(chartMax) // the axis maximum is 1500
+        leftAxis.setAxisMaxValue(chartMax)  // the axis maximum is 1500
         leftAxis.setAxisMinValue(chartMin) // start at zero
         leftAxis.setDrawLabels(false) // no axis labels
         leftAxis.setDrawAxisLine(false) // no axis line
@@ -218,34 +166,52 @@ class ChartFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
 
-        outState?.putInt("useFor", useFor)
-        outState?.putInt("chartIntervalStep", chartIntervalStep)
-        outState?.putFloat("chartMin", chartMin)
-        outState?.putFloat("chartMax", chartMax)
-        outState?.putInt("chartIntervalStart", chartIntervalStart)
-        outState?.putInt("chartIntervalEnd", chartIntervalEnd)
-        outState?.putInt("chartLabelYCount", chartLabelYCount)
-        outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
-        outState?.putString("chartLabelUnit", chartLabelUnit)
-        outState?.putString("chartLabel", chartLabel)
+        outState.putInt("useFor", useFor)
+//        outState?.putInt("chartIntervalStep", chartIntervalStep)
+//        outState?.putFloat("chartMin", chartMin)
+//        outState?.putFloat("chartMax", chartMax)
+//        outState?.putInt("chartIntervalStart", chartIntervalStart)
+//        outState?.putInt("chartIntervalEnd", chartIntervalEnd)
+//        outState?.putInt("chartLabelYCount", chartLabelYCount)
+//        outState?.putBoolean("chartIsShowMinTextView", chartIsShowMinTextView)
+//        outState?.putString("chartLabelUnit", chartLabelUnit)
+//        outState?.putString("chartLabel", chartLabel)
         super.onSaveInstanceState(outState!!)
     }
 
     @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        val myJsonFile=GetJson()
+        val jsonArray = JSONArray(myJsonFile)
+        for (i in 0..(jsonArray.length() - 1)) {
+            val item = jsonArray.getJSONObject(i)
+            val define = item.getInt("define")
+            if (useFor == define)
+            {
+                chartLabel = item.getString("chartLabel")
+                chartMin = item.getDouble("chartMin").toFloat()
+                chartMax = item.getDouble("chartMax").toFloat()
+                chartIntervalStep = item.getInt("chartIntervalStep")
+                chartIntervalStart = item.getInt("chartIntervalStart")
+                chartIntervalEnd = item.getInt("chartIntervalEnd")
+                chartLabelYCount = item.getInt("chartLabelYCount")
+                chartIsShowMinTextView = item.getBoolean("chartIsShowMinTextView")
+                chartLabelUnit = item.getString("chartLabelUnit")
+            }
+        }
         if (savedInstanceState != null) {
             // Restore value of members from saved state
             useFor = savedInstanceState.getInt("useFor")
-            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
-            chartMin = savedInstanceState.getFloat("chartMin")
-            chartMax = savedInstanceState.getFloat("chartMax")
-            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
-            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
-            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
-            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
-            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
-            chartLabel = savedInstanceState.getString("chartLabel")
+//            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
+//            chartMin = savedInstanceState.getFloat("chartMin")
+//            chartMax = savedInstanceState.getFloat("chartMax")
+//            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
+//            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
+//            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
+//            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
+//            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
+//            chartLabel = savedInstanceState.getString("chartLabel")
 
         } else {
             // Probably initialize members with default values for a new instance
@@ -583,7 +549,7 @@ class ChartFragment : Fragment() {
                     Log.d("drawChart" + useFor.toString(), calObject.toString())
                 }
                 getRealmDay()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
                 //chart_line.setVisibleXRangeMinimum(20.0f)
@@ -605,7 +571,7 @@ class ChartFragment : Fragment() {
             }
             1 -> {
                 getRealmWeek()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(7.0f, 7.0f)
@@ -614,7 +580,7 @@ class ChartFragment : Fragment() {
             }
             2 -> {
                 getRealmMonth()
-                chart_line.data = getBarData3(arrData, arrTime, position)
+                chart_line.data = buildBarData(arrData, arrTime, position)
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
@@ -970,7 +936,7 @@ class ChartFragment : Fragment() {
 
     }
 
-    private fun getBarData3(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
+    private fun buildBarData(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
         val dataSetA = MyBarDataSet(getChartData3(inputValue), chartLabel)
         dataSetA.setColors(intArray)
 
@@ -1291,5 +1257,23 @@ class ChartFragment : Fragment() {
                 }
             }
         }
+    }
+    private fun GetJson():String{
+        val `is` = resources.openRawResource(R.raw.range_standard)
+        val writer = StringWriter()
+        val buffer = CharArray(1024)
+        try {
+            val reader = BufferedReader(InputStreamReader(`is`, "UTF-8"))
+            var n:Int
+            n = reader.read(buffer)
+            while (n != -1) {
+                writer.write(buffer, 0, n)
+                n = reader.read(buffer)
+            }
+        } finally {
+            `is`.close()
+        }
+        return writer.toString()
+        //val jsonString = writer.toString()
     }
 }

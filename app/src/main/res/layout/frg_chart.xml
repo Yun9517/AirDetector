@@ -286,13 +286,13 @@
 
         </RelativeLayout>
 
-        <com.microjet.airqi2.CustomAPI.FixBarChart
+        <com.microjet.airqi2.CustomAPI.FixBarChartK
             android:id="@+id/chart_line"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="10dp">
 
-        </com.microjet.airqi2.CustomAPI.FixBarChart>
+        </com.microjet.airqi2.CustomAPI.FixBarChartK>
     </LinearLayout>
 
     <LinearLayout
