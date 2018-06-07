@@ -924,9 +924,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             //添加到循环滚动数组里面去
             scrollViewsArr.add(vScrollivs)
         }
-            view?.post(Runnable {
-                upview1?.setViews(scrollViewsArr)
-            })
+        upview1?.setViews(scrollViewsArr)
     }
 
     fun setNewsPanelShow(enable: Boolean) {
@@ -943,7 +941,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "new Topic get" -> {
-                setViewSingleLine()
+                view?.post(Runnable {
+                    setViewSingleLine()
+                })
             }
         }
     }

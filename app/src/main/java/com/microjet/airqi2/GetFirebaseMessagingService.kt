@@ -35,7 +35,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
         }else{
             if(isAppAlive(this,"com.microjet.airqi2") == true ){
                 val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
-                Log.e("TAG","Message Topic= "+firebaseScorllingText)
+                Log.e(TAG,"Message Topic= "+firebaseScorllingText)
                 firebaseScrollingToic(firebaseScorllingText)
             }
         }
@@ -100,7 +100,6 @@ class GetFirebaseMessagingService : FirebaseMessagingService(){
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
         }
         val urlEvent = BleEvent("new Topic get")
-
         EventBus.getDefault().post(urlEvent)
     }
 
