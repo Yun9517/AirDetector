@@ -275,7 +275,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/textview_corner_radius"
-        android:text="往下滑更多"
+        android:text="@string/text_main_page_hint"
         android:textColor="@color/whiteColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

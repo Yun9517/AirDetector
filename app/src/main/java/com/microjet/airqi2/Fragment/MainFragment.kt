@@ -420,9 +420,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun eco2StatusTextShow(currentValue: Float) {
         when (currentValue) {
-            in 0..699 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Green)
-                inCircleState.text = getString(R.string.label_eCO2_Green)
+            in 0..1499 -> {
+                tvNotify?.text = getString(R.string.new_ECO2_main_page_Description_Green)
+                inCircleState.text = getString(R.string.new_ECO2_main_page_Circle_Green)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
@@ -432,63 +432,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
-            in 700..999 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Yellow)
-                inCircleState.text = getString(R.string.label_eCO2_Yellow)
-                inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
-                inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
-                //20180131
-                imgLight.setImageResource(R.drawable.face_icon_02)
-                //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
-            }
-            in 1000..1499 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Orange)
-                inCircleState.text = getString(R.string.label_eCO2_Orange)
-                inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
-                inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
-                //20180131
-                imgLight.setImageResource(R.drawable.face_icon_03)
-                //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
-            }
-            in 1500..2499 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Red)
-                inCircleState.text = getString(R.string.label_eCO2_Red)
+            else -> {
+                tvNotify?.text = getString(R.string.new_ECO2_main_page_Description_Red)
+                inCircleState.text = getString(R.string.new_ECO2_main_page_Circle_Red)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 //20180131
                 imgLight.setImageResource(R.drawable.face_icon_04)
-                //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
-            }
-            in 2500..4999 -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Purple)
-                inCircleState.text = getString(R.string.label_eCO2_Purple)
-                inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
-                inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
-                //20180131
-                imgLight.setImageResource(R.drawable.face_icon_05)
-                //20180301
-                PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
-            }
-            else -> {
-                tvNotify?.text = getString(R.string.message_eCO2_Brown)
-                inCircleState.text = getString(R.string.label_eCO2_Brown)
-                inCircleValue.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
-                inCircleState.setTextColor(
-                        ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
-                //20180131
-                imgLight.setImageResource(R.drawable.face_icon_06)
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
@@ -658,9 +610,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun pm10StatusTextShow(currentValue: Float) {
         when (currentValue) {
-            in 0..15 -> {
-                tvNotify?.text = getString(R.string.message_pm25_Green)
-                inCircleState.text = getString(R.string.label_pm25_Green)
+            in 0..53 -> {
+                tvNotify?.text = getString(R.string.message_pm10_Green)
+                inCircleState.text = getString(R.string.label_pm10_Green)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
@@ -671,9 +623,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
             }
 
-            in 16..34 -> {
-                tvNotify?.text = getString(R.string.message_pm25_Yellow)
-                inCircleState.text = getString(R.string.label_pm25_Yellow)
+            in 54..124 -> {
+                tvNotify?.text = getString(R.string.message_pm10_Yellow)
+                inCircleState.text = getString(R.string.label_pm10_Yellow)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Moderate))
                 inCircleState.setTextColor(
@@ -683,9 +635,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
-            in 35..54 -> {
-                tvNotify?.text = getString(R.string.message_pm25_Orange)
-                inCircleState.text = getString(R.string.label_pm25_Orange)
+            in 125..253 -> {
+                tvNotify?.text = getString(R.string.message_pm10_Orange)
+                inCircleState.text = getString(R.string.label_pm10_Orange)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Orange))
                 inCircleState.setTextColor(
@@ -695,9 +647,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
             }
-            in 55..150 -> {
-                tvNotify?.text = getString(R.string.message_pm25_Red)
-                inCircleState.text = getString(R.string.label_pm25_Red)
+            in 254..353 -> {
+                tvNotify?.text = getString(R.string.message_pm10_Red)
+                inCircleState.text = getString(R.string.label_pm10_Red)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
@@ -707,9 +659,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 //20180301
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
-            in 151..250 -> {
-                tvNotify?.text = getString(R.string.message_pm25_Purple)
-                inCircleState.text = getString(R.string.label_pm25_Purple)
+            in 354..423 -> {
+                tvNotify?.text = getString(R.string.message_pm10_Purple)
+                inCircleState.text = getString(R.string.label_pm10_Purple)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Purple))
                 inCircleState.setTextColor(
@@ -720,8 +672,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 PrimaryBackground.setBackgroundResource(R.drawable.app_bg_cloud_red)
             }
             else -> {
-                tvNotify?.text = getString(R.string.message_pm25_Brown)
-                inCircleState.text = getString(R.string.label_pm25_Brown)
+                tvNotify?.text = getString(R.string.message_pm10_Brown)
+                inCircleState.text = getString(R.string.label_pm10_Brown)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Test_Unhealthy))
                 inCircleState.setTextColor(
@@ -776,14 +728,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         inCircleTitle.text = getString(R.string.text_label_co2)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
-                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
                         //數值不等比顯示
                         when (co2DataFloat) {
-                            in 0..700 -> inCircleBar.setCurrentValues(co2DataFloat)
-                            in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
+                            in 0..1499 -> inCircleBar.setCurrentValues(co2DataFloat)
+                            else -> inCircleBar.setCurrentValues(co2DataFloat)
+                            /*in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
                             in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)
                             in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 590)
-                            else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)
+                            else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)*/
                         }
                         inCircleBar.setCurrentValues(co2DataFloat)
                         //inCircleBar.setCurrentValues(60000f)
@@ -851,6 +804,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         //數值不等比顯示
                         when (pm10DataFloat) {
+                            in 0..53 -> inCircleBar.setCurrentValues(pm10DataFloat)
+                            in 54..124 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 700)
+                            in 125..253 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 770)
+                            in 254..353 -> inCircleBar.setCurrentValues((pm10DataFloat / 180) + 830)
+                            else -> inCircleBar.setCurrentValues((pm10DataFloat / 360) + 890)
                             //in 0..700 -> inCircleBar.setCurrentValues(pm10DataFloat)
                             //in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
                             //in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)

@@ -465,4 +465,26 @@
     <string name="text_Title_Manifest_general_setting">ADDWII 一般設定</string>
     <string name="text_export_success_msg">已將資料匯出至記憶卡</string>
     <string name="text_not_show">不再顯示</string>
+
+    <!-- 2018/06/07 new eCO2 -->
+    <string name="new_ECO2_main_page_Circle_Green">空氣流通</string>
+    <string name="new_ECO2_main_page_Circle_Red">空氣不流通</string>
+    <string name="new_ECO2_main_page_Description_Green">通風狀況一般</string>
+    <string name="new_ECO2_main_page_Description_Red">空氣不流通，可能會感到不適</string>
+
+    <!-- PM10 message -->
+    <string name="label_pm10_Green">正常</string>
+    <string name="label_pm10_Yellow">中等</string>
+    <string name="label_pm10_Orange">過高</string>
+    <string name="label_pm10_Red">有害健康</string>
+    <string name="label_pm10_Purple">非常有害健康</string>
+    <string name="label_pm10_Brown">極度危害健康</string>
+    <string name="message_pm10_Green">空氣品質正常。</string>
+    <string name="message_pm10_Yellow">空氣品質中等。</string>
+    <string name="message_pm10_Orange">空氣品質不佳，避免長時間待在此環境。體質敏感者可能感到不適。</string>
+    <string name="message_pm10_Red">空氣品質不健康，避免長時間待在此環境。</string>
+    <string name="message_pm10_Purple">空氣品質非常不健康，請離開此地。</string>
+    <string name="message_pm10_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
+
+    <string name="text_main_page_hint">往下滑更多</string>
 </resources>

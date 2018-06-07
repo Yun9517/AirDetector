@@ -278,7 +278,7 @@ class Pm10Fragment : Fragment() {
         when (useFor) {
             DEFINE_FRAGMENT_PM10 -> {
                 ChartLabel.text = getString(R.string.text_label_pm10)
-                faceBar.setImageResource(R.drawable.face_bar_pm25)
+                faceBar.setImageResource(R.drawable.face_bar_pm10)
                 intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
                         ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
                         ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
@@ -300,10 +300,10 @@ class Pm10Fragment : Fragment() {
         when (useFor) {
             DEFINE_FRAGMENT_PM10 -> {
                 when (input) {
-                    in 0..15 -> {
+                    in 0..53 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
                     }
-                    in 16..54 -> {
+                    in 54..124 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
                     in 65538..65540 -> {

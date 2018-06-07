@@ -383,11 +383,11 @@ class ChartFragment : Fragment() {
                 ChartLabel.text = getString(R.string.text_label_co2)
                 faceBar.setImageResource(R.drawable.face_bar_eco2)
                 intArray = intArrayOf(ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good),
-                        ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
-                        ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
-                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad),
-                        ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
-                        ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
+                        //ContextCompat.getColor(context!!, R.color.Main_textResult_Moderate),
+                        //ContextCompat.getColor(context!!, R.color.Main_textResult_Orange),
+                        ContextCompat.getColor(context!!, R.color.Main_textResult_Bad))
+                        //ContextCompat.getColor(context!!, R.color.Main_textResult_Purple),
+                        //ContextCompat.getColor(context!!, R.color.Main_textResult_Unhealthy))
             }
             DEFINE_FRAGMENT_TEMPERATURE -> {
                 ChartLabel.text = getString(R.string.text_label_temperature_full)
@@ -448,11 +448,8 @@ class ChartFragment : Fragment() {
 
             DEFINE_FRAGMENT_ECO2 -> {
                 when (input) {
-                    in 0..699 -> {
+                    in 0..1499 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)
-                    }
-                    in 700..1499 -> {
-                        ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_orange)
                     }
                     in 65538..65540 -> {
                         ChartBackground.setBackgroundResource(R.drawable.app_bg_cloud_green)

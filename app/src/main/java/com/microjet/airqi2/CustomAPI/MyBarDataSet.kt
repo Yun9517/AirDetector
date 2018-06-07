@@ -29,13 +29,13 @@ class MyBarDataSet(yVals: List<BarEntry>, label: String) : BarDataSet(yVals, lab
             }
             "ECO2" -> {
                 return when (getEntryForXIndex(index).`val`) {
-                    in 0..700 -> mColors[0]         //G
-                    in 701..1000 -> mColors[1]       //Y
-                    in 1001..1500 -> mColors[2]      //O
-                    in 1501..2500 -> mColors[3]     //R
-                    in 2501..5000 -> mColors[4]     //P
+                    in 0..1499 -> mColors[0]         //G
+                    //in 701..1000 -> mColors[1]       //Y
+                    //in 1001..1500 -> mColors[2]      //O
+                    //in 1501..2500 -> mColors[3]     //R
+                    //in 2501..5000 -> mColors[4]     //P
                     in 65537..65538 -> Color.TRANSPARENT
-                    else -> mColors[5]              //B
+                    else -> mColors[1]              //B
                 }
             }
             "Temp" -> {

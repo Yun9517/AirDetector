@@ -26,7 +26,7 @@
     <string name="message_eCO2_Brown">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
 
     <!-- pm2.5 message -->
-    <string name="label_pm25_Green">Good</string>
+    <string name="label_pm25_Green">Normal</string>
     <string name="label_pm25_Yellow">Moderate</string>
     <string name="label_pm25_Orange">High</string>
     <string name="label_pm25_Red">Unhealthy</string>
@@ -362,4 +362,26 @@
     <string name="text_Title_Manifest_general_setting">ADDWII General Setting</string>
     <string name="text_export_success_msg">Exported data to your storage card.</string>
     <string name="text_not_show">Do not show again</string>
+
+    <!-- 2018/06/07 new eCO2 -->
+    <string name="new_ECO2_main_page_Circle_Green">Normal</string>
+    <string name="new_ECO2_main_page_Circle_Red">Uncomfortable</string>
+    <string name="new_ECO2_main_page_Description_Green">Air ventilation is normal</string>
+    <string name="new_ECO2_main_page_Description_Red">Air ventilation is worse, it may causes discomfort</string>
+
+    <!-- PM10 message -->
+    <string name="label_pm10_Green">Normal</string>
+    <string name="label_pm10_Yellow">Moderate</string>
+    <string name="label_pm10_Orange">High</string>
+    <string name="label_pm10_Red">Unhealthy</string>
+    <string name="label_pm10_Purple">Harmful</string>
+    <string name="label_pm10_Brown">Hazardous</string>
+    <string name="message_pm10_Green">The air quality is fine.</string>
+    <string name="message_pm10_Yellow">The air quality is moderate.</string>
+    <string name="message_pm10_Orange">The air quality is poor. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
+    <string name="message_pm10_Red">The air quality is unhealthy. Avoid staying in this situation too long.</string>
+    <string name="message_pm10_Purple">The air quality is very unhealthy. Please leave here.</string>
+    <string name="message_pm10_Brown">The air quality is hazardous. Please leave here immediately. Stay too long may affect lung function or causing irregular heartbeat.</string>
+
+    <string name="text_main_page_hint">More detail</string>
 </resources>

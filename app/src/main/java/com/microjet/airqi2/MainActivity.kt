@@ -522,13 +522,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         val mHumiFg = ChartFragment()
         val mTvocFg = ChartFragment()
-        val mEco2Fg = ChartFragment()
+        //val mEco2Fg = ChartFragment()
         val mTempFg = ChartFragment()
         val mPM25Fg = ChartFragment()
         val mPM10Fg = Pm10Fragment()
 
         mTvocFg.configFragment(DEFINE_FRAGMENT_TVOC)
-        mEco2Fg.configFragment(DEFINE_FRAGMENT_ECO2)
+        //mEco2Fg.configFragment(DEFINE_FRAGMENT_ECO2)
         mTempFg.configFragment(DEFINE_FRAGMENT_TEMPERATURE)
         mHumiFg.configFragment(DEFINE_FRAGMENT_HUMIDITY)
         mPM25Fg.configFragment(DEFINE_FRAGMENT_PM25)
@@ -536,7 +536,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
-        mFragmentList.add(mEco2Fg)
+        //mFragmentList.add(mEco2Fg)
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
         mFragmentList.add(mPM25Fg)
