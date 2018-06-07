@@ -1372,7 +1372,7 @@ class ChartFragment : Fragment() {
             ActivityCompat.requestPermissions(activity!!,
                     arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
         } else {
-            Log.e("DB", "PERMISSION GRANTED")
+            Log.e("ChectPerm", "Permission Granted. Starting export data...")
             parseDataToCsv()
         }
     }

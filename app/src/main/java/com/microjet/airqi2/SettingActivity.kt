@@ -862,7 +862,7 @@ class SettingActivity : AppCompatActivity() {
             writeCSV.close()
             result.removeAllChangeListeners()
 
-            Utils.toastMakeTextAndShow(this@SettingActivity, "Exported data to your storage card.", Toast.LENGTH_SHORT)
+            Utils.toastMakeTextAndShow(this@SettingActivity, getString(R.string.text_export_success_msg), Toast.LENGTH_SHORT)
         }
     }
 
@@ -872,7 +872,7 @@ class SettingActivity : AppCompatActivity() {
             ActivityCompat.requestPermissions(this@SettingActivity,
                     arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
         } else {
-            Log.e("Parse CSV", "PERMISSION GRANTED")
+            Log.e("ChectPerm", "Permission Granted. Starting export data...")
             runRealmQueryData()
         }
     }
