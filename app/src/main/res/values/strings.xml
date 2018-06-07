@@ -52,10 +52,10 @@
     <string name="text_label_tvoc_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">輕度污染</string>
-    <string name="text_label_status_medium_Orange">中度汙染</string>
+    <string name="text_label_status_medium_Orange">中度污染</string>
     <string name="text_label_status_bad">重度污染</string>
-    <string name="text_label_status_Serious_Purple">嚴重汙染</string>
-    <string name="text_label_status_Extreme_Dark_Purple">非常嚴重汙染</string>
+    <string name="text_label_status_Serious_Purple">嚴重污染</string>
+    <string name="text_label_status_Extreme_Dark_Purple">非常嚴重污染</string>
     <string name="text_battery_value">電池電量：</string>
     <string name="text_battery_title">裝置電量</string>
     <string name="button_label_ok">確認</string>
@@ -241,7 +241,7 @@
     <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="text_label_latitude">緯度</string>
     <string name="text_label_longitude">經度</string>
 

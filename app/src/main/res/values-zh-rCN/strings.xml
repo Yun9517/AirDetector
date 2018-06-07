@@ -51,10 +51,10 @@
     <string name="text_label_tvoc_detect">TVOC\n总挥发性有机化合物</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">轻度污染</string>
-    <string name="text_label_status_medium_Orange">中度汙染</string>
+    <string name="text_label_status_medium_Orange">中度污染</string>
     <string name="text_label_status_bad">重度污染</string>
-    <string name="text_label_status_Serious_Purple">严重汙染</string>
-    <string name="text_label_status_Extreme_Dark_Purple">非常严重汙染</string>
+    <string name="text_label_status_Serious_Purple">严重污染</string>
+    <string name="text_label_status_Extreme_Dark_Purple">非常严重污染</string>
     <string name="text_battery_value">电池电量：</string>
     <string name="text_battery_title">装置电量</string>
     <string name="button_label_ok">确认</string>
@@ -240,7 +240,7 @@
     <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content">ADDWII\n空汙鼻\n好棒棒！</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="text_label_latitude">纬度</string>
     <string name="text_label_longitude">经度</string>
 
