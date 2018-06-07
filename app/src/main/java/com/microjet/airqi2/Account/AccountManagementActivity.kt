@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.FirebaseNotifSettingTask
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_login.*
 import okhttp3.MediaType
@@ -33,6 +34,8 @@ class AccountManagementActivity : AppCompatActivity() {
     var userName = ""
     private var loginResult: String? = null
     private var mMyThing: logInMything? = null
+    //2018/06/07 enable data upload dialog & use share preference
+    private lateinit var myPref: PrefObjects
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +98,8 @@ class AccountManagementActivity : AppCompatActivity() {
                 }
             }
         }
+        //2018/06/07 enable data upload dialog & use share preference
+        myPref = PrefObjects(this)
     }
 
     override fun onStart() {
@@ -145,8 +150,16 @@ class AccountManagementActivity : AppCompatActivity() {
     // 2018/04/17 Add function for intent activity
 
     private fun forgotPasswordShow() {
-        val i: Intent? = Intent(this, AccountForgetPasswordActivity::class.java)
-        startActivity(i)
+        val intent = Intent(mContext, AccountForgetPasswordActivity::class.java)
+        startActivity(intent)
+    }
+
+    // 2018/06/07 Add function for intent activity
+
+    private fun AccountActivityShow() {
+        val intent = Intent(mContext, AccountActiveActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun registerShow() {
@@ -242,10 +255,8 @@ class AccountManagementActivity : AppCompatActivity() {
             if (result == "成功登入") {
                 val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                 val myToken = shareToken.getString("token", "")
+                showEnableUploadDialog()
                 FirebaseNotifSettingTask().execute(myToken)
-                val intent = Intent(mContext, AccountActiveActivity::class.java)
-                startActivity(intent)
-                finish()
             }else{
                 val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
@@ -291,6 +302,66 @@ class AccountManagementActivity : AppCompatActivity() {
         { dialog, _ ->
             dialog.dismiss()
             //finish()
+        }
+        Dialog.show()
+    }
+
+    // 2018/06/07 enable data upload dialog & use share preference
+    private fun showEnableUploadDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle("")
+        Dialog.setMessage(getString(R.string.text_UploadDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_close))//否
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUploadStat(false)
+            showUploadCloudClose()
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.text_open))//是
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUploadStat(true)
+            showUploadCloudOpen()
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
+
+    private fun showUploadCloudOpen() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle(getString(R.string.allow_3G))
+        Dialog.setMessage(getString(R.string.text_Enable3GDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_close))//否
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUpload3GStat(false)
+            dialog.dismiss()
+            AccountActivityShow()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.text_open))//是
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUpload3GStat(true)
+            dialog.dismiss()
+            AccountActivityShow()
+        }
+        Dialog.show()
+    }
+
+    private fun showUploadCloudClose() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle("")
+        Dialog.setMessage(getString(R.string.text_CloseUploadDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_gotIt))
+        { dialog, _ ->
+            dialog.dismiss()
+            AccountActivityShow()
         }
         Dialog.show()
     }
