@@ -449,6 +449,7 @@
     <string name="text_open">開啟</string>
     <string name="text_close">取消</string>
     <string name="text_Enable3GDialog">開啟選項將會透過手機網路自動上傳數據，關閉選項僅會在連接Wi-Fi時上傳數據</string>
+    <string name="text_UploadDialog_Title">您尚未開啟雲端同步功能</string>
     <string name="text_UploadDialog">開啟雲端同步功能可即時將偵測資料上傳至雲端</string>
     <string name="text_CloseUploadDialog">資料將不會上傳至雲端，如需開啟此功能，請至設定頁面</string>
     <string name="text_gotIt">我知道了</string>

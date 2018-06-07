@@ -349,6 +349,7 @@
     <string name="text_open">Open</string>
     <string name="text_close">Cancel</string>
     <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload only executes when you have Wi-Fi connection</string>
+    <string name="text_UploadDialog_Title">Turn on DATA UPLOAD?</string>
     <string name="text_UploadDialog">Enable to upload detect data to cloud storage immediately.</string>
     <string name="text_CloseUploadDialog">Data will not upload to cloud storage, please visit SETTING PAGE to enable this feature if you need it.</string>
     <string name="text_gotIt">Got it</string>
