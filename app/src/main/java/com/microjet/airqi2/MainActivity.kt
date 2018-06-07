@@ -198,6 +198,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mywarningclass:WarringClass?=null
 
     private var c6d6map = HashMap<String, String>()
+    private var lati = 255f  //TvocNoseData.lati
+    private var longi = 255f //TvocNoseData.longi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1397,6 +1399,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xC6.toByte() -> {
                         if (isFirstC6) {
                             isFirstC6 = false
+                            setPublicLatiLongi() //將經緯度設為全域
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
@@ -1557,12 +1560,18 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
-
+        val realm = Realm.getDefaultInstance()
+        val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]).findFirst()
+        if (latiLongiObj != null) {
+            lati = latiLongiObj.latitude
+            longi = latiLongiObj.longitude
+        }
         mDeviceAddress = share.getString("mac", "noValue")
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
-        hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
-        hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
+        hashMap.put(TvocNoseData.C5LATI, lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
+        realm.close()
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
@@ -1846,12 +1855,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        val realm = Realm.getDefaultInstance()
+        val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
+        if (latiLongiObj != null) {
+            lati = latiLongiObj.latitude
+            longi = latiLongiObj.longitude
+        }
         val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
         mDeviceAddress = share.getString("mac", "noValue")
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
-        hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
-        hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
+        hashMap.put(TvocNoseData.C5LATI, lati.toString())
+        hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
+        realm.close()
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))
@@ -1917,6 +1933,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             uploadData()
         }
         c6d6map.clear()
+    }
+
+    private fun setPublicLatiLongi() {
+        lati = TvocNoseData.lati
+        longi = TvocNoseData.longi
     }
 }
 

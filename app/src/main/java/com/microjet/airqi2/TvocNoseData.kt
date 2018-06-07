@@ -73,8 +73,8 @@ object TvocNoseData {
     val C5LATI = "C5LATI"
     val C5LONGI = "C5LONGI"
     //Location
-    var longi: Float? = 255f
-    var lati: Float? = 255f
+    var longi: Float = 255f
+    var lati: Float = 255f
     //C6
     val C6II = "C6Item_Index"
     val C6TEMP = "C6Temperature"
