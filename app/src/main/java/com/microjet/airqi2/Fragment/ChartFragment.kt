@@ -1313,7 +1313,16 @@ class ChartFragment : Fragment() {
     private fun parseDataToCsv() {
         val foldeName = "ADDWII Mobile Nose"
         val date = SimpleDateFormat("yyyyMMdd")
-        val fileName = "${date.format(calObject.timeInMillis)}_Mobile_Nose"
+
+        val type = when (useFor) {
+            1 -> "TVOC"
+            2 -> "eCO2"
+            3 -> "Temperature"
+            4 -> "Humidity"
+            else -> "PM25"
+        }
+
+        val fileName = "${date.format(calObject.timeInMillis)}_${type}_Mobile_Nose"
 
         val writeCSV = CSVWriter(foldeName, fileName, CSVWriter.COMMA_SEPARATOR)
 
