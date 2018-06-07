@@ -9,7 +9,6 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
@@ -50,14 +49,13 @@ import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
-import com.microjet.airqi2.MainActivity.BleConnection.*
+import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
+import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.engieeringMode.EngineerModeActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.activity_qanda.*
 import kotlinx.android.synthetic.main.drawer_header.*
 import layout.ExpandableListAdapter
 import layout.ExpandedMenuModel
@@ -150,7 +148,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 finish()
             }
             // Automatically connects to the device upon successful start-up initialization.
-            if (!MyApplication.getSharePreferenceManualDisconn()) {
+            if (!myPref.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
             mUartService?.initFuseLocationProviderClient()
@@ -181,7 +179,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val soundPool2 = SoundPool(1, AudioManager.STREAM_MUSIC, 100)
     private var alertId = 0
     private var lowPowerCont: Int = 0
-    private var warningClass: WarningClass? = null
     val mContext = this@MainActivity
 
     // 2018/05/29 Add "introduction" & "ourStory", modify sequence. Thanks the original creator!
@@ -200,10 +197,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var setNavigationView: NavigationView? = null
 
     private var mywarningclass:WarringClass?=null
+
+    private lateinit var myPref: PrefObjects
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.e(TAG, "call onCreate")
+
+        myPref = PrefObjects(this)
+
         uiFindViewById()
         viewPagerInit()
         initActionBar()
@@ -342,13 +345,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        //val mBluetoothDeviceAddress = share.getString("mac", "noValue")
-        mDeviceAddress = share.getString("mac", "noValue")
+        mDeviceAddress = myPref.getSharePreferenceMAC()
         if (mDeviceAddress != "noValue" && connState == DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-            if (!MyApplication.getSharePreferenceManualDisconn()) {
+            if (!myPref.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
         }
@@ -541,7 +542,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPageScrolled(position: Int, offset: Float,
                                         offsetPixels: Int) {
 
-                val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
+                val share = getSharedPreferences(SavePreferences.SETTING_KEY, Activity.MODE_PRIVATE)
                 val name = share.getString("name", "")
 
                 if (name == "TVOC_NOSE") {
@@ -682,8 +683,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     // 20171127 Peter 新增：AboutActivity, AirMapActivity
     private fun aboutShow() {
         //萬一DFU失敗時為Preference的Address加1
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-        val realAddress = share.getString("mac", "noValue")
+        val realAddress = myPref.getSharePreferenceMAC()
 
         val i: Intent? = Intent(this, AboutActivity::class.java)
                 .putExtra("ADDRESS", realAddress)
@@ -692,8 +692,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun airmapShow() {
-        val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
-        val isPrivacy = share.getBoolean(SavePreferences.SETTING_MAP_PRIVACY, false)
+        val isPrivacy = myPref.getSharePreferencePrivacy()
         if (isPrivacy) {
             DefaultPatternCheckingActivity.startAction(this@MainActivity,
                     DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
@@ -1027,9 +1026,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
 
                 //20180206
-                val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-                val allowNotify = mPreference!!.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
-                val useLowBattNotify = mPreference.getBoolean(SavePreferences.SETTING_BATTERY_SOUND, false)
+                val allowNotify = myPref.getSharePreferenceAllowNotify()
+                val useLowBattNotify = myPref.getSharePreferenceAllowNotifyLowBattery()
                 //20180206
                 lowPowerCont++
                 if (allowNotify && useLowBattNotify && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
@@ -1093,9 +1091,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
-            val share = getSharedPreferences("MACADDRESS", Activity.MODE_PRIVATE)
-            show_Dev_address?.text = share.getString("mac", "")
-            show_Device_Name?.text = share.getString("name", "")
+            val share = getSharedPreferences(SavePreferences.SETTING_KEY, Activity.MODE_PRIVATE)
+            show_Dev_address?.text = myPref.getSharePreferenceMAC()
+            show_Device_Name?.text = myPref.getSharePreferenceName()
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             text_Account_status?.text = shareMSG.getString("name", "")
             /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
@@ -1335,35 +1333,30 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         //saveToRealm(txValue)
                     }
                     0xB9.toByte() -> {
-                        val mPreference = this.application.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
                         val ledState = txValue[3].toInt()
                         val ledState2 = txValue[4].toInt()
                         if (txValue.size > 5) {
                             if (ledState == 1) {
                                 MyApplication.isOnlineLedOn = false
-                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                        false).apply()
+                                myPref.setSharePreferenceLedOn(false)
                             } else {
                                 MyApplication.isOnlineLedOn = true
-                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH,
-                                        true).apply()
+                                myPref.setSharePreferenceLedOn(true)
                             }
 
                             if (ledState2 == 1) {
                                 MyApplication.isOfflineLedOn = false
-                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
-                                        false).apply()
+                                myPref.setSharePreferenceDisconnectLedOn(false)
                             } else {
                                 MyApplication.isOfflineLedOn = true
-                                mPreference.edit().putBoolean(SavePreferences.SETTING_LED_SWITCH_OFFLINE,
-                                        true).apply()
+                                myPref.setSharePreferenceDisconnectLedOn(true)
                             }
                             Log.e(TAG, "LED Status: $ledState")
                         }
                         //Log.d("0xB9",hashMap.toString())
                     }
                     0xBA.toByte() -> {
-                        MyApplication.setSharePreferenceManualDisconn(true)
+                        myPref.setSharePreferenceManualDisconn(true)
                         Log.e("0xBA", "Manual Disconnect from Device.........")
                     }
                     0xE0.toByte() -> {
@@ -1527,7 +1520,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun putC5ToObject(tx: ByteArray) {
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
-        val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
+        val share = getSharedPreferences(SavePreferences.SETTING_KEY, Context.MODE_PRIVATE)
         if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
             if (!lock) {
                 indexMap.put("UTCBlockHead", hashMap[TvocNoseData.C5II]!!.toInt())
@@ -1544,7 +1537,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
 
-        mDeviceAddress = share.getString("mac", "noValue")
+        mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, TvocNoseData.lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, TvocNoseData.longi.toString())
@@ -1775,13 +1768,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun uploadData() {
-        val swCloudVal: Boolean = MyApplication.getSharePreferenceCloudUploadStat()
-        val swCloud3GVal: Boolean = MyApplication.getSharePreferenceCloudUpload3GStat()
+        val swCloudVal: Boolean = myPref.getSharePreferenceCloudUploadStat()
+        val swCloud3GVal: Boolean = myPref.getSharePreferenceCloudUpload3GStat()
         if (swCloudVal) {
             val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val token = shareToken.getString("token", "")
-            val share = getSharedPreferences("MACADDRESS", Context.MODE_PRIVATE)
-            val macAddressForDB = share.getString("mac", "noValue")
+            val macAddressForDB = myPref.getSharePreferenceMAC()
             val networkStat = MyApplication.getConnectStatus()
             when (networkStat) {
                 "MOBILE" -> {

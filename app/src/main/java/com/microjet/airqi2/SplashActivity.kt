@@ -15,10 +15,14 @@ import android.view.WindowManager
  */
 class SplashActivity : AppCompatActivity() {
 
+    private lateinit var myPref: PrefObjects
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_splash)
+
+        myPref = PrefObjects(this)
 
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -34,7 +38,7 @@ class SplashActivity : AppCompatActivity() {
         {
             // This method will be executed once the timer is over
             // Start your app main activity
-            if (MyApplication.getIsFirstUsed()) {
+            if (myPref.getIsFirstUsed()) {
                 val i = Intent(this@SplashActivity, TourActivity::class.java) //放你想跳過去的頁面
                 startActivity(i)
                 finish()

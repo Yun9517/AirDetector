@@ -36,10 +36,15 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
     private var startX: Float = 0.toFloat()   //手指接觸螢幕時X的坐標（演示左右滑動）
     private var endX: Float = 0.toFloat() //手指離開螢幕時的坐標（演示左右滑動）
 
+    private lateinit var myPref: PrefObjects
+
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tour)
+
+        myPref = PrefObjects(this)
+
         imgSwitcher!!.setFactory(this)//通過工廠實現ImageSwitcher
         initpoint()
         imgSwitcher!!.setOnTouchListener(this)//設置觸摸事件
@@ -86,7 +91,7 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
 
     private fun mainShow() {
         // ****** 2018/04/17 Call Identify the App is first time initial or not from MyApplication ************//
-        MyApplication.saveIsFirstUsed()
+        myPref.setIsFirstUsed()
         val i: Intent? = Intent(this, MainActivity::class.java)
         startActivity(i)
     }

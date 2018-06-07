@@ -15,7 +15,8 @@ import io.realm.RealmSchema;
 
 public class RealmMigrations implements RealmMigration {
 
-    private String MACADDR = MyApplication.Companion.getSharePreferenceMAC();
+    private PrefObjects myPref = new PrefObjects(MyApplication.Companion.applicationContext());
+    private String MACADDR = myPref.getSharePreferenceMAC();
 
     @Override
     public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {

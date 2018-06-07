@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.Build
 import android.util.Log
 import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.MyApplication
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import java.util.*
 
@@ -13,35 +15,37 @@ import java.util.*
  * Created by B00055 on 2018/5/21.
  */
 
-class WarringClass (context:Context)
-{
-    private val REQUEST_TVOC_CODE=0x01
-    private val REQUEST_PM25_CODE=0x02
+class WarringClass(context: Context) {
+    private val REQUEST_TVOC_CODE = 0x01
+    private val REQUEST_PM25_CODE = 0x02
     private var allowNotify = false
     private var allowVibrator = false
     private var allowSound = false
-    private var allowNotification=false
+    private var allowNotification = false
     private var tvocAlertValue = 660
     private var pm25AlertValue = 16
-    private val tvocChannel="tvocChannel"
-    private val pm25Channel="pm25Channel"
-    private val tvocChannelName="TVOC"
-    private val pm25ChannelName="PM25"
-    private val mContext=context
-    private val mPreference= mContext.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
-    private val mPreferenceNotification=mContext.getSharedPreferences("NotificationAction", 0)
-    private var tvocSound=WarringSound(context, R.raw.tvoc_over)
-    private var pm25Sound=WarringSound(context, R.raw.pm25_over)
-    private var tvocNotification=WarringNotification(context,REQUEST_TVOC_CODE,tvocAlertValue,tvocChannel,tvocChannelName)
-    private var pm25Notification=WarringNotification(context,REQUEST_PM25_CODE,pm25AlertValue,pm25Channel,pm25ChannelName)
-    private var tvocVibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660))
-    private var pm25Vibrator=WarringVibrator(context,mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16))
-    private var myCondition="none"
+    private val tvocChannel = "tvocChannel"
+    private val pm25Channel = "pm25Channel"
+    private val tvocChannelName = "TVOC"
+    private val pm25ChannelName = "PM25"
+    private val mContext = context
+    private val mPreference = mContext.getSharedPreferences(SavePreferences.SETTING_KEY, 0)
+    private val mPreferenceNotification = mContext.getSharedPreferences("NotificationAction", 0)
+    private var tvocSound = WarringSound(context, R.raw.tvoc_over)
+    private var pm25Sound = WarringSound(context, R.raw.pm25_over)
+    private var tvocNotification = WarringNotification(context, REQUEST_TVOC_CODE, tvocAlertValue, tvocChannel, tvocChannelName)
+    private var pm25Notification = WarringNotification(context, REQUEST_PM25_CODE, pm25AlertValue, pm25Channel, pm25ChannelName)
+    private var tvocVibrator = WarringVibrator(context, mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660))
+    private var pm25Vibrator = WarringVibrator(context, mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16))
+    private var myCondition = "none"
 
-    private val tvocArrayAlertValue=ArrayList<Int>()
-    private val tvocArrayStringList=ArrayList<Int>()
-    private val pm25ArrayAlertValue=ArrayList<Int>()
-    private val pm25ArrayStringList=ArrayList<Int>()
+    private val tvocArrayAlertValue = ArrayList<Int>()
+    private val tvocArrayStringList = ArrayList<Int>()
+    private val pm25ArrayAlertValue = ArrayList<Int>()
+    private val pm25ArrayStringList = ArrayList<Int>()
+
+    private val myPref = PrefObjects(context)
+
     init {
         tvocArrayAlertValue.add(0)
         tvocArrayAlertValue.add(219)
@@ -77,20 +81,21 @@ class WarringClass (context:Context)
         pm25Notification.setArrayPoint(pm25ArrayStringList)
 
     }
-    fun judgeValue(tvocValue: Int, pm25Value: Int){
-        allowNotify = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_NOTIFY, false)
-        allowVibrator = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_VIBERATION,false)
-        allowSound = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_SOUND,false)
-        allowNotification = mPreference.getBoolean(SavePreferences.SETTING_ALLOW_MESSAGE, false)
-        tvocAlertValue = mPreference.getInt(SavePreferences.SETTING_TVOC_NOTIFY_VALUE, 660)
-        pm25AlertValue = mPreference.getInt(SavePreferences.SETTING_PM25_NOTIFY_VALUE, 16)
-        myCondition= mPreferenceNotification.getString("nextNotification","none")
 
-        when (myCondition){
-            "none"->{
+    fun judgeValue(tvocValue: Int, pm25Value: Int) {
+        allowNotify = myPref.getSharePreferenceAllowNotify()
+        allowVibrator = myPref.getSharePreferenceAllowNotifyVibrate()
+        allowSound = myPref.getSharePreferenceAllowNotifySound()
+        allowNotification = myPref.getSharePreferenceAllowNotifyMessage()
+        tvocAlertValue = myPref.getSharePreferenceAllowNotifyTvocValue()
+        pm25AlertValue = myPref.getSharePreferenceAllowNotifyPM25Value()
+        myCondition = mPreferenceNotification.getString("nextNotification", "none")
+
+        when (myCondition) {
+            "none" -> {
 
             }
-            "tomorrow"-> {
+            "tomorrow" -> {
                 /*val setTime = mPreferenceNotification!!.getString("now time","0")
                 val date = Date().time
                 val time = setTime.toLong()
@@ -98,12 +103,12 @@ class WarringClass (context:Context)
                     return
                 }*/
             }
-            "5min"-> {
-                val setTime = mPreferenceNotification.getString("now time","0")//取得存放於NotificationAction.xml的時間
+            "5min" -> {
+                val setTime = mPreferenceNotification.getString("now time", "0")//取得存放於NotificationAction.xml的時間
                 val date = Date().time
                 val time = setTime.toLong()
-                if ((date-time) < 300000) {
-                    Log.v(this.javaClass.simpleName,"date:$date time:$time")
+                if ((date - time) < 300000) {
+                    Log.v(this.javaClass.simpleName, "date:$date time:$time")
                     return//5分鐘內所有通知當放屁
                 }
                 mPreferenceNotification.edit().clear().apply()//將NotificationAction.xml中的訊息清空
@@ -115,52 +120,56 @@ class WarringClass (context:Context)
         pm25Vibrator.warringValue = pm25AlertValue
         pm25Sound.warringValue = pm25AlertValue
         pm25Notification.warringValue = pm25AlertValue
-                when (allowNotify){
-            true->{
-                checkVibrator(tvocValue,pm25Value)
-                checkSound(tvocValue,pm25Value)
+        when (allowNotify) {
+            true -> {
+                checkVibrator(tvocValue, pm25Value)
+                checkSound(tvocValue, pm25Value)
                 if (isAppIsInBackground(mContext)) {
-                    checkNotification(tvocValue,pm25Value)
+                    checkNotification(tvocValue, pm25Value)
                 }
             }
-            false->{
-                Log.v(this.javaClass.simpleName,"allowNotify:$allowNotify")
+            false -> {
+                Log.v(this.javaClass.simpleName, "allowNotify:$allowNotify")
             }
         }
     }
-    private fun checkVibrator(tvocValue: Int, pm25Value: Int){
-        when (allowVibrator){
-            true->{
+
+    private fun checkVibrator(tvocValue: Int, pm25Value: Int) {
+        when (allowVibrator) {
+            true -> {
                 tvocVibrator.sendVibrator(tvocValue)
                 pm25Vibrator.sendVibrator(pm25Value)
             }
-            false->{
-                Log.v(this.javaClass.simpleName,"allowVibrator:$allowVibrator")
+            false -> {
+                Log.v(this.javaClass.simpleName, "allowVibrator:$allowVibrator")
             }
         }
     }
-    private fun checkSound(tvocValue: Int, pm25Value: Int){
-        when (allowSound){
-            true->{
+
+    private fun checkSound(tvocValue: Int, pm25Value: Int) {
+        when (allowSound) {
+            true -> {
                 pm25Sound.soundPlay(pm25Value)
                 tvocSound.soundPlay(tvocValue)
             }
-            false->{
-                Log.v(this.javaClass.simpleName,"allowSound:$allowSound")
+            false -> {
+                Log.v(this.javaClass.simpleName, "allowSound:$allowSound")
             }
         }
     }
-    private fun checkNotification(tvocValue:Int,pm25Value:Int){
-        when (allowNotification){
-            true ->{
+
+    private fun checkNotification(tvocValue: Int, pm25Value: Int) {
+        when (allowNotification) {
+            true -> {
                 tvocNotification.showNotification(tvocValue)
                 pm25Notification.showNotification(pm25Value)
             }
-            false ->{
-                Log.v(this.javaClass.simpleName,"allowNotification:$allowNotification")
+            false -> {
+                Log.v(this.javaClass.simpleName, "allowNotification:$allowNotification")
             }
         }
     }
+
     @SuppressLint("ObsoleteSdkInt")
     private fun isAppIsInBackground(context: Context): Boolean {
         var isInBackground = true
@@ -185,7 +194,8 @@ class WarringClass (context:Context)
         }
         return isInBackground
     }
-    interface onChangeListener{
+
+    interface onChangeListener {
         fun allowNotifyChange()
         fun allowVibratorChange()
         fun allowSoundChange()
