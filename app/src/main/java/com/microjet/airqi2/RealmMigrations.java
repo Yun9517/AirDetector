@@ -41,6 +41,7 @@ public class RealmMigrations implements RealmMigration {
         if (oldVersion < 3L) {
             RealmObjectSchema userSchema = schema.get("AsmDataModel");
             userSchema.addField("PM10Value", Integer.class);
+            userSchema.transform(obj -> obj.set("PM10Value", 0));
             oldVersion++;
         }
     }
