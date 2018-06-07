@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,39 +15,36 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_weight="1"
-        app:layout_constraintBottom_toTopOf="@+id/skipTour"
+        app:layout_constraintBottom_toTopOf="@+id/point_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/skipTour"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="40dp"
         android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/style_black_button"
-        android:text="@string/getStarted"
+        android:text="X"
         android:textColor="@color/AboutHyperLink"
         android:textSize="22sp"
-        app:layout_constraintBottom_toTopOf="@+id/point_layout"
+        app:layout_constraintDimensionRatio="w,1:1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/swNotShow"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:text="@string/text_not_show"
         android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="@+id/skipTour"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/skipTour"
-        app:layout_constraintTop_toTopOf="@+id/skipTour" />
+        app:layout_constraintBottom_toTopOf="@+id/point_layout"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <LinearLayout
         android:id="@+id/point_layout"
