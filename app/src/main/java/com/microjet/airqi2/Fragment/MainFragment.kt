@@ -24,6 +24,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -32,6 +33,8 @@ import com.microjet.airqi2.R
 import com.microjet.airqi2.ScrollingTextTask
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.frg_main.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -213,6 +216,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     override fun onResume() {
         super.onResume()
+
+        EventBus.getDefault().register(this)
+        checkUIState()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        EventBus.getDefault().unregister(this)
         checkUIState()
     }
 
@@ -988,7 +1000,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Handler().postDelayed(Runnable {
             if (TvocNoseData.scrollingList.isNotEmpty()) {
                 setViewSingleLine()
-                upview1?.setViews(scrollViewsArr)
             } else {
                 scrollindex++
                 if (scrollindex < 10) {
@@ -1002,7 +1013,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     @SuppressLint("SetTextI18n")
-    private fun setViewSingleLine() {
+    public fun setViewSingleLine() {
         scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
@@ -1021,10 +1032,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
             //进行对控件赋值
             tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
-            Log.e("HAO", TvocNoseData.scrollingList[i]["title"].toString())
+            Log.e("scrollingList[title]", TvocNoseData.scrollingList[i]["title"].toString())
             //添加到循环滚动数组里面去
             scrollViewsArr.add(vScrollivs)
         }
+        upview1?.setViews(scrollViewsArr)
     }
 
     fun setNewsPanelShow(enable: Boolean) {
@@ -1032,6 +1044,19 @@ class MainFragment : Fragment(), View.OnTouchListener {
             upview1?.visibility = View.VISIBLE
         } else {
             upview1?.visibility = View.INVISIBLE
+        }
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "new Topic get" -> {
+                view?.post(Runnable {
+                    setViewSingleLine()
+                })
+            }
         }
     }
 }

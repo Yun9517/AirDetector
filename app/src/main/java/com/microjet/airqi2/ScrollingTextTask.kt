@@ -12,7 +12,7 @@ import org.json.JSONObject
  */
 class ScrollingTextTask : AsyncTask<String, Int, Void>() {
 
-    val TAG = this.javaClass.simpleName
+    val TAG = "ScrollingTextTask"
 
     //主要背景執行
     override fun doInBackground(vararg params: String?): Void? {
@@ -40,7 +40,7 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
                     hashMap["url"] = jsonObjScrolling["url"].toString()
                     TvocNoseData.scrollingList.add(hashMap)
                 }
-                Log.e("scrollingText的內容",  TvocNoseData.scrollingList.toString())
+                Log.e(TAG,  TvocNoseData.scrollingList.toString())
            }
         } catch (e: Exception) {
             e.printStackTrace()
