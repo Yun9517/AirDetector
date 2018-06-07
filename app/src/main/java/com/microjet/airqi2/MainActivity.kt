@@ -1647,7 +1647,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     asmData.tvocValue = arrIndexMap[y][TvocNoseData.C5TVOC].toString()
                                     asmData.ecO2Value = arrIndexMap[y][TvocNoseData.C5ECO2].toString()
                                     asmData.pM25Value = arrIndexMap[y][TvocNoseData.C5PM25].toString()
-                                    asmData.pM10Value = arrIndexMap[y][TvocNoseData.D5PM10]?.toInt()
+                                    asmData.pM10Value = if (arrIndexMap[y][TvocNoseData.D5PM10]?.toInt() != null) arrIndexMap[y][TvocNoseData.D5PM10]?.toInt() else 0
                                     asmData.created_time = time //(arrIndexMap[head][TvocNoseData.C5TIME]!!.toLong() - 60 * count) * 1000//+ Calendar.getInstance().timeZone.rawOffset//getMyDate().getTime() - countForItem * getSampleRateUnit() * 30 * 1000 + (getSampleRateUnit() * counterB5 * 30 * 1000).toLong() + (getCorrectTime() * 30 * 1000).toLong()
                                     asmData.macAddress = arrIndexMap[y][TvocNoseData.C5MACA].toString()
                                     asmData.latitude = arrIndexMap[y][TvocNoseData.C5LATI]?.toFloat()

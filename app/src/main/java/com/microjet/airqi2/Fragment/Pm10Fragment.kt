@@ -637,7 +637,7 @@ class Pm10Fragment : Fragment() {
                 if (useFor == DEFINE_FRAGMENT_PM10) { //PM25
                     val count = ((asmDataModel.created_time - startTime) / (60 * 1000 * 5)).toInt()
                     TvocNoseData.arrPm25Day[count] = asmDataModel.pM25Value.toString()
-                    TvocNoseData.arrPm10Day[count] = asmDataModel.pM10Value.toString()
+                    TvocNoseData.arrPm10Day[count] = if (asmDataModel.pM10Value != null) asmDataModel.pM10Value.toString() else "0"
                 } else {
                     val count = ((asmDataModel.created_time - startTime) / (60 * 1000)).toInt()
                     TvocNoseData.arrTvocDay[count] = asmDataModel.tvocValue.toString()
