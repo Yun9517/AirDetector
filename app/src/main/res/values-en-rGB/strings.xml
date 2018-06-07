@@ -334,4 +334,5 @@
     <string name="text_open">Open</string>
     <string name="text_close">Close</string>
     <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
+    <string name="text_export_success_msg">Exported data to your storage card.</string>
 </resources>

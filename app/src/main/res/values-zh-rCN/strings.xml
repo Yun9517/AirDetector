@@ -449,4 +449,5 @@
     <!--20180521-->
     <string name="text_scrollingTitle">用户体验</string>
     <string name="text_check_fragment">有下载正在进行，要停止并开始新的下载?</string>
+    <string name="text_export_success_msg">已将数据导出至存储卡</string>
 </resources>

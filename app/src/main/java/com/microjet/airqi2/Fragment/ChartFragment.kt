@@ -1354,7 +1354,7 @@ class ChartFragment : Fragment() {
 
         writeCSV.close()
 
-        Utils.toastMakeTextAndShow(context!!, "Exported data to your storage card.", Toast.LENGTH_SHORT)
+        Utils.toastMakeTextAndShow(context!!, getString(R.string.text_export_success_msg), Toast.LENGTH_SHORT)
     }
 
     private fun checkPermissions() {
