@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> { publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map)) }
+                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.app_name_air_map)) }
                 3 -> { airmapShow() }
                 4 -> { knowledgeShow() }
                 5 -> {
@@ -1842,8 +1842,31 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-
     private fun showPm10OrNot() {
+        val pmType = MyApplication.getDevicePMType().toInt()
+        try {
+            if (pmType < 2) {
+                val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
+                if (ll1!!.childCount == 3) { ll1.removeViewAt(2) }
+                val fragCount = mFragmentAdapter.count
+                if (fragCount == 7) {
+                    this.supportFragmentManager.beginTransaction().remove(this.supportFragmentManager.fragments.get(6)).commit()
+                }
+            } else {
+
+            }
+
+
+            Log.d("EREWRAWR", viewPager.adapter?.count.toString())
+
+
+        } catch (e: Exception) {
+            Log.d(TAG,e.toString())
+        }
+    }
+
+
+    /*private fun showPm10OrNot() {
         try {
             val pmType = MyApplication.getDevicePMType().toInt()
             if (pmType < 2) {
@@ -1853,7 +1876,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } catch (e: Exception) {
             Log.d(TAG,e.toString())
         }
-    }
+    }*/
 
     //多型代入PM10TYPE,一筆C5一筆D5
     private fun putC5ToObject(tx: ByteArray, pm10type: Int) {

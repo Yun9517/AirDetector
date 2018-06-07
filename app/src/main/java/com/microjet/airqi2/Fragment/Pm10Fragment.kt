@@ -36,8 +36,6 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
-import io.realm.RealmChangeListener
-import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
 import java.text.SimpleDateFormat
@@ -437,7 +435,7 @@ class Pm10Fragment : Fragment() {
     }
 
     private fun setProgressBarNow(input: Int) {
-        chartDataLoading.progress = input
+        chartDataLoading.setProgress(input, true)
     }
 
     private fun setProgressBarZero() {
