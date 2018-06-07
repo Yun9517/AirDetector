@@ -66,6 +66,8 @@ class AccountActiveActivity : AppCompatActivity() {
 
     //20180530
     private var cloudDeviceListItem: String? =""
+    //2018/06/07 enable data upload dialog & use share preference
+    private lateinit var myPref: PrefObjects
 
     @SuppressLint("SdCardPath", "SimpleDateFormat")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -185,6 +187,9 @@ class AccountActiveActivity : AppCompatActivity() {
                 }
             }
         }
+        // 2018/06/07 enable data upload dialog & use share preference
+        myPref = PrefObjects(this)
+        showUploadDialog()
     }
 
     private fun updateDateInView() {
@@ -429,6 +434,68 @@ class AccountActiveActivity : AppCompatActivity() {
         dialog?.dismiss()//結束小視窗
     }
 
+    private fun showUploadDialog() {
+        if (myPref.getSharePreferenceCloudUploadStat() == false){
+            showEnableUploadDialog()
+        }
+    }
+
+    // 2018/05/30 show enable Upload dialog
+    private fun showEnableUploadDialog() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle("")
+        Dialog.setMessage(getString(R.string.text_UploadDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_close))//否
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUploadStat(false)
+            showUploadCloudClose()
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.text_open))//是
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUploadStat(true)
+            showUploadCloudOpen()
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
+
+    private fun showUploadCloudOpen() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle(getString(R.string.allow_3G))
+        Dialog.setMessage(getString(R.string.text_Enable3GDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_close))//否
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUpload3GStat(false)
+            dialog.dismiss()
+        }
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.text_open))//是
+        { dialog, _ ->
+            myPref.setSharePreferenceCloudUpload3GStat(true)
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
+
+    private fun showUploadCloudClose() {
+        val Dialog = android.app.AlertDialog.Builder(this).create()
+        Dialog.setTitle("")
+        Dialog.setMessage(getString(R.string.text_CloseUploadDialog))
+        Dialog.setCancelable(false)//讓返回鍵與空白無效
+        //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
+
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.text_gotIt))
+        { dialog, _ ->
+            dialog.dismiss()
+        }
+        Dialog.show()
+    }
 }
 
 

@@ -445,10 +445,13 @@
     <string name="text_drawer_07_setting">設定</string>
     <string name="text_drawer_07_1_account_setting">帳號設定</string>
     <string name="text_drawer_07_2_general_setting">一般設定</string>
-    <!-- 2018/05/30 setting dialog -->
-    <string name="text_open">打開</string>
-    <string name="text_close">關閉</string>
-    <string name="text_Enable3GDialog">打開的話，會透過手機行動網路上傳資料到雲端；關閉的話，數據上傳到雲端不會使用手機行動網路</string>
+    <!-- 2018/05/30 setting dialog & 2018/06/07 Add dialog in AccountActivity-->
+    <string name="text_open">開啟</string>
+    <string name="text_close">取消</string>
+    <string name="text_Enable3GDialog">開啟選項將會透過手機網路自動上傳數據，關閉選項僅會在連接Wi-Fi時上傳數據</string>
+    <string name="text_UploadDialog">開啟雲端同步功能可即時將偵測資料上傳至雲端</string>
+    <string name="text_CloseUploadDialog">資料將不會上傳至雲端，如需開啟此功能，請至設定頁面</string>
+    <string name="text_gotIt">我知道了</string>
     <!--20180530-->
     <string name="text_check_fragment">有下載正在進行，要停止並開始新的下載?</string>
 

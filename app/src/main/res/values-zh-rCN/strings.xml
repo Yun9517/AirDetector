@@ -442,10 +442,13 @@
     <string name="text_drawer_07_setting">设定</string>
     <string name="text_drawer_07_1_account_setting">账号设定</string>
     <string name="text_drawer_07_2_general_setting">一般设定</string>
-    <!-- 2018/05/30 setting dialog -->
-    <string name="text_open">打开</string>
-    <string name="text_close">关闭</string>
-    <string name="text_Enable3GDialog">打开的话，会透过手机行动网络上传数据到云端；关闭的话，数据上传到云端不会使用手机行动网络</string>
+    <!-- 2018/05/30 setting dialog & 2018/06/07 Add dialog in AccountActivity-->
+    <string name="text_open">开启</string>
+    <string name="text_close">取消</string>
+    <string name="text_Enable3GDialog">开启选项将会透过手机网络自动上传数据，关闭选项仅会在连接Wi-Fi时上传数据</string>
+    <string name="text_UploadDialog">开启云端同步功能可实时将侦测数据上传至云端</string>
+    <string name="text_CloseUploadDialog">数据将不会上传至云端，如需开启此功能，请至设定页面</string>
+    <string name="text_gotIt">我知道了</string>
     <!--20180521-->
     <string name="text_scrollingTitle">用户体验</string>
     <string name="text_check_fragment">有下载正在进行，要停止并开始新的下载?</string>

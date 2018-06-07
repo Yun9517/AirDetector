@@ -343,10 +343,13 @@
     <string name="text_drawer_07_setting">Setting</string>
     <string name="text_drawer_07_1_account_setting">Account Setting</string>
     <string name="text_drawer_07_2_general_setting">General Setting</string>
-    <!-- 2018/05/30 setting dialog -->
+    <!-- 2018/05/30 setting dialog & 2018/06/07 Add dialog in AccountActivity-->
     <string name="text_open">Open</string>
-    <string name="text_close">Close</string>
-    <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
+    <string name="text_close">Cancel</string>
+    <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload only executes when you have Wi-Fi connection</string>
+    <string name="text_UploadDialog">Enable to upload detect data to cloud storage immediately.</string>
+    <string name="text_CloseUploadDialog">Data will not upload to cloud storage, please visit SETTING PAGE to enable this feature if you need it.</string>
+    <string name="text_gotIt">Got it</string>
     <!-- 2018/06/04 Title for Manifest -->
     <string name="text_title_Manifest_AirMap">ADDWII Air map</string>
     <string name="text_title_Manifest_PersonTrail">ADDWII Personal Trail</string>
