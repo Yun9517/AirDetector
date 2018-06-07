@@ -457,4 +457,5 @@
     <string name="text_Title_Manifest_FAQ">ADDWII 常见问题</string>
     <string name="text_Title_Manifest_account_setting">ADDWII 账号设定</string>
     <string name="text_Title_Manifest_general_setting">ADDWII 一般设定</string>
+    <string name="text_not_show">不再顯示</string>
 </resources>

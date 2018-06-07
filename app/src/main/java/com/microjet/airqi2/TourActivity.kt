@@ -45,6 +45,8 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
 
         myPref = PrefObjects(this)
 
+        swNotShow.isChecked = myPref.getSharePreferenceNotShowTour()
+
         imgSwitcher!!.setFactory(this)//通過工廠實現ImageSwitcher
         initpoint()
         imgSwitcher!!.setOnTouchListener(this)//設置觸摸事件
@@ -53,6 +55,9 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
             mainShow()
         }
 
+        swNotShow.setOnCheckedChangeListener { _, isChecked ->
+            myPref.setSharePreferenceNotShowTour(isChecked)
+        }
     }
 
     //初始化導航圓點的方法
@@ -91,7 +96,7 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
 
     private fun mainShow() {
         // ****** 2018/04/17 Call Identify the App is first time initial or not from MyApplication ************//
-        myPref.setIsFirstUsed()
+        //myPref.setSharePreferenceNotShowTour()
         val i: Intent? = Intent(this, MainActivity::class.java)
         startActivity(i)
     }
