@@ -5,9 +5,9 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
-import android.os.Environment
-import android.support.v4.content.FileProvider
+import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.text.InputType
@@ -20,6 +20,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
+import com.microjet.airqi2.CustomAPI.CSVWriter
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
@@ -28,14 +30,12 @@ import com.microjet.airqi2.GestureLock.DefaultPatternSettingActivity
 import com.microjet.airqi2.TvocNoseData.calObject
 import com.microjet.airqi2.URL.AirActionTask
 import io.realm.Realm
+import io.realm.RealmChangeListener
+import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
-import org.json.JSONException
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,6 +76,11 @@ class SettingActivity : AppCompatActivity() {
 
     private lateinit var myPref: PrefObjects
 
+    private lateinit var realm: Realm
+    private lateinit var result: RealmResults<AsmDataModel>
+    private lateinit var listener: RealmChangeListener<RealmResults<AsmDataModel>>
+    private lateinit var filter: List<AsmDataModel>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
@@ -88,7 +93,7 @@ class SettingActivity : AppCompatActivity() {
         //20180516 by 白~~~~~~~~~~~~~~~~~~~告
         setFCMSettingView()
 
-        if(intent.getBooleanExtra("CONN", false)) {
+        if (intent.getBooleanExtra("CONN", false)) {
             cgDeviceControl.visibility = View.VISIBLE
         } else {
             cgDeviceControl.visibility = View.GONE
@@ -106,7 +111,7 @@ class SettingActivity : AppCompatActivity() {
         super.onResume()
 
         //text_device_ver.text = String.format(resources.getString(R.string.text_label_device_version), MyApplication.getDeviceVersion())
-        text_device_ver_detail.text = String.format(resources.getString(R.string.text_label_device_version_detail), MyApplication.getDeviceVersion()," v", MyApplication.getDeviceSerial())
+        text_device_ver_detail.text = String.format(resources.getString(R.string.text_label_device_version_detail), MyApplication.getDeviceVersion(), " v", MyApplication.getDeviceSerial())
         text_app_ver.text = String.format(resources.getString(R.string.show_app_version), BuildConfig.VERSION_NAME)
 
         getPrivacySettings()
@@ -143,7 +148,7 @@ class SettingActivity : AppCompatActivity() {
                 cgLowBatt.visibility = View.GONE
             }
 
-           myPref.setSharePreferenceAllowNotify(isChecked)
+            myPref.setSharePreferenceAllowNotify(isChecked)
         }
 
         swMessage.setOnCheckedChangeListener { _, isChecked ->
@@ -426,11 +431,11 @@ class SettingActivity : AppCompatActivity() {
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
-                if(value.isNotEmpty() && value.toInt() in 16..150) {
+                if (value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
                     cloudPM25 = value.toInt()
-                    setSeekBarColor( cloudPM25SeekBar, value.toFloat(), false)
-                    setSeekBarValue( cloudPM25SeekValue, value.toFloat())
+                    setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
+                    setSeekBarValue(cloudPM25SeekValue, value.toFloat())
 
 
                 }
@@ -445,7 +450,7 @@ class SettingActivity : AppCompatActivity() {
         }
 
         btnSaveCloudSetting.setOnClickListener {
-            updateCloudSetting(cloudTime,cloudPM25,cloudTVOC)
+            updateCloudSetting(cloudTime, cloudPM25, cloudTVOC)
         }
 
         dataExport.setOnClickListener {
@@ -453,7 +458,7 @@ class SettingActivity : AppCompatActivity() {
             val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
                 cal.set(year, month, dayOfMonth)
                 calObject.set(year, month, dayOfMonth)
-                updateDateInView()
+                checkPermissions()
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
             dpd.setMessage("請選擇日期")
             dpd.show()
@@ -564,10 +569,10 @@ class SettingActivity : AppCompatActivity() {
 
         swCloudFunc.isChecked = swCloudVal
 
-        if(swCloudVal) {
+        if (swCloudVal) {
             cgAllow3G.visibility = View.VISIBLE
 
-            if(swCloud3GVal) {
+            if (swCloud3GVal) {
                 swAllow3G.isChecked = swCloud3GVal
             }
         } else {
@@ -649,7 +654,7 @@ class SettingActivity : AppCompatActivity() {
     private fun checkFwVersion(Version: String, DeviceType: String) {
         //if (batValue > 100) {
         val aat = AirActionTask(this@SettingActivity, Version, DeviceType)
-        val myResponse = aat.execute("postFWVersion")
+        /*val myResponse = */aat.execute("postFWVersion")
         Log.v("AirActionTask", "OVER")
         //}
     }
@@ -672,7 +677,7 @@ class SettingActivity : AppCompatActivity() {
 
             dialog.dismiss()
 
-            val fwVer = ""
+            //val fwVer = ""
 
             val aat = AirActionTask(this@SettingActivity)
             aat.execute("downloadFWFile")
@@ -802,108 +807,73 @@ class SettingActivity : AppCompatActivity() {
         setFCMSettingView()
     }
 
+    // 查詢資料庫
+    private fun runRealmQueryData() {
+        realm = Realm.getDefaultInstance()
 
-    private fun updateDateInView() {
-        dbData2CVSAsyncTasks()//sdf)
-        fileProvider()
-    }
+        //現在時間實體毫秒
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //將日期設為今天日子加一天減1秒
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
-    private fun dbData2CVSAsyncTasks() {//TS: TvocNoseData) {
-        try {
-            val allData = getDbData(Date().day, Date().day)//Date().day, Date().day)
-            writeDataToFile(allData, this@SettingActivity)
-        } catch (e: Exception) {
-            Log.e("return_body_erro", e.toString())
+        listener = RealmChangeListener {
+            filter = it.filter { it.macAddress == myPref.getSharePreferenceMAC() }
+
+            parseDataToCsv(filter)
+            Log.e("Realm Listener", "Update Database...")
         }
-    }
 
-    private fun fileProvider() {
-        var mSDFile: File? = null
-        //mSDFile = this.getFilesDir()
-        mSDFile = this@SettingActivity.getFileStreamPath("BLE_Data.csv")
-        val uri = FileProvider.getUriForFile(this, packageName, mSDFile)
+        result = realm.where(AsmDataModel::class.java)
+                .between("Created_time", startTime, endTime)
+                .sort("Created_time", Sort.ASCENDING).findAllAsync()
 
-        Log.e("#抓取檔案路徑為:", uri.path + "#packageName=" + packageName + "#mSDFile=" + mSDFile)
-        val intent = Intent(Intent.ACTION_SEND)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK;
-        intent.data = uri
-        intent.putExtra(Intent.EXTRA_STREAM, uri)
-        intent.type = "csv/plain"
-        intent.type = "Application/csv"
-        val chooser = Intent.createChooser(intent, title)
-
-        //給目錄臨時的權限
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        // Verify the intent will resolve to at least one activity
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(chooser, 0)
-        }
+        result.addChangeListener(listener)
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getDbData(startTimeZone: Int, EntTime: Int): ArrayList<String> {
-        val dataArrayListOnee = ArrayList<String>()
-        val touchTime = if (calObject.get(Calendar.HOUR) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        //val touchTime = calObject.timeInMillis// + calObject.timeZone.rawOffset
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        val realm = Realm.getDefaultInstance()
-        val query = realm.where(AsmDataModel::class.java)
-        //一天共有2880筆
-        val dataCount = (endDayLast - endDay) / (60 * 1000)
-        query.between("Created_time", endDay, endDayLast).sort("Created_time", Sort.ASCENDING)
-        val result1 = query.findAll()
-        Log.e("資料筆數", result1.size.toString())
-        Log.e("所有資料筆數", result1.toString())
-        try {
-            if (result1.size > 0) {
-                val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
-                for (i in result1.indices) {
-                    Log.i("text", "i=$i\n")
-                    dataArrayListOnee.add(result1[i]?.tempValue.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.humiValue.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.tvocValue.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.ecO2Value.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.pM25Value.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.longitude!!.toString() + ",")
-                    dataArrayListOnee.add(result1[i]?.latitude!!.toString() + ",")
-                    val date = dateLabelFormat.format(result1[i]?.created_time!!.toLong())
-                    dataArrayListOnee.add(date + "\r\n")
-                }
-            } else {
-                Log.e("未上傳資料筆數", result1.size.toString())
+    private fun parseDataToCsv(results: List<AsmDataModel>) {
+        if (results.isNotEmpty()) {
+            val foldeName = "ADDWII Mobile Nose"
+            val date = SimpleDateFormat("yyyyMMdd")
+            val fileName = "${date.format(calObject.timeInMillis)}_Mobile_Nose"
+
+            val writeCSV = CSVWriter(foldeName, fileName, CSVWriter.COMMA_SEPARATOR)
+
+            val timeFormat = SimpleDateFormat("HH:mm")
+
+            val header = arrayOf("id", "Time", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5")
+
+            writeCSV.writeLine(header)
+
+            for (i in 0 until results.size) {
+                val time = results[i].created_time
+                val tvocVal = if (results[i].tvocValue == "65538") "No Data" else "${results[i].tvocValue} ppb"
+                val eco2Val = if (results[i].ecO2Value == "65538") "No Data" else "${results[i].ecO2Value} ppm"
+                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
+                val humiVal = if (results[i].humiValue == "65538") "No Data" else "${results[i].humiValue} %"
+                val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
+
+                val textCSV = arrayOf((i + 1).toString(), timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val)
+
+                writeCSV.writeLine(textCSV).toString()
             }
-        } catch (e: JSONException) {
-            e.printStackTrace()
+
+            writeCSV.close()
+            result.removeAllChangeListeners()
+
+            Utils.toastMakeTextAndShow(this@SettingActivity, getString(R.string.text_export_success_msg), Toast.LENGTH_SHORT)
         }
-        realm.close()
-        return dataArrayListOnee
     }
 
-    private fun writeDataToFile(data: ArrayList<String>, context: Context) {
-        try {
-            var mSDFile: File? = null
-            //檢查有沒有SD卡裝置
-            if (Environment.getExternalStorageState() == Environment.MEDIA_REMOVED) {
-                Toast.makeText(applicationContext, "沒有SD卡!!!", Toast.LENGTH_SHORT).show()
-                return
-            } else {
-                //取得SD卡儲存路徑
-                mSDFile = Environment.getExternalStorageDirectory()
-                mSDFile = context.getFileStreamPath("BLE_Data.csv")
-                mSDFile.delete()
-            }
-            val mFileWriter = FileWriter(mSDFile!!, true)
-            mFileWriter.write("tempValue,humiValue,tvocValue,ecO2Value,pM25Value,longitude,latitude,created_time \r\n")
-            for (l in 0..data.size) {
-                mFileWriter.write(data[l])//data[l])
-                mFileWriter.flush()
-            }
-            Log.e("全給我進去!!", data.last())
-            mFileWriter.close()
-            Log.e("Excel檔完成!!路徑為:", mSDFile.path)
-        } catch (e: IOException) {
-            Log.e("Exception", "File write failed: " + e.toString())
+    private fun checkPermissions() {
+
+        if (ActivityCompat.checkSelfPermission(this@SettingActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this@SettingActivity,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
+        } else {
+            Log.e("ChectPerm", "Permission Granted. Starting export data...")
+            runRealmQueryData()
         }
     }
 }

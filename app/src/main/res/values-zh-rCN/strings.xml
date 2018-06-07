@@ -449,7 +449,6 @@
     <!--20180521-->
     <string name="text_scrollingTitle">用户体验</string>
     <string name="text_check_fragment">有下载正在进行，要停止并开始新的下载?</string>
-
     <!-- 2018/06/04 Title for Manifest -->
     <string name="text_title_Manifest_AirMap">ADDWII 空气地图</string>
     <string name="text_title_Manifest_PersonTrail">ADDWII 个人轨迹图</string>
@@ -457,4 +456,5 @@
     <string name="text_Title_Manifest_FAQ">ADDWII 常见问题</string>
     <string name="text_Title_Manifest_account_setting">ADDWII 账号设定</string>
     <string name="text_Title_Manifest_general_setting">ADDWII 一般设定</string>
+    <string name="text_export_success_msg">已将数据导出至存储卡</string>
 </resources>

@@ -348,7 +348,6 @@
     <string name="text_open">Open</string>
     <string name="text_close">Close</string>
     <string name="text_Enable3GDialog">Turn on to allow using cellular data to upload data; If you turn it off, data upload will not use cellular data.</string>
-
     <!-- 2018/06/04 Title for Manifest -->
     <string name="text_title_Manifest_AirMap">ADDWII Air map</string>
     <string name="text_title_Manifest_PersonTrail">ADDWII Personal Trail</string>
@@ -356,4 +355,5 @@
     <string name="text_Title_Manifest_FAQ">ADDWII F.A.Q</string>
     <string name="text_Title_Manifest_account_setting">ADDWII Account Setting</string>
     <string name="text_Title_Manifest_general_setting">ADDWII General Setting</string>
+    <string name="text_export_success_msg">Exported data to your storage card.</string>
 </resources>
