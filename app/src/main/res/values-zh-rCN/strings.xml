@@ -484,4 +484,5 @@
     <string name="message_pm10_Brown">空气质量极度危害健康，请立即离开。停留过久恐影响肺功能或心律不整。</string>
 
     <string name="text_main_page_hint">往下滑更多</string>
+    <string name="text_label_pm10">PM10</string>
 </resources>
