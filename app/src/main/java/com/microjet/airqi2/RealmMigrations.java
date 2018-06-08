@@ -33,15 +33,15 @@ public class RealmMigrations implements RealmMigration {
             userSchema.addField("Longitude", Float.class);
             userSchema.addField("Latitude", Float.class);
             userSchema.addField("MACAddress", String.class);
-            userSchema.transform(obj -> obj.set("Longitude", 255f));
-            userSchema.transform(obj -> obj.set("Latitude", 255f));
+            userSchema.transform(obj -> obj.set("Longitude", "255"));
+            userSchema.transform(obj -> obj.set("Latitude", "255"));
             userSchema.transform(obj -> obj.set("MACAddress", MACADDR));
             oldVersion++;
         }
         if (oldVersion < 3L) {
             RealmObjectSchema userSchema = schema.get("AsmDataModel");
             userSchema.addField("PM10Value", Integer.class);
-            userSchema.transform(obj -> obj.set("PM10Value", 0));
+            userSchema.transform(obj -> obj.set("PM10Value", "0")); //Transform 要設Value不論型態為何都要丟字串
             oldVersion++;
         }
     }

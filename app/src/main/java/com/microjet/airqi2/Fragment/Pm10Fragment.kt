@@ -695,7 +695,7 @@ class Pm10Fragment : Fragment() {
                     sumTemp += it.tempValue.toFloat()
                     sumHumi += it.humiValue.toInt()
                     sumPm25 += it.pM25Value.toInt()
-                    sumPm10 += it.pM10Value
+                    sumPm10 += if (it.pM10Value != null) it.pM10Value else 0
                 }
                 TvocNoseData.arrTvocWeek.add((sumTvoc / result1.size).toString())
                 TvocNoseData.arrEco2Week.add((sumEco2 / result1.size).toString())
@@ -754,7 +754,7 @@ class Pm10Fragment : Fragment() {
                     sumTemp += it.tempValue.toFloat()
                     sumHumi += it.humiValue.toInt()
                     sumPm25 += it.pM25Value.toInt()
-                    sumPm10 += it.pM10Value
+                    sumPm10 += if (it.pM10Value != null) it.pM10Value else 0
                 }
                 TvocNoseData.arrTvocMonth.add((sumTvoc / result1.size).toString())
                 TvocNoseData.arrEco2Month.add((sumEco2 / result1.size).toString())
