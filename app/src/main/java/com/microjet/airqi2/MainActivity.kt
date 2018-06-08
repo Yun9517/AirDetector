@@ -436,15 +436,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 拒絕權限後的方法實作
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        val mBuilder = AlertDialog.Builder(this)
-        mBuilder.setTitle(R.string.text_message_need_permission)
-                .setMessage(R.string.text_message_need_permission)
-                .setCancelable(false)
-                .setPositiveButton(resources.getString(R.string.text_message_yes)
-                ) { _, _ -> finish() }
+        if(requestCode == RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION) {
+            val mBuilder = AlertDialog.Builder(this)
+            mBuilder.setTitle(R.string.text_message_need_permission)
+                    .setMessage(R.string.text_message_need_permission)
+                    .setCancelable(false)
+                    .setPositiveButton(resources.getString(R.string.text_message_yes)
+                    ) { _, _ -> finish() }
 
-        val mADialog = mBuilder.create()
-        mADialog.show()
+            val mADialog = mBuilder.create()
+            mADialog.show()
+        }
     }
 
     // 請求權限結果方法實作

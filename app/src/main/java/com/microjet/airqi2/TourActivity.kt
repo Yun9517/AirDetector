@@ -99,6 +99,7 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
         //myPref.setSharePreferenceNotShowTour()
         val i: Intent? = Intent(this, MainActivity::class.java)
         startActivity(i)
+        finish()
     }
 
     @SuppressLint("ClickableViewAccessibility")
