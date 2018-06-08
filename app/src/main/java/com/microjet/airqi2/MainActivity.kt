@@ -1844,10 +1844,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun showPm10OrNot() {
         val pmType = MyApplication.getDevicePMType().toInt()
+        val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
         try {
             if (pmType < 2) {
-                val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
-                if (ll1!!.childCount == 3) { ll1.removeViewAt(2) }
+                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE }
+            } else {
+                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE }
             }
             Log.d("ViewPager", viewPager.adapter?.count.toString())
         } catch (e: Exception) {

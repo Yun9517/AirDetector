@@ -139,13 +139,13 @@ class SettingActivity : AppCompatActivity() {
                 cgVibration.visibility = View.VISIBLE
                 cgSound.visibility = View.VISIBLE
                 cgSeekbar.visibility = View.VISIBLE
-                cgLowBatt.visibility = View.VISIBLE
+                //cgLowBatt.visibility = View.VISIBLE
             } else {
                 cgMessage.visibility = View.GONE
                 cgVibration.visibility = View.GONE
                 cgSound.visibility = View.GONE
                 cgSeekbar.visibility = View.GONE
-                cgLowBatt.visibility = View.GONE
+                //cgLowBatt.visibility = View.GONE
             }
 
             myPref.setSharePreferenceAllowNotify(isChecked)
@@ -526,13 +526,13 @@ class SettingActivity : AppCompatActivity() {
             cgVibration.visibility = View.VISIBLE
             cgSound.visibility = View.VISIBLE
             cgSeekbar.visibility = View.VISIBLE
-            cgLowBatt.visibility = View.VISIBLE
+            //cgLowBatt.visibility = View.VISIBLE
         } else {
             cgMessage.visibility = View.GONE
             cgVibration.visibility = View.GONE
             cgSound.visibility = View.GONE
             cgSeekbar.visibility = View.GONE
-            cgLowBatt.visibility = View.GONE
+            //cgLowBatt.visibility = View.GONE
         }
 
         swMessage.isChecked = swMessageVal
