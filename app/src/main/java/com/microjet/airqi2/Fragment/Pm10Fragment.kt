@@ -105,12 +105,23 @@ class Pm10Fragment : Fragment() {
         useFor = input
         when (input) {
             DEFINE_FRAGMENT_PM10 -> {
+
+//                chartLabel = "PM10"
+//                chartMin = 0.0f
+//                chartMax = 100.0f
+//                chartIntervalStep = 20
+//                chartIntervalStart = 20
+//                chartIntervalEnd = 80
+//                chartLabelYCount = 11
+//                chartIsShowMinTextView = false
+//                chartLabelUnit = "(μg/m³)"
+
                 chartLabel = "PM10"
                 chartMin = 0.0f
-                chartMax = 100.0f
-                chartIntervalStep = 20
-                chartIntervalStart = 20
-                chartIntervalEnd = 80
+                chartMax = 300.0f
+                chartIntervalStep = 30
+                chartIntervalStart = 30
+                chartIntervalEnd = 270
                 chartLabelYCount = 11
                 chartIsShowMinTextView = false
                 chartLabelUnit = "(μg/m³)"
