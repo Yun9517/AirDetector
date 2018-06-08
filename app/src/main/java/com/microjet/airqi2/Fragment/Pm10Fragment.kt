@@ -619,12 +619,12 @@ class Pm10Fragment : Fragment() {
 
         //先生出1440筆值為0的陣列
         for (y in 0..dataCount step 5) {
-            TvocNoseData.arrTvocDay.add("0")
-            TvocNoseData.arrEco2Day.add("0")
-            TvocNoseData.arrTempDay.add("0")
-            TvocNoseData.arrHumiDay.add("0")
-            TvocNoseData.arrPm25Day.add("0")
-            TvocNoseData.arrPm10Day.add("0")
+            TvocNoseData.arrTvocDay.add("65538")
+            TvocNoseData.arrEco2Day.add("65538")
+            TvocNoseData.arrTempDay.add("65538")
+            TvocNoseData.arrHumiDay.add("65538")
+            TvocNoseData.arrPm25Day.add("65538")
+            TvocNoseData.arrPm10Day.add("65538")
             TvocNoseData.arrTimeDay.add((startTime + y * 60 * 1000).toString())
         }
 

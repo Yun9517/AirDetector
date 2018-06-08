@@ -1528,7 +1528,11 @@ object BLECallingTranslate {
                             value = 0
                         }
                         3 -> {
-                            returnValue.put(TvocNoseData.D5PM10, value.toString())
+                            if (value == 65535) {
+                                returnValue.put(TvocNoseData.D5PM10, 0.toString())
+                            } else {
+                                returnValue.put(TvocNoseData.D5PM10, value.toString())
+                            }
                             value = 0
                         }
                         15 -> {
