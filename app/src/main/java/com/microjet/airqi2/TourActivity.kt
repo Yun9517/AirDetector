@@ -28,7 +28,8 @@ class TourActivity : AppCompatActivity(), ViewSwitcher.ViewFactory, View.OnTouch
             R.drawable.new_guide_04,
             R.drawable.new_guide_05,
             R.drawable.new_guide_06,
-            R.drawable.new_guide_07)
+            R.drawable.new_guide_07,
+            R.drawable.new_guide_08)
 
     //實例化存儲導航圓點的集合
     private var points = ArrayList<ImageView>()
