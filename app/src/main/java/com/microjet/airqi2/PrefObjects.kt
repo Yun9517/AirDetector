@@ -112,7 +112,7 @@ class PrefObjects(context: Context) {
     }
 
     fun getSharePreferenceCloudUploadStat(): Boolean {
-        return share.getBoolean(SavePreferences.SETTING_CLOUD_FUN, true)
+        return share.getBoolean(SavePreferences.SETTING_CLOUD_FUN, false)
     }
 
     fun setSharePreferenceCloudUploadStat(value: Boolean) {
@@ -120,7 +120,7 @@ class PrefObjects(context: Context) {
     }
 
     fun getSharePreferenceCloudUpload3GStat(): Boolean {
-        return share.getBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, true)
+        return share.getBoolean(SavePreferences.SETTING_CLOUD_ALLOW_3G, false)
     }
 
     fun setSharePreferenceCloudUpload3GStat(value: Boolean) {

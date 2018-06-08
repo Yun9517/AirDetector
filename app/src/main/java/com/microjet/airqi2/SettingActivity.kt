@@ -58,8 +58,8 @@ class SettingActivity : AppCompatActivity() {
     private var swLedOffLinePowerVal: Boolean = true
 
     //20180227
-    private var swCloudVal: Boolean = true
-    private var swCloud3GVal: Boolean = true
+    private var swCloudVal: Boolean = false
+    private var swCloud3GVal: Boolean = false
 
     private var tvocSeekBarVal: Int = 660
     private var pm25SeekBarVal: Int = 16

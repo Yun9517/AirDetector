@@ -306,7 +306,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.app_name_air_map)) }
+                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
                 3 -> { airmapShow() }
                 4 -> { knowledgeShow() }
                 5 -> {
@@ -536,11 +536,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         mFragmentList.add(mMainFg)
         mFragmentList.add(mTvocFg)
+        mFragmentList.add(mPM25Fg)
+        mFragmentList.add(mPM10Fg)
         //mFragmentList.add(mEco2Fg)
         mFragmentList.add(mTempFg)
         mFragmentList.add(mHumiFg)
-        mFragmentList.add(mPM25Fg)
-        mFragmentList.add(mPM10Fg)
+
 
         mFragmentAdapter = FragmentAdapter(this.supportFragmentManager, mFragmentList)
 
@@ -793,7 +794,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_disconnect_device -> blueToothDisconnect()
             R.id.nav_about -> aboutShow()
             R.id.nav_accountManagement -> accountShow()
-            R.id.nav_air_map -> publicMapShow("http://mjairql.com/air_map/", getString(R.string.app_name_air_map))
+            R.id.nav_air_map -> publicMapShow("http://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
             R.id.nav_tour -> tourShow()
             R.id.nav_knowledge -> knowledgeShow()
             R.id.nav_qanda -> qandaShow()
@@ -1856,19 +1857,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.d(TAG,e.toString())
         }
     }
-
-
-    /*private fun showPm10OrNot() {
-        try {
-            val pmType = MyApplication.getDevicePMType().toInt()
-            if (pmType < 2) {
-                mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.show_PM10)?.visibility = View.GONE
-            }
-            Log.d("EREWRAWR", viewPager.adapter?.count.toString())
-        } catch (e: Exception) {
-            Log.d(TAG,e.toString())
-        }
-    }*/
 
     //多型代入PM10TYPE,一筆C5一筆D5
     private fun putC5ToObject(tx: ByteArray, pm10type: Int) {

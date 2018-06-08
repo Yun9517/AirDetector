@@ -207,6 +207,10 @@
         <activity
             android:name=".PublicMapActivity"
             android:label="@string/text_title_Manifest_AirMap"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme" />
 
         <!--

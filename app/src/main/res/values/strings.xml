@@ -419,7 +419,7 @@
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
-    <string name="text_cloud_notify">日平均推播通知</string>
+    <string name="text_cloud_notify">推播通知</string>
     <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
     <string name="text_save_cloud_setting">儲存設定</string>
     <string name="text_cloud_set_minute">%d分</string>
