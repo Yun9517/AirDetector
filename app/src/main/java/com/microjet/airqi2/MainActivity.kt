@@ -1848,18 +1848,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             if (pmType < 2) {
                 val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
                 if (ll1!!.childCount == 3) { ll1.removeViewAt(2) }
-                val fragCount = mFragmentAdapter.count
-                if (fragCount == 7) {
-                    this.supportFragmentManager.beginTransaction().remove(this.supportFragmentManager.fragments.get(6)).commit()
-                }
-            } else {
-
             }
-
-
-            Log.d("EREWRAWR", viewPager.adapter?.count.toString())
-
-
+            Log.d("ViewPager", viewPager.adapter?.count.toString())
         } catch (e: Exception) {
             Log.d(TAG,e.toString())
         }
