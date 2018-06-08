@@ -68,8 +68,7 @@ class ChartFragment : Fragment() {
     private val DEFINE_FRAGMENT_ECO2 = 3
     private val DEFINE_FRAGMENT_TEMPERATURE = 4
     private val DEFINE_FRAGMENT_HUMIDITY = 5
-
-
+    
     private var mContext: Context? = null
 
     private var mDataCount: Int = 60
@@ -192,6 +191,23 @@ class ChartFragment : Fragment() {
     @SuppressLint("SimpleDateFormat")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        if (savedInstanceState != null) {
+            // Restore value of members from saved state
+            useFor = savedInstanceState.getInt("useFor")
+//            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
+//            chartMin = savedInstanceState.getFloat("chartMin")
+//            chartMax = savedInstanceState.getFloat("chartMax")
+//            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
+//            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
+//            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
+//            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
+//            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
+//            chartLabel = savedInstanceState.getString("chartLabel")
+
+        } else {
+            // Probably initialize members with default values for a new instance
+        }
         val myJsonFile=GetJson()
         val jsonArray = JSONArray(myJsonFile)
         for (i in 0..(jsonArray.length() - 1)) {
@@ -210,23 +226,6 @@ class ChartFragment : Fragment() {
                 chartLabelUnit = item.getString("chartLabelUnit")
             }
         }
-        if (savedInstanceState != null) {
-            // Restore value of members from saved state
-            useFor = savedInstanceState.getInt("useFor")
-//            chartIntervalStep = savedInstanceState.getInt("chartIntervalStep")
-//            chartMin = savedInstanceState.getFloat("chartMin")
-//            chartMax = savedInstanceState.getFloat("chartMax")
-//            chartIntervalStart = savedInstanceState.getInt("chartIntervalStart")
-//            chartIntervalEnd = savedInstanceState.getInt("chartIntervalEnd")
-//            chartLabelYCount = savedInstanceState.getInt("chartLabelYCount")
-//            chartIsShowMinTextView = savedInstanceState.getBoolean("chartIsShowMinTextView")
-//            chartLabelUnit = savedInstanceState.getString("chartLabelUnit")
-//            chartLabel = savedInstanceState.getString("chartLabel")
-
-        } else {
-            // Probably initialize members with default values for a new instance
-        }
-
         for ((j, i) in (chartMin.toInt()..chartMax.toInt() step chartIntervalStep).withIndex()) {
             val textView = TextView(this.context)
             textView.width = 200
