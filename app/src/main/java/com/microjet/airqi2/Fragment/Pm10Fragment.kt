@@ -446,7 +446,8 @@ class Pm10Fragment : Fragment() {
     }
 
     private fun setProgressBarNow(input: Int) {
-        chartDataLoading.setProgress(input, true)
+        chartDataLoading.progress = input
+        //chartDataLoading.setProgress(input, true)
     }
 
     private fun setProgressBarZero() {
@@ -544,6 +545,12 @@ class Pm10Fragment : Fragment() {
         override fun onReceive(context: Context, intent: Intent) {
             val action = intent.action
             when (action) {
+                BroadcastActions.ACTION_GATT_DISCONNECTED -> {
+                    mConnectStatus = false
+                }
+                BroadcastActions.ACTION_GATT_CONNECTED -> {
+                    mConnectStatus = true
+                }
                 BroadcastActions.ACTION_GET_HISTORY_COUNT -> {
                     val bundle = intent.extras
                     val totalData = bundle.getString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
