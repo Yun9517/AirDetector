@@ -101,7 +101,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
-    //private var menuItem: MenuItem? = null
+
+    private var getDrawerLayoutItem: MenuItem? = null
+
     private var lightIcon: ImageView? = null
 
     private var connState = DISCONNECTED
@@ -683,6 +685,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             android.R.id.home -> {
                 //checkUIState()
                 checkLoginState()
+                getDrawerLayoutItem = item
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
 
@@ -759,6 +762,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun accountShow() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
+        mDrawerToggle!!.onOptionsItemSelected(getDrawerLayoutItem)
         if (GetNetWork.isFastGetNet) {
             if (myToken == "") {
                 Log.e("主葉面看偷肯", myToken)
