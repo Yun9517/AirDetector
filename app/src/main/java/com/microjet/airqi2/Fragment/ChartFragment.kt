@@ -41,6 +41,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
@@ -56,6 +57,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by B00055 on 2018/2/9.
@@ -331,6 +333,9 @@ class ChartFragment : Fragment() {
                     2 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
+                    3 -> {
+                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                    }
                 }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
@@ -543,6 +548,10 @@ class ChartFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
                 btnCallDatePicker.text = dateFormat.format(calObject.time)
             }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy")
+                btnCallDatePicker.text = dateFormat.format(calObject.time)
+            }
         }
 
     }
@@ -597,7 +606,14 @@ class ChartFragment : Fragment() {
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
+            }
 
+            3 -> {
+                getRealmYear()
+                chart_line.data = buildBarData(arrData, arrTime, position)
+                chart_line.data?.setDrawValues(false)
+                chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
+                chart_line.setVisibleXRange(12.0f, 12.0f)
             }
         }
 
@@ -1005,6 +1021,21 @@ class ChartFragment : Fragment() {
                 show_Today.text = getString(R.string.text_default_value)
                 show_Yesterday!!.text = getString(R.string.text_default_value)
             }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy-MM")
+                val dateLabelFormat = SimpleDateFormat("yyyy-MM")
+                labelArray.clear()
+                for (i in 0 until input.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                    labelArray.add(dateLabel)
+                }
+                result_Today.text = getString(R.string.text_default_value)
+                result_Yesterday.text = getString(R.string.text_default_value)
+                show_Today.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
+            }
         }
         Log.d("TVOCGETLABEL3" + useFor.toString(), chartLabels.lastIndex.toString())
         return chartLabels
@@ -1355,6 +1386,59 @@ class ChartFragment : Fragment() {
         } else {
             Log.e("ChectPerm", "Permission Granted. Starting export data...")
             parseDataToCsv()
+        }
+    }
+
+    private fun getRealmYear() {
+        arrTime.clear()
+        arrData.clear()
+
+        val getYearCal = Calendar.getInstance()
+        getYearCal.set(Calendar.YEAR, calObject.get(Calendar.YEAR))
+        getYearCal.set(Calendar.DAY_OF_YEAR, 1)
+        getYearCal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+
+        for (y in 0..11) {
+            val sqlStartDate = getYearCal.timeInMillis
+            getYearCal.add(Calendar.MONTH, 1) //加1個月
+            val sqlEndDate = getYearCal.timeInMillis - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+
+            if (result1.size != 0) {
+                var sumMonth = 0f
+                for (i in result1) {
+                    when (useFor) {
+                        DEFINE_FRAGMENT_TVOC -> {
+                            sumMonth += i.tvocValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_ECO2 -> {
+                            sumMonth += i.ecO2Value.toInt()
+                        }
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
+                            sumMonth += i.tempValue.toFloat() + 10.0f
+                        }
+                        DEFINE_FRAGMENT_HUMIDITY -> {
+                            sumMonth += i.humiValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_PM25 -> {
+                            sumMonth += i.pM25Value.toInt()
+                        }
+                    }
+                }
+                arrData.add((sumMonth / result1.size).toString())
+                //依序加入時間
+                arrTime.add((sqlStartDate).toString())
+            } else {
+                arrData.add("65538")
+                //依序加入時間
+                arrTime.add((sqlStartDate).toString())
+            }
         }
     }
 }
