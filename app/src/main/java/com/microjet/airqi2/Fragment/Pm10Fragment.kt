@@ -39,6 +39,7 @@ import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
 import java.text.SimpleDateFormat
+import java.time.Month
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -250,6 +251,9 @@ class Pm10Fragment : Fragment() {
                     2 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
+                    3 -> {
+                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                    }
                 }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
@@ -357,6 +361,11 @@ class Pm10Fragment : Fragment() {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
                 btnCallDatePicker.text = dateFormat.format(calObject.time)
             }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy")
+                btnCallDatePicker.text = dateFormat.format(calObject.time)
+            }
+
         }
 
     }
@@ -397,6 +406,13 @@ class Pm10Fragment : Fragment() {
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
+            }
+            3 -> {
+                pullData(position)
+                chart_line.data = getBarData3(TvocNoseData.arrPm10Year, TvocNoseData.arrTimeYear, position)
+                chart_line.data?.setDrawValues(false)
+                chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
+                chart_line.setVisibleXRange(12.0f, 12.0f)
             }
         }
 
@@ -503,6 +519,21 @@ class Pm10Fragment : Fragment() {
             2 -> {
                 val dateFormat = SimpleDateFormat("MM/dd")
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
+                labelArray.clear()
+                for (i in 0 until input.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                    labelArray.add(dateLabel)
+                }
+                result_Today.text = getString(R.string.text_default_value)
+                result_Yesterday.text = getString(R.string.text_default_value)
+                show_Today.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
+            }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy-MM")
+                val dateLabelFormat = SimpleDateFormat("yyyy-MM")
                 labelArray.clear()
                 for (i in 0 until input.size) {
                     val date = dateFormat.format(input[i].toLong())
@@ -801,6 +832,7 @@ class Pm10Fragment : Fragment() {
             0 -> { getRealmDay() }
             1 -> { getRealmWeek() }
             2 -> { getRealmMonth() }
+            3 -> { getRealmYear() }
             else -> {}
         }
     }
@@ -901,22 +933,26 @@ class Pm10Fragment : Fragment() {
     }
 
     private fun getRealmYear() {
-        TvocNoseData.arrTvocMonth.clear()
-        TvocNoseData.arrEco2Month.clear()
-        TvocNoseData.arrTempMonth.clear()
-        TvocNoseData.arrHumiMonth.clear()
-        TvocNoseData.arrPm25Month.clear()
-        TvocNoseData.arrPm10Month.clear()
-        TvocNoseData.arrTimeMonth.clear()
-        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
-        //val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
-        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
-        Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
-        for (y in 0..(monthCount - 1)) {
-            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
-            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        TvocNoseData.arrTvocYear.clear()
+        TvocNoseData.arrEco2Year.clear()
+        TvocNoseData.arrTempYear.clear()
+        TvocNoseData.arrHumiYear.clear()
+        TvocNoseData.arrPm25Year.clear()
+        TvocNoseData.arrPm10Year.clear()
+        TvocNoseData.arrTimeYear.clear()
+
+        val getYearCal = Calendar.getInstance()
+        getYearCal.set(Calendar.YEAR, calObject.get(Calendar.YEAR))
+        getYearCal.set(Calendar.DAY_OF_YEAR, 1)
+        getYearCal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+
+        for (y in 0..11) {
+            val sqlStartDate = getYearCal.timeInMillis
+            getYearCal.add(Calendar.MONTH, 1) //加1個月
+            val sqlEndDate = getYearCal.timeInMillis - TimeUnit.SECONDS.toMillis(1)
             val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             query.between("Created_time", sqlStartDate, sqlEndDate)
@@ -937,25 +973,27 @@ class Pm10Fragment : Fragment() {
                     sumPm25 += it.pM25Value.toInt()
                     sumPm10 += if (it.pM10Value != null) it.pM10Value else 0
                 }
-                TvocNoseData.arrTvocMonth.add((sumTvoc / result1.size).toString())
-                TvocNoseData.arrEco2Month.add((sumEco2 / result1.size).toString())
-                TvocNoseData.arrTempMonth.add((sumTemp / result1.size).toString())
-                TvocNoseData.arrHumiMonth.add((sumHumi / result1.size).toString())
-                TvocNoseData.arrPm25Month.add((sumPm25 / result1.size).toString())
-                TvocNoseData.arrPm10Month.add((sumPm10 / result1.size).toString())
+                TvocNoseData.arrTvocYear.add((sumTvoc / result1.size).toString())
+                TvocNoseData.arrEco2Year.add((sumEco2 / result1.size).toString())
+                TvocNoseData.arrTempYear.add((sumTemp / result1.size).toString())
+                TvocNoseData.arrHumiYear.add((sumHumi / result1.size).toString())
+                TvocNoseData.arrPm25Year.add((sumPm25 / result1.size).toString())
+                TvocNoseData.arrPm10Year.add((sumPm10 / result1.size).toString())
                 //依序加入時間
-                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+                TvocNoseData.arrTimeYear.add((sqlStartDate).toString())
             } else {
-                TvocNoseData.arrTvocMonth.add("65538")
-                TvocNoseData.arrEco2Month.add("65538")
-                TvocNoseData.arrTempMonth.add("65538")
-                TvocNoseData.arrHumiMonth.add("65538")
-                TvocNoseData.arrPm25Month.add("65538")
-                TvocNoseData.arrPm10Month.add("65538")
+                TvocNoseData.arrTvocYear.add("65538")
+                TvocNoseData.arrEco2Year.add("65538")
+                TvocNoseData.arrTempYear.add("65538")
+                TvocNoseData.arrHumiYear.add("65538")
+                TvocNoseData.arrPm25Year.add("65538")
+                TvocNoseData.arrPm10Year.add("65538")
                 //依序加入時間
-                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+                TvocNoseData.arrTimeYear.add((sqlStartDate).toString())
             }
         }
 
     }
+
+
 }
