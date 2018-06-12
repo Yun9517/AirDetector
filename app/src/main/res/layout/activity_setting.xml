@@ -463,8 +463,8 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="subDivider3, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            android:visibility="visible"
+            app:constraint_referenced_ids="cloudSaveText, subDivider3, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
@@ -631,8 +631,9 @@
         <Button
             android:id="@+id/btnSaveCloudSetting"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
             android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:background="@drawable/style_setting_button_long"
             android:text="@string/text_save_cloud_setting"
@@ -642,6 +643,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
 
+        <TextView
+            android:id="@+id/cloudSaveText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/text_save_setting_message"
+            android:textAlignment="center"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
+
         <ImageView
             android:id="@+id/mainDivider3"
             android:layout_width="0dp"
@@ -650,7 +664,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
+            app:layout_constraintTop_toBottomOf="@+id/cloudSaveText" />
 
         <TextView
             android:id="@+id/text_cloud_fun"

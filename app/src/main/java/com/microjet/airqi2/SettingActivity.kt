@@ -497,8 +497,8 @@ class SettingActivity : AppCompatActivity() {
                 in 0..15 -> Colors.tvocCO2Colors[0]
                 in 16..34 -> Colors.tvocCO2Colors[1]
                 in 35..54 -> Colors.tvocCO2Colors[2]
-                in 55..150 -> Colors.tvocCO2Colors[3]
-                in 151..250 -> Colors.tvocCO2Colors[4]
+                in 55..149 -> Colors.tvocCO2Colors[3]
+                in 150..250 -> Colors.tvocCO2Colors[4]
                 else -> Colors.tvocCO2Colors[5]
             })
         }
