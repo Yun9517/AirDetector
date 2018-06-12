@@ -899,4 +899,63 @@ class Pm10Fragment : Fragment() {
             }
         }
     }
+
+    private fun getRealmYear() {
+        TvocNoseData.arrTvocMonth.clear()
+        TvocNoseData.arrEco2Month.clear()
+        TvocNoseData.arrTempMonth.clear()
+        TvocNoseData.arrHumiMonth.clear()
+        TvocNoseData.arrPm25Month.clear()
+        TvocNoseData.arrPm10Month.clear()
+        TvocNoseData.arrTimeMonth.clear()
+        val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
+        //val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
+        for (y in 0..(monthCount - 1)) {
+            val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
+            val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+            Log.d("getRealmMonth" + useFor.toString(), result1.size.toString())
+            if (result1.size != 0) {
+                var sumTvoc = 0
+                var sumEco2 = 0
+                var sumTemp = 0f
+                var sumHumi = 0
+                var sumPm25 = 0
+                var sumPm10 = 0
+                result1.forEach {
+                    sumTvoc += it.tvocValue.toInt()
+                    sumEco2 += it.ecO2Value.toInt()
+                    sumTemp += it.tempValue.toFloat()
+                    sumHumi += it.humiValue.toInt()
+                    sumPm25 += it.pM25Value.toInt()
+                    sumPm10 += if (it.pM10Value != null) it.pM10Value else 0
+                }
+                TvocNoseData.arrTvocMonth.add((sumTvoc / result1.size).toString())
+                TvocNoseData.arrEco2Month.add((sumEco2 / result1.size).toString())
+                TvocNoseData.arrTempMonth.add((sumTemp / result1.size).toString())
+                TvocNoseData.arrHumiMonth.add((sumHumi / result1.size).toString())
+                TvocNoseData.arrPm25Month.add((sumPm25 / result1.size).toString())
+                TvocNoseData.arrPm10Month.add((sumPm10 / result1.size).toString())
+                //依序加入時間
+                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+            } else {
+                TvocNoseData.arrTvocMonth.add("65538")
+                TvocNoseData.arrEco2Month.add("65538")
+                TvocNoseData.arrTempMonth.add("65538")
+                TvocNoseData.arrHumiMonth.add("65538")
+                TvocNoseData.arrPm25Month.add("65538")
+                TvocNoseData.arrPm10Month.add("65538")
+                //依序加入時間
+                TvocNoseData.arrTimeMonth.add((sqlStartDate).toString())
+            }
+        }
+
+    }
 }
