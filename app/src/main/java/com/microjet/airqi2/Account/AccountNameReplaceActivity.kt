@@ -1,5 +1,6 @@
 package com.microjet.airqi2.Account
 
+import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -10,19 +11,18 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
 import com.microjet.airqi2.CustomAPI.GetNetWork
-import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_namereplace.*
-import okhttp3.OkHttpClient
 import okhttp3.MediaType
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
-import org.json.JSONObject
 
 
 @Suppress("IMPLICIT_CAST_TO_ANY")
 class AccountNameReplaceActivity : AppCompatActivity() {
 
+    val replaceNameActivity: Activity = this
     private var mContext: Context? = null
     //private var enter_ID : EditText? = null
     private var mMyThing: mything? = null
@@ -84,6 +84,9 @@ class AccountNameReplaceActivity : AppCompatActivity() {
     // ***** 2018/04/17 Add function for intent activity *********************** //
     private fun accountActiveShow() {
         val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+        if(!replaceNameActivity.isFinishing){
+            replaceNameActivity.finish()
+        }
         startActivity(i)
     }
 
@@ -124,7 +127,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
             val client = OkHttpClient()
             var mediaType = MediaType.parse("application/x-www-form-urlencoded")
             val nametxt = enter_ID?.text.toString()
-            val ccc = "name=$nametxt&password=yun_hsieh"
+            val ccc = "name=$nametxt"
             var body = RequestBody.create(mediaType, ccc)
             var request = Request.Builder()
                     .url(params[0].myAddress)
