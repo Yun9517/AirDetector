@@ -948,6 +948,62 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/text_app_ver" />
 
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/text_allow_service_run_in_foreground"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowServiceForeground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
+
+        <TextView
+            android:id="@+id/textView18_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:ellipsize="marquee"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:scrollHorizontally="false"
+            android:singleLine="false"
+            android:text="@string/text_allow_service_run_in_foreground_comment"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowServiceForeground"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowServiceForeground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
+
+        <ImageView
+            android:id="@+id/mainDivider9"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="0dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView18_comment" />
+
         <Button
             android:id="@+id/dataExport"
             android:layout_width="0dp"
@@ -959,10 +1015,10 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider9" />
 
         <ImageView
-            android:id="@+id/mainDivider9"
+            android:id="@+id/mainDivider10"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginBottom="64dp"

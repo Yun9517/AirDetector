@@ -159,6 +159,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             if (!myPref.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
+            if(myPref.getSharePreferenceServiceForeground()) {
+                val serviceIntent = Intent(this@MainActivity, UartService::class.java)
+                serviceIntent.action = "START_FOREGROUND"
+                startService(serviceIntent)
+            }
             mUartService?.initFuseLocationProviderClient()
         }
 

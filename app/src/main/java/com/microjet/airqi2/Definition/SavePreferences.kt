@@ -38,4 +38,7 @@ object SavePreferences {
     const val SETTING_FIREBASE  = "airqi2.settings.SETTING_FIREBASE_ALLOW"
 
     const val SETTING_IS_FIRST_USED  = "airqi2.settings.SETTING_IS_FIRST_USED"
+
+
+    const val SETTING_IS_FOREGROUND  = "airqi2.settings.SETTING_IS_FOREGROUND"
 }

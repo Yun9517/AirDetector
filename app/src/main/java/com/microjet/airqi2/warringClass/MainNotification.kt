@@ -1,0 +1,68 @@
+package com.microjet.airqi2.warringClass
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.support.annotation.RequiresApi
+import android.support.v4.app.NotificationCompat
+import com.microjet.airqi2.MainActivity
+import com.microjet.airqi2.R
+import io.realm.internal.SyncObjectServerFacade.getApplicationContext
+
+/**
+ * Created by ray650128 on 2018/6/13.
+ *
+ */
+class MainNotification(context: Context) {
+    private val NOTIF_ID = "com.microjet.airqi2.notify"
+    private val NOTIF_NAME = "com.microjet.airqi2.mainNotify"
+    private val NOTIF_DESC = "Main Notification for foreground service"
+
+    val mContext = context
+
+    fun makeNotificion(): Notification {
+
+        // 建立觸碰通知範圍時的PendingIntent
+        val actionIntent = Intent(getApplicationContext(), MainActivity::class.java)
+        val pi = PendingIntent.getActivity(getApplicationContext(),
+                0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificionManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationChannel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                NotificationChannel(NOTIF_ID, NOTIF_NAME, NotificationManager.IMPORTANCE_LOW)
+            } else {
+                null
+            }
+
+            notificationChannel!!.description = NOTIF_DESC
+
+            notificationChannel.enableLights(false)
+            notificationChannel.enableVibration(false)
+            notificationChannel.setSound(null, null)
+
+            notificionManager.createNotificationChannel(notificationChannel)
+        }
+
+        val notificationBuilder = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationCompat.Builder(mContext, NOTIF_ID)
+        } else {
+            NotificationCompat.Builder(mContext)
+        }
+
+        //notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
+
+        notificationBuilder.setOngoing(true)
+
+        notificationBuilder.setContentTitle("ADDWII")
+        notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
+        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        notificationBuilder.setContentIntent(pi)
+
+        return notificationBuilder.build()
+    }
+}

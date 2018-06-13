@@ -57,6 +57,8 @@ class SettingActivity : AppCompatActivity() {
     private var swLedPowerVal: Boolean = true
     private var swLedOffLinePowerVal: Boolean = true
 
+    private var isRunInForeground: Boolean = false
+
     //20180227
     private var swCloudVal: Boolean = false
     private var swCloud3GVal: Boolean = false
@@ -130,6 +132,7 @@ class SettingActivity : AppCompatActivity() {
         getPrivacySettings()
         getDeviceLedSettings()
         getFCMSettings()
+        getServiceSetting()
     }
 
     private fun uiSetListener() {
@@ -480,6 +483,10 @@ class SettingActivity : AppCompatActivity() {
                 }
             }
         }
+
+        swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
+            myPref.setSharePreferenceServiceForeground(isChecked)
+        }
     }
 
     private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {
@@ -599,6 +606,12 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.isChecked = swLedPowerVal
         ledDisconnectPower.isChecked = swLedOffLinePowerVal
+    }
+
+    private fun getServiceSetting() {
+        isRunInForeground = myPref.getSharePreferenceServiceForeground()
+
+        swAllowServiceForeground.isChecked = isRunInForeground
     }
 
     private fun initActionBar() {
