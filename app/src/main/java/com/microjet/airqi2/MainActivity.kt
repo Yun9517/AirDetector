@@ -1721,7 +1721,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val appPackageName = packageName
                 val Dialog = android.app.AlertDialog.Builder(this).create()
                 Dialog.setTitle(getString(R.string.remind))
-                Dialog.setMessage("有新版軟體可更新。")
+                Dialog.setMessage(getString(R.string.new_Version_Notify))
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
                 { dialog, _ ->
