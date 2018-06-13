@@ -4,39 +4,39 @@
     <string name="app_name_knowledge">知識庫</string>
     <string name="app_name_about">關於APP</string>
     <string name="text_message_air_good">空氣品質一般，請保持空氣流通。\n揮發性有機物濃度低，沒有刺激或不適風險</string>
-    <string name="text_message_air_mid">空氣品質輕度污染\n避免長時間待在此環境下(十二個月)\n建議改善通風。</string>
-    <string name="text_message_air_Medium_Orange">空氣品質不佳\n避免長時間待在此環境下(一個月)\n建議加強通風。</string>
+    <string name="text_message_air_mid">空氣品質中等\n避免長時間待在此環境下(十二個月)\n建議改善通風。</string>
+    <string name="text_message_air_Medium_Orange">空污品質偏高\n避免長時間待在此環境下(一個月)\n建議加強通風。</string>
     <string name="text_message_air_bad">空氣品質不健康。避免長時間待在此環境下(數小時)。\n必需加強通風。</string>
-    <string name="text_message_air_Serious_Purple">空氣品質非常不健康。\n請離開並務必加強通風。</string>
-    <string name="text_message_air_Extreme_Dark_Purple">空氣品質非常危險。\n請立即離開並務必加強通風。</string>
+    <string name="text_message_air_Serious_Purple">空氣品質有害健康。\n請離開並務必加強通風。</string>
+    <string name="text_message_air_Extreme_Dark_Purple">空氣品質危害健康。\n請立即離開並務必加強通風。</string>
     <string name="text_message_humidity">一般來說，濕度維持在45%~65％，不僅涼爽舒適，也不會因為過度乾燥、潮濕而影響健康。</string> <!-- 2018/01/04 -->
     <!-- eCO2 message -->
     <string name="label_eCO2_Green">正常</string>
-    <string name="label_eCO2_Yellow">濃度中等</string>
-    <string name="label_eCO2_Orange">濃度過高</string>
-    <string name="label_eCO2_Red">有害健康</string>
-    <string name="label_eCO2_Purple">非常有害健康</string>
-    <string name="label_eCO2_Brown">極度危害健康</string>
+    <string name="label_eCO2_Yellow">中等</string>
+    <string name="label_eCO2_Orange">高</string>
+    <string name="label_eCO2_Red">不健康</string>
+    <string name="label_eCO2_Purple">有害健康</string>
+    <string name="label_eCO2_Brown">危害健康</string>
     <string name="message_eCO2_Green">空氣品質一般</string>
     <string name="message_eCO2_Yellow">空氣品質中等，可能感覺不舒適\n建議改善通風</string>
     <string name="message_eCO2_Orange">空氣品質不佳，避免長時間待在此環境下\n建議加強通風。</string>
     <string name="message_eCO2_Red">空氣品質不健康，避免長時間待在此環境下\n必需加強通風</string>
-    <string name="message_eCO2_Purple">空氣品質非常不健康，請離開並務必加強通風</string>
-    <string name="message_eCO2_Brown">空氣品質極度危害健康，請立即離開並務必加強通風</string>
+    <string name="message_eCO2_Purple">空氣品質有害健康，請離開並務必加強通風</string>
+    <string name="message_eCO2_Brown">空氣品質危害健康，請立即離開並務必加強通風</string>
 
     <!-- pm2.5 message -->
     <string name="label_pm25_Green">正常</string>
-    <string name="label_pm25_Yellow">濃度中等</string>
-    <string name="label_pm25_Orange">濃度過高</string>
-    <string name="label_pm25_Red">有害健康</string>
-    <string name="label_pm25_Purple">非常有害健康</string>
-    <string name="label_pm25_Brown">極度危害健康</string>
+    <string name="label_pm25_Yellow">中等</string>
+    <string name="label_pm25_Orange">高</string>
+    <string name="label_pm25_Red">不健康</string>
+    <string name="label_pm25_Purple">有害健康</string>
+    <string name="label_pm25_Brown">危害健康</string>
     <string name="message_pm25_Green">空氣品質正常。</string>
     <string name="message_pm25_Yellow">空氣品質中等。</string>
     <string name="message_pm25_Orange">空氣品質不佳，避免長時間待在此環境。體質敏感者可能感到不適。</string>
     <string name="message_pm25_Red">空氣品質不健康，避免長時間待在此環境。</string>
-    <string name="message_pm25_Purple">空氣品質非常不健康，請離開此地。</string>
-    <string name="message_pm25_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
+    <string name="message_pm25_Purple">空氣品質有害健康，請離開此地。</string>
+    <string name="message_pm25_Brown">空氣品質危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
 
     <string name="text_message_temperature">一般來說，人體在室內感覺最舒適的溫度是18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
     <string name="text_label_time">時間</string>
@@ -51,11 +51,11 @@
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_status_good">正常</string>
-    <string name="text_label_status_mid">輕度污染</string>
-    <string name="text_label_status_medium_Orange">中度污染</string>
-    <string name="text_label_status_bad">重度污染</string>
-    <string name="text_label_status_Serious_Purple">嚴重污染</string>
-    <string name="text_label_status_Extreme_Dark_Purple">非常嚴重污染</string>
+    <string name="text_label_status_mid">中等</string>
+    <string name="text_label_status_medium_Orange">高</string>
+    <string name="text_label_status_bad">不健康</string>
+    <string name="text_label_status_Serious_Purple">有害健康</string>
+    <string name="text_label_status_Extreme_Dark_Purple">危害健康</string>
     <string name="text_battery_value">電池電量：</string>
     <string name="text_battery_title">裝置電量</string>
     <string name="button_label_ok">確認</string>
@@ -398,7 +398,7 @@
     <string name="getStarted">開始體驗</string>
     <!--    雲端下載視窗    -->
     <string name="messag_text">藍牙裝置名稱</string>
-    <string name="messag_dowload">雲端同步下載</string>
+    <string name="messag_download">雲端同步下載</string>
     <string name="text_navi_personal">個人軌跡</string>
 
     <!-- 2018/05/15 -->
@@ -475,17 +475,18 @@
     <!-- PM10 message -->
     <string name="label_pm10_Green">正常</string>
     <string name="label_pm10_Yellow">中等</string>
-    <string name="label_pm10_Orange">過高</string>
-    <string name="label_pm10_Red">有害健康</string>
-    <string name="label_pm10_Purple">非常有害健康</string>
-    <string name="label_pm10_Brown">極度危害健康</string>
+    <string name="label_pm10_Orange">高</string>
+    <string name="label_pm10_Red">不健康</string>
+    <string name="label_pm10_Purple">有害健康</string>
+    <string name="label_pm10_Brown">危害健康</string>
     <string name="message_pm10_Green">空氣品質正常。</string>
     <string name="message_pm10_Yellow">空氣品質中等。</string>
     <string name="message_pm10_Orange">空氣品質不佳，避免長時間待在此環境。體質敏感者可能感到不適。</string>
     <string name="message_pm10_Red">空氣品質不健康，避免長時間待在此環境。</string>
-    <string name="message_pm10_Purple">空氣品質非常不健康，請離開此地。</string>
-    <string name="message_pm10_Brown">空氣品質極度危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
+    <string name="message_pm10_Purple">空氣品質有害健康，請離開此地。</string>
+    <string name="message_pm10_Brown">空氣品質危害健康，請立即離開。停留過久恐影響肺功能或心律不整。</string>
 
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
+    <string name="new_Version_Notify">有新版軟體可更新</string>
 </resources>

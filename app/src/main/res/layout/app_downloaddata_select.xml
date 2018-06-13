@@ -26,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:minHeight="50dp"
                 android:padding="10dp"
-                android:text="@string/messag_dowload"
+                android:text="@string/messag_download"
                 android:textColor="#ffffffff"
                 android:textSize="22sp" />
 
