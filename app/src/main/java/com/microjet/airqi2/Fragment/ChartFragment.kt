@@ -41,6 +41,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
@@ -56,6 +57,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 /**
  * Created by B00055 on 2018/2/9.
@@ -331,6 +333,9 @@ class ChartFragment : Fragment() {
                     2 -> {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
+                    3 -> {
+                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                    }
                 }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
@@ -543,6 +548,10 @@ class ChartFragment : Fragment() {
                 val dateFormat = SimpleDateFormat("yyyy/MM")
                 btnCallDatePicker.text = dateFormat.format(calObject.time)
             }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy")
+                btnCallDatePicker.text = dateFormat.format(calObject.time)
+            }
         }
 
     }
@@ -597,7 +606,14 @@ class ChartFragment : Fragment() {
                 chart_line.data?.setDrawValues(false)
                 chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
                 chart_line.setVisibleXRange(14.0f, 14.0f)
+            }
 
+            3 -> {
+                getRealmYear()
+                chart_line.data = buildBarData(arrData, arrTime, position)
+                chart_line.data?.setDrawValues(false)
+                chart_line.animateY(3000, Easing.EasingOption.EaseOutBack)
+                chart_line.setVisibleXRange(12.0f, 12.0f)
             }
         }
 
@@ -687,10 +703,10 @@ class ChartFragment : Fragment() {
         arrData.clear()
         //現在時間實體毫秒
         //var touchTime = Calendar.getInstance().timeInMillis
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         Log.d("TVOCbtncallRealm" + useFor.toString(), calObject.get(Calendar.HOUR).toString())
         //將日期設為今天日子加一天減1秒
-        val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val endDay = getCalendarInstanceForDB().timeInMillis
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val realm = Realm.getDefaultInstance()
         val query = realm.where(AsmDataModel::class.java)
@@ -827,6 +843,7 @@ class ChartFragment : Fragment() {
                 result_Yesterday.text = avgTVOC3.toInt().toString() + " μg/m³"
             }
         }
+        realm.close()
     }
 
     @SuppressLint("SetTextI18n")
@@ -835,12 +852,11 @@ class ChartFragment : Fragment() {
         arrData.clear()
         //拿到現在是星期幾的Int
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        //今天的00:00
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val nowDateMills = getCalendarInstanceForDB().timeInMillis
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         var thisWeekAVETvoc: Float
+        val realm = Realm.getDefaultInstance()
         //var aveLastWeekTvoc = 0
         Log.d("getRealmWeek" + useFor.toString(), sqlWeekBase.toString())
         //跑七筆BarChart
@@ -849,7 +865,6 @@ class ChartFragment : Fragment() {
             val sqlStartDate = sqlWeekBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            val realm = Realm.getDefaultInstance()
             val query = realm.where(AsmDataModel::class.java)
             Log.e("thisGetRealmWeekStart" + useFor.toString(), sqlStartDate.toString())
             Log.e("thisGetRealmWeekEnd" + useFor.toString(), sqlEndDate.toString())
@@ -887,6 +902,7 @@ class ChartFragment : Fragment() {
                 arrTime.add((sqlStartDate).toString())
             }
         }
+        realm.close()
     }
 
     private fun getRealmMonth() {
@@ -895,18 +911,18 @@ class ChartFragment : Fragment() {
         //拿到現在是星期幾的Int
         val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
         val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val nowDateMills = getCalendarInstanceForDB().timeInMillis
         //將星期幾退回到星期日為第一時間點
         val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
+        val realm = Realm.getDefaultInstance()
         //跑七筆BarChart
         for (y in 0..(monthCount - 1)) {
             //第一筆為日 00:00
             val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
             //結束點為日 23:59
             val sqlEndDate = sqlStartDate + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-            val realm = Realm.getDefaultInstance()
+
             val query = realm.where(AsmDataModel::class.java)
             val dataCount = (sqlEndDate - sqlStartDate) / (60 * 1000)
             Log.d("TimePeriod" + useFor.toString(), (dataCount.toString() + "thirtySecondsCount"))
@@ -946,7 +962,7 @@ class ChartFragment : Fragment() {
                 arrTime.add((sqlStartDate).toString())
             }
         }
-
+        realm.close()
     }
 
     private fun buildBarData(inputValue: ArrayList<String>, inputTime: ArrayList<String>, positionID: Int?): BarData {
@@ -995,6 +1011,21 @@ class ChartFragment : Fragment() {
                 val dateLabelFormat = SimpleDateFormat("yyyy/MM/dd")
                 labelArray.clear()
                 for (i in 0 until arrTime.size) {
+                    val date = dateFormat.format(input[i].toLong())
+                    val dateLabel = dateLabelFormat.format(input[i].toLong())
+                    chartLabels.add(date)
+                    labelArray.add(dateLabel)
+                }
+                result_Today.text = getString(R.string.text_default_value)
+                result_Yesterday.text = getString(R.string.text_default_value)
+                show_Today.text = getString(R.string.text_default_value)
+                show_Yesterday!!.text = getString(R.string.text_default_value)
+            }
+            3 -> {
+                val dateFormat = SimpleDateFormat("yyyy-MM")
+                val dateLabelFormat = SimpleDateFormat("yyyy-MM")
+                labelArray.clear()
+                for (i in 0 until input.size) {
                     val date = dateFormat.format(input[i].toLong())
                     val dateLabel = dateLabelFormat.format(input[i].toLong())
                     chartLabels.add(date)
@@ -1356,5 +1387,70 @@ class ChartFragment : Fragment() {
             Log.e("ChectPerm", "Permission Granted. Starting export data...")
             parseDataToCsv()
         }
+    }
+
+    private fun getRealmYear() {
+        arrTime.clear()
+        arrData.clear()
+
+        val getYearCal = Calendar.getInstance()
+        getYearCal.set(Calendar.YEAR, calObject.get(Calendar.YEAR))
+        getYearCal.set(Calendar.DAY_OF_YEAR, 1)
+        getYearCal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        getYearCal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+
+        for (y in 0..11) {
+            val sqlStartDate = getYearCal.timeInMillis
+            getYearCal.add(Calendar.MONTH, 1) //加1個月
+            val sqlEndDate = getYearCal.timeInMillis - TimeUnit.SECONDS.toMillis(1)
+            val realm = Realm.getDefaultInstance()
+            val query = realm.where(AsmDataModel::class.java)
+            query.between("Created_time", sqlStartDate, sqlEndDate)
+            val result1 = query.findAll()
+
+            if (result1.size != 0) {
+                var sumMonth = 0f
+                for (i in result1) {
+                    when (useFor) {
+                        DEFINE_FRAGMENT_TVOC -> {
+                            sumMonth += i.tvocValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_ECO2 -> {
+                            sumMonth += i.ecO2Value.toInt()
+                        }
+                        DEFINE_FRAGMENT_TEMPERATURE -> {
+                            sumMonth += i.tempValue.toFloat() + 10.0f
+                        }
+                        DEFINE_FRAGMENT_HUMIDITY -> {
+                            sumMonth += i.humiValue.toInt()
+                        }
+                        DEFINE_FRAGMENT_PM25 -> {
+                            sumMonth += i.pM25Value.toInt()
+                        }
+                    }
+                }
+                arrData.add((sumMonth / result1.size).toString())
+                //依序加入時間
+                arrTime.add((sqlStartDate).toString())
+            } else {
+                arrData.add("65538")
+                //依序加入時間
+                arrTime.add((sqlStartDate).toString())
+            }
+        }
+    }
+
+    private fun getCalendarInstanceForDB(): Calendar {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, calObject.get(Calendar.YEAR))
+        cal.set(Calendar.MONTH, calObject.get(Calendar.MONTH))
+        cal.set(Calendar.DAY_OF_MONTH, calObject.get(Calendar.DAY_OF_MONTH))
+        cal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        cal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        cal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        cal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+        return cal
     }
 }

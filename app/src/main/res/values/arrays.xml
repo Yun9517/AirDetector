@@ -12,6 +12,7 @@
         <item>日</item>
         <item>週</item>
         <item>月</item>
+        <item>年</item>
     </string-array>
 
     <string-array name="tvocArray">
