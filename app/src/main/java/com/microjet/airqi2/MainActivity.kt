@@ -101,7 +101,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
-    //private var menuItem: MenuItem? = null
+
+    private var getDrawerLayoutItem: MenuItem? = null
+
     private var lightIcon: ImageView? = null
 
     private var connState = DISCONNECTED
@@ -357,7 +359,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
-        //checkUIState()
+        checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
         mDeviceAddress = myPref.getSharePreferenceMAC()
@@ -383,7 +385,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService == null) {
             connState = DISCONNECTED
         }
-        checkUIState()
     }
 
     override fun onPause() {
@@ -684,6 +685,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             android.R.id.home -> {
                 //checkUIState()
                 checkLoginState()
+                getDrawerLayoutItem = item
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
 
@@ -760,6 +762,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun accountShow() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
+        mDrawerToggle!!.onOptionsItemSelected(getDrawerLayoutItem)
         if (GetNetWork.isFastGetNet) {
             if (myToken == "") {
                 Log.e("主葉面看偷肯", myToken)
@@ -1117,7 +1120,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             show_Dev_address?.text = myPref.getSharePreferenceMAC()
             show_Device_Name?.text = myPref.getSharePreferenceName()
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            text_Account_status?.text = shareMSG.getString("name", "")
+            checkLoginState()
             /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -1237,7 +1240,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             text_Account_status.text = getString(R.string.account_Deactivation)
         } else {
             val myName = shareToken.getString("name", "")
-            text_Account_status.text = myName
+            val myEmail = shareToken.getString("email", "")
+            when(myName){
+                "空汙鼻使用者" ->text_Account_status.text = myEmail
+                else ->text_Account_status.text = myName
+            }
             Log.e("MainActivity取名字", myName)
         }
     }
