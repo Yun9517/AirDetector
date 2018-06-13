@@ -20,7 +20,9 @@ import com.google.android.gms.location.LocationServices
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.MyApplication
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.TvocNoseData
+import com.microjet.airqi2.warringClass.MainNotification
 import org.greenrobot.eventbus.EventBus
 import java.util.*
 
@@ -148,6 +150,11 @@ class UartService : Service() {
         // invoked when the UI is disconnected from the Service.
         unregisterReceiver(mServiceReceiver)
         close()
+
+        val mPref = PrefObjects(applicationContext)
+        if(!mPref.getSharePreferenceServiceForeground()) {
+            stopForeground(true)
+        }
         return super.onUnbind(intent)
     }
 
@@ -428,5 +435,32 @@ class UartService : Service() {
                 //BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(0))
             }
         }
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Log.e(TAG, "onStartCommand() called...")
+
+        val action = intent?.action
+
+        if(action != null && action == "START_FOREGROUND") {
+            startToForeground()
+        }
+
+        return START_STICKY
+    }
+
+    private fun startToForeground() {
+        val mainNotification = MainNotification(this@UartService)
+
+        val notification = mainNotification.makeNotificion()
+        //notification.
+
+        startForeground(1, notification)
+        Log.e(TAG, "Set service to foreground = on.")
+    }
+
+    fun stopToForeground() {
+        stopForeground(true)
+        Log.e(TAG, "Set service to foreground = off.")
     }
 }

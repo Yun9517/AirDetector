@@ -485,4 +485,5 @@
 
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
+    <string name="text_allow_service_run_in_foreground">允許背景服務常駐通知列</string>
 </resources>
