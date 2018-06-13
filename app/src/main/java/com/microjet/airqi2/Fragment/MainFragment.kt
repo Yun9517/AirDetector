@@ -971,7 +971,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     @SuppressLint("SetTextI18n")
-    public fun setViewSingleLine() {
+    private fun setViewSingleLine() {
         scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
@@ -989,7 +989,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             }
 
             //进行对控件赋值
-            tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
+            tv1?.text = "${TvocNoseData.scrollingList[i]["title"]}..."
             Log.e("scrollingList[title]", TvocNoseData.scrollingList[i]["title"].toString())
             //添加到循环滚动数组里面去
             scrollViewsArr.add(vScrollivs)
