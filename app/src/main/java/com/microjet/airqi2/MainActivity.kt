@@ -235,7 +235,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
 
         //20180209
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        //window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         //20180411   建立警告物件
       //  warningClass = WarningClass(this)
