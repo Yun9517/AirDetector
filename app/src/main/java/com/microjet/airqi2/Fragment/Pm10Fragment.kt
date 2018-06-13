@@ -653,9 +653,11 @@ class Pm10Fragment : Fragment() {
 
         TvocNoseData.arrTimeDay.clear()
         val pm10Realm = Realm.getDefaultInstance()
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
+        //val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset //舊方法
+        //val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset //舊方法
+        val getDayCal = getCalendarInstanceForDB()
+        val startTime = getDayCal.timeInMillis
         //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
         val query = pm10Realm.where(AsmDataModel::class.java)
         //一天共有1440筆
@@ -713,11 +715,10 @@ class Pm10Fragment : Fragment() {
         TvocNoseData.arrPm25Week.clear()
         TvocNoseData.arrPm10Week.clear()
         TvocNoseData.arrTimeWeek.clear()
-        //拿到現在是星期幾的Int
+
         val dayOfWeek = calObject.get(Calendar.DAY_OF_WEEK)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        //今天的00:00
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
+        val getWeekCal = getCalendarInstanceForDB()
+        val startTime = getWeekCal.timeInMillis
         //將星期幾退回到星期日為第一時間點
         val sqlWeekBase = startTime - TimeUnit.DAYS.toMillis((dayOfWeek - 1).toLong())
         //跑七筆BarChart
@@ -775,12 +776,12 @@ class Pm10Fragment : Fragment() {
         TvocNoseData.arrPm25Month.clear()
         TvocNoseData.arrPm10Month.clear()
         TvocNoseData.arrTimeMonth.clear()
+
         val dayOfMonth = calObject.get(Calendar.DAY_OF_MONTH)
         val monthCount = calObject.getActualMaximum(Calendar.DAY_OF_MONTH)
-        val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
-        val nowDateMills = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         //將星期幾退回到星期日為第一時間點
-        val sqlMonthBase = nowDateMills - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
+        val getMonthCal = getCalendarInstanceForDB()
+        val sqlMonthBase = getMonthCal.timeInMillis - TimeUnit.DAYS.toMillis((dayOfMonth - 1).toLong())
         Log.d("getRealmMonth" + useFor.toString(), sqlMonthBase.toString())
         for (y in 0..(monthCount - 1)) {
             val sqlStartDate = sqlMonthBase + TimeUnit.DAYS.toMillis(y.toLong())
@@ -995,5 +996,15 @@ class Pm10Fragment : Fragment() {
 
     }
 
-
+    private fun getCalendarInstanceForDB(): Calendar {
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, calObject.get(Calendar.YEAR))
+        cal.set(Calendar.MONTH, calObject.get(Calendar.MONTH))
+        cal.set(Calendar.DAY_OF_MONTH, calObject.get(Calendar.DAY_OF_MONTH))
+        cal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        cal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        cal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        cal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+        return cal
+    }
 }
