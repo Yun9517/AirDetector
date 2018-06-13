@@ -1,6 +1,7 @@
 package com.microjet.airqi2
 
 import android.content.ContentValues.TAG
+import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import com.google.firebase.iid.FirebaseInstanceId
@@ -8,7 +9,9 @@ import okhttp3.*
 import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
-class SignOutTask: AsyncTask<String, Int, String>() {
+class SignOutTask(input: Context): AsyncTask<String, Int, String>() {
+
+    private var mContext: Context? = input
 
     override fun doInBackground(vararg params: String): String? {
         try{
@@ -32,7 +35,11 @@ class SignOutTask: AsyncTask<String, Int, String>() {
 
             if (!response.isSuccessful) { Log.d(TAG, "ERROR") }
             else {
-
+                if (mContext != null) {
+                    val shareToKen = mContext?.getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+                    shareToKen!!.edit().putString("token", "").apply()
+                    shareToKen!!.edit().putString("LoginPassword", "").apply()
+                }
             }
         } catch (e: Exception) {
             Log.e("backLogOutE", "restError")
