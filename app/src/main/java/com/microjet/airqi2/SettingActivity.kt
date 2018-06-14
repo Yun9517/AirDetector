@@ -676,16 +676,16 @@ class SettingActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage("$msg\t請確定裝置與電源連接正常，手機儘量接近裝置，以利FW更新。")
+        Dialog.setTitle(getString(R.string.new_FW_Arrival_Dialog_Title))
+        Dialog.setMessage(getString(R.string.new_FW_Arrival_Dialog))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
 
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.new_FW_Arrival_Dialog_Button_Later))//否
         { dialog, _ ->
             dialog.dismiss()
         }
-        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.new_FW_Arrival_Dialog_Button_Update))//是
         { dialog, _ ->
 
             dialog.dismiss()
