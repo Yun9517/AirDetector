@@ -52,7 +52,7 @@ class UartService : Service() {
     private var mBluetoothGatt: BluetoothGatt? = null
     private var mConnectionState = STATE_DISCONNECTED
 
-   // private val bus = EventBus.getDefault()
+    // private val bus = EventBus.getDefault()
     //private val bleEventObj = BleEvent()
 
     // 20180328 Add Location Request to Service
@@ -151,10 +151,10 @@ class UartService : Service() {
         unregisterReceiver(mServiceReceiver)
         close()
 
-        val mPref = PrefObjects(applicationContext)
-        if(!mPref.getSharePreferenceServiceForeground()) {
-            stopForeground(true)
-        }
+        //val mPref = PrefObjects(applicationContext)
+        //if(!mPref.getSharePreferenceServiceForeground()) {
+        stopForeground(true)
+        //}
         return super.onUnbind(intent)
     }
 
@@ -430,9 +430,9 @@ class UartService : Service() {
                 }
                 BroadcastActions.INTENT_KEY_PUMP_ON -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
                 BroadcastActions.INTENT_KEY_PUMP_OFF -> writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
-                // 2018/05/08
+            // 2018/05/08
                 BroadcastActions.INTENT_KEY_PM25_FAN_ON -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(10))
-                //BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(0))
+            //BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(0))
             }
         }
     }
@@ -442,8 +442,11 @@ class UartService : Service() {
 
         val action = intent?.action
 
-        if(action != null && action == "START_FOREGROUND") {
-            startToForeground()
+        if (action != null) {
+            when (action) {
+                "START_FOREGROUND" -> startToForeground()
+                "STOP_FOREGROUND" -> stopForeground(true)
+            }
         }
 
         return START_STICKY
@@ -457,10 +460,5 @@ class UartService : Service() {
 
         startForeground(1, notification)
         Log.e(TAG, "Set service to foreground = on.")
-    }
-
-    fun stopToForeground() {
-        stopForeground(true)
-        Log.e(TAG, "Set service to foreground = off.")
     }
 }

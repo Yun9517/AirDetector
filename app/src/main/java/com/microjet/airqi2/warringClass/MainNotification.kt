@@ -9,6 +9,8 @@ import android.content.Intent
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.widget.RemoteViews
+import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 import io.realm.internal.SyncObjectServerFacade.getApplicationContext
@@ -28,11 +30,11 @@ class MainNotification(context: Context) {
 
         // 建立觸碰通知範圍時的PendingIntent
         val actionIntent = Intent(getApplicationContext(), MainActivity::class.java)
-        val pi = PendingIntent.getActivity(getApplicationContext(),
+        val mainPendingIntent = PendingIntent.getActivity(getApplicationContext(),
                 0, actionIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val notificionManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            val notificationManager = mContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             val notificationChannel = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 NotificationChannel(NOTIF_ID, NOTIF_NAME, NotificationManager.IMPORTANCE_LOW)
             } else {
@@ -45,7 +47,7 @@ class MainNotification(context: Context) {
             notificationChannel.enableVibration(false)
             notificationChannel.setSound(null, null)
 
-            notificionManager.createNotificationChannel(notificationChannel)
+            notificationManager.createNotificationChannel(notificationChannel)
         }
 
         val notificationBuilder = if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -54,15 +56,29 @@ class MainNotification(context: Context) {
             NotificationCompat.Builder(mContext)
         }
 
-        //notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
+        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher)
+        contentView.setTextViewText(R.id.contentTitle, "ADDWII")
+        contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))
+
+        contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("STOP_FOREGROUND"))
 
         notificationBuilder.setOngoing(true)
 
-        notificationBuilder.setContentTitle("ADDWII")
-        notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
+        //notificationBuilder.setContentTitle("ADDWII")
+        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
         notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
-        notificationBuilder.setContentIntent(pi)
+        notificationBuilder.setCustomContentView(contentView)
+        notificationBuilder.setContentIntent(mainPendingIntent)
 
         return notificationBuilder.build()
+    }
+
+    private fun createPendingIntent(action: String): PendingIntent {
+        // 為了儲存對應Action的Service的Intent，建立PendingIntent
+        val service = Intent(mContext, UartService::class.java)
+        service.action = action
+
+        return PendingIntent.getService(mContext, 0, service, 0)
     }
 }
