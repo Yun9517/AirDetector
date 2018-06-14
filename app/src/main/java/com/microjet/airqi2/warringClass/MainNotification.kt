@@ -61,7 +61,8 @@ class MainNotification(context: Context) {
         contentView.setTextViewText(R.id.contentTitle, "ADDWII")
         contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))
 
-        contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("STOP_FOREGROUND"))
+        //contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("STOP_FOREGROUND"))
+        contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("MANUAL_DISCONNECT"))
 
         notificationBuilder.setOngoing(true)
 
