@@ -13,11 +13,12 @@ import com.microjet.airqi2.Account.AccountActiveActivity
 /**
  * Created by B00190 on 2018/5/29.
  */
-class CheckFragment: DialogFragment() {
-    fun newInstance(title: Int, activity: Activity?): CheckFragment {
+class CheckFragment : DialogFragment() {
+    fun newInstance(title: Int, activity: Activity?, howMany: Int): CheckFragment {
         val frag = CheckFragment()
         val args = Bundle()
         args.putInt("title", title) //傳入title參數
+        args.putInt("howMany", howMany)
         frag.setArguments(args)
         return frag
     }
@@ -25,21 +26,31 @@ class CheckFragment: DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         super.onCreate(savedInstanceState)
         val title = arguments.getInt("title") //取得參數title
-
-        //回傳AlertDialog
-        return AlertDialog.Builder(activity)
-                .setTitle(title)
-                .setPositiveButton("確定",{ dialog,which ->
-                    when (activity::class.java.simpleName) {
-                        "AccountActiveActivity" -> {
-                            (activity as? AccountActiveActivity)?.doPositiveClick()
-                        }
+        val howMany = arguments.getInt("howMany")
+        val whichActivity = AlertDialog.Builder(activity)
+        when (howMany) {
+        //one Button
+            1 -> whichActivity.setPositiveButton("確定", { dialog, which ->
+                when (activity::class.java.simpleName) {
+                    "AccountManagementActivity" -> {
+                        dismiss()
                     }
-                })
-                .setNegativeButton("取消",{ dialog,which ->
-                    dismiss()
-                })
-                .create()
+                }
+            })
+
+        //two Button
+            2 -> whichActivity.setPositiveButton("確定", { dialog, which ->
+                when (activity::class.java.simpleName) {
+                    "AccountActiveActivity" -> {
+                        (activity as? AccountActiveActivity)?.doPositiveClick()
+                    }
+                }
+            })
+                    .setNegativeButton("取消", { dialog, which ->
+                        dismiss()
+                    })
+        }
+        return whichActivity.setTitle(title).create()
     }
 
 }
