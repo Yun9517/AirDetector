@@ -446,6 +446,7 @@ class UartService : Service() {
             when (action) {
                 "START_FOREGROUND" -> startToForeground()
                 "STOP_FOREGROUND" -> stopForeground(true)
+                "MANUAL_DISCONNECT" -> disconnect()
             }
         }
 
