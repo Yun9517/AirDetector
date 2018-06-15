@@ -25,23 +25,31 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
         try {
             val response = client.newCall(request).execute()
             if (!response.isSuccessful) {
-                Log.e(TAG,"ERROR")
+                Log.e(TAG, "ERROR")
             } else {
                 val res = response.body()?.string()
-                Log.e(TAG,res)
+                Log.e(TAG, res)
                 val jsonObj = JSONObject(res)
                 //取出posts內容
                 val resultArray = jsonObj.getJSONArray("posts")
 
-                for(i in 0 until resultArray.length()){
+                for (i in 0 until resultArray.length()) {
                     val jsonObjScrolling = resultArray.getJSONObject(i)
-                    val hashMap = HashMap<String,String>()
-                    hashMap["title"] = jsonObjScrolling["title"].toString()
+                    val hashMap = HashMap<String, String>()
+                    val jsonObjTitle = resultArray.getJSONObject(i)
+                            .getJSONObject("custom_fields")
+                            .getJSONArray("tm_posts_short_description")
+                            .getString(0)
+                    if (jsonObjTitle != "") {
+                        hashMap["title"] = jsonObjTitle
+                    } else {
+                        hashMap["title"] = jsonObjScrolling["title"].toString()
+                    }
                     hashMap["url"] = jsonObjScrolling["url"].toString()
                     TvocNoseData.scrollingList.add(hashMap)
                 }
-                Log.e(TAG,  TvocNoseData.scrollingList.toString())
-           }
+                Log.e(TAG, TvocNoseData.scrollingList.toString())
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }

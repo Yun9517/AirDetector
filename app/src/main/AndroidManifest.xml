@@ -10,7 +10,7 @@
     <!-- Vibrate -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- 20180209 PowerWAKE_LOCK -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <!--uses-permission android:name="android.permission.WAKE_LOCK" /-->
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use

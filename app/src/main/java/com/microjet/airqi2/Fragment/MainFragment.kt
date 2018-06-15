@@ -100,12 +100,12 @@ class MainFragment : Fragment(), View.OnTouchListener {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        show_TVOC.setOnTouchListener(this)
-        show_eCO2.setOnTouchListener(this)
-        show_Temp.setOnTouchListener(this)
-        show_RH.setOnTouchListener(this)
-        show_PM.setOnTouchListener(this)
-        show_PM10.setOnTouchListener(this)
+        show_TVOC?.setOnTouchListener(this)
+        show_eCO2?.setOnTouchListener(this)
+        show_Temp?.setOnTouchListener(this)
+        show_RH?.setOnTouchListener(this)
+        show_PM?.setOnTouchListener(this)
+        show_PM10?.setOnTouchListener(this)
 
         imgLight.setOnTouchListener { view, motionEvent ->
             if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
@@ -325,19 +325,19 @@ class MainFragment : Fragment(), View.OnTouchListener {
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
         //DetectorValue=currentValue
-        tvBtmTVOCValue.text = tvocDataFloat.toInt().toString() + " ppb"
+        tvBtmTVOCValue?.text = tvocDataFloat.toInt().toString() + " ppb"
         //if (MyApplication.isPM25 == "000000000000") {
         if (pm25DataFloat == 65535f) {
-            tvBtmPM25Value.text = "Not Support"
-            show_PM.isEnabled = false
+            tvBtmPM25Value?.text = "Not Support"
+            show_PM?.isEnabled = false
         } else {
-            tvBtmPM25Value.text = pm25DataFloat.toInt().toString() + " μg/m³"
-            show_PM.isEnabled = true
+            tvBtmPM25Value?.text = pm25DataFloat.toInt().toString() + " μg/m³"
+            show_PM?.isEnabled = true
         }
-        tvBtmCO2Value.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
-        tvBtmHUMIValue.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
-        tvBtmPM10Value.text = pm10DataFloat.toInt().toString() + " μg/m³"
+        tvBtmCO2Value?.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
+        tvBtmTEMPValue?.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
+        tvBtmHUMIValue?.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
+        tvBtmPM10Value?.text = pm10DataFloat.toInt().toString() + " μg/m³"
     }
 
     @SuppressLint("SetTextI18n")
@@ -828,21 +828,21 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 tvLastDetectTime.text = dateFormat.format(date).toString()
                 //20171228 ANDY增加
             } else {
-                inCircleValue.text = " "
-                inCircleState.text = " "
-                tvBtmTVOCValue.text = "---"
-                tvBtmPM25Value.text = "---"
-                tvBtmCO2Value?.text = "---"
-                tvBtmTEMPValue.text = "---"/*currentValue[0] + " ℃"*/
-                tvBtmHUMIValue.text = "---"/*currentValue[1] + " %"*/
-                tvBtmPM10Value.text = "---"
-                tvNotify?.text = " "
-                tvLastDetectTime.text = " "
-                inCircleBar.setCurrentValues(0f)
-                imgLight?.setImageResource(R.drawable.app_android_icon_light)
                 setNewsPanelShow(false)
             }
         } else {
+            inCircleValue?.text = " "
+            inCircleState?.text = " "
+            tvBtmTVOCValue?.text = "---"
+            tvBtmPM25Value?.text = "---"
+            tvBtmCO2Value?.text = "---"
+            tvBtmTEMPValue?.text = "---"/*currentValue[0] + " ℃"*/
+            tvBtmHUMIValue?.text = "---"/*currentValue[1] + " %"*/
+            tvBtmPM10Value?.text = "---"
+            tvNotify?.text = " "
+            tvLastDetectTime?.text = " "
+            inCircleBar?.setCurrentValues(0f)
+            imgLight?.setImageResource(R.drawable.app_android_icon_light)
             setNewsPanelShow(true)
         }
     }
@@ -971,7 +971,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     @SuppressLint("SetTextI18n")
-    public fun setViewSingleLine() {
+    private fun setViewSingleLine() {
         scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
@@ -989,7 +989,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             }
 
             //进行对控件赋值
-            tv1.text = "${TvocNoseData.scrollingList[i]["title"]}..."
+            tv1?.text = "${TvocNoseData.scrollingList[i]["title"]}..."
             Log.e("scrollingList[title]", TvocNoseData.scrollingList[i]["title"].toString())
             //添加到循环滚动数组里面去
             scrollViewsArr.add(vScrollivs)
