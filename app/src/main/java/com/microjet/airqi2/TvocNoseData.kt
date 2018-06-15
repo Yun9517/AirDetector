@@ -126,6 +126,14 @@ object TvocNoseData {
     var arrPm10Month: ArrayList<String> = arrayListOf()
     var arrTimeMonth: ArrayList<String> = arrayListOf()
 
+    var arrTvocYear: ArrayList<String> = arrayListOf()
+    var arrEco2Year: ArrayList<String> = arrayListOf()
+    var arrTempYear: ArrayList<String> = arrayListOf()
+    var arrHumiYear: ArrayList<String> = arrayListOf()
+    var arrPm25Year: ArrayList<String> = arrayListOf()
+    var arrPm10Year: ArrayList<String> = arrayListOf()
+    var arrTimeYear: ArrayList<String> = arrayListOf()
+
     // 20180518 setting by 白~~~~~~~~~~~~~~~~~~~~~告
     var firebaseNotiftime: Int = 0
     var firebaseNotifPM25: Int = 35

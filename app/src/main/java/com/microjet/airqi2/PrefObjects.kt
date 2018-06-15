@@ -158,4 +158,13 @@ class PrefObjects(context: Context) {
     fun setSharePreferencePrivacy(value: Boolean) {
         share.edit().putBoolean(SavePreferences.SETTING_MAP_PRIVACY, value).apply()
     }
+
+
+    fun getSharePreferenceServiceForeground(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_FOREGROUND, false)
+    }
+
+    fun setSharePreferenceServiceForeground(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_FOREGROUND, value).apply()
+    }
 }

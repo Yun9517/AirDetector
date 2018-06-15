@@ -3,11 +3,11 @@
     <string name="app_name_air_map">Air map</string>
     <string name="app_name_knowledge">Knowledge</string>
     <string name="app_name_about">About</string>
-    <string name="text_message_air_good">Air quality is normal, please keep it fresh. TVOC is low, no irritation or discomfort risk.</string>
-    <string name="text_message_air_mid">The air quality is slightly polluted. Avoid staying in this situation too long (12 months). Improved ventilation is recommended.</string>
-    <string name="text_message_air_Medium_Orange">The air quality is poor. Avoid staying in this situation too long (1 month). Intensified ventilation is recommended.</string>
+    <string name="text_message_air_good">The air quality is normal, please keep it fresh. TVOC is low, no irritation or discomfort risk.</string>
+    <string name="text_message_air_mid">The air quality is moderate. Avoid staying in this situation too long (12 months). Improved ventilation is recommended.</string>
+    <string name="text_message_air_Medium_Orange">The air quality is high pollution. Avoid staying in this situation too long (1 month). Intensified ventilation is recommended.</string>
     <string name="text_message_air_bad">The air quality is unhealthy. Avoid staying in this situation too long (Within hours). Intensified ventilation is necessary.</string>
-    <string name="text_message_air_Serious_Purple">The air quality is very unhealthy. Please leave here. Intensified ventilation is mandatory.</string>
+    <string name="text_message_air_Serious_Purple">The air quality is harmful. Please leave here. Intensified ventilation is mandatory.</string>
     <string name="text_message_air_Extreme_Dark_Purple">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
     <string name="text_message_humidity">Normally, Human feels cool and comfortable when the humidity percent range is about 45%~65%. Your body healthy cannot be afforded by too dry or too moist.</string>
     <string name="text_message_temperature">Normally, the best temperature for human is about 18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
@@ -16,13 +16,13 @@
     <string name="label_eCO2_Yellow">Moderate</string>
     <string name="label_eCO2_Orange">High</string>
     <string name="label_eCO2_Red">Unhealthy</string>
-    <string name="label_eCO2_Purple">Very Unhealthy</string>
+    <string name="label_eCO2_Purple">Harmful</string>
     <string name="label_eCO2_Brown">Hazardous</string>
     <string name="message_eCO2_Green">The air quality is normal.</string>
     <string name="message_eCO2_Yellow">The air quality is moderate. You may feel uncomfortable. Improved ventilation is recommended.</string>
-    <string name="message_eCO2_Orange">The air quality is poor. Avoid staying in this situation too long. Intensified ventilation is recommended.</string>
+    <string name="message_eCO2_Orange">The air quality is high pollution. Avoid staying in this situation too long. Intensified ventilation is recommended.</string>
     <string name="message_eCO2_Red">The air quality is unhealthy. Avoid staying in this situation too long. Intensified ventilation is necessary.</string>
-    <string name="message_eCO2_Purple">The air quality is very unhealthy. Please leave here. Intensified ventilation is mandatory.</string>
+    <string name="message_eCO2_Purple">The air quality is harmful. Please leave here. Intensified ventilation is mandatory.</string>
     <string name="message_eCO2_Brown">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
 
     <!-- pm2.5 message -->
@@ -30,13 +30,13 @@
     <string name="label_pm25_Yellow">Moderate</string>
     <string name="label_pm25_Orange">High</string>
     <string name="label_pm25_Red">Unhealthy</string>
-    <string name="label_pm25_Purple">Very Unhealthy</string>
+    <string name="label_pm25_Purple">Harmful</string>
     <string name="label_pm25_Brown">Hazardous</string>
-    <string name="message_pm25_Green">The air quality is fine.</string>
+    <string name="message_pm25_Green">The air quality is normal.</string>
     <string name="message_pm25_Yellow">The air quality is moderate.</string>
-    <string name="message_pm25_Orange">The air quality is poor. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
+    <string name="message_pm25_Orange">The air quality is high pollution. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
     <string name="message_pm25_Red">The air quality is unhealthy. Avoid staying in this situation too long.</string>
-    <string name="message_pm25_Purple">The air quality is very unhealthy. Please leave here.</string>
+    <string name="message_pm25_Purple">The air quality is harmful. Please leave here.</string>
     <string name="message_pm25_Brown">The air quality is hazardous. Please leave here immediately. Stay too long may affect lung function or causing irregular heartbeat.</string>
 
     <string name="text_label_tvoc">TVOC</string>
@@ -49,11 +49,11 @@
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_status_good">Normal</string>
-    <string name="text_label_status_mid">Mild pollution</string>
-    <string name="text_label_status_medium_Orange">Medium pollution</string>
-    <string name="text_label_status_bad">High pollution</string>
-    <string name="text_label_status_Serious_Purple">Serious pollution</string>
-    <string name="text_label_status_Extreme_Dark_Purple">Extreme pollution</string>
+    <string name="text_label_status_mid">Moderate</string>
+    <string name="text_label_status_medium_Orange">High pollution</string>
+    <string name="text_label_status_bad">Unhealthy</string>
+    <string name="text_label_status_Serious_Purple">Harmful</string>
+    <string name="text_label_status_Extreme_Dark_Purple">Hazardous</string>
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>
@@ -229,8 +229,8 @@
 
     <string name="download_min">Have a cup of tea</string>
 
-    <string name="text_label_latitude">Latitude:</string>
-    <string name="text_label_longitude">Longitude:</string>
+    <string name="text_label_latitude">Lati</string>
+    <string name="text_label_longitude">Longi</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">Slow your click attempt</string>
@@ -250,7 +250,7 @@
 
     <!--    雲端下載視窗    -->
     <string name="messag_text">Device Name</string>
-    <string name="messag_dowload">Data Sync</string>
+    <string name="messag_download">Data Sync</string>
     <string name="text_navi_personal">Personal trail</string>
     <string name="text_label_time">Time</string>
     <string name="download_text">Download Progress:</string>
@@ -374,12 +374,24 @@
     <string name="label_pm10_Red">Unhealthy</string>
     <string name="label_pm10_Purple">Harmful</string>
     <string name="label_pm10_Brown">Hazardous</string>
-    <string name="message_pm10_Green">The air quality is fine.</string>
+    <string name="message_pm10_Green">The air quality is normal.</string>
     <string name="message_pm10_Yellow">The air quality is moderate.</string>
-    <string name="message_pm10_Orange">The air quality is poor. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
+    <string name="message_pm10_Orange">The air quality is high pollution. Avoid staying in this situation too long. Sensitive people may feel uncomfortable.</string>
     <string name="message_pm10_Red">The air quality is unhealthy. Avoid staying in this situation too long.</string>
-    <string name="message_pm10_Purple">The air quality is very unhealthy. Please leave here.</string>
+    <string name="message_pm10_Purple">The air quality is harmful. Please leave here.</string>
     <string name="message_pm10_Brown">The air quality is hazardous. Please leave here immediately. Stay too long may affect lung function or causing irregular heartbeat.</string>
 
     <string name="text_main_page_hint">More detail</string>
+    <string name="text_save_setting_message">Click SAVE to complete all set up</string>
+    <string name="text_service_live_in_foreground">ADDWII executes in background!</string>
+    <string name="text_allow_service_run_in_foreground">Allow background service alive in notification</string>
+    <string name="text_allow_service_run_in_foreground_comment">Restart APP to active（Must completely close APP）</string>
+    <string name="new_Version_Notify">You can update to the latest version.</string>
+
+    <!-- 2018/06/14 FW update dialog -->
+    <string name="new_FW_Arrival_Dialog_Title">Firmware Update</string>
+    <string name="new_FW_Arrival_Dialog">Ensure the device is connected to the charger and avoid shaking the device or your phone.\n
+Please note that the risk of FW update failure exists in any conditions. If this occurs, please refer to Q&amp;A or contact us.</string>
+    <string name="new_FW_Arrival_Dialog_Button_Update">Update now</string>
+    <string name="new_FW_Arrival_Dialog_Button_Later">Ask me later</string>
 </resources>

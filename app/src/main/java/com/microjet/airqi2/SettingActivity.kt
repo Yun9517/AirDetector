@@ -57,6 +57,8 @@ class SettingActivity : AppCompatActivity() {
     private var swLedPowerVal: Boolean = true
     private var swLedOffLinePowerVal: Boolean = true
 
+    private var isRunInForeground: Boolean = false
+
     //20180227
     private var swCloudVal: Boolean = false
     private var swCloud3GVal: Boolean = false
@@ -130,6 +132,7 @@ class SettingActivity : AppCompatActivity() {
         getPrivacySettings()
         getDeviceLedSettings()
         getFCMSettings()
+        getServiceSetting()
     }
 
     private fun uiSetListener() {
@@ -480,6 +483,10 @@ class SettingActivity : AppCompatActivity() {
                 }
             }
         }
+
+        swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
+            myPref.setSharePreferenceServiceForeground(isChecked)
+        }
     }
 
     private fun setSeekBarColor(view: RangeSeekBar, min: Float, isTVOC: Boolean) {
@@ -497,8 +504,8 @@ class SettingActivity : AppCompatActivity() {
                 in 0..15 -> Colors.tvocCO2Colors[0]
                 in 16..34 -> Colors.tvocCO2Colors[1]
                 in 35..54 -> Colors.tvocCO2Colors[2]
-                in 55..150 -> Colors.tvocCO2Colors[3]
-                in 151..250 -> Colors.tvocCO2Colors[4]
+                in 55..149 -> Colors.tvocCO2Colors[3]
+                in 150..250 -> Colors.tvocCO2Colors[4]
                 else -> Colors.tvocCO2Colors[5]
             })
         }
@@ -601,6 +608,12 @@ class SettingActivity : AppCompatActivity() {
         ledDisconnectPower.isChecked = swLedOffLinePowerVal
     }
 
+    private fun getServiceSetting() {
+        isRunInForeground = myPref.getSharePreferenceServiceForeground()
+
+        swAllowServiceForeground.isChecked = isRunInForeground
+    }
+
     private fun initActionBar() {
         // 取得 actionBar
         val actionBar = supportActionBar
@@ -663,16 +676,16 @@ class SettingActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage("$msg\t請確定裝置與電源連接正常，手機儘量接近裝置，以利FW更新。")
+        Dialog.setTitle(getString(R.string.new_FW_Arrival_Dialog_Title))
+        Dialog.setMessage(getString(R.string.new_FW_Arrival_Dialog))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
 
-        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
+        Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.new_FW_Arrival_Dialog_Button_Later))//否
         { dialog, _ ->
             dialog.dismiss()
         }
-        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.new_FW_Arrival_Dialog_Button_Update))//是
         { dialog, _ ->
 
             dialog.dismiss()

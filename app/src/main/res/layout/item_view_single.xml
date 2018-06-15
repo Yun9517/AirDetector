@@ -19,8 +19,9 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textColor="@color/whiteColor"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
 
+        <!--2018/05/09 android:textSize="12sp"14"-->
     </RelativeLayout>
 
 

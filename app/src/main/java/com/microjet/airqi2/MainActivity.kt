@@ -36,6 +36,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.microjet.airqi2.Account.AccountActiveActivity
@@ -101,7 +102,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
-    //private var menuItem: MenuItem? = null
+
+    private var getDrawerLayoutItem: MenuItem? = null
+
     private var lightIcon: ImageView? = null
 
     private var connState = DISCONNECTED
@@ -157,6 +160,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             if (!myPref.getSharePreferenceManualDisconn()) {
                 mUartService?.connect(mDeviceAddress)
             }
+            if(myPref.getSharePreferenceServiceForeground()) {
+                val serviceIntent = Intent(this@MainActivity, UartService::class.java)
+                serviceIntent.action = "START_FOREGROUND"
+                startService(serviceIntent)
+            }
             mUartService?.initFuseLocationProviderClient()
         }
 
@@ -208,6 +216,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var c6d6map = HashMap<String, String>()
     private var lati = 255f  //TvocNoseData.lati
     private var longi = 255f //TvocNoseData.longi
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -235,7 +244,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
 
         //20180209
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        //window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         //20180411   建立警告物件
       //  warningClass = WarningClass(this)
@@ -278,6 +287,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                         val uri = Uri.parse(experienceURL)
                                         val intent = Intent(Intent.ACTION_VIEW, uri)
                                         startActivity(intent)
+                                        val bundle = Bundle()
+                                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
+                                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
+                                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                                     }
                                 }
                                 1 -> {
@@ -307,7 +320,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
                 2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
-                3 -> { airmapShow() }
+                3 -> { trailMapShow() }
                 4 -> { knowledgeShow() }
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
@@ -349,6 +362,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -357,7 +372,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
-        //checkUIState()
+        checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
         mDeviceAddress = myPref.getSharePreferenceMAC()
@@ -383,7 +398,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService == null) {
             connState = DISCONNECTED
         }
-        checkUIState()
     }
 
     override fun onPause() {
@@ -577,6 +591,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 collapseIndicatorAnim(250)
 
                 indicator.visibility = View.INVISIBLE
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VIEW_SCROLL")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+                mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
             }
 
             override fun onPageSelected(position: Int) {
@@ -684,6 +702,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             android.R.id.home -> {
                 //checkUIState()
                 checkLoginState()
+                getDrawerLayoutItem = item
                 mDrawerToggle!!.onOptionsItemSelected(item)
             }
 
@@ -713,7 +732,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-    private fun airmapShow() {
+    private fun trailMapShow() {
         val isPrivacy = myPref.getSharePreferencePrivacy()
         if (isPrivacy) {
             DefaultPatternCheckingActivity.startAction(this@MainActivity,
@@ -728,6 +747,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             })
             startActivity(i)
         }
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TRAIL_MAP")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     // 20171127 Raymond 新增：知識庫activity
@@ -735,6 +758,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //blueToothDisconnect()
         val i: Intent? = Intent(this, KnowledgeActivity::class.java)
         startActivity(i)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "KNOW_HOW")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     // 20171219 Raymond 新增：Q&A activity
@@ -760,6 +787,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun accountShow() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
+        mDrawerToggle!!.onOptionsItemSelected(getDrawerLayoutItem)
         if (GetNetWork.isFastGetNet) {
             if (myToken == "") {
                 Log.e("主葉面看偷肯", myToken)
@@ -803,7 +831,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_getData -> {
             }
             R.id.nav_setting -> settingShow()
-            R.id.nav_personal_map -> airmapShow()
+            R.id.nav_personal_map -> trailMapShow()
         }
         drawerLayout?.closeDrawer(GravityCompat.START)
     }
@@ -1117,7 +1145,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             show_Dev_address?.text = myPref.getSharePreferenceMAC()
             show_Device_Name?.text = myPref.getSharePreferenceName()
             val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
-            text_Account_status?.text = shareMSG.getString("name", "")
+            checkLoginState()
             /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = false
             naviView.menu?.findItem(R.id.nav_disconnect_device)?.isVisible = true*/
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
@@ -1237,7 +1265,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             text_Account_status.text = getString(R.string.account_Deactivation)
         } else {
             val myName = shareToken.getString("name", "")
-            text_Account_status.text = myName
+            val myEmail = shareToken.getString("email", "")
+            when(myName){
+                "空汙鼻使用者" ->text_Account_status.text = myEmail
+                else ->text_Account_status.text = myName
+            }
             Log.e("MainActivity取名字", myName)
         }
     }
@@ -1709,7 +1741,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val appPackageName = packageName
                 val Dialog = android.app.AlertDialog.Builder(this).create()
                 Dialog.setTitle(getString(R.string.remind))
-                Dialog.setMessage("有新版軟體可更新。")
+                Dialog.setMessage(getString(R.string.new_Version_Notify))
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.Reject))//否
                 { dialog, _ ->
@@ -1782,6 +1814,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         i!!.putExtra("URL", url)
         i!!.putExtra("TITLE", title)
         startActivity(i)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PUBLIC_MAP")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     private fun CheckSWversion() {
