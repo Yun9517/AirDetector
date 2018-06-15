@@ -42,7 +42,7 @@
     <string name="text_label_time">时间</string>
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
-    <string name="text_label_pm10">PM2.5</string>
+    <string name="text_label_pm10">PM10</string>
     <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">温度</string>
     <string name="text_label_humidity">湿度</string>
