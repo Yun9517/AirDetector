@@ -229,8 +229,8 @@
 
     <string name="download_min">Have a cup of tea</string>
 
-    <string name="text_label_latitude">Latitude:</string>
-    <string name="text_label_longitude">Longitude:</string>
+    <string name="text_label_latitude">Lati</string>
+    <string name="text_label_longitude">Longi</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">Slow your click attempt</string>

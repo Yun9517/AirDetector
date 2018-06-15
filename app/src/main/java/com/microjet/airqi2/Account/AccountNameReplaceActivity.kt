@@ -22,7 +22,7 @@ import okhttp3.RequestBody
 @Suppress("IMPLICIT_CAST_TO_ANY")
 class AccountNameReplaceActivity : AppCompatActivity() {
 
-    val replaceNameActivity: Activity = this
+    private val replaceNameActivity: Activity = this
     private var mContext: Context? = null
     //private var enter_ID : EditText? = null
     private var mMyThing: mything? = null
