@@ -205,7 +205,11 @@ class Pm10Fragment : Fragment() {
                     textView.text = chartLabelUnit
                 }
                 else -> {
-                    textView.text = (chartMin + (j) * chartIntervalStep).toInt().toString()
+                    if (i % 60 == 0) {
+                        textView.text = ""
+                    } else {
+                        textView.text = (chartMin + (j) * chartIntervalStep).toInt().toString()
+                    }
                 }
             }
             RelativeLayoutForLabelTextView.addView(textView)
