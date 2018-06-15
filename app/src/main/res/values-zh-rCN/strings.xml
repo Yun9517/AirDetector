@@ -485,7 +485,9 @@
 
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">设定完成后请储存设定</string>
+    <string name="text_service_live_in_foreground">ADDWII仍在背景执行！</string>
     <string name="text_allow_service_run_in_foreground">允许背景服务常驻通知列</string>
+    <string name="text_allow_service_run_in_foreground_comment">下一次开启APP时才会生效（须将APP完全滑掉）。</string>
     <string name="new_Version_Notify">有新版软件可更新</string>
 
     <!-- 2018/06/14 FW update dialog -->

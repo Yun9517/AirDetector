@@ -382,8 +382,10 @@
     <string name="message_pm10_Brown">The air quality is hazardous. Please leave here immediately. Stay too long may affect lung function or causing irregular heartbeat.</string>
 
     <string name="text_main_page_hint">More detail</string>
-    <string name="text_allow_service_run_in_foreground">允許背景服務常駐通知列</string>
     <string name="text_save_setting_message">Click SAVE to complete all set up</string>
+    <string name="text_service_live_in_foreground">ADDWII still executes in background!</string>
+    <string name="text_allow_service_run_in_foreground">Allow background service alive in notification</string>
+    <string name="text_allow_service_run_in_foreground_comment">Restart APP to active（Must completely close APP）</string>
     <string name="new_Version_Notify">You can update to the latest version.</string>
 
     <!-- 2018/06/14 FW update dialog -->
