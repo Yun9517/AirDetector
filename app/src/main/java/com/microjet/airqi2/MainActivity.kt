@@ -36,6 +36,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.microjet.airqi2.Account.AccountActiveActivity
@@ -215,6 +216,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var c6d6map = HashMap<String, String>()
     private var lati = 255f  //TvocNoseData.lati
     private var longi = 255f //TvocNoseData.longi
+    private var mFirebaseAnalytics: FirebaseAnalytics? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -285,6 +287,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                         val uri = Uri.parse(experienceURL)
                                         val intent = Intent(Intent.ACTION_VIEW, uri)
                                         startActivity(intent)
+                                        val bundle = Bundle()
+                                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
+                                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
+                                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
                                     }
                                 }
                                 1 -> {
@@ -314,7 +320,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                 }
                 2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
-                3 -> { airmapShow() }
+                3 -> { trailMapShow() }
                 4 -> { knowledgeShow() }
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
@@ -356,6 +362,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -583,6 +591,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 collapseIndicatorAnim(250)
 
                 indicator.visibility = View.INVISIBLE
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VIEW_SCROLL")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+                mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
             }
 
             override fun onPageSelected(position: Int) {
@@ -720,7 +732,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         startActivity(i)
     }
 
-    private fun airmapShow() {
+    private fun trailMapShow() {
         val isPrivacy = myPref.getSharePreferencePrivacy()
         if (isPrivacy) {
             DefaultPatternCheckingActivity.startAction(this@MainActivity,
@@ -735,6 +747,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             })
             startActivity(i)
         }
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TRAIL_MAP")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     // 20171127 Raymond 新增：知識庫activity
@@ -742,6 +758,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //blueToothDisconnect()
         val i: Intent? = Intent(this, KnowledgeActivity::class.java)
         startActivity(i)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "KNOW_HOW")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     // 20171219 Raymond 新增：Q&A activity
@@ -811,7 +831,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             R.id.nav_getData -> {
             }
             R.id.nav_setting -> settingShow()
-            R.id.nav_personal_map -> airmapShow()
+            R.id.nav_personal_map -> trailMapShow()
         }
         drawerLayout?.closeDrawer(GravityCompat.START)
     }
@@ -1794,6 +1814,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         i!!.putExtra("URL", url)
         i!!.putExtra("TITLE", title)
         startActivity(i)
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "PUBLIC_MAP")
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     private fun CheckSWversion() {
