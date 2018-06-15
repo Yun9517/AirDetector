@@ -34,7 +34,6 @@ import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_account_active.*
 import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
 import java.io.Closeable
 import java.io.File
 import java.io.FileWriter
@@ -411,7 +410,7 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
             if (TvocNoseData.download_AsynTask?.status == AsyncTask.Status.RUNNING) {
-                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this)
+                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this,2)
                 newFrage.show(fragmentManager,"dialog")
                 cloudDeviceListItem = list[position]
             } else {
