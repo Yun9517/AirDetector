@@ -214,11 +214,11 @@
     <string name="account_Activation">Activation</string>
     <string name="account_Deactivation">Deactivation</string>
     <string name="create_Description">You will receive a password for the first time sign in, you can change the password anytime.</string>
-    <string name="nick_Name">User name : </string>
+    <string name="nick_Name">Username : </string>
     <string name="email">Email : </string>
     <string name="edit">Edit</string>
-    <string name="nameReplace">New User Name</string>
-    <string name="enterName">Enter your new user name</string>
+    <string name="nameReplace">New Username</string>
+    <string name="enterName">Enter your new username</string>
     <string name="recordTitle">Record</string>
     <string name="fetchData">Check</string>
     <string name="downloadData">Download</string>
