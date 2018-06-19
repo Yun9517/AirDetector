@@ -193,11 +193,11 @@
     <string name="login">Sign in</string>
     <string name="enter_Password">Password</string>
     <string name="forget_Password">Forgot password?</string>
-    <string name="forget_Password_Title">Forgot password</string>
+    <string name="forget_Password_Title">Forgot Password</string>
     <string name="forget_Check_Password_Title">Forgot-Change password</string>
     <string name="forget_Password_Description">Check your mail and click the Verification Link, you will be able to change your password.</string>
     <string name="change_Password">Change password?</string>
-    <string name="change_Password_Title">Change password</string>
+    <string name="change_Password_Title">Change Password</string>
     <string name="check_Password">Enter new password</string>
     <string name="double_check_Password">Confirm your password</string>
     <string name="no_Account">No account? </string>
@@ -217,8 +217,8 @@
     <string name="nick_Name">User name : </string>
     <string name="email">Email : </string>
     <string name="edit">Edit</string>
-    <string name="nameReplace">New ID</string>
-    <string name="enterName">Enter your new ID here</string>
+    <string name="nameReplace">New User Name</string>
+    <string name="enterName">Enter your new user name</string>
     <string name="recordTitle">Record</string>
     <string name="fetchData">Check</string>
     <string name="downloadData">Download</string>
@@ -229,8 +229,8 @@
 
     <string name="download_min">Have a cup of tea</string>
 
-    <string name="text_label_latitude">Lati</string>
-    <string name="text_label_longitude">Longi</string>
+    <string name="text_label_latitude">Lat.</string>
+    <string name="text_label_longitude">Long.</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">Slow your click attempt</string>
