@@ -10,7 +10,8 @@
     <!-- Vibrate -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <!-- 20180209 PowerWAKE_LOCK -->
-    <!--uses-permission android:name="android.permission.WAKE_LOCK" /-->
+    <!-- uses-permission android:name="android.permission.WAKE_LOCK" / -->
+
 
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
@@ -20,14 +21,15 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-    <!-- 高德地圖需要權限 -->
-    <!--uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /-->
-    <!--uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /-->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <!-- 高德地圖需要權限 -->
+    <!-- uses-permission android:name="android.permission.ACCESS_WIFI_STATE" / -->
+    <!-- uses-permission android:name="android.permission.CHANGE_WIFI_STATE" / -->
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -36,7 +38,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".SplashActivity"
+            android:name=".CameraActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
@@ -65,8 +67,8 @@
             android:theme="@android:style/Theme.Dialog" />
         <activity
             android:name=".Account.AccountManagementActivity"
-            android:label="@string/text_Title_Manifest_account_setting"
             android:excludeFromRecents="true"
+            android:label="@string/text_Title_Manifest_account_setting"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
@@ -125,16 +127,16 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".KnowledgeActivity"
-            android:label="@string/text_title_Manifest_Knowledge"
             android:excludeFromRecents="true"
+            android:label="@string/text_title_Manifest_Knowledge"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".QandAActivity"
-            android:label="ADDWII Q&amp;A"
             android:excludeFromRecents="true"
+            android:label="ADDWII Q&amp;A"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
@@ -182,8 +184,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".AirMapActivity"
-            android:label="@string/text_title_Manifest_PersonTrail"
             android:excludeFromRecents="true"
+            android:label="@string/text_title_Manifest_PersonTrail"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
@@ -206,8 +208,8 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".PublicMapActivity"
-            android:label="@string/text_title_Manifest_AirMap"
             android:excludeFromRecents="true"
+            android:label="@string/text_title_Manifest_AirMap"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
@@ -222,20 +224,14 @@
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
         -->
 
-        <activity
-            android:name=".engieeringMode.EngineerModeActivity" />
-
-        <activity
-            android:name=".engieeringMode.ScanActivity" />
-
+        <activity android:name=".engieeringMode.EngineerModeActivity" />
+        <activity android:name=".engieeringMode.ScanActivity" />
         <activity
             android:name=".GestureLock.DefaultPatternSettingActivity"
             android:label="@string/text_pattern_lock" />
-
         <activity
             android:name=".GestureLock.DefaultPatternCheckingActivity"
             android:label="@string/text_pattern_lock" />
-
         <activity
             android:name=".GestureLock.UsePasswordActivity"
             android:label="@string/text_pw_lock" />
@@ -248,28 +244,30 @@
 
         <service android:name=".GetFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <meta-data android:name="com.amap.api.v2.apikey" android:value="0623ea9fad451f1b1c0c5884e38c9e28" />
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0623ea9fad451f1b1c0c5884e38c9e28" />
 
         <activity
             android:name=".GoldenMapActivity"
-            android:label="ADDWII 个人軌跡"
             android:excludeFromRecents="true"
+            android:label="ADDWII 个人軌跡"
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
 
-        <service
-            android:name=".GetFirebaseInstanceIdService">
+        <service android:name=".GetFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
+        <activity android:name=".SplashActivity"></activity>
     </application>
 
 </manifest>
