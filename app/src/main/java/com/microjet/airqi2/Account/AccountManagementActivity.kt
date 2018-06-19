@@ -10,6 +10,10 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.login.LoginResult
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.FirebaseNotifSettingTask
 import com.microjet.airqi2.PrefObjects
@@ -24,6 +28,10 @@ import org.json.JSONException
 import org.json.JSONObject
 import java.io.IOException
 import java.util.regex.Pattern
+
+
+
+
 
 
 class AccountManagementActivity : AppCompatActivity() {
@@ -100,24 +108,25 @@ class AccountManagementActivity : AppCompatActivity() {
         }
         //2018/06/07 enable data upload dialog & use share preference
         myPref = PrefObjects(this)
-    }
 
-    override fun onStart() {
-        super.onStart()
-    }
 
-    override fun onStop() {
-        super.onStop()
-    }
+        val callbackMannger = CallbackManager.Factory.create()
+        login_buttonFB.setReadPermissions("email","public_profile")
+        // Callback registration
+        login_buttonFB.registerCallback(callbackMannger, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                Log.d("WEREQR","EWRADFDFAS")
+            }
 
-    override fun onResume() {
-        super.onResume()
-    }
+            override fun onCancel() {
+                Log.d("WEREQR","EWRADFDFAS")
+            }
 
-    override fun onPause() {
-        super.onPause()
+            override fun onError(exception: FacebookException) {
+                Log.d("WEREQR","EWRADFDFAS")
+            }
+        })
     }
-
 
     private fun initActionBar() {
         // 取得 actionBar
@@ -365,6 +374,7 @@ class AccountManagementActivity : AppCompatActivity() {
         }
         Dialog.show()
     }
+
 }
 class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn

@@ -15,7 +15,7 @@
     14:76:C0:25:FF:D5:FB:73:9E:90:88:56:8B:95:67:5A:0D:F3:FF:49
 
     Alternatively, follow the directions here:
-    https://developers.google.com/maps/documentation/android/start#get-key
+    https://developers.google.com/maps/doc0umentation/android/start#get-key
 
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.

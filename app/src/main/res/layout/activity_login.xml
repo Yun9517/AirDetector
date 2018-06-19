@@ -105,6 +105,25 @@
                 android:text="@string/create_New_account"
                 android:textStyle="normal"
                 android:textColor="@color/hype_Link_Blue" />
+            15:26 白_________________告 <TextView
+            android:id="@+id/noAccountOr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="0dp"
+            android:layout_weight="1"
+            android:text="@string/no_Account_or" />
+
+            <com.facebook.login.widget.LoginButton
+                android:id="@+id/login_buttonFB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="0dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1" />
         </LinearLayout>
 
         <Button
