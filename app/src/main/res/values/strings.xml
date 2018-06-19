@@ -495,7 +495,7 @@
 
     <!-- 2018/06/14 FW update dialog -->
     <string name="new_FW_Arrival_Dialog_Title">韌體更新</string>
-    <string name="new_FW_Arrival_Dialog">請確保裝置接上電源並避免晃動裝置手機。\n提醒您，更新韌體本身具一定風險，若更新失敗或有其他問題，請參考Q&amp;A或聯絡我們。</string>
+    <string name="new_FW_Arrival_Dialog">請確保裝置接上電源並避免晃動裝置手機。\n提醒您，更新韌體本身具一定風險，若更新失敗請聯繫 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暫不更新</string>
 </resources>

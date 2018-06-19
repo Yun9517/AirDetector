@@ -493,7 +493,7 @@
 
     <!-- 2018/06/14 FW update dialog -->
     <string name="new_FW_Arrival_Dialog_Title">韧体更新</string>
-    <string name="new_FW_Arrival_Dialog">请确保装置接上电源并避免晃动装置手机。\n提醒您，更新韧体本身具一定风险，若更新失败或有其他问题，请参考Q&amp;A或联络我们。</string>
+    <string name="new_FW_Arrival_Dialog">请确保装置接上电源并避免晃动装置手机。\n提醒您，更新韧体本身具一定风险，若更新失败请联系 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暂不更新</string>
 </resources>
