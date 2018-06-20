@@ -118,11 +118,11 @@ class AccountRegisterActivity : AppCompatActivity() {
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-                    register_mail_Result = "密碼已經寄送，請至登入頁面輸入密碼。"
+                    register_mail_Result = getString(R.string.dialog_Mail_Has_Sent) //密碼已經寄送，請至登入帳號頁面輸入密碼
                 } else {
                     params[0].myBlean = false
                     Log.e("註冊錯誤回來", response.body()!!.string())
-                    register_mail_Result = "此信箱已經被申請，請更改信箱再註冊謝謝。"
+                    register_mail_Result = getString(R.string.dialog_Mail_Registered) //此信箱已經被申請，請更改信箱再註冊謝謝
                    runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
                         nextStep?.isEnabled=true
@@ -140,7 +140,7 @@ class AccountRegisterActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
+            if (result == getString(R.string.dialog_Mail_Has_Sent)) { //密碼已經寄送，請至登入帳號頁面輸入密碼
                 val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")

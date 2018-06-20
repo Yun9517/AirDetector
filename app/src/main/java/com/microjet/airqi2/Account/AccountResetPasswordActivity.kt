@@ -57,7 +57,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             MyToKen = shareToKen.getString("token", "")
 
-            if (cheackRestPassWord(enterPassword?.text.toString().trim(), checkPassword?.text.toString().trim() )&& enterPassword?.text.toString() != "") {
+            if (cheackRestPassWord(enterPassword?.text.toString().trim(), checkPassword?.text.toString().trim()) && enterPassword?.text.toString() != "") {
                 if (GetNetWork.isFastGetNet) {
                     if (Utils.isFastDoubleClick) {
                         //showDialog("按慢一點太快了")
@@ -77,10 +77,15 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                 }
             } else {
                 //showDialog("密碼輸入不正確")
-                showDialog(getString(R.string.dialog_Wrong_Password))
+                if(enterPassword?.text.toString().trim() != checkPassword?.text.toString().trim()) {
+                    if (enterPassword?.text.toString() != " " || checkPassword?.text.toString() != " "){
+                        showDialog(getString(R.string.dialog_Password_noMatch))
+                    }
+                } else {
+                    showDialog(getString(R.string.dialog_Password_Empty))
+                }
             }
         }
-
     }
 
     // 2018/03/30
@@ -152,17 +157,17 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                         e.printStackTrace()
                         Log.e("修改密碼正確回來的錯誤", e.toString())
                     }
-                    restpassword_Result = "密碼已經修改，請至登入頁面輸入帳密。"
+                    restpassword_Result = getString(R.string.dialog_Password_Change_Successfully) //密碼已經修改，請至登入頁面輸入帳密。
                     val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
                     shareToKen.edit().putString("token","").apply()
                     //showDialog(restpassword_Result!!)
                 } else {
                     params[0].myBlean = false
                     Log.e("改密碼錯誤回來", response.body()!!.string())
-                    restpassword_Result = "修改密碼失敗。"
+                    restpassword_Result = getString(R.string.dialog_Password_noMatch) //修改密碼失敗
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
-                        btn_confirm_Modify?.isEnabled=true
+                        btn_confirm_Modify?.isEnabled = true
                     })
 
                 }
@@ -186,7 +191,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "密碼已經修改，請至登入頁面輸入帳密。") {
+            if (result == getString(R.string.dialog_Password_Change_Successfully)) {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountResetPasswordActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")

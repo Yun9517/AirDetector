@@ -234,7 +234,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     })
                     params[0].myBlean = false
                     Log.e("登入錯誤回來", response.body()!!.string())
-                    loginResult = "登入失敗"
+                    loginResult = getString(R.string.dialog_Wrong_Password) //登入失敗
                 }
             }
             catch (e: Exception) {

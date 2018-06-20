@@ -129,11 +129,11 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
                     Log.e("忘記密碼正確回來", tempBody)
                     val responseContent = JSONObject(tempBody)
                     //mForgetPassword = responseContent.getJSONObject("success").getString("")
-                    mForgetPassword = "密碼已經寄送，請至登入頁面輸入密碼。"
+                    mForgetPassword = getString(R.string.dialog_Password_Change_Successfully) //密碼已經寄送，請至登入頁面輸入密碼。
                 } else {
                     params[0].myBlean = false
                     Log.e("更改密碼失敗", response.body()!!.string())
-                    mForgetPassword = "忘記密碼失敗，請從新輸入正確的Mail。"
+                    mForgetPassword = getString(R.string.dialog_Mail_Verification_Failed) //忘記密碼失敗，請從新輸入正確的Mail。
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
                         btn_confirm?.isEnabled=true
@@ -151,7 +151,7 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
+            if (result == getString(R.string.dialog_Password_Change_Successfully)) {//密碼已經寄送，請至登入頁面輸入密碼。
                 val Dialog = android.app.AlertDialog.Builder(this@AccountForgetPasswordActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
