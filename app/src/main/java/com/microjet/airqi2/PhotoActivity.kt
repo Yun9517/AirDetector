@@ -18,6 +18,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.os.Environment.getExternalStorageDirectory
 import android.util.Log
+import android.widget.Toast
+import com.microjet.airqi2.CustomAPI.Utils
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -34,7 +36,7 @@ class PhotoActivity : AppCompatActivity() {
 
         btnTakeAShot.setOnClickListener {
             this.btnSave.visibility = View.GONE
-            val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = true, countDownInSeconds = 3)
+            val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
             startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
         }
 
@@ -108,15 +110,16 @@ class PhotoActivity : AppCompatActivity() {
             val path = createPath.path
             // 開啟檔案
             val imgCount = myPref.getSharePreferenceSaveImageCount()
-            val file = File(path, "Image_$imgCount.png")
+            val file = File(path, "Image_$imgCount.jpg")
             // 開啟檔案串流
             val out = FileOutputStream(file)
             // 將 Bitmap壓縮成指定格式的圖片並寫入檔案串流
-            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out)
             // 刷新並關閉檔案串流
             out.flush()
             out.close()
             myPref.setSharePreferenceSaveImageCount(imgCount + 1)
+            Utils.toastMakeTextAndShow(this@PhotoActivity, "Save Photo success!", Toast.LENGTH_SHORT)
         } catch (e: FileNotFoundException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
