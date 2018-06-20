@@ -6,22 +6,40 @@ import android.graphics.*
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_photo.*
-import android.view.View.MeasureSpec
-import android.view.Gravity
-import android.widget.LinearLayout
+import android.graphics.Bitmap
+import android.view.View
 import android.widget.TextView
-import android.graphics.Paint.ANTI_ALIAS_FLAG
+import android.widget.ImageView
+import android.view.View.MeasureSpec
+import android.widget.RelativeLayout
+import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.os.Environment
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.os.Environment.getExternalStorageDirectory
+import android.util.Log
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 
 class PhotoActivity : AppCompatActivity() {
+
+    private var addTextBitmap: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo)
 
         btnTakeAShot.setOnClickListener {
+            this.btnSave.visibility = View.GONE
             val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = true, countDownInSeconds = 3)
             startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+        }
+
+        btnSave.setOnClickListener {
+            savePicture(addTextBitmap!!)
         }
     }
 
@@ -29,53 +47,83 @@ class PhotoActivity : AppCompatActivity() {
         if (resultCode == CameraActivity.VSCAMERAACTIVITY_RESULT_CODE) {
             val bitmap = VSBitmapStore.getBitmap(data.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
-            val addTextBitmap = drawTextToBitmap(this@PhotoActivity, rotatedBitmap, "看尛")
+            addTextBitmap = setLayout(rotatedBitmap, "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
+            this.btnSave.visibility = View.VISIBLE
         }
     }
 
     private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(angle)
+        matrix.postScale(0.5f, 0.5f)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    fun drawTextToBitmap(gContext: Context, gRes: Bitmap, gText: String): Bitmap {
-        val resources = gContext.resources
-        val scale = resources.displayMetrics.density
-        var bitmap = gRes
+    private fun setLayout(background: Bitmap, text: String): Bitmap {
+        val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-        var bitmapConfig: android.graphics.Bitmap.Config? = bitmap.config
-        // set default bitmap config if none
-        if (bitmapConfig == null) {
-            bitmapConfig = android.graphics.Bitmap.Config.ARGB_8888
-        }
-        // resource bitmaps are imutable,
-        // so we need to convert it to mutable one
-        bitmap = bitmap.copy(bitmapConfig, true)
+        //Inflate the layout into a view and configure it the way you like
+        val view = RelativeLayout(this)
+        mInflater.inflate(R.layout.photo_layout, view, true)
 
-        val canvas = Canvas(bitmap)
-        // new antialised Paint
-        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-        // text color - #3D3D3D
-        paint.color = Color.rgb(61, 61, 61)
-        // text size in pixels
-        paint.textSize = 14f * scale * 5f
-        // text shadow
-        paint.setShadowLayer(1f, 0f, 1f, Color.WHITE)
+        val img = view.findViewById<View>(R.id.imgBg) as ImageView
+        img.setImageBitmap(background)
 
-        // draw text to the Canvas center
-        val bounds = Rect()
-        paint.getTextBounds(gText, 0, gText.length, bounds)
+        val tv = view.findViewById<View>(R.id.text1) as TextView
+        tv.text = text
 
-        //int x = (bitmap.getWidth() - bounds.width()) / 2;
-        //int y = (bitmap.getHeight() + bounds.height()) / 2;
-        //draw text to the bottom
-        val x = (bitmap.width - bounds.width()) / 10 * 9
-        val y = (bitmap.height + bounds.height()) / 10 * 9
-        canvas.drawText(gText, x.toFloat(), y.toFloat(), paint)
+        //Provide it with a layout params. It should necessarily be wrapping the
+        //content as we not really going to have a parent for it.
+        view.layoutParams = ViewGroup.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT)
 
+        //Pre-measure the view so that height and width don't remain null.
+        view.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+
+        //Assign a size and position to the view and all of its descendants
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+        //Create the bitmap
+        val bitmap = Bitmap.createBitmap(view.measuredWidth,
+                view.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+        //Create a canvas with the specified bitmap to draw into
+        val c = Canvas(bitmap)
+
+        //Render this view (and all of its children) to the given Canvas
+        view.draw(c)
         return bitmap
     }
 
+    private fun savePicture(bitmap: Bitmap) {
+        val createPath = File("${android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII")
+        createPath.mkdir()
+        Log.e("Photo", createPath.path)
+
+        val myPref = PrefObjects(this@PhotoActivity)
+        try {
+            // 取得外部儲存裝置路徑
+            val path = createPath.path
+            // 開啟檔案
+            val imgCount = myPref.getSharePreferenceSaveImageCount()
+            val file = File(path, "Image_$imgCount.png")
+            // 開啟檔案串流
+            val out = FileOutputStream(file)
+            // 將 Bitmap壓縮成指定格式的圖片並寫入檔案串流
+            bitmap.compress(Bitmap.CompressFormat.PNG, 90, out)
+            // 刷新並關閉檔案串流
+            out.flush()
+            out.close()
+            myPref.setSharePreferenceSaveImageCount(imgCount + 1)
+        } catch (e: FileNotFoundException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        } catch (e: IOException) {
+            // TODO Auto-generated catch block
+            e.printStackTrace()
+        }
+
+    }
 }
