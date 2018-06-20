@@ -21,10 +21,10 @@ import android.util.Size
 import android.view.Surface
 import android.view.TextureView
 import android.view.View
-import android.widget.Button
-import android.widget.TextView
 import android.widget.Toast
-import java.io.*
+import kotlinx.android.synthetic.main.activity_camera.*
+import java.io.FileNotFoundException
+import java.io.IOException
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.concurrent.timerTask
@@ -36,9 +36,6 @@ class CameraActivity : AppCompatActivity() {
     private var isFullScreen: Boolean = false
     private var isCountDownEnabled: Boolean = false
     private var countDownInSeconds: Int = 0
-    private lateinit var takePictureButton: Button
-    private lateinit var coundDownLabel: TextView
-    private lateinit var textureView: TextureView
     private lateinit var cameraId: String
     private lateinit var cameraDevice: CameraDevice
     private lateinit var cameraCaptureSessions: CameraCaptureSession
@@ -88,10 +85,8 @@ class CameraActivity : AppCompatActivity() {
         this.isCountDownEnabled = this.intent.getBooleanExtra(IS_COUNT_DOWN_ENABLED, false)
         this.countDownInSeconds = this.intent.getIntExtra(COUNT_DOWN_IN_SECONDS, 0)
 
-        this.textureView = findViewById<TextureView>(R.id.texture)
         this.textureView.surfaceTextureListener = this.textureListener
 
-        this.takePictureButton = findViewById<Button>(R.id.takePictureButton)
         this.takePictureButton.setOnClickListener { takePicture() }
 
         this.setupFullScreen()
@@ -141,15 +136,14 @@ class CameraActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.M)
     private fun checkPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            this.requestPermissions(arrayOf<String>(android.Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
+            this.requestPermissions(arrayOf(android.Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION)
         }
         if (this.checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            this.requestPermissions(arrayOf<String>(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CAMERA_PERMISSION)
+            this.requestPermissions(arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), REQUEST_CAMERA_PERMISSION)
         }
     }
 
     private fun setupCountDownLabel() {
-        this.coundDownLabel = findViewById<TextView>(R.id.coundDownLabel)
 
         if (this.isCountDownEnabled) {
             this.coundDownLabel.text = this.countDownInSeconds.toString()
@@ -181,7 +175,7 @@ class CameraActivity : AppCompatActivity() {
     private fun startBackgroundThread() {
         this.backgroundThread = HandlerThread("Camera Background")
         this.backgroundThread.start()
-        this.backgroundHandler = Handler(this.backgroundThread.getLooper())
+        this.backgroundHandler = Handler(this.backgroundThread.looper)
     }
 
     private fun stopBackgroundThread() {
@@ -196,8 +190,8 @@ class CameraActivity : AppCompatActivity() {
     private fun takePicture() {
         val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
-            val characteristics = manager.getCameraCharacteristics(this.cameraDevice.getId())
-            var jpegSizes: Array<Size> = arrayOf<Size>()
+            val characteristics = manager.getCameraCharacteristics(this.cameraDevice.id)
+            var jpegSizes: Array<Size> = arrayOf()
 
             if (characteristics != null) {
                 jpegSizes = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP).getOutputSizes(ImageFormat.JPEG)
@@ -206,42 +200,40 @@ class CameraActivity : AppCompatActivity() {
             var width = 640
             var height = 480
 
-            if (0 < jpegSizes.size) {
-                width = jpegSizes[0].getWidth()
-                height = jpegSizes[0].getHeight()
+            if (jpegSizes.isNotEmpty()) {
+                width = jpegSizes[0].width
+                height = jpegSizes[0].height
             }
 
             val reader = ImageReader.newInstance(width, height, ImageFormat.JPEG, 1)
 
             val outputSurfaces = ArrayList<Surface>(2)
-            outputSurfaces.add(reader.getSurface())
+            outputSurfaces.add(reader.surface)
             outputSurfaces.add(Surface(this.textureView.surfaceTexture))
 
             val captureBuilder = this.cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_STILL_CAPTURE)
-            captureBuilder.addTarget(reader.getSurface())
+            captureBuilder.addTarget(reader.surface)
             captureBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO)
 
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, this.getSensorOrientation(manager))
 
-            val readerListener = object : ImageReader.OnImageAvailableListener {
-                override fun onImageAvailable(reader: ImageReader) {
-                    val image: Image = reader.acquireNextImage()
+            val readerListener = ImageReader.OnImageAvailableListener { reader ->
+                val image: Image = reader.acquireNextImage()
 
-                    try {
-                        val buffer = image.getPlanes()[0].getBuffer()
-                        buffer.rewind()
-                        val data = ByteArray(buffer.capacity())
-                        buffer.get(data)
-                        val storedBitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
+                try {
+                    val buffer = image.planes[0].buffer
+                    buffer.rewind()
+                    val data = ByteArray(buffer.capacity())
+                    buffer.get(data)
+                    val storedBitmap = BitmapFactory.decodeByteArray(data, 0, data.size)
 
-                        sendByteArray(storedBitmap)
-                    } catch (e: FileNotFoundException) {
-                        e.printStackTrace()
-                    } catch (e: IOException) {
-                        e.printStackTrace()
-                    } finally {
-                        image.close()
-                    }
+                    sendByteArray(storedBitmap)
+                } catch (e: FileNotFoundException) {
+                    e.printStackTrace()
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                } finally {
+                    image.close()
                 }
             }
 
@@ -279,7 +271,7 @@ class CameraActivity : AppCompatActivity() {
     private fun createCameraPreview() {
         try {
             val texture = this.textureView.surfaceTexture
-            texture.setDefaultBufferSize(this.imageDimension.getWidth(), this.imageDimension.getHeight())
+            texture.setDefaultBufferSize(this.imageDimension.width, this.imageDimension.height)
 
             val surface = Surface(texture)
             this.captureRequestBuilder = this.cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW)
@@ -317,7 +309,7 @@ class CameraActivity : AppCompatActivity() {
     private fun openCamera() {
         val manager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
         try {
-            if (this.isBackCamera == true) {
+            if (this.isBackCamera) {
                 this.cameraId = this.getBackCameraId(manager)
             } else {
                 this.cameraId = this.getFrontFacingCameraId(manager)
@@ -343,18 +335,18 @@ class CameraActivity : AppCompatActivity() {
     }
 
     private fun configureTransform(viewWidth: Float, viewHeight: Float) {
-        val rotation = this.getWindowManager().getDefaultDisplay().getRotation()
+        val rotation = this.windowManager.defaultDisplay.rotation
         val matrix = Matrix()
         val viewRect = RectF(0.toFloat(), 0.toFloat(), viewWidth, viewHeight)
-        val bufferRect = RectF(0.toFloat(), 0.toFloat(), this.textureView.getHeight().toFloat(), this.textureView.getWidth().toFloat())
+        val bufferRect = RectF(0.toFloat(), 0.toFloat(), this.textureView.height.toFloat(), this.textureView.width.toFloat())
         val centerX = viewRect.centerX()
         val centerY = viewRect.centerY()
         if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
             bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY())
             matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL)
             val scale = Math.max(
-                    viewHeight.toFloat() / this.textureView.getHeight().toFloat(),
-                    viewWidth.toFloat() / this.textureView.getWidth().toFloat())
+                    viewHeight / this.textureView.height.toFloat(),
+                    viewWidth / this.textureView.width.toFloat())
             matrix.postScale(scale, scale, centerX, centerY)
             matrix.postRotate(90.toFloat() * (rotation - 2), centerX, centerY)
         } else if (Surface.ROTATION_180 == rotation) {
@@ -372,7 +364,7 @@ class CameraActivity : AppCompatActivity() {
         val output = Intent()
         output.putExtra(VSCAMERAACTIVITY_IMAGE_ID, VSBitmapStore.putBitmap(bitmap))
         this.setResult(1, output)
-        //this.finish()
+        this.finish()
     }
 
     companion object {

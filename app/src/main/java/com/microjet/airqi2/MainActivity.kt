@@ -697,7 +697,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    clickCount++
 //                }
 //            }
-
+            R.id.bleStatus -> {
+                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
+            }
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
