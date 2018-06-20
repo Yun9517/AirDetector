@@ -496,4 +496,18 @@
     <string name="new_FW_Arrival_Dialog">请确保装置接上电源并避免晃动装置手机。\n提醒您，更新韧体本身具一定风险，若更新失败请联系 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暂不更新</string>
+
+    <!-- 2018/06/20 Dialog for Account Page -->
+    <string name="dialog_Correct_Mail_Format">请输入正确的信箱格式</string>
+    <string name="dialog_Mail_Verification_Failed">信箱验证失败，请重新输入或注册新账号</string>
+    <string name="dialog_Mail_Has_Sent">认证信已发送</string>
+    <string name="dialog_Mail_Registered">此信箱已被注册</string>
+    <string name="dialog_Check_MailBox">认证信已发送，请至信件夹点选启用</string>
+    <string name="dialog_Wrong_Password">密码错误，请重新输入</string>
+    <string name="dialog_Username_Empty">昵称不能空白</string>
+    <string name="dialog_Username_tooLong">昵称不能太长\n(中文8字符, 英文16字符)</string>
+    <string name="dialog_Change_Successfully">修改成功</string>
+    <string name="dialog_Password_Empty">密码不能空白</string>
+    <string name="dialog_Password_noMatch">两个密码不相同</string>
+    <string name="dialog_Password_Change_Successfully">密码修改成功</string>
 </resources>

@@ -64,7 +64,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     }
                 } else {
                     //showDialog("請輸入正確的E-mail地址")
-                    showDialog(getString(R.string.errorMail_address))
+                    showDialog(getString(R.string.dialog_Correct_Mail_Format))
                 }
             }else{
                 //showDialog("請連接網路")
@@ -144,7 +144,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
-                Dialog.setTitle(getString(R.string.remind))
+                //Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
@@ -254,7 +254,7 @@ class AccountRegisterActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
+        //Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")

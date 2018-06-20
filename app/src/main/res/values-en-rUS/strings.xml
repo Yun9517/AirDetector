@@ -394,4 +394,18 @@
 Please note that this FW update process is done entirely at your own risk. If the failure occurs, please contact us at service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">Update now</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">Ask me later</string>
+
+    <!-- 2018/06/20 Dialog for Account Page -->
+    <string name="dialog_Correct_Mail_Format">Please enter a valid email address.</string>
+    <string name="dialog_Mail_Verification_Failed">Mail verification failed, please enter again or sign up a new one.</string>
+    <string name="dialog_Mail_Has_Sent">Verification email has been sent.</string>
+    <string name="dialog_Mail_Registered">Account has been registered.</string>
+    <string name="dialog_Check_MailBox">A verification email has been sent, please check your mailbox.</string>
+    <string name="dialog_Wrong_Password">Wrong password, try again.</string>
+    <string name="dialog_Username_Empty">Username can\'t be empty.</string>
+    <string name="dialog_Username_tooLong">Username cannot exceed 16 characters</string>
+    <string name="dialog_Change_Successfully">Your username has been changed successfully.</string>
+    <string name="dialog_Password_Empty">Password can\'t be empty.</string>
+    <string name="dialog_Password_noMatch">Passwords didn\'t match. Try again.</string>
+    <string name="dialog_Password_Change_Successfully">Your password has been changed successfully.</string>
 </resources>

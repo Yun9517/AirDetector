@@ -77,7 +77,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                 }
             } else {
                 //showDialog("密碼輸入不正確")
-                showDialog(getString(R.string.errorPassword))
+                showDialog(getString(R.string.dialog_Wrong_Password))
             }
         }
 
@@ -225,7 +225,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
             val Dialog = android.app.AlertDialog.Builder(this@AccountResetPasswordActivity).create()
             //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
             //Dialog.setTitle("提示")
-            Dialog.setTitle(getString(R.string.remind))
+            //Dialog.setTitle(getString(R.string.remind))
             Dialog.setMessage(msg.toString())
             Dialog.setCancelable(false)//讓返回鍵與空白無效
             //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
