@@ -160,7 +160,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottom_panel"
+        android:layout_above="@+id/valPanel"
         android:layout_marginEnd="32dp"
         android:layout_marginStart="32dp"
         android:layout_marginTop="96dp"
@@ -212,7 +212,7 @@
         -->
 
     <LinearLayout
-        android:id="@+id/bottom_panel"
+        android:id="@+id/valPanel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

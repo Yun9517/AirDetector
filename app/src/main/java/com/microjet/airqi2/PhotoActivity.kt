@@ -45,11 +45,11 @@ class PhotoActivity : AppCompatActivity() {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == CameraActivity.VSCAMERAACTIVITY_RESULT_CODE) {
-            val bitmap = VSBitmapStore.getBitmap(data.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
+            val bitmap = VSBitmapStore.getBitmap(data!!.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
-            addTextBitmap = setLayout(rotatedBitmap, "看尛")
+            addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
             this.btnSave.visibility = View.VISIBLE
         }
@@ -62,7 +62,9 @@ class PhotoActivity : AppCompatActivity() {
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    private fun setLayout(background: Bitmap, text: String): Bitmap {
+    private fun setLayout(background: Bitmap,
+                          tvocText: String, pm25Text: String, pm10Text: String,
+                          eco2Text: String, tempText: String, thumiText: String): Bitmap {
         val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         //Inflate the layout into a view and configure it the way you like
@@ -72,8 +74,23 @@ class PhotoActivity : AppCompatActivity() {
         val img = view.findViewById<View>(R.id.imgBg) as ImageView
         img.setImageBitmap(background)
 
-        val tv = view.findViewById<View>(R.id.text1) as TextView
-        tv.text = text
+        val tvoc = view.findViewById<View>(R.id.tvocValue) as TextView
+        tvoc.text = tvocText
+
+        val pm25 = view.findViewById<View>(R.id.pm25Value) as TextView
+        pm25.text = pm25Text
+
+        val pm10 = view.findViewById<View>(R.id.pm10Value) as TextView
+        pm10.text = pm10Text
+
+        val eco2 = view.findViewById<View>(R.id.eco2Value) as TextView
+        eco2.text = eco2Text
+
+        val temp = view.findViewById<View>(R.id.tempValue) as TextView
+        temp.text = tempText
+
+        val humi = view.findViewById<View>(R.id.rhValue) as TextView
+        humi.text = thumiText
 
         //Provide it with a layout params. It should necessarily be wrapping the
         //content as we not really going to have a parent for it.
