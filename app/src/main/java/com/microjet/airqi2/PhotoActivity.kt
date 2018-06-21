@@ -2,24 +2,25 @@ package com.microjet.airqi2
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.*
-import android.support.v7.app.AppCompatActivity
-import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_photo.*
 import android.graphics.Bitmap
-import android.view.View
-import android.widget.TextView
-import android.widget.ImageView
-import android.view.View.MeasureSpec
-import android.widget.RelativeLayout
-import android.content.Context.LAYOUT_INFLATER_SERVICE
+import android.graphics.Canvas
+import android.graphics.Matrix
+import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
-import android.view.LayoutInflater
-import android.view.ViewGroup
-import android.os.Environment.getExternalStorageDirectory
+import android.support.v4.content.FileProvider.getUriForFile
+import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.View.MeasureSpec
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.CustomAPI.Utils
+import kotlinx.android.synthetic.main.activity_photo.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -29,19 +30,20 @@ import java.io.IOException
 class PhotoActivity : AppCompatActivity() {
 
     private var addTextBitmap: Bitmap? = null
+    private var fileName = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo)
 
         btnTakeAShot.setOnClickListener {
-            this.btnSave.visibility = View.GONE
+            this.btnShare.visibility = View.GONE
             val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
             startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
         }
 
-        btnSave.setOnClickListener {
-            savePicture(addTextBitmap!!)
+        btnShare.setOnClickListener {
+            shareContent(fileName)
         }
     }
 
@@ -51,7 +53,29 @@ class PhotoActivity : AppCompatActivity() {
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
             addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
-            this.btnSave.visibility = View.VISIBLE
+            fileName = savePicture(addTextBitmap!!)
+            this.btnShare.visibility = View.VISIBLE
+        }
+    }
+
+    private fun shareContent(imageFileName: String) {
+        val sharePath = "${android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII"
+        val file = File(sharePath, imageFileName)
+        val contentUri = getUriForFile(applicationContext, packageName, file)
+
+        val intent = Intent(Intent.ACTION_SEND)
+
+        intent.data = contentUri
+        intent.type = "image/*"
+        intent.putExtra(Intent.EXTRA_STREAM, contentUri)  //圖片的實體路徑
+
+        val chooser = Intent.createChooser(intent, "Share")
+
+        //給目錄臨時的權限
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        // Verify the intent will resolve to at least one activity
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(chooser,0)
         }
     }
 
@@ -116,7 +140,7 @@ class PhotoActivity : AppCompatActivity() {
         return bitmap
     }
 
-    private fun savePicture(bitmap: Bitmap) {
+    private fun savePicture(bitmap: Bitmap): String {
         val createPath = File("${android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII")
         createPath.mkdir()
         Log.e("Photo", createPath.path)
@@ -137,13 +161,16 @@ class PhotoActivity : AppCompatActivity() {
             out.close()
             myPref.setSharePreferenceSaveImageCount(imgCount + 1)
             Utils.toastMakeTextAndShow(this@PhotoActivity, "Save Photo success!", Toast.LENGTH_SHORT)
+            return file.name
         } catch (e: FileNotFoundException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
+            return "error"
         } catch (e: IOException) {
             // TODO Auto-generated catch block
             e.printStackTrace()
+            return "error"
         }
-
     }
+
 }
