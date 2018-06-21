@@ -2,11 +2,13 @@ package com.microjet.airqi2
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.os.Bundle
 import android.os.Environment
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider.getUriForFile
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -49,9 +51,7 @@ class PhotoActivity : AppCompatActivity() {
         mCal = Calendar.getInstance()
 
         btnTakeAShot.setOnClickListener {
-            this.btnShare.visibility = View.GONE
-            val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
-            startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+            checkPermissions()
         }
 
         btnShare.setOnClickListener {
@@ -80,6 +80,23 @@ class PhotoActivity : AppCompatActivity() {
             this.imageView.setImageBitmap(addTextBitmap)
             fileName = savePicture(addTextBitmap!!)
             this.btnShare.visibility = View.VISIBLE
+        }
+    }
+
+    private fun checkPermissions() {
+        when {
+            ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@PhotoActivity,
+                    arrayOf(android.Manifest.permission.CAMERA), 101)
+            ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@PhotoActivity,
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 102)
+            else -> {
+                this.btnShare.visibility = View.GONE
+                val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
+                startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+                Log.e("CheckPerm", "Permission Granted...")
+            }
         }
     }
 
