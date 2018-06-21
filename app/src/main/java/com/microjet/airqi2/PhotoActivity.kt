@@ -65,7 +65,13 @@ class PhotoActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == CameraActivity.VSCAMERAACTIVITY_RESULT_CODE) {
             val bitmap = VSBitmapStore.getBitmap(data!!.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
-            val rotatedBitmap = rotateBitmap(bitmap, 90f)
+
+            // 判斷照片是直的還是橫的
+            val rotatedBitmap = if(bitmap.width > bitmap.height) {
+                rotateBitmap(bitmap, 90f)
+            } else {
+                rotateBitmap(bitmap, 0f)
+            }
 
             val lastData = queryDatabaseLastData()
             // 隨機 0~2
@@ -120,7 +126,7 @@ class PhotoActivity : AppCompatActivity() {
                 .between("Created_time", startTime, endTime)
                 .sort("Created_time", Sort.ASCENDING).findAllAsync()
 
-        return result.last()
+        return if(result.isNotEmpty()) { result.last() } else { null }
     }
 
     private fun shareContent(imageFileName: String) {
