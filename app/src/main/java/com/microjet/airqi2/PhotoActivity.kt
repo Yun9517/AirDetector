@@ -31,6 +31,7 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 
 
@@ -43,6 +44,8 @@ class PhotoActivity : AppCompatActivity() {
     private lateinit var result: RealmResults<AsmDataModel>
 
     private lateinit var mCal: Calendar
+
+    private val random = Random()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,16 +68,20 @@ class PhotoActivity : AppCompatActivity() {
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
 
             val lastData = queryDatabaseLastData()
+            // 隨機 0~2
+            val mode = random.nextInt(4)
+            Log.e("Random", "The number is $mode")
+
             addTextBitmap = if (lastData != null) {
-                setLayout(rotatedBitmap,
+                setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
                         "${lastData.pM10Value} μg/m³",
                         "${lastData.ecO2Value} ppm",
                         "${lastData.tempValue} °C",
-                        "${lastData. humiValue} %")
+                        "${lastData.humiValue} %")
             } else {
-                setLayout(rotatedBitmap, "----", "----", "----", "----", "----", "----")
+                setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
             }
             //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
@@ -87,10 +94,10 @@ class PhotoActivity : AppCompatActivity() {
         when {
             ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ->
                 ActivityCompat.requestPermissions(this@PhotoActivity,
-                    arrayOf(android.Manifest.permission.CAMERA), 101)
+                        arrayOf(android.Manifest.permission.CAMERA), 101)
             ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
                 ActivityCompat.requestPermissions(this@PhotoActivity,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 102)
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 102)
             else -> {
                 this.btnShare.visibility = View.GONE
                 val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
@@ -144,14 +151,22 @@ class PhotoActivity : AppCompatActivity() {
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    private fun setLayout(background: Bitmap,
+    private fun setLayout(background: Bitmap, mode: Int,
                           tvocText: String, pm25Text: String, pm10Text: String,
                           eco2Text: String, tempText: String, thumiText: String): Bitmap {
+
         val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         //Inflate the layout into a view and configure it the way you like
         val view = RelativeLayout(this)
-        mInflater.inflate(R.layout.photo_layout, view, true)
+        mInflater.inflate(
+                when (mode) {
+                    0 -> R.layout.photo_layout
+                    1 -> R.layout.photo_layout1
+                    2 -> R.layout.photo_layout2
+                    else -> R.layout.photo_layout3
+                },
+                view, true)
 
         val img = view.findViewById<View>(R.id.imgBg) as ImageView
         img.setImageBitmap(background)
