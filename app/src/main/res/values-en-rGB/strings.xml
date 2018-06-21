@@ -419,4 +419,6 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="fireBase_Toast_Broadcast_Error">Broadcast Error</string>
     <string name="fireBase_Toast_SignIn">Please sign in</string>
     <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
+
+    <string name="select_Date">Select a date</string>
 </resources>

@@ -463,7 +463,7 @@ class SettingActivity : AppCompatActivity() {
                 calObject.set(year, month, dayOfMonth)
                 checkPermissions()
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-            dpd.setMessage("請選擇日期")
+            dpd.setMessage(getString(R.string.select_Date)) //請選擇日期
             dpd.show()
         }
 

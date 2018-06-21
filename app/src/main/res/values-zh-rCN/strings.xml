@@ -519,4 +519,6 @@
     <string name="fireBase_Toast_Broadcast_Error">推播错误</string>
     <string name="fireBase_Toast_SignIn">请登入账号</string>
     <string name="fireBase_Toast_Network_Connect">请链上网络</string>
+
+    <string name="select_Date">请选择日期</string>
 </resources>
