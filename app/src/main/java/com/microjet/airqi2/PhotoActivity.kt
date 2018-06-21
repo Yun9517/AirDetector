@@ -5,7 +5,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
-import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.support.v4.content.FileProvider.getUriForFile
@@ -20,11 +19,17 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.CustomAPI.Utils
+import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.Sort
+import kotlinx.android.synthetic.main.activity_airmap.*
 import kotlinx.android.synthetic.main.activity_photo.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 
 class PhotoActivity : AppCompatActivity() {
@@ -32,9 +37,16 @@ class PhotoActivity : AppCompatActivity() {
     private var addTextBitmap: Bitmap? = null
     private var fileName = ""
 
+    private lateinit var realm: Realm
+    private lateinit var result: RealmResults<AsmDataModel>
+
+    private lateinit var mCal: Calendar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo)
+
+        mCal = Calendar.getInstance()
 
         btnTakeAShot.setOnClickListener {
             this.btnShare.visibility = View.GONE
@@ -51,11 +63,40 @@ class PhotoActivity : AppCompatActivity() {
         if (resultCode == CameraActivity.VSCAMERAACTIVITY_RESULT_CODE) {
             val bitmap = VSBitmapStore.getBitmap(data!!.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
             val rotatedBitmap = rotateBitmap(bitmap, 90f)
-            addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
+
+            val lastData = queryDatabaseLastData()
+            addTextBitmap = if (lastData != null) {
+                setLayout(rotatedBitmap,
+                        "${lastData.tvocValue} ppb",
+                        "${lastData.pM25Value} μg/m³",
+                        "${lastData.pM10Value} μg/m³",
+                        "${lastData.ecO2Value} ppm",
+                        "${lastData.tempValue} °C",
+                        "${lastData. humiValue} %")
+            } else {
+                setLayout(rotatedBitmap, "----", "----", "----", "----", "----", "----")
+            }
+            //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
             fileName = savePicture(addTextBitmap!!)
             this.btnShare.visibility = View.VISIBLE
         }
+    }
+
+    private fun queryDatabaseLastData(): AsmDataModel? {
+        realm = Realm.getDefaultInstance()
+
+        //現在時間實體毫秒
+        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
+        //將日期設為今天日子加一天減1秒
+        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
+        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+
+        result = realm.where(AsmDataModel::class.java)
+                .between("Created_time", startTime, endTime)
+                .sort("Created_time", Sort.ASCENDING).findAllAsync()
+
+        return result.last()
     }
 
     private fun shareContent(imageFileName: String) {
@@ -75,7 +116,7 @@ class PhotoActivity : AppCompatActivity() {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         // Verify the intent will resolve to at least one activity
         if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(chooser,0)
+            startActivityForResult(chooser, 0)
         }
     }
 
@@ -172,5 +213,4 @@ class PhotoActivity : AppCompatActivity() {
             return "error"
         }
     }
-
 }
