@@ -394,6 +394,9 @@
 Please note that this FW update process is done entirely at your own risk. If the failure occurs, please contact us at service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">Update now</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">Ask me later</string>
+    <string name="new_FW_Arrival_Dialog_Last_Version">Your Mobile Nose has already been updated to the last version.</string>
+    <string name="new_FW_Arrival_Dialog_Charge">Please put your Mobile Nose connect to charger.</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Update finished! Please restart your Mobile NoseMobile Nose.</string>
 
     <!-- 2018/06/20 Dialog for Account Page -->
     <string name="dialog_Correct_Mail_Format">Please enter a valid email address.</string>

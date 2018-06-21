@@ -703,7 +703,8 @@ class SettingActivity : AppCompatActivity() {
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
         Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage("您的Mobile Nose已是最新版本。")
+        //Dialog.setMessage("您的Mobile Nose已是最新版本。")
+        Dialog.setMessage(getString(R.string.new_FW_Arrival_Dialog_Last_Version))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
         { dialog, _ ->
@@ -718,7 +719,8 @@ class SettingActivity : AppCompatActivity() {
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
         Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage("請將您的Mobile Nose插上充電線。")
+        //Dialog.setMessage("請將您的Mobile Nose插上充電線。")
+        Dialog.setMessage(getString(R.string.new_FW_Arrival_Dialog_Charge))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
         { dialog, _ ->
@@ -733,7 +735,8 @@ class SettingActivity : AppCompatActivity() {
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
         Dialog.setTitle(getString(R.string.remind))
-        Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
+        //Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
+        Dialog.setMessage(getString(R.string.new_FW_Arrival_Dialog_Update_Done))
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         Dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
         { dialog, _ ->

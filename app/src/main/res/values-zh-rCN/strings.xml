@@ -496,6 +496,9 @@
     <string name="new_FW_Arrival_Dialog">请确保装置接上电源并避免晃动装置手机。\n提醒您，更新韧体本身具一定风险，若更新失败请联系 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暂不更新</string>
+    <string name="new_FW_Arrival_Dialog_Last_Version">您的Mobile Nose已是最新版本</string>
+    <string name="new_FW_Arrival_Dialog_Charge">请将您的Mobile Nose插上充电线。</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Mobile Nose已更新完成，请将您的Mobile Nose重新启动。</string>
 
     <!-- 2018/06/20 Dialog for Account Page -->
     <string name="dialog_Correct_Mail_Format">请输入正确的信箱格式</string>

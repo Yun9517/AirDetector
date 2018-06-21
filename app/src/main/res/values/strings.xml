@@ -498,6 +498,9 @@
     <string name="new_FW_Arrival_Dialog">請確保裝置接上電源並避免晃動裝置手機。\n提醒您，更新韌體本身具一定風險，若更新失敗請聯繫 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暫不更新</string>
+    <string name="new_FW_Arrival_Dialog_Last_Version">您的Mobile Nose已是最新版本</string>
+    <string name="new_FW_Arrival_Dialog_Charge">請將您的Mobile Nose插上充電線。</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Mobile Nose已更新完成，請將您的Mobile Nose重新開機。</string>
 
     <!-- 2018/06/20 Dialog for Account Page -->
     <string name="dialog_Correct_Mail_Format">請輸入正確的信箱格式</string>
