@@ -413,4 +413,10 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="dialog_Password_Empty">Password can\'t be empty.</string>
     <string name="dialog_Password_noMatch">Passwords didn\'t match. Try again.</string>
     <string name="dialog_Password_Change_Successfully">Your password has been changed successfully.</string>
+
+    <!-- 2018/06/21 Text for Fire base Toast-->
+    <string name="fireBase_Toast_Setup_Done">Save all set up</string>
+    <string name="fireBase_Toast_Broadcast_Error">Broadcast Error</string>
+    <string name="fireBase_Toast_SignIn">Please sign in</string>
+    <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
 </resources>

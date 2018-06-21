@@ -513,4 +513,10 @@
     <string name="dialog_Password_Empty">密码不能空白</string>
     <string name="dialog_Password_noMatch">两个密码不相同</string>
     <string name="dialog_Password_Change_Successfully">密码修改成功</string>
+
+    <!-- 2018/06/21 Text for Fire base Toast-->
+    <string name="fireBase_Toast_Setup_Done">云端推播设定完成</string>
+    <string name="fireBase_Toast_Broadcast_Error">推播错误</string>
+    <string name="fireBase_Toast_SignIn">请登入账号</string>
+    <string name="fireBase_Toast_Network_Connect">请链上网络</string>
 </resources>

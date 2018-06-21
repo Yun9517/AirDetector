@@ -515,4 +515,10 @@
     <string name="dialog_Password_Empty">密碼不能空白</string>
     <string name="dialog_Password_noMatch">兩個密碼不相同</string>
     <string name="dialog_Password_Change_Successfully">密碼修改成功</string>
+
+    <!-- 2018/06/21 Text for Fire base Toast-->
+    <string name="fireBase_Toast_Setup_Done">雲端推播設定完成</string>
+    <string name="fireBase_Toast_Broadcast_Error">推播錯誤</string>
+    <string name="fireBase_Toast_SignIn">請登入帳號</string>
+    <string name="fireBase_Toast_Network_Connect">請連上網路</string>
 </resources>
