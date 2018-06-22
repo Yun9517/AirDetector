@@ -45,8 +45,8 @@ class AccountNameReplaceActivity : AppCompatActivity() {
 
         mMyThing = mything(id_Confirm!!, false, "https://mjairql.com/api/v1/editUserData")
 
-        // 03/16 InputFilter max 20
-        enter_ID.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+        // 03/16 InputFilter max 16
+        enter_ID.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(16))
         
         // 03/12
         id_Confirm?.setOnClickListener {
@@ -61,7 +61,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
                     }
                 } else {
                     //showDialog("請輸入欲更改的名字")
-                    showDialog(getString(R.string.expectName))
+                    showDialog(getString(R.string.dialog_Username_Empty))
                 }
             } else {
                 //showDialog("請連接網路")
@@ -183,7 +183,7 @@ class AccountNameReplaceActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this@AccountNameReplaceActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
+        //Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")

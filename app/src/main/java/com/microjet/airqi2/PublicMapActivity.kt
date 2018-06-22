@@ -9,6 +9,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_publicmap.*
+import android.webkit.GeolocationPermissions
+import android.webkit.WebChromeClient
 
 /**
  * Created by B00175 on 2018/4/24.
@@ -37,6 +39,11 @@ class PublicMapActivity: AppCompatActivity() {
                     }
                 }
 
+            }
+        }
+        wvMap.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+                callback.invoke(origin, true, false)
             }
         }
     }

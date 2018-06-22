@@ -78,25 +78,25 @@ class FirebaseNotifSettingTask : AsyncTask<String, Int, String>() {
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
         try {
-            if (result != null && setting== 4 ) {
+            if (result != null && setting == 4 ) {
                 when (result) {
                     "FirebaseSetting_success" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), " 雲端推播設定完成", Toast.LENGTH_SHORT).show()
+                        if (Build.BRAND != "OPPO") {//雲端推播設定完成
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Setup_Done, Toast.LENGTH_SHORT).show()
                         }
                     }
                     "Error" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "推播錯誤", Toast.LENGTH_SHORT).show()
+                        if (Build.BRAND != "OPPO") {//推播錯誤
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Broadcast_Error, Toast.LENGTH_SHORT).show()
                         }
                     }
-                    "ResponseError" -> {
+                    "ResponseError" -> {//請登入帳號
                         Log.e("ResponseError", "測試中")
-                        Toast.makeText(MyApplication.applicationContext(), "請登入帳號", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_SignIn, Toast.LENGTH_SHORT).show()
                     }
                     "ReconnectNetwork" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
+                        if (Build.BRAND != "OPPO") {//請連結網路
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Network_Connect, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
