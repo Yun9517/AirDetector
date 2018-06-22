@@ -63,11 +63,11 @@
             android:screenOrientation="unspecified"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
+        <!--android:noHistory="true"-->
         <activity
             android:name=".Account.AccountManagementActivity"
             android:label="@string/text_Title_Manifest_account_setting"
             android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />

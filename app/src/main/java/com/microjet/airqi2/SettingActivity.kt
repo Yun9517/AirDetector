@@ -803,7 +803,7 @@ class SettingActivity : AppCompatActivity() {
         TvocNoseData.firebaseNotifTVOC = argTvoc
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        FirebaseNotifTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
+        FirebaseNotifSettingTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
         setFCMSettingView()
     }
 

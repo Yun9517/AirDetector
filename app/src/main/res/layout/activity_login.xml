@@ -11,7 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="31dp">
 
         <TextView
             android:id="@+id/createAccount"
@@ -26,13 +28,13 @@
 
         <EditText
             android:id="@+id/email"
-            android:background="@drawable/style_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/style_input"
             android:ems="10"
             android:hint="@string/enter_Email"
             android:inputType="textEmailAddress"
@@ -40,13 +42,13 @@
 
         <EditText
             android:id="@+id/password"
-            android:background="@drawable/style_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="40dp"
             android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="8dp"
+            android:background="@drawable/style_input"
             android:ems="10"
             android:hint="@string/enter_Password"
             android:inputType="textPassword"
@@ -68,15 +70,15 @@
             android:layout_marginEnd="40dp"
             android:layout_marginTop="8dp"
             android:text="@string/forget_Password"
-            android:textColor="@color/hype_Link_Blue"/>
+            android:textColor="@color/hype_Link_Blue" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:layout_gravity="center"
-            android:layout_marginStart="40dp"
-            android:layout_marginEnd="40dp"
             android:layout_marginBottom="5dp"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="40dp"
             android:layout_marginTop="20dp"
             android:background="#484848"
             android:visibility="visible" />
@@ -103,39 +105,32 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="0dp"
                 android:text="@string/create_New_account"
-                android:textStyle="normal"
-                android:textColor="@color/hype_Link_Blue" />
-            15:26 白_________________告 <TextView
-            android:id="@+id/noAccountOr"
+                android:textColor="@color/hype_Link_Blue"
+                android:textStyle="normal" />
+            15:26 白_________________告
+
+        </LinearLayout>
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/login_buttonFB"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginEnd="0dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="0dp"
-            android:layout_weight="1"
-            android:text="@string/no_Account_or" />
-
-            <com.facebook.login.widget.LoginButton
-                android:id="@+id/login_buttonFB"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginEnd="0dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="0dp"
-                android:layout_weight="1" />
-        </LinearLayout>
+            android:layout_weight="1" />
 
         <Button
             android:id="@+id/login"
-            android:background="@drawable/style_login_button"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:layout_gravity="center"
             android:layout_marginEnd="0dp"
             android:layout_marginTop="25dp"
+            android:background="@drawable/style_login_button"
             android:text="@string/login"
-            android:textColor="@color/whiteColor"/>
+            android:textColor="@color/whiteColor" />
 
     </LinearLayout>
 

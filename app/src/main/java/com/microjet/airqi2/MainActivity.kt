@@ -25,7 +25,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.content.res.AppCompatResources
-import android.util.Base64
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.*
@@ -70,8 +69,6 @@ import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.nio.ByteBuffer
-import java.security.MessageDigest
-import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
@@ -355,18 +352,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
 
-        try{
-            val info = packageManager.getPackageInfo("com.microjet.airqi2",PackageManager.GET_SIGNATURES)
-            for(i in info.signatures){
-                val md = MessageDigest.getInstance("SHA")
-                md.update(i.toByteArray())
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT))
-            }
-        }catch (exception: PackageManager.NameNotFoundException) {
 
-        } catch (exception: NoSuchAlgorithmException) {
-
-        }
     }
 
     @SuppressLint("WifiManagerLeak")
