@@ -193,11 +193,11 @@
     <string name="login">Sign in</string>
     <string name="enter_Password">Password</string>
     <string name="forget_Password">Forgot password?</string>
-    <string name="forget_Password_Title">Forgot password</string>
+    <string name="forget_Password_Title">Forgot Password</string>
     <string name="forget_Check_Password_Title">Forgot-Change password</string>
     <string name="forget_Password_Description">Check your mail and click the Verification Link, you will be able to change your password.</string>
     <string name="change_Password">Change password?</string>
-    <string name="change_Password_Title">Change password</string>
+    <string name="change_Password_Title">Change Password</string>
     <string name="check_Password">Enter new password</string>
     <string name="double_check_Password">Confirm your password</string>
     <string name="no_Account">No account? </string>
@@ -214,11 +214,11 @@
     <string name="account_Activation">Activation</string>
     <string name="account_Deactivation">Deactivation</string>
     <string name="create_Description">You will receive a password for the first time sign in, you can change the password anytime.</string>
-    <string name="nick_Name">ID : </string>
+    <string name="nick_Name">Username : </string>
     <string name="email">Email : </string>
     <string name="edit">Edit</string>
-    <string name="nameReplace">New ID</string>
-    <string name="enterName">Enter your new ID here</string>
+    <string name="nameReplace">New Username</string>
+    <string name="enterName">Enter your new username</string>
     <string name="recordTitle">Record</string>
     <string name="fetchData">Check</string>
     <string name="downloadData">Download</string>
@@ -229,8 +229,8 @@
 
     <string name="download_min">Have a cup of tea</string>
 
-    <string name="text_label_latitude">Lati</string>
-    <string name="text_label_longitude">Longi</string>
+    <string name="text_label_latitude">Lat.</string>
+    <string name="text_label_longitude">Long.</string>
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">Slow your click attempt</string>
@@ -391,7 +391,32 @@
     <!-- 2018/06/14 FW update dialog -->
     <string name="new_FW_Arrival_Dialog_Title">Firmware Update</string>
     <string name="new_FW_Arrival_Dialog">Ensure the device is connected to the charger and avoid shaking the device or your phone.\n
-Please note that the risk of FW update failure exists in any conditions. If this occurs, please refer to Q&amp;A or contact us.</string>
+Please note that this FW update process is done entirely at your own risk. If the failure occurs, please contact us at service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">Update now</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">Ask me later</string>
+    <string name="new_FW_Arrival_Dialog_Last_Version">Your Mobile Nose has already been updated to the last version.</string>
+    <string name="new_FW_Arrival_Dialog_Charge">Please put your Mobile Nose connect to charger.</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Update finished! Please restart your Mobile NoseMobile Nose.</string>
+
+    <!-- 2018/06/20 Dialog for Account Page -->
+    <string name="dialog_Correct_Mail_Format">Please enter a valid email address.</string>
+    <string name="dialog_Mail_Verification_Failed">Mail verification failed, please enter again or sign up a new one.</string>
+    <string name="dialog_Mail_Has_Sent">Verification email has been sent.</string>
+    <string name="dialog_Mail_Registered">Account has been registered.</string>
+    <string name="dialog_Check_MailBox">A verification email has been sent, please check your mailbox.</string>
+    <string name="dialog_Wrong_Password">Wrong password, try again.</string>
+    <string name="dialog_Username_Empty">Username can\'t be empty.</string>
+    <string name="dialog_Username_tooLong">Username cannot exceed 16 characters</string>
+    <string name="dialog_Change_Successfully">Your username has been changed successfully.</string>
+    <string name="dialog_Password_Empty">Password can\'t be empty.</string>
+    <string name="dialog_Password_noMatch">Passwords didn\'t match. Try again.</string>
+    <string name="dialog_Password_Change_Successfully">Your password has been changed successfully.</string>
+
+    <!-- 2018/06/21 Text for Fire base Toast-->
+    <string name="fireBase_Toast_Setup_Done">Save all set up</string>
+    <string name="fireBase_Toast_Broadcast_Error">Broadcast Error</string>
+    <string name="fireBase_Toast_SignIn">Please sign in</string>
+    <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
+
+    <string name="select_Date">Select a date</string>
 </resources>

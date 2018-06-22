@@ -98,7 +98,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
                         runRealmQueryData()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
-                    dpd.setMessage("請選擇日期")
+                    dpd.setMessage(getString(R.string.select_Date))//請選擇日期
                     dpd.show()
                 }
             }
