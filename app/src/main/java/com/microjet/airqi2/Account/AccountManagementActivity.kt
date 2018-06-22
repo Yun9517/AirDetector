@@ -72,23 +72,12 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private fun login() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
-            true -> Log.e("loginActivity", "進入了喔")
-            false ->Log.e("loginActivity", "失敗")
+            true -> AccountLoginTask(this).execute(email?.text.toString(), password?.text.toString())
+            false -> {
+                val newFrage = CheckFragment().newInstance(R.string.errorMail_address, this, 1)
+                newFrage.show(fragmentManager, "dialog")
+            }
         }
-        /*
-        if (isEmail(email?.text.toString()) && email?.text.toString() != "") {
-                    if (com.microjet.airqi2.CustomAPI.Utils.isFastDoubleClick) {
-                        //showDialog("按慢一點太快了")
-                        showDialog(getString(R.string.tooFast))
-                    } else {
-                        login?.isEnabled = false
-                        goLoginAsyncTasks().execute(mMyThing)
-                    }
-                } else {
-                    //showDialog("請輸入正確的E-mail地址")
-                    showDialog(getString(R.string.errorMail_address))
-                }
-         */
     }
 
     private fun isEmail(strEmail: String?): Boolean {
@@ -140,5 +129,6 @@ class AccountManagementActivity : AppCompatActivity() {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
     }
+
 
 }
