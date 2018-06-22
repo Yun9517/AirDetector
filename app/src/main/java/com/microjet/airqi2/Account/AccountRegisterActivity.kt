@@ -64,7 +64,7 @@ class AccountRegisterActivity : AppCompatActivity() {
                     }
                 } else {
                     //showDialog("請輸入正確的E-mail地址")
-                    showDialog(getString(R.string.errorMail_address))
+                    showDialog(getString(R.string.dialog_Correct_Mail_Format))
                 }
             }else{
                 //showDialog("請連接網路")
@@ -118,11 +118,11 @@ class AccountRegisterActivity : AppCompatActivity() {
                     } catch (e: JSONException) {
                         e.printStackTrace()
                     }
-                    register_mail_Result = "密碼已經寄送，請至登入頁面輸入密碼。"
+                    register_mail_Result = getString(R.string.dialog_Mail_Has_Sent) //密碼已經寄送，請至登入帳號頁面輸入密碼
                 } else {
                     params[0].myBlean = false
                     Log.e("註冊錯誤回來", response.body()!!.string())
-                    register_mail_Result = "此信箱已經被申請，請更改信箱再註冊謝謝。"
+                    register_mail_Result = getString(R.string.dialog_Mail_Registered) //此信箱已經被申請，請更改信箱再註冊謝謝
                    runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
                         nextStep?.isEnabled=true
@@ -140,11 +140,11 @@ class AccountRegisterActivity : AppCompatActivity() {
 
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
-            if (result == "密碼已經寄送，請至登入頁面輸入密碼。") {
+            if (result == getString(R.string.dialog_Mail_Has_Sent)) { //密碼已經寄送，請至登入帳號頁面輸入密碼
                 val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
-                Dialog.setTitle(getString(R.string.remind))
+                //Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
@@ -254,7 +254,7 @@ class AccountRegisterActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this@AccountRegisterActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
+        //Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")

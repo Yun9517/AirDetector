@@ -495,7 +495,32 @@
 
     <!-- 2018/06/14 FW update dialog -->
     <string name="new_FW_Arrival_Dialog_Title">韌體更新</string>
-    <string name="new_FW_Arrival_Dialog">請確保裝置接上電源並避免晃動裝置手機。\n提醒您，更新韌體本身具一定風險，若更新失敗或有其他問題，請參考Q&amp;A或聯絡我們。</string>
+    <string name="new_FW_Arrival_Dialog">請確保裝置接上電源並避免晃動裝置手機。\n提醒您，更新韌體本身具一定風險，若更新失敗請聯繫 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暫不更新</string>
+    <string name="new_FW_Arrival_Dialog_Last_Version">您的Mobile Nose已是最新版本</string>
+    <string name="new_FW_Arrival_Dialog_Charge">請將您的Mobile Nose插上充電線。</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Mobile Nose已更新完成，請將您的Mobile Nose重新開機。</string>
+
+    <!-- 2018/06/20 Dialog for Account Page -->
+    <string name="dialog_Correct_Mail_Format">請輸入正確的信箱格式</string>
+    <string name="dialog_Mail_Verification_Failed">信箱驗證失敗，請重新輸入或註冊新帳號</string>
+    <string name="dialog_Mail_Has_Sent">認證信已發送</string>
+    <string name="dialog_Mail_Registered">此信箱已被註冊</string>
+    <string name="dialog_Check_MailBox">認證信已發送，請至信件夾點選啟用</string>
+    <string name="dialog_Wrong_Password">密碼錯誤，請重新輸入</string>
+    <string name="dialog_Username_Empty">暱稱不能空白</string>
+    <string name="dialog_Username_tooLong">暱稱不能太長\n(中文8字元, 英文16字元)</string>
+    <string name="dialog_Change_Successfully">修改成功</string>
+    <string name="dialog_Password_Empty">密碼不能空白</string>
+    <string name="dialog_Password_noMatch">兩個密碼不相同</string>
+    <string name="dialog_Password_Change_Successfully">密碼修改成功</string>
+
+    <!-- 2018/06/21 Text for Fire base Toast-->
+    <string name="fireBase_Toast_Setup_Done">雲端推播設定完成</string>
+    <string name="fireBase_Toast_Broadcast_Error">推播錯誤</string>
+    <string name="fireBase_Toast_SignIn">請登入帳號</string>
+    <string name="fireBase_Toast_Network_Connect">請連上網路</string>
+    
+    <string name="select_Date">請選擇日期</string>
 </resources>

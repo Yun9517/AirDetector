@@ -288,7 +288,7 @@ class Pm10Fragment : Fragment() {
                         drawChart(spinnerPositon)
                         timePickerShow()
                     }, calObject.get(Calendar.YEAR), calObject.get(Calendar.MONTH), calObject.get(Calendar.DAY_OF_MONTH))
-                    dpd.setMessage("請選擇日期")
+                    dpd.setMessage(getString(R.string.select_Date))//請選擇日期
                     dpd.show()
                 }
             }
