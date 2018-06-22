@@ -165,7 +165,7 @@ class AccountActiveActivity : AppCompatActivity() {
                 calObject.set(year, month, dayOfMonth)
                 updateDateInView()
             }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-            dpd.setMessage("請選擇日期")
+            dpd.setMessage(getString(R.string.select_Date))//請選擇日期
             dpd.show()
         }
 
@@ -201,7 +201,7 @@ class AccountActiveActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this@AccountActiveActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        Dialog.setTitle(getString(R.string.remind))
+        //Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
@@ -360,7 +360,7 @@ class AccountActiveActivity : AppCompatActivity() {
         val lineInstallFlag: Boolean = false
         val pm = packageManager
         val m_appList = pm.getInstalledApplications(0)
-        val ai:ApplicationInfo
+        val ai: ApplicationInfo
 
         m_appList?.forEachIndexed { _, ai ->
             if (ai.packageName == PACKAGE_NAME) {
