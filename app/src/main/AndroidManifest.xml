@@ -267,7 +267,8 @@
         </service>
 
         <activity android:name=".CameraActivity" />
-        <activity android:name=".PhotoActivity"></activity>
+        <activity android:name=".PhotoActivity"
+            android:label="拍照分享" />
     </application>
 
 </manifest>
