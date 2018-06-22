@@ -217,6 +217,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var lati = 255f  //TvocNoseData.lati
     private var longi = 255f //TvocNoseData.longi
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
+    private var countForAndroidO: Int = 0
+    private var triggerForAndroidOOn: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -372,7 +374,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onStart")
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
-        checkUIState()
         requestPermissionsForBluetooth()
         //checkBluetooth()
         mDeviceAddress = myPref.getSharePreferenceMAC()
@@ -398,6 +399,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService == null) {
             connState = DISCONNECTED
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            countForAndroidO = 0
+            triggerForAndroidOOn = false
+        }
+        checkUIState()
     }
 
     override fun onPause() {
@@ -408,6 +414,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onStop() {
         super.onStop()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            countForAndroidO = 0
+            triggerForAndroidOOn = true
+        }
         checkUIState()
         Log.e(TAG, "call onStop")
     }
@@ -1470,6 +1480,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xD6.toByte() -> {
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueD6(txValue)
                         saveToRealmD6(c6d6map,hashMap)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            if (triggerForAndroidOOn) {
+                                countForAndroidO++
+                                if (countForAndroidO >= 60) {
+                                    countForAndroidO = 0
+                                    mUartService?.disconnect()
+                                }
+                            }
+                        }
                     }
                 }
             } else {
