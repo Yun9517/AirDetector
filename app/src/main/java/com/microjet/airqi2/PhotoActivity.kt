@@ -77,6 +77,7 @@ class PhotoActivity : AppCompatActivity() {
             }
 
             val lastData = queryDatabaseLastData()
+            Log.e("LastData", "$lastData")
             // 隨機 0~2
             val mode = random.nextInt(4)
             Log.e("Random", "The number is $mode")
@@ -149,7 +150,7 @@ class PhotoActivity : AppCompatActivity() {
                 .between("Created_time", startTime, endTime)
                 .sort("Created_time", Sort.ASCENDING).findAllAsync()
 
-        return if(result.isNotEmpty()) { result.last() } else { null }
+        return if(result.last() != null) { result.last() } else { null }
     }
 
     private fun shareContent(imageFileName: String) {
