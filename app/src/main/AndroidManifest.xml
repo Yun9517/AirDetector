@@ -189,7 +189,7 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".settingPage.SettingActivity"
             android:label="@string/text_Title_Manifest_general_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
@@ -262,6 +262,10 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
+        <activity android:name=".settingPage.PrivacySettingActivity" />
+        <activity android:name=".settingPage.DeviceNotifySettingActivity" />
+        <activity android:name=".settingPage.CloudNotifySettingActivity" />
+        <activity android:name=".settingPage.CloudSyncSettingActivity" />
 
         <service
             android:name=".GetFirebaseInstanceIdService">

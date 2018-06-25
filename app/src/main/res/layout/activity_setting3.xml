@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#f5f5f5"
+    android:scrollbars="vertical">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:isScrollContainer="true"
+        android:orientation="vertical"
+        android:scrollbars="vertical">
+
+        <TextView
+            android:id="@+id/textAllowCloudNotify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:text="@string/text_cloud_notify"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/swAllowCloudNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
+
+        <TextView
+            android:id="@+id/text_cloud_notification_func_comment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp"
+            android:text="@string/text_cloud_notify_comment"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textAllowCloudNotify" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/swAllowCloudNotify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cgCloudNotify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="cloudSaveText, subDivider3, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
+
+        <ImageView
+            android:id="@+id/subDivider3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
+
+        <TextView
+            android:id="@+id/text_cloud_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_cloud_notify_time"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
+            app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/btnCloudNotify" />
+
+        <Button
+            android:id="@+id/btnCloudNotify"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button"
+            android:text="@string/text_cloud_set_minute"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider3" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cgCloudSeekbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
+
+        <TextView
+            android:id="@+id/textCloudTvocSeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_tvoc_value"
+            android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            android:singleLine="false"
+            app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/cloudTvocSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCloudTvocSeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/tvocArray"
+            app:rsb_max="2200"
+            app:rsb_min="220"
+            app:rsb_seekBarHeight="16dp"
+            app:rsb_seekBarMode="single"
+            app:rsb_textPadding="20dp"
+            app:rsb_thumbSize="30dp" />
+
+        <TextView
+            android:id="@+id/cloudTvocSeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="2200"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
+
+        <TextView
+            android:id="@+id/textCloudPM25SeekBarLabel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_pm25_value"
+            android:textAlignment="viewStart"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/cloudTvocSeekValue"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
+
+        <com.jaygoo.widget.RangeSeekBar
+            android:id="@+id/cloudPM25SeekBar"
+            android:layout_width="0dp"
+            android:layout_height="80dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textCloudPM25SeekBarLabel"
+            app:rsb_cellMode="number"
+            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
+            app:rsb_lineColorSelected="@color/colorAccent"
+            app:rsb_markTextArray="@array/pm25Array"
+            app:rsb_max="150"
+            app:rsb_min="15"
+            app:rsb_seekBarHeight="16dp"
+            app:rsb_seekBarMode="single"
+            app:rsb_textPadding="20dp"
+            app:rsb_thumbSize="30dp" />
+
+
+        <TextView
+            android:id="@+id/cloudPM25SeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="250"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
+
+        <Button
+            android:id="@+id/btnSaveCloudSetting"
+            android:layout_width="0dp"
+            android:layout_height="42dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_long"
+            android:text="@string/text_save_cloud_setting"
+            android:textColor="#f32091"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
+
+        <TextView
+            android:id="@+id/cloudSaveText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:text="@string/text_save_setting_message"
+            android:textAlignment="center"
+            android:textColor="#6d6d72"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>
