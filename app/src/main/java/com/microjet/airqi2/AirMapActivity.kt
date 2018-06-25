@@ -141,8 +141,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             pgLoading.bringToFront()
             
             //runRealmQueryData()
-            drawLineChart(filter)
-            drawMapPolyLine(filter)
+            drawLineChart(sampleData.getData())
+            drawMapPolyLine(sampleData.getData())
         }
 
         imgAirQuality.setOnClickListener(object : OnMultipleClickListener(10, 250) {
@@ -184,8 +184,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         listener = RealmChangeListener {
             filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
-            drawMapPolyLine(filter)
-            drawLineChart(filter)
+            drawMapPolyLine(sampleData.getData())
+            drawLineChart(sampleData.getData())
             Log.e("Realm Listener", "Update Map...")
         }
 
@@ -593,7 +593,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         if(lineChart.Mode() != MJGraphView.MODE_DAILY) {
             lineChart.SetMode(MJGraphView.MODE_DAILY)
         }
-
+        filter = sampleData.getData()
         val data = if (rbTVOC.isChecked) {
             filter[_index].tvocValue!!.toInt()
         } else {
