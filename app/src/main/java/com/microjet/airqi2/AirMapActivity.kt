@@ -66,11 +66,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     private lateinit var filter: List<AsmDataModel>
 
-    companion object {
-        private lateinit var mCal: Calendar
-        private lateinit var mMap: GoogleMap
-        var aResult = java.util.ArrayList<MJGraphData>()
-    }
+    private lateinit var mCal: Calendar
+    private lateinit var mMap: GoogleMap
+
+    private var aResult = java.util.ArrayList<MJGraphData>()
 
     private lateinit var myPref: PrefObjects
 
@@ -473,8 +472,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // 移動畫面到目前的標記
         val zoomValue = mMap.cameraPosition.zoom
+        Log.e("Zoom", "Value: $zoomValue")
         if(zoomValue < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
         }
