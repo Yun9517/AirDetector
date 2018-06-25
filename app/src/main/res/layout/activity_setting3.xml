@@ -46,9 +46,11 @@
             android:id="@+id/swAllowCloudNotify"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintBottom_toBottomOf="@+id/text_cloud_notification_func_comment"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
 
@@ -167,7 +169,7 @@
             android:text="2200"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
@@ -219,7 +221,7 @@
             android:text="250"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
@@ -231,7 +233,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_long"
+            android:background="@android:color/transparent"
             android:text="@string/text_save_cloud_setting"
             android:textColor="#f32091"
             android:textSize="18sp"
