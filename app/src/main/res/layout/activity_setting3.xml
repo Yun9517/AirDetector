@@ -28,7 +28,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/swAllowCloudNotify"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/text_cloud_notification_func_comment"
@@ -52,7 +52,7 @@
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintBottom_toBottomOf="@+id/text_cloud_notification_func_comment"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
+            app:layout_constraintTop_toTopOf="@+id/textAllowCloudNotify" />
 
         <android.support.constraint.Group
             android:id="@+id/cgCloudNotify"
