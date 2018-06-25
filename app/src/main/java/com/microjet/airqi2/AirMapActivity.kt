@@ -141,8 +141,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             pgLoading.bringToFront()
             
             //runRealmQueryData()
-            drawLineChart(result)
-            drawMapPolyLine(result)
+            drawLineChart(filter)
+            drawMapPolyLine(filter)
         }
 
         imgAirQuality.setOnClickListener(object : OnMultipleClickListener(10, 250) {
