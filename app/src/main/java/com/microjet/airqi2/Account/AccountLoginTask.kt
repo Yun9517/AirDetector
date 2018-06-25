@@ -8,6 +8,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.json.JSONObject
 
 /**
  * Created by B00190 on 2018/6/22.
@@ -37,11 +38,17 @@ class AccountLoginTask(mContext: Context?) : AsyncTask<String, Int, String>() {
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
             loginResult = "成功登入"
-            val tempBody: String = response.body()!!.string().toString()
-            Log.e(TAG, tempBody)
+            val res: String = response.body()!!.string().toString()
+            Log.e(TAG, res)
+            val returnResult = JSONObject(res).getJSONObject("success")
+            val token = returnResult.getString("token").toString()
+            val name = returnResult.getJSONObject("userData").getString("name").toString()
+            val email = returnResult.getJSONObject("userData").getString("email").toString()
+            val deviceArr = returnResult.getJSONArray("deviceList")
+            //Log.e(TAG, token) Log.e(TAG, name) Log.e(TAG, email) Log.e(TAG,deviceArr.toString())
+            //val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
 
         } else {
-            Log.e(TAG, response.body()!!.string())
             loginResult = "登入失敗"
         }
         return loginResult
@@ -59,7 +66,7 @@ class AccountLoginTask(mContext: Context?) : AsyncTask<String, Int, String>() {
             val intent = Intent(mContext, AccountActiveActivity::class.java)
             mContext?.startActivity(intent)
 
-        }else{
+        }else if(result == "登入失敗"){
 
         }
     }
