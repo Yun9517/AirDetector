@@ -262,10 +262,30 @@
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
-        <activity android:name=".settingPage.PrivacySettingActivity" />
-        <activity android:name=".settingPage.DeviceNotifySettingActivity" />
-        <activity android:name=".settingPage.CloudNotifySettingActivity" />
-        <activity android:name=".settingPage.CloudSyncSettingActivity" />
+
+        <activity
+            android:name=".settingPage.PrivacySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.DeviceNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudSyncSettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".GetFirebaseInstanceIdService">
