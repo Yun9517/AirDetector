@@ -212,7 +212,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 }
 
                 val o: MJGraphData? = MJGraphData(datas[i].created_time, data)
-                if (o != null && i < result.size - 1) {
+                if (o != null && i < datas.size - 1) {
                     try {
                         aResult.add(o)
                         //lineChart.AddData(o)
