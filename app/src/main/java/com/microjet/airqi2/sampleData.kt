@@ -16,7 +16,7 @@ object sampleData {
             var asm = AsmDataModel()
             asm.tempValue = "23.2"
             asm.humiValue = "41"
-            asm.tvocValue = (1648 + i).toString()
+            asm.tvocValue = (218 + i).toString()
             asm.ecO2Value = "1171"
             asm.pM25Value = (3 + i ).toString()
             asm.pM10Value = 3
@@ -33,9 +33,10 @@ object sampleData {
     }
 
     private fun changeData() {
-        var item = arr.get(10)
-        item.longitude = 121.334865f
-        item.latitude = 24.930527f
+        var item = arr[3]
+        item.longitude = 121.412718f
+        item.latitude = 24.960936f
+        item.tvocValue = "5000"
 
     }
 }
