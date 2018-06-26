@@ -972,7 +972,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     @SuppressLint("SetTextI18n")
     private fun setViewSingleLine() {
-        scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
+        scrollViewsArr.clear()//记得加这句话，不然可能会产生重影现象
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
             val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
