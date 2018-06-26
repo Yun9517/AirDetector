@@ -1630,18 +1630,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
@@ -1934,18 +1937,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))

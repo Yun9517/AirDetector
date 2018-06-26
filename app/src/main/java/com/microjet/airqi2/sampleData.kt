@@ -36,6 +36,8 @@ object sampleData {
         var item = arr[3]
         item.longitude = 121.412718f
         item.latitude = 24.960936f
+        item.longitude = 255f
+        item.latitude = 255f
         item.tvocValue = "5000"
 
     }

@@ -73,6 +73,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     private lateinit var myPref: PrefObjects
 
+    private var lati = 255f
+    private var longi = 255f
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,9 +85,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         initActionBar()
         initGoogleMapFragment()
-
         initLineChart()
-
         createLocationRequest()
 
         mCal = Calendar.getInstance()
@@ -183,7 +184,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val mDeviceAddress = myPref.getSharePreferenceMAC()
 
         listener = RealmChangeListener {
-            filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
+            //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             drawMapPolyLine(sampleData.getData())
             drawLineChart(sampleData.getData())
             Log.e("Realm Listener", "Update Map...")
@@ -201,6 +202,14 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private fun drawLineChart(datas: List<AsmDataModel>) {
 
         aResult.clear()
+        datas.forEach {
+            if (it.latitude == 255f) {
+                it.latitude = lati
+                it.longitude = longi
+            }
+            lati = it.latitude
+            longi = it.longitude
+        }
 
         if (datas.isNotEmpty()) {
             for (i in 0 until datas.size) {
@@ -261,26 +270,23 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     // 畫軌跡
     private fun drawMapPolyLine(datas: List<AsmDataModel>) {
-        val rectOptions1 = PolylineOptions()
-        rectOptions1.color(Colors.tvocCO2Colors[0])
 
-        val rectOptions2 = PolylineOptions()
-        rectOptions2.color(Colors.tvocCO2Colors[1])
-
-        val rectOptions3 = PolylineOptions()
-        rectOptions3.color(Colors.tvocCO2Colors[2])
-
-        val rectOptions4 = PolylineOptions()
-        rectOptions4.color(Colors.tvocCO2Colors[3])
-
-        val rectOptions5 = PolylineOptions()
-        rectOptions5.color(Colors.tvocCO2Colors[4])
-
-        val rectOptions6 = PolylineOptions()
-        rectOptions6.color(Colors.tvocCO2Colors[5])
+        val rectOptions1 = PolylineOptions().color(Colors.tvocCO2Colors[0])
+        val rectOptions2 = PolylineOptions().color(Colors.tvocCO2Colors[1])
+        val rectOptions3 = PolylineOptions().color(Colors.tvocCO2Colors[2])
+        val rectOptions4 = PolylineOptions().color(Colors.tvocCO2Colors[3])
+        val rectOptions5 = PolylineOptions().color(Colors.tvocCO2Colors[4])
+        val rectOptions6 = PolylineOptions().color(Colors.tvocCO2Colors[5])
         
-        //val dataFilter = datas.filter { it.latitude < 255f && it.latitude != null }
-
+        //val datas = dataOrigin//.filter { it.latitude < 255f && it.latitude != null }
+        datas.forEach {
+            if (it.latitude == 255f) {
+                it.latitude = lati
+                it.longitude = longi
+            }
+            lati = it.latitude
+            longi = it.longitude
+        }
         datas.forEachIndexed { index, asmDataModel ->
             if (index < datas.size - 1) {
                 if (rbTVOC.isChecked) {
@@ -339,6 +345,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                     }
                 }
             }
+
         }
 
         // 先清完再畫
@@ -594,6 +601,14 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             lineChart.SetMode(MJGraphView.MODE_DAILY)
         }
         filter = sampleData.getData()
+        filter.forEach {
+            if (it.latitude == 255f) {
+                it.latitude = lati
+                it.longitude = longi
+            }
+            lati = it.latitude
+            longi = it.longitude
+        }
         val data = if (rbTVOC.isChecked) {
             filter[_index].tvocValue!!.toInt()
         } else {
