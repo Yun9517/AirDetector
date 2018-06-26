@@ -36,7 +36,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:text="@string/text_setting_allow_privacy"
+            android:text="@string/text_label_personal_track_password"
             android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintBottom_toBottomOf="@+id/swAllowPrivacy"

@@ -63,10 +63,22 @@ class SettingActivity : AppCompatActivity() {
             deviceControl1.visibility = View.VISIBLE
             deviceControl2.visibility = View.VISIBLE
             deviceControl3.visibility = View.VISIBLE
+
+            mainDivider6.visibility = View.VISIBLE
+            mainDivider7.visibility = View.VISIBLE
+            subDivider3.visibility = View.VISIBLE
+            subDivider4.visibility = View.VISIBLE
+            groupDivider4.visibility = View.VISIBLE
         } else {
             deviceControl1.visibility = View.GONE
             deviceControl2.visibility = View.GONE
             deviceControl3.visibility = View.GONE
+
+            mainDivider6.visibility = View.GONE
+            mainDivider7.visibility = View.GONE
+            subDivider3.visibility = View.GONE
+            subDivider4.visibility = View.GONE
+            groupDivider4.visibility = View.GONE
         }
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part one

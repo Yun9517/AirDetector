@@ -62,13 +62,13 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView8, swMessage, subDivider2"
+            app:constraint_referenced_ids="textView8, swMessage, subDivider1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
 
         <ImageView
-            android:id="@+id/subDivider2"
+            android:id="@+id/subDivider1"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginEnd="16dp"
@@ -103,7 +103,20 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider2" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider1" />
+
+        <ImageView
+            android:id="@+id/subDivider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swMessage" />
 
 
         <android.support.constraint.Group
@@ -112,12 +125,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView10, swVibrate"
+            app:constraint_referenced_ids="textView10, swVibrate, subDivider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swMessage" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider2" />
 
         <TextView
             android:id="@+id/textView10"
@@ -145,6 +157,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
 
+        <ImageView
+            android:id="@+id/subDivider3"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
 
         <android.support.constraint.Group
             android:id="@+id/cgSound"
@@ -152,12 +176,11 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView12, swSound"
+            app:constraint_referenced_ids="textView12, swSound, subDivider3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider3" />
 
         <TextView
             android:id="@+id/textView12"
@@ -186,6 +209,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgSound" />
 
+        <ImageView
+            android:id="@+id/subDivider4"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/swSound" />
 
         <android.support.constraint.Group
             android:id="@+id/cgSeekbar"
@@ -195,10 +230,10 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
+            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue, subDivider4, subDivider5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swSound" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider4" />
 
         <TextView
             android:id="@+id/textTvocSeekBarLabel"
@@ -214,6 +249,20 @@
             app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
+
+        <TextView
+            android:id="@+id/tvocSeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="2200"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textTvocSeekBarLabel" />
 
         <com.jaygoo.widget.RangeSeekBar
             android:id="@+id/tvocSeekBar"
@@ -236,20 +285,18 @@
             app:rsb_textPadding="20dp"
             app:rsb_thumbSize="30dp" />
 
-        <TextView
-            android:id="@+id/tvocSeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+        <ImageView
+            android:id="@+id/subDivider5"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="2200"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
 
         <TextView
             android:id="@+id/textPM25SeekBarLabel"
@@ -257,14 +304,28 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="16dp"
             android:text="@string/text_setting_pm25_value"
             android:textAlignment="viewStart"
             android:textColor="@color/blackColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toStartOf="@+id/pm25SeekValue"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider5" />
+
+        <TextView
+            android:id="@+id/pm25SeekValue"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="250"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textPM25SeekBarLabel" />
 
         <com.jaygoo.widget.RangeSeekBar
             android:id="@+id/pm25SeekBar"
@@ -287,21 +348,18 @@
             app:rsb_textPadding="20dp"
             app:rsb_thumbSize="30dp" />
 
-
-        <TextView
-            android:id="@+id/pm25SeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
+        <ImageView
+            android:id="@+id/mainDivider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
             android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="250"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="18sp"
-            android:textStyle="bold"
+            android:layout_marginEnd="0dp"
+            android:layout_marginStart="0dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />
 
     </android.support.constraint.ConstraintLayout>
 
