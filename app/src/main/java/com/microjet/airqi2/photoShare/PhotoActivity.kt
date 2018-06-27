@@ -1,13 +1,16 @@
 package com.microjet.airqi2.photoShare
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
+import android.location.Geocoder
 import android.os.Bundle
 import android.os.Environment
+import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider.getUriForFile
 import android.support.v7.app.AppCompatActivity
@@ -33,6 +36,7 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -47,7 +51,7 @@ class PhotoActivity : AppCompatActivity() {
 
     private lateinit var mCal: Calendar
 
-    private val random = Random()
+    //private val random = Random()
 
     private val reqCodeCamera = 101
     private val reqCodeWriteStorage = 102
@@ -83,19 +87,25 @@ class PhotoActivity : AppCompatActivity() {
             val lastData = queryDatabaseLastData()
             Log.e("LastData", "$lastData")
             // 隨機 0~2
-            val mode = random.nextInt(4)
-            Log.e("Random", "The number is $mode")
+            //val mode = random.nextInt(4)
+            //Log.e("Random", "The number is $mode")
 
             addTextBitmap = if (lastData != null) {
-                setLayout(rotatedBitmap, mode,
+                val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+                setLayout2(rotatedBitmap, lastLocation,
+                        "${lastData.tvocValue} ppb",
+                        "${lastData.pM25Value} μg/m³",
+                        "${lastData.tempValue} °C")
+                /*setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
                         "${lastData.pM10Value} μg/m³",
                         "${lastData.ecO2Value} ppm",
                         "${lastData.tempValue} °C",
-                        "${lastData.humiValue} %")
+                        "${lastData.humiValue} %")*/
             } else {
-                setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
+                //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
+                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----")
             }
             //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
@@ -265,6 +275,78 @@ class PhotoActivity : AppCompatActivity() {
         //Render this view (and all of its children) to the given Canvas
         view.draw(c)
         return bitmap
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun setLayout2(background: Bitmap, cityText: String,
+                           tvocText: String, pm25Text: String, tempText: String): Bitmap {
+
+        val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+
+        //Inflate the layout into a view and configure it the way you like
+        val view = RelativeLayout(this)
+        mInflater.inflate(R.layout.photo_layout4, view, true)
+
+        val img = view.findViewById<View>(R.id.imgBg) as ImageView
+        img.setImageBitmap(background)
+
+        val city = view.findViewById<View>(R.id.textLocation) as TextView
+        city.text = cityText
+
+        val tvoc = view.findViewById<View>(R.id.tvocValue) as TextView
+        tvoc.text = tvocText
+
+        val pm25 = view.findViewById<View>(R.id.pm25Value) as TextView
+        pm25.text = pm25Text
+
+        val temp = view.findViewById<View>(R.id.tempValue) as TextView
+        temp.text = tempText
+
+        val date = view.findViewById<View>(R.id.textDate) as TextView
+        val dateFormat = SimpleDateFormat("HH:mm\nMM/dd")
+        date.text = dateFormat.format(System.currentTimeMillis())
+
+        //Provide it with a layout params. It should necessarily be wrapping the
+        //content as we not really going to have a parent for it.
+        view.layoutParams = ViewGroup.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT)
+
+        //Pre-measure the view so that height and width don't remain null.
+        view.measure(MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED),
+                MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED))
+
+        //Assign a size and position to the view and all of its descendants
+        view.layout(0, 0, view.measuredWidth, view.measuredHeight)
+
+        //Create the bitmap
+        val bitmap = Bitmap.createBitmap(view.measuredWidth,
+                view.measuredHeight,
+                Bitmap.Config.ARGB_8888)
+        //Create a canvas with the specified bitmap to draw into
+        val c = Canvas(bitmap)
+
+        //Render this view (and all of its children) to the given Canvas
+        view.draw(c)
+        return bitmap
+    }
+
+    private fun getLocationName(latitude: Double, longitude: Double): String {
+        try {
+            val geo = Geocoder(this.applicationContext, Locale.getDefault())
+            val addresses = geo.getFromLocation(latitude, longitude, 1)
+            return if (addresses.isEmpty()) {
+                "Waiting for Location"
+            } else {
+                if (addresses.size > 0) {
+                    "${addresses[0].locality }, ${addresses[0].adminArea}"
+                } else {
+                    "Waiting for Location"
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            return "Waiting for Location"
+        }
     }
 
     private fun savePicture(bitmap: Bitmap): String {
