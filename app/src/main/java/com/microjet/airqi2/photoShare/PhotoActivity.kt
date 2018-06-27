@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.photoShare
 
 import android.content.Context
 import android.content.Intent
@@ -21,18 +21,19 @@ import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
+import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.PrefObjects
+import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.Sort
-import kotlinx.android.synthetic.main.activity_airmap.*
 import kotlinx.android.synthetic.main.activity_photo.*
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 import java.util.*
-import java.util.concurrent.ThreadLocalRandom
 import java.util.concurrent.TimeUnit
 
 
@@ -47,6 +48,9 @@ class PhotoActivity : AppCompatActivity() {
     private lateinit var mCal: Calendar
 
     private val random = Random()
+
+    private val reqCodeCamera = 101
+    private val reqCodeWriteStorage = 102
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,6 +104,22 @@ class PhotoActivity : AppCompatActivity() {
         }
     }
 
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            reqCodeCamera -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    callCameraActivity()
+                    Log.e("CheckPerm", "Camera Permission Granted...")
+                }
+                return
+            }
+        }// other 'case' lines to check for other
+        // permissions this app might request
+    }
+
     private fun initActionBar() {
         // 取得 actionBar
         val actionBar = supportActionBar
@@ -124,17 +144,21 @@ class PhotoActivity : AppCompatActivity() {
         when {
             ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ->
                 ActivityCompat.requestPermissions(this@PhotoActivity,
-                        arrayOf(android.Manifest.permission.CAMERA), 101)
+                        arrayOf(android.Manifest.permission.CAMERA), reqCodeCamera)
             ActivityCompat.checkSelfPermission(this@PhotoActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
                 ActivityCompat.requestPermissions(this@PhotoActivity,
-                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 102)
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
             else -> {
-                this.btnShare.visibility = View.GONE
-                val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
-                startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+                callCameraActivity()
                 Log.e("CheckPerm", "Permission Granted...")
             }
         }
+    }
+
+    private fun callCameraActivity() {
+        this.btnShare.visibility = View.GONE
+        val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
+        startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
     }
 
     private fun queryDatabaseLastData(): AsmDataModel? {

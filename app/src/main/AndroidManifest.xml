@@ -266,8 +266,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".CameraActivity" />
-        <activity android:name=".PhotoActivity"
+        <activity android:name=".photoShare.CameraActivity" />
+        <activity android:name=".photoShare.PhotoActivity"
             android:label="拍照分享" />
     </application>
 

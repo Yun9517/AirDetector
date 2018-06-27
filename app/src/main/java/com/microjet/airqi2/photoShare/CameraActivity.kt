@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.photoShare
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,6 +22,7 @@ import android.view.Surface
 import android.view.TextureView
 import android.view.View
 import android.widget.Toast
+import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_camera.*
 import java.io.FileNotFoundException
 import java.io.IOException
