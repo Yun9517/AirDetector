@@ -31,7 +31,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         if (getMessage?.notification != null) {
             Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
             sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
-        } else {
+        } else if (getMessage?.data != null) {
             val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
             Log.e(TAG, "Message Topic= " + firebaseScorllingText)
             firebaseScrollingToic(firebaseScorllingText)
@@ -87,8 +87,8 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
             TvocNoseData.scrollingList.add(hashMap)
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
         }
-            val urlEvent = BleEvent("new Topic get")
-            EventBus.getDefault().post(urlEvent)
-            sendnotfication("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
+        val urlEvent = BleEvent("new Topic get")
+        EventBus.getDefault().post(urlEvent)
+        sendnotfication("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
     }
 }
