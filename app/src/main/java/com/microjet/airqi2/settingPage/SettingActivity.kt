@@ -206,9 +206,9 @@ class SettingActivity : AppCompatActivity() {
             myPref.setSharePreferenceServiceForeground(isChecked)
         }
 
-        aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 500) {
+        aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 400) {
             override fun onMultipleClick(v: View) {
-                soundPool!!.play(soundsMap!![SOUND1]!!, 10f, 10f, 1, 0, 1f)
+                soundPool!!.play(soundsMap!![SOUND1]!!, 1f, 1f, 0, 0, 1f)
                 Utils.toastMakeTextAndShow(this@SettingActivity, "你為什麼要點我QAQ", Toast.LENGTH_SHORT)
             }
         })
