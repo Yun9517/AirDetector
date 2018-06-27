@@ -365,6 +365,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")測試用
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -373,6 +374,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
@@ -449,6 +451,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //EventBus.getDefault().unregister(this)
         FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiiNewsNotifi")
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -669,6 +672,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)

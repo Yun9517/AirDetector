@@ -295,6 +295,7 @@
             </intent-filter>
         </service>
 
+        <activity android:name=".OpenBrowserActivity"></activity>
     </application>
 
 </manifest>
