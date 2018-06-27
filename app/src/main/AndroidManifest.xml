@@ -189,7 +189,7 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".settingPage.SettingActivity"
             android:label="@string/text_Title_Manifest_general_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
@@ -262,6 +262,30 @@
             android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.PrivacySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.DeviceNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudSyncSettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 
         <service
