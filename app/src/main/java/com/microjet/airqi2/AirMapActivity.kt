@@ -240,6 +240,21 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
                 Log.e("LoadChartData", "Time: ${dateFormat.format(localDatas[i].created_time)}, Value: $itemValue")
             }
+            /*
+            for (i in 1 .. 5) {
+                val o: MJGraphData? = MJGraphData(localDatas.last().created_time + i * 60000, Random().nextInt(500))
+                if (o != null) {
+                    try {
+                        aResult.add(o)
+                    } catch (_e: ClassCastException) {
+                        _e.printStackTrace()
+                    } catch (_e: IllegalArgumentException) {
+                        _e.printStackTrace()
+                    } catch (_e: UnsupportedOperationException) {
+                        _e.printStackTrace()
+                    }
+                }
+            }*/
         } else {
             /*
             val o: MJGraphData? = MJGraphData(mCal.timeInMillis, 0)
