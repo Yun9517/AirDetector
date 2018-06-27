@@ -392,13 +392,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if(myToken != ""){
             FirebaseNotifSettingTask().execute(myToken)
         }
-        //副總杯杯要的網頁
-        if (getIntent().hasExtra("fromNotification")) {
-            getIntent().removeExtra("fromNotification")
-            val url = Uri.parse(TvocNoseData.scrollingList[0]["url"].toString())
-            val i = Intent(Intent.ACTION_VIEW, url)
-            startActivity(i)
-        }
     }
 
     override fun onResume() {
