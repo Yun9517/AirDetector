@@ -35,10 +35,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         } else {
             val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
             Log.e(TAG, "Message Topic= " + firebaseScorllingText)
-            addwiiNewsNotifi(firebaseScorllingText)
-            if (isAppAlive(this, "com.microjet.airqi2") == true) {
-                firebaseScrollingToic(firebaseScorllingText)
-            }
+            firebaseScrollingToic(firebaseScorllingText)
         }
     }
 
@@ -47,10 +44,19 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
-
         val intent = Intent()
-        intent.setClass(this, MainActivity::class.java)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        when (body) {
+            "Addwii最新資訊" -> {
+                intent.setClass(this, MainActivity::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.putExtra("fromNotification", true)
+            }
+            else -> {
+                intent.setClass(this, MainActivity::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            }
+        }
+
         val pend_intent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
@@ -101,58 +107,10 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
             TvocNoseData.scrollingList.add(hashMap)
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
         }
-        val urlEvent = BleEvent("new Topic get")
-        EventBus.getDefault().post(urlEvent)
-    }
-
-    private fun addwiiNewsNotifi(firebaseScorllingText: String) {
-        TvocNoseData.scrollingList = arrayListOf()
-        val jsonObj = JSONObject(firebaseScorllingText)
-        //取出posts內容
-        val resultArray = jsonObj.getJSONArray("posts")
-        for (i in 0 until resultArray.length()) {
-            val jsonObjScrolling = resultArray.getJSONObject(i)
-            val hashMap = HashMap<String, String>()
-            hashMap["title"] = jsonObjScrolling["title"].toString()
-            hashMap["url"] = jsonObjScrolling["url"].toString()
-            TvocNoseData.scrollingList.add(hashMap)
-            Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
+        if (isAppAlive(this, "com.microjet.airqi2") == true) {
+            val urlEvent = BleEvent("new Topic get")
+            EventBus.getDefault().post(urlEvent)
+            sendnotfication("Addwii最新資訊",TvocNoseData.scrollingList[0]["title"])
         }
-        sendnotficationNEW(TvocNoseData.scrollingList[0]["title"])
     }
-
-    private fun sendnotficationNEW(title: String?) {
-        val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        val channelId: String = "給程式辨認，使用者看不到"
-        val channelName: String = "ADDWII"
-        var notiFication_ID: Int = 8
-
-        val intent = Intent()
-        intent.setClass(this, MainActivity::class.java)
-        intent.putExtra("fromNotification", true)
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-
-        val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val newNotBuilder = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            notfiMangger.createNotificationChannel(newNotBuilder)
-        }
-
-        val notBuilder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)//等Firebase設定Title
-                .setAutoCancel(true)
-                .setSound(Not_sound)//由Firebase設定鈴聲
-                .setContentIntent(pendIntent)
-                .setChannelId(channelId)
-
-
-        notfiMangger.notify(1, notBuilder.build())
-
-    }
-
-
 }
