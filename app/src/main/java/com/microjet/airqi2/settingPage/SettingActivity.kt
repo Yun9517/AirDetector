@@ -5,6 +5,8 @@ import android.app.DatePickerDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.AudioManager
+import android.media.SoundPool
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
@@ -15,6 +17,7 @@ import android.widget.Toast
 import com.microjet.airqi2.*
 import com.microjet.airqi2.BlueTooth.DFU.DFUProcessClass
 import com.microjet.airqi2.CustomAPI.CSVWriter
+import com.microjet.airqi2.CustomAPI.OnMultipleClickListener
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.TvocNoseData.calObject
@@ -49,11 +52,22 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var listener: RealmChangeListener<RealmResults<AsmDataModel>>
     private lateinit var filter: List<AsmDataModel>
 
+    private var soundPool: SoundPool? = null
+    private var soundsMap: HashMap<Int, Int>? = null
+
+    private var SOUND1 = 1
+
+    private val reqCodeWriteStorage = 2
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting)
 
         myPref = PrefObjects(this)
+
+        soundPool = SoundPool(1, AudioManager.STREAM_ALARM, 100)
+        soundsMap = HashMap()
+        soundsMap!![SOUND1] = soundPool!!.load(this, R.raw.pixiedust, 1)
 
         readPreferences()   // 載入設定值
         uiSetListener()
@@ -191,6 +205,13 @@ class SettingActivity : AppCompatActivity() {
         swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
             myPref.setSharePreferenceServiceForeground(isChecked)
         }
+
+        aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 500) {
+            override fun onMultipleClick(v: View) {
+                soundPool!!.play(soundsMap!![SOUND1]!!, 10f, 10f, 1, 0, 1f)
+                Utils.toastMakeTextAndShow(this@SettingActivity, "你為什麼要點我QAQ", Toast.LENGTH_SHORT)
+            }
+        })
     }
 
     private fun getDeviceLedSettings() {
@@ -402,10 +423,26 @@ class SettingActivity : AppCompatActivity() {
 
         if (ActivityCompat.checkSelfPermission(this@SettingActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this@SettingActivity,
-                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 2)
+                    arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
         } else {
-            Log.e("ChectPerm", "Permission Granted. Starting export data...")
             runRealmQueryData()
+            Log.e("CheckPerm", "Permission Granted. Starting export data...")
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            reqCodeWriteStorage -> {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    runRealmQueryData()
+                    Log.e("CheckPerm", "Permission Granted. Starting export data...")
+                }
+                return
+            }
+        }// other 'case' lines to check for other
+        // permissions this app might request
     }
 }

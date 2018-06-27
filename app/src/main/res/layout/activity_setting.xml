@@ -469,9 +469,10 @@
             android:visibility="visible" />
 
         <LinearLayout
+            android:id="@+id/aboutButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#f5f5f5"
+            android:background="@drawable/style_setting_button_long"
             android:orientation="horizontal">
 
             <TextView
