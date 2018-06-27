@@ -224,7 +224,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 }
 
                 val o: MJGraphData? = MJGraphData(localDatas[i].created_time, itemValue)
-                if (o != null && i < localDatas.size - 1) {
+                if (o != null && i < localDatas.size) {
                     try {
                         aResult.add(o)
                         //lineChart.AddData(o)
@@ -240,7 +240,8 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
                 Log.e("LoadChartData", "Time: ${dateFormat.format(localDatas[i].created_time)}, Value: $itemValue")
             }
-        }/* else {
+        } else {
+            /*
             val o: MJGraphData? = MJGraphData(mCal.timeInMillis, 0)
             if (o != null) {
                 try {
@@ -254,10 +255,11 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                     _e.printStackTrace()
                 }
             }
+            */
 
             val nullDataText = "-----"
             updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
-        }*/
+        }
 
         lineChart.SetData(aResult)
 
@@ -282,7 +284,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val rectOptions6 = PolylineOptions().color(Colors.tvocCO2Colors[5])
         
         //val datas = dataOrigin//.filter { it.latitude < 255f && it.latitude != null }
-        localDatas.forEachIndexed { index, asmDataModel ->
+        localDatas?.forEachIndexed { index, asmDataModel ->
             if (index < localDatas.size - 1) {
                 if (rbTVOC.isChecked) {
                     when (asmDataModel.tvocValue.toInt()) {
