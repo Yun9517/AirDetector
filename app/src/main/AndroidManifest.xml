@@ -261,7 +261,6 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
 
-        <service android:name=".GetFirebaseInstanceIdService">
         <activity
             android:name=".settingPage.PrivacySettingActivity"
             android:label="@string/text_Title_Manifest_general_setting"
