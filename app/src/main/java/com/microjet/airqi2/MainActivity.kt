@@ -59,6 +59,7 @@ import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
 import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
+import com.microjet.airqi2.settingPage.SettingActivity
 import com.microjet.airqi2.photoShare.PhotoActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
@@ -365,6 +366,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")測試用
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -373,6 +375,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
@@ -449,6 +452,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //EventBus.getDefault().unregister(this)
         FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiiNewsNotifi")
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -669,6 +673,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)
@@ -1633,18 +1638,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
@@ -1937,18 +1945,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))

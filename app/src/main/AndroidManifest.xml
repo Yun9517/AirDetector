@@ -190,13 +190,14 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".SettingActivity"
+            android:name=".settingPage.SettingActivity"
             android:label="@string/text_Title_Manifest_general_setting"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".TourActivity"
             android:label="@string/title_activity_tour"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FetchDataMain"
@@ -261,6 +262,32 @@
             android:theme="@style/AppTheme" />
 
         <service android:name=".GetFirebaseInstanceIdService">
+        <activity
+            android:name=".settingPage.PrivacySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.DeviceNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudNotifySettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".settingPage.CloudSyncSettingActivity"
+            android:label="@string/text_Title_Manifest_general_setting"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <service
+            android:name=".GetFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -269,6 +296,7 @@
         <activity android:name=".photoShare.CameraActivity" />
         <activity android:name=".photoShare.PhotoActivity"
             android:label="拍照分享" />
+        <activity android:name=".OpenBrowserActivity"></activity>
     </application>
 
 </manifest>
