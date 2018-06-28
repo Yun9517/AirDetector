@@ -725,7 +725,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.CO2 -> {
-                        inCircleTitle.text = getString(R.string.text_label_co2)
+                        inCircleTitle.text = getString(R.string.text_label_eco2_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
@@ -745,7 +745,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.Temp -> {
-                        inCircleTitle.text = getString(R.string.text_label_temperature_full)
+                        inCircleTitle.text = getString(R.string.text_label_temp_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
@@ -762,7 +762,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     }
 
                     DetectionData.Humi -> {
-                        inCircleTitle.text = getString(R.string.text_label_humidity_full)
+                        inCircleTitle.text = getString(R.string.text_label_humi_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
@@ -778,7 +778,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.PM25 -> {
-                        inCircleTitle.text = getString(R.string.text_label_pm25)
+                        inCircleTitle.text = getString(R.string.text_label_pm25_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
@@ -798,7 +798,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.PM10 -> {
-                        inCircleTitle.text = getString(R.string.text_label_pm10)
+                        inCircleTitle.text = getString(R.string.text_label_pm10_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
