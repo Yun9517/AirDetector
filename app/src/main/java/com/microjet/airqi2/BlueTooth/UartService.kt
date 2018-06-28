@@ -19,6 +19,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.NotificationObj
 import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.TvocNoseData
@@ -459,7 +460,7 @@ class UartService : Service() {
         val notification = mainNotification.makeNotificion()
         //notification.
 
-        startForeground(1, notification)
+        startForeground(NotificationObj.MAIN_NOTIFICATION_ID, notification)
         Log.e(TAG, "Set service to foreground = on.")
     }
 }

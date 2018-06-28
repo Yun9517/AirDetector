@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.microjet.airqi2.Definition.NotificationObj
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
@@ -70,7 +71,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
 
-        notfiMangger.notify(1, notBuilder.build())
+        notfiMangger.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
 
     }
 
