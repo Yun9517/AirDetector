@@ -43,6 +43,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
+        val GROUP_KEY_NEWS ="notification_NewsGronp"
 
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -70,12 +71,21 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
 
-        notfiMangger.notify(1, notBuilder.build())
+        val notfiID = System.currentTimeMillis().toInt()
+        Log.e("notfiID",notfiID.toString())
+
+        when (body) {
+            "Addwii最新資訊" ->{
+                notBuilder.setGroup(GROUP_KEY_NEWS).setGroupSummary(true)//將相同訊息包在一起
+                notfiMangger.notify(notfiID, notBuilder.build())
+            }
+            else ->notfiMangger.notify(2, notBuilder.build())
+        }
 
     }
 
     private fun firebaseScrollingToic(firebaseScorllingText: String) {
-        TvocNoseData.scrollingList = arrayListOf()
+        TvocNoseData.scrollingList.clear()
         val jsonObj = JSONObject(firebaseScorllingText)
         //取出posts內容
         val resultArray = jsonObj.getJSONArray("posts")

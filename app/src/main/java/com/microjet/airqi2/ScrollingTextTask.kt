@@ -38,10 +38,9 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
                     val hashMap = HashMap<String, String>()
                     val jsonObjTitle = resultArray.getJSONObject(i)
                             .getJSONObject("custom_fields")
-                            .getJSONArray("tm_posts_short_description")
-                            .getString(0)
-                    if (jsonObjTitle != "") {
-                        hashMap["title"] = jsonObjTitle
+                            .optJSONArray("tm_posts_short_description")
+                    if (jsonObjTitle != null) {
+                        hashMap["title"] = jsonObjTitle.getString(0)
                     } else {
                         hashMap["title"] = jsonObjScrolling["title"].toString()
                     }

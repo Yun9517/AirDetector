@@ -355,8 +355,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-        //2018524 白~~~~告新聞抓取
-        ScrollingTextTask().execute()
         val checkResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if(checkResult != ConnectionResult.SUCCESS){
             Log.e("偵測是否成功","結論失敗")
@@ -364,7 +362,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
-        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")//測試用
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -450,7 +447,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //EventBus.getDefault().unregister(this)
         FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiiNewsNotifi")
     }
 
     // 20171130 add by Raymond 增加權限 Request
