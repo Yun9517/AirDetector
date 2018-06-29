@@ -468,7 +468,7 @@
     <string name="text_Title_Manifest_FAQ">ADDWII 常見問題</string>
     <string name="text_Title_Manifest_account_setting">ADDWII 帳號設定</string>
     <string name="text_Title_Manifest_general_setting">ADDWII 一般設定</string>
-    <string name="text_export_success_msg">已將資料匯出至記憶卡</string>
+    <string name="text_export_success_msg">已將資料匯出至 ADDWII Mobile Nose 目錄</string>
     <string name="text_not_show">不再顯示</string>
 
     <!-- 2018/06/07 new eCO2 -->
