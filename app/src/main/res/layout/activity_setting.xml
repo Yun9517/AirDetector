@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#f5f5f5"
+    android:background="#d1d1d3"
     android:scrollbars="vertical">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -15,1020 +14,506 @@
         android:orientation="vertical"
         android:scrollbars="vertical">
 
-        <android.support.constraint.Group
-            android:id="@+id/cgPrivacy"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="btnChangePassword, subDivider1"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="match_parent"
+            android:background="#f5f5f5"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textAllowPrivacy"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_allow_privacy"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swAllowPrivacy"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowPrivacy"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swAllowPrivacy" />
+            <LinearLayout
+                android:id="@+id/itemPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/style_setting_button_long"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swAllowPrivacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgPrivacy" />
+                <TextView
+                    android:id="@+id/textAllowPrivacy"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/text_setting_allow_privacy"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageArrow1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/subDivider1"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/itemDeviceNotify"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/style_setting_button_long"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textAllowNotify"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/text_setting_allow_notification"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:id="@+id/imageArrow2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/subDivider2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/itemCloudNotify"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/style_setting_button_long"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textAllowCloudNotify"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/text_cloud_notify"
+                        android:textColor="@color/blackColor"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_cloud_notification_func_comment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/text_cloud_notify_comment"
+                        android:textColor="#6d6d72"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imageArrow3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/mainDivider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+        </LinearLayout>
+
 
         <ImageView
-            android:id="@+id/subDivider1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowPrivacy" />
-
-        <Button
-            android:id="@+id/btnChangePassword"
-            android:layout_width="0dp"
-            android:layout_height="26dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_long"
-            android:text="@string/change_Password_Title"
-            android:textColor="#f32091"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider1" />
-
-        <ImageView
-            android:id="@+id/mainDivider1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnChangePassword" />
-
-        <TextView
-            android:id="@+id/textAllowNotify"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_allow_notification"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swAllowNotify"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowNotify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swAllowNotify" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swAllowNotify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider1" />
-
-
-        <android.support.constraint.Group
-            android:id="@+id/cgMessage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textView8, swMessage, subDivider2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowNotify" />
-
-        <ImageView
-            android:id="@+id/subDivider2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgMessage" />
-
-        <TextView
-            android:id="@+id/textView8"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_notify_message"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swMessage"
-            app:layout_constraintEnd_toStartOf="@+id/swMessage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swMessage" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swMessage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider2" />
-
-
-        <android.support.constraint.Group
-            android:id="@+id/cgVibration"
+            android:id="@+id/groupDivider"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textView10, swVibrate"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swMessage" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_notify_viberation"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swVibrate"
-            app:layout_constraintEnd_toStartOf="@+id/swVibrate"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swVibrate" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swVibrate"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgVibration" />
-
-
-        <android.support.constraint.Group
-            android:id="@+id/cgSound"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textView12, swSound"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swVibrate" />
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_notify_sound"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swSound"
-            app:layout_constraintEnd_toStartOf="@+id/swSound"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swSound" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgSound" />
-
-
-        <android.support.constraint.Group
-            android:id="@+id/cgSeekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textTvocSeekBarLabel, tvocSeekBar, tvocSeekValue, textPM25SeekBarLabel, pm25SeekBar, pm25SeekValue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swSound" />
-
-        <TextView
-            android:id="@+id/textTvocSeekBarLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_tvoc_value"
-            android:textAlignment="viewStart"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
-
-        <com.jaygoo.widget.RangeSeekBar
-            android:id="@+id/tvocSeekBar"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTvocSeekBarLabel"
-            app:rsb_cellMode="number"
-            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
-            app:rsb_lineColorSelected="@color/colorAccent"
-            app:rsb_markTextArray="@array/tvocArray"
-            app:rsb_max="2200"
-            app:rsb_min="220"
-            app:rsb_seekBarHeight="16dp"
-            app:rsb_seekBarMode="single"
-            app:rsb_textPadding="20dp"
-            app:rsb_thumbSize="30dp" />
-
-        <TextView
-            android:id="@+id/tvocSeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="2200"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgSeekbar" />
-
-        <TextView
-            android:id="@+id/textPM25SeekBarLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_pm25_value"
-            android:textAlignment="viewStart"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/pm25SeekValue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
-
-        <com.jaygoo.widget.RangeSeekBar
-            android:id="@+id/pm25SeekBar"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textPM25SeekBarLabel"
-            app:rsb_cellMode="number"
-            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
-            app:rsb_lineColorSelected="@color/colorAccent"
-            app:rsb_markTextArray="@array/pm25Array"
-            app:rsb_max="150"
-            app:rsb_min="15"
-            app:rsb_seekBarHeight="16dp"
-            app:rsb_seekBarMode="single"
-            app:rsb_textPadding="20dp"
-            app:rsb_thumbSize="30dp" />
-
-
-        <TextView
-            android:id="@+id/pm25SeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="250"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvocSeekBar" />
-
-        <android.support.constraint.Group
-            android:id="@+id/cgLowBatt"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textView14, batSound"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/pm25SeekBar" />
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/bat_switch"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/batSound"
-            app:layout_constraintEnd_toStartOf="@+id/batSound"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/batSound" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/batSound"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgLowBatt" />
-
-        <ImageView
-            android:id="@+id/mainDivider2"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/batSound" />
-
-        <TextView
-            android:id="@+id/textAllowCloudNotify"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"
-            android:text="@string/text_cloud_notify"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowCloudNotify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
-
-        <TextView
-            android:id="@+id/text_cloud_notification_func_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:text="@string/text_cloud_notify_comment"
-            android:textColor="#6d6d72"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textAllowCloudNotify" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swAllowCloudNotify"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider2" />
-
-        <android.support.constraint.Group
-            android:id="@+id/cgCloudNotify"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="visible"
-            app:constraint_referenced_ids="cloudSaveText, subDivider3, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
-
-        <ImageView
-            android:id="@+id/subDivider3"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cloud_notification_func_comment" />
-
-        <TextView
-            android:id="@+id/text_cloud_notify"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_cloud_notify_time"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
-            app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnCloudNotify" />
-
-        <Button
-            android:id="@+id/btnCloudNotify"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button"
-            android:text="@string/text_cloud_set_minute"
-            android:textColor="@color/whiteColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider3" />
-
-        <android.support.constraint.Group
-            android:id="@+id/cgCloudSeekbar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
-
-        <TextView
-            android:id="@+id/textCloudTvocSeekBarLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_tvoc_value"
-            android:textAlignment="viewStart"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            android:singleLine="false"
-            app:layout_constraintEnd_toStartOf="@+id/tvocSeekValue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
-
-        <com.jaygoo.widget.RangeSeekBar
-            android:id="@+id/cloudTvocSeekBar"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCloudTvocSeekBarLabel"
-            app:rsb_cellMode="number"
-            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
-            app:rsb_lineColorSelected="@color/colorAccent"
-            app:rsb_markTextArray="@array/tvocArray"
-            app:rsb_max="2200"
-            app:rsb_min="220"
-            app:rsb_seekBarHeight="16dp"
-            app:rsb_seekBarMode="single"
-            app:rsb_textPadding="20dp"
-            app:rsb_thumbSize="30dp" />
-
-        <TextView
-            android:id="@+id/cloudTvocSeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="2200"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
-
-        <TextView
-            android:id="@+id/textCloudPM25SeekBarLabel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_setting_pm25_value"
-            android:textAlignment="viewStart"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/cloudTvocSeekValue"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
-
-        <com.jaygoo.widget.RangeSeekBar
-            android:id="@+id/cloudPM25SeekBar"
-            android:layout_width="0dp"
-            android:layout_height="80dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textCloudPM25SeekBarLabel"
-            app:rsb_cellMode="number"
-            app:rsb_lineColorEdge="@color/colorSeekBarDefault"
-            app:rsb_lineColorSelected="@color/colorAccent"
-            app:rsb_markTextArray="@array/pm25Array"
-            app:rsb_max="150"
-            app:rsb_min="15"
-            app:rsb_seekBarHeight="16dp"
-            app:rsb_seekBarMode="single"
-            app:rsb_textPadding="20dp"
-            app:rsb_thumbSize="30dp" />
-
-
-        <TextView
-            android:id="@+id/cloudPM25SeekValue"
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_1"
-            android:text="250"
-            android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cloudTvocSeekBar" />
-
-        <Button
-            android:id="@+id/btnSaveCloudSetting"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button_long"
-            android:text="@string/text_save_cloud_setting"
-            android:textColor="#f32091"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
-
-        <TextView
-            android:id="@+id/cloudSaveText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:text="@string/text_save_setting_message"
-            android:textAlignment="center"
-            android:textColor="#6d6d72"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnSaveCloudSetting" />
-
-        <ImageView
-            android:id="@+id/mainDivider3"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
+            android:layout_height="40dp"
             android:background="#d1d1d3"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cloudSaveText" />
-
-        <TextView
-            android:id="@+id/text_cloud_fun"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/cloud_fun"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider3" />
-
-        <TextView
-            android:id="@+id/text_cloud_func_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="false"
-            android:singleLine="false"
-            android:text="@string/cloud_func_comment"
-            android:textColor="#6d6d72"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/swCloudFunc"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cloud_fun" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swCloudFunc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintTop_toTopOf="@+id/text_cloud_fun"
-            app:layout_constraintBottom_toBottomOf="@+id/text_cloud_func_comment"
-            app:layout_constraintEnd_toEndOf="parent" />
-
-        <android.support.constraint.Group
-            android:id="@+id/cgAllow3G"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:visibility="gone"
-            app:constraint_referenced_ids="imageView5, text_allow_3g, swAllow3G, placeHolder"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cloud_func_comment" />
-
-        <ImageView
-            android:id="@+id/imageView5"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_cloud_func_comment" />
-
-        <TextView
-            android:id="@+id/text_allow_3g"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/allow_3G"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/swAllow3G"
-            app:layout_constraintEnd_toStartOf="@+id/swAllow3G"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/swAllow3G" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swAllow3G"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgAllow3G"/>
-
-        <ImageView
-            android:id="@+id/placeHolder"
-            android:layout_width="0dp"
-            android:layout_height="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_allow_3g" />
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/mainDivider4"
-            android:layout_width="0dp"
-            android:layout_height="20dp"
-            android:background="#d1d1d3"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/placeHolder" />
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b0b0b0"
+            android:visibility="visible" />
 
-        <android.support.constraint.Group
-            android:id="@+id/cgDeviceControl"
+        <LinearLayout
+            android:id="@+id/itemCloudSync"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="visible"
-            app:constraint_referenced_ids="textView15, ledPower, mainDivider5, textView16, ledDisconnectPower, mainDivider6, text_device_ver, text_device_ver_detail, btnCheckFW, mainDivider7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider4" />
+            android:background="@drawable/style_setting_button_long"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/led_light"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/ledPower"
-            app:layout_constraintEnd_toStartOf="@+id/ledPower"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ledPower" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/ledPower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider4" />
+                <TextView
+                    android:id="@+id/text_cloud_fun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:text="@string/cloud_fun"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/text_cloud_func_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:text="@string/cloud_func_comment"
+                    android:textColor="#6d6d72"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/imageArrow4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                app:srcCompat="@drawable/ic_keyboard_arrow_right_24dp" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/mainDivider5"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="8dp"
             android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ledPower" />
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/led_light_disconnect"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/ledDisconnectPower"
-            app:layout_constraintEnd_toStartOf="@+id/ledDisconnectPower"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/ledDisconnectPower" />
-
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/ledDisconnectPower"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider5" />
+            android:visibility="visible" />
 
         <ImageView
-            android:id="@+id/mainDivider6"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="8dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ledDisconnectPower" />
+            android:id="@+id/groupDivider2"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#d1d1d3"
+            android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/text_device_ver"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_label_device_version"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/btnCheckFW"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider6" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f5f5f5"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/text_device_ver_detail"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="16dp"
-            android:text="@string/text_label_device_version_detail"
-            android:textColor="#6d6d72"
-            android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_device_ver" />
+            <ImageView
+                android:id="@+id/mainDivider6"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
 
-        <Button
-            android:id="@+id/btnCheckFW"
-            android:layout_width="wrap_content"
-            android:layout_height="36dp"
-            android:layout_marginBottom="6dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="6dp"
-            android:background="@drawable/style_setting_button"
-            android:text="@string/text_check_device_update"
-            android:textColor="@color/whiteColor"
-            android:textSize="12sp"
-            app:layout_constraintBottom_toTopOf="@+id/mainDivider7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider6" />
+            <LinearLayout
+                android:id="@+id/deviceControl1"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f5f5f5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/led_light"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="@+id/ledPower"
+                    app:layout_constraintEnd_toStartOf="@+id/ledPower"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/ledPower" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/ledPower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:theme="@style/SwitchCompatTheme"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/groupDivider2" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/subDivider3"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/deviceControl2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f5f5f5"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/led_light_disconnect"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/ledDisconnectPower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginTop="8dp"
+                    android:theme="@style/SwitchCompatTheme" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/subDivider4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/deviceControl3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#f5f5f5"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/text_device_ver"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/text_label_device_version"
+                        android:textColor="@color/blackColor"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/text_device_ver_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/text_label_device_version_detail"
+                        android:textColor="#6d6d72"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnCheckFW"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/style_setting_button"
+                    android:text="@string/text_check_device_update"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/mainDivider7"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#b0b0b0"
+                android:visibility="visible" />
+
+        </LinearLayout>
 
         <ImageView
-            android:id="@+id/mainDivider7"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginTop="10dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_device_ver_detail" />
-
-        <TextView
-            android:id="@+id/text_app_ver"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="10dp"
-            android:text="@string/show_app_version"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/btnCheckFW"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider7" />
+            android:id="@+id/groupDivider4"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#d1d1d3"
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/mainDivider8"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="10dp"
             android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/text_app_ver" />
+            android:visibility="visible" />
 
-        <TextView
-            android:id="@+id/textView18"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:text="@string/text_allow_service_run_in_foreground"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowServiceForeground"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#f5f5f5"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/textView18_comment"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:ellipsize="marquee"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:marqueeRepeatLimit="marquee_forever"
-            android:scrollHorizontally="false"
-            android:singleLine="false"
-            android:text="@string/text_allow_service_run_in_foreground_comment"
-            android:textColor="#6d6d72"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toStartOf="@+id/swAllowServiceForeground"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView18" />
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-        <android.support.v7.widget.SwitchCompat
-            android:id="@+id/swAllowServiceForeground"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:theme="@style/SwitchCompatTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider8" />
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="16dp"
+                    android:text="@string/text_allow_service_run_in_foreground"
+                    android:textColor="@color/blackColor"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/textView18_comment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="16dp"
+                    android:ellipsize="marquee"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:marqueeRepeatLimit="marquee_forever"
+                    android:scrollHorizontally="false"
+                    android:singleLine="false"
+                    android:text="@string/text_allow_service_run_in_foreground_comment"
+                    android:textColor="#6d6d72"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <android.support.v7.widget.SwitchCompat
+                android:id="@+id/swAllowServiceForeground"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                android:theme="@style/SwitchCompatTheme" />
+
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/mainDivider9"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginTop="0dp"
             android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView18_comment" />
+            android:visibility="visible" />
 
-        <Button
-            android:id="@+id/dataExport"
-            android:layout_width="0dp"
-            android:layout_height="42dp"
+        <LinearLayout
+            android:id="@+id/aboutButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/style_setting_button_long"
-            android:text="@string/dataExport"
-            android:textColor="#f32091"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainDivider9" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/text_app_ver"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginBottom="10dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/show_app_version"
+                android:textColor="@color/blackColor"
+                android:textSize="18sp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/mainDivider10"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#b0b0b0"
+            android:visibility="visible" />
+
+        <Button
+            android:id="@+id/dataExport"
+            android:layout_width="match_parent"
+            android:layout_height="42dp"
+            android:background="#f5f5f5"
+            android:text="@string/dataExport"
+            android:textColor="#f32091"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/mainDivider11"
+            android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="64dp"
             android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/dataExport" />
+            android:visibility="visible" />
 
-    </android.support.constraint.ConstraintLayout>
+    </LinearLayout>
 
 </ScrollView>

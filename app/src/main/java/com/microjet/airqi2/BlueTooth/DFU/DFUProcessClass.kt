@@ -7,17 +7,14 @@ import android.app.ActivityManager
 import android.app.NotificationManager
 import android.app.ProgressDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Build
 import android.os.Handler
 import android.preference.PreferenceManager
 import android.util.Log
 import android.webkit.MimeTypeMap
-import android.widget.ProgressBar
 import android.widget.Toast
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.R
-import com.microjet.airqi2.SettingActivity
 import no.nordicsemi.android.dfu.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File

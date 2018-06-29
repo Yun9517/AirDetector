@@ -81,7 +81,7 @@
     <color name="headerBackgroundColor">#009ada</color>
     <color name="headerTextColor">#FFFFFF</color>
     <color name="actionBarColor">#009cde</color>
-    <color name="darkGray">#AAABAF</color>
+    <color name="darkGray">#aaabaf</color>
     <color name="actionBarColorDark">#404446</color>
 
     <!--GoldenMap-->

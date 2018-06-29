@@ -59,6 +59,8 @@ import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
 import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
+import com.microjet.airqi2.settingPage.SettingActivity
+import com.microjet.airqi2.photoShare.PhotoActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
@@ -355,8 +357,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-        //2018524 白~~~~告新聞抓取
-        ScrollingTextTask().execute()
         val checkResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if(checkResult != ConnectionResult.SUCCESS){
             Log.e("偵測是否成功","結論失敗")
@@ -372,6 +372,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
@@ -668,6 +669,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)
@@ -707,7 +709,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    clickCount++
 //                }
 //            }
-
+            R.id.bleStatus -> {
+                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
+            }
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
@@ -1272,13 +1276,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         if (myToken == "") {
-            text_Account_status.text = getString(R.string.account_Deactivation)
+            text_Account_status?.text = getString(R.string.account_Deactivation)
         } else {
             val myName = shareToken.getString("name", "")
             val myEmail = shareToken.getString("email", "")
             when(myName){
-                "空汙鼻使用者" ->text_Account_status.text = myEmail
-                else ->text_Account_status.text = myName
+                "空汙鼻使用者" ->text_Account_status?.text = myEmail
+                else ->text_Account_status?.text = myName
             }
             Log.e("MainActivity取名字", myName)
         }
@@ -1630,18 +1634,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         Log.d("C5ToObject", nowItem.toString())
@@ -1934,18 +1941,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 lock = false
             }
         }
+        /*
         val realm = Realm.getDefaultInstance()
         val latiLongiObj = realm.where(AsmDataModel::class.java).equalTo("Created_time", hashMap[TvocNoseData.C5TIME]?.toLong()).findFirst()
         if (latiLongiObj != null) {
             lati = latiLongiObj.latitude
             longi = latiLongiObj.longitude
         }
+        realm.close()
+        */
         mDeviceAddress = myPref.getSharePreferenceMAC()
         hashMap.put(TvocNoseData.C5MACA, mDeviceAddress!!)
         hashMap.put(TvocNoseData.C5LATI, lati.toString())
         hashMap.put(TvocNoseData.C5LONGI, longi.toString())
         arrIndexMap.add(hashMap)
-        realm.close()
+
 
         var nowItem = hashMap[TvocNoseData.C5II]!!.toInt()
         mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleD5(nowItem))
