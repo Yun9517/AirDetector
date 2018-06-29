@@ -50,6 +50,11 @@
     <string name="text_label_humidity_full">湿度</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC\n总挥发性有机化合物</string>
+    <string name="text_label_pm25_detect">PM2.5\n细悬浮微粒</string>
+    <string name="text_label_pm10_detect">PM10\n悬浮微粒</string>
+    <string name="text_label_eco2_detect">ECO2\n等效二氧化碳</string>
+    <string name="text_label_temp_detect">TEMP\n温度</string>
+    <string name="text_label_humi_detect">HUMI\n溼度</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">中等</string>
     <string name="text_label_status_medium_Orange">高</string>
@@ -521,4 +526,5 @@
     <string name="fireBase_Toast_Network_Connect">请链上网络</string>
 
     <string name="select_Date">请选择日期</string>
+    <string name="text_label_personal_track_password">个人轨迹密码</string>
 </resources>
