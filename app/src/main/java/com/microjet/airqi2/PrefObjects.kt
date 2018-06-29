@@ -167,4 +167,12 @@ class PrefObjects(context: Context) {
     fun setSharePreferenceServiceForeground(value: Boolean) {
         share.edit().putBoolean(SavePreferences.SETTING_IS_FOREGROUND, value).apply()
     }
+
+    fun getSharePreferenceSaveImageCount(): Int {
+        return share.getInt(SavePreferences.SETTING_PHOTO_COUNT, 0)
+    }
+
+    fun setSharePreferenceSaveImageCount(value: Int) {
+        share.edit().putInt(SavePreferences.SETTING_PHOTO_COUNT, value).apply()
+    }
 }

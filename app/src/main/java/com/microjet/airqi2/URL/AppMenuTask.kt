@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
+import java.util.*
 
 /**
  * Created by B00055 on 2018/5/11.
@@ -43,7 +44,7 @@ class AppMenuTask : AsyncTask<String, Long, ArrayList<String>>() {
 
     fun getAppMenu(): ArrayList<String> {
         val client = OkHttpClient()
-        val urlBuilder = HttpUrl.parse(MjAQIUrl.getAddMenu)!!.newBuilder()
+        val urlBuilder = HttpUrl.parse(MjAQIUrl.getAddMenu)!!.newBuilder().addQueryParameter("language", Locale.getDefault().language + "-" + Locale.getDefault().country)
         val url = urlBuilder.build().toString()
         val request = Request.Builder()
                 .url(url)

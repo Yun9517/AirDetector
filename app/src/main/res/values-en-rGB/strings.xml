@@ -42,9 +42,8 @@
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
-    <string name="text_label_temperature">Temp.</string>
-    <string name="text_label_humidity">RH</string>
-
+    <string name="text_label_temperature">TEMP.</string>
+    <string name="text_label_humidity">HUMI.</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_status_good">Normal</string>
@@ -360,7 +359,7 @@
     <string name="text_Title_Manifest_FAQ">ADDWII F.A.Q</string>
     <string name="text_Title_Manifest_account_setting">ADDWII Account Setting</string>
     <string name="text_Title_Manifest_general_setting">ADDWII General Setting</string>
-    <string name="text_export_success_msg">Exported data to your storage card.</string>
+    <string name="text_export_success_msg">Data is exported to %s</string>
     <string name="text_not_show">Do not show again</string>
 
     <!-- 2018/06/07 new eCO2 -->

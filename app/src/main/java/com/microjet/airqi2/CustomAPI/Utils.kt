@@ -2,7 +2,16 @@ package com.microjet.airqi2.CustomAPI
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
 import android.widget.Toast
+import android.text.Spanned
+import android.text.style.AbsoluteSizeSpan
+import android.text.style.RelativeSizeSpan
+import android.text.style.SubscriptSpan
+import com.microjet.airqi2.R.id.inCircleValue
+import kotlinx.android.synthetic.main.frg_main.*
+
 
 object Utils {
     private var lastClickTime: Long = 0
@@ -14,7 +23,7 @@ object Utils {
         get() {
             val time = System.currentTimeMillis()
             val timeD = time - lastClickTime
-            if (0 < timeD && timeD < 1000) {
+            if (timeD in 1..999) {
                 return true
             }
             lastClickTime = time
@@ -44,4 +53,18 @@ object Utils {
         return checkSumByte == max
 
     }
+
+    fun setTextSubscript(inputText: String, index: Int): SpannableString {
+        val msp = SpannableString(inputText)
+        msp.setSpan(RelativeSizeSpan(0.5f), index, inputText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)  //0.5f表示默認字體大小的一半
+        msp.setSpan(SubscriptSpan(), index, inputText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)     //下標
+        return msp
+    }
+
+    fun setTextSubscript(inputText: String): SpannableString {
+        val msp = SpannableString(inputText)
+        msp.setSpan(RelativeSizeSpan(0.75f), inputText.indexOf(" ") + 1, inputText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)  //0.5f表示默認字體大小的一半
+        return msp
+    }
+
 }

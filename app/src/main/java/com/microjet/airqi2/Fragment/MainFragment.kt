@@ -12,9 +12,9 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.text.Spannable
-import android.text.SpannableStringBuilder
+import android.text.*
 import android.text.style.AbsoluteSizeSpan
+import android.text.style.RelativeSizeSpan
 import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
@@ -26,6 +26,7 @@ import android.view.animation.AnimationUtils
 import android.widget.TextView
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
@@ -99,6 +100,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        tvBtmPMTitle.text = Utils.setTextSubscript("PM2.5", 2)
+        tvBtmPM10Title?.text = Utils.setTextSubscript("PM10", 2)
+        tvBtmCO2Title.text = Utils.setTextSubscript("eCO2", 3)
 
         show_TVOC?.setOnTouchListener(this)
         show_eCO2?.setOnTouchListener(this)
@@ -281,11 +286,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
             else -> convertSpToPx(18f)
         }
 
-        textSpan.setSpan(AbsoluteSizeSpan(text1Size),
-                0, temp.indexOf(" ") + 1, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
-        textSpan.setSpan(AbsoluteSizeSpan(text2Size),
-                temp.indexOf(" ") + 1, temp.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+        textSpan.setSpan(RelativeSizeSpan(0.5f), temp.indexOf(" ") + 1, temp.length,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         //textSpan.setSpan(AbsoluteSizeSpan(text1Size),temp.indexOf(" ") - 1, temp.length, Spannable.SPAN_INCLUSIVE_INCLUSIVE)
         inCircleValue.text = textSpan
     }
@@ -324,20 +326,20 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
-        //DetectorValue=currentValue
-        tvBtmTVOCValue?.text = tvocDataFloat.toInt().toString() + " ppb"
+
+        tvBtmTVOCValue?.text = Utils.setTextSubscript("${tvocDataFloat.toInt()} ppb")
         //if (MyApplication.isPM25 == "000000000000") {
         if (pm25DataFloat == 65535f) {
             tvBtmPM25Value?.text = "Not Support"
             show_PM?.isEnabled = false
         } else {
-            tvBtmPM25Value?.text = pm25DataFloat.toInt().toString() + " μg/m³"
+            tvBtmPM25Value?.text = Utils.setTextSubscript("${pm25DataFloat.toInt()} μg/m³")
             show_PM?.isEnabled = true
         }
-        tvBtmCO2Value?.text = co2DataFloat.toInt().toString() + " ppm" //co2DataFloat.toInt().toString()+ " ppm"
-        tvBtmTEMPValue?.text = tempDataFloat.toString() + " ℃"/*currentValue[0] + " ℃"*/
-        tvBtmHUMIValue?.text = humiDataFloat.toInt().toString() + " %"/*currentValue[1] + " %"*/
-        tvBtmPM10Value?.text = pm10DataFloat.toInt().toString() + " μg/m³"
+        tvBtmCO2Value?.text = Utils.setTextSubscript("${co2DataFloat.toInt()} ppm")
+        tvBtmTEMPValue?.text = Utils.setTextSubscript("${tempDataFloat} ℃")
+        tvBtmHUMIValue?.text = Utils.setTextSubscript("${humiDataFloat.toInt()} %")
+        tvBtmPM10Value?.text = Utils.setTextSubscript("${pm10DataFloat.toInt()} μg/m³")
     }
 
     @SuppressLint("SetTextI18n")
@@ -725,7 +727,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.CO2 -> {
-                        inCircleTitle.text = getString(R.string.text_label_co2)
+                        inCircleTitle.text = getString(R.string.text_label_eco2_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
@@ -745,7 +747,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.Temp -> {
-                        inCircleTitle.text = getString(R.string.text_label_temperature_full)
+                        inCircleTitle.text = getString(R.string.text_label_temp_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
@@ -762,7 +764,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     }
 
                     DetectionData.Humi -> {
-                        inCircleTitle.text = getString(R.string.text_label_humidity_full)
+                        inCircleTitle.text = getString(R.string.text_label_humi_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
@@ -778,7 +780,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.PM25 -> {
-                        inCircleTitle.text = getString(R.string.text_label_pm25)
+                        inCircleTitle.text = getString(R.string.text_label_pm25_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
@@ -798,7 +800,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         textSpannable(temp)
                     }
                     DetectionData.PM10 -> {
-                        inCircleTitle.text = getString(R.string.text_label_pm10)
+                        inCircleTitle.text = getString(R.string.text_label_pm10_detect)
                         setThresholdValue(dataForState)
                         setBarMaxValue(dataForState)
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
@@ -972,7 +974,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     @SuppressLint("SetTextI18n")
     private fun setViewSingleLine() {
-        scrollViewsArr.clear();//记得加这句话，不然可能会产生重影现象
+        scrollViewsArr.clear()//记得加这句话，不然可能会产生重影现象
+        Log.e("scrollingList", TvocNoseData.scrollingList.toString())
         for (i in 0 until TvocNoseData.scrollingList.size) {
             //设置滚动的单个布局
             val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)

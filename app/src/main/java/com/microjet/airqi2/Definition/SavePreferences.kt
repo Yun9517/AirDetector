@@ -41,4 +41,6 @@ object SavePreferences {
 
 
     const val SETTING_IS_FOREGROUND  = "airqi2.settings.SETTING_IS_FOREGROUND"
+
+    const val SETTING_PHOTO_COUNT  = "airqi2.settings.SETTING_PHOTO_COUNT"
 }
