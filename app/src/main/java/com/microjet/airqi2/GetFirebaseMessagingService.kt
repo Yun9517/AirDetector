@@ -12,7 +12,6 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
-import com.microjet.airqi2.Definition.NotificationObj
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
@@ -32,7 +31,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         if (getMessage?.notification != null) {
             Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
             sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
-        } else {
+        } else if (getMessage?.data != null) {
             val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
             Log.e(TAG, "Message Topic= " + firebaseScorllingText)
             firebaseScrollingToic(firebaseScorllingText)
@@ -44,6 +43,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
+        val GROUP_KEY_NEWS ="notification_NewsGronp"
 
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -71,12 +71,21 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
 
-        notfiMangger.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
+        val notfiID = System.currentTimeMillis().toInt()
+        Log.e("notfiID",notfiID.toString())
+
+        when (body) {
+            "Addwii最新資訊" ->{
+                notBuilder.setGroup(GROUP_KEY_NEWS).setGroupSummary(true)//將相同訊息包在一起
+                notfiMangger.notify(notfiID, notBuilder.build())
+            }
+            else ->notfiMangger.notify(2, notBuilder.build())
+        }
 
     }
 
     private fun firebaseScrollingToic(firebaseScorllingText: String) {
-        TvocNoseData.scrollingList = arrayListOf()
+        TvocNoseData.scrollingList.clear()
         val jsonObj = JSONObject(firebaseScorllingText)
         //取出posts內容
         val resultArray = jsonObj.getJSONArray("posts")
@@ -88,8 +97,8 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
             TvocNoseData.scrollingList.add(hashMap)
             Log.e(TAG, "TvocNoseData.scrollingList=  " + TvocNoseData.scrollingList.toString())
         }
-            val urlEvent = BleEvent("new Topic get")
-            EventBus.getDefault().post(urlEvent)
-            sendnotfication("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
+        val urlEvent = BleEvent("new Topic get")
+        EventBus.getDefault().post(urlEvent)
+        sendnotfication("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
     }
 }
