@@ -42,8 +42,8 @@
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
-    <string name="text_label_temperature">Temp.</string>
-    <string name="text_label_humidity">RH</string>
+    <string name="text_label_temperature">TEMP.</string>
+    <string name="text_label_humidity">HUMI.</string>
     <string name="text_label_temperature_full">Temperature</string>
     <string name="text_label_humidity_full">Humidity</string>
     <string name="text_default_value">----</string>
