@@ -356,8 +356,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
-        //2018524 白~~~~告新聞抓取
-        ScrollingTextTask().execute()
         val checkResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if(checkResult != ConnectionResult.SUCCESS){
             Log.e("偵測是否成功","結論失敗")
@@ -365,7 +363,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
-        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")測試用
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -451,7 +448,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         //EventBus.getDefault().unregister(this)
         FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiiNewsNotifi")
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -1277,13 +1273,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         if (myToken == "") {
-            text_Account_status.text = getString(R.string.account_Deactivation)
+            text_Account_status?.text = getString(R.string.account_Deactivation)
         } else {
             val myName = shareToken.getString("name", "")
             val myEmail = shareToken.getString("email", "")
             when(myName){
-                "空汙鼻使用者" ->text_Account_status.text = myEmail
-                else ->text_Account_status.text = myName
+                "空汙鼻使用者" ->text_Account_status?.text = myEmail
+                else ->text_Account_status?.text = myName
             }
             Log.e("MainActivity取名字", myName)
         }
