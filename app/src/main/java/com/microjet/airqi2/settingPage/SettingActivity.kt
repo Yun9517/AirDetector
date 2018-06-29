@@ -387,11 +387,11 @@ class SettingActivity : AppCompatActivity() {
     @SuppressLint("SimpleDateFormat")
     private fun parseDataToCsv(results: List<AsmDataModel>) {
         if (results.isNotEmpty()) {
-            val foldeName = "ADDWII Mobile Nose"
+            val folderName = "ADDWII Mobile Nose"
             val date = SimpleDateFormat("yyyyMMdd")
             val fileName = "${date.format(calObject.timeInMillis)}_Mobile_Nose"
 
-            val writeCSV = CSVWriter(foldeName, fileName, CSVWriter.COMMA_SEPARATOR)
+            val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
             val timeFormat = SimpleDateFormat("HH:mm")
 
@@ -415,7 +415,8 @@ class SettingActivity : AppCompatActivity() {
             writeCSV.close()
             result.removeAllChangeListeners()
 
-            Utils.toastMakeTextAndShow(this@SettingActivity, getString(R.string.text_export_success_msg), Toast.LENGTH_SHORT)
+            val directoryPath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + folderName
+            Utils.toastMakeTextAndShow(this@SettingActivity, String.format(getString(R.string.text_export_success_msg), directoryPath), Toast.LENGTH_SHORT)
         }
     }
 

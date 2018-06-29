@@ -12,6 +12,7 @@ import android.support.v4.app.NotificationCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.microjet.airqi2.Definition.NotificationObj
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
@@ -79,7 +80,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
                 notBuilder.setGroup(GROUP_KEY_NEWS).setGroupSummary(true)//將相同訊息包在一起
                 notfiMangger.notify(notfiID, notBuilder.build())
             }
-            else ->notfiMangger.notify(2, notBuilder.build())
+            else ->notfiMangger.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
         }
 
     }
