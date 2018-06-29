@@ -60,6 +60,7 @@ import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.settingPage.SettingActivity
+import com.microjet.airqi2.photoShare.PhotoActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
@@ -708,7 +709,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    clickCount++
 //                }
 //            }
-
+            R.id.bleStatus -> {
+                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
+            }
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
