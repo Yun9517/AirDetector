@@ -294,13 +294,13 @@ class PhotoActivity : AppCompatActivity() {
         city.text = cityText
 
         val tvoc = view.findViewById<View>(R.id.tvocValue) as TextView
-        tvoc.text = tvocText
+        tvoc.text = Utils.setTextSubscript(tvocText)
 
         val pm25 = view.findViewById<View>(R.id.pm25Value) as TextView
-        pm25.text = pm25Text
+        pm25.text = Utils.setTextSubscript(pm25Text)
 
         val temp = view.findViewById<View>(R.id.tempValue) as TextView
-        temp.text = tempText
+        temp.text = Utils.setTextSubscript(tempText)
 
         val date = view.findViewById<View>(R.id.textDate) as TextView
         val dateFormat = SimpleDateFormat("HH:mm\nMM/dd")
