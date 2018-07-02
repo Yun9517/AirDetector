@@ -454,7 +454,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
-        
+
         val finalTempVal = Utils.convertTemperature(this@AirMapActivity, tempVal.toFloat())
 
         val dateFormat = SimpleDateFormat("HH:mm")
