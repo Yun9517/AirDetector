@@ -47,7 +47,7 @@ class PhotoActivity : AppCompatActivity() {
     private var fileName = ""
 
     private lateinit var realm: Realm
-    private lateinit var result: RealmResults<AsmDataModel>
+    private var result: RealmResults<AsmDataModel>? = null
 
     private lateinit var mCal: Calendar
 
@@ -180,11 +180,11 @@ class PhotoActivity : AppCompatActivity() {
         val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
-        result = realm.where(AsmDataModel::class.java)
-                .between("Created_time", startTime, endTime)
-                .sort("Created_time", Sort.ASCENDING).findAllAsync()
+        result = realm.where(AsmDataModel::class.java).findAll()
+                //.between("Created_time", startTime, endTime)
+                //.sort("Created_time", Sort.ASCENDING).findAllAsync()
 
-        return if(result.last() != null) { result.last() } else { null }
+        return result?.lastOrNull()
     }
 
     private fun shareContent(imageFileName: String) {

@@ -353,7 +353,7 @@ class CameraActivity : AppCompatActivity() {
         } else if (Surface.ROTATION_180 == rotation) {
             matrix.postRotate(180.toFloat(), centerX, centerY)
         }
-        this.textureView.setTransform(matrix)
+        this.textureView?.setTransform(matrix)
     }
 
     private fun closeCamera() {
