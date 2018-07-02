@@ -76,7 +76,18 @@ object Utils {
             val fahrenheitVal = ((celsiusVal + 40) * 1.8) - 40
             String.format("%.1f", fahrenheitVal) + " ℉"
         } else {
-            "$celsiusVal ℃"
+            String.format("%.1f", celsiusVal) + " ℃"
+        }
+    }
+
+    fun convertTemperatureNoUnit(context: Context, celsiusVal: Int): Int {
+        val myPref = PrefObjects(context)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        return if(isFahrenheit) {
+            (((celsiusVal.toFloat() + 40) * 1.8) - 40).toInt()
+        } else {
+            celsiusVal
         }
     }
 
