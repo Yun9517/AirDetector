@@ -2,16 +2,12 @@ package com.microjet.airqi2.CustomAPI
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Spannable
 import android.text.SpannableString
-import android.widget.Toast
 import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.SubscriptSpan
+import android.widget.Toast
 import com.microjet.airqi2.PrefObjects
-import com.microjet.airqi2.R.id.inCircleValue
-import kotlinx.android.synthetic.main.frg_main.*
 
 
 object Utils {

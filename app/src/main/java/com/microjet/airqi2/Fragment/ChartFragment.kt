@@ -17,6 +17,7 @@ import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.content.res.AppCompatResources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -635,6 +636,15 @@ class ChartFragment : Fragment() {
         //dependRadioIDDrawChart(radioButtonID)
 
         if(useFor == DEFINE_FRAGMENT_TEMPERATURE) {
+            val myPref = PrefObjects(mContext!!)
+            val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+            if(isFahrenheit) {
+                faceBar.setImageDrawable(AppCompatResources.getDrawable(mContext!!, R.drawable.face_bar_temp_f))
+            } else {
+                faceBar.setImageDrawable(AppCompatResources.getDrawable(mContext!!, R.drawable.face_bar_temp))
+            }
+
             reloadYAxisLabels()
         }
 
