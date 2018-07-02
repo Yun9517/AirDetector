@@ -9,6 +9,7 @@ import android.text.Spanned
 import android.text.style.AbsoluteSizeSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.SubscriptSpan
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R.id.inCircleValue
 import kotlinx.android.synthetic.main.frg_main.*
 
@@ -65,6 +66,18 @@ object Utils {
         val msp = SpannableString(inputText)
         msp.setSpan(RelativeSizeSpan(0.75f), inputText.indexOf(" ") + 1, inputText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)  //0.5f表示默認字體大小的一半
         return msp
+    }
+
+    fun convertTemperature(context: Context, celsiusVal: Float): String {
+        val myPref = PrefObjects(context)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        return if(isFahrenheit) {
+            val fahrenheitVal = ((celsiusVal + 40) * 1.8) - 40
+            String.format("%.1f", fahrenheitVal) + " ℉"
+        } else {
+            "$celsiusVal ℃"
+        }
     }
 
 }
