@@ -17,7 +17,7 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
     //主要背景執行
     override fun doInBackground(vararg params: String?): Void? {
         val client = OkHttpClient()
-        val urlBuilder = HttpUrl.parse("https://www.addwii.com/api/get_recent_posts/?count=3")!!.newBuilder()
+        val urlBuilder = HttpUrl.parse("https://www.addwii.com/api/get_recent_posts/")!!.newBuilder()
         val url = urlBuilder.build().toString()
         val request = Request.Builder()
                 .url(url)
@@ -36,15 +36,27 @@ class ScrollingTextTask : AsyncTask<String, Int, Void>() {
                 for (i in 0 until resultArray.length()) {
                     val jsonObjScrolling = resultArray.getJSONObject(i)
                     val hashMap = HashMap<String, String>()
-                    val jsonObjTitle = resultArray.getJSONObject(i)
+
+                    val jsonObjLongTitle = jsonObjScrolling.optString("title")
+                    val jsonObjURL = jsonObjScrolling.optString("url")
+                    val jsonObjShortTitle = jsonObjScrolling
                             .getJSONObject("custom_fields")
                             .optJSONArray("tm_posts_short_description")
-                    if (jsonObjTitle != null) {
-                        hashMap["title"] = jsonObjTitle.getString(0)
-                    } else {
-                        hashMap["title"] = jsonObjScrolling["title"].toString()
+
+                    when (jsonObjLongTitle != null && jsonObjURL != null) {
+                        true -> {
+                            hashMap["url"] = jsonObjScrolling.optString("url")
+                            if (jsonObjShortTitle != null) {
+                                hashMap["title"] = jsonObjShortTitle.getString(0)
+                            } else {
+                                hashMap["title"] = jsonObjScrolling["title"].toString()
+                            }
+                        }
+                        false ->{
+                            hashMap["url"] = "https://www.addwii.com/issues/"
+                            hashMap["title"] = "ADDWII5重要議題都在這裡，歡迎點擊!!"
+                        }
                     }
-                    hashMap["url"] = jsonObjScrolling["url"].toString()
                     TvocNoseData.scrollingList.add(hashMap)
                 }
                 Log.e(TAG, TvocNoseData.scrollingList.toString())
