@@ -453,7 +453,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         when (currentValue) {
             in 18..24 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_temp_Green)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
@@ -465,7 +465,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             }
             in 25..200 -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_temp_Red)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
@@ -477,7 +477,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             }
             else -> {
                 tvNotify?.text = getString(R.string.text_message_temperature)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_temp_Blue)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
@@ -494,7 +494,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         when (currentValue) {
             in 0..44 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_Humi_Blue)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.progressBarMiddleBlue))
                 inCircleState.setTextColor(
@@ -506,7 +506,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             }
             in 45..65 -> {
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_Humi_Green)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Good))
                 inCircleState.setTextColor(
@@ -519,7 +519,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             else -> {
 
                 tvNotify?.text = getString(R.string.text_message_humidity)
-                inCircleState.text = " "
+                inCircleState.text = getString(R.string.text_label_Humi_Red)
                 inCircleValue.setTextColor(
                         ContextCompat.getColor(mContext!!, R.color.Main_textResult_Bad))
                 inCircleState.setTextColor(
