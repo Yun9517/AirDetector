@@ -396,7 +396,7 @@ object VSBitmapStore {
 
     fun putBitmap(b: Bitmap): Int {
         val id = b.hashCode()
-        BITMAPS.put(id, b)
+        BITMAPS[id] = b
         return id
     }
 }

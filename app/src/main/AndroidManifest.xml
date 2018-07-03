@@ -290,10 +290,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".photoShare.CameraActivity" />
+        <activity android:name=".photoShare.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".photoShare.PhotoActivity"
             android:label="拍照分享" />
-        <activity android:name=".OpenBrowserActivity"></activity>
+
+        <activity android:name=".OpenBrowserActivity" />
     </application>
 
 </manifest>
