@@ -70,6 +70,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 cg_cloud_Message.visibility = View.VISIBLE
                 cg_cloud_Vibration.visibility = View.VISIBLE
                 cg_cloud_Sound.visibility = View.VISIBLE
+                indexTitleGroup.visibility = View.VISIBLE
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
@@ -78,6 +79,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 cg_cloud_Message.visibility = View.GONE
                 cg_cloud_Vibration.visibility = View.GONE
                 cg_cloud_Sound.visibility = View.GONE
+                indexTitleGroup.visibility = View.GONE
             }
 
             myPref.setSharePreferenceFirebase(isChecked)
@@ -248,6 +250,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             cg_cloud_Message.visibility = View.VISIBLE
             cg_cloud_Vibration.visibility = View.VISIBLE
             cg_cloud_Sound.visibility = View.VISIBLE
+            indexTitleGroup.visibility = View.VISIBLE
         } else {
             cgCloudNotify.visibility = View.GONE
             cgCloudSeekbar.visibility = View.GONE
@@ -255,6 +258,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             cg_cloud_Message.visibility = View.GONE
             cg_cloud_Vibration.visibility = View.GONE
             cg_cloud_Sound.visibility = View.GONE
+            indexTitleGroup.visibility = View.GONE
         }
         // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
         sw_cloud_Message.isChecked = swMessageVal
@@ -287,13 +291,13 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     private fun setFCMSettingView() {
         when (TvocNoseData.firebaseNotiftime) {
             in 0..9 -> {
-                btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
+                btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}"
             }
             25 -> {
-                btnCloudNotify.text = "00:00"
+                btnCloudNotify.text = "00"
             }
             else -> {
-                btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
+                btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}"
             }
         }
         //TVOC TEXTVIEW VALUE
@@ -317,9 +321,9 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     cloudTime = myHourPicker.value
                     if (cloudTime < 10) {
-                        btnCloudNotify.text = "0$cloudTime:00"
+                        btnCloudNotify.text = "0$cloudTime"
                     } else {
-                        btnCloudNotify.text = "$cloudTime:00"
+                        btnCloudNotify.text = "$cloudTime"
                     }
                     Log.e("TvocNoseData", TvocNoseData.firebaseNotiftime.toString())
                 }.setTitle(getString(R.string.text_cloud_notify_time))

@@ -21,6 +21,13 @@ import org.json.JSONObject
  */
 class GetFirebaseMessagingService : FirebaseMessagingService() {
     private val TAG = "MyFirebaseMessaging"
+
+    // 2018/07/04
+    private var swMessageVal: Boolean = false
+    private var swVibrateVal: Boolean = false
+    private var swSoundVal: Boolean = false
+    private lateinit var myPref: PrefObjects
+
     override fun onMessageReceived(getMessage: RemoteMessage?) {
         super.onMessageReceived(getMessage)
 
@@ -31,20 +38,24 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
 
         if (getMessage?.notification != null) {
             Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
-            sendnotfication(getMessage?.notification?.body, getMessage?.notification?.title)
+            sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
         } else if (getMessage?.data != null) {
             val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
             Log.e(TAG, "Message Topic= " + firebaseScorllingText)
-            firebaseScrollingToic(firebaseScorllingText)
+            firebaseScrollingTopic(firebaseScorllingText)
         }
     }
 
-    private fun sendnotfication(body: String?, title: String?) {
+    private fun sendNotification(body: String?, title: String?) {
         val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
         val GROUP_KEY_NEWS ="notification_NewsGronp"
+
+        swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
+        swVibrateVal = myPref.getSharePreferenceAllowNotifyVibrate()
+        swSoundVal = myPref.getSharePreferenceAllowNotifySound()
 
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -85,7 +96,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    private fun firebaseScrollingToic(firebaseScorllingText: String) {
+    private fun firebaseScrollingTopic(firebaseScorllingText: String) {
         TvocNoseData.scrollingList.clear()
         val jsonObj = JSONObject(firebaseScorllingText)
         //取出posts內容
@@ -100,6 +111,6 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         }
         val urlEvent = BleEvent("new Topic get")
         EventBus.getDefault().post(urlEvent)
-        sendnotfication("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
+        sendNotification("Addwii最新資訊", TvocNoseData.scrollingList[0]["title"])
     }
 }

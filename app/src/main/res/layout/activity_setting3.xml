@@ -43,19 +43,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!--<ImageView
-            android:id="@+id/subDivider1"
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:background="#b0b0b0"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify" />-->
-
         <android.support.constraint.Group
             android:id="@+id/cg_cloud_Message"
             android:layout_width="0dp"
@@ -64,7 +51,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView8, sw_cloud_Message, subDivider2"
+            app:constraint_referenced_ids="textView8, sw_cloud_Message, subDivider0, subDivider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify"/>
@@ -127,7 +114,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView10, sw_cloud_Vibrate, subDivider3"
+            app:constraint_referenced_ids="textView10, sw_cloud_Vibrate, subDivider0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subDivider0" />
@@ -178,7 +165,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView12, sw_cloud_Sound, subDivider4"
+            app:constraint_referenced_ids="textView12, sw_cloud_Sound, subDivider4, subDivider_sound"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subDivider" />
@@ -258,7 +245,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
+            app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue, subDivider3, subDivider4"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/airIndexTitle" />
@@ -397,7 +384,7 @@
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="cloudSaveText, subDivider1, subDivider2, subDivider3, subDivider4, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            app:constraint_referenced_ids="cloudSaveText, subDivider1, subDivider2, subDivider3, subDivider4, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting, mainDivider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subDivider4" />
