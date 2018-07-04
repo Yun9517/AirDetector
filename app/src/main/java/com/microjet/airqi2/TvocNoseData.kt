@@ -135,7 +135,8 @@ object TvocNoseData {
     var arrTimeYear: ArrayList<String> = arrayListOf()
 
     // 20180518 setting by 白~~~~~~~~~~~~~~~~~~~~~告
-    var firebaseNotiftime: Int = 0
+    // 2018/07/04 Change default Value
+    var firebaseNotiftime: Int = 12 // 0 -> 12
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
     var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()

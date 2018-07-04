@@ -437,9 +437,9 @@
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
     <string name="text_cloud_notify">推播通知</string>
     <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
-    <string name="text_save_cloud_setting">儲存設定</string>
+    <string name="text_save_cloud_setting">儲存</string>
     <string name="text_cloud_set_minute">%d分</string>
-    <string name="text_cloud_notify_time">推播時間</string>
+    <string name="text_cloud_notify_time">推播時間(時)</string>
     <string name="text_product_introduction">產品介紹</string>
     <string name="text_user_experience">用戶體驗</string>
     <string name="text_buy_link">購買連結</string>
@@ -506,7 +506,7 @@
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
     <string name="text_service_live_in_foreground">ADDWII仍在背景執行！</string>
     <string name="text_allow_service_run_in_foreground">允許背景服務常駐通知列</string>
-    <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全滑掉）</string>
+    <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全關閉）</string>
     <string name="new_Version_Notify">有新版軟體可更新</string>
 
     <!-- 2018/06/14 FW update dialog -->

@@ -43,7 +43,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <!--<ImageView
             android:id="@+id/subDivider1"
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -54,53 +54,112 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify" />
+            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify" />-->
 
         <android.support.constraint.Group
-            android:id="@+id/cgCloudNotify"
-            android:layout_width="match_parent"
+            android:id="@+id/cg_cloud_Message"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="cloudSaveText, subDivider1, subDivider2, subDivider3, subDivider4, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            app:constraint_referenced_ids="textView8, sw_cloud_Message, subDivider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider1" />
-
-        <TextView
-            android:id="@+id/text_cloud_notify"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/text_cloud_notify_time"
-            android:textColor="@color/blackColor"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
-            app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/btnCloudNotify" />
-
-        <Button
-            android:id="@+id/btnCloudNotify"
-            android:layout_width="0dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-            android:background="@drawable/style_setting_button"
-            android:text="@string/text_cloud_set_minute"
-            android:textColor="@color/whiteColor"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider1" />
+            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify"/>
 
         <ImageView
             android:id="@+id/subDivider2"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cg_cloud_Message" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_message"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/sw_cloud_Message"
+            app:layout_constraintEnd_toStartOf="@+id/sw_cloud_Message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sw_cloud_Message" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sw_cloud_Message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider2" />
+
+        <ImageView
+            android:id="@+id/subDivider0"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sw_cloud_Message" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cg_cloud_Vibration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="textView10, sw_cloud_Vibrate, subDivider3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider0" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_viberation"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/sw_cloud_Vibrate"
+            app:layout_constraintEnd_toStartOf="@+id/sw_cloud_Vibrate"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sw_cloud_Vibrate" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sw_cloud_Vibrate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cg_cloud_Vibration" />
+
+        <ImageView
+            android:id="@+id/subDivider"
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginEnd="16dp"
@@ -110,7 +169,87 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
+            app:layout_constraintTop_toBottomOf="@+id/sw_cloud_Vibrate" />
+
+        <android.support.constraint.Group
+            android:id="@+id/cg_cloud_Sound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="textView12, sw_cloud_Sound, subDivider4"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_setting_notify_sound"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/sw_cloud_Sound"
+            app:layout_constraintEnd_toStartOf="@+id/sw_cloud_Sound"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/sw_cloud_Sound" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/sw_cloud_Sound"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="8dp"
+            android:theme="@style/SwitchCompatTheme"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cg_cloud_Sound" />
+
+        <ImageView
+            android:id="@+id/subDivider_sound"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:background="#b0b0b0"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/sw_cloud_Sound" />
+
+        <android.support.constraint.Group
+            android:id="@+id/indexTitleGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="airIndexTitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider_sound" />
+
+        <TextView
+            android:id="@+id/airIndexTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            android:text="@string/text_setting_AirIndex"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/indexTitleGroup"/>
 
         <android.support.constraint.Group
             android:id="@+id/cgCloudSeekbar"
@@ -122,7 +261,7 @@
             app:constraint_referenced_ids="textCloudTvocSeekBarLabel, cloudTvocSeekBar, cloudTvocSeekValue, textCloudPM25SeekBarLabel, cloudPM25SeekBar, cloudPM25SeekValue"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider2" />
+            app:layout_constraintTop_toBottomOf="@+id/airIndexTitle" />
 
         <TextView
             android:id="@+id/textCloudTvocSeekBarLabel"
@@ -137,7 +276,7 @@
             android:textSize="18sp"
             android:singleLine="false"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cgCloudSeekbar" />
+            app:layout_constraintTop_toBottomOf="@+id/airIndexTitle" />
 
         <TextView
             android:id="@+id/cloudTvocSeekValue"
@@ -250,25 +389,69 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cloudPM25SeekBar" />
 
+        <android.support.constraint.Group
+            android:id="@+id/cgCloudNotify"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="8dp"
+            android:visibility="visible"
+            app:constraint_referenced_ids="cloudSaveText, subDivider1, subDivider2, subDivider3, subDivider4, text_cloud_notify, btnCloudNotify, btnSaveCloudSetting"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/subDivider4" />
+
+        <TextView
+            android:id="@+id/text_cloud_notify"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/text_cloud_notify_time"
+            android:textColor="@color/blackColor"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/btnCloudNotify"
+            app:layout_constraintEnd_toStartOf="@+id/btnCloudNotify"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/cgCloudNotify" />
+
+        <Button
+            android:id="@+id/btnCloudNotify"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/style_setting_button_1"
+            android:text="@string/text_cloud_set_minute"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cgCloudNotify" />
+
         <Button
             android:id="@+id/btnSaveCloudSetting"
             android:layout_width="0dp"
             android:layout_height="42dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="0dp"
-            android:background="@android:color/transparent"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/style_setting_button"
             android:text="@string/text_save_cloud_setting"
-            android:textColor="#f32091"
+            android:textColor="@color/whiteColor"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/subDivider4" />
+            app:layout_constraintTop_toBottomOf="@+id/btnCloudNotify" />
 
         <TextView
             android:id="@+id/cloudSaveText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:text="@string/text_save_setting_message"
             android:textAlignment="center"

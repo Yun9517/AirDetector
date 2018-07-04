@@ -2,6 +2,7 @@ package com.microjet.airqi2.settingPage
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -13,6 +14,7 @@ import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.FirebaseNotifTask
 import com.microjet.airqi2.PrefObjects
@@ -30,6 +32,10 @@ class CloudNotifySettingActivity : AppCompatActivity() {
 
     //20180515
     private var swCloudNotifyVal: Boolean = false
+    //2018/07/04
+    private var swMessageVal: Boolean = false
+    private var swVibrateVal: Boolean = false
+    private var swSoundVal: Boolean = false
 
     //20180517
     private var cloudTime: Int = TvocNoseData.firebaseNotiftime
@@ -60,13 +66,44 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             if (isChecked) {
                 cgCloudNotify.visibility = View.VISIBLE
                 cgCloudSeekbar.visibility = View.VISIBLE
+                // 2018/07/04
+                cg_cloud_Message.visibility = View.VISIBLE
+                cg_cloud_Vibration.visibility = View.VISIBLE
+                cg_cloud_Sound.visibility = View.VISIBLE
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
                 updateCloudSetting(25, 35, 660)
+                // 2018/07/04
+                cg_cloud_Message.visibility = View.GONE
+                cg_cloud_Vibration.visibility = View.GONE
+                cg_cloud_Sound.visibility = View.GONE
             }
 
             myPref.setSharePreferenceFirebase(isChecked)
+        }
+
+        sw_cloud_Message.setOnCheckedChangeListener { _, isChecked ->
+
+            if (isChecked) {
+                val mainintent = Intent(BroadcastIntents.PRIMARY)
+                mainintent.putExtra("status", "message")
+                sendBroadcast(mainintent)
+
+                Log.d("message", "messageSETTING")
+            }
+
+            myPref.setSharePreferenceAllowNotifyMessage(isChecked)
+        }
+
+        sw_cloud_Vibrate.setOnCheckedChangeListener { _, isChecked ->
+
+            myPref.setSharePreferenceAllowNotifyVibrate(isChecked)
+        }
+
+        sw_cloud_Sound.setOnCheckedChangeListener { _, isChecked ->
+
+            myPref.setSharePreferenceAllowNotifySound(isChecked)
         }
 
         //20180516 BY 白~~~~~~~~~~~~~~告
@@ -199,14 +236,30 @@ class CloudNotifySettingActivity : AppCompatActivity() {
 
     private fun getFCMSettings() {
         swCloudNotifyVal = myPref.getSharePreferenceFirebase()
+        swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
+        swVibrateVal = myPref.getSharePreferenceAllowNotifyVibrate()
+        swSoundVal = myPref.getSharePreferenceAllowNotifySound()
+
         swAllowCloudNotify?.isChecked = swCloudNotifyVal
         if (swCloudNotifyVal) {
             cgCloudNotify.visibility = View.VISIBLE
             cgCloudSeekbar.visibility = View.VISIBLE
+            // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
+            cg_cloud_Message.visibility = View.VISIBLE
+            cg_cloud_Vibration.visibility = View.VISIBLE
+            cg_cloud_Sound.visibility = View.VISIBLE
         } else {
             cgCloudNotify.visibility = View.GONE
             cgCloudSeekbar.visibility = View.GONE
+            // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
+            cg_cloud_Message.visibility = View.GONE
+            cg_cloud_Vibration.visibility = View.GONE
+            cg_cloud_Sound.visibility = View.GONE
         }
+        // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
+        sw_cloud_Message.isChecked = swMessageVal
+        sw_cloud_Vibrate.isChecked = swVibrateVal
+        sw_cloud_Sound.isChecked = swSoundVal
     }
 
     private fun initActionBar() {
