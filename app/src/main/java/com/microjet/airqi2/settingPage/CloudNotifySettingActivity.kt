@@ -14,7 +14,7 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.FirebaseNotifTask
+import com.microjet.airqi2.FirebaseNotifSettingTask
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
@@ -280,7 +280,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         TvocNoseData.firebaseNotifTVOC = argTvoc
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        FirebaseNotifTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
+        FirebaseNotifSettingTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
         setFCMSettingView()
     }
 }

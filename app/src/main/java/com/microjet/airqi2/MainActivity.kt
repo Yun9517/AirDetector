@@ -59,8 +59,8 @@ import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
 import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.settingPage.SettingActivity
 import com.microjet.airqi2.photoShare.PhotoActivity
+import com.microjet.airqi2.settingPage.SettingActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
@@ -372,7 +372,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
-        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
@@ -669,7 +668,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)

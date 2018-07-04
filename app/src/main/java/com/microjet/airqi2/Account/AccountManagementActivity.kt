@@ -10,6 +10,11 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Button
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.GraphRequest
+import com.facebook.login.LoginResult
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.FirebaseNotifSettingTask
 import com.microjet.airqi2.PrefObjects
@@ -26,6 +31,10 @@ import java.io.IOException
 import java.util.regex.Pattern
 
 
+
+
+
+
 class AccountManagementActivity : AppCompatActivity() {
 
     private var mContext: Context? = null
@@ -36,6 +45,9 @@ class AccountManagementActivity : AppCompatActivity() {
     private var mMyThing: logInMything? = null
     //2018/06/07 enable data upload dialog & use share preference
     private lateinit var myPref: PrefObjects
+
+    val callbackManager = CallbackManager.Factory.create()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,7 +99,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     }
                 } else {
                     //showDialog("請輸入正確的E-mail地址")
-                    showDialog(getString(R.string.dialog_Correct_Mail_Format))
+                    showDialog(getString(R.string.errorMail_address))
                 }
             }else{
                 //showDialog("請連接網路")
@@ -100,24 +112,14 @@ class AccountManagementActivity : AppCompatActivity() {
         }
         //2018/06/07 enable data upload dialog & use share preference
         myPref = PrefObjects(this)
-    }
 
-    override fun onStart() {
-        super.onStart()
-    }
 
-    override fun onStop() {
-        super.onStop()
-    }
+        val callbackMannger = CallbackManager.Factory.create()
+        login_buttonFB.setReadPermissions("email","public_profile")
+        // Callback registration
+        loginButtonFB()
 
-    override fun onResume() {
-        super.onResume()
     }
-
-    override fun onPause() {
-        super.onPause()
-    }
-
 
     private fun initActionBar() {
         // 取得 actionBar
@@ -234,7 +236,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     })
                     params[0].myBlean = false
                     Log.e("登入錯誤回來", response.body()!!.string())
-                    loginResult = getString(R.string.dialog_Wrong_Password) //登入失敗
+                    loginResult = "登入失敗"
                 }
             }
             catch (e: Exception) {
@@ -261,7 +263,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
-                //Dialog.setTitle(getString(R.string.remind))
+                Dialog.setTitle(getString(R.string.remind))
                 Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
@@ -275,10 +277,6 @@ class AccountManagementActivity : AppCompatActivity() {
         }
     }
 
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     //20180311
     private fun isEmail(strEmail: String?): Boolean {
@@ -294,7 +292,7 @@ class AccountManagementActivity : AppCompatActivity() {
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
-        //Dialog.setTitle(getString(R.string.remind))
+        Dialog.setTitle(getString(R.string.remind))
         Dialog.setMessage(msg.toString())
         Dialog.setCancelable(false)//讓返回鍵與空白無效
         //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
@@ -365,6 +363,52 @@ class AccountManagementActivity : AppCompatActivity() {
         }
         Dialog.show()
     }
+
+    private fun loginButtonFB() {
+        login_buttonFB.registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+            override fun onSuccess(loginResult: LoginResult) {
+                // App code
+                val userId = loginResult.accessToken.userId
+                val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response -> displayUserInfo(`object`) }
+                val parameters = Bundle()
+                parameters.putString("fields", "first_name, last_name, email, id")
+                graphRequest.parameters = parameters
+                graphRequest.executeAsync()
+                Log.e("FB_Token",loginResult.accessToken.token)
+            }
+
+            override fun onCancel() {
+                // App code
+            }
+
+            override fun onError(exception: FacebookException) {
+                // App code
+            }
+        })
+    }
+
+    fun displayUserInfo(`object`: JSONObject) {
+        var first_name = ""
+        var last_name = ""
+        var email = ""
+        var id = ""
+        try {
+            first_name = `object`.getString("first_name")
+            last_name = `object`.getString("last_name")
+            email = `object`.getString("email")
+            id = `object`.getString("id")
+        } catch (e: JSONException) {
+            e.printStackTrace()
+        }
+        Log.e("testFBandFUCK", first_name + "_" + last_name + "_" + email + "_" + id)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        callbackManager.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+
 }
 class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
     var button = btn

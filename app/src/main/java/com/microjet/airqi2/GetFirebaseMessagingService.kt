@@ -46,7 +46,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         var notiFication_ID: Int = 8
         val GROUP_KEY_NEWS ="notification_NewsGronp"
 
-        val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+        val notifiSound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val newNotBuilder = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             notfiMangger.createNotificationChannel(newNotBuilder)
@@ -64,11 +64,11 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val pend_intent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val notBuilder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.app_notifi_icon)
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
-                .setSound(Not_sound)//由Firebase設定鈴聲
+                .setSound(notifiSound)//由Firebase設定鈴聲
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
 
