@@ -43,7 +43,7 @@
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
     <string name="text_label_temperature">Temp.</string>
-    <string name="text_label_humidity">RH</string>
+    <string name="text_label_humidity">HUMI.</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_pm25_detect">PM2.5</string>
@@ -436,4 +436,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
 
     <string name="select_Date">Select a date</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_setting_AirIndex">Air Index Setting</string>
 </resources>

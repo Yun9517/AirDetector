@@ -538,4 +538,7 @@
 
     <string name="select_Date">请选择日期</string>
     <string name="text_label_personal_track_password">个人轨迹密码</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_setting_AirIndex">空气指标警示设定</string>
 </resources>
