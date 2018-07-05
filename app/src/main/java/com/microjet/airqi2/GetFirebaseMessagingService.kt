@@ -31,6 +31,8 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(getMessage: RemoteMessage?) {
         super.onMessageReceived(getMessage)
 
+        myPref = PrefObjects(this)
+
         if (getMessage?.data!!.size > 0) {
             Log.d(TAG, "Message data" + getMessage.data)
 

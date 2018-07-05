@@ -95,17 +95,17 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 Log.d("message", "messageSETTING")
             }
 
-            myPref.setSharePreferenceAllowNotifyMessage(isChecked)
+            myPref.setSharePreferenceAllowBroadcastMessage(isChecked)
         }
 
         sw_cloud_Vibrate.setOnCheckedChangeListener { _, isChecked ->
 
-            myPref.setSharePreferenceAllowNotifyVibrate(isChecked)
+            myPref.setSharePreferenceAllowBroadcastVibrate(isChecked)
         }
 
         sw_cloud_Sound.setOnCheckedChangeListener { _, isChecked ->
 
-            myPref.setSharePreferenceAllowNotifySound(isChecked)
+            myPref.setSharePreferenceAllowBroadcastSound(isChecked)
         }
 
         //20180516 BY 白~~~~~~~~~~~~~~告
@@ -238,9 +238,9 @@ class CloudNotifySettingActivity : AppCompatActivity() {
 
     private fun getFCMSettings() {
         swCloudNotifyVal = myPref.getSharePreferenceFirebase()
-        swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
-        swVibrateVal = myPref.getSharePreferenceAllowNotifyVibrate()
-        swSoundVal = myPref.getSharePreferenceAllowNotifySound()
+        swMessageVal = myPref.getSharePreferenceAllowBroadcastMessage()
+        swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
+        swSoundVal = myPref.getSharePreferenceAllowBroadcastSound()
 
         swAllowCloudNotify?.isChecked = swCloudNotifyVal
         if (swCloudNotifyVal) {
