@@ -761,7 +761,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         inCircleBar.setCurrentValues(tempDataFloat)
                         //inCircleBar.setCurrentValues(18f)
                         tempStatusTextShow(tempDataFloat)
-                        val temp = tempDataFloat.toString() + " °C"
+                        val temp = Utils.convertTemperature(mContext!!, tempDataFloat)// tempDataFloat.toString() + " °C"
                         textSpannable(temp)
                     }
 
