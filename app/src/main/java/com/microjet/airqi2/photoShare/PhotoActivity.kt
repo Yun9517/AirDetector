@@ -95,7 +95,7 @@ class PhotoActivity : AppCompatActivity() {
                 setLayout2(rotatedBitmap, lastLocation,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
-                        tempVal)
+                        tempVal, lastData.created_time)
                 /*setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
@@ -105,7 +105,7 @@ class PhotoActivity : AppCompatActivity() {
                         "${lastData.humiValue} %")*/
             } else {
                 //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
-                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----")
+                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----", System.currentTimeMillis())
             }
             //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
@@ -292,7 +292,7 @@ class PhotoActivity : AppCompatActivity() {
 
     @SuppressLint("SimpleDateFormat")
     private fun setLayout2(background: Bitmap, cityText: String,
-                           tvocText: String, pm25Text: String, tempText: String): Bitmap {
+                           tvocText: String, pm25Text: String, tempText: String, tempDate: Long): Bitmap {
 
         val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -317,7 +317,7 @@ class PhotoActivity : AppCompatActivity() {
 
         val date = view.findViewById<View>(R.id.textDate) as TextView
         val dateFormat = SimpleDateFormat("HH:mm\nMM/dd")
-        date.text = dateFormat.format(System.currentTimeMillis())
+        date.text = dateFormat.format(tempDate)
 
         //Provide it with a layout params. It should necessarily be wrapping the
         //content as we not really going to have a parent for it.
@@ -362,18 +362,20 @@ class PhotoActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun savePicture(bitmap: Bitmap): File? {
         val createPath = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII")
         createPath.mkdir()
         Log.e("Photo", createPath.path)
 
-        val myPref = PrefObjects(this@PhotoActivity)
         try {
             // 取得外部儲存裝置路徑
             val path = createPath.path
             // 開啟檔案
-            val imgCount = myPref.getSharePreferenceSaveImageCount()
-            val file = File(path, "Image_$imgCount.jpg")
+            //val imgCount = myPref.getSharePreferenceSaveImageCount()
+            val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss")
+            val dateAndTime = dateFormat.format(System.currentTimeMillis())
+            val file = File(path, "ADDWII_$dateAndTime.jpg")
             // 開啟檔案串流
             val out = FileOutputStream(file)
             // 將 Bitmap壓縮成指定格式的圖片並寫入檔案串流
@@ -381,7 +383,6 @@ class PhotoActivity : AppCompatActivity() {
             // 刷新並關閉檔案串流
             out.flush()
             out.close()
-            myPref.setSharePreferenceSaveImageCount(imgCount + 1)
             Utils.toastMakeTextAndShow(this@PhotoActivity, getString(R.string.text_photo_saved), Toast.LENGTH_SHORT)
             return file
         } catch (e: FileNotFoundException) {
