@@ -90,10 +90,12 @@ class PhotoActivity : AppCompatActivity() {
 
             addTextBitmap = if (lastData != null) {
                 val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+
+                val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
                 setLayout2(rotatedBitmap, lastLocation,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
-                        "${lastData.tempValue} °C")
+                        tempVal)
                 /*setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",

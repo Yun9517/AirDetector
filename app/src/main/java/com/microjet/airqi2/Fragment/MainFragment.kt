@@ -12,8 +12,8 @@ import android.os.Handler
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
-import android.text.*
-import android.text.style.AbsoluteSizeSpan
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.style.RelativeSizeSpan
 import android.util.DisplayMetrics
 import android.util.Log
@@ -43,7 +43,7 @@ import kotlin.collections.ArrayList
 
 class MainFragment : Fragment(), View.OnTouchListener {
 
-    private val TAG = this.javaClass.simpleName
+    //private val TAG = this.javaClass.simpleName
 
     enum class DetectionData(val range1: Long, val range2: Long) {
         TVOC(220, 660),
@@ -269,9 +269,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
     }
 
     private fun textSpannable(temp: String) {
-        val dm = resources.displayMetrics
+        //val dm = resources.displayMetrics
         val textSpan = SpannableStringBuilder(temp)
-        val text1Size = when (dm.densityDpi) {
+        /*val text1Size = when (dm.densityDpi) {
             DisplayMetrics.DENSITY_DEFAULT -> convertSpToPx(50f)   // MDPI
             DisplayMetrics.DENSITY_HIGH -> convertSpToPx(30f)   // HDPI
             in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(34f)   // XXHDPI
@@ -284,7 +284,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             in DisplayMetrics.DENSITY_420..DisplayMetrics.DENSITY_XXHIGH -> convertSpToPx(20f)   // XXHDPI
             in DisplayMetrics.DENSITY_560..DisplayMetrics.DENSITY_XXXHIGH -> convertSpToPx(22f)   // XXXHDPI
             else -> convertSpToPx(18f)
-        }
+        }*/
 
         textSpan.setSpan(RelativeSizeSpan(0.5f), temp.indexOf(" ") + 1, temp.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
@@ -326,6 +326,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
+        val finalTempVal = Utils.convertTemperature(mContext!!, tempDataFloat)
 
         tvBtmTVOCValue?.text = Utils.setTextSubscript("${tvocDataFloat.toInt()} ppb")
         //if (MyApplication.isPM25 == "000000000000") {
@@ -337,7 +338,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
             show_PM?.isEnabled = true
         }
         tvBtmCO2Value?.text = Utils.setTextSubscript("${co2DataFloat.toInt()} ppm")
-        tvBtmTEMPValue?.text = Utils.setTextSubscript("${tempDataFloat} ℃")
+        //tvBtmTEMPValue?.text = Utils.setTextSubscript("${tempDataFloat} ℃")
+        tvBtmTEMPValue?.text = Utils.setTextSubscript(finalTempVal)
         tvBtmHUMIValue?.text = Utils.setTextSubscript("${humiDataFloat.toInt()} %")
         tvBtmPM10Value?.text = Utils.setTextSubscript("${pm10DataFloat.toInt()} μg/m³")
     }

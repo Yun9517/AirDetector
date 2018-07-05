@@ -175,4 +175,13 @@ class PrefObjects(context: Context) {
     fun setSharePreferenceSaveImageCount(value: Int) {
         share.edit().putInt(SavePreferences.SETTING_PHOTO_COUNT, value).apply()
     }
+
+
+    fun getSharePreferenceTempUnitFahrenheit(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, false)
+    }
+
+    fun setSharePreferenceTempUnitFahrenheit(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, value).apply()
+    }
 }
