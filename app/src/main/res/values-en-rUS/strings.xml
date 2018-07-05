@@ -420,4 +420,10 @@ Please note that this FW update process is done entirely at your own risk. If th
 
     <string name="select_Date">Select a date</string>
     <string name="text_setting_temperature_unit">Temperature Unit</string>
+    <string name="text_label_pm25_detect">PM2.5</string>
+    <string name="text_label_pm10_detect">PM10</string>
+    <string name="text_label_eco2_detect">eCO2</string>
+    <string name="text_label_temp_detect">Temp.</string>
+    <string name="text_label_humi_detect">Humi.</string>
+    <string name="text_label_pm10">PM10</string>
 </resources>

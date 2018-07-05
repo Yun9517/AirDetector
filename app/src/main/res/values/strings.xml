@@ -51,10 +51,10 @@
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC\n總揮發性有機化合物</string>
     <string name="text_label_pm25_detect">PM2.5\n細懸浮微粒</string>
-    <string name="text_label_pm10_detect">PM10\n懸浮微粒</string>
+    <string name="text_label_pm10_detect">PM10 懸浮微粒</string>
     <string name="text_label_eco2_detect">ECO2\n等效二氧化碳</string>
-    <string name="text_label_temp_detect">TEMP\n溫度</string>
-    <string name="text_label_humi_detect">HUMI\n溼度</string>
+    <string name="text_label_temp_detect">TEMP 溫度</string>
+    <string name="text_label_humi_detect">HUMI 溼度</string>
     <string name="text_label_status_good">正常</string>
     <string name="text_label_status_mid">中等</string>
     <string name="text_label_status_medium_Orange">高</string>
@@ -495,7 +495,7 @@
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
     <string name="text_service_live_in_foreground">ADDWII仍在背景執行！</string>
     <string name="text_allow_service_run_in_foreground">允許背景服務常駐通知列</string>
-    <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全滑掉）</string>
+    <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全關閉）</string>
     <string name="new_Version_Notify">有新版軟體可更新</string>
 
     <!-- 2018/06/14 FW update dialog -->
