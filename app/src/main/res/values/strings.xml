@@ -61,6 +61,16 @@
     <string name="text_label_status_bad">不健康</string>
     <string name="text_label_status_Serious_Purple">有害健康</string>
     <string name="text_label_status_Extreme_Dark_Purple">危害健康</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_label_temp_Green">舒適</string>
+    <string name="text_label_temp_Blue">寒冷</string>
+    <string name="text_label_temp_Red">炎熱</string>
+
+    <string name="text_label_Humi_Green">舒適</string>
+    <string name="text_label_Humi_Blue">乾燥</string>
+    <string name="text_label_Humi_Red">潮濕</string>
+
     <string name="text_battery_value">電池電量：</string>
     <string name="text_battery_title">裝置電量</string>
     <string name="button_label_ok">確認</string>
@@ -146,6 +156,7 @@
     <string name="averageExposure_Daily">日平均曝露濃度</string>
     <string name="averageExposure_Week">週平均曝露濃度</string>
     <string name="averageExposure_Month">月平均曝露濃度</string>
+    <string name="averageExposure_Year">年平均曝露濃度</string>
 
     <string name="averageTemperature_Daily">平均溫度</string>
     <string name="averageHumidity_Daily">平均濕度</string>
@@ -426,9 +437,9 @@
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
     <string name="text_cloud_notify">推播通知</string>
     <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
-    <string name="text_save_cloud_setting">儲存設定</string>
+    <string name="text_save_cloud_setting">儲存</string>
     <string name="text_cloud_set_minute">%d分</string>
-    <string name="text_cloud_notify_time">推播時間</string>
+    <string name="text_cloud_notify_time">推播時間(時)</string>
     <string name="text_product_introduction">產品介紹</string>
     <string name="text_user_experience">用戶體驗</string>
     <string name="text_buy_link">購買連結</string>
@@ -530,4 +541,7 @@
     <string name="select_Date">請選擇日期</string>
 
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_setting_AirIndex">空氣指標警告設定</string>
 </resources>

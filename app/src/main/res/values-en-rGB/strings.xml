@@ -10,7 +10,7 @@
     <string name="text_message_air_Serious_Purple">The air quality is harmful. Please leave here. Intensified ventilation is mandatory.</string>
     <string name="text_message_air_Extreme_Dark_Purple">The air quality is hazardous. Please leave here immediately. Intensified ventilation is mandatory.</string>
     <string name="text_message_humidity">Normally, human feels cool and comfortable when the humidity percent range is about 45%~65%. Your body healthy cannot be afforded by too dry or too moist.</string>
-    <string name="text_message_temperature">Normally, the best temperature for human is about 18~25℃(64~77°F)</string> <!-- 2018/01/04 -->
+    <string name="text_message_temperature">Normally, the best temperature for human is about 64~77°F(18~25℃)</string> <!-- 2018/01/04 -->
     <!-- eCO2 message -->
     <string name="label_eCO2_Green">Normal</string>
     <string name="label_eCO2_Yellow">Moderate</string>
@@ -42,16 +42,31 @@
     <string name="text_label_tvoc">TVOC</string>
     <string name="text_label_pm25">PM2.5</string>
     <string name="text_label_co2">eCO2</string>
-    <string name="text_label_temperature">TEMP.</string>
+    <string name="text_label_temperature">Temp.</string>
     <string name="text_label_humidity">HUMI.</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
+    <string name="text_label_pm25_detect">PM2.5</string>
+    <string name="text_label_pm10_detect">PM10</string>
+    <string name="text_label_eco2_detect">ECO2</string>
+    <string name="text_label_temp_detect">TEMP</string>
+    <string name="text_label_humi_detect">HUMI</string>
     <string name="text_label_status_good">Normal</string>
     <string name="text_label_status_mid">Moderate</string>
     <string name="text_label_status_medium_Orange">High pollution</string>
     <string name="text_label_status_bad">Unhealthy</string>
     <string name="text_label_status_Serious_Purple">Harmful</string>
     <string name="text_label_status_Extreme_Dark_Purple">Hazardous</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_label_temp_Green">Comfortable</string>
+    <string name="text_label_temp_Blue">Cold</string>
+    <string name="text_label_temp_Red">Hot</string>
+
+    <string name="text_label_Humi_Green">Comfortable</string>
+    <string name="text_label_Humi_Blue">Dry</string>
+    <string name="text_label_Humi_Red">Wet</string>
+
     <string name="text_battery_value">Battery Volume: </string>
     <string name="text_battery_title">Device Battery</string>
     <string name="button_label_ok">OK</string>
@@ -136,6 +151,7 @@
     <string name="averageExposure_Daily">Average Exposure Level</string>
     <string name="averageExposure_Week">Average Exposure Level</string>
     <string name="averageExposure_Month">Average Exposure Level</string>
+    <string name="averageExposure_Year">Average Exposure Level</string>
 
     <string name="averageTemperature_Daily">Average Temperature</string>
     <string name="averageHumidity_Daily">Average Humidity</string>
@@ -420,4 +436,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
 
     <string name="select_Date">Select a date</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_setting_AirIndex">Air Index Setting</string>
 </resources>

@@ -328,13 +328,13 @@ class ChartFragment : Fragment() {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
                     1 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Week)
                     }
                     2 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Month)
                     }
                     3 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Year)
                     }
                 }
                 btnTextChanged(spinnerPositon)

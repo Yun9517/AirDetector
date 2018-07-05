@@ -61,6 +61,16 @@
     <string name="text_label_status_bad">不健康</string>
     <string name="text_label_status_Serious_Purple">有害健康</string>
     <string name="text_label_status_Extreme_Dark_Purple">危害健康</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_label_temp_Green">舒适</string>
+    <string name="text_label_temp_Blue">寒冷</string>
+    <string name="text_label_temp_Red">炎热</string>
+
+    <string name="text_label_Humi_Green">舒适</string>
+    <string name="text_label_Humi_Blue">干燥</string>
+    <string name="text_label_Humi_Red">潮湿</string>
+
     <string name="text_battery_value">电池电量：</string>
     <string name="text_battery_title">装置电量</string>
     <string name="button_label_ok">确认</string>
@@ -146,6 +156,7 @@
     <string name="averageExposure_Daily">日平均曝露浓度</string>
     <string name="averageExposure_Week">週平均曝露浓度</string>
     <string name="averageExposure_Month">月平均曝露浓度</string>
+    <string name="averageExposure_Year">年平均曝露浓度</string>
 
     <string name="averageTemperature_Daily">平均温度</string>
     <string name="averageHumidity_Daily">平均湿度</string>
@@ -426,9 +437,9 @@
     <string name="text_click_to_adjust">（按一下数值可微调）</string>
     <string name="text_cloud_notify">推播通知</string>
     <string name="text_cloud_notify_comment">前24小时侦测空气品质的平均数据。</string>
-    <string name="text_save_cloud_setting">储存设定</string>
+    <string name="text_save_cloud_setting">储存</string>
     <string name="text_cloud_set_minute">%d分</string>
-    <string name="text_cloud_notify_time">推播时间</string>
+    <string name="text_cloud_notify_time">推播时间(时)</string>
     <string name="text_product_introduction">产品介绍</string>
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
@@ -527,4 +538,7 @@
 
     <string name="select_Date">请选择日期</string>
     <string name="text_label_personal_track_password">个人轨迹密码</string>
+
+    <!-- 2018/07/03 -->
+    <string name="text_setting_AirIndex">空气指标警告设定</string>
 </resources>
