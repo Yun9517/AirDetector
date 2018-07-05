@@ -427,4 +427,14 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="text_label_temp_detect">Temp.</string>
     <string name="text_label_humi_detect">Humi.</string>
     <string name="text_label_pm10">PM10</string>
+    <string name="text_label_personal_track_password">Personal trail password</string>
+    <string name="text_scrollingTitle">User experience</string>
+    <string name="text_check_fragment">There is a download going on, want to stop and start a new download?</string>
+    <string name="text_product_introduction">Product introduction</string>
+    <string name="text_user_experience">User Experience</string>
+    <string name="text_buy_link">Buy link</string>
+    <string name="dfu_update_failure">Fix update failed</string>
+    <string name="dfu_title">Repair mode</string>
+    <string name="dfu_default_name">Engineering mode</string>
+    <string name="text_setting_allow_firebase_notification">Cloud notification allows</string>
 </resources>
