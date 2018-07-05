@@ -49,20 +49,20 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun sendNotification(body: String?, title: String?) {
-        val notfiMangger = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notiManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
         val GROUP_KEY_NEWS ="notification_NewsGronp"
 
-        swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
-        swVibrateVal = myPref.getSharePreferenceAllowNotifyVibrate()
-        swSoundVal = myPref.getSharePreferenceAllowNotifySound()
+        swMessageVal = myPref.getSharePreferenceAllowBroadcastMessage()
+        swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
+        swSoundVal = myPref.getSharePreferenceAllowBroadcastSound()
 
         val Not_sound: Uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val newNotBuilder = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
-            notfiMangger.createNotificationChannel(newNotBuilder)
+            notiManager.createNotificationChannel(newNotBuilder)
         }
 
         val intent = Intent()
@@ -91,9 +91,9 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         when (body) {
             "Addwii最新資訊" ->{
                 notBuilder.setGroup(GROUP_KEY_NEWS).setGroupSummary(true)//將相同訊息包在一起
-                notfiMangger.notify(notfiID, notBuilder.build())
+                notiManager.notify(notfiID, notBuilder.build())
             }
-            else ->notfiMangger.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
+            else ->notiManager.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
         }
 
     }
