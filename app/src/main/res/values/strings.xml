@@ -543,5 +543,5 @@
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
 
     <!-- 2018/07/03 -->
-    <string name="text_setting_AirIndex">空氣指標警示設定</string>
+    <string name="text_setting_AirIndex">空氣指標警告設定</string>
 </resources>
