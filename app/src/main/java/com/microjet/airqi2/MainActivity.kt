@@ -364,7 +364,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
-        FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
+        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }

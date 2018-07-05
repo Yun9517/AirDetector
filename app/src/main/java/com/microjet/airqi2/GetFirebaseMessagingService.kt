@@ -81,9 +81,16 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)
-                .setSound(Not_sound)//由Firebase設定鈴聲
+                //.setSound(Not_sound)//由Firebase設定鈴聲
                 .setContentIntent(pend_intent)
                 .setChannelId(channelId)
+        // 2018/07/05 Add Judgement for Sound & Vibrate
+        if (swSoundVal) {
+            notBuilder.setSound(Not_sound)
+        }
+        if (swVibrateVal) {
+            notBuilder.setVibrate(longArrayOf(1000,1000,1000,1000,1000))
+        }
 
         val notfiID = System.currentTimeMillis().toInt()
         Log.e("notfiID",notfiID.toString())
