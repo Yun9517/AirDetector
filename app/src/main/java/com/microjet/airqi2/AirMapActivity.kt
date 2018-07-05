@@ -190,13 +190,17 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         listener = RealmChangeListener {
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
-            filter.forEach {
-                if (it.latitude == 255f) {
-                    it.latitude = lati
-                    it.longitude = longi
+            if (filter.isNotEmpty()) {
+                lati = filter[0].latitude
+                longi = filter[0].longitude
+                filter.forEach {
+                    if (it.latitude == 255f || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
+                        it.latitude = lati
+                        it.longitude = longi
+                    }
+                    lati = it.latitude
+                    longi = it.longitude
                 }
-                lati = it.latitude
-                longi = it.longitude
             }
             drawMapPolyLine(filter)
             drawLineChart(filter)

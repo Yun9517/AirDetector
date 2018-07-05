@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onCreate")
 
         myPref = PrefObjects(this)
-        Log.e("Firebase", FirebaseInstanceId.getInstance().token)
+        Log.e("Firebase", FirebaseInstanceId.getInstance().token.toString())
         uiFindViewById()
         viewPagerInit()
         initActionBar()
