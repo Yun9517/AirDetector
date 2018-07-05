@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.*
 import android.hardware.camera2.*
+import android.hardware.camera2.params.StreamConfigurationMap
 import android.media.Image
 import android.media.ImageReader
 import android.os.Build
@@ -19,6 +20,7 @@ import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Size
 import android.view.Surface
+import android.view.SurfaceHolder
 import android.view.TextureView
 import android.view.View
 import android.widget.Toast
@@ -90,6 +92,7 @@ class CameraActivity : AppCompatActivity() {
 
         this.takePictureButton.setOnClickListener { takePicture() }
 
+        this.btnChangeCamera.setOnClickListener { changeCamera() }
         this.setupFullScreen()
     }
 
@@ -264,6 +267,12 @@ class CameraActivity : AppCompatActivity() {
         }
     }
 
+    private fun changeCamera() {
+        closeCamera()
+        this.isBackCamera = !this.isBackCamera
+        openCamera()
+    }
+
     @Throws(CameraAccessException::class)
     private fun getSensorOrientation(manager: CameraManager): Int {
         return manager.getCameraCharacteristics(this.cameraId).get(CameraCharacteristics.SENSOR_ORIENTATION)
@@ -353,12 +362,12 @@ class CameraActivity : AppCompatActivity() {
         } else if (Surface.ROTATION_180 == rotation) {
             matrix.postRotate(180.toFloat(), centerX, centerY)
         }
-        this.textureView.setTransform(matrix)
+        this.textureView?.setTransform(matrix)
     }
 
     private fun closeCamera() {
         this.cameraDevice.close()
-        this.imageReader.close()
+        //this.imageReader.close()
     }
 
     private fun sendByteArray(bitmap: Bitmap) {
@@ -396,7 +405,7 @@ object VSBitmapStore {
 
     fun putBitmap(b: Bitmap): Int {
         val id = b.hashCode()
-        BITMAPS.put(id, b)
+        BITMAPS[id] = b
         return id
     }
 }

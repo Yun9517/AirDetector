@@ -176,15 +176,6 @@ class PrefObjects(context: Context) {
         share.edit().putInt(SavePreferences.SETTING_PHOTO_COUNT, value).apply()
     }
 
-    // 2018/07/05
-/*    fun getSharePreferenceAllowBroadcastNotify(): Boolean {
-        return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_NOTIFY, false)
-    }
-
-    fun setSharePreferenceAllowBroadcastNotify(value: Boolean) {
-        share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_NOTIFY, value).apply()
-    }*/
-
     fun getSharePreferenceAllowBroadcastMessage(): Boolean {
         return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_MESSAGE, false)
     }
@@ -207,5 +198,13 @@ class PrefObjects(context: Context) {
 
     fun setSharePreferenceAllowBroadcastSound(value: Boolean) {
         share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_SOUND, value).apply()
+    }
+
+    fun getSharePreferenceTempUnitFahrenheit(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, false)
+    }
+
+    fun setSharePreferenceTempUnitFahrenheit(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, value).apply()
     }
 }

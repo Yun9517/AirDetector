@@ -435,7 +435,21 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="fireBase_Toast_Network_Connect">Please connect to internet</string>
 
     <string name="select_Date">Select a date</string>
-
     <!-- 2018/07/03 -->
     <string name="text_setting_AirIndex">Air Index Setting</string>
+    <string name="text_setting_temperature_unit">Temperature Unit</string>
+    <string name="text_label_pm10">PM10</string>
+    <string name="text_label_personal_track_password">Personal trail password</string>
+    <string name="text_scrollingTitle">User experience</string>
+    <string name="text_check_fragment">There is a download going on, want to stop and start a new download?</string>
+    <string name="text_product_introduction">Product introduction</string>
+    <string name="text_user_experience">User Experience</string>
+    <string name="text_buy_link">Buy link</string>
+    <string name="dfu_update_failure">Fix update failed</string>
+    <string name="dfu_title">Repair mode</string>
+    <string name="dfu_default_name">Engineering mode</string>
+    <string name="text_setting_allow_firebase_notification">Cloud notification allows</string>
+    <string name="photo_share_activity">Photo sharing</string>
+    <string name="button_take_a_photo">Take a photo</string>
+    <string name="text_photo_saved">Photo saved.</string>
 </resources>

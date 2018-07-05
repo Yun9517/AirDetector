@@ -458,6 +458,9 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     @SuppressLint("SetTextI18n", "SimpleDateFormat")
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
+
+        val finalTempVal = Utils.convertTemperature(this@AirMapActivity, tempVal.toFloat())
+
         val dateFormat = SimpleDateFormat("HH:mm")
 
         textTIMEvalue.text = if(timeVal != 0L) {
@@ -475,7 +478,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
 
         textECO2value.text = "$eco2Val ppm"
-        textTEMPvalue.text = "$tempVal °C"
+        textTEMPvalue.text = finalTempVal
         textHUMIvalue.text = "$humiVal %"
         textLATIvalue.text = latiVal
         textLNGIvalue.text = longiVal

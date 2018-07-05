@@ -2,15 +2,12 @@ package com.microjet.airqi2.CustomAPI
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.Spannable
 import android.text.SpannableString
-import android.widget.Toast
 import android.text.Spanned
-import android.text.style.AbsoluteSizeSpan
 import android.text.style.RelativeSizeSpan
 import android.text.style.SubscriptSpan
-import com.microjet.airqi2.R.id.inCircleValue
-import kotlinx.android.synthetic.main.frg_main.*
+import android.widget.Toast
+import com.microjet.airqi2.PrefObjects
 
 
 object Utils {
@@ -65,6 +62,29 @@ object Utils {
         val msp = SpannableString(inputText)
         msp.setSpan(RelativeSizeSpan(0.75f), inputText.indexOf(" ") + 1, inputText.length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE)  //0.5f表示默認字體大小的一半
         return msp
+    }
+
+    fun convertTemperature(context: Context, celsiusVal: Float): String {
+        val myPref = PrefObjects(context)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        return if(isFahrenheit) {
+            val fahrenheitVal = ((celsiusVal + 40) * 1.8) - 40
+            String.format("%.1f", fahrenheitVal) + " ℉"
+        } else {
+            String.format("%.1f", celsiusVal) + " ℃"
+        }
+    }
+
+    fun convertTemperatureNoUnit(context: Context, celsiusVal: Int): Int {
+        val myPref = PrefObjects(context)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        return if(isFahrenheit) {
+            (((celsiusVal.toFloat() + 40) * 1.8) - 40).toInt()
+        } else {
+            celsiusVal
+        }
     }
 
 }

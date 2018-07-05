@@ -45,6 +45,8 @@ class SettingActivity : AppCompatActivity() {
 
     private var isRunInForeground: Boolean = false
 
+    private var isFahrenhelt: Boolean = true
+
     private lateinit var myPref: PrefObjects
 
     private lateinit var realm: Realm
@@ -121,6 +123,7 @@ class SettingActivity : AppCompatActivity() {
     private fun readPreferences() {
         getDeviceLedSettings()
         getServiceSetting()
+        getTempUnitSetting()
     }
 
     private fun uiSetListener() {
@@ -212,6 +215,10 @@ class SettingActivity : AppCompatActivity() {
                 Utils.toastMakeTextAndShow(this@SettingActivity, "你為什麼要點我QAQ", Toast.LENGTH_SHORT)
             }
         })
+
+        swTempUnit.setOnCheckedChangeListener { _, isChecked ->
+            myPref.setSharePreferenceTempUnitFahrenheit(isChecked)
+        }
     }
 
     private fun getDeviceLedSettings() {
@@ -226,6 +233,12 @@ class SettingActivity : AppCompatActivity() {
         isRunInForeground = myPref.getSharePreferenceServiceForeground()
 
         swAllowServiceForeground.isChecked = isRunInForeground
+    }
+
+    private fun getTempUnitSetting() {
+        isFahrenhelt = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        swTempUnit.isChecked = isFahrenhelt
     }
 
     private fun initActionBar() {
