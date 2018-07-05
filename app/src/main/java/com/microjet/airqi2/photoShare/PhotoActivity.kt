@@ -122,6 +122,9 @@ class PhotoActivity : AppCompatActivity() {
                                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this@PhotoActivity,
                             arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
+                } else {
+                    callCameraActivity()
+                    Log.e("CheckPerm", "Camera Permission Granted...")
                 }
             }
             reqCodeWriteStorage -> {
@@ -129,7 +132,7 @@ class PhotoActivity : AppCompatActivity() {
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     callCameraActivity()
-                    Log.e("CheckPerm", "Camera Permission Granted...")
+                    Log.e("CheckPerm", "Write External Storage Permission Granted...")
                 }
                 return
             }
@@ -379,7 +382,7 @@ class PhotoActivity : AppCompatActivity() {
             out.flush()
             out.close()
             myPref.setSharePreferenceSaveImageCount(imgCount + 1)
-            Utils.toastMakeTextAndShow(this@PhotoActivity, "Save Photo success!", Toast.LENGTH_SHORT)
+            Utils.toastMakeTextAndShow(this@PhotoActivity, getString(R.string.text_photo_saved), Toast.LENGTH_SHORT)
             return file
         } catch (e: FileNotFoundException) {
             e.printStackTrace()

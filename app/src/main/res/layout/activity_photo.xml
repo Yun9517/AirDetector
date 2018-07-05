@@ -14,7 +14,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:background="@drawable/setting_switch_style"
-        android:text="拍照"
+        android:text="@string/button_take_a_photo"
         android:textColor="@color/whiteColor"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

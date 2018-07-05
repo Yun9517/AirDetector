@@ -531,4 +531,7 @@
 
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
     <string name="text_setting_temperature_unit">溫度單位</string>
+    <string name="photo_share_activity">拍照分享</string>
+    <string name="button_take_a_photo">拍照</string>
+    <string name="text_photo_saved">照片已儲存</string>
 </resources>

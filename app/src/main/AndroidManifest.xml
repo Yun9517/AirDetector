@@ -295,7 +295,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".photoShare.PhotoActivity"
-            android:label="拍照分享" />
+            android:label="@string/photo_share_activity" />
 
         <activity android:name=".OpenBrowserActivity" />
     </application>
