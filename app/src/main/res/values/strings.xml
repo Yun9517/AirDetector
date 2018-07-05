@@ -530,4 +530,5 @@
     <string name="select_Date">請選擇日期</string>
 
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
+    <string name="text_setting_temperature_unit">溫度單位</string>
 </resources>

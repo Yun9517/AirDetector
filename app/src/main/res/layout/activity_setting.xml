@@ -172,7 +172,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="10dp"
                     android:layout_weight="1"
-                    android:text="溫度單位"
+                    android:text="@string/text_setting_temperature_unit"
                     android:textColor="@color/blackColor"
                     android:textSize="18sp" />
 
