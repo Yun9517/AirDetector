@@ -65,8 +65,8 @@ class AccountManagementActivity : AppCompatActivity() {
             Log.e(this.javaClass.simpleName, userEmail + userName)
         }
         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        email.setText(share.getString("LoginEmail",""))
-        rememberID.isChecked = share.getBoolean("rememberID",false)
+        email.setText(share.getString("LoginEmail", ""))
+        rememberID.isChecked = share.getBoolean("rememberID", false)
 
         // ****** Create Account Button ******************** //
         newAccount.setOnClickListener {
@@ -101,7 +101,7 @@ class AccountManagementActivity : AppCompatActivity() {
                     //showDialog("請輸入正確的E-mail地址")
                     showDialog(getString(R.string.errorMail_address))
                 }
-            }else{
+            } else {
                 //showDialog("請連接網路")
                 if (isConnected()) {
                     goLoginAsyncTasks().execute(mMyThing)
@@ -115,7 +115,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
         val callbackMannger = CallbackManager.Factory.create()
-        login_buttonFB.setReadPermissions("email","public_profile")
+        login_buttonFB.setReadPermissions("email", "public_profile")
         // Callback registration
         loginButtonFB()
 
@@ -182,7 +182,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 val ccc = "email=" + userEmail + "&password=" + userName
 
 
-                Log.e(this.javaClass.simpleName, "Email&Password"+ccc)
+                Log.e(this.javaClass.simpleName, "Email&Password" + ccc)
                 val body = RequestBody.create(mediaType, ccc)// )
                 val request = Request.Builder()
                         .url(params[0].myAddress)
@@ -213,14 +213,14 @@ class AccountManagementActivity : AppCompatActivity() {
                         share.edit().putString("email", email).apply()
                         val deviceArr: JSONArray = responseContent.getJSONObject("success").getJSONArray("deviceList")
                         share.edit().putString("deviceLi", deviceArr.toString()).apply()
-                        Log.d("DDDD",deviceArr.toString())
+                        Log.d("DDDD", deviceArr.toString())
 
 
                         // ****** 2018/04/10 Remember ID *******************************************************//
                         if (rememberID.isChecked) {
                             share.edit().putBoolean("rememberID", true).apply()
                             share.edit().putString("LoginEmail", email).apply()
-                        }else{
+                        } else {
                             share.edit().putBoolean("rememberID", false).apply()
                             share.edit().putString("LoginEmail", "").apply()
                         }
@@ -232,16 +232,15 @@ class AccountManagementActivity : AppCompatActivity() {
                 } else {
                     runOnUiThread(java.lang.Runnable {
                         params[0].button!!.isEnabled = true
-                        login?.isEnabled=true
+                        login?.isEnabled = true
                     })
                     params[0].myBlean = false
                     Log.e("登入錯誤回來", response.body()!!.string())
                     loginResult = "登入失敗"
                 }
-            }
-            catch (e: Exception) {
+            } catch (e: Exception) {
                 when (e) {
-                    is JSONException ->{
+                    is JSONException -> {
                         e.printStackTrace()
                     }
                     is IOException -> {
@@ -259,7 +258,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 val myToken = shareToken.getString("token", "")
                 showEnableUploadDialog()
                 FirebaseNotifSettingTask().execute(myToken)
-            }else{
+            } else {
                 val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
@@ -288,7 +287,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
 
     //20180312
-    private fun showDialog(msg: String){
+    private fun showDialog(msg: String) {
         val Dialog = android.app.AlertDialog.Builder(this@AccountManagementActivity).create()
         //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
         //Dialog.setTitle("提示")
@@ -369,12 +368,12 @@ class AccountManagementActivity : AppCompatActivity() {
             override fun onSuccess(loginResult: LoginResult) {
                 // App code
                 val userId = loginResult.accessToken.userId
-                val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response -> displayUserInfo(`object`) }
+                val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response -> displayUserInfo(`object`, loginResult) }
                 val parameters = Bundle()
                 parameters.putString("fields", "first_name, last_name, email, id")
                 graphRequest.parameters = parameters
                 graphRequest.executeAsync()
-                Log.e("FB_Token",loginResult.accessToken.token)
+
             }
 
             override fun onCancel() {
@@ -387,7 +386,17 @@ class AccountManagementActivity : AppCompatActivity() {
         })
     }
 
-    fun displayUserInfo(`object`: JSONObject) {
+    //20180705 FB登入，撈回資料，並進行處理
+    private fun displayUserInfo(`object`: JSONObject, loginResult: LoginResult) {
+        try {
+            var FB_Token = loginResult.accessToken.token.toString()
+            AccountFBLoginTask().execute(FB_Token,"facebook")
+            Log.e("FB_Token", loginResult.accessToken.token.toString())
+        } catch (e: JSONException) {
+            e.printStackTrace()
+            Log.e("FB_Token", "登入失敗")
+        }
+        /*
         var first_name = ""
         var last_name = ""
         var email = ""
@@ -401,7 +410,7 @@ class AccountManagementActivity : AppCompatActivity() {
             e.printStackTrace()
         }
         Log.e("testFBandFUCK", first_name + "_" + last_name + "_" + email + "_" + id)
-
+*/
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -410,7 +419,7 @@ class AccountManagementActivity : AppCompatActivity() {
     }
 
 }
-class logInMything ( btn:Button?, blean:Boolean?, myString :String?){
+class logInMything(btn: Button?, blean: Boolean?, myString: String?) {
     var button = btn
     var myBlean = blean
     var myAddress = myString

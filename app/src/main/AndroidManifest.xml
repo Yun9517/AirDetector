@@ -69,7 +69,6 @@
             android:name=".Account.AccountManagementActivity"
             android:excludeFromRecents="true"
             android:label="@string/text_Title_Manifest_account_setting"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />

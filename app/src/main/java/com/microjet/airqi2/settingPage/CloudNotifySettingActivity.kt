@@ -63,7 +63,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
-                updateCloudSetting(25, 35, 660)
+                updateCloudSetting(25, TvocNoseData.firebaseNotifPM25, TvocNoseData.firebaseNotifTVOC)
             }
 
             myPref.setSharePreferenceFirebase(isChecked)
@@ -237,7 +237,8 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}:00"
             }
             25 -> {
-                btnCloudNotify.text = "00:00"
+                btnCloudNotify.text = "12:00"
+                updateCloudSetting(12,  TvocNoseData.firebaseNotifPM25, TvocNoseData.firebaseNotifTVOC)
             }
             else -> {
                 btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}:00"
