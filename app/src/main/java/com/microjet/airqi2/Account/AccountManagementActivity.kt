@@ -15,6 +15,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginResult
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.FirebaseNotifSettingTask
 import com.microjet.airqi2.PrefObjects
@@ -24,6 +25,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -390,7 +392,7 @@ class AccountManagementActivity : AppCompatActivity() {
     private fun displayUserInfo(`object`: JSONObject, loginResult: LoginResult) {
         try {
             var FB_Token = loginResult.accessToken.token.toString()
-            AccountFBLoginTask().execute(FB_Token,"facebook")
+            AccountFBLoginTask(mContext).execute(FB_Token,"facebook")
             Log.e("FB_Token", loginResult.accessToken.token.toString())
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -416,6 +418,17 @@ class AccountManagementActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "fb_Login" -> {
+                Log.e("YOYOYOman","WTFYOYOYOYOYOYOYOYOYOY")
+            }
+        }
     }
 
 }
