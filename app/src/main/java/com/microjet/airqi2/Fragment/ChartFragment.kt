@@ -1,6 +1,5 @@
 package com.microjet.airqi2.Fragment
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
@@ -12,19 +11,21 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.RectF
-import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.os.Handler
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.LocalBroadcastManager
+import android.support.v7.content.res.AppCompatResources
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.TextView
+import android.widget.Toast
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -40,8 +41,8 @@ import com.microjet.airqi2.CustomAPI.MyBarDataSet
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
-import com.microjet.airqi2.TvocNoseData
 import io.realm.Realm
 import io.realm.Sort
 import kotlinx.android.synthetic.main.frg_chart.*
@@ -49,15 +50,10 @@ import org.json.JSONArray
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.io.StringWriter
-import java.io.BufferedWriter
-import java.io.File
-import java.io.FileWriter
-import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 /**
  * Created by B00055 on 2018/2/9.
@@ -286,8 +282,9 @@ class ChartFragment : Fragment() {
                         if (temp1!! == 65528f) {
                             ChartSelectDetectionValue.text = getString(R.string.not_yetDetected)
                         } else {
-                            val newTemp = "%.1f".format(temp1)
-                            ChartSelectDetectionValue.text = "$newTemp ℃"
+                            //val newTemp = "%.1f".format(temp1)
+                            val newTemp = Utils.convertTemperature(mContext!!, temp1)
+                            ChartSelectDetectionValue.text = "$newTemp"
                         }
 
                         changeBackground(temp.toInt())
@@ -328,13 +325,13 @@ class ChartFragment : Fragment() {
                         averageExposureByTime.text = getString(R.string.averageExposure_Daily)
                     }
                     1 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Week)
                     }
                     2 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Month)
                     }
                     3 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
+                        averageExposureByTime.text = getString(R.string.averageExposure_Year)
                     }
                 }
                 btnTextChanged(spinnerPositon)
@@ -637,6 +634,20 @@ class ChartFragment : Fragment() {
         super.onResume()
         //視Radio id畫圖
         //dependRadioIDDrawChart(radioButtonID)
+
+        if(useFor == DEFINE_FRAGMENT_TEMPERATURE) {
+            val myPref = PrefObjects(mContext!!)
+            val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+            if(isFahrenheit) {
+                faceBar.setImageDrawable(AppCompatResources.getDrawable(mContext!!, R.drawable.face_bar_temp_f))
+            } else {
+                faceBar.setImageDrawable(AppCompatResources.getDrawable(mContext!!, R.drawable.face_bar_temp))
+            }
+
+            reloadYAxisLabels()
+        }
+
         btnTextChanged(spinnerPositon)
         drawChart(spinnerPositon)
     }
@@ -661,6 +672,25 @@ class ChartFragment : Fragment() {
             downloadingData = false
             setProgressBarZero()
         }
+    }
+
+    private fun reloadYAxisLabels() {
+        val myPref = PrefObjects(mContext!!)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        val view = RelativeLayoutForLabelTextView as ViewGroup
+        val childCount = view.childCount
+
+        val textUnit = view.getChildAt(childCount - 1) as TextView
+        textUnit.text = if(isFahrenheit) "(°F)" else "(°C)"
+
+        for(i in 1 until childCount - 1) {
+            val textVal = view.getChildAt(i) as TextView
+            textVal.text = Utils.convertTemperatureNoUnit(mContext!!, (-5 + ((i - 1) * 5))).toString()
+        }
+
+        view.invalidate()
+        //Log.e("CHILD", childCount.toString())
     }
 
     private fun getDeviceData() {
@@ -831,8 +861,8 @@ class ChartFragment : Fragment() {
                 result_Yesterday.text = avgTVOC3.toInt().toString() + " ppm"
             }
             DEFINE_FRAGMENT_TEMPERATURE -> {
-                result_Today.text = "%.1f".format(avgValueFloat) + " ℃"
-                result_Yesterday.text = "%.1f".format(avgTVOC3) + " ℃"
+                result_Today.text = Utils.convertTemperature(mContext!!, avgValueFloat)//"%.1f".format(avgValueFloat) + " ℃"
+                result_Yesterday.text = Utils.convertTemperature(mContext!!, avgTVOC3)//"%.1f".format(avgTVOC3) + " ℃"
             }
             DEFINE_FRAGMENT_HUMIDITY -> {
                 result_Today.text = avgValueInt.toString() + " %"

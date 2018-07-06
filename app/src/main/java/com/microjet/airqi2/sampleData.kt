@@ -36,9 +36,16 @@ object sampleData {
         var item = arr[3]
         item.longitude = 121.412718f
         item.latitude = 24.960936f
-        item.longitude = 255f
-        item.latitude = 255f
         item.tvocValue = "5000"
 
+        var item1 = arr[4]
+        item1.longitude = 123.412718f
+        item1.latitude = 26.960936f
+        item1.tvocValue = "500"
+
+        var item2 = arr[10]
+        item2.longitude = 0f
+        item2.latitude = 0f
+        item2.tvocValue = "50000"
     }
 }

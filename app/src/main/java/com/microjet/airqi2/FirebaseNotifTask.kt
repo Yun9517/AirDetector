@@ -3,8 +3,11 @@ package com.microjet.airqi2
 
 import android.os.AsyncTask
 import android.os.Build
+import android.provider.Settings.Global.getString
+import android.support.v4.content.res.TypedArrayUtils.getText
 import android.util.Log
 import android.widget.Toast
+import com.crashlytics.android.Crashlytics.setString
 import okhttp3.*
 import org.json.JSONObject
 
@@ -81,22 +84,22 @@ class FirebaseNotifTask : AsyncTask<String, Int, String>() {
             if (result != null && setting== 4 ) {
                 when (result) {
                     "FirebaseSetting_success" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), " 雲端推播設定完成", Toast.LENGTH_SHORT).show()
+                        if (Build.BRAND != "OPPO") {//雲端推播設定完成
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Setup_Done, Toast.LENGTH_SHORT).show()
                         }
                     }
                     "Error" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "推播錯誤", Toast.LENGTH_SHORT).show()
+                        if (Build.BRAND != "OPPO") {//推播錯誤
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Broadcast_Error, Toast.LENGTH_SHORT).show()
                         }
                     }
-                    "ResponseError" -> {
+                    "ResponseError" -> {//請登入帳號
                         Log.e("ResponseError", "測試中")
-                        Toast.makeText(MyApplication.applicationContext(), "請登入帳號", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_SignIn, Toast.LENGTH_SHORT).show()
                     }
-                    "ReconnectNetwork" -> {
+                    "ReconnectNetwork" -> {//請連結網路
                         if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(MyApplication.applicationContext(), R.string.fireBase_Toast_Network_Connect, Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
