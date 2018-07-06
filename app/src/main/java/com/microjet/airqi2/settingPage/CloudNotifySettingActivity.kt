@@ -13,7 +13,9 @@ import android.view.View
 import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
+import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.FirebaseNotifTask
@@ -149,13 +151,15 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty() && value.toInt() in 220..2200) {
-                    cloudTvocSeekBar.setValue(value.toFloat())
-                    cloudTVOC = value.toInt()
-                    setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
-                    setSeekBarValue(cloudTvocSeekValue, value.toFloat())
-
-
+                if (value.isNotEmpty()) {
+                    if (value.toInt() in 220..2200) {
+                        cloudTvocSeekBar.setValue(value.toFloat())
+                        cloudTVOC = value.toInt()
+                        setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
+                        setSeekBarValue(cloudTvocSeekValue, value.toFloat())
+                    } else {
+                        Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                    }
                 }
             })
 
@@ -180,8 +184,8 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     cloudPM25 = value.toInt()
                     setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue(cloudPM25SeekValue, value.toFloat())
-
-
+                } else {
+                    Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }
             })
 

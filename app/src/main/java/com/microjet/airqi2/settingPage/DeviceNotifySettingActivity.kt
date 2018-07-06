@@ -10,7 +10,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.PrefObjects
@@ -149,6 +151,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     setSeekBarValue(tvocSeekValue, value.toFloat())
 
                     myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
+                } else {
+                    Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }
             })
 
@@ -175,6 +179,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     setSeekBarValue(pm25SeekValue, value.toFloat())
 
                     myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
+                } else {
+                    Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }
             })
 

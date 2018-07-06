@@ -86,8 +86,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountActiveActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme">
@@ -199,8 +197,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FetchDataMain"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />

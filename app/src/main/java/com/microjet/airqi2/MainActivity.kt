@@ -449,7 +449,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         //EventBus.getDefault().unregister(this)
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
     }
 
     // 20171130 add by Raymond 增加權限 Request
