@@ -10,7 +10,9 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.PrefObjects
@@ -27,7 +29,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
 
     private var swAllowNotifyVal: Boolean = false
     private var swMessageVal: Boolean = false
-    private var swViberateVal: Boolean = false
+    private var swVibrateVal: Boolean = false
     private var swSoundVal: Boolean = false
 
     private var tvocSeekBarVal: Int = 660
@@ -149,6 +151,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     setSeekBarValue(tvocSeekValue, value.toFloat())
 
                     myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
+                } else {
+                    Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }
             })
 
@@ -175,6 +179,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     setSeekBarValue(pm25SeekValue, value.toFloat())
 
                     myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
+                } else {
+                    Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }
             })
 
@@ -213,7 +219,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
     private fun getNotificationSettings() {
         swAllowNotifyVal = myPref.getSharePreferenceAllowNotify()
         swMessageVal = myPref.getSharePreferenceAllowNotifyMessage()
-        swViberateVal = myPref.getSharePreferenceAllowNotifyVibrate()
+        swVibrateVal = myPref.getSharePreferenceAllowNotifyVibrate()
         swSoundVal = myPref.getSharePreferenceAllowNotifySound()
 
         tvocSeekBarVal = myPref.getSharePreferenceAllowNotifyTvocValue()
@@ -236,7 +242,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
         }
 
         swMessage.isChecked = swMessageVal
-        swVibrate.isChecked = swViberateVal
+        swVibrate.isChecked = swVibrateVal
         swSound.isChecked = swSoundVal
 
         tvocSeekBar.setValue(tvocSeekBarVal.toFloat())

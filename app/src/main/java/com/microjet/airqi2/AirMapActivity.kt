@@ -190,13 +190,17 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         listener = RealmChangeListener {
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
-            filter.forEach {
-                if (it.latitude == 255f) {
-                    it.latitude = lati
-                    it.longitude = longi
+            if (filter.isNotEmpty()) {
+                lati = filter[0].latitude
+                longi = filter[0].longitude
+                filter.forEach {
+                    if (it.latitude == 255f || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
+                        it.latitude = lati
+                        it.longitude = longi
+                    }
+                    lati = it.latitude
+                    longi = it.longitude
                 }
-                lati = it.latitude
-                longi = it.longitude
             }
             drawMapPolyLine(filter)
             drawLineChart(filter)
@@ -455,7 +459,6 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
         val dateFormat = SimpleDateFormat("HH:mm")
-
         textTIMEvalue.text = if(timeVal != 0L) {
             dateFormat.format(timeVal)
         } else {
@@ -469,9 +472,18 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         } else {
             "$pm25Val μg/m³"
         }
-
+        val myPref = PrefObjects(this)
+        val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
         textECO2value.text = "$eco2Val ppm"
-        textTEMPvalue.text = "$tempVal °C"
+        textTEMPvalue.text = if (tempVal=="-----") {
+            when (isFahrenheit){
+                true->{"$tempVal ℉"}
+                false->{"$tempVal ℃"}
+            }
+        }
+        else{
+            Utils.convertTemperature(this@AirMapActivity, tempVal.toFloat())
+        }
         textHUMIvalue.text = "$humiVal %"
         textLATIvalue.text = latiVal
         textLNGIvalue.text = longiVal

@@ -178,6 +178,7 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/style_login_button"
+            android:visibility="gone"
             android:text="@string/shareData"
             android:textColor="@color/whiteColor" />
 

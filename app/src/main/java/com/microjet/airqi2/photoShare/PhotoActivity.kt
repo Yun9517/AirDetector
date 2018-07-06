@@ -8,11 +8,11 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.location.Geocoder
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.ActivityCompat
-import android.support.v4.content.FileProvider.getUriForFile
+import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,7 +30,6 @@ import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.RealmResults
-import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_photo.*
 import java.io.File
 import java.io.FileNotFoundException
@@ -38,13 +37,12 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 
 
 class PhotoActivity : AppCompatActivity() {
 
     private var addTextBitmap: Bitmap? = null
-    private var fileName = ""
+    private var file: File? = null
 
     private lateinit var realm: Realm
     private var result: RealmResults<AsmDataModel>? = null
@@ -69,7 +67,7 @@ class PhotoActivity : AppCompatActivity() {
         }
 
         btnShare.setOnClickListener {
-            shareContent(fileName)
+            shareContent(file!!)
         }
     }
 
@@ -92,10 +90,12 @@ class PhotoActivity : AppCompatActivity() {
 
             addTextBitmap = if (lastData != null) {
                 val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+
+                val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
                 setLayout2(rotatedBitmap, lastLocation,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
-                        "${lastData.tempValue} °C")
+                        tempVal, lastData.created_time)
                 /*setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
@@ -105,11 +105,11 @@ class PhotoActivity : AppCompatActivity() {
                         "${lastData.humiValue} %")*/
             } else {
                 //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
-                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----")
+                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----", System.currentTimeMillis())
             }
             //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
             this.imageView.setImageBitmap(addTextBitmap)
-            fileName = savePicture(addTextBitmap!!)
+            file = savePicture(addTextBitmap!!)
             this.btnShare.visibility = View.VISIBLE
         }
     }
@@ -118,11 +118,21 @@ class PhotoActivity : AppCompatActivity() {
                                             permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
             reqCodeCamera -> {
+                if(ActivityCompat.checkSelfPermission(this@PhotoActivity,
+                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this@PhotoActivity,
+                            arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
+                } else {
+                    callCameraActivity()
+                    Log.e("CheckPerm", "Camera Permission Granted...")
+                }
+            }
+            reqCodeWriteStorage -> {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     callCameraActivity()
-                    Log.e("CheckPerm", "Camera Permission Granted...")
+                    Log.e("CheckPerm", "Write External Storage Permission Granted...")
                 }
                 return
             }
@@ -175,10 +185,10 @@ class PhotoActivity : AppCompatActivity() {
         realm = Realm.getDefaultInstance()
 
         //現在時間實體毫秒
-        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
+        //val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
         //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
-        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        //val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
+        //val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
         result = realm.where(AsmDataModel::class.java).findAll()
                 //.between("Created_time", startTime, endTime)
@@ -187,24 +197,27 @@ class PhotoActivity : AppCompatActivity() {
         return result?.lastOrNull()
     }
 
-    private fun shareContent(imageFileName: String) {
-        val sharePath = "${android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII"
-        val file = File(sharePath, imageFileName)
-        val contentUri = getUriForFile(applicationContext, packageName, file)
+    private fun shareContent(imageFile: File) {
+        try {
+            val photoURI = FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
+            Log.e("SHARE", photoURI.path)
 
-        val intent = Intent(Intent.ACTION_SEND)
+            val intent = Intent(Intent.ACTION_SEND)
 
-        intent.data = contentUri
-        intent.type = "image/*"
-        intent.putExtra(Intent.EXTRA_STREAM, contentUri)  //圖片的實體路徑
+            intent.data = photoURI
+            intent.type = "image/*"
+            intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
 
-        val chooser = Intent.createChooser(intent, "Share")
+            val chooser = Intent.createChooser(intent, "Share")
 
-        //給目錄臨時的權限
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        // Verify the intent will resolve to at least one activity
-        if (intent.resolveActivity(packageManager) != null) {
-            startActivityForResult(chooser, 0)
+            //給目錄臨時的權限
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            // Verify the intent will resolve to at least one activity
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivityForResult(chooser, 0)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 
@@ -215,7 +228,7 @@ class PhotoActivity : AppCompatActivity() {
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 
-    private fun setLayout(background: Bitmap, mode: Int,
+    /*private fun setLayout(background: Bitmap, mode: Int,
                           tvocText: String, pm25Text: String, pm10Text: String,
                           eco2Text: String, tempText: String, thumiText: String): Bitmap {
 
@@ -275,11 +288,11 @@ class PhotoActivity : AppCompatActivity() {
         //Render this view (and all of its children) to the given Canvas
         view.draw(c)
         return bitmap
-    }
+    }*/
 
     @SuppressLint("SimpleDateFormat")
     private fun setLayout2(background: Bitmap, cityText: String,
-                           tvocText: String, pm25Text: String, tempText: String): Bitmap {
+                           tvocText: String, pm25Text: String, tempText: String, tempDate: Long): Bitmap {
 
         val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
@@ -294,17 +307,17 @@ class PhotoActivity : AppCompatActivity() {
         city.text = cityText
 
         val tvoc = view.findViewById<View>(R.id.tvocValue) as TextView
-        tvoc.text = tvocText
+        tvoc.text = Utils.setTextSubscript(tvocText)
 
         val pm25 = view.findViewById<View>(R.id.pm25Value) as TextView
-        pm25.text = pm25Text
+        pm25.text = Utils.setTextSubscript(pm25Text)
 
         val temp = view.findViewById<View>(R.id.tempValue) as TextView
-        temp.text = tempText
+        temp.text = Utils.setTextSubscript(tempText)
 
         val date = view.findViewById<View>(R.id.textDate) as TextView
         val dateFormat = SimpleDateFormat("HH:mm\nMM/dd")
-        date.text = dateFormat.format(System.currentTimeMillis())
+        date.text = dateFormat.format(tempDate)
 
         //Provide it with a layout params. It should necessarily be wrapping the
         //content as we not really going to have a parent for it.
@@ -349,18 +362,20 @@ class PhotoActivity : AppCompatActivity() {
         }
     }
 
-    private fun savePicture(bitmap: Bitmap): String {
-        val createPath = File("${android.os.Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII")
+    @SuppressLint("SimpleDateFormat")
+    private fun savePicture(bitmap: Bitmap): File? {
+        val createPath = File("${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)}/ADDWII")
         createPath.mkdir()
         Log.e("Photo", createPath.path)
 
-        val myPref = PrefObjects(this@PhotoActivity)
         try {
             // 取得外部儲存裝置路徑
             val path = createPath.path
             // 開啟檔案
-            val imgCount = myPref.getSharePreferenceSaveImageCount()
-            val file = File(path, "Image_$imgCount.jpg")
+            //val imgCount = myPref.getSharePreferenceSaveImageCount()
+            val dateFormat = SimpleDateFormat("yyyyMMdd_HHmmss")
+            val dateAndTime = dateFormat.format(System.currentTimeMillis())
+            val file = File(path, "ADDWII_$dateAndTime.jpg")
             // 開啟檔案串流
             val out = FileOutputStream(file)
             // 將 Bitmap壓縮成指定格式的圖片並寫入檔案串流
@@ -368,17 +383,14 @@ class PhotoActivity : AppCompatActivity() {
             // 刷新並關閉檔案串流
             out.flush()
             out.close()
-            myPref.setSharePreferenceSaveImageCount(imgCount + 1)
-            Utils.toastMakeTextAndShow(this@PhotoActivity, "Save Photo success!", Toast.LENGTH_SHORT)
-            return file.name
+            Utils.toastMakeTextAndShow(this@PhotoActivity, getString(R.string.text_photo_saved), Toast.LENGTH_SHORT)
+            return file
         } catch (e: FileNotFoundException) {
-            // TODO Auto-generated catch block
             e.printStackTrace()
-            return "error"
+            return null
         } catch (e: IOException) {
-            // TODO Auto-generated catch block
             e.printStackTrace()
-            return "error"
+            return null
         }
     }
 }

@@ -87,8 +87,6 @@
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountActiveActivity"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme">
@@ -101,12 +99,12 @@
         <!-- authorities="你的包名+fileprovider" -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.microjet.airqi2"
+            android:authorities="com.microjet.airqi2.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/filepaths" />
+                android:resource="@xml/file_path" />
         </provider>
 
         <activity
@@ -200,8 +198,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".FetchDataMain"
-            android:excludeFromRecents="true"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
@@ -291,10 +287,14 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".photoShare.CameraActivity" />
+        <activity android:name=".photoShare.CameraActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".photoShare.PhotoActivity"
-            android:label="拍照分享" />
-        <activity android:name=".OpenBrowserActivity"></activity>
+            android:label="@string/photo_share_activity" />
+
+        <activity android:name=".OpenBrowserActivity" />
     </application>
 
 </manifest>

@@ -175,4 +175,36 @@ class PrefObjects(context: Context) {
     fun setSharePreferenceSaveImageCount(value: Int) {
         share.edit().putInt(SavePreferences.SETTING_PHOTO_COUNT, value).apply()
     }
+
+    fun getSharePreferenceAllowBroadcastMessage(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_MESSAGE, false)
+    }
+
+    fun setSharePreferenceAllowBroadcastMessage(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_MESSAGE, value).apply()
+    }
+
+    fun getSharePreferenceAllowBroadcastVibrate(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_VIBRATION, false)
+    }
+
+    fun setSharePreferenceAllowBroadcastVibrate(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_VIBRATION, value).apply()
+    }
+
+    fun getSharePreferenceAllowBroadcastSound(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_SOUND, false)
+    }
+
+    fun setSharePreferenceAllowBroadcastSound(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_SOUND, value).apply()
+    }
+
+    fun getSharePreferenceTempUnitFahrenheit(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, false)
+    }
+
+    fun setSharePreferenceTempUnitFahrenheit(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, value).apply()
+    }
 }

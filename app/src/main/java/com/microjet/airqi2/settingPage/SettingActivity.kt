@@ -22,6 +22,7 @@ import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.TvocNoseData.calObject
 import com.microjet.airqi2.URL.AirActionTask
+import com.microjet.airqi2.photoShare.PhotoActivity
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
@@ -44,6 +45,8 @@ class SettingActivity : AppCompatActivity() {
     private var swLedOffLinePowerVal: Boolean = true
 
     private var isRunInForeground: Boolean = false
+
+    private var isFahrenhelt: Boolean = true
 
     private lateinit var myPref: PrefObjects
 
@@ -121,6 +124,7 @@ class SettingActivity : AppCompatActivity() {
     private fun readPreferences() {
         getDeviceLedSettings()
         getServiceSetting()
+        getTempUnitSetting()
     }
 
     private fun uiSetListener() {
@@ -208,10 +212,17 @@ class SettingActivity : AppCompatActivity() {
 
         aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 400) {
             override fun onMultipleClick(v: View) {
+                /*
                 soundPool!!.play(soundsMap!![SOUND1]!!, 1f, 1f, 0, 0, 1f)
                 Utils.toastMakeTextAndShow(this@SettingActivity, "你為什麼要點我QAQ", Toast.LENGTH_SHORT)
+                */
+                startActivity(Intent(this@SettingActivity, PhotoActivity::class.java))
             }
         })
+
+        swTempUnit.setOnCheckedChangeListener { _, isChecked ->
+            myPref.setSharePreferenceTempUnitFahrenheit(isChecked)
+        }
     }
 
     private fun getDeviceLedSettings() {
@@ -226,6 +237,12 @@ class SettingActivity : AppCompatActivity() {
         isRunInForeground = myPref.getSharePreferenceServiceForeground()
 
         swAllowServiceForeground.isChecked = isRunInForeground
+    }
+
+    private fun getTempUnitSetting() {
+        isFahrenhelt = myPref.getSharePreferenceTempUnitFahrenheit()
+
+        swTempUnit.isChecked = isFahrenhelt
     }
 
     private fun initActionBar() {

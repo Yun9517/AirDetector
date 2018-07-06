@@ -228,7 +228,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.e(TAG, "call onCreate")
 
         myPref = PrefObjects(this)
-        Log.e("Firebase", FirebaseInstanceId.getInstance().token)
+        Log.e("Firebase", FirebaseInstanceId.getInstance().token.toString())
         uiFindViewById()
         viewPagerInit()
         initActionBar()
@@ -364,6 +364,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             Log.e("偵測是否成功","結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
+        //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
     }
@@ -448,7 +449,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         //EventBus.getDefault().unregister(this)
-        FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
+        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -709,9 +710,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //                    clickCount++
 //                }
 //            }
-            R.id.bleStatus -> {
-                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
-            }
+//            R.id.bleStatus -> {
+//                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
+//            }
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
