@@ -161,6 +161,15 @@
     <string name="averageTemperature_Daily">平均温度</string>
     <string name="averageHumidity_Daily">平均湿度</string>
 
+    <string name="daily">日</string>
+    <string name="weekly">周</string>
+    <string name="monthly">月</string>
+    <string name="annual">年</string>
+    <string name="average">平均</string>
+    <string name="exposure">曝露浓度</string>
+    <string name="temp">温度</string>
+    <string name="humi">湿度</string>
+
     <string name="text_setting_test_cycle">测试週期选择</string>
     <string name="text_setting_allow_notification">裝置侦测通知</string>
     <string name="text_setting_allow_privacy">隱私设定</string>

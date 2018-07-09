@@ -114,6 +114,8 @@ class ChartFragment : Fragment() {
 
     private var errorTime = 0
 
+    private val localTempUnit = Locale.getDefault().getLanguage()
+
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
         chart_line.yChartInterval.size
@@ -1472,21 +1474,26 @@ class ChartFragment : Fragment() {
     }
 
     private fun bottomTitleChange(position: Int?) {
-        var date = "日"
-        var unit = "曝露濃度"
+        var date = getString(R.string.daily)
+        var average = getString(R.string.average)
+        var unit = getString(R.string.exposure)
         when (position) {
-            0 -> { date = "日" }
-            1 -> { date = "週" }
-            2 -> { date = "月" }
-            3 -> { date = "年" }
+            0 -> { date = getString(R.string.daily) }
+            1 -> { date = getString(R.string.weekly) }
+            2 -> { date = getString(R.string.monthly) }
+            3 -> { date = getString(R.string.annual) }
         }
         when (useFor) {
-            DEFINE_FRAGMENT_TVOC -> {unit = "曝露濃度"}
-            DEFINE_FRAGMENT_ECO2 -> {unit = "曝露濃度" }
-            DEFINE_FRAGMENT_TEMPERATURE -> { unit = "溫度" }
-            DEFINE_FRAGMENT_HUMIDITY -> { unit = "溼度" }
-            DEFINE_FRAGMENT_PM25 -> {unit = "曝露濃度"  }
+            //DEFINE_FRAGMENT_TVOC -> {unit = "曝露濃度"}
+            //DEFINE_FRAGMENT_ECO2 -> {unit = "曝露濃度" }
+            DEFINE_FRAGMENT_TEMPERATURE -> { unit = getString(R.string.temp) }
+            DEFINE_FRAGMENT_HUMIDITY -> { unit = getString(R.string.humi) }
+            else -> { unit = getString(R.string.exposure) }
         }
-        averageExposureByTime.text = date + "平均" + unit
+        if(localTempUnit == "en") {
+            averageExposureByTime.text = average +" "+ unit
+        } else {
+            averageExposureByTime.text = date + average + unit
+        }
     }
 }
