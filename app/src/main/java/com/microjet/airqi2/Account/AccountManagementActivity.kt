@@ -25,6 +25,7 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.json.JSONArray
 import org.json.JSONException
@@ -121,6 +122,16 @@ class AccountManagementActivity : AppCompatActivity() {
         // Callback registration
         loginButtonFB()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun initActionBar() {
@@ -392,7 +403,7 @@ class AccountManagementActivity : AppCompatActivity() {
     private fun displayUserInfo(`object`: JSONObject, loginResult: LoginResult) {
         try {
             var FB_Token = loginResult.accessToken.token.toString()
-            AccountFBLoginTask(mContext).execute(FB_Token,"facebook")
+            AccountFBLoginTask().execute(FB_Token, "facebook")
             Log.e("FB_Token", loginResult.accessToken.token.toString())
         } catch (e: JSONException) {
             e.printStackTrace()
@@ -425,13 +436,14 @@ class AccountManagementActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "fb_Login" -> {
-                Log.e("YOYOYOman","WTFYOYOYOYOYOYOYOYOYOY")
+            "fb Login" -> {
+
             }
         }
     }
 
 }
+
 class logInMything(btn: Button?, blean: Boolean?, myString: String?) {
     var button = btn
     var myBlean = blean
