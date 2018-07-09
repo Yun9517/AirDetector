@@ -177,7 +177,7 @@
     <string name="text_tvoc_meter_660ppb">660</string>
     <string name="text_navi_q_and_a">Q and A</string>
     <string name="text_navi_tour">Guide Tour</string>
-    <string name="text_message_heating">Please wait...</string>
+    <string name="text_message_heating">Please wait…%s sec.</string>
 
     <!--    Permissions    -->
     <string name="permission_rationale_location">Access to the location service is required to demonstrate the \'my location\' feature, which shows your current location on the map.</string>
