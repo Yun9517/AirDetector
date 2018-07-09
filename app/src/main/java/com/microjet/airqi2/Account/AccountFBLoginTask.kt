@@ -62,7 +62,7 @@ class AccountFBLoginTask() : AsyncTask<String, Int, String>() {
                         Log.e(TAG, " \"ResponseError!!\"")
                     }
                     "successNetwork" -> {
-                        val urlEvent = BleEvent("fb Login")
+                        val urlEvent = BleEvent("success Login")
                         EventBus.getDefault().post(urlEvent)
                     }
                 }

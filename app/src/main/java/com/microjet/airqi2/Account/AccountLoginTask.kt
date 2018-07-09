@@ -1,24 +1,33 @@
 package com.microjet.airqi2.Account
 
+import android.app.ProgressDialog
 import android.content.Context
-import android.content.Intent
 import android.os.AsyncTask
 import android.util.Log
+import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.TvocNoseData
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 
 /**
  * Created by B00190 on 2018/6/22.
  */
-class AccountLoginTask(mContext: Context?) : AsyncTask<String, Int, String>() {
+class AccountLoginTask(content: Context?) : AsyncTask<String, Int, String>() {
     private val TAG: String = "AccountLoginTask"
-    private val mContext = mContext
+    private var waitDialog: ProgressDialog? = null
+    private val mcontent = content
+
     override fun onPreExecute() {
         super.onPreExecute()
-
+        waitDialog = ProgressDialog(mcontent)
+        waitDialog?.setMessage("先別提安麗，有聽過Addwii嗎?")
+        waitDialog?.setCancelable(false)
+        waitDialog?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
+        waitDialog?.show()
     }
 
 
@@ -37,19 +46,16 @@ class AccountLoginTask(mContext: Context?) : AsyncTask<String, Int, String>() {
                 .build()
         val response = client.newCall(request).execute()
         if (response.isSuccessful) {
-            loginResult = "成功登入"
+            loginResult = "successNetwork"
             val res: String = response.body()!!.string().toString()
             Log.e(TAG, res)
             val returnResult = JSONObject(res).getJSONObject("success")
-            val token = returnResult.getString("token").toString()
-            val name = returnResult.getJSONObject("userData").getString("name").toString()
-            val email = returnResult.getJSONObject("userData").getString("email").toString()
-            val deviceArr = returnResult.getJSONArray("deviceList")
-            //Log.e(TAG, token) Log.e(TAG, name) Log.e(TAG, email) Log.e(TAG,deviceArr.toString())
-            //val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-
+            TvocNoseData.cloudToken = returnResult.getString("token").toString()
+            TvocNoseData.cloudName = returnResult.getJSONObject("userData").getString("name").toString()
+            TvocNoseData.cloudEmail = returnResult.getJSONObject("userData").getString("email").toString()
+            TvocNoseData.cloudDeviceArr = returnResult.getJSONArray("deviceList").toString()
         } else {
-            loginResult = "登入失敗"
+            loginResult = "ResponseError"
         }
         return loginResult
     }
@@ -59,18 +65,18 @@ class AccountLoginTask(mContext: Context?) : AsyncTask<String, Int, String>() {
 
     }
 
-
     override fun onPostExecute(result: String?) {
         Log.e(TAG, result)
-        if (result == "成功登入") {
-            val intent = Intent(mContext, AccountActiveActivity::class.java)
-            mContext?.startActivity(intent)
-
-        }else if(result == "登入失敗"){
-
+        if (result == "successNetwork") {
+            val urlEvent = BleEvent("success Login")
+            EventBus.getDefault().post(urlEvent)
+            waitDialog?.dismiss()
+        } else if (result == "ResponseError") {
+            val urlEvent = BleEvent("wrong Login")
+            EventBus.getDefault().post(urlEvent)
+            waitDialog?.dismiss()
         }
     }
-
 
 
 }
