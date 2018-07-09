@@ -158,11 +158,10 @@
     <string name="averageTemperature_Daily">Average Temperature</string>
     <string name="averageHumidity_Daily">Average Humidity</string>
 
-    <string name="daily">Daily</string>
-    <string name="weekly">Weekly</string>
-    <string name="monthly">Monthly</string>
-    <string name="annual">Annual</string>
-    <string name="average">Average</string>
+    <string name="daily">Average\ \ '</string>
+    <string name="weekly">Average\ \ '</string>
+    <string name="monthly">Average\ \ '</string>
+    <string name="annual">Average\ \ '</string>
     <string name="exposure">Exposure</string>
     <string name="temp">Temperature</string>
     <string name="humi">Humidity</string>

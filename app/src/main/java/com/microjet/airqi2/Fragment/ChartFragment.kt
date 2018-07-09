@@ -114,8 +114,6 @@ class ChartFragment : Fragment() {
 
     private var errorTime = 0
 
-    private val localTempUnit = Locale.getDefault().getLanguage()
-
     private fun setImageBarPosition() {
         chart_line.data = getBarData()
         chart_line.yChartInterval.size
@@ -1475,7 +1473,6 @@ class ChartFragment : Fragment() {
 
     private fun bottomTitleChange(position: Int?) {
         var date = getString(R.string.daily)
-        var average = getString(R.string.average)
         var unit = getString(R.string.exposure)
         when (position) {
             0 -> { date = getString(R.string.daily) }
@@ -1490,10 +1487,6 @@ class ChartFragment : Fragment() {
             DEFINE_FRAGMENT_HUMIDITY -> { unit = getString(R.string.humi) }
             else -> { unit = getString(R.string.exposure) }
         }
-        if(localTempUnit == "en") {
-            averageExposureByTime.text = average +" "+ unit
-        } else {
-            averageExposureByTime.text = date + average + unit
-        }
+            averageExposureByTime.text = date + unit
     }
 }
