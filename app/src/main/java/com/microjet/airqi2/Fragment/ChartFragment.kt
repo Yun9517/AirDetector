@@ -320,20 +320,6 @@ class ChartFragment : Fragment() {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 view?.textAlignment = View.TEXT_ALIGNMENT_CENTER
                 spinnerPositon = position
-                when (spinnerPositon) {
-                    0 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Daily)
-                    }
-                    1 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Week)
-                    }
-                    2 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Month)
-                    }
-                    3 -> {
-                        averageExposureByTime.text = getString(R.string.averageExposure_Year)
-                    }
-                }
                 btnTextChanged(spinnerPositon)
                 drawChart(spinnerPositon)
 
@@ -550,6 +536,7 @@ class ChartFragment : Fragment() {
                 btnCallDatePicker.text = dateFormat.format(calObject.time)
             }
         }
+        bottomTitleChange(position)
 
     }
 
@@ -1482,5 +1469,24 @@ class ChartFragment : Fragment() {
         cal.clear(Calendar.SECOND) //這幾行是新寫法，好用
         cal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
         return cal
+    }
+
+    private fun bottomTitleChange(position: Int?) {
+        var date = "日"
+        var unit = "曝露濃度"
+        when (position) {
+            0 -> { date = "日" }
+            1 -> { date = "週" }
+            2 -> { date = "月" }
+            3 -> { date = "年" }
+        }
+        when (useFor) {
+            DEFINE_FRAGMENT_TVOC -> {unit = "曝露濃度"}
+            DEFINE_FRAGMENT_ECO2 -> {unit = "曝露濃度" }
+            DEFINE_FRAGMENT_TEMPERATURE -> { unit = "溫度" }
+            DEFINE_FRAGMENT_HUMIDITY -> { unit = "溼度" }
+            DEFINE_FRAGMENT_PM25 -> {unit = "曝露濃度"  }
+        }
+        averageExposureByTime.text = date + "平均" + unit
     }
 }
