@@ -51,6 +51,7 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
@@ -59,7 +60,6 @@ import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
 import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
-import com.microjet.airqi2.photoShare.PhotoActivity
 import com.microjet.airqi2.settingPage.SettingActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm

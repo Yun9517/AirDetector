@@ -16,7 +16,7 @@ import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.FirebaseNotifSettingTask
+import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData

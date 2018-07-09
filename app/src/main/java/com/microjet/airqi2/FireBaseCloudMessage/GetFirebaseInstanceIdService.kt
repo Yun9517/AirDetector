@@ -1,4 +1,4 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.FireBaseCloudMessage
 
 import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.iid.FirebaseInstanceIdService

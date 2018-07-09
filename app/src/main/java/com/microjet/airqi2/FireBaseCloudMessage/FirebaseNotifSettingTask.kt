@@ -1,10 +1,13 @@
-package com.microjet.airqi2
+package com.microjet.airqi2.FireBaseCloudMessage
 
 
 import android.os.AsyncTask
 import android.os.Build
 import android.util.Log
 import android.widget.Toast
+import com.microjet.airqi2.MyApplication
+import com.microjet.airqi2.R
+import com.microjet.airqi2.TvocNoseData
 import okhttp3.*
 import org.json.JSONObject
 
@@ -60,7 +63,7 @@ class FirebaseNotifSettingTask : AsyncTask<String, Int, String>() {
                     TvocNoseData.firebaseNotiftime = jsonObj1.getInt("time")
                     TvocNoseData.firebaseNotifTVOC = jsonObj1.getInt("tvoc")
                     TvocNoseData.firebaseNotifPM25 = jsonObj1.getInt("pm25")
-                    Log.e("抓取設定", "_"+TvocNoseData.firebaseNotiftime+"_"+ TvocNoseData.firebaseNotifPM25+"_" +TvocNoseData.firebaseNotifTVOC )
+                    Log.e("抓取設定", "_"+ TvocNoseData.firebaseNotiftime +"_"+ TvocNoseData.firebaseNotifPM25 +"_" + TvocNoseData.firebaseNotifTVOC)
                     return "FirebaseSetting_success"
 
                 }else{

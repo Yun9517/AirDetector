@@ -237,7 +237,7 @@
 
         <receiver android:name=".BroadReceiver.NotificationButtonReceiver" />
 
-        <service android:name=".GetFirebaseMessagingService">
+        <service android:name=".FireBaseCloudMessage.GetFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -281,7 +281,7 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".GetFirebaseInstanceIdService">
+            android:name=".FireBaseCloudMessage.GetFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
@@ -312,7 +312,7 @@
         <activity android:name=".photoShare.PhotoActivity"
             android:label="@string/photo_share_activity" />
 
-        <activity android:name=".OpenBrowserActivity" />
+        <activity android:name=".FireBaseCloudMessage.OpenBrowserActivity" />
 
     </application>
 
