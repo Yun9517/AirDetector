@@ -158,6 +158,7 @@ class AccountActiveActivity : AppCompatActivity() {
 //            }
 
         // when you click on the button, show DatePickerDialog that is set with OnDateSetListener
+        /*
         shareData!!.setOnClickListener {
             var cal = Calendar.getInstance()
             val dpd = DatePickerDialog(this!!, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -168,6 +169,7 @@ class AccountActiveActivity : AppCompatActivity() {
             dpd.setMessage(getString(R.string.select_Date))//請選擇日期
             dpd.show()
         }
+        */
 
         //雲端DATA DOWNLOAD 按鈕事件
         downloadData.setOnClickListener {

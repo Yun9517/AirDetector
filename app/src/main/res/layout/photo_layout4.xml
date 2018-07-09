@@ -5,7 +5,7 @@
     android:id="@+id/pic_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_green_dark">
+    android:background="@color/whiteColor">
 
     <ImageView
         android:id="@+id/imgBg"
@@ -19,6 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
