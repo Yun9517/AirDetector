@@ -35,7 +35,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     //20180515
     private var swCloudNotifyVal: Boolean = false
     //2018/07/04
-    private var swMessageVal: Boolean = false
     private var swVibrateVal: Boolean = false
     private var swSoundVal: Boolean = false
 
@@ -85,10 +84,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             }
 
             myPref.setSharePreferenceFirebase(isChecked)
-        }
-
-        sw_cloud_Message.setOnCheckedChangeListener { _, isChecked ->
-            myPref.setSharePreferenceAllowBroadcastMessage(isChecked)
         }
 
         sw_cloud_Vibrate.setOnCheckedChangeListener { _, isChecked ->
@@ -231,7 +226,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
 
     private fun getFCMSettings() {
         swCloudNotifyVal = myPref.getSharePreferenceFirebase()
-        swMessageVal = myPref.getSharePreferenceAllowBroadcastMessage()
         swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
         swSoundVal = myPref.getSharePreferenceAllowBroadcastSound()
 
@@ -239,7 +233,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         if (swCloudNotifyVal) {
             cgCloudNotify.visibility = View.VISIBLE
             cgCloudSeekbar.visibility = View.VISIBLE
-            // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
+            // 2018/07/04 Add toggle Button: sw_cloud_Vibrate, sw_cloud_Sound
             cg_cloud_Message.visibility = View.VISIBLE
             cg_cloud_Vibration.visibility = View.VISIBLE
             cg_cloud_Sound.visibility = View.VISIBLE
@@ -247,14 +241,13 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         } else {
             cgCloudNotify.visibility = View.GONE
             cgCloudSeekbar.visibility = View.GONE
-            // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
+            // 2018/07/04 Add toggle Button: sw_cloud_Vibrate, sw_cloud_Sound
             cg_cloud_Message.visibility = View.GONE
             cg_cloud_Vibration.visibility = View.GONE
             cg_cloud_Sound.visibility = View.GONE
             indexTitleGroup.visibility = View.GONE
         }
-        // 2018/07/04 Add toggle Button: sw_cloud_Message, sw_cloud_Vibrate, sw_cloud_Sound
-        sw_cloud_Message.isChecked = swMessageVal
+        // 2018/07/04 Add toggle Button: sw_cloud_Vibrate, sw_cloud_Sound
         sw_cloud_Vibrate.isChecked = swVibrateVal
         sw_cloud_Sound.isChecked = swSoundVal
     }

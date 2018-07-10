@@ -180,10 +180,6 @@ class PrefObjects(context: Context) {
         return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_MESSAGE, false)
     }
 
-    fun setSharePreferenceAllowBroadcastMessage(value: Boolean) {
-        share.edit().putBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_MESSAGE, value).apply()
-    }
-
     fun getSharePreferenceAllowBroadcastVibrate(): Boolean {
         return share.getBoolean(SavePreferences.SETTING_ALLOW_BROADCAST_VIBRATION, false)
     }
