@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import android.os.PowerManager
 import android.support.annotation.RequiresApi
@@ -77,7 +78,7 @@ class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelI
          }
     }
 
-    private fun makeNotificationShow( iconID: Bitmap, title: String, text: String?) {
+    private fun makeNotificationShow(iconID: Bitmap, title: String, text: String?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
@@ -96,7 +97,8 @@ class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelI
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(mContext)
                 .setChannelId(mChannelID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.icon_leaf)
+                .setColor(Color.parseColor("#76cdc5"))
                 .setLargeIcon(iconID)
                 .setContentTitle(title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(title))
