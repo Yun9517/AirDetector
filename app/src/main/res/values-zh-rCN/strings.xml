@@ -187,6 +187,7 @@
     <string name="text_navi_tour">操作导览</string>
     <string name="title_activity_tour">TourActivity</string>
     <string name="text_message_heating">请稍候...</string>
+    <string name="text_second">秒</string>
     <string name="title_activity_air_map1">Map</string>
     <string name="text_setting_allow_firebase_notification">云端通知允许</string>
     <string name="text_setting_allow_firebase_settime">设定时间</string>

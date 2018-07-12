@@ -917,7 +917,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (preheatCountDownString != "255") {
             preheatCountDownInt = (120 - preheatCountDownString.toInt())
             Log.v(TAG, "Preheat Count Down: $preheatCountDownInt")
-            waitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + "秒"
+            waitLayout?.findViewById<TextView>(R.id.textView15)?.text = resources.getString(R.string.text_message_heating) + preheatCountDownInt.toString() + resources.getString(R.string.text_second)
             //if (waitLayout!!.visibility == View.VISIBLE) {
             //    heatingPanelHide()
             //}
