@@ -288,24 +288,25 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     private fun setFCMSettingView() {
         when (TvocNoseData.firebaseNotiftime) {
             in 0..9 -> {
-                btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}"
+                btnCloudNotify.text = "0${cloudTime}"
             }
             25 -> {
                 btnCloudNotify.text = "12"
+                cloudTime = 12
             }
             else -> {
-                btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}"
+                btnCloudNotify.text = "${cloudTime}"
             }
         }
         //TVOC TEXTVIEW VALUE
-        cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
-        cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
+        cloudTvocSeekValue.text = cloudTVOC.toString()
+        cloudTvocSeekBar.setValue(cloudTVOC.toFloat())
         //PM25 TEXTVIEW VALUE
-        cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
-        cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
+        cloudPM25SeekValue.text = cloudPM25.toString()
+        cloudPM25SeekBar.setValue(cloudPM25.toFloat())
         //SEEKBARCOLOR
-        setSeekBarColor(cloudTvocSeekBar, TvocNoseData.firebaseNotifTVOC.toFloat(), true)
-        setSeekBarColor(cloudPM25SeekBar, TvocNoseData.firebaseNotifPM25.toFloat(), false)
+        setSeekBarColor(cloudTvocSeekBar, cloudTVOC.toFloat(), true)
+        setSeekBarColor(cloudPM25SeekBar, cloudPM25.toFloat(), false)
     }
 
     @SuppressLint("SetTextI18n")
@@ -313,7 +314,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
         myHourPicker.minValue = 0
-        myHourPicker.value = TvocNoseData.firebaseNotiftime
+        myHourPicker.value = cloudTime
         val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     cloudTime = myHourPicker.value
@@ -351,11 +352,11 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     fun onEvent(bleEvent: BleEvent) {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
+        var newFrage: CheckFragment? = null
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0)
+                newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0)
                 newFrage.setCancelable(false)
-                newFrage.show(fragmentManager, "dialog")
             }
             "close Wait Dialog" -> {
                 val previousDialog = fragmentManager.findFragmentByTag("dialog")
@@ -367,17 +368,17 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             "FirebaseSetting_success" -> {
                 myPref.setSharePreferenceFirebase(swCloudNotifyVal)
                 setFCMSettingView()
-                val newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1)
-                newFrage.show(fragmentManager, "dialog")
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1)
             }
             "ResponseError" -> {
-                val newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1)
-                newFrage.show(fragmentManager, "dialog")
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1)
             }
             "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
-                newFrage.show(fragmentManager, "dialog")
+                newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
             }
+        }
+        if( TvocNoseData.firebaseNotiftime != 25){
+            newFrage?.show(fragmentManager, "dialog")
         }
     }
 }
