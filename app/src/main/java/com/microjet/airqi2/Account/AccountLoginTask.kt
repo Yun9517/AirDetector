@@ -1,7 +1,5 @@
 package com.microjet.airqi2.Account
 
-import android.app.ProgressDialog
-import android.content.Context
 import android.os.AsyncTask
 import android.util.Log
 import com.microjet.airqi2.BleEvent
@@ -16,18 +14,13 @@ import org.json.JSONObject
 /**
  * Created by B00190 on 2018/6/22.
  */
-class AccountLoginTask(content: Context?) : AsyncTask<String, Int, String>() {
+class AccountLoginTask() : AsyncTask<String, Int, String>() {
     private val TAG: String = "AccountLoginTask"
-    private var waitDialog: ProgressDialog? = null
-    private val mcontent = content
 
     override fun onPreExecute() {
         super.onPreExecute()
-        waitDialog = ProgressDialog(mcontent)
-        waitDialog?.setMessage("先別提安麗，有聽過Addwii嗎?")
-        waitDialog?.setCancelable(false)
-        waitDialog?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
-        waitDialog?.show()
+        val urlEvent = BleEvent("wait Dialog")
+        EventBus.getDefault().post(urlEvent)
     }
 
 
@@ -67,14 +60,14 @@ class AccountLoginTask(content: Context?) : AsyncTask<String, Int, String>() {
 
     override fun onPostExecute(result: String?) {
         Log.e(TAG, result)
+        val urlEvent_close = BleEvent("close Wait Dialog")
+        EventBus.getDefault().post(urlEvent_close)
         if (result == "successNetwork") {
-            val urlEvent = BleEvent("success Login")
-            EventBus.getDefault().post(urlEvent)
-            waitDialog?.dismiss()
+            val urlEvent_success = BleEvent("success Login")
+            EventBus.getDefault().post(urlEvent_success)
         } else if (result == "ResponseError") {
-            val urlEvent = BleEvent("wrong Login")
-            EventBus.getDefault().post(urlEvent)
-            waitDialog?.dismiss()
+            val urlEvent_Error = BleEvent("wrong Login")
+            EventBus.getDefault().post(urlEvent_Error)
         }
     }
 

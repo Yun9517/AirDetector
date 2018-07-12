@@ -6,8 +6,7 @@ import android.app.DialogFragment
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.microjet.airqi2.Account.AccountActiveActivity
-
-
+import com.microjet.airqi2.R
 
 
 /**
@@ -29,6 +28,11 @@ class CheckFragment : DialogFragment() {
         val howMany = arguments.getInt("howMany")
         val whichActivity = AlertDialog.Builder(activity)
         when (howMany) {
+        //zero Button
+            0 -> {
+                whichActivity.setView(R.layout.wait_progress_bar)
+                        .setCancelable(false) // disable click back button
+            }
         //one Button
             1 -> whichActivity.setPositiveButton("確定", { dialog, which ->
                 when (activity::class.java.simpleName) {

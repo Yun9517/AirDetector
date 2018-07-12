@@ -269,7 +269,7 @@
     <string name="errorPassword">密碼輸入不正確</string>
     <string name="remind">提示</string>
     <string name="expectName">請輸入欲更改的名稱</string>
-
+    <string name="wait_Login">登入中，請稍後</string>
 
     <string name="scanner_title">選擇裝置：</string>
     <string name="scanner_empty">找不到裝置</string>

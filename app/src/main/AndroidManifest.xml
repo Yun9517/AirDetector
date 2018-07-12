@@ -74,14 +74,12 @@
         <activity
             android:name=".Account.AccountRegisterActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountForgetPasswordActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
@@ -110,14 +108,12 @@
         <activity
             android:name=".Account.AccountResetPasswordActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountNameReplaceActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />

@@ -1,5 +1,6 @@
 package com.microjet.airqi2.Account
 
+import android.app.DialogFragment
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -76,7 +77,7 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private fun login() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
-            true -> AccountLoginTask(this).execute(email?.text.toString(), password?.text.toString())
+            true -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
             false -> {
                 val newFrage = CheckFragment().newInstance(R.string.errorMail_address, this, 1)
                 newFrage.show(fragmentManager, "dialog")
@@ -97,7 +98,7 @@ class AccountManagementActivity : AppCompatActivity() {
             override fun onSuccess(loginResult: LoginResult) {
                 // App code
                 val userId = loginResult.accessToken.userId
-                val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response -> displayUserInfo(`object`,loginResult) }
+                val graphRequest = GraphRequest.newMeRequest(loginResult.accessToken) { `object`, response -> displayUserInfo(`object`, loginResult) }
                 val parameters = Bundle()
                 parameters.putString("fields", "first_name, last_name, email, id")
                 graphRequest.parameters = parameters
@@ -114,7 +115,7 @@ class AccountManagementActivity : AppCompatActivity() {
         })
     }
 
-    fun displayUserInfo(`object`: JSONObject,loginResult: LoginResult) {
+    fun displayUserInfo(`object`: JSONObject, loginResult: LoginResult) {
         var first_name = ""
         var last_name = ""
         var email = ""
@@ -141,6 +142,18 @@ class AccountManagementActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
+            "wait Dialog" -> {
+                val newFrage = CheckFragment().newInstance(R.string.wait_Login, this, 0)
+                newFrage.setCancelable(false)
+                newFrage.show(fragmentManager, "dialog")
+            }
+            "close Wait Dialog" -> {
+                val previousDialog = fragmentManager.findFragmentByTag("dialog")
+                if (previousDialog != null) {
+                    val dialog = previousDialog as DialogFragment
+                    dialog.dismiss()
+                }
+            }
             "success Login" -> {
                 writeUserData()
                 AccountActivityShow()
@@ -152,16 +165,16 @@ class AccountManagementActivity : AppCompatActivity() {
         }
     }
 
-    private fun writeUserData(){
+    private fun writeUserData() {
         val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
         share.edit().putString("token", TvocNoseData.cloudToken).apply()
         share.edit().putString("name", TvocNoseData.cloudName).apply()
         share.edit().putString("email", TvocNoseData.cloudEmail).apply()
         share.edit().putString("deviceLi", TvocNoseData.cloudDeviceArr).apply()
-        TvocNoseData.cloudToken=""
-        TvocNoseData.cloudName=""
-        TvocNoseData.cloudEmail=""
-        TvocNoseData.cloudDeviceArr=""
+        TvocNoseData.cloudToken = ""
+        TvocNoseData.cloudName = ""
+        TvocNoseData.cloudEmail = ""
+        TvocNoseData.cloudDeviceArr = ""
     }
 
     private fun AccountActivityShow() {
