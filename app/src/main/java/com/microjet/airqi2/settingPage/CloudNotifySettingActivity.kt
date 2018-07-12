@@ -1,6 +1,7 @@
 package com.microjet.airqi2.settingPage
 
 import android.annotation.SuppressLint
+import android.app.DialogFragment
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
@@ -14,13 +15,17 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.Colors
 import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
+import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.activity_setting3.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
 
 /**
@@ -83,8 +88,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 cg_cloud_Sound.visibility = View.GONE
                 indexTitleGroup.visibility = View.GONE
             }
-
-            myPref.setSharePreferenceFirebase(isChecked)
+            swCloudNotifyVal = isChecked
         }
 
         sw_cloud_Message.setOnCheckedChangeListener { _, isChecked ->
@@ -288,7 +292,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             }
             25 -> {
                 btnCloudNotify.text = "12"
-                updateCloudSetting(12,  TvocNoseData.firebaseNotifPM25, TvocNoseData.firebaseNotifTVOC)
             }
             else -> {
                 btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}"
@@ -332,6 +335,49 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         FirebaseNotifSettingTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
-        setFCMSettingView()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "wait Dialog" -> {
+                val newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0)
+                newFrage.setCancelable(false)
+                newFrage.show(fragmentManager, "dialog")
+            }
+            "close Wait Dialog" -> {
+                val previousDialog = fragmentManager.findFragmentByTag("dialog")
+                if (previousDialog != null) {
+                    val dialog = previousDialog as DialogFragment
+                    dialog.dismiss()
+                }
+            }
+            "FirebaseSetting_success" -> {
+                myPref.setSharePreferenceFirebase(swCloudNotifyVal)
+                setFCMSettingView()
+                val newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1)
+                newFrage.show(fragmentManager, "dialog")
+            }
+            "ResponseError" -> {
+                val newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1)
+                newFrage.show(fragmentManager, "dialog")
+            }
+            "ReconnectNetwork" -> {
+                val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+                newFrage.show(fragmentManager, "dialog")
+            }
+        }
     }
 }

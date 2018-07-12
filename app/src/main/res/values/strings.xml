@@ -537,6 +537,7 @@
     <string name="fireBase_Toast_Broadcast_Error">推播錯誤</string>
     <string name="fireBase_Toast_SignIn">請登入帳號</string>
     <string name="fireBase_Toast_Network_Connect">請連上網路</string>
+    <string name="wait_Setting">設定儲存中，請稍後</string>
 
     <string name="select_Date">請選擇日期</string>
 
