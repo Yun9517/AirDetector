@@ -137,7 +137,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         //************************************************************************************************************************************
                     }
                 }
-            } else if (dataForState == DetectionData.PM25) {
+            } else if (dataForState == DetectionData.PM25 || dataForState == DetectionData.PM10) {
                 when (motionEvent.action) {
                     MotionEvent.ACTION_DOWN -> {
                         view.parent.requestDisallowInterceptTouchEvent(true)
