@@ -68,7 +68,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 cgCloudNotify.visibility = View.VISIBLE
                 cgCloudSeekbar.visibility = View.VISIBLE
                 // 2018/07/04
-                cg_cloud_Message.visibility = View.VISIBLE
                 cg_cloud_Vibration.visibility = View.VISIBLE
                 cg_cloud_Sound.visibility = View.VISIBLE
                 indexTitleGroup.visibility = View.VISIBLE
@@ -77,7 +76,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 cgCloudSeekbar.visibility = View.GONE
                 updateCloudSetting(25, 35, 660)
                 // 2018/07/04
-                cg_cloud_Message.visibility = View.GONE
                 cg_cloud_Vibration.visibility = View.GONE
                 cg_cloud_Sound.visibility = View.GONE
                 indexTitleGroup.visibility = View.GONE
@@ -234,7 +232,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             cgCloudNotify.visibility = View.VISIBLE
             cgCloudSeekbar.visibility = View.VISIBLE
             // 2018/07/04 Add toggle Button: sw_cloud_Vibrate, sw_cloud_Sound
-            cg_cloud_Message.visibility = View.VISIBLE
             cg_cloud_Vibration.visibility = View.VISIBLE
             cg_cloud_Sound.visibility = View.VISIBLE
             indexTitleGroup.visibility = View.VISIBLE
@@ -242,7 +239,6 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             cgCloudNotify.visibility = View.GONE
             cgCloudSeekbar.visibility = View.GONE
             // 2018/07/04 Add toggle Button: sw_cloud_Vibrate, sw_cloud_Sound
-            cg_cloud_Message.visibility = View.GONE
             cg_cloud_Vibration.visibility = View.GONE
             cg_cloud_Sound.visibility = View.GONE
             indexTitleGroup.visibility = View.GONE

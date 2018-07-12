@@ -42,19 +42,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.constraint.Group
-            android:id="@+id/cg_cloud_Message"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="8dp"
-            android:visibility="visible"
-            app:constraint_referenced_ids="textView8, sw_cloud_Message, subDivider0, subDivider2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/swAllowCloudNotify" />
-
         <ImageView
             android:id="@+id/subDivider0"
             android:layout_width="0dp"
@@ -75,7 +62,7 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="textView10, sw_cloud_Vibrate, subDivider0"
+            app:constraint_referenced_ids="textView10, sw_cloud_Vibrate, subDivider"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/subDivider0" />
@@ -104,7 +91,7 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cg_cloud_Message" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider0" />
 
         <ImageView
             android:id="@+id/subDivider"
@@ -156,9 +143,9 @@
             android:layout_marginTop="8dp"
             android:theme="@style/SwitchCompatTheme"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cg_cloud_Sound" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider" />
 
-        <!--<ImageView
+        <ImageView
             android:id="@+id/subDivider_sound"
             android:layout_width="0dp"
             android:layout_height="1dp"
@@ -169,7 +156,7 @@
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="@+id/textView12"/>-->
+            app:layout_constraintTop_toBottomOf="@+id/textView12"/>
 
         <android.support.constraint.Group
             android:id="@+id/indexTitleGroup"
@@ -178,10 +165,10 @@
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
             android:visibility="visible"
-            app:constraint_referenced_ids="airIndexTitle, sw_cloud_Sound, subDivider_sound"
+            app:constraint_referenced_ids="airIndexTitle"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/sw_cloud_Sound" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider_sound" />
 
         <TextView
             android:id="@+id/airIndexTitle"
