@@ -702,7 +702,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private fun loadFaceMarker() {
         mMap.clear()
 
-        for(i in 0 until result.size) {
+        for(i in 0 until filter.size) {
             val latLng = LatLng(filter[i].latitude.toDouble(), filter[i].longitude.toDouble())
             val markerOptions = MarkerOptions()
 

@@ -58,11 +58,14 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     private lateinit var filter: List<AsmDataModel>
 
     private lateinit var mCal: Calendar
-    var aResult = java.util.ArrayList<MJGraphData>()
 
     private lateinit var myLocationStyle: MyLocationStyle
     
     private lateinit var myPref: PrefObjects
+
+    private var lati = 255f
+    private var longi = 255f
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -131,8 +134,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             pgLoading.bringToFront()
 
             //runRealmQueryData()
-            drawLineChart(result)
-            drawMapPolyLine(result)
+            drawLineChart(filter)
+            drawMapPolyLine(filter)
         }
     }
 
@@ -246,16 +249,33 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     private fun runRealmQueryData() {
         realm = Realm.getDefaultInstance()
 
-        //現在時間實體毫秒
-        val touchTime = if (mCal.get(Calendar.HOUR_OF_DAY) >= 8) mCal.timeInMillis else mCal.timeInMillis + mCal.timeZone.rawOffset
-        //將日期設為今天日子加一天減1秒
-        val startTime = touchTime / (3600000 * 24) * (3600000 * 24) - mCal.timeZone.rawOffset
+        val cal = Calendar.getInstance()
+        cal.set(Calendar.YEAR, mCal.get(Calendar.YEAR))
+        cal.set(Calendar.MONTH, mCal.get(Calendar.MONTH))
+        cal.set(Calendar.DAY_OF_MONTH, mCal.get(Calendar.DAY_OF_MONTH))
+        cal.set(Calendar.HOUR_OF_DAY, 0) // ! clear would not reset the hour of day ! //這幾行是新寫法，好用
+        cal.clear(Calendar.MINUTE) //這幾行是新寫法，好用
+        cal.clear(Calendar.SECOND) //這幾行是新寫法，好用
+        cal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
+
+        val startTime = cal.timeInMillis
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
-        val mDeviceAddress = myPref.getSharePreferenceMAC()
-
         listener = RealmChangeListener {
-            filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
+            //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
+            filter = realm.copyFromRealm(it)
+            if (filter.isNotEmpty()) {
+                lati = filter[0].latitude
+                longi = filter[0].longitude
+                filter.forEach {
+                    if (it.latitude == 255f || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
+                        it.latitude = lati
+                        it.longitude = longi
+                    }
+                    lati = it.latitude
+                    longi = it.longitude
+                }
+            }
             drawMapPolyLine(filter)
             drawLineChart(filter)
             Log.e("Realm Listener", "Update Map...")
@@ -270,21 +290,19 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
     // 讀取線圖資料
     @SuppressLint("SimpleDateFormat")
-    private fun drawLineChart(datas: List<AsmDataModel>) {
-
-        aResult.clear()
-
-        if (datas.isNotEmpty()) {
-            for (i in 0 until datas.size) {
+    private fun drawLineChart(localDatas: List<AsmDataModel>) {
+        val aResult = java.util.ArrayList<MJGraphData>()
+        if (localDatas.isNotEmpty()) {
+            for (i in 0 until localDatas.size) {
                 // 判斷 RadioButton 選中的項目
-                val data = if (rbTVOC.isChecked) {
-                    datas[i].tvocValue.toInt()
+                val itemValue = if (rbTVOC.isChecked) {
+                    localDatas[i].tvocValue.toInt()
                 } else {
-                    datas[i].pM25Value.toInt()
+                    localDatas[i].pM25Value.toInt()
                 }
 
-                val o: MJGraphData? = MJGraphData(datas[i].created_time, data)
-                if (o != null && i < result.size - 1) {
+                val o: MJGraphData? = MJGraphData(localDatas[i].created_time, itemValue)
+                if (o != null && i < localDatas.size) {
                     try {
                         aResult.add(o)
                         //lineChart.AddData(o)
@@ -298,9 +316,25 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                 }
 
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd, HH:mm")
-                Log.e("LoadChartData", "Time: ${dateFormat.format(datas[i].created_time)}, Value: $data")
+                Log.e("LoadChartData", "Time: ${dateFormat.format(localDatas[i].created_time)}, Value: $itemValue")
             }
+            /*
+            for (i in 1 .. 5) {
+                val o: MJGraphData? = MJGraphData(localDatas.last().created_time + i * 60000, Random().nextInt(500))
+                if (o != null) {
+                    try {
+                        aResult.add(o)
+                    } catch (_e: ClassCastException) {
+                        _e.printStackTrace()
+                    } catch (_e: IllegalArgumentException) {
+                        _e.printStackTrace()
+                    } catch (_e: UnsupportedOperationException) {
+                        _e.printStackTrace()
+                    }
+                }
+            }*/
         } else {
+            /*
             val o: MJGraphData? = MJGraphData(mCal.timeInMillis, 0)
             if (o != null) {
                 try {
@@ -314,6 +348,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                     _e.printStackTrace()
                 }
             }
+            */
 
             val nullDataText = "-----"
             updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
@@ -329,86 +364,74 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         if (pgLoading.visibility == View.VISIBLE) {
             pgLoading.visibility = View.GONE
         }
-
-        lineChart.invalidate()
     }
 
     // 畫軌跡
-    private fun drawMapPolyLine(datas: List<AsmDataModel>) {
-        val rectOptions1 = PolylineOptions()
-        rectOptions1.color(Colors.tvocCO2Colors[0])
+    private fun drawMapPolyLine(localDatas: List<AsmDataModel>) {
 
-        val rectOptions2 = PolylineOptions()
-        rectOptions2.color(Colors.tvocCO2Colors[1])
+        val rectOptions1 = PolylineOptions().color(Colors.tvocCO2Colors[0])
+        val rectOptions2 = PolylineOptions().color(Colors.tvocCO2Colors[1])
+        val rectOptions3 = PolylineOptions().color(Colors.tvocCO2Colors[2])
+        val rectOptions4 = PolylineOptions().color(Colors.tvocCO2Colors[3])
+        val rectOptions5 = PolylineOptions().color(Colors.tvocCO2Colors[4])
+        val rectOptions6 = PolylineOptions().color(Colors.tvocCO2Colors[5])
 
-        val rectOptions3 = PolylineOptions()
-        rectOptions3.color(Colors.tvocCO2Colors[2])
+        //val dataFilter = localDatas.filter { it.latitude < 255f && it.latitude != null }
 
-        val rectOptions4 = PolylineOptions()
-        rectOptions4.color(Colors.tvocCO2Colors[3])
-
-        val rectOptions5 = PolylineOptions()
-        rectOptions5.color(Colors.tvocCO2Colors[4])
-
-        val rectOptions6 = PolylineOptions()
-        rectOptions6.color(Colors.tvocCO2Colors[5])
-
-        //val dataFilter = datas.filter { it.latitude < 255f && it.latitude != null }
-
-        datas.forEachIndexed { index, asmDataModel ->
-            if (index < datas.size - 1) {
+        localDatas.forEachIndexed { index, asmDataModel ->
+            if (index < localDatas.size - 1) {
                 if (rbTVOC.isChecked) {
                     when (asmDataModel.tvocValue.toInt()) {
                         in 0..219 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 220..659 -> {
-                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 660..2199 -> {
-                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 2200..5499 -> {
-                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 5500..19999 -> {
-                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         else -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                     }
                 } else {
                     when (asmDataModel.pM25Value.toInt()) {
                         in 0..15 -> {
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions1.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions1.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 16..34 -> {
-                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions2.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions2.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 35..54 -> {
-                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions3.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions3.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 55..150 -> {
-                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions4.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions4.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         in 151..250 -> {
-                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions5.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions5.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                         else -> {
-                            rectOptions6.add(goldenLocationConvert(LatLng(datas[index].latitude.toDouble(), datas[index].longitude.toDouble())))
-                            rectOptions6.add(goldenLocationConvert(LatLng(datas[index + 1].latitude.toDouble(), datas[index + 1].longitude.toDouble())))
+                            rectOptions6.add(goldenLocationConvert(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble())))
+                            rectOptions6.add(goldenLocationConvert(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())))
                         }
                     }
                 }
