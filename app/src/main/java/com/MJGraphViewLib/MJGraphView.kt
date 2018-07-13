@@ -1,5 +1,6 @@
 package com.mobile2box.MJGraphView
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.graphics.*
@@ -377,10 +378,15 @@ class MJGraphView @JvmOverloads constructor(_context: Context, _attrs: Attribute
 				view_Parent = parent as HorizontalScrollView
 
 			if (view_Parent != null) {
-				minimumWidth = iContentWidth + view_Parent!!.measuredWidth
-				iItemPerPage = (view_Parent!!.measuredWidth / fItemWidth).toInt()
+
+				val displayMetrics = DisplayMetrics()
+				(context as Activity).windowManager.defaultDisplay.getMetrics(displayMetrics)
+				val width = displayMetrics.widthPixels
+
+				minimumWidth = iContentWidth + width
+				iItemPerPage = (width / fItemWidth).toInt()
 				iItemOffscreen = iItemPerPage / 2
-				fHalfPageWidth = view_Parent!!.measuredWidth.toFloat() / 2
+				fHalfPageWidth = width.toFloat() / 2
 
 				UpdateCurrentIndex(_bRedraw)
 			}
