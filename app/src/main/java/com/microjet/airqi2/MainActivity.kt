@@ -1462,7 +1462,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     0xC6.toByte() -> {
                         if (isFirstC6) {
                             isFirstC6 = false
-                            setPublicLatiLongi() //將經緯度設為全域
+                            //setPublicLatiLongi() //將經緯度設為全域
                             mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
                         }
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
@@ -2021,10 +2021,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         c6d6map.clear()
     }
 
-    private fun setPublicLatiLongi() {
-        lati = TvocNoseData.lati
-        longi = TvocNoseData.longi
-    }
+//    private fun setPublicLatiLongi() {
+//        lati = TvocNoseData.lati
+//        longi = TvocNoseData.longi
+//    }
 }
 
 
