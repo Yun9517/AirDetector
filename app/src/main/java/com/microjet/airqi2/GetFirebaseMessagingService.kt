@@ -79,7 +79,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
 
         val notBuilder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon_leaf)
-                .setColor(Color.parseColor("#76cdc5"))
+                .setColor(getColor(R.color.iconColor))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

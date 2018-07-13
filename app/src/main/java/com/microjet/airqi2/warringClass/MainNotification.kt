@@ -28,6 +28,7 @@ class MainNotification(context: Context) {
 
     val mContext = context
 
+    @SuppressLint("NewApi")
     fun makeNotificion(): Notification {
 
         // 建立觸碰通知範圍時的PendingIntent
@@ -70,7 +71,7 @@ class MainNotification(context: Context) {
 
         //notificationBuilder.setContentTitle("ADDWII")
         //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
-        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf).color = Color.parseColor("#76cdc5")
+        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf).color = mContext.getColor(R.color.iconColor)
         notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
 
