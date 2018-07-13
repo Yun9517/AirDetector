@@ -87,4 +87,7 @@
     <!--GoldenMap-->
     <color name="myLocationRange">#80009cde</color>
 
+    <!--Icon color -->
+    <color name="iconColor">#76cdc5</color>
+
 </resources>

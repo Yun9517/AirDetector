@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import android.os.PowerManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.res.ResourcesCompat.getColor
 import android.util.Log
 import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
 import com.microjet.airqi2.MainActivity
@@ -77,7 +79,8 @@ class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelI
          }
     }
 
-    private fun makeNotificationShow( iconID: Bitmap, title: String, text: String?) {
+    @SuppressLint("NewApi")
+    private fun makeNotificationShow(iconID: Bitmap, title: String, text: String?) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createNotificationChannel()
         }
@@ -96,7 +99,8 @@ class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelI
         @SuppressLint("ResourceAsColor")
         val notification = NotificationCompat.Builder(mContext)
                 .setChannelId(mChannelID)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.icon_leaf)
+                .setColor(mContext.getColor(R.color.iconColor))
                 .setLargeIcon(iconID)
                 .setContentTitle(title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(title))

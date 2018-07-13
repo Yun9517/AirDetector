@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -79,7 +80,8 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val pend_intent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val notBuilder = NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.app_notifi_icon)
+                .setSmallIcon(R.mipmap.icon_leaf)
+                .setColor(getColor(R.color.iconColor))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

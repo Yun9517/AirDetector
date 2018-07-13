@@ -1,11 +1,13 @@
 package com.microjet.airqi2.warringClass
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
@@ -26,6 +28,7 @@ class MainNotification(context: Context) {
 
     val mContext = context
 
+    @SuppressLint("NewApi")
     fun makeNotificion(): Notification {
 
         // 建立觸碰通知範圍時的PendingIntent
@@ -57,7 +60,7 @@ class MainNotification(context: Context) {
         }
 
         val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
-        contentView.setImageViewResource(R.id.image, R.mipmap.ic_launcher)
+        contentView.setImageViewResource(R.id.image, R.mipmap.icon_leaf)
         contentView.setTextViewText(R.id.contentTitle, "ADDWII")
         contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))
 
@@ -68,7 +71,7 @@ class MainNotification(context: Context) {
 
         //notificationBuilder.setContentTitle("ADDWII")
         //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
-        notificationBuilder.setSmallIcon(R.mipmap.ic_launcher)
+        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf).color = mContext.getColor(R.color.iconColor)
         notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
 
