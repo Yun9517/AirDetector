@@ -265,7 +265,6 @@
     <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="text_label_latitude">纬度</string>
     <string name="text_label_longitude">经度</string>
 
@@ -552,4 +551,11 @@
     <string name="photo_share_activity">拍照分享</string>
     <string name="button_take_a_photo">拍照</string>
     <string name="text_photo_saved">照片已保存</string>
+
+    <string name="text_second">秒</string>
+    <string name="facebook_app_id">1406650272815007</string>
+    <string name="error_login">登入失败</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
+    <string name="wait_Login">登入中請稍候</string>
+    <string name="wait_Setting">设定储存中，请稍后</string>
 </resources>

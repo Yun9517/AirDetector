@@ -265,7 +265,6 @@
     <string name="download_min">喝杯茶</string>
 
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="text_label_latitude">緯度</string>
     <string name="text_label_longitude">經度</string>
 
@@ -552,9 +551,7 @@
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
 
 
-    <string name="facebook_app_id">1406650272815007</string>
-    <string name="fb_login_protocol_scheme">fb1406650272815007</string>
-    <string name="error_login">登入失敗</string>
+
 
     <!-- 2018/07/03 -->
     <string name="text_setting_AirIndex">空氣指標警告設定</string>
@@ -562,5 +559,9 @@
     <string name="photo_share_activity">拍照分享</string>
     <string name="button_take_a_photo">拍照</string>
     <string name="text_photo_saved">照片已儲存</string>
+    <string name="text_second">秒</string>
+    <string name="error_login">登入失敗</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
+    <string name="facebook_app_id">1406650272815007</string>
 
 </resources>

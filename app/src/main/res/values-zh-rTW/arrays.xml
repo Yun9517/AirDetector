@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="pickCycle" >
-        <item>30sec.</item>
-        <item>10min.</item>
-        <item>15min.</item>
-        <item>20min.</item>
-        <item>30min.</item>
+        <item>30秒</item>
+        <item>10分</item>
+        <item>15分</item>
+        <item>20分</item>
+        <item>30分</item>
     </string-array>
 
     <string-array name="SpinnerArray" >
-        <item>Daily</item>
-        <item>Week</item>
-        <item>Month</item>
-        <item>Year</item>
+        <item>日</item>
+        <item>週</item>
+        <item>月</item>
+        <item>年</item>
     </string-array>
 
     <string-array name="tvocArray">
@@ -28,4 +28,5 @@
         <item>54</item>
         <item>150</item>
     </string-array>
+
 </resources>

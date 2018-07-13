@@ -460,4 +460,8 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="photo_share_activity">Photo sharing</string>
     <string name="button_take_a_photo">Take a photo</string>
     <string name="text_photo_saved">Photo saved.</string>
+
+    <string name="facebook_app_id">1406650272815007</string>
+    <string name="error_login">Login_error</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
 </resources>

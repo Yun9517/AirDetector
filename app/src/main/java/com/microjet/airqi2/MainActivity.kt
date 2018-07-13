@@ -611,10 +611,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 collapseIndicatorAnim(250)
 
                 indicator.visibility = View.INVISIBLE
+                /*
                 val bundle = Bundle()
                 bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "VIEW_SCROLL")
                 bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
                 mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                */
             }
 
             override fun onPageSelected(position: Int) {
