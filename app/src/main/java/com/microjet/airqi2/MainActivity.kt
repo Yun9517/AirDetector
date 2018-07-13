@@ -160,7 +160,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             // Automatically connects to the device upon successful start-up initialization.
             if (!myPref.getSharePreferenceManualDisconn()) {
-                mUartService?.connect(mDeviceAddress)
+                mDeviceAddress = myPref.getSharePreferenceMAC()
+                if (mDeviceAddress != "noValue") {
+                    mUartService?.connect(mDeviceAddress)
+                }
             }
             if(myPref.getSharePreferenceServiceForeground()) {
                 val serviceIntent = Intent(this@MainActivity, UartService::class.java)
