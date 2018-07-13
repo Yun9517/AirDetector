@@ -7,6 +7,7 @@ import android.net.ConnectivityManager
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
@@ -31,7 +32,7 @@ class AccountManagementActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
+        login_buttonFB?.visibility = View.GONE
         login_buttonFB.setReadPermissions(Arrays.asList("public_profile", "email"))
         loginButtonFB()
 
