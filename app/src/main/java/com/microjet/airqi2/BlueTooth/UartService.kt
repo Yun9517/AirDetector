@@ -387,8 +387,8 @@ class UartService : Service() {
 
     private fun createLocationRequest() {
         locationRequest = LocationRequest()
-        locationRequest.interval = 5000          // original is 5000 milliseconds
-        locationRequest.fastestInterval = 2000   // original is 2000 milliseconds
+        locationRequest.interval = 50000          // original is 5000 milliseconds
+        locationRequest.fastestInterval = 30000   // original is 2000 milliseconds
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
