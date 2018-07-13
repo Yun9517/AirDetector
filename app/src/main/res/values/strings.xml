@@ -266,7 +266,7 @@
     <string name="checkConnection">網路不穩定，請檢查網路連線</string>
     <string name="errorMail_form">信箱輸入不正確</string>
     <string name="errorMail_address">請輸入正確的信箱位置</string>
-    <string name="errorPassword">密碼輸入不正確</string>
+    <string name="errorPassword">信箱或密碼輸入有誤</string>
     <string name="remind">提示</string>
     <string name="expectName">請輸入欲更改的名稱</string>
     <string name="wait_Login">登入中，請稍後</string>

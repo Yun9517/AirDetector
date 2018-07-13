@@ -34,7 +34,7 @@ import java.text.DecimalFormat
  */
 
 class CloudNotifySettingActivity : AppCompatActivity() {
-
+    private val TAG: String = "CloudNotifySettingActivity"
     //20180515
     private var swCloudNotifyVal: Boolean = false
     //2018/07/04
@@ -43,7 +43,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     private var swSoundVal: Boolean = false
 
     //20180517
-    private var cloudTime: Int = TvocNoseData.firebaseNotiftime
+    private var cloudTime: Int = TvocNoseData.firebaseNotiftime      //停留本頁暫存用變數
     private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
     private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
 
@@ -286,7 +286,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     //2018515 by 白~~~~~~~~~~~~~~~~告
     @SuppressLint("SetTextI18n")
     private fun setFCMSettingView() {
-        when (TvocNoseData.firebaseNotiftime) {
+        when (cloudTime) {
             in 0..9 -> {
                 btnCloudNotify.text = "0${cloudTime}"
             }
@@ -323,7 +323,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     } else {
                         btnCloudNotify.text = "$cloudTime"
                     }
-                    Log.e("TvocNoseData", TvocNoseData.firebaseNotiftime.toString())
+                    Log.e("TAG", cloudTime.toString())
                 }.setTitle(getString(R.string.text_cloud_notify_time))
 
         alertBuilder.show()
