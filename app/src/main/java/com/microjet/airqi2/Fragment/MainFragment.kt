@@ -106,7 +106,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
         show_RH?.setOnTouchListener(this)
         show_PM?.setOnTouchListener(this)
         show_PM10?.setOnTouchListener(this)
-
         imgLight?.setOnTouchListener(this)
 
         // 初始化inCircleTitle文字大小

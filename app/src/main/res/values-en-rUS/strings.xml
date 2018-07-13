@@ -46,6 +46,7 @@
     <string name="text_label_humidity">HUMI.</string>
     <string name="text_label_temperature_full">Temperature</string>
     <string name="text_label_humidity_full">Humidity</string>
+    <string name="text_second">s</string>
     <string name="text_default_value">----</string>
     <string name="text_label_tvoc_detect">TVOC</string>
     <string name="text_label_pm25_detect">PM2.5</string>
