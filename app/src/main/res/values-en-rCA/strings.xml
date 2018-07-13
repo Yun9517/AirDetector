@@ -158,6 +158,14 @@
     <string name="averageTemperature_Daily">Average Temperature</string>
     <string name="averageHumidity_Daily">Average Humidity</string>
 
+    <string name="daily">Average\ \ '</string>
+    <string name="weekly">Average\ \ '</string>
+    <string name="monthly">Average\ \ '</string>
+    <string name="annual">Average\ \ '</string>
+    <string name="exposure">Exposure</string>
+    <string name="temp">Temperature</string>
+    <string name="humi">Humidity</string>
+
     <string name="text_setting_test_cycle">Choose a detect cycle</string>
     <string name="text_setting_allow_notification">Allow Notification</string>
     <string name="text_setting_notify_message">Info</string>
