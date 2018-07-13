@@ -4,7 +4,6 @@ import android.os.AsyncTask
 import android.util.Log
 import io.realm.Realm
 import io.realm.Sort
-import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -26,7 +25,7 @@ object TvocNoseData {
     val DEVICE = "DEV"
     val TVOCSENOR = "B0TVOC"
     val FW = "FW"
-    val FWSerial="FWSerial"
+    val FWSerial = "FWSerial"
     //B2 GetSampleRate
     val ASMS = "ASM_Setting"
     val B2SR = "B2_Sample_Rate"
@@ -138,8 +137,13 @@ object TvocNoseData {
     var firebaseNotiftime: Int = 12
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
-    var scrollingList: ArrayList<HashMap<String,String>> = arrayListOf()
+    var scrollingList: ArrayList<HashMap<String, String>> = arrayListOf()
     var download_AsynTask: AsyncTask<String, Int, String>? = null
+
+    var cloudToken: String = ""
+    var cloudName: String = ""
+    var cloudEmail: String = ""
+    var cloudDeviceArr: String = ""
 
     fun getRealmDay() {
         arrTvocDay.clear()

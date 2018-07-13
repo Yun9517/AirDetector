@@ -1,8 +1,8 @@
 package com.microjet.airqi2.settingPage
 
 import android.annotation.SuppressLint
+import android.app.DialogFragment
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
@@ -15,14 +15,17 @@ import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
 import com.jaygoo.widget.RangeSeekBar
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.CustomAPI.Utils
-import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.FirebaseNotifTask
+import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
+import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.activity_setting3.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.text.DecimalFormat
 
 /**
@@ -31,7 +34,7 @@ import java.text.DecimalFormat
  */
 
 class CloudNotifySettingActivity : AppCompatActivity() {
-
+    private val TAG: String = "CloudNotifySettingActivity"
     //20180515
     private var swCloudNotifyVal: Boolean = false
     //2018/07/04
@@ -40,7 +43,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     private var swSoundVal: Boolean = false
 
     //20180517
-    private var cloudTime: Int = TvocNoseData.firebaseNotiftime
+    private var cloudTime: Int = TvocNoseData.firebaseNotiftime      //停留本頁暫存用變數
     private var cloudPM25: Int = TvocNoseData.firebaseNotifPM25     //停留本頁暫存用變數
     private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
 
@@ -76,15 +79,16 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             } else {
                 cgCloudNotify.visibility = View.GONE
                 cgCloudSeekbar.visibility = View.GONE
-                updateCloudSetting(25, 35, 660)
+
+                updateCloudSetting(25, TvocNoseData.firebaseNotifPM25, TvocNoseData.firebaseNotifTVOC)
+
                 // 2018/07/04
                 cg_cloud_Message.visibility = View.GONE
                 cg_cloud_Vibration.visibility = View.GONE
                 cg_cloud_Sound.visibility = View.GONE
                 indexTitleGroup.visibility = View.GONE
             }
-
-            myPref.setSharePreferenceFirebase(isChecked)
+            swCloudNotifyVal = isChecked
         }
 
         sw_cloud_Message.setOnCheckedChangeListener { _, isChecked ->
@@ -282,26 +286,27 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     //2018515 by 白~~~~~~~~~~~~~~~~告
     @SuppressLint("SetTextI18n")
     private fun setFCMSettingView() {
-        when (TvocNoseData.firebaseNotiftime) {
+        when (cloudTime) {
             in 0..9 -> {
-                btnCloudNotify.text = "0${TvocNoseData.firebaseNotiftime}"
+                btnCloudNotify.text = "0${cloudTime}"
             }
             25 -> {
-                btnCloudNotify.text = "00"
+                btnCloudNotify.text = "12"
+                cloudTime = 12
             }
             else -> {
-                btnCloudNotify.text = "${TvocNoseData.firebaseNotiftime}"
+                btnCloudNotify.text = "${cloudTime}"
             }
         }
         //TVOC TEXTVIEW VALUE
-        cloudTvocSeekValue.text = TvocNoseData.firebaseNotifTVOC.toString()
-        cloudTvocSeekBar.setValue(TvocNoseData.firebaseNotifTVOC.toFloat())
+        cloudTvocSeekValue.text = cloudTVOC.toString()
+        cloudTvocSeekBar.setValue(cloudTVOC.toFloat())
         //PM25 TEXTVIEW VALUE
-        cloudPM25SeekValue.text = TvocNoseData.firebaseNotifPM25.toString()
-        cloudPM25SeekBar.setValue(TvocNoseData.firebaseNotifPM25.toFloat())
+        cloudPM25SeekValue.text = cloudPM25.toString()
+        cloudPM25SeekBar.setValue(cloudPM25.toFloat())
         //SEEKBARCOLOR
-        setSeekBarColor(cloudTvocSeekBar, TvocNoseData.firebaseNotifTVOC.toFloat(), true)
-        setSeekBarColor(cloudPM25SeekBar, TvocNoseData.firebaseNotifPM25.toFloat(), false)
+        setSeekBarColor(cloudTvocSeekBar, cloudTVOC.toFloat(), true)
+        setSeekBarColor(cloudPM25SeekBar, cloudPM25.toFloat(), false)
     }
 
     @SuppressLint("SetTextI18n")
@@ -309,7 +314,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         val myHourPicker = NumberPicker(this)
         myHourPicker.maxValue = 23
         myHourPicker.minValue = 0
-        myHourPicker.value = TvocNoseData.firebaseNotiftime
+        myHourPicker.value = cloudTime
         val alertBuilder = AlertDialog.Builder(this).setView(myHourPicker)
                 .setPositiveButton(android.R.string.ok) { _, _ ->
                     cloudTime = myHourPicker.value
@@ -318,7 +323,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     } else {
                         btnCloudNotify.text = "$cloudTime"
                     }
-                    Log.e("TvocNoseData", TvocNoseData.firebaseNotiftime.toString())
+                    Log.e("TAG", cloudTime.toString())
                 }.setTitle(getString(R.string.text_cloud_notify_time))
 
         alertBuilder.show()
@@ -330,7 +335,50 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         TvocNoseData.firebaseNotifTVOC = argTvoc
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        FirebaseNotifTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
-        setFCMSettingView()
+        FirebaseNotifSettingTask().execute(myToken, argTime.toString(), argPm25.toString(), argTvoc.toString())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        var newFrage: CheckFragment? = null
+        when (bleEvent.message) {
+            "wait Dialog" -> {
+                newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0)
+                newFrage.setCancelable(false)
+            }
+            "close Wait Dialog" -> {
+                val previousDialog = fragmentManager.findFragmentByTag("dialog")
+                if (previousDialog != null) {
+                    val dialog = previousDialog as DialogFragment
+                    dialog.dismiss()
+                }
+            }
+            "FirebaseSetting_success" -> {
+                myPref.setSharePreferenceFirebase(swCloudNotifyVal)
+                setFCMSettingView()
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1)
+            }
+            "ResponseError" -> {
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1)
+            }
+            "ReconnectNetwork" -> {
+                newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+            }
+        }
+        if( TvocNoseData.firebaseNotiftime != 25){
+            newFrage?.show(fragmentManager, "dialog")
+        }
     }
 }

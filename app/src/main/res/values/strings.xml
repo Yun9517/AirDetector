@@ -263,13 +263,13 @@
 
     <!-- 2018/03/14 Dialog Messages -->
     <string name="tooFast">請不要點太快</string>
-    <string name="checkConnection">請連接網路</string>
+    <string name="checkConnection">網路不穩定，請檢查網路連線</string>
     <string name="errorMail_form">信箱輸入不正確</string>
     <string name="errorMail_address">請輸入正確的信箱位置</string>
-    <string name="errorPassword">密碼輸入不正確</string>
+    <string name="errorPassword">信箱或密碼輸入有誤</string>
     <string name="remind">提示</string>
     <string name="expectName">請輸入欲更改的名稱</string>
-
+    <string name="wait_Login">登入中，請稍後</string>
 
     <string name="scanner_title">選擇裝置：</string>
     <string name="scanner_empty">找不到裝置</string>
@@ -537,14 +537,22 @@
     <string name="fireBase_Toast_Broadcast_Error">推播錯誤</string>
     <string name="fireBase_Toast_SignIn">請登入帳號</string>
     <string name="fireBase_Toast_Network_Connect">請連上網路</string>
+    <string name="wait_Setting">設定儲存中，請稍後</string>
 
     <string name="select_Date">請選擇日期</string>
 
     <string name="text_label_personal_track_password">個人軌跡密碼</string>
+
+
+    <string name="facebook_app_id">1406650272815007</string>
+    <string name="fb_login_protocol_scheme">fb1406650272815007</string>
+    <string name="error_login">登入失敗</string>
+
     <!-- 2018/07/03 -->
     <string name="text_setting_AirIndex">空氣指標警告設定</string>
     <string name="text_setting_temperature_unit">溫度單位</string>
     <string name="photo_share_activity">拍照分享</string>
     <string name="button_take_a_photo">拍照</string>
     <string name="text_photo_saved">照片已儲存</string>
+
 </resources>

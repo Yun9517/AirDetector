@@ -51,6 +51,7 @@ import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
+import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
@@ -60,7 +61,6 @@ import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.settingPage.SettingActivity
-import com.microjet.airqi2.photoShare.PhotoActivity
 import com.microjet.airqi2.warringClass.WarringClass
 import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_main.*
@@ -373,7 +373,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onStart() {
         super.onStart()
         Log.e(TAG, "call onStart")
-        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         //val serviceIntent: Intent? = Intent(this, UartService::class.java)
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
@@ -449,7 +448,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
 
         //EventBus.getDefault().unregister(this)
-        //FirebaseMessaging.getInstance().unsubscribeFromTopic("addwiinews")
     }
 
     // 20171130 add by Raymond 增加權限 Request
@@ -670,7 +668,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }*/
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        Log.e("HAOscrollingList",TvocNoseData.scrollingList.toString())
         menuInflater.inflate(R.menu.main_menu, menu)
         topMenu = menu
         //menuItem= menu!!.findItem(R.id.batStatus)

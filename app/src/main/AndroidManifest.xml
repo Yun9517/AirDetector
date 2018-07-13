@@ -24,6 +24,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
+
     <!-- 高德地圖需要權限 -->
     <!-- uses-permission android:name="android.permission.ACCESS_WIFI_STATE" / -->
     <!-- uses-permission android:name="android.permission.CHANGE_WIFI_STATE" / -->
@@ -62,25 +63,23 @@
             android:screenOrientation="unspecified"
             android:taskAffinity=""
             android:theme="@android:style/Theme.Dialog" />
+        <!--android:noHistory="true"-->
         <activity
             android:name=".Account.AccountManagementActivity"
             android:excludeFromRecents="true"
             android:label="@string/text_Title_Manifest_account_setting"
-            android:noHistory="true"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountRegisterActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountForgetPasswordActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
@@ -109,14 +108,12 @@
         <activity
             android:name=".Account.AccountResetPasswordActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
         <activity
             android:name=".Account.AccountNameReplaceActivity"
             android:excludeFromRecents="true"
-            android:noHistory="false"
             android:screenOrientation="portrait"
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
@@ -236,7 +233,7 @@
 
         <receiver android:name=".BroadReceiver.NotificationButtonReceiver" />
 
-        <service android:name=".GetFirebaseMessagingService">
+        <service android:name=".FireBaseCloudMessage.GetFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
@@ -280,11 +277,29 @@
             android:theme="@style/AppTheme" />
 
         <service
-            android:name=".GetFirebaseInstanceIdService">
+            android:name=".FireBaseCloudMessage.GetFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <activity android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name" />
+        <activity
+            android:name="com.facebook.CustomTabActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
 
         <activity android:name=".photoShare.CameraActivity"
             android:screenOrientation="portrait"
@@ -293,7 +308,8 @@
         <activity android:name=".photoShare.PhotoActivity"
             android:label="@string/photo_share_activity" />
 
-        <activity android:name=".OpenBrowserActivity" />
+        <activity android:name=".FireBaseCloudMessage.OpenBrowserActivity" />
+
     </application>
 
 </manifest>
