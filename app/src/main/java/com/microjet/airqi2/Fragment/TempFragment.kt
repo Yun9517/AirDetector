@@ -193,7 +193,7 @@ class TempFragment : Fragment() {
                 if (temp1!! <= -10.0f) {
                     mTextViewValue!!.text = "---" + " ℃"
                 }else{
-                    val newTemp = "%.1f".format(temp1)
+                    val newTemp = "%.1f".format(Locale.US, temp1)
                     mTextViewValue!!.text = newTemp + " ℃"
                 }
             }
@@ -694,8 +694,8 @@ class TempFragment : Fragment() {
             AVGTvoc3 = 0.0f
         }
 
-        val newTemp = "%.1f".format(aveTvoc)
-        val newTemp1 = "%.1f".format(AVGTvoc3)
+        val newTemp = "%.1f".format(Locale.US, aveTvoc)
+        val newTemp1 = "%.1f".format(Locale.US, AVGTvoc3)
         result_Today!!.text = newTemp + " ℃"        //arrTvoc3[1].toString()+" ppb"
         result_Yesterday!!.text = newTemp1 + " ℃"
     }

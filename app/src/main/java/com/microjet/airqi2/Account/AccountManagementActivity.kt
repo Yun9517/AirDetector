@@ -192,7 +192,7 @@ class AccountManagementActivity : AppCompatActivity() {
     }
 
     private fun forgotPassword() {
-        val i: Intent? = Intent(this, AccountRegisterActivity::class.java)
+        val i: Intent? = Intent(this, AccountForgetPasswordActivity::class.java)
         startActivity(i)
     }
 

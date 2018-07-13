@@ -2,7 +2,8 @@ package com.microjet.airqi2.BlueTooth
 
 import android.util.Log
 import com.microjet.airqi2.TvocNoseData
-import java.util.ArrayList
+import java.text.DecimalFormat
+import java.util.*
 import kotlin.experimental.and
 
 /**
@@ -424,7 +425,7 @@ object BLECallingTranslate {
                     value = value + (bytes[i] and 0xFF.toByte())
                     if (j == 1) {//Temperature
                         var Tempvalue = -45 + 175.0f * value / 65535
-                        val newTemp = "%.1f".format(Tempvalue)
+                        val newTemp = "%.1f".format(Locale.US, Tempvalue)
                         //value -= 6
                         ReturnValue.add(newTemp.toString())
                         value = 0
@@ -475,7 +476,7 @@ object BLECallingTranslate {
                         3//Temperature
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             //value -= 6
                             ReturnValue.add(newTemp.toString())
                             value = 0
@@ -707,7 +708,7 @@ object BLECallingTranslate {
                     when (j) {
                         1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             //value -= 6
                             ReturnValue.add(newTemp.toString())
                             value = 0
@@ -769,7 +770,7 @@ object BLECallingTranslate {
                     when (j) {
                         1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             //value -= 6
                             ReturnValue.add(newTemp.toString())
                             value = 0
@@ -844,7 +845,7 @@ object BLECallingTranslate {
                     when (j) {
                         1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             returnValue.put(TvocNoseData.B0TEMP, newTemp)
                             value = 0
                         }
@@ -1290,7 +1291,8 @@ object BLECallingTranslate {
                     when (j) {
                         1 -> {//Temperature
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
+                            //val newTemp = String.format("%.1f", Tempvalue)
                             returnValue.put(TvocNoseData.C0TEMP, newTemp)
                             value = 0
                         }
@@ -1370,7 +1372,7 @@ object BLECallingTranslate {
                         3//Temperature
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             returnValue.put(TvocNoseData.C5TEMP, newTemp)
                             value = 0
                         }
@@ -1428,7 +1430,7 @@ object BLECallingTranslate {
                         1//Temperature
                         -> {
                             var Tempvalue = -45 + 175.0f * value / 65535
-                            val newTemp = "%.1f".format(Tempvalue)
+                            val newTemp = "%.1f".format(Locale.US, Tempvalue)
                             returnValue.put(TvocNoseData.C6TEMP, newTemp)
                             value = 0
                         }
