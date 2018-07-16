@@ -49,7 +49,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         Temp(18, 25),
         Humi(45, 65),
         PM25(220, 660),
-        PM10(54, 125)
+        PM10(220, 660)
     }
 
     private var mContext: Context? = null
