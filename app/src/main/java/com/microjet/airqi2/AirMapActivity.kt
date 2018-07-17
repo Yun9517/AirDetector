@@ -191,8 +191,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
             if (filter.isNotEmpty()) {
-                lati = filter[0].latitude
-                longi = filter[0].longitude
+                getMapInitThreeDaysAgoLati(startTime, endTime)
                 filter.forEach {
                     if (it.latitude == 255f || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
                         it.latitude = lati
@@ -730,4 +729,17 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         }
     }
 
+    private fun getMapInitThreeDaysAgoLati(start: Long, end: Long) {
+            //取三天前的經緯度最新值位置
+            val startTime = start - TimeUnit.DAYS.toMillis(3)
+            val endTime = end - TimeUnit.DAYS.toMillis(1)
+            val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
+                    .between("Created_time", startTime, endTime)
+                    .notEqualTo("Latitude", 255f)
+                    .sort("Created_time", Sort.DESCENDING).findFirst()
+            if (pastAvailableGPSLocation != null ) {
+                lati = pastAvailableGPSLocation.latitude
+                longi = pastAvailableGPSLocation.longitude
+            }
+    }
 }

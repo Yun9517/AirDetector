@@ -215,111 +215,108 @@ class MJGraphView @JvmOverloads constructor(_context: Context, _attrs: Attribute
 				// --------------------
 				x1 = fHalfPageWidth
 				i = iIndexStart
-				while (i <= iIndexEnd) {
-					var s: String?
-					try {
-						o = a_Data!![i]
-						s = o.Label()
-						if (s != null) {
-							_canvas.drawLine(x1, 0f, x1, h1.toFloat(), pantDivider)
-							_canvas.drawText(s, (x1 + fScaleWidth), pantText.textSize, pantText)
+				if (a_Data!!.isNotEmpty()) {
+					while (i <= iIndexEnd) {
+						var s: String?
+						try {
+							o = a_Data!![i]
+							s = o.Label()
+							if (s != null) {
+								_canvas.drawLine(x1, 0f, x1, h1.toFloat(), pantDivider)
+								_canvas.drawText(s, (x1 + fScaleWidth), pantText.textSize, pantText)
+							}
+						} catch (_e: IndexOutOfBoundsException) {
+							_e.printStackTrace()
+						} catch (_e: NullPointerException) {
+							_e.printStackTrace()
 						}
+						x1 += fItemWidth
+						i += iIndexInc
 					}
-					catch (_e: IndexOutOfBoundsException) {
-						_e.printStackTrace()
-					}
-					catch (_e: NullPointerException) {
-						_e.printStackTrace()
-					}
-					x1 += fItemWidth
-					i += iIndexInc
-				}
 
-				// draw line graph
-				// ---------------
-				try {
-					var bFutureTime = false
-					val lCurrentTime = System.currentTimeMillis()
-					val j = (fScrollX / fItemWidth).toInt()
-					var k = j - iItemOffscreen
-					if (k < 0)
-						k = 0
+					// draw line graph
+					// ---------------
+					try {
+						var bFutureTime = false
+						val lCurrentTime = System.currentTimeMillis()
+						val j = (fScrollX / fItemWidth).toInt()
+						var k = j - iItemOffscreen
+						if (k < 0)
+							k = 0
 
-					i = k * iIndexInc + iIndexStart
-					if (i > iIndexEnd)
-						i = iIndexEnd
+						i = k * iIndexInc + iIndexStart
+						if (i > iIndexEnd)
+							i = iIndexEnd
 
-					o = a_Data!![i]
-
-					x1 = fHalfPageWidth + fItemWidth * k
-					x2 = x1 + fItemWidth
-					y1 = h2 * o.ScaledValue() + fCursorSize
-					ya = y1
-					yb = y1
-
-					pathDash.reset()
-					pathLine.reset()
-					pathDash.moveTo(x1, y1)
-					pathLine.moveTo(x1, y1)
-
-					// check if the time is in future
-					// ------------------------------
-					if (o.TimeStamp() > lCurrentTime)
-						bFutureTime = true
-
-					iCursorIndex = j * iIndexInc + iIndexStart
-					if (iCursorIndex > iIndexEnd)
-						iCursorIndex = iIndexEnd
-
-					k = iCursorIndex + iIndexInc
-
-					i += iIndexInc
-					var z = (iItemPerPage + iItemOffscreen) * iIndexInc + i
-					if (z > iIndexEnd)
-						z = iIndexEnd
-
-					while (i <= z) {
 						o = a_Data!![i]
+
+						x1 = fHalfPageWidth + fItemWidth * k
+						x2 = x1 + fItemWidth
+						y1 = h2 * o.ScaledValue() + fCursorSize
+						ya = y1
+						yb = y1
+
+						pathDash.reset()
+						pathLine.reset()
+						pathDash.moveTo(x1, y1)
+						pathLine.moveTo(x1, y1)
 
 						// check if the time is in future
 						// ------------------------------
-						if (!bFutureTime && o.TimeStamp() > lCurrentTime)
+						if (o.TimeStamp() > lCurrentTime)
 							bFutureTime = true
 
-						// draw line
-						// ---------
-						y2 = h2 * o.ScaledValue() + fCursorSize
-						val x0 = x1 + ((x2 - x1) / 2)
+						iCursorIndex = j * iIndexInc + iIndexStart
+						if (iCursorIndex > iIndexEnd)
+							iCursorIndex = iIndexEnd
 
-						if (bFutureTime)
-							pathDash.cubicTo(x0, y1, x0, y2, x2, y2)
-						else {
-							pathDash.moveTo(x2, y2)
-							pathLine.cubicTo(x0, y1, x0, y2, x2, y2)
-						}
+						k = iCursorIndex + iIndexInc
 
-						// set Cursor Y coordinates
-						// ------------------------
-						if (i == iCursorIndex) {
-							ya = y2
-							yb = y2
-						}
-						else if (i == k)
-							yb = y2
-
-						x1 = x2
-						y1 = y2
-						x2 += fItemWidth
 						i += iIndexInc
+						var z = (iItemPerPage + iItemOffscreen) * iIndexInc + i
+						if (z > iIndexEnd)
+							z = iIndexEnd
+
+						while (i <= z) {
+							o = a_Data!![i]
+
+							// check if the time is in future
+							// ------------------------------
+							if (!bFutureTime && o.TimeStamp() > lCurrentTime)
+								bFutureTime = true
+
+							// draw line
+							// ---------
+							y2 = h2 * o.ScaledValue() + fCursorSize
+							val x0 = x1 + ((x2 - x1) / 2)
+
+							if (bFutureTime)
+								pathDash.cubicTo(x0, y1, x0, y2, x2, y2)
+							else {
+								pathDash.moveTo(x2, y2)
+								pathLine.cubicTo(x0, y1, x0, y2, x2, y2)
+							}
+
+							// set Cursor Y coordinates
+							// ------------------------
+							if (i == iCursorIndex) {
+								ya = y2
+								yb = y2
+							} else if (i == k)
+								yb = y2
+
+							x1 = x2
+							y1 = y2
+							x2 += fItemWidth
+							i += iIndexInc
+						}
+						_canvas.drawPath(pathDash, pantDash)
+						_canvas.drawPath(pathLine, pantLine)
+					} catch (_e: IndexOutOfBoundsException) {
+						_e.printStackTrace()
+					} catch (_e: NullPointerException) {
+						_e.printStackTrace()
 					}
-					_canvas.drawPath(pathDash, pantDash)
-					_canvas.drawPath(pathLine, pantLine)
-				}
-				catch (_e: IndexOutOfBoundsException) {
-					_e.printStackTrace()
-				}
-				catch (_e: NullPointerException) {
-					_e.printStackTrace()
 				}
 				if (bShowCursor && (bmapCursor != null)) {
 					// draw Cursor
