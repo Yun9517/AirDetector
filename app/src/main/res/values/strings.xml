@@ -551,4 +551,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="wait_Login">Logining Please Wait</string>
     <string name="wait_Setting">Setting Please Wait</string>
 
+    <!-- 2018/07/17 AccountRetry -->
+    <string name="errorToken">Account aging has expired, please log in again</string>
+
 </resources>

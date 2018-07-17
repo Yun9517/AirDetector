@@ -6,7 +6,6 @@ package com.microjet.airqi2.Account
 //import com.github.angads25.filepicker.view.FilePickerDialog
 
 import android.annotation.SuppressLint
-import android.app.DatePickerDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
@@ -412,7 +411,7 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
             if (TvocNoseData.download_AsynTask?.status == AsyncTask.Status.RUNNING) {
-                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this,2)
+                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this,2, "doPositiveClick")
                 newFrage.show(fragmentManager,"dialog")
                 cloudDeviceListItem = list[position]
             } else {

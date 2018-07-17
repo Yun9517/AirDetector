@@ -13,6 +13,7 @@ import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
 import android.media.SoundPool
+import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.*
 import android.provider.Settings
@@ -41,11 +42,12 @@ import com.google.firebase.iid.FirebaseInstanceId
 import com.google.firebase.messaging.FirebaseMessaging
 import com.microjet.airqi2.Account.AccountActiveActivity
 import com.microjet.airqi2.Account.AccountManagementActivity
+import com.microjet.airqi2.Account.AccountRetryActivity
+import com.microjet.airqi2.Account.AccountTask.AccountCheckTokenTask
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.BlueTooth.DeviceListActivity
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.CustomAPI.FragmentAdapter
-import com.microjet.airqi2.CustomAPI.GetNetWork
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
@@ -53,6 +55,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
+import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
@@ -165,7 +168,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     mUartService?.connect(mDeviceAddress)
                 }
             }
-            if(myPref.getSharePreferenceServiceForeground()) {
+            if (myPref.getSharePreferenceServiceForeground()) {
                 val serviceIntent = Intent(this@MainActivity, UartService::class.java)
                 serviceIntent.action = "START_FOREGROUND"
                 startService(serviceIntent)
@@ -215,7 +218,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private val listDataChild: HashMap<ExpandedMenuModel, ArrayList<String>> = HashMap()
     private var setNavigationView: NavigationView? = null
 
-    private var mywarningclass:WarringClass?=null
+    private var mywarningclass: WarringClass? = null
 
     private lateinit var myPref: PrefObjects
     private var c6d6map = HashMap<String, String>()
@@ -229,6 +232,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.e(TAG, "call onCreate")
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        share.edit().putString("token", "123456789456132").apply()
 
         myPref = PrefObjects(this)
         Log.e("Firebase", FirebaseInstanceId.getInstance().token.toString())
@@ -238,7 +243,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         initpoint()
         CheckSWversion()
         checkUrl()
-        mywarningclass=WarringClass(mContext)
+        mywarningclass = WarringClass(mContext)
         val dm = DisplayMetrics()
         this@MainActivity.windowManager.defaultDisplay.getMetrics(dm)
         Log.v("MainActivity", "Resolution: " + dm.heightPixels + "x" + dm.widthPixels)
@@ -254,10 +259,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         //20180411   建立警告物件
-      //  warningClass = WarningClass(this)
+        //  warningClass = WarningClass(this)
         alertId = soundPool2.load(this, R.raw.low_power, 1)
 
-      //  mywarningclass=WarringClass(this)
+        //  mywarningclass=WarringClass(this)
         // 2018/05/03 ExpandableListView
         setNavigationView = findViewById<View>(R.id.naviView) as NavigationView
 
@@ -287,8 +292,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.collapseGroup(groupPosition)
                     } else {
                         parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
-                            when(childPosition) {
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
                                 0 -> {
                                     if (experienceURL.isNotEmpty()) {
                                         val uri = Uri.parse(experienceURL)
@@ -326,18 +331,28 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
-                3 -> { trailMapShow() }
-                4 -> { knowledgeShow() }
+                2 -> {
+                    publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
+                }
+                3 -> {
+                    trailMapShow()
+                }
+                4 -> {
+                    knowledgeShow()
+                }
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
                     } else {
                         parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
-                            when(childPosition) {
-                                0 -> { qandaShow() }
-                                1 -> { tourShow() }
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
+                                0 -> {
+                                    qandaShow()
+                                }
+                                1 -> {
+                                    tourShow()
+                                }
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -348,10 +363,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.collapseGroup(groupPosition)
                     } else {
                         parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener ({ parent, _, groupPosition, childPosition, _ ->
-                            when(childPosition) {
-                                0 -> { accountShow() }
-                                1 -> { settingShow() }
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
+                                0 -> {
+                                    accountShow()
+                                }
+                                1 -> {
+                                    settingShow()
+                                }
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -361,10 +380,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             true
         })
         val checkResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
-        if(checkResult != ConnectionResult.SUCCESS){
-            Log.e("偵測是否成功","結論失敗")
-        }else{
-            Log.e("偵測是否成功","結論成功")
+        if (checkResult != ConnectionResult.SUCCESS) {
+            Log.e("偵測是否成功", "結論失敗")
+        } else {
+            Log.e("偵測是否成功", "結論成功")
         }
         FirebaseMessaging.getInstance().subscribeToTopic("addwiinews")
         //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
@@ -401,8 +420,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //20180518
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
-        if(myToken != ""){
+        if (myToken != "") {
             FirebaseNotifSettingTask().execute(myToken)
+            AccountCheckTokenTask().execute(myToken, "checkEvent")
         }
     }
 
@@ -473,7 +493,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     // 拒絕權限後的方法實作
     override fun onPermissionsDenied(requestCode: Int, perms: List<String>) {
-        if(requestCode == RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION) {
+        if (requestCode == RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION) {
             val mBuilder = AlertDialog.Builder(this)
             mBuilder.setTitle(R.string.text_message_need_permission)
                     .setMessage(R.string.text_message_need_permission)
@@ -815,21 +835,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
         mDrawerToggle!!.onOptionsItemSelected(getDrawerLayoutItem)
-        if (GetNetWork.isFastGetNet) {
-            if (myToken == "") {
-                Log.e("主葉面看偷肯", myToken)
-                val i: Intent? = Intent(this, AccountManagementActivity::class.java)
-                //text_Account_status.setText(R.string.account_Deactivation)
-                startActivity(i)
-            } else {
-                Log.e("主葉面!=空字串看偷肯", myToken)
-                val i: Intent? = Intent(this, AccountActiveActivity::class.java)
-                //text_Account_status.setText(R.string.account_Activation)
-                startActivity(i)
-            }
+        if (myToken == "") {
+            Log.e("checkMyTokem", "myToken = " + myToken)
+            val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+            startActivity(i)
         } else {
-            //showDialog("請連接網路")
-            showDialog(getString(R.string.checkConnection))
+            Log.e("checkMyTokem", "myToken = " + myToken)
+            checkMyTokem(myToken)
         }
 
 
@@ -1293,9 +1305,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } else {
             val myName = shareToken.getString("name", "")
             val myEmail = shareToken.getString("email", "")
-            when(myName){
-                "空汙鼻使用者" ->text_Account_status?.text = myEmail
-                else ->text_Account_status?.text = myName
+            when (myName) {
+                "空汙鼻使用者" -> text_Account_status?.text = myEmail
+                else -> text_Account_status?.text = myName
             }
             Log.e("MainActivity取名字", myName)
         }
@@ -1489,14 +1501,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
 
                         mywarningclass?.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
-                       // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
+                        // warningClass!!.judgeValue(hashMap[TvocNoseData.C6TVOC]!!.toInt(), hashMap[TvocNoseData.C6PM25]!!.toInt())
                     }
                     0xD5.toByte() -> {
                         putD5ToObject(txValue)
                     }
                     0xD6.toByte() -> {
                         val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueD6(txValue)
-                        saveToRealmD6(c6d6map,hashMap)
+                        saveToRealmD6(c6d6map, hashMap)
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             if (triggerForAndroidOOn) {
                                 countForAndroidO++
@@ -1805,6 +1817,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 experienceURL = bleEvent.userExp!!
                 ourStoryURL = bleEvent.ourStory!!
             }
+        // 2018/07/17 Add check Account Token effective
+            "successToken" -> {
+                val i: Intent? = Intent(this, AccountActiveActivity::class.java)
+                startActivity(i)
+            }/*
+            "ErrorTokenWithOnstart" ->{
+                val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+                share.edit().putString("token", "").apply()
+                share.edit().putString("name", "").apply()
+                share.edit().putString("email", "").apply()
+                share.edit().putString("deviceLi","").apply()
+            }
+            */
+            "ErrorTokenWithButton" -> {
+                //失效的Token，清除Apk內所有使用者資料
+                val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+                share.edit().putString("token", "").apply()
+                share.edit().putString("name", "").apply()
+                share.edit().putString("email", "").apply()
+                share.edit().putString("deviceLi", "").apply()
+                val newFrage = CheckFragment().newInstance(R.string.errorToken, this, 1, "Login")
+                newFrage.show(fragmentManager, "dialog")
+            }
         }
     }
 
@@ -1925,19 +1960,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
         try {
             if (pmType < 2) {
-                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE }
+                if (ll1!!.childCount == 3) {
+                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE
+                }
             } else {
-                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE }
+                if (ll1!!.childCount == 3) {
+                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE
+                }
             }
             Log.d("ViewPager", viewPager.adapter?.count.toString())
         } catch (e: Exception) {
-            Log.d(TAG,e.toString())
+            Log.d(TAG, e.toString())
         }
     }
 
     //多型代入PM10TYPE,一筆C5一筆D5
     private fun putC5ToObject(tx: ByteArray, pm10type: Int) {
-        Log.d(TAG,"putC5ToObject---$pm10type")
+        Log.d(TAG, "putC5ToObject---$pm10type")
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemKeyValueC5(tx)
         if (hashMap[TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
             if (!lock) {
@@ -2008,7 +2047,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         Log.d("C5D5ARR", arr1.toString())
     }
 
-    private fun saveToRealmD6(hash1: HashMap<String,String>, hash2: HashMap<String, String>) {
+    private fun saveToRealmD6(hash1: HashMap<String, String>, hash2: HashMap<String, String>) {
         var c6Time = if (hash1[TvocNoseData.C6TIME] != null) hash1[TvocNoseData.C6TIME]!!.toLong() * 1000 else 0L
         var d6Time = if (hash2[TvocNoseData.D6TIME] != null) hash2[TvocNoseData.D6TIME]!!.toLong() * 1000 else 0L
         if (c6Time == d6Time && d6Time != 0L) {
@@ -2034,6 +2073,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             uploadData()
         }
         c6d6map.clear()
+    }
+
+    private fun checkMyTokem(myToken: String?) {
+        val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val networkInfo = cm.activeNetworkInfo
+        if (networkInfo != null && networkInfo.isConnected) {
+            AccountCheckTokenTask().execute(myToken, "btEvent")
+        } else {
+            val i: Intent? = Intent(this, AccountRetryActivity::class.java)
+            startActivity(i)
+        }
+    }
+
+    fun Login() {
+        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+        startActivity(i)
     }
 
 //    private fun setPublicLatiLongi() {

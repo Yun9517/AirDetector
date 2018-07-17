@@ -14,6 +14,7 @@ import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.GraphRequest
 import com.facebook.login.LoginResult
+import com.microjet.airqi2.Account.AccountTask.AccountLoginTask
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.R
@@ -73,7 +74,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 "login" -> login()
             }
         } else {
-            val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+            val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1,"dismiss")
             newFrage.show(fragmentManager, "dialog")
         }
     }
@@ -82,7 +83,7 @@ class AccountManagementActivity : AppCompatActivity() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
             true -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
             false -> {
-                val newFrage = CheckFragment().newInstance(R.string.errorMail_address, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.errorMail_address, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }
@@ -146,7 +147,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.wait_Login, this, 0)
+                val newFrage = CheckFragment().newInstance(R.string.wait_Login, this, 0,"wait")
                 newFrage.setCancelable(false)
                 newFrage.show(fragmentManager, "dialog")
             }
@@ -162,7 +163,11 @@ class AccountManagementActivity : AppCompatActivity() {
                 AccountActivityShow()
             }
             "wrong Login" -> {
-                val newFrage = CheckFragment().newInstance(R.string.errorPassword, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.errorPassword, this, 1,"dismiss")
+                newFrage.show(fragmentManager, "dialog")
+            }
+            "ReconnectNetwork" -> {
+                val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }

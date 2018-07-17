@@ -1,4 +1,4 @@
-package com.microjet.airqi2.Account
+package com.microjet.airqi2.Account.AccountTask
 
 import android.os.AsyncTask
 import android.util.Log

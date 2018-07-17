@@ -6,6 +6,8 @@ import android.app.DialogFragment
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import com.microjet.airqi2.Account.AccountActiveActivity
+import com.microjet.airqi2.Account.AccountRetryActivity
+import com.microjet.airqi2.MainActivity
 import com.microjet.airqi2.R
 
 
@@ -13,7 +15,7 @@ import com.microjet.airqi2.R
  * Created by B00190 on 2018/5/29.
  */
 class CheckFragment : DialogFragment() {
-    fun newInstance(title: Int, activity: Activity?, howMany: Int): CheckFragment {
+    fun newInstance(title: Int, activity: Activity?, howMany: Int, chooseMethod: String): CheckFragment {
         val frag = CheckFragment()
         val args = Bundle()
         args.putInt("title", title) //傳入title參數
@@ -26,6 +28,7 @@ class CheckFragment : DialogFragment() {
         super.onCreate(savedInstanceState)
         val title = arguments.getInt("title") //取得參數title
         val howMany = arguments.getInt("howMany")
+        val chooseMethod = arguments.getString("chooseMethod")
         val whichActivity = AlertDialog.Builder(activity)
         when (howMany) {
         //zero Button
@@ -39,8 +42,22 @@ class CheckFragment : DialogFragment() {
                     "AccountManagementActivity" -> {
                         dismiss()
                     }
+                    "AccountRetryActivity" -> {
+                        if(chooseMethod == "Login"){
+                            (activity as? AccountRetryActivity)?.Login()
+                        }
+                        if(chooseMethod == "dismiss") {
+                            dismiss()
+                        }
+                    }
+                    "MainActivity" -> {
+                        if(chooseMethod == "Login"){
+                            (activity as? MainActivity)?.Login()
+                        }
+                    }
                 }
-            })
+
+            }) 
 
         //two Button
             2 -> whichActivity.setPositiveButton("確定", { dialog, which ->
