@@ -803,7 +803,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             tvNotify?.text = " "
             tvLastDetectTime?.text = " "
             inCircleBar?.setCurrentValues(0f)
-            imgLight?.setImageResource(R.drawable.app_android_icon_light)
+            //imgLight?.setImageResource(R.drawable.app_android_icon_light)
             setNewsPanelShow(true)
         }
     }

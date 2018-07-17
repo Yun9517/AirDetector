@@ -545,7 +545,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun uiFindViewById() {
         viewPager.offscreenPageLimit = 6
         naviView.menu?.findItem(R.id.nav_setting)?.isVisible = false
-        lightIcon?.setImageResource(R.drawable.app_android_icon_light)
+        //lightIcon?.setImageResource(R.drawable.app_android_icon_light)
     }
 
     @Suppress("DEPRECATION")
