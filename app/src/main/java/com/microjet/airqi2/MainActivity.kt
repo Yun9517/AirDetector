@@ -1527,26 +1527,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private fun getMaxItems(tx: ByteArray) {
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
-        //var sampleRateTime = 0
-        //var correctTime = 0
-        //sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
         maxItem = hashMap[TvocNoseData.MAXI]!!.toInt()
-        //correctTime = hashMap[TvocNoseData.CT]!!.toInt()
         Log.d("UART", "total item " + Integer.toString(maxItem))
         if (maxItem > 0) {
-            if (Build.BRAND != "OPPO") {
-                Toast.makeText(applicationContext, getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show()
-            }
-            //Realm 資料庫
+            if (Build.BRAND != "OPPO") { Toast.makeText(applicationContext, getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show() }
             val realm = Realm.getDefaultInstance()
-            //將資料庫最大時間與現在時間換算成Count
             var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
-            if (maxCreatedTime == null) {
-                maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2)
-            }
-            val nowTime = System.currentTimeMillis()//Calendar.getInstance().timeInMillis
-            Log.d("0xB4countLast", Date(nowTime).toString())
-            Log.d("0xB4countLast", Date(maxCreatedTime.toLong()).toString())
+            if (maxCreatedTime == null) { maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2) }
+            val nowTime = System.currentTimeMillis()
             val countForItemTime = nowTime - maxCreatedTime.toLong()
             Log.d("0xB4countItemTime", countForItemTime.toString())
             countForItem = Math.min((countForItemTime / (60L * 1000L)).toInt(), maxItem)
@@ -1743,6 +1731,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
+                myPref.setSharePreferencePullAllData(true)
             }
         }
         SaveRealmTask().execute()
