@@ -212,4 +212,12 @@ class PrefObjects(context: Context) {
         share.edit().putBoolean(SavePreferences.FLAG_PULL_ALL_DATA, value).apply()
     }
 
+    fun getSharePreferencePullAllDataMAC(): String {
+        return share.getString(SavePreferences.FLAG_PULL_ALL_DATA_MAC, "no")
+    }
+
+    fun setSharePreferencePullAllData(value: String?) {
+        share.edit().putString(SavePreferences.FLAG_PULL_ALL_DATA_MAC, value).apply()
+    }
+
 }

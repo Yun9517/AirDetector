@@ -56,8 +56,6 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
-import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
-import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.settingPage.SettingActivity
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var lightIcon: ImageView? = null
 
-    private var connState = DISCONNECTED
+    private var connState = BleConnection.DISCONNECTED
 
     // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
@@ -274,10 +272,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        CONNECTED -> {
+                        BleConnection.CONNECTED -> {
                             blueToothDisconnect()
                         }
-                        DISCONNECTED -> {
+                        BleConnection.DISCONNECTED -> {
                             blueToothConnect()
                         }
                     }
@@ -380,7 +378,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
         //checkBluetooth()
-        if (connState == DISCONNECTED) {
+        if (connState == BleConnection.DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
         }
@@ -411,7 +409,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
-            connState = DISCONNECTED
+            connState = BleConnection.DISCONNECTED
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             countForAndroidO = 0
@@ -800,7 +798,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun settingShow() {
         val i: Intent? = Intent(this, SettingActivity::class.java)
 
-        i!!.putExtra("CONN", connState == CONNECTED)
+        i!!.putExtra("CONN", connState == BleConnection.CONNECTED)
 
         startActivityForResult(i, REQUEST_SELECT_SAMPLE)
         //startActivity(i)
@@ -883,7 +881,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothDisconnect() {
-        if (connState == CONNECTED) {
+        if (connState == BleConnection.CONNECTED) {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
@@ -964,7 +962,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (connState == DISCONNECTED) {
+                    if (connState == BleConnection.DISCONNECTED) {
                         mDeviceAddress = data.extras.getString("MAC")
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
@@ -1123,12 +1121,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = CONNECTED
+                    connState = BleConnection.CONNECTED
                     checkUIState()
+                    checkMACConsistency()
                     Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = DISCONNECTED
+                    connState = BleConnection.DISCONNECTED
                     isFirstC0 = true
                     isFirstC6 = true
                     arr1.clear()
@@ -1164,7 +1163,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
-        if (connState == CONNECTED) {
+        if (connState == BleConnection.CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
@@ -1710,6 +1709,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
+                myPref.setSharePreferencePullAllData(mDeviceAddress)
                 myPref.setSharePreferencePullAllData(true)
             }
         }
@@ -2017,6 +2017,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val appropriateMaxItems = Math.min(((time - maxCreatedTime.toLong()) / 60000L).toInt(), maxItem)
         maxItem = appropriateMaxItems
         Log.d("Items", appropriateMaxItems.toString())
+    }
+
+    private fun checkMACConsistency() {
+        val keyMAC = myPref.getSharePreferencePullAllDataMAC()
+        if (mDeviceAddress != keyMAC) {
+            myPref.setSharePreferencePullAllData(false)
+        }
     }
 }
 
