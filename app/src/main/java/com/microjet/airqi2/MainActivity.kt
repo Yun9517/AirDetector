@@ -55,7 +55,6 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
-import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
@@ -232,9 +231,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         Log.e(TAG, "call onCreate")
-        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-        share.edit().putString("token", "123456789456132").apply()
-
         myPref = PrefObjects(this)
         Log.e("Firebase", FirebaseInstanceId.getInstance().token.toString())
         uiFindViewById()
@@ -422,7 +418,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val myToken = shareToken.getString("token", "")
         if (myToken != "") {
             FirebaseNotifSettingTask().execute(myToken)
-            AccountCheckTokenTask().execute(myToken, "checkEvent")
+            AccountCheckTokenTask().execute(myToken, "checkTokenByOnstart")
         }
     }
 
@@ -1821,24 +1817,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             "successToken" -> {
                 val i: Intent? = Intent(this, AccountActiveActivity::class.java)
                 startActivity(i)
-            }/*
-            "ErrorTokenWithOnstart" ->{
-                val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                share.edit().putString("token", "").apply()
-                share.edit().putString("name", "").apply()
-                share.edit().putString("email", "").apply()
-                share.edit().putString("deviceLi","").apply()
             }
-            */
+            "ErrorTokenWithOnstart" ->{
+                cleanUserData()
+            }
             "ErrorTokenWithButton" -> {
-                //失效的Token，清除Apk內所有使用者資料
-                val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                share.edit().putString("token", "").apply()
-                share.edit().putString("name", "").apply()
-                share.edit().putString("email", "").apply()
-                share.edit().putString("deviceLi", "").apply()
-                val newFrage = CheckFragment().newInstance(R.string.errorToken, this, 1)
-                newFrage.show(fragmentManager, "dialog")
+                cleanUserData()
+                val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+                startActivity(i)
             }
         }
     }
@@ -2079,16 +2065,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
-            AccountCheckTokenTask().execute(myToken, "btEvent")
+            AccountCheckTokenTask().execute(myToken, "checkTokenBybtEvent")
         } else {
             val i: Intent? = Intent(this, AccountRetryActivity::class.java)
             startActivity(i)
         }
     }
 
-    fun Login() {
-        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
-        startActivity(i)
+    private fun cleanUserData() {
+        //失效的Token，清除Apk內所有使用者資料
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        share.edit().putString("token", "").apply()
+        share.edit().putString("name", "").apply()
+        share.edit().putString("email", "").apply()
+        share.edit().putString("deviceLi", "").apply()
+        if (Build.BRAND != "OPPO") {
+            Toast.makeText(MyApplication.applicationContext(), R.string.errorToken, Toast.LENGTH_SHORT).show()
+        }
     }
 
 //    private fun setPublicLatiLongi() {

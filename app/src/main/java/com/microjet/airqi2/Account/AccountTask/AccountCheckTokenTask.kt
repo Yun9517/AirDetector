@@ -78,20 +78,20 @@ class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
             when (result) {
                 "successToken" -> {
                     var urlEvent_success: BleEvent? = null
-                    if (event == "btEvent") {
+                    if (event == "checkTokenBybtEvent") {
                         urlEvent_success = BleEvent("successToken")
                     }
-                    if (event == "checkEvent") {
+                    if (event == "checkTokenByOnstart") {
                        Log.d(TAG,"Token有效")
                     }
                     EventBus.getDefault().post(urlEvent_success)
                 }
                 "ResponseError" -> {
                     var urlEvent_success: BleEvent? = null
-                    if (event == "btEvent") {
+                    if (event == "checkTokenBybtEvent") {
                         urlEvent_success = BleEvent("ErrorTokenWithButton")
                     }
-                    if (event == "checkEvent") {
+                    if (event == "checkTokenByOnstart") {
                         urlEvent_success = BleEvent("ErrorTokenWithOnstart")
                     }
                     EventBus.getDefault().post(urlEvent_success)

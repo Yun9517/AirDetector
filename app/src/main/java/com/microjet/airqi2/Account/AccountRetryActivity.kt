@@ -4,13 +4,16 @@ import android.app.DialogFragment
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
+import android.widget.Toast
 import com.microjet.airqi2.Account.AccountTask.AccountCheckTokenTask
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
+import com.microjet.airqi2.MyApplication
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_account_retry.*
 import org.greenrobot.eventbus.EventBus
@@ -48,7 +51,7 @@ class AccountRetryActivity : AppCompatActivity() {
         if (networkInfo != null && networkInfo.isConnected) {
             val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val myToken = shareToken.getString("token", "")
-            AccountCheckTokenTask().execute(myToken,"btEvent")
+            AccountCheckTokenTask().execute(myToken,"checkTokenBybtEvent")
         } else {
             val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
             newFrage.show(fragmentManager, "dialog")
@@ -96,14 +99,10 @@ class AccountRetryActivity : AppCompatActivity() {
                 finish()
             }
             "ErrorTokenWithButton" -> {
-                //失效的Token，清除Apk內所有使用者資料
-                val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
-                share.edit().putString("token", "").apply()
-                share.edit().putString("name", "").apply()
-                share.edit().putString("email", "").apply()
-                share.edit().putString("deviceLi","").apply()
-                val newFrage = CheckFragment().newInstance(R.string.errorToken, this, 1)
-                newFrage.show(fragmentManager, "dialog")
+                cleanUserData()
+                val i: Intent? = Intent(this, AccountManagementActivity::class.java)
+                startActivity(i)
+                finish()
             }
             "ReconnectNetwork" -> {
                 val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
@@ -112,10 +111,16 @@ class AccountRetryActivity : AppCompatActivity() {
         }
     }
 
-    fun Login() {
-        val i: Intent? = Intent(this, AccountManagementActivity::class.java)
-        startActivity(i)
-        finish()
+    private fun cleanUserData() {
+        //失效的Token，清除Apk內所有使用者資料
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        share.edit().putString("token", "").apply()
+        share.edit().putString("name", "").apply()
+        share.edit().putString("email", "").apply()
+        share.edit().putString("deviceLi", "").apply()
+        if (Build.BRAND != "OPPO") {
+            Toast.makeText(MyApplication.applicationContext(), R.string.errorToken, Toast.LENGTH_SHORT).show()
+        }
     }
 
 }
