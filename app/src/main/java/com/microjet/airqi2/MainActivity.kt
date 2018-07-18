@@ -56,8 +56,6 @@ import com.microjet.airqi2.Fragment.ChartFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
-import com.microjet.airqi2.MainActivity.BleConnection.CONNECTED
-import com.microjet.airqi2.MainActivity.BleConnection.DISCONNECTED
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.settingPage.SettingActivity
@@ -109,7 +107,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var lightIcon: ImageView? = null
 
-    private var connState = DISCONNECTED
+    private var connState = BleConnection.DISCONNECTED
 
     // private var mDevice: BluetoothDevice? = null
     //private var mBluetoothLeService: UartService? = null
@@ -274,10 +272,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        CONNECTED -> {
+                        BleConnection.CONNECTED -> {
                             blueToothDisconnect()
                         }
-                        DISCONNECTED -> {
+                        BleConnection.DISCONNECTED -> {
                             blueToothConnect()
                         }
                     }
@@ -380,7 +378,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
         //checkBluetooth()
-        if (connState == DISCONNECTED) {
+        if (connState == BleConnection.DISCONNECTED) {
             val gattServiceIntent = Intent(this, UartService::class.java)
             bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
         }
@@ -411,7 +409,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
         if (mUartService == null) {
-            connState = DISCONNECTED
+            connState = BleConnection.DISCONNECTED
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             countForAndroidO = 0
@@ -800,7 +798,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun settingShow() {
         val i: Intent? = Intent(this, SettingActivity::class.java)
 
-        i!!.putExtra("CONN", connState == CONNECTED)
+        i!!.putExtra("CONN", connState == BleConnection.CONNECTED)
 
         startActivityForResult(i, REQUEST_SELECT_SAMPLE)
         //startActivity(i)
@@ -883,7 +881,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun blueToothDisconnect() {
-        if (connState == CONNECTED) {
+        if (connState == BleConnection.CONNECTED) {
             //val serviceIntent: Intent? = Intent(BroadcastIntents.PRIMARY)
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
@@ -964,7 +962,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 //When the DeviceListActivity return, with the selected device address
                 //得到Address後將Address後傳遞至Service後啟動 171129
                 if (resultCode == Activity.RESULT_OK && data != null) {
-                    if (connState == DISCONNECTED) {
+                    if (connState == BleConnection.DISCONNECTED) {
                         mDeviceAddress = data.extras.getString("MAC")
                         val gattServiceIntent = Intent(this, UartService::class.java)
                         bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
@@ -1123,12 +1121,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             val action = intent.action
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
-                    connState = CONNECTED
+                    connState = BleConnection.CONNECTED
                     checkUIState()
+                    checkMACConsistency()
                     Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
-                    connState = DISCONNECTED
+                    connState = BleConnection.DISCONNECTED
                     isFirstC0 = true
                     isFirstC6 = true
                     arr1.clear()
@@ -1164,7 +1163,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     @Synchronized
     private fun checkUIState() {
-        if (connState == CONNECTED) {
+        if (connState == BleConnection.CONNECTED) {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
@@ -1410,7 +1409,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         Log.d("0xB2", hashMap.toString())
                     }
                     0xB4.toByte() -> {
-                        getMaxItems(txValue)
+                        setMaxAvailableItems(txValue)
                     }
                     0xB5.toByte() -> {
                         //saveToRealm(txValue)
@@ -1475,12 +1474,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                     }
                     0xC6.toByte() -> {
+                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         if (isFirstC6) {
                             isFirstC6 = false
-                            //setPublicLatiLongi() //將經緯度設為全域
-                            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                            if (maxItem > 0) {
+                                if (myPref.getSharePreferencePullAllData()) {
+                                    changeMaxItem(hashMap)
+                                }
+
+                                val mainIntent = Intent(BroadcastIntents.PRIMARY)
+                                mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
+                                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
+                                sendBroadcast(mainIntent)
+                                mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                                Log.d("AppropriateItem", maxItem.toString())
+                            }
                         }
-                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         val pmType = MyApplication.getDevicePMType().toInt()
                         if (pmType < 2) {
                             saveToRealmC6(hashMap)
@@ -1525,52 +1534,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }*/
 
-    private fun getMaxItems(tx: ByteArray) {
+    private fun setMaxAvailableItems(tx: ByteArray) {
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
-        //var sampleRateTime = 0
-        //var correctTime = 0
-        //sampleRateTime = hashMap[TvocNoseData.B4SR]!!.toInt()
         maxItem = hashMap[TvocNoseData.MAXI]!!.toInt()
-        //correctTime = hashMap[TvocNoseData.CT]!!.toInt()
-        Log.d("UART", "total item " + Integer.toString(maxItem))
-        if (maxItem > 0) {
-            if (Build.BRAND != "OPPO") {
-                Toast.makeText(applicationContext, getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show()
-            }
-            //Realm 資料庫
-            val realm = Realm.getDefaultInstance()
-            //將資料庫最大時間與現在時間換算成Count
-            var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
-            if (maxCreatedTime == null) {
-                maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2)
-            }
-            val nowTime = System.currentTimeMillis()//Calendar.getInstance().timeInMillis
-            Log.d("0xB4countLast", Date(nowTime).toString())
-            Log.d("0xB4countLast", Date(maxCreatedTime.toLong()).toString())
-            val countForItemTime = nowTime - maxCreatedTime.toLong()
-            Log.d("0xB4countItemTime", countForItemTime.toString())
-            countForItem = Math.min((countForItemTime / (60L * 1000L)).toInt(), maxItem)
-            Log.d("0xB4countItem", java.lang.Long.toString(countForItem.toLong()))
-            if (Build.BRAND != "OPPO") {
-                //Toast.makeText(applicationContext, getText(R.string.Total_Data).toString() + java.lang.Long.toString(countForItem.toLong()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show()
-            }
-            if (countForItem >= 1) {
-                //NowItem = countForItem
-                //mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(countForItem))
-                //downloading = true
-                //downloadComplete = false;
-                val mainIntent = Intent(BroadcastIntents.PRIMARY)
-                mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
-                sendBroadcast(mainIntent)
-            } else {
-                if (Build.BRAND != "OPPO") {
-                    //Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        Log.d("getMaxItems", hashMap.toString())
     }
 
     private fun connectionInitMethod(rtcTime: Long) {
@@ -1743,6 +1709,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
+                myPref.setSharePreferencePullAllData(mDeviceAddress)
+                myPref.setSharePreferencePullAllData(true)
             }
         }
         SaveRealmTask().execute()
@@ -2040,6 +2008,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //        lati = TvocNoseData.lati
 //        longi = TvocNoseData.longi
 //    }
+
+    private fun changeMaxItem(hashmap: HashMap<String, String>) {
+        val time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
+        val realm = Realm.getDefaultInstance()
+        var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
+        if (maxCreatedTime == null) { maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2) }
+        val appropriateMaxItems = Math.min(((time - maxCreatedTime.toLong()) / 60000L).toInt(), maxItem)
+        maxItem = appropriateMaxItems
+        Log.d("Items", appropriateMaxItems.toString())
+    }
+
+    private fun checkMACConsistency() {
+        val keyMAC = myPref.getSharePreferencePullAllDataMAC()
+        if (mDeviceAddress != keyMAC) {
+            myPref.setSharePreferencePullAllData(false)
+        }
+    }
 }
 
 

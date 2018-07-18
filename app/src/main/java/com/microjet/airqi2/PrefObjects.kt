@@ -203,4 +203,21 @@ class PrefObjects(context: Context) {
     fun setSharePreferenceTempUnitFahrenheit(value: Boolean) {
         share.edit().putBoolean(SavePreferences.SETTING_IS_FAHRENHEIT, value).apply()
     }
+
+    fun getSharePreferencePullAllData(): Boolean {
+        return share.getBoolean(SavePreferences.FLAG_PULL_ALL_DATA, false)
+    }
+
+    fun setSharePreferencePullAllData(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.FLAG_PULL_ALL_DATA, value).apply()
+    }
+
+    fun getSharePreferencePullAllDataMAC(): String {
+        return share.getString(SavePreferences.FLAG_PULL_ALL_DATA_MAC, "no")
+    }
+
+    fun setSharePreferencePullAllData(value: String?) {
+        share.edit().putString(SavePreferences.FLAG_PULL_ALL_DATA_MAC, value).apply()
+    }
+
 }

@@ -49,4 +49,7 @@ object SavePreferences {
     const val SETTING_ALLOW_BROADCAST_VIBRATION = "airqi2.settings.SETTING_ALLOW_BROADCAST_VIBRATION"
     const val SETTING_ALLOW_BROADCAST_SOUND = "airqi2.settings.SETTING_ALLOW_BROADCAST_SOUND"
     const val SETTING_IS_FAHRENHEIT  = "airqi2.settings.SETTING_IS_FAHRENHEIT"
+
+    const val FLAG_PULL_ALL_DATA = "airqi2.FLAG.PULL_ALL_DATA"
+    const val FLAG_PULL_ALL_DATA_MAC = "airqi2.FLAG.PULL_ALL_DATA_MAC"
 }
