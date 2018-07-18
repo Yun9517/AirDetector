@@ -1410,7 +1410,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         Log.d("0xB2", hashMap.toString())
                     }
                     0xB4.toByte() -> {
-                        getMaxItems(txValue)
+                        setMaxAvailableItems(txValue)
                     }
                     0xB5.toByte() -> {
                         //saveToRealm(txValue)
@@ -1475,12 +1475,22 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         }
                     }
                     0xC6.toByte() -> {
+                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         if (isFirstC6) {
                             isFirstC6 = false
-                            //setPublicLatiLongi() //將經緯度設為全域
-                            mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                            if (maxItem > 0) {
+                                if (myPref.getSharePreferencePullAllData()) {
+                                    changeMaxItem(hashMap)
+                                }
+
+                                val mainIntent = Intent(BroadcastIntents.PRIMARY)
+                                mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
+                                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
+                                sendBroadcast(mainIntent)
+                                mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(1))
+                                Log.d("AppropriateItem", maxItem.toString())
+                            }
                         }
-                        val hashMap = BLECallingTranslate.ParserGetAutoSendDataKeyValueC6(txValue)
                         val pmType = MyApplication.getDevicePMType().toInt()
                         if (pmType < 2) {
                             saveToRealmC6(hashMap)
@@ -1525,40 +1535,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     }*/
 
-    private fun getMaxItems(tx: ByteArray) {
+    private fun setMaxAvailableItems(tx: ByteArray) {
         val hashMap = BLECallingTranslate.parserGetHistorySampleItemsKeyValue(tx)
         maxItem = hashMap[TvocNoseData.MAXI]!!.toInt()
-        Log.d("UART", "total item " + Integer.toString(maxItem))
-        if (maxItem > 0) {
-            if (Build.BRAND != "OPPO") { Toast.makeText(applicationContext, getText(R.string.Loading_Data), Toast.LENGTH_SHORT).show() }
-            val realm = Realm.getDefaultInstance()
-            var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
-            if (maxCreatedTime == null) { maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2) }
-            val nowTime = System.currentTimeMillis()
-            val countForItemTime = nowTime - maxCreatedTime.toLong()
-            Log.d("0xB4countItemTime", countForItemTime.toString())
-            countForItem = Math.min((countForItemTime / (60L * 1000L)).toInt(), maxItem)
-            Log.d("0xB4countItem", java.lang.Long.toString(countForItem.toLong()))
-            if (Build.BRAND != "OPPO") {
-                //Toast.makeText(applicationContext, getText(R.string.Total_Data).toString() + java.lang.Long.toString(countForItem.toLong()) + getText(R.string.Total_Data_Finish), Toast.LENGTH_SHORT).show()
-            }
-            if (countForItem >= 1) {
-                //NowItem = countForItem
-                //mUartService?.writeRXCharacteristic(BLECallingTranslate.getHistorySampleC5(countForItem))
-                //downloading = true
-                //downloadComplete = false;
-                val mainIntent = Intent(BroadcastIntents.PRIMARY)
-                mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
-                mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
-                sendBroadcast(mainIntent)
-            } else {
-                if (Build.BRAND != "OPPO") {
-                    //Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        Log.d("getMaxItems", hashMap.toString())
     }
 
     private fun connectionInitMethod(rtcTime: Long) {
@@ -2029,6 +2008,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //        lati = TvocNoseData.lati
 //        longi = TvocNoseData.longi
 //    }
+
+    private fun changeMaxItem(hashmap: HashMap<String, String>) {
+        val time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
+        val realm = Realm.getDefaultInstance()
+        var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
+        if (maxCreatedTime == null) { maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2) }
+        val appropriateMaxItems = Math.min(((time - maxCreatedTime.toLong()) / 60000L).toInt(), maxItem)
+        maxItem = appropriateMaxItems
+        Log.d("Items", appropriateMaxItems.toString())
+    }
 }
 
 
