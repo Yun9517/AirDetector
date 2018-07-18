@@ -82,7 +82,7 @@ class AccountRetryActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.wait_Login, this, 0)
+                val newFrage = CheckFragment().newInstance(R.string.checkToken, this, 0)
                 newFrage.setCancelable(false)
                 newFrage.show(fragmentManager, "dialog")
             }
