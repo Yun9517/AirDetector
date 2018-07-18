@@ -43,13 +43,13 @@ import kotlin.collections.ArrayList
 
 class MainFragment : Fragment(), View.OnTouchListener {
 
-    enum class DetectionData(val range1: Long, val range2: Long) {
-        TVOC(220, 660),
-        CO2(700, 1000),
-        Temp(18, 25),
-        Humi(45, 65),
-        PM25(15, 35),
-        PM10(54, 125)
+    enum class DetectionData(val range1: Long, val range2: Long, val maxValue: Float) {
+        TVOC(220, 660, 1000f),
+        CO2(700, 1000, 5000f),
+        Temp(18, 25, 50f),
+        Humi(45, 65, 100f),
+        PM25(220, 660, 200f),
+        PM10(54, 125, 600f)
     }
 
     private var mContext: Context? = null
@@ -272,27 +272,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
     private fun setBarMaxValue(state: DetectionData) {
         inCircleBar.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
-        when (state) {
-
-            DetectionData.TVOC -> {
-                inCircleBar.setMaxValues(1000f)
-            }
-            DetectionData.CO2 -> {
-                inCircleBar.setMaxValues(5000f)
-            }
-            DetectionData.Temp -> {
-                inCircleBar.setMaxValues(50f)
-            }
-            DetectionData.Humi -> {
-                inCircleBar.setMaxValues(100f)
-            }
-            DetectionData.PM25 -> {
-                inCircleBar.setMaxValues(200f)
-            }
-            DetectionData.PM10 -> {
-                inCircleBar.setMaxValues(600f)
-            }
-        }
+        inCircleBar.setMaxValues(state.maxValue)
     }
 
     @SuppressLint("SetTextI18n")
