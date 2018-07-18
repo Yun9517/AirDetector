@@ -5,12 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Matrix
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.provider.MediaStore
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.FileProvider
 import android.support.v7.app.AppCompatActivity
@@ -54,6 +56,10 @@ class PhotoActivity : AppCompatActivity() {
     private val reqCodeCamera = 101
     private val reqCodeWriteStorage = 102
 
+    companion object {
+        val CAMERA_INTENT_REQUEST_CODE = 0x11
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_photo)
@@ -72,8 +78,9 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == CameraActivity.VSCAMERAACTIVITY_RESULT_CODE) {
-            val bitmap = VSBitmapStore.getBitmap(data!!.getIntExtra(CameraActivity.VSCAMERAACTIVITY_IMAGE_ID, 0))
+        if (requestCode == PhotoActivity.CAMERA_INTENT_REQUEST_CODE) {
+            val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
+            val bitmap = BitmapFactory.decodeFile("${tmpPath.path}/image.jpg")
 
             // 判斷照片是直的還是橫的
             val rotatedBitmap = if(bitmap.width > bitmap.height) {
@@ -177,8 +184,22 @@ class PhotoActivity : AppCompatActivity() {
 
     private fun callCameraActivity() {
         this.btnShare.visibility = View.GONE
-        val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
-        startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+        //val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
+        //startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
+
+        val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
+        if(!tmpPath.exists()) tmpPath.mkdirs()
+
+        val tmpFile = File(tmpPath, "image.jpg")
+        val outFileUri = FileProvider.getUriForFile(this@PhotoActivity, "$packageName.fileprovider", tmpFile)
+
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, outFileUri)
+
+        if(intent.resolveActivity(packageManager) != null) {
+            startActivityForResult(intent, PhotoActivity.CAMERA_INTENT_REQUEST_CODE)
+        }
+
     }
 
     private fun queryDatabaseLastData(): AsmDataModel? {
