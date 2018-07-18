@@ -344,7 +344,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         var newFrage: CheckFragment? = null
         when (bleEvent.message) {
             "wait Dialog" -> {
-                newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0,"wait")
+                newFrage = CheckFragment().newInstance(R.string.wait_Setting, this, 0)
                 newFrage.setCancelable(false)
             }
             "close Wait Dialog" -> {
@@ -357,13 +357,13 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             "FirebaseSetting_success" -> {
                 myPref.setSharePreferenceFirebase(swCloudNotifyVal)
                 setFCMSettingView()
-                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_Setup_Done, this, 1)
             }
             "ResponseError" -> {
-                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.fireBase_Toast_SignIn, this, 1)
             }
             "ReconnectNetwork" -> {
-                newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
             }
         }
         if( TvocNoseData.firebaseNotiftime != 25){

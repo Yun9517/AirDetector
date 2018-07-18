@@ -1837,7 +1837,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 share.edit().putString("name", "").apply()
                 share.edit().putString("email", "").apply()
                 share.edit().putString("deviceLi", "").apply()
-                val newFrage = CheckFragment().newInstance(R.string.errorToken, this, 1, "Login")
+                val newFrage = CheckFragment().newInstance(R.string.errorToken, this, 1)
                 newFrage.show(fragmentManager, "dialog")
             }
         }
