@@ -17,6 +17,7 @@ import com.facebook.login.LoginResult
 import com.microjet.airqi2.Account.AccountTask.AccountLoginTask
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
+import com.microjet.airqi2.JokeEngineering.JokeOneActivity
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
@@ -85,7 +86,14 @@ class AccountManagementActivity : AppCompatActivity() {
 
     private fun login() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
-            true -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
+            true -> {
+                if(email?.text.toString()=="9487HAHAHA@YOU.WIN.com"){
+                    val i: Intent? = Intent(this, JokeOneActivity::class.java)
+                    startActivity(i)
+                }else{
+                    AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
+                }
+            }
             false -> {
                 val newFrage = CheckFragment().newInstance(R.string.remind,R.string.errorMail_address, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
