@@ -78,46 +78,60 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == PhotoActivity.CAMERA_INTENT_REQUEST_CODE) {
-            val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
-            val bitmap = BitmapFactory.decodeFile("${tmpPath.path}/image.jpg")
-
-            // 判斷照片是直的還是橫的
-            val rotatedBitmap = if(bitmap.width > bitmap.height) {
-                rotateBitmap(bitmap, 90f)
-            } else {
-                rotateBitmap(bitmap, 0f)
+        Log.e("onActivityResult", "requestCode: $requestCode, resultCode: $resultCode")
+        if (requestCode == PhotoActivity.CAMERA_INTENT_REQUEST_CODE && resultCode == -1) {
+            if(addTextBitmap != null) {
+                addTextBitmap!!.recycle()
             }
 
-            val lastData = queryDatabaseLastData()
-            Log.e("LastData", "$lastData")
-            // 隨機 0~2
-            //val mode = random.nextInt(4)
-            //Log.e("Random", "The number is $mode")
+            val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
+            val bitmap = decodeFile("${tmpPath.path}/image.jpg")
 
-            addTextBitmap = if (lastData != null) {
-                val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+            if(bitmap != null) {
+                // 判斷照片是直的還是橫的
+                val rotatedBitmap = if (bitmap.width > bitmap.height) {
+                    rotateBitmap(bitmap, 90f)
+                } else {
+                    rotateBitmap(bitmap, 0f)
+                }
 
-                val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
-                setLayout2(rotatedBitmap, lastLocation,
-                        "${lastData.tvocValue} ppb",
-                        "${lastData.pM25Value} μg/m³",
-                        tempVal, lastData.created_time)
-                /*setLayout(rotatedBitmap, mode,
+                // 修正旋轉角度後釋放原圖佔用的記憶體
+                bitmap.recycle()
+
+                val lastData = queryDatabaseLastData()
+                Log.e("LastData", "$lastData")
+                // 隨機 0~2
+                //val mode = random.nextInt(4)
+                //Log.e("Random", "The number is $mode")
+
+                addTextBitmap = if (lastData != null) {
+                    val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+
+                    val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
+                    setLayout2(rotatedBitmap!!, lastLocation,
+                            "${lastData.tvocValue} ppb",
+                            "${lastData.pM25Value} μg/m³",
+                            tempVal, lastData.created_time)
+                    /*setLayout(rotatedBitmap, mode,
                         "${lastData.tvocValue} ppb",
                         "${lastData.pM25Value} μg/m³",
                         "${lastData.pM10Value} μg/m³",
                         "${lastData.ecO2Value} ppm",
                         "${lastData.tempValue} °C",
                         "${lastData.humiValue} %")*/
-            } else {
-                //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
-                setLayout2(rotatedBitmap, "Unknown", "----", "----", "----", System.currentTimeMillis())
+                } else {
+                    //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
+                    setLayout2(rotatedBitmap!!, "Unknown", "----", "----", "----", System.currentTimeMillis())
+                }
+
+                // 合成後釋放原圖佔用的記憶體
+                rotatedBitmap.recycle()
+
+                //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
+                this.imageView.setImageBitmap(addTextBitmap)
+                file = savePicture(addTextBitmap!!)
+                this.btnShare.visibility = View.VISIBLE
             }
-            //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
-            this.imageView.setImageBitmap(addTextBitmap)
-            file = savePicture(addTextBitmap!!)
-            this.btnShare.visibility = View.VISIBLE
         }
     }
 
@@ -242,7 +256,7 @@ class PhotoActivity : AppCompatActivity() {
         }
     }
 
-    private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
+    private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap? {
         val matrix = Matrix()
         matrix.postRotate(angle)
         matrix.postScale(0.5f, 0.5f)
@@ -413,5 +427,29 @@ class PhotoActivity : AppCompatActivity() {
             e.printStackTrace()
             return null
         }
+    }
+
+    private fun decodeFile(filePath: String): Bitmap? {
+        var bitmap: Bitmap? = null
+        val options = BitmapFactory.Options()
+        options.inPurgeable = true
+
+        try {
+            BitmapFactory.Options::class.java.getField("inNativeAlloc").setBoolean(options, true)
+        } catch (e: IllegalArgumentException) {
+            e.printStackTrace()
+        } catch (e: SecurityException) {
+            e.printStackTrace()
+        } catch (e: IllegalAccessException) {
+            e.printStackTrace()
+        } catch (e: NoSuchFieldException) {
+            e.printStackTrace()
+        }
+
+        if (filePath != null) {
+            bitmap = BitmapFactory.decodeFile(filePath, options)
+        }
+
+        return bitmap
     }
 }
