@@ -53,7 +53,7 @@ class AccountRetryActivity : AppCompatActivity() {
             val myToken = shareToken.getString("token", "")
             AccountCheckTokenTask().execute(myToken,"checkTokenBybtEvent")
         } else {
-            val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
             newFrage.show(fragmentManager, "dialog")
         }
     }
@@ -82,7 +82,7 @@ class AccountRetryActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.checkToken, this, 0)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkToken, this, 0,"wait")
                 newFrage.setCancelable(false)
                 newFrage.show(fragmentManager, "dialog")
             }
@@ -105,7 +105,7 @@ class AccountRetryActivity : AppCompatActivity() {
                 finish()
             }
             "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }

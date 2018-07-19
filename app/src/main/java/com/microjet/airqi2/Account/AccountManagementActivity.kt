@@ -17,6 +17,7 @@ import com.facebook.login.LoginResult
 import com.microjet.airqi2.Account.AccountTask.AccountLoginTask
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.activity_login.*
@@ -30,6 +31,7 @@ import java.util.regex.Pattern
 
 class AccountManagementActivity : AppCompatActivity() {
     val callbackManager = CallbackManager.Factory.create()
+    private lateinit var myPref: PrefObjects
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,8 @@ class AccountManagementActivity : AppCompatActivity() {
         login_buttonFB.setReadPermissions(Arrays.asList("public_profile", "email"))
         loginButtonFB()
         initActionBar()
+
+        myPref = PrefObjects(this)
 
         newAccount?.setOnClickListener {
             checkNetwork("registerShow")
@@ -74,7 +78,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 "login" -> login()
             }
         } else {
-            val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
             newFrage.show(fragmentManager, "dialog")
         }
     }
@@ -83,7 +87,7 @@ class AccountManagementActivity : AppCompatActivity() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
             true -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
             false -> {
-                val newFrage = CheckFragment().newInstance(R.string.errorMail_address, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.errorMail_address, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }
@@ -147,7 +151,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.wait_Login, this, 0)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.wait_Login, this, 0,"wait")
                 newFrage.setCancelable(false)
                 newFrage.show(fragmentManager, "dialog")
             }
@@ -160,14 +164,14 @@ class AccountManagementActivity : AppCompatActivity() {
             }
             "success Login" -> {
                 writeUserData()
-                AccountActivityShow()
+                showCloudAllowDialog()
             }
             "wrong Login" -> {
-                val newFrage = CheckFragment().newInstance(R.string.errorPassword, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.errorPassword, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
             "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.checkConnection, this, 1)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }
@@ -185,7 +189,7 @@ class AccountManagementActivity : AppCompatActivity() {
         TvocNoseData.cloudDeviceArr = ""
     }
 
-    private fun AccountActivityShow() {
+    fun AccountActivityShow() {
         val intent = Intent(this, AccountActiveActivity::class.java)
         startActivity(intent)
         finish()
@@ -220,5 +224,22 @@ class AccountManagementActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun showCloudAllowDialog(){
+        val newFrage = CheckFragment().newInstance(R.string.text_UploadDialog_Title,R.string.text_UploadDialog, this, 2,"showEnableCloudUploadStat")
+        newFrage.show(fragmentManager, "dialog")
+    }
+
+    fun showEnableCloudUploadStat() {
+        myPref.setSharePreferenceCloudUploadStat(true)
+        val newFrage = CheckFragment().newInstance(R.string.allow_3G,R.string.text_Enable3GDialog, this, 2,"showEnable3G_Network")
+        newFrage.show(fragmentManager, "dialog")
+    }
+
+    fun showEnable3G_Network(){
+        myPref.setSharePreferenceCloudUpload3GStat(true)
+        AccountActivityShow()
+    }
+
 
 }

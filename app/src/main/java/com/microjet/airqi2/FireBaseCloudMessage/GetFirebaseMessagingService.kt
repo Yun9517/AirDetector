@@ -5,7 +5,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
@@ -40,13 +39,13 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
 
         }
 
-        if (getMessage?.notification != null) {
-            Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
-            sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
-        } else if (getMessage?.data != null) {
+        if (getMessage?.data != null) {
             val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
             Log.e(TAG, "Message Topic= " + firebaseScorllingText)
             firebaseScrollingTopic(firebaseScorllingText)
+        } else if (getMessage?.notification != null) {
+            Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
+            sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
         }
     }
 
@@ -55,7 +54,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         val channelId: String = "給程式辨認，使用者看不到"
         val channelName: String = "ADDWII"
         var notiFication_ID: Int = 8
-        val GROUP_KEY_NEWS ="notification_NewsGronp"
+        val GROUP_KEY_NEWS = "notification_NewsGronp"
 
         swMessageVal = myPref.getSharePreferenceAllowBroadcastMessage()
         swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
@@ -94,18 +93,18 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
             notBuilder.setSound(Not_sound)
         }
         if (swVibrateVal) {
-            notBuilder.setVibrate(longArrayOf(1000,1000,1000,1000,1000))
+            notBuilder.setVibrate(longArrayOf(1000, 1000, 1000, 1000, 1000))
         }
 
         val notfiID = System.currentTimeMillis().toInt()
-        Log.e("notfiID",notfiID.toString())
+        Log.e("notfiID", notfiID.toString())
 
         when (body) {
-            "Addwii最新資訊" ->{
+            "Addwii最新資訊" -> {
                 notBuilder.setGroup(GROUP_KEY_NEWS).setGroupSummary(true)//將相同訊息包在一起
                 notiManager.notify(notfiID, notBuilder.build())
             }
-            else ->notiManager.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
+            else -> notiManager.notify(NotificationObj.CLOUD_NOTIFICATION_ID, notBuilder.build())
         }
 
     }

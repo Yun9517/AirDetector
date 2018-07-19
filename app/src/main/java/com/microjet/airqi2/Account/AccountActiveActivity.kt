@@ -62,6 +62,7 @@ class AccountActiveActivity : AppCompatActivity() {
     var download_Bar: ProgressBar? = null
     var download_min: TextView? = null
     var download_text: TextView? = null
+    private lateinit var myPref: PrefObjects
 
     //20180530
     private var cloudDeviceListItem: String? =""
@@ -74,6 +75,7 @@ class AccountActiveActivity : AppCompatActivity() {
         download_Bar = this.findViewById(R.id.progressBar2)
         download_min = this.findViewById(R.id.download_min)
         download_text = this.findViewById(R.id.download_text)
+        myPref = PrefObjects(this)
 
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -85,6 +87,8 @@ class AccountActiveActivity : AppCompatActivity() {
             val token: String = "Bearer " + shareToKen.getString("token", "")
             Log.e("clickLogOut", token)
             SignOutTask(this).execute(token)
+            myPref.setSharePreferenceCloudUploadStat(false)
+            myPref.setSharePreferenceCloudUpload3GStat(false)
             intent.setClass(this@AccountActiveActivity.mContext, AccountManagementActivity::class.java)
             startActivity(intent)
             finish()
@@ -411,7 +415,7 @@ class AccountActiveActivity : AppCompatActivity() {
         bt_listview.setScrollbarFadingEnabled(false)//滾動條不活動時候，依舊顯示
         bt_listview.setOnItemClickListener { parent, view, position, id ->
             if (TvocNoseData.download_AsynTask?.status == AsyncTask.Status.RUNNING) {
-                val newFrage = CheckFragment().newInstance(R.string.text_check_fragment,this,2)
+                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.text_check_fragment,this,2,"doPositiveClick")
                 newFrage.show(fragmentManager,"dialog")
                 cloudDeviceListItem = list[position]
             } else {
