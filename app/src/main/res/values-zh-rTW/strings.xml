@@ -567,5 +567,5 @@
     <!-- 2018/07/17 AccountRetry -->
     <string name="errorToken">帳號權限已經過期，請重新登入</string>
     <string name="checkToken">檢查帳號權限有效性，請稍後</string>
-
+    <string name="connectServer">連結伺服器，請稍後</string>
 </resources>

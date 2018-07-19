@@ -55,6 +55,7 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
+import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
@@ -1826,6 +1827,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val i: Intent? = Intent(this, AccountManagementActivity::class.java)
                 startActivity(i)
             }
+            "close Wait Dialog" -> {
+                val previousDialog = fragmentManager.findFragmentByTag("dialog")
+                if (previousDialog != null) {
+                    val dialog = previousDialog as DialogFragment
+                    dialog.dismiss()
+                }
+            }
         }
     }
 
@@ -2065,7 +2073,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
-            AccountCheckTokenTask().execute(myToken, "checkTokenBybtEvent")
+            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.connectServer,this,0,"wait")
+            newFrage.show(fragmentManager,"dialog")
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+                //TASK改用並行
+                AccountCheckTokenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken, "checkTokenBybtEvent")
+            else
+                AccountCheckTokenTask().execute(myToken, "checkTokenBybtEvent")
+
         } else {
             val i: Intent? = Intent(this, AccountRetryActivity::class.java)
             startActivity(i)
