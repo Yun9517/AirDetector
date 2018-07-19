@@ -2075,11 +2075,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (networkInfo != null && networkInfo.isConnected) {
             val newFrage = CheckFragment().newInstance(R.string.remind,R.string.connectServer,this,0,"wait")
             newFrage.show(fragmentManager,"dialog")
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB)
+            //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 判斷Android3.0版本以上運行
                 //TASK改用並行
                 AccountCheckTokenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken, "checkTokenBybtEvent")
-            else
-                AccountCheckTokenTask().execute(myToken, "checkTokenBybtEvent")
 
         } else {
             val i: Intent? = Intent(this, AccountRetryActivity::class.java)
