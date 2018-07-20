@@ -59,6 +59,7 @@ import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
+import com.microjet.airqi2.URL.AirActionTask
 import com.microjet.airqi2.URL.AppMenuTask
 import com.microjet.airqi2.URL.AppVersion
 import com.microjet.airqi2.settingPage.SettingActivity
@@ -1190,6 +1191,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             heatingPanelHide()
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
+            myPref.setSharePreferenceCheckFWVersion(false)
         }
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()
@@ -1398,6 +1400,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         MyApplication.putDeviceVersion(hashMap[TvocNoseData.FW].toString())
                         MyApplication.putDeviceSerial(hashMap[TvocNoseData.FWSerial].toString())
                         MyApplication.putDeviceType(hashMap[TvocNoseData.DEVICE].toString())
+                        val aat = AirActionTask(this,"20" +hashMap[TvocNoseData.FW].toString()+hashMap[TvocNoseData.FWSerial].toString(), hashMap[TvocNoseData.DEVICE].toString())
+                        /*val myResponse = */aat.execute("postFWVersion")
+                        Log.v("AirActionTask", "OVER")
                         Log.d("PARSERB1", hashMap.toString())
                         showPm10OrNot()
                     }
@@ -1791,6 +1796,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     val dialog = previousDialog as DialogFragment
                     dialog.dismiss()
                 }
+            }
+            // 2018/07/20 Check FW Status
+            "New FW Arrival"->{
+                runOnUiThread({
+                    listDataHeader[6].FWIndicator = R.drawable.app_android_icon_fw_remind
+                    mMenuAdapter!!.notifyDataSetInvalidated()
+                })
             }
         }
     }

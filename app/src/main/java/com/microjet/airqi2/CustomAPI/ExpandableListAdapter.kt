@@ -15,11 +15,8 @@ import android.view.View
 import android.widget.ExpandableListView
 import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
-import com.microjet.airqi2.AboutActivity
+import com.microjet.airqi2.*
 import com.microjet.airqi2.Account.AccountManagementActivity
-import com.microjet.airqi2.FetchDataMain
-import com.microjet.airqi2.KnowledgeActivity
-import com.microjet.airqi2.R
 
 
 /**
@@ -27,7 +24,7 @@ import com.microjet.airqi2.R
  */
 class ExpandableListAdapter(private val mContext: Context, private val mListDataHeader: ArrayList<ExpandedMenuModel> // header titles
                             , // child data in format of header title, child title
-                            private val mListDataChild: HashMap<ExpandedMenuModel, ArrayList<String>>, internal var expandList: ExpandableListView) : BaseExpandableListAdapter() {
+                            private val mListDataChild: HashMap<ExpandedMenuModel, ArrayList<String>>, internal var expandList: ExpandableListView, val myPref: PrefObjects = PrefObjects(mContext)) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int {
         val i = mListDataHeader.size
@@ -75,10 +72,17 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         val lblListHeader = convertView!!.findViewById(R.id.submenu) as TextView
         val headerIcon = convertView!!.findViewById(R.id.iconimage) as ImageView
         // 2018/05/09 Expandable View, Indicator right
-        val headerIndicator = convertView.findViewById(R.id.indicatorImage) as ImageView
+        val headerIndicator = convertView!!.findViewById(R.id.indicatorImage) as ImageView
+
         lblListHeader.setTypeface(null, Typeface.NORMAL)
         lblListHeader.text = headerTitle.iconName
         headerIcon.setImageResource(headerTitle.iconImg)
+        headerIndicator.setImageResource(headerTitle.iconIndicator)
+
+        // 2018/07/19 Add FW Indicator in Drawer Group View
+        val fwIndicator = convertView!!.findViewById(R.id.img_FW_Indicator) as ImageView
+        fwIndicator.setImageResource(headerTitle.FWIndicator)
+
         // 2018/05/09 Expandable View, Indicator status
         if (getChildrenCount( groupPosition ) == 0) {
             headerIndicator.visibility = View.GONE
@@ -90,23 +94,48 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
                 headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_down_grey_400_18dp))
             }
         }
+        // 2018/07/19 Control Group View's Indicator
+        if (groupPosition == 6) {
+            if (isExpanded) {
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_grey_400_18dp))
+                fwIndicator.setImageResource(R.color.transparent)
+            } else {
+                headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_down_grey_400_18dp))
+                if (myPref.getSharePreferenceCheckFWVersion()){
+                    fwIndicator.setImageResource(R.drawable.app_android_icon_fw_remind)
+                } else {
+                    fwIndicator.setImageResource(R.color.transparent)
+                }
+            }
+        }
+
         return convertView
     }
 
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
+        val headerTitle = getGroup(childPosition) as ExpandedMenuModel
         var convertView = convertView
         val childText = getChild(groupPosition, childPosition) as String
-
         if (convertView == null) {
             val infalInflater = this.mContext
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.list_submenu, null)
         }
 
-        val txtListChild = convertView!!
-                .findViewById(R.id.submenu) as TextView
-
+        // 2018/07/20 Set up val for Child View's FW Indicator
+        val txtListChild = convertView!!.findViewById(R.id.text_Submenu) as TextView
+        val childIndicatorImage = convertView!!.findViewById(R.id.childIndicatorImage) as ImageView //Important, add bridge for Indicator
         txtListChild.text = childText
+        childIndicatorImage.setImageResource(headerTitle.FWIndicatorChild) //Important, add bridge for Indicator
+
+        // 2018/07/20 Control Child View's indicator
+        if (groupPosition == 6 && childPosition == 1){
+            if (myPref.getSharePreferenceCheckFWVersion()){
+                childIndicatorImage.setImageResource(R.drawable.app_android_icon_fw_remind)
+            } else {
+                childIndicatorImage.setImageResource(R.color.transparent)
+            }
+        }
 
         return convertView
     }

@@ -7,4 +7,7 @@ class ExpandedMenuModel {
 
     var iconName = ""
     var iconImg = -1 // menu icon resource id
+    var iconIndicator = 0
+    var FWIndicator = 0
+    var FWIndicatorChild = 0
 }

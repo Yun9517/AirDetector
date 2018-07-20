@@ -334,6 +334,8 @@
     <string name="text_save_cloud_setting">Save</string>
     <string name="text_cloud_set_minute">%d分</string>
     <string name="text_cloud_notify_time">Notify time</string>
+    <string name="text_setting_FW_update">update</string>
+    <string name="text_setting_FW_updating">Updating, please keep your device alive.</string>
 
     <string name="text_redraw_again">Link at least %d points, please reset</string>
     <string name="text_redraw_again1">Not the same as the first time, please reset</string>

@@ -441,6 +441,9 @@
     <string name="text_pw_error">密碼錯誤，還剩%d次機會</string>
     <string name="text_use_login_pw">改用密碼登入</string>
     <string name="text_check_device_update">檢查更新</string>
+    <string name="text_setting_FW_update">更新</string>
+    <string name="text_setting_FW_updating">資料上傳至裝置中，請勿關閉裝置</string>
+
     <string name="text_click_to_adjust">（按一下數值可微調）</string>
     <string name="text_cloud_notify">推播通知</string>
     <string name="text_cloud_notify_comment">前24小時偵測空氣品質的平均數據。</string>
