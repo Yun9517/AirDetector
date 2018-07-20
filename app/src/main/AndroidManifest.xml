@@ -311,6 +311,21 @@
 
         <activity android:name=".FireBaseCloudMessage.OpenBrowserActivity" />
 
+        <activity
+            android:name=".Account.AccountRetryActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".JokeEngineering.JokeOneActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/AppTheme" />
+
+
     </application>
 
 </manifest>

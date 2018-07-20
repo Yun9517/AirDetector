@@ -27,7 +27,7 @@ class FirebaseNotifSettingTask : AsyncTask<String, Int, String>() {
     //主要背景執行
     override fun doInBackground(vararg params: String?): String? {
         val token = params[0]
-        val phpToken = "Bearer " + token
+        val phpToken = "Bearer "+ token
         val mediaTime: String?
         val mediaPM25: String?
         val mediaTVOC: String?
