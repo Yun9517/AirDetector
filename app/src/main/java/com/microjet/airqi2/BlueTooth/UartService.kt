@@ -65,21 +65,41 @@ class UartService : Service() {
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
             val intentAction: String
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                intentAction = BroadcastActions.ACTION_GATT_CONNECTED
-                mConnectionState = STATE_CONNECTED
-                broadcastUpdate(intentAction)
-                Log.i(TAG, "Connected to GATT server.")
-                // Attempts to discover services after successful connection.
-                Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
-                //bleEventObj.message = intentAction
-                //bus.post(bleEventObj)
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            if (status == BluetoothGatt.GATT_SUCCESS) {
+                if (newState == BluetoothProfile.STATE_CONNECTED) {
+                    intentAction = BroadcastActions.ACTION_GATT_CONNECTED
+                    mConnectionState = STATE_CONNECTED
+                    broadcastUpdate(intentAction)
+                    Log.i(TAG, "Connected to GATT server.")
+                    // Attempts to discover services after successful connection.
+                    Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
+                    //bleEventObj.message = intentAction
+                    //bus.post(bleEventObj)
+                } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
+                    mConnectionState = STATE_DISCONNECTED
+                    Log.i(TAG, "Disconnected from GATT server.")
+                    broadcastUpdate(intentAction)
+                    close()
+                }
+            } else {
+                Log.d(TAG, "onConnectionStateChange received: " + status)
                 intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                 mConnectionState = STATE_DISCONNECTED
-                Log.i(TAG, "Disconnected from GATT server.")
+                close() // 防止出现status 133
                 broadcastUpdate(intentAction)
-                close()
+                connect(mBluetoothDeviceAddress)
+
+                /*
+                防止133
+                http://www.loverobots.cn/android-ble-connection-solution-bluetoothgatt-status-133.html
+                Log.d(TAG, "onConnectionStateChange received: " + status);
+                intentAction = BluetoothConstants.GATT_STATUS_133;
+                mBLEConnectionState = BluetoothConstants.BLE_STATE_DISCONNECTED;
+                close(); // 防止出现status 133
+                broadcastUpdate(intentAction);
+                connect(reConnectAddress);
+                */
             }
         }
 
