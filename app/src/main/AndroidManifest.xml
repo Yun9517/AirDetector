@@ -306,7 +306,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".photoShare.PhotoActivity"
-            android:label="@string/photo_share_activity" />
+            android:label="@string/photo_share_activity"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".FireBaseCloudMessage.OpenBrowserActivity" />
 
