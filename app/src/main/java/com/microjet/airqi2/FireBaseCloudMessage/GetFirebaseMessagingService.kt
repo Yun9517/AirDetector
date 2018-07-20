@@ -40,12 +40,14 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         }
 
         if (getMessage?.data != null) {
-            val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
-            Log.e(TAG, "Message Topic= " + firebaseScorllingText)
-            firebaseScrollingTopic(firebaseScorllingText)
-        } else if (getMessage?.notification != null) {
-            Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
-            sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
+            if (getMessage?.data.isNotEmpty()){
+                val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
+                Log.e(TAG, "Message Topic= " + firebaseScorllingText)
+                firebaseScrollingTopic(firebaseScorllingText)
+            }else if (getMessage?.notification != null) {
+                Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
+                sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
+            }
         }
     }
 
