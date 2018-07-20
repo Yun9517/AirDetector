@@ -554,6 +554,8 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="wait_Setting">Setting Please Wait</string>
 
     <!-- 2018/07/17 AccountRetry -->
-    <string name="errorToken">Account aging has expired, please log in again</string>
+    <string name="errorToken">Account token has expired, please log in again</string>
+    <string name="checkToken">Check Account Available，Please Wait</string>
+    <string name="connectServer">Connect Server，Please Wait</string>
 
 </resources>

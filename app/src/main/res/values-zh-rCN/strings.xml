@@ -561,4 +561,7 @@
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="wait_Login">登入中請稍候</string>
     <string name="wait_Setting">设定储存中，请稍后</string>
+    <string name="errorToken">帳號token已失效，請重新登入</string>
+    <string name="checkToken">检查帐号权限有效性，请稍后</string>
+    <string name="connectServer">连结伺服器，请稍后</string>
 </resources>
