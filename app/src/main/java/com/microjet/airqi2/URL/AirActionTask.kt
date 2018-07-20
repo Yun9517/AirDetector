@@ -55,7 +55,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
     private var callback: PostDownload? = null
     private var mPreference: SharedPreferences? = null
     // 2018/07/20 Use Share Preference
-    private var checkFW: PrefObjects? = null // SETTING_KEY
+    private lateinit var myPref: PrefObjects // SETTING_KEY
 
     init {//主建構元
         //  mContext=input
@@ -64,6 +64,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
     constructor(input: Context) : this() {//第二建構元
         mContext = input
         //    callback=callbackInput
+        myPref = PrefObjects(input)
     }
 
     constructor(input: Context, urlVersion: String, urlDeviceType: String) : this() {//第二建構元
@@ -71,7 +72,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
         urlV = urlVersion
         urlDT = urlDeviceType
         // 2018/07/20 Use Share Preference
-        checkFW = PrefObjects(input) // Like "onCreate"
+        myPref = PrefObjects(input)
     }
 
     override fun onPreExecute() {
@@ -140,7 +141,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
                 //無新版本
                     "version latest" -> {
                         Log.d(javaClass.simpleName, "version latest")
-                        checkFW?.setSharePreferenceCheckFWVersion(false)
+                        myPref.setSharePreferenceCheckFWVersion(false)
                         EventBus.getDefault().post(BleEvent("version latest"))//使用event 通知有新的FW版本
                     }
                 //資訊有錯
@@ -155,7 +156,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
                     }
                     else -> {
                         mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
-                        checkFW?.setSharePreferenceCheckFWVersion(true)
+                        myPref.setSharePreferenceCheckFWVersion(true)
                         EventBus.getDefault().post(BleEvent("New FW Arrival"))//使用event 通知有新的FW版本
                     }
 

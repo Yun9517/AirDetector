@@ -221,11 +221,11 @@ class PrefObjects(context: Context) {
     }
 
     fun getSharePreferenceCheckFWVersion(): Boolean {
-        return share.getBoolean(SavePreferences.SETTING_IS_NewFW_ARRIVAL, false)
+        return share.getBoolean(SavePreferences.SETTING_IS_NEWFW_ARRIVAL, false)
     }
 
     fun setSharePreferenceCheckFWVersion(value: Boolean) {
-        share.edit().putBoolean(SavePreferences.SETTING_IS_NewFW_ARRIVAL, value).apply()
+        share.edit().putBoolean(SavePreferences.SETTING_IS_NEWFW_ARRIVAL, value).apply()
     }
 
 }

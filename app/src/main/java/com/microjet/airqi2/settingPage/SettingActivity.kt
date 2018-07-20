@@ -48,8 +48,6 @@ class SettingActivity : AppCompatActivity() {
 
     private var isFahrenhelt: Boolean = true
 
-    private var isNewFWArrival: Boolean = false
-
     private lateinit var myPref: PrefObjects
 
     private lateinit var realm: Realm
@@ -251,8 +249,7 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun checkFWVersionSetting() {
-        isNewFWArrival = myPref.getSharePreferenceCheckFWVersion()
-        if (isNewFWArrival){
+        if (myPref.getSharePreferenceCheckFWVersion()){
             img_FW_status.visibility = View.VISIBLE
             btnCheckFW.text = getString(R.string.text_setting_FW_update)
         } else {

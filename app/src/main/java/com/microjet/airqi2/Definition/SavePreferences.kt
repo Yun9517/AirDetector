@@ -53,5 +53,5 @@ object SavePreferences {
     const val FLAG_PULL_ALL_DATA = "airqi2.FLAG.PULL_ALL_DATA"
     const val FLAG_PULL_ALL_DATA_MAC = "airqi2.FLAG.PULL_ALL_DATA_MAC"
     // 2018/07/19
-    const val SETTING_IS_NewFW_ARRIVAL = "airqi2.settings.SETTING_IS_NewFW_ARRIVAL"
+    const val SETTING_IS_NEWFW_ARRIVAL = "airqi2.settings.SETTING_IS_NEWFW_ARRIVAL"
 }
