@@ -91,7 +91,6 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
             android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
             -> {
                 Log.d(this.javaClass.simpleName,"home icon")
-                //accountManagementShow()
                 finish()
                 return true
             }
@@ -109,14 +108,14 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
             try {
                 var response: okhttp3.Response? = null
                 val forgetPassWordMail =enterMail?.text.toString()
-                 Log.e("輸入的內容信箱", forgetPassWordMail)
+                Log.e("輸入的內容信箱", forgetPassWordMail)
                 val client = OkHttpClient()
                 val mediaType = MediaType.parse("application/x-www-form-urlencoded")
                 val body = RequestBody.create(mediaType, "email=" + forgetPassWordMail)
                 val request = Request.Builder()
                         .url("https://mjairql.com/api/v1/forgotPassword")
                         .post(body)
-                       // .addHeader("authorization", "Bearer " )
+                        // .addHeader("authorization", "Bearer " )
                         .addHeader("cache-control", "no-cache")
                         .addHeader("content-type", "application/x-www-form-urlencoded")
                         .build()
@@ -161,8 +160,6 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
                 //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))
                 { _, _ ->
-                    val i: Intent? = Intent(applicationContext, AccountManagementActivity::class.java)
-                    startActivity(i)
                     finish()
                 }
                 Dialog.show()
