@@ -79,23 +79,16 @@ class AccountManagementActivity : AppCompatActivity() {
                 "login" -> login()
             }
         } else {
-            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
+            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
             newFrage.show(fragmentManager, "dialog")
         }
     }
 
     private fun login() {
         when (isEmail(email?.text.toString()) && email?.text.toString() != "") {
-            true -> {
-                if(email?.text.toString()=="9487HAHAHA@YOU.WIN.com"){
-                    val i: Intent? = Intent(this, JokeOneActivity::class.java)
-                    startActivity(i)
-                }else{
-                    AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
-                }
-            }
+            true -> findJokeEngineering(email?.text.toString())
             false -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.errorMail_address, this, 1,"dismiss")
+                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorMail_address, this, 1, "dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }
@@ -159,7 +152,7 @@ class AccountManagementActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
             "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.wait_Login, this, 0,"wait")
+                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Login, this, 0, "wait")
                 newFrage.setCancelable(false)
                 newFrage.show(fragmentManager, "dialog")
             }
@@ -175,11 +168,11 @@ class AccountManagementActivity : AppCompatActivity() {
                 showCloudAllowDialog()
             }
             "wrong Login" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.errorPassword, this, 1,"dismiss")
+                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, this, 1, "dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
             "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
+                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
                 newFrage.show(fragmentManager, "dialog")
             }
         }
@@ -233,21 +226,36 @@ class AccountManagementActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun showCloudAllowDialog(){
-        val newFrage = CheckFragment().newInstance(R.string.text_UploadDialog_Title,R.string.text_UploadDialog, this, 2,"showEnableCloudUploadStat")
+    private fun showCloudAllowDialog() {
+        val newFrage = CheckFragment().newInstance(R.string.text_UploadDialog_Title, R.string.text_UploadDialog, this, 2, "showEnableCloudUploadStat")
         newFrage.show(fragmentManager, "dialog")
     }
 
     fun showEnableCloudUploadStat() {
         myPref.setSharePreferenceCloudUploadStat(true)
-        val newFrage = CheckFragment().newInstance(R.string.allow_3G,R.string.text_Enable3GDialog, this, 2,"showEnable3G_Network")
+        val newFrage = CheckFragment().newInstance(R.string.allow_3G, R.string.text_Enable3GDialog, this, 2, "showEnable3G_Network")
         newFrage.show(fragmentManager, "dialog")
     }
 
-    fun showEnable3G_Network(){
+    fun showEnable3G_Network() {
         myPref.setSharePreferenceCloudUpload3GStat(true)
         AccountActivityShow()
     }
 
+    private fun findJokeEngineering(emailGet: String) {
+        when (emailGet) {
+            "ADDWII@ADDWII.COM" -> {
+                val i: Intent? = Intent(this, JokeOneActivity::class.java)
+                startActivity(i)
+            }
+            "ADDWII@ADDWII.COM" -> {
+                val i: Intent? = Intent(this, JokeOneActivity::class.java)
+                startActivity(i)
+            }
+
+            else -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
+
+        }
+    }
 
 }
