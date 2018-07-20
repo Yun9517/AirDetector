@@ -1709,7 +1709,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 if (Build.BRAND != "OPPO") {
                     Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
-                myPref.setSharePreferencePullAllData(mDeviceAddress)
+                myPref.setSharePreferencePullAllDataMAC(mDeviceAddress)
                 myPref.setSharePreferencePullAllData(true)
             }
         }
