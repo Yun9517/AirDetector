@@ -14,13 +14,13 @@ import com.microjet.airqi2.R
  * Created by B00190 on 2018/5/29.
  */
 class CheckFragment : DialogFragment() {
-    fun newInstance(title: Int, message: Int, activity: Activity?, howMany: Int, method: String): CheckFragment {
+    fun newInstance(title: Int, message: Int, activity: Activity?, howMany: Int, clickMethodName: String): CheckFragment {
         val frag = CheckFragment()
         val args = Bundle()
         args.putInt("title", title) //傳入title參數
         args.putInt("message", message)
         args.putInt("howMany", howMany)
-        args.putString("method", method)
+        args.putString("clickMethodNameKey", clickMethodName)
         frag.setArguments(args)
         return frag
     }
@@ -30,13 +30,13 @@ class CheckFragment : DialogFragment() {
         val title = arguments.getInt("title") //取得參數title
         val message = arguments.getInt("message")
         val howMany = arguments.getInt("howMany")
-        val method = arguments.getString("method")
+        val strClickMethod = arguments.getString("clickMethodNameKey")
         val whichActivity = AlertDialog.Builder(activity)
 
         when (howMany) {
         //zero Button
             0 -> {
-                when (method) {
+                when (strClickMethod) {
                     "wait" -> {
                         whichActivity.setView(R.layout.wait_progress_bar)
                                 .setCancelable(false) // disable click back button
@@ -45,7 +45,7 @@ class CheckFragment : DialogFragment() {
             }
         //one Button
             1 -> whichActivity.setPositiveButton("確定", { dialog, which ->
-                when (method) {
+                when (strClickMethod) {
                     "dismiss" -> {
                             dismiss()
                     }
@@ -54,14 +54,14 @@ class CheckFragment : DialogFragment() {
 
         //two Button
             2 -> whichActivity.setPositiveButton("確定", { dialog, which ->
-                when (method) {
+                when (strClickMethod) {
                     "doPositiveClick" -> (activity as? AccountActiveActivity)?.doPositiveClick()
                     "showEnableCloudUploadStat" -> (activity as? AccountManagementActivity)?.showEnableCloudUploadStat()
                     "showEnable3G_Network" -> (activity as? AccountManagementActivity)?.showEnable3G_Network()
                 }
             })
                     .setNegativeButton("取消", { dialog, which ->
-                        when(method){
+                        when(strClickMethod){
                             "showEnableCloudUploadStat"->(activity as? AccountManagementActivity)?.AccountActivityShow()
                             "showEnable3G_Network"->(activity as? AccountManagementActivity)?.AccountActivityShow()
                             else -> dismiss()

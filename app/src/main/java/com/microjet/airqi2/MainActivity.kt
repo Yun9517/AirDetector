@@ -326,15 +326,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> {
-                    publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
-                }
-                3 -> {
-                    trailMapShow()
-                }
-                4 -> {
-                    knowledgeShow()
-                }
+                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
+                3 -> { trailMapShow() }
+                4 -> { knowledgeShow() }
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
@@ -342,12 +336,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> {
-                                    qandaShow()
-                                }
-                                1 -> {
-                                    tourShow()
-                                }
+                                0 -> { qandaShow() }
+                                1 -> { tourShow() }
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -1922,13 +1912,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
         try {
             if (pmType < 2) {
-                if (ll1!!.childCount == 3) {
-                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE
-                }
+                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE }
             } else {
-                if (ll1!!.childCount == 3) {
-                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE
-                }
+                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE }
             }
             Log.d("ViewPager", viewPager.adapter?.count.toString())
         } catch (e: Exception) {

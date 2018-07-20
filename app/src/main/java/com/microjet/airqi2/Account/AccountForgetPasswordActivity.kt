@@ -115,7 +115,7 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
                 val request = Request.Builder()
                         .url("https://mjairql.com/api/v1/forgotPassword")
                         .post(body)
-                        // .addHeader("authorization", "Bearer " )
+                        //.addHeader("authorization", "Bearer " )
                         .addHeader("cache-control", "no-cache")
                         .addHeader("content-type", "application/x-www-form-urlencoded")
                         .build()

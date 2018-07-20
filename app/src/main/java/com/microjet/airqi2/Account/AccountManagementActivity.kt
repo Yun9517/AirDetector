@@ -243,8 +243,8 @@ class AccountManagementActivity : AppCompatActivity() {
         AccountActivityShow()
     }
 
-    private fun  loginAccountGO(emailGet: String) {
-        when (emailGet) {
+    private fun loginAccountGO(emailGetted: String) {
+        when (emailGetted) {
             JockObject.JockOblectName_One -> {
                 val i: Intent? = Intent(this, JokeOneActivity::class.java)
                 startActivity(i)
