@@ -48,6 +48,8 @@ class SettingActivity : AppCompatActivity() {
 
     private var isFahrenhelt: Boolean = true
 
+    private var isNewFWArrival: Boolean = false
+
     private lateinit var myPref: PrefObjects
 
     private lateinit var realm: Realm
@@ -125,6 +127,7 @@ class SettingActivity : AppCompatActivity() {
         getDeviceLedSettings()
         getServiceSetting()
         getTempUnitSetting()
+        checkFWVersionSetting()
     }
 
     private fun uiSetListener() {
@@ -200,8 +203,10 @@ class SettingActivity : AppCompatActivity() {
                     val fwType = MyApplication.getDeviceType()
                     //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
                     checkFwVersion("20$fwVer$fwSerial", fwType)
+                    img_FW_status.visibility = View.GONE
                 } else {
                     showNotChargingDialog()
+                    img_FW_status.visibility = View.VISIBLE
                 }
             }
         }
@@ -245,6 +250,17 @@ class SettingActivity : AppCompatActivity() {
         swTempUnit.isChecked = isFahrenhelt
     }
 
+    private fun checkFWVersionSetting() {
+        isNewFWArrival = myPref.getSharePreferenceCheckFWVersion()
+        if (isNewFWArrival){
+            img_FW_status.visibility = View.VISIBLE
+            btnCheckFW.text = getString(R.string.text_setting_FW_update)
+        } else {
+            img_FW_status.visibility = View.GONE
+            btnCheckFW.text = getString(R.string.text_check_device_update)
+        }
+    }
+
     private fun initActionBar() {
         // 取得 actionBar
         val actionBar = supportActionBar
@@ -273,7 +289,7 @@ class SettingActivity : AppCompatActivity() {
             "version latest" -> {
                 showFwLatestDialog()
             }
-            "New FW Arrival " -> {
+            "New FW Arrival" -> {
                 showDownloadDialog()
             }
             "Download Success" -> {

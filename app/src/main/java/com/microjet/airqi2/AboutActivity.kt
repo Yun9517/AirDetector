@@ -140,7 +140,7 @@ class AboutActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "New FW Arrival "->{
+            "New FW Arrival"->{
             //    showDownloadDialog(bleEvent.message!!)
             }
             "Download Success"->{

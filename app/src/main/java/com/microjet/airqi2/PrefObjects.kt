@@ -220,4 +220,12 @@ class PrefObjects(context: Context) {
         share.edit().putString(SavePreferences.FLAG_PULL_ALL_DATA_MAC, value).apply()
     }
 
+    fun getSharePreferenceCheckFWVersion(): Boolean {
+        return share.getBoolean(SavePreferences.SETTING_IS_NewFW_ARRIVAL, false)
+    }
+
+    fun setSharePreferenceCheckFWVersion(value: Boolean) {
+        share.edit().putBoolean(SavePreferences.SETTING_IS_NewFW_ARRIVAL, value).apply()
+    }
+
 }

@@ -104,7 +104,7 @@ class DFUProcessClass (){
 
         override fun onProgressChanged(deviceAddress: String?, percent: Int, speed: Float, avgSpeed: Float, currentPart: Int, partsTotal: Int) {
             mProgressBar!!.isIndeterminate = false
-            mProgressBar?.setMessage("資料上傳至裝置中，請勿關閉裝置")
+            mProgressBar?.setMessage(mContext!!.getString(R.string.text_setting_FW_updating))
             mProgressBar!!.progress = percent
             //mTextPercentage!!.text = getString(R.string.dfu_uploading_percentage, percent)
             /*

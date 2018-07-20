@@ -13,7 +13,9 @@ import org.json.JSONObject
 import android.content.SharedPreferences
 import android.content.Context.MODE_PRIVATE
 import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Definition.SavePreferences.AirActionTask_KEY
+import com.microjet.airqi2.PrefObjects
 import org.greenrobot.eventbus.EventBus
 import java.io.*
 import java.net.URL
@@ -52,6 +54,8 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
     private var urlDT: String? = null
     private var callback: PostDownload? = null
     private var mPreference: SharedPreferences? = null
+    // 2018/07/20 Use Share Preference
+    private var checkFW: PrefObjects? = null // SETTING_KEY
 
     init {//主建構元
         //  mContext=input
@@ -66,7 +70,8 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
         mContext = input
         urlV = urlVersion
         urlDT = urlDeviceType
-
+        // 2018/07/20 Use Share Preference
+        checkFW = PrefObjects(input) // Like "onCreate"
     }
 
     override fun onPreExecute() {
@@ -135,6 +140,7 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
                 //無新版本
                     "version latest" -> {
                         Log.d(javaClass.simpleName, "version latest")
+                        checkFW?.setSharePreferenceCheckFWVersion(false)
                         EventBus.getDefault().post(BleEvent("version latest"))//使用event 通知有新的FW版本
                     }
                 //資訊有錯
@@ -149,7 +155,8 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
                     }
                     else -> {
                         mPreference?.edit()?.putString("FilePath", result[1])?.apply()//將路徑存起來
-                        EventBus.getDefault().post(BleEvent("New FW Arrival "))//使用event 通知有新的FW版本
+                        checkFW?.setSharePreferenceCheckFWVersion(true)
+                        EventBus.getDefault().post(BleEvent("New FW Arrival"))//使用event 通知有新的FW版本
                     }
 
                 }
