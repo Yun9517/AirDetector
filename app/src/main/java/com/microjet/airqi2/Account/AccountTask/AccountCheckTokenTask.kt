@@ -1,8 +1,12 @@
 package com.microjet.airqi2.Account.AccountTask
 
+import android.app.Activity
+import android.app.DialogFragment
 import android.os.AsyncTask
 import android.util.Log
 import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.Fragment.CheckFragment
+import com.microjet.airqi2.R
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -14,9 +18,11 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by B00190 on 2018/7/17.
  */
-class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
+class AccountCheckTokenTask(gettedActivity: Activity, strEvent: String) : AsyncTask<String, Int, String>() {
     private val TAG = "AccountCheckTokenTask"
-    private var event: String? = ""
+    private var event: String? = strEvent
+    private val useGettedActivity: Activity = gettedActivity
+
     /*
     onPreExecute -> AsyncTask 執行前的準備工作
     doInBackground -> 實際要執行的程式碼就是寫在這裡
@@ -26,8 +32,11 @@ class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
 
     override fun onPreExecute() {
         super.onPreExecute()
-        val urlEvent = BleEvent("wait Dialog")
-        EventBus.getDefault().post(urlEvent)
+        if (event == "checkTokenBybtEvent") {
+            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.connectServer, useGettedActivity, 0, "wait")
+            newFrage.setCancelable(false)
+            newFrage.show(useGettedActivity.fragmentManager, "dialog")
+        }
     }
 
     override fun doInBackground(vararg params: String?): String? {
@@ -38,7 +47,6 @@ class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
                 .build()
         val mediaType = MediaType.parse("application/x-www-form-urlencoded")
         val myToken: String? = "Bearer " + params[0]
-        event = params[1]
         Log.e(TAG, myToken)
         val body = RequestBody.create(mediaType, myToken)
         val request = Request.Builder()
@@ -73,18 +81,20 @@ class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
         super.onPostExecute(result)
         Log.e(TAG, result)
         try {
-            val urlEvent_close = BleEvent("close Wait Dialog")
-            EventBus.getDefault().post(urlEvent_close)
+            val previousDialog = useGettedActivity.fragmentManager.findFragmentByTag("dialog")
+            if (previousDialog != null) {
+                val dialog = previousDialog as DialogFragment
+                dialog.dismiss()
+            }
             when (result) {
                 "successToken" -> {
-                    var urlEvent_success: BleEvent? = null
                     if (event == "checkTokenBybtEvent") {
-                        urlEvent_success = BleEvent("successToken")
+                        val urlEvent_success = BleEvent("successToken")
+                        EventBus.getDefault().post(urlEvent_success)
                     }
                     if (event == "checkTokenByOnstart") {
-                       Log.d(TAG,"Token有效")
+                        Log.d(TAG, "Token有效")
                     }
-                    EventBus.getDefault().post(urlEvent_success)
                 }
                 "ResponseError" -> {
                     var urlEvent_success: BleEvent? = null
@@ -97,8 +107,10 @@ class AccountCheckTokenTask : AsyncTask<String, Int, String>() {
                     EventBus.getDefault().post(urlEvent_success)
                 }
                 "ReconnectNetwork" -> {
-                    val urlEvent_success = BleEvent("ReconnectNetwork")
-                    EventBus.getDefault().post(urlEvent_success)
+                    if (event == "checkTokenBybtEvent") {
+                        val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useGettedActivity, 1, "dismiss")
+                        newFrage.show(useGettedActivity.fragmentManager, "dialog")
+                    }
                 }
             }
         } catch (e: Exception) {
