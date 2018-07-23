@@ -44,7 +44,7 @@ import kotlin.collections.ArrayList
 class MainFragment : Fragment(), View.OnTouchListener {
 
     enum class DetectionData(val range1: Long, val range2: Long, val maxValue: Float) {
-        TVOC(220, 660, 1000f),
+        TVOC(220, 660, 60000f),
         CO2(700, 1000, 5000f),
         Temp(18, 25, 50f),
         Humi(45, 65, 100f),
@@ -667,14 +667,14 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         //數值不等比顯示
-                        when (tvocDataFloat) {
+                        /*when (tvocDataFloat) {
                             in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
                             in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
                             in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
                             in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
                             else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
-                        }
-                        //inCircleBar.setCurrentValues(tvocDataFloat)
+                        }*/
+                        inCircleBar.setCurrentValues(tvocDataFloat)
                         tvocStatusTextShow(tvocDataFloat)
                         val temp = tvocDataFloat.toInt().toString() + " ppb"
                         textSpannable(temp)
