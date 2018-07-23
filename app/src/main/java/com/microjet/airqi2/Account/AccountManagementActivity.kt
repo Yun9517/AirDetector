@@ -1,6 +1,6 @@
 package com.microjet.airqi2.Account
 
-import android.app.DialogFragment
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -34,6 +34,7 @@ import java.util.regex.Pattern
 class AccountManagementActivity : AppCompatActivity() {
     val callbackManager = CallbackManager.Factory.create()
     private lateinit var myPref: PrefObjects
+    private val getManagementActivity: Activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -152,29 +153,9 @@ class AccountManagementActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Login, this, 0, "wait")
-                newFrage.setCancelable(false)
-                newFrage.show(fragmentManager, "dialog")
-            }
-            "close Wait Dialog" -> {
-                val previousDialog = fragmentManager.findFragmentByTag("dialog")
-                if (previousDialog != null) {
-                    val dialog = previousDialog as DialogFragment
-                    dialog.dismiss()
-                }
-            }
             "success Login" -> {
                 writeUserData()
                 showCloudAllowDialog()
-            }
-            "wrong Login" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, this, 1, "dismiss")
-                newFrage.show(fragmentManager, "dialog")
-            }
-            "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
-                newFrage.show(fragmentManager, "dialog")
             }
         }
     }
@@ -250,7 +231,7 @@ class AccountManagementActivity : AppCompatActivity() {
                 startActivity(i)
             }
 
-            else -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
+            else -> AccountLoginTask(getManagementActivity).execute(email?.text.toString(), password?.text.toString())
 
         }
     }

@@ -1,8 +1,12 @@
 package com.microjet.airqi2.Account.AccountTask
 
+import android.app.Activity
+import android.app.DialogFragment
 import android.os.AsyncTask
 import android.util.Log
 import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.Fragment.CheckFragment
+import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -15,13 +19,16 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by B00190 on 2018/6/22.
  */
-class AccountLoginTask : AsyncTask<String, Int, String>() {
+class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String>() {
     private val TAG: String = "AccountLoginTask"
+    private val useManagementActivity: Activity = gettedActivity
 
     override fun onPreExecute() {
         super.onPreExecute()
-        val urlEvent = BleEvent("wait Dialog")
-        EventBus.getDefault().post(urlEvent)
+        //等候dialog視窗開啟
+        val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Login, useManagementActivity, 0, "wait")
+        newFrage.setCancelable(false)
+        newFrage.show(useManagementActivity.fragmentManager, "dialog")
     }
 
 
@@ -41,7 +48,7 @@ class AccountLoginTask : AsyncTask<String, Int, String>() {
                 .addHeader("cache-control", "no-cache")
                 .addHeader("content-type", "application/x-www-form-urlencoded")
                 .build()
-        try{
+        try {
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
                 val res: String = response.body()!!.string().toString()
@@ -55,7 +62,7 @@ class AccountLoginTask : AsyncTask<String, Int, String>() {
             } else {
                 return "ResponseError"
             }
-        }catch(e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             return "ReconnectNetwork"
         }
@@ -69,18 +76,23 @@ class AccountLoginTask : AsyncTask<String, Int, String>() {
 
     override fun onPostExecute(result: String?) {
         Log.e(TAG, result)
-        val urlEvent_close = BleEvent("close Wait Dialog")
-        EventBus.getDefault().post(urlEvent_close)
+        //獲得結果後，關閉所有dialog視窗
+        val previousDialog = useManagementActivity.fragmentManager.findFragmentByTag("dialog")
+        if (previousDialog != null) {
+            val dialog = previousDialog as DialogFragment
+            dialog.dismiss()
+        }
+        //處理結果
+        var newFrage: CheckFragment? =null
         if (result == "successNetwork") {
             val urlEvent_success = BleEvent("success Login")
             EventBus.getDefault().post(urlEvent_success)
         } else if (result == "ResponseError") {
-            val urlEvent_Error = BleEvent("wrong Login")
-            EventBus.getDefault().post(urlEvent_Error)
-        }else if (result =="ReconnectNetwork"){
-            val urlEvent_success = BleEvent("ReconnectNetwork")
-            EventBus.getDefault().post(urlEvent_success)
+            newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, useManagementActivity, 1, "dismiss")
+        } else if (result == "ReconnectNetwork") {
+            newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useManagementActivity, 1, "dismiss")
         }
+        newFrage?.show(useManagementActivity.fragmentManager, "dialog")
     }
 
 
