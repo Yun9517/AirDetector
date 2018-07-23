@@ -22,17 +22,17 @@ import java.io.File
 class DFUProcessClass() {
     private val mDfuProgressListener = object : DfuProgressListenerAdapter() {
         override fun onDeviceConnecting(deviceAddress: String?) {
-            //    mProgressBar?.setTitle("Now status")
+            //mProgressBar?.setTitle("Now status")
             mProgressBar?.setMessage("Device Connected")
-            //    mProgressBar!!.isIndeterminate = true
-            //    mTextPercentage!!.setText(R.string.dfu_status_connecting)
+            //mProgressBar!!.isIndeterminate = true
+            //mTextPercentage!!.setText(R.string.dfu_status_connecting)
         }
 
         override fun onDfuProcessStarting(deviceAddress: String?) {
             mProgressBar!!.isIndeterminate = true
-            //   mProgressBar?.setTitle("Now status")
-            //   mProgressBar?.setMessage("")
-            //    mTextPercentage!!.setText(R.string.dfu_status_starting)
+            //mProgressBar?.setTitle("Now status")
+            //mProgressBar?.setMessage("")
+            //mTextPercentage!!.setText(R.string.dfu_status_starting)
         }
 
         override fun onEnablingDfuMode(deviceAddress: String?) {
@@ -59,8 +59,8 @@ class DFUProcessClass() {
             if (mResumed) {
                 // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
                 Handler().postDelayed({
-                    //    onTransferCompleted()//清除資訊用
-                    //    showDownloadDialog("DFU Successful")
+                    //onTransferCompleted()//清除資訊用
+                    //showDownloadDialog("DFU Successful")
                     // if this activity is still open and upload process was completed, cancel the notification
                     val manager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     manager.cancel(DfuBaseService.NOTIFICATION_ID)
@@ -95,7 +95,7 @@ class DFUProcessClass() {
             //mTextPercentage!!.setText(R.string.dfu_status_aborted)
             // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
             Handler().postDelayed({
-                //    onUploadCanceled()
+                //onUploadCanceled()
 
                 // if this activity is still open and upload process was completed, cancel the notification
                 val manager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -184,7 +184,7 @@ class DFUProcessClass() {
             mjupdateFileInfo(file.name, file.length())
             mFilePath = file.path
             if (isDfuServiceRunning()) {//確保dfu service只跑一個
-                //   showUploadCancelDialog()
+                //showUploadCancelDialog()
                 return
             }
             if (!mStatusOk) {
@@ -227,7 +227,7 @@ class DFUProcessClass() {
             if (mScope != null)
                 starter.setScope(mScope!!)
         } else {
-            //   starter.setBinOrHex(mFileType, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath)
+            //starter.setBinOrHex(mFileType, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath)
         }
         starter.start(this.mContext!!, DFUService::class.java)
     }
