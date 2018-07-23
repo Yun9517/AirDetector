@@ -66,12 +66,6 @@ class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String
             e.printStackTrace()
             return "ReconnectNetwork"
         }
-        return null
-    }
-
-    override fun onProgressUpdate(vararg values: Int?) {
-        super.onProgressUpdate(*values)
-
     }
 
     override fun onPostExecute(result: String?) {
@@ -83,16 +77,11 @@ class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String
             dialog.dismiss()
         }
         //處理結果
-        var newFrage: CheckFragment? =null
-        if (result == "successNetwork") {
-            val urlEvent_success = BleEvent("success Login")
-            EventBus.getDefault().post(urlEvent_success)
-        } else if (result == "ResponseError") {
-            newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, useManagementActivity, 1, "dismiss")
-        } else if (result == "ReconnectNetwork") {
-            newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useManagementActivity, 1, "dismiss")
+        when(result){
+            "successNetwork" ->   EventBus.getDefault().post(BleEvent("success Login"))
+            "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, useManagementActivity, 1, "dismiss").show(useManagementActivity.fragmentManager, "dialog")}
+            "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useManagementActivity, 1, "dismiss").show(useManagementActivity.fragmentManager, "dialog")}
         }
-        newFrage?.show(useManagementActivity.fragmentManager, "dialog")
     }
 
 
