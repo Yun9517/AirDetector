@@ -477,7 +477,7 @@ class UartService : Service() {
     private fun startToForeground() {
         val mainNotification = MainNotification(this@UartService)
 
-        val notification = mainNotification.makeNotificion()
+        val notification = mainNotification.makeNotification()
         //notification.
 
         startForeground(NotificationObj.MAIN_NOTIFICATION_ID, notification)

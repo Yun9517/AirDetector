@@ -8,7 +8,9 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -51,6 +53,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun sendNotification(body: String?, title: String?) {
         val notiManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId: String = "給程式辨認，使用者看不到"
@@ -82,7 +85,7 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
 
         val notBuilder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.icon_leaf)
-                .setColor(getColor(R.color.iconColor))
+                .setColor(ContextCompat.getColor(applicationContext, R.color.iconColor))
                 .setContentTitle(title)
                 .setContentText(body)
                 .setAutoCancel(true)

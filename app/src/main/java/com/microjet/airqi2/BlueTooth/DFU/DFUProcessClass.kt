@@ -19,20 +19,20 @@ import no.nordicsemi.android.dfu.*
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
-class DFUProcessClass (){
+class DFUProcessClass() {
     private val mDfuProgressListener = object : DfuProgressListenerAdapter() {
         override fun onDeviceConnecting(deviceAddress: String?) {
-        //    mProgressBar?.setTitle("Now status")
+            //    mProgressBar?.setTitle("Now status")
             mProgressBar?.setMessage("Device Connected")
-        //    mProgressBar!!.isIndeterminate = true
-        //    mTextPercentage!!.setText(R.string.dfu_status_connecting)
+            //    mProgressBar!!.isIndeterminate = true
+            //    mTextPercentage!!.setText(R.string.dfu_status_connecting)
         }
 
         override fun onDfuProcessStarting(deviceAddress: String?) {
             mProgressBar!!.isIndeterminate = true
-         //   mProgressBar?.setTitle("Now status")
-         //   mProgressBar?.setMessage("")
-        //    mTextPercentage!!.setText(R.string.dfu_status_starting)
+            //   mProgressBar?.setTitle("Now status")
+            //   mProgressBar?.setMessage("")
+            //    mTextPercentage!!.setText(R.string.dfu_status_starting)
         }
 
         override fun onEnablingDfuMode(deviceAddress: String?) {
@@ -42,7 +42,7 @@ class DFUProcessClass (){
 
         override fun onFirmwareValidating(deviceAddress: String?) {
             mProgressBar!!.isIndeterminate = true
-           // mProgressBar?.setTitle("Now status")
+            // mProgressBar?.setTitle("Now status")
             mProgressBar?.setMessage("Data validating")
             //mTextPercentage!!.setText(R.string.dfu_status_validating)
         }
@@ -59,8 +59,8 @@ class DFUProcessClass (){
             if (mResumed) {
                 // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
                 Handler().postDelayed({
-                //    onTransferCompleted()//清除資訊用
-                //    showDownloadDialog("DFU Successful")
+                    //    onTransferCompleted()//清除資訊用
+                    //    showDownloadDialog("DFU Successful")
                     // if this activity is still open and upload process was completed, cancel the notification
                     val manager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                     manager.cancel(DfuBaseService.NOTIFICATION_ID)
@@ -74,6 +74,7 @@ class DFUProcessClass (){
 
             Log.d("AirAction", "Dfu Completed")
         }
+
         /*
         private fun showDownloadDialog(msg: String) {
             val Dialog = android.app.AlertDialog.Builder(this@DFUActivity).create()
@@ -94,7 +95,7 @@ class DFUProcessClass (){
             //mTextPercentage!!.setText(R.string.dfu_status_aborted)
             // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
             Handler().postDelayed({
-            //    onUploadCanceled()
+                //    onUploadCanceled()
 
                 // if this activity is still open and upload process was completed, cancel the notification
                 val manager = mContext!!.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -150,37 +151,40 @@ class DFUProcessClass (){
     private var mFileType: Int = 0
 
     private var mStatusOk: Boolean = false
-    private var  mScope :Int ?= null
-    var myDeviceName:String?=null
-    var myDeviceAddress:String?=null
+    private var mScope: Int? = null
+    var myDeviceName: String? = null
+    var myDeviceAddress: String? = null
     private var mFilePath: String? = null
-    private  var mProgressBar :ProgressDialog?=null
-    init {}
-    constructor(input: Context):this(){//第二建構元
-        mContext=input
+    private var mProgressBar: ProgressDialog? = null
+
+    init {
     }
 
-    fun DFUAction(DeviceName:String,DeviceAddress:String){
+    constructor(input: Context) : this() {//第二建構元
+        mContext = input
+    }
+
+    fun DFUAction(DeviceName: String, DeviceAddress: String) {
         DfuServiceListenerHelper.registerProgressListener(mContext, mDfuProgressListener)
-        if (mContext!=null) {
+        if (mContext != null) {
             mProgressBar = ProgressDialog(mContext)
             mProgressBar?.setMessage("DFUing")
             mProgressBar?.isIndeterminate = false//功能不知道
             mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
             mProgressBar?.setCancelable(true)//
-            mProgressBar?.max=100
+            mProgressBar?.max = 100
             mProgressBar?.show()
         }
-        mFileType=DfuBaseService.TYPE_AUTO
-        myDeviceName=DeviceName
-        myDeviceAddress=DeviceAddress
+        mFileType = DfuBaseService.TYPE_AUTO
+        myDeviceName = DeviceName
+        myDeviceAddress = DeviceAddress
 
-        val file= File(mContext!!.cacheDir, "FWupdate.zip")
-        if( file.exists()) {
+        val file = File(mContext!!.cacheDir, "FWupdate.zip")
+        if (file.exists()) {
             mjupdateFileInfo(file.name, file.length())
-            mFilePath=file.path
+            mFilePath = file.path
             if (isDfuServiceRunning()) {//確保dfu service只跑一個
-             //   showUploadCancelDialog()
+                //   showUploadCancelDialog()
                 return
             }
             if (!mStatusOk) {
@@ -192,13 +196,13 @@ class DFUProcessClass (){
     }
 
 
-    private fun saveCurrentState(){
+    private fun saveCurrentState() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(this.mContext!!)
         val editor = preferences.edit()
-        editor.putString(PREFS_DEVICE_NAME,myDeviceName)// mSelectedDevice!!.name)
-       // editor.putString(PREFS_FILE_NAME, mFileNameView!!.text.toString())
-       // editor.putString(PREFS_FILE_TYPE, mFileTypeView!!.text.toString())
-       // editor.putString(PREFS_FILE_SCOPE, mFileScopeView!!.text.toString())
+        editor.putString(PREFS_DEVICE_NAME, myDeviceName)// mSelectedDevice!!.name)
+        // editor.putString(PREFS_FILE_NAME, mFileNameView!!.text.toString())
+        // editor.putString(PREFS_FILE_TYPE, mFileTypeView!!.text.toString())
+        // editor.putString(PREFS_FILE_SCOPE, mFileScopeView!!.text.toString())
         editor.apply()
         val keepBond = preferences.getBoolean(SETTINGS_KEEP_BOND, false)
         val forceDfu = preferences.getBoolean(DfuSettingsConstants.SETTINGS_ASSUME_DFU_NODE, true)
@@ -210,22 +214,24 @@ class DFUProcessClass (){
         } catch (e: NumberFormatException) {
             numberOfPackets = DfuServiceInitiator.DEFAULT_PRN_VALUE
         }
-        val starter = DfuServiceInitiator(myDeviceAddress)//mSelectedDevice!!.address)
+        val starter = DfuServiceInitiator(myDeviceAddress!!)//mSelectedDevice!!.address)
                 .setDeviceName(myDeviceName)//mSelectedDevice!!.name)
                 .setKeepBond(keepBond)
                 .setForceDfu(forceDfu)
                 .setPacketsReceiptNotificationsEnabled(enablePRNs)
                 .setPacketsReceiptNotificationsValue(numberOfPackets)
                 .setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true)
+                .setForeground(false)
         if (mFileType == DfuBaseService.TYPE_AUTO) {
-            starter.setZip( mFilePath)// starter.setZip(mFileStreamUri, mFilePath)
+            starter.setZip(mFilePath!!)// starter.setZip(mFileStreamUri, mFilePath)
             if (mScope != null)
                 starter.setScope(mScope!!)
         } else {
-         //   starter.setBinOrHex(mFileType, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath)
+            //   starter.setBinOrHex(mFileType, mFileStreamUri, mFilePath).setInitFile(mInitFileStreamUri, mInitFilePath)
         }
         starter.start(this.mContext!!, DFUService::class.java)
     }
+
     private fun isDfuServiceRunning(): Boolean {
         val manager = mContext!!.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
         for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
@@ -235,13 +241,14 @@ class DFUProcessClass (){
         }
         return false
     }
+
     /**
      * Updates the file information on UI
      *
      * @param fileName file name
      * @param fileSize file length
      */
-    private fun mjupdateFileInfo(fileName: String, fileSize: Long, fileType: Int=0) {
+    private fun mjupdateFileInfo(fileName: String, fileSize: Long, fileType: Int = 0) {
 
         val extension = if (mFileType == DfuBaseService.TYPE_AUTO) "(?i)ZIP" else "(?i)HEX|BIN" // (?i) =  case insensitive
         mStatusOk = MimeTypeMap.getFileExtensionFromUrl(fileName).matches(extension.toRegex())

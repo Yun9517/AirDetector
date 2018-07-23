@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.widget.RemoteViews
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.MainActivity
@@ -29,7 +30,7 @@ class MainNotification(context: Context) {
     val mContext = context
 
     @SuppressLint("NewApi")
-    fun makeNotificion(): Notification {
+    fun makeNotification(): Notification {
 
         // 建立觸碰通知範圍時的PendingIntent
         val actionIntent = Intent(getApplicationContext(), MainActivity::class.java)
@@ -70,8 +71,9 @@ class MainNotification(context: Context) {
         notificationBuilder.setOngoing(true)
 
         //notificationBuilder.setContentTitle("ADDWII")
-        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
-        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf).color = mContext.getColor(R.color.iconColor)
+        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))\
+        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf)
+        notificationBuilder.color = ContextCompat.getColor(mContext, R.color.iconColor)
         notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
 

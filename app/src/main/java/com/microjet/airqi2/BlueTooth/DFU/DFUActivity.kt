@@ -680,7 +680,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             numberOfPackets = DfuServiceInitiator.DEFAULT_PRN_VALUE
         }
 
-        val starter = DfuServiceInitiator(myDeviceAddress)//mSelectedDevice!!.address)
+        val starter = DfuServiceInitiator(myDeviceAddress!!)//mSelectedDevice!!.address)
                 .setDeviceName(myDeviceName)//mSelectedDevice!!.name)
                 .setKeepBond(keepBond)
                 .setForceDfu(forceDfu)
@@ -688,7 +688,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 .setPacketsReceiptNotificationsValue(numberOfPackets)
                 .setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true)
         if (mFileType == DfuBaseService.TYPE_AUTO) {
-            starter.setZip( mFilePath)// starter.setZip(mFileStreamUri, mFilePath)
+            starter.setZip(mFilePath!!)// starter.setZip(mFileStreamUri, mFilePath)
             if (mScope != null)
                 starter.setScope(mScope!!)
         } else {
