@@ -201,10 +201,8 @@ class SettingActivity : AppCompatActivity() {
                     val fwType = MyApplication.getDeviceType()
                     //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
                     checkFwVersion("20$fwVer$fwSerial", fwType)
-                    img_FW_status.visibility = View.GONE
                 } else {
                     showNotChargingDialog()
-                    img_FW_status.visibility = View.VISIBLE
                 }
             }
         }
