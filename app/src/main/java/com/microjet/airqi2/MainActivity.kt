@@ -75,7 +75,6 @@ import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.nio.ByteBuffer
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -1123,7 +1122,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
                     checkUIState()
-                    checkMACConsistency()
                     Log.d(TAG, "OnReceive: $action")
                 }
                 BroadcastActions.ACTION_GATT_DISCONNECTED -> {
@@ -1482,10 +1480,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         if (isFirstC6) {
                             isFirstC6 = false
                             if (maxItem > 0) {
-                                if (myPref.getSharePreferencePullAllData()) {
-                                    changeMaxItem(hashMap)
-                                }
-
+                                changeMaxItem(hashMap)
                                 val mainIntent = Intent(BroadcastIntents.PRIMARY)
                                 mainIntent.putExtra("status", BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT)
                                 mainIntent.putExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, Integer.toString(maxItem))
@@ -1711,10 +1706,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onPostExecute(result: Void?) {
                 super.onPostExecute(result)
                 if (Build.BRAND != "OPPO") {
-                    Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+                    Utils.toastMakeTextAndShow(this@MainActivity, getString(R.string.Loading_Completely), Toast.LENGTH_SHORT)
+                    //Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
                 }
-                myPref.setSharePreferencePullAllDataMAC(mDeviceAddress)
-                myPref.setSharePreferencePullAllData(true)
+                val headTime = arrIndexMap.first()[TvocNoseData.C5TIME]!!.toLong() * 1000
+                myPref.setSharePreferencePairedC5LastTime(mDeviceAddress, headTime)
             }
         }
         SaveRealmTask().execute()
@@ -2063,26 +2059,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-//    private fun setPublicLatiLongi() {
-//        lati = TvocNoseData.lati
-//        longi = TvocNoseData.longi
-//    }
-
     private fun changeMaxItem(hashmap: HashMap<String, String>) {
-        val time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
-        val realm = Realm.getDefaultInstance()
-        var maxCreatedTime = realm.where(AsmDataModel::class.java).max("Created_time")
-        if (maxCreatedTime == null) { maxCreatedTime = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(2) }
-        val appropriateMaxItems = Math.min(((time - maxCreatedTime.toLong()) / 60000L).toInt(), maxItem)
+        val c6Time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
+        var maxC5DevicePairedTime = myPref.getSharePreferencePairedC5LastTime(mDeviceAddress)
+        val appropriateMaxItems = Math.min(((c6Time - maxC5DevicePairedTime) / 60000L).toInt(), maxItem)
         maxItem = appropriateMaxItems
-        Log.d("Items", appropriateMaxItems.toString())
-    }
-
-    private fun checkMACConsistency() {
-        val keyMAC = myPref.getSharePreferencePullAllDataMAC()
-        if (mDeviceAddress != keyMAC) {
-            myPref.setSharePreferencePullAllData(false)
-        }
+        Log.d("maxItems", appropriateMaxItems.toString())
     }
 }
 
