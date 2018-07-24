@@ -1,12 +1,10 @@
 package layout
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.widget.TextView
 import android.content.Context.LAYOUT_INFLATER_SERVICE
 import android.content.Intent
 import android.database.Cursor
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.graphics.Typeface
@@ -63,7 +61,6 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         return false
     }
 
-    @SuppressLint("ResourceType")
     override fun getGroupView(groupPosition: Int, isExpanded: Boolean, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         val headerTitle = getGroup(groupPosition) as ExpandedMenuModel
@@ -100,13 +97,13 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         if (groupPosition == 6) {
             if (isExpanded) {
                 headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_up_grey_400_18dp))
-                fwIndicator.setImageResource(Color.TRANSPARENT)
+                fwIndicator.setImageResource(android.R.color.transparent)
             } else {
                 headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_down_grey_400_18dp))
                 if (myPref.getSharePreferenceCheckFWVersion()){
                     fwIndicator.setImageResource(R.drawable.app_android_icon_fw_remind)
                 } else {
-                    fwIndicator.setImageResource(Color.TRANSPARENT)
+                    fwIndicator.setImageResource(android.R.color.transparent)
                 }
             }
         }
@@ -114,7 +111,6 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         return convertView
     }
 
-    @SuppressLint("ResourceType")
     override fun getChildView(groupPosition: Int, childPosition: Int, isLastChild: Boolean, convertView: View?, parent: ViewGroup): View {
         var convertView = convertView
         val childText = getChild(groupPosition, childPosition) as String
@@ -136,7 +132,7 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
             if (myPref.getSharePreferenceCheckFWVersion()){
                 childIndicatorImage.setImageResource(R.drawable.app_android_icon_fw_remind)
             } else {
-                childIndicatorImage.setImageResource(Color.TRANSPARENT)
+                childIndicatorImage.setImageResource(android.R.color.transparent)
             }
         }
 
