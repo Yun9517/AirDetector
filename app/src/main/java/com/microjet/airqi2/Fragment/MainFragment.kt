@@ -673,7 +673,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                             in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
                             in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 750)
                             in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 835)
-                            else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 870)
+                            else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 880)
                         }
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         tvocStatusTextShow(tvocDataFloat)
