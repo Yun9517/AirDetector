@@ -1441,6 +1441,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     }
                     0xBA.toByte() -> {
                         myPref.setSharePreferenceManualDisconn(true)
+                        mUartService?.disconnect()
                         Log.e("0xBA", "Manual Disconnect from Device.........")
                     }
                     0xE0.toByte() -> {
