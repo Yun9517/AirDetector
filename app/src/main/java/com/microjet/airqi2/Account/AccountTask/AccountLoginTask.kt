@@ -74,7 +74,7 @@ class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String
         val previousDialog = useManagementActivity.fragmentManager.findFragmentByTag("dialog")
         if (previousDialog != null) {
             val dialog = previousDialog as DialogFragment
-            dialog.dismiss()
+            dialog.dismissAllowingStateLoss()//處理縮小APP出現的沒回應事件
         }
         //處理結果
         when(result){
