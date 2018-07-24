@@ -564,4 +564,11 @@
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="facebook_app_id">1406650272815007</string>
 
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="last_month">上個月</string>
+    <string name="next_month">下個月</string>
+    <string name="export_csv">輸出 CSV</string>
+    <string name="maximum_number_of_date">已達天數上限</string>
 </resources>

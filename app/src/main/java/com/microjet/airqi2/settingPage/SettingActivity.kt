@@ -179,14 +179,19 @@ class SettingActivity : AppCompatActivity() {
         }
 
         dataExport.setOnClickListener {
-            val cal = Calendar.getInstance()
-            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
-                cal.set(year, month, dayOfMonth)
-                calObject.set(year, month, dayOfMonth)
-                checkPermissions()
-            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-            dpd.setMessage(getString(R.string.select_Date)) //請選擇日期
-            dpd.show()
+//            val cal = Calendar.getInstance()
+//            val dpd = DatePickerDialog(this, DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
+//                cal.set(year, month, dayOfMonth)
+//                calObject.set(year, month, dayOfMonth)
+//                checkPermissions()
+//            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+//            dpd.setMessage(getString(R.string.select_Date)) //請選擇日期
+//            dpd.show()
+
+            val intent = Intent()
+            intent.setClass(this@SettingActivity, CalendarMain::class.java)
+            startActivity(intent)
+//            startActivityForResult(intent,1)
         }
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two

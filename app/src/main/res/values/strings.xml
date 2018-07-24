@@ -551,4 +551,11 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="wait_Login">Logining Please Wait</string>
     <string name="wait_Setting">Setting Please Wait</string>
 
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="day">day</string>
+    <string name="last_month">last month</string>
+    <string name="next_month">next month</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="maximum_number_of_date">The maximum number of days has been reached</string>
 </resources>

@@ -310,6 +310,10 @@
 
         <activity android:name=".FireBaseCloudMessage.OpenBrowserActivity" />
 
+        <activity
+            android:name=".CalendarMain"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
     </application>
 
 </manifest>

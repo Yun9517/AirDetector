@@ -464,4 +464,12 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="facebook_app_id">1406650272815007</string>
     <string name="error_login">Login_error</string>
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
+
+    <string name="year">year</string>
+    <string name="month">month</string>
+    <string name="day">day</string>
+    <string name="last_month">last month</string>
+    <string name="next_month">next month</string>
+    <string name="export_csv">Export CSV</string>
+    <string name="maximum_number_of_date">The maximum number of days has been reached</string>
 </resources>
