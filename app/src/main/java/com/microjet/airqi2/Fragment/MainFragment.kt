@@ -668,12 +668,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         //數值不等比顯示
                         when (tvocDataFloat) {
-                            in 0..220 -> inCircleBar.setCurrentValues(tvocDataFloat)
-                            in 221..660 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 360)
+                            in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
                             in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
                             in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 750)
-                            in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 835)
-                            else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 880)
+                            in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 800)
+                            else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
                         }
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         tvocStatusTextShow(tvocDataFloat)
