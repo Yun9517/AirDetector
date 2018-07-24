@@ -32,7 +32,7 @@ import java.util.regex.Pattern
 
 
 class AccountManagementActivity : AppCompatActivity() {
-    val callbackManager = CallbackManager.Factory.create()
+    private val callbackManager = CallbackManager.Factory.create()
     private lateinit var myPref: PrefObjects
     private val getManagementActivity: Activity = this
 
@@ -58,7 +58,9 @@ class AccountManagementActivity : AppCompatActivity() {
             checkNetwork("login")
         }
 
-
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        email.setText(share.getString("LoginEmail",""))
+        rememberID.isChecked = share.getBoolean("rememberID",false)
     }
 
     override fun onResume() {
@@ -170,6 +172,13 @@ class AccountManagementActivity : AppCompatActivity() {
         TvocNoseData.cloudName = ""
         TvocNoseData.cloudEmail = ""
         TvocNoseData.cloudDeviceArr = ""
+        if (rememberID.isChecked) {
+            share.edit().putBoolean("rememberID", true).apply()
+            share.edit().putString("LoginEmail", email?.text.toString()).apply()
+        }else{
+            share.edit().putBoolean("rememberID", false).apply()
+            share.edit().putString("LoginEmail", "").apply()
+        }
     }
 
     fun AccountActivityShow() {
