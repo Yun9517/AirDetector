@@ -24,8 +24,8 @@ import io.realm.internal.SyncObjectServerFacade.getApplicationContext
  */
 class MainNotification(context: Context) {
     private val NOTIF_ID = "com.microjet.airqi2.notify"
-    private val NOTIF_NAME = "com.microjet.airqi2.mainNotify"
-    private val NOTIF_DESC = "Main Notification for foreground service"
+    private val NOTIF_NAME = context.getString(R.string.text_permanent_notification_name)
+    private val NOTIF_DESC = context.getString(R.string.text_notification_description)
 
     val mContext = context
 

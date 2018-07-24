@@ -564,4 +564,6 @@
     <string name="errorToken">帳號token已失效，請重新登入</string>
     <string name="checkToken">检查帐号权限有效性，请稍后</string>
     <string name="connectServer">连结伺服器，请稍后</string>
+    <string name="text_notification_description">由于您打开了「允许背景服务常驻通知列」功能，本服务会持续在背景执行，您可关闭本通知。但若您为 Android 8.1 用户，因系统原生限制，在关闭通知后，您仍会看到 Android 系统本身的提示。</string>
+    <string name="text_permanent_notification_name">ADDWII常驻通知</string>
 </resources>

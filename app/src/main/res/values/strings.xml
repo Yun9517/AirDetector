@@ -557,5 +557,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="errorToken">Account token has expired, please log in again</string>
     <string name="checkToken">Check Account Available，Please Wait</string>
     <string name="connectServer">Connect Server，Please Wait</string>
+    <string name="text_notification_description">由於您打開了「允許背景服務常駐通知列」功能，本服務會持續在背景執行，您可關閉本通知。但若您為 Android 8.1 用戶，因系統原生限制，在關閉通知後，您仍會看到 Android 系統本身的提示。</string>
+    <string name="text_permanent_notification_name">ADDWII Permanent Notify</string>
 
 </resources>
