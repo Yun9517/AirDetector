@@ -8,7 +8,7 @@
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
     tools:context="com.microjet.airqi2.CalendarMain"
-    android:background="@color/colorPrimaryDark">
+    android:background="@android:color/holo_green_dark">
 
     <TextView
         android:id="@+id/txt_date"
@@ -18,11 +18,11 @@
         android:gravity="center"
         android:textColor="@android:color/black"/>
 
-    <com.microjet.airqi2.WeekView
+    <com.microjet.airqi2.CalendarWeekView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/holo_green_dark"
+        android:background="@android:color/holo_green_light"
         app:wv_textColor="#333333"
         app:wv_textSize="14sp"/>
 

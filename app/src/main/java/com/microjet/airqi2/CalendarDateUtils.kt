@@ -8,7 +8,7 @@ import java.util.Calendar
  *
  * 日期工具类.
  */
-class DateUtils private constructor() {
+class CalendarDateUtils private constructor() {
 
     init {
         // 工具类, 禁止实例化

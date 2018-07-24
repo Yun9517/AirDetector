@@ -1,7 +1,6 @@
 package com.microjet.airqi2
 
 import android.content.Context
-import android.content.res.TypedArray
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -15,11 +14,9 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
-import android.widget.Toast
-import com.microjet.airqi2.CustomAPI.Utils
 
 
-import com.microjet.airqi2.DateUtils
+import com.microjet.airqi2.Definition.CalendarParameter
 
 import java.text.SimpleDateFormat
 import java.util.*
@@ -49,7 +46,6 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
     /** 选中后天的背景  */
     private var mSelectDayBackground: Drawable? = null
     /** */
-    private var mMaxDayValue: Int = 30
 
     /** 日期格式化格式  */
     /**
@@ -202,7 +198,7 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         mSelectDate = ArrayList()
         isClickable = true
         initAttrs(attrs)
-        Log.d("barney","CalendarView start")
+
     }
 
     private fun initAttrs(attrs: AttributeSet?) {
@@ -246,9 +242,9 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         // 获取的月份要少一月, 所以这里 + 1
         val month = mCalendar!!.get(Calendar.MONTH) + 1
         // 获取当月的天数
-        val days = DateUtils.getMonthDays(year, month)
+        val days = CalendarDateUtils.getMonthDays(year, month)
         // 获取当月第一天位于周几
-        val week = DateUtils.getFirstDayWeek(year, month)
+        val week = CalendarDateUtils.getFirstDayWeek(year, month)
         // 绘制每天
         for (day in 1..days) {
             // 获取天在行、列的位置
@@ -340,17 +336,15 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
         if (mIsChangeDateStatus) {
             // 如果选中的天已经选择则取消选中
-            if(mSelectDate!!.size <= 3){
-                Log.d("Barney", "mIsChangeDateStatus ::: mSelectDate =  " + (mSelectDate) + "  " + isClickable)
-            }
             val date:String = getFormatDate(year, month, day)
-            if (mSelectDate != null && (mSelectDate!!.contains(date) || mSelectDate!!.size >= mMaxDayValue)) {
+            if (mSelectDate != null && (mSelectDate!!.contains(date) || mSelectDate!!.size >= CalendarParameter.mMaxDayValue)) {
                 mSelectDate!!.remove(date)
                 if (mChangeListener != null) {
                     mChangeListener!!.onSelectedDayChange(this, false, year, month, day)
                 }
-                if(mSelectDate!!.size >= mMaxDayValue) {
-//                    Utils.toastMakeTextAndShow(this@CalendarView, resources.getString(R.string.maximum_number_of_date),Toast.LENGTH_SHORT)
+                if(mSelectDate!!.size >= CalendarParameter.mMaxDayValue) {
+                    Log.d("Barney", " date click > 2   " + date)
+                    //Utils.toastMakeTextAndShow(this@CalendarView, resources.getString(R.string.maximum_number_of_date),Toast.LENGTH_SHORT)
                 }
             } else {
                 if (mSelectDate == null) {

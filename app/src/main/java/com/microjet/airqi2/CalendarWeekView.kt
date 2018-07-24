@@ -19,7 +19,7 @@ import com.microjet.airqi2.R
  *
  * 自定义日历顶部星期 View.
  */
-class WeekView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
+class CalendarWeekView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
 
     private val mWeeks = getContext().resources.getStringArray(R.array.english_week_string_array)
 
