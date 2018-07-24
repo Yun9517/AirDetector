@@ -101,7 +101,7 @@ class SettingActivity : AppCompatActivity() {
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part one
         val deviceName = myPref.getSharePreferenceName()
         if (deviceName == "DfuTarg") {
-            btnCheckFW?.text = getString(R.string.dfu_update_failure)
+            btnCheckFW?.text = getString(R.string.dfu_title)
         }
     }
 
@@ -192,7 +192,7 @@ class SettingActivity : AppCompatActivity() {
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
         btnCheckFW.setOnClickListener {
-            if (btnCheckFW.text == getString(R.string.dfu_update_failure)) {
+            if (btnCheckFW.text == getString(R.string.dfu_title)) {
                 EventBus.getDefault().post(BleEvent("Download Success"))
             } else {
                 if (MyApplication.getDeviceChargeStatus()) {
