@@ -67,7 +67,7 @@ class AccountCheckTokenTask(gettedActivity: Activity, strEvent: String) : AsyncT
             val previousDialog = useGettedActivity.fragmentManager.findFragmentByTag("dialog")
             if (previousDialog != null) {
                 val dialog = previousDialog as DialogFragment
-                dialog.dismiss()
+                dialog.dismissAllowingStateLoss()//處理縮小APP出現的沒回應事件
             }
             when (result) {
                 "successToken" -> {
