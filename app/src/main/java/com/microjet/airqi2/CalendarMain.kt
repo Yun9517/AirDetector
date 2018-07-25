@@ -125,7 +125,7 @@ class CalendarMain : AppCompatActivity() {
                         val startTime:Long = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
                         val endTime:Long = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
                     if (checkPermissions()){
-                    runRealmQueryData(startTime,endTime)
+                        runRealmQueryData(startTime,endTime)
                     }
                  }
 
@@ -160,9 +160,12 @@ class CalendarMain : AppCompatActivity() {
     private fun initData(): MutableList<String> {
         val dates = ArrayList<String>()
         val calendar = Calendar.getInstance(Locale.CHINESE)
-        val sdf = SimpleDateFormat(mCalendarView!!.dateFormatPattern, Locale.CHINESE)
-        sdf.format(calendar.time)
-        dates.add(sdf.format(calendar.time))
+        val sdf_DayEnd = SimpleDateFormat(mCalendarView!!.dateFormatPattern, Locale.CHINESE)
+        val sdf_DayStart:Long = (sdf_DayEnd.format(calendar.time).toLong() - 1)
+        sdf_DayEnd.format(calendar.time)
+        dates.add(sdf_DayStart.toString())
+        dates.add(sdf_DayEnd.format(calendar.time))
+
         return dates
     }
 

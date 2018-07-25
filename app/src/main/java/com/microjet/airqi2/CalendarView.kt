@@ -192,8 +192,8 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
 
     init {
         mSlop = ViewConfiguration.get(context).scaledTouchSlop
-        mSelectCalendar = Calendar.getInstance(Locale.CHINA)
-        mCalendar = Calendar.getInstance(Locale.CHINA)
+        mSelectCalendar = Calendar.getInstance(Locale.CHINESE)
+        mCalendar = Calendar.getInstance(Locale.CHINESE)
         paint = Paint(Paint.ANTI_ALIAS_FLAG)
         mSelectDate = ArrayList()
         isClickable = true
