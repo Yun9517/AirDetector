@@ -188,13 +188,13 @@ class CalendarMain : AppCompatActivity() {
         //一天共有1440筆
         val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "Count"))
+//        Log.d("runRealmQueryData ", " startTime " +startTime+ " endTime "+endTime)
         query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
         val Result = query.findAll()
         Log.d("Result", Result.toString())
         listener = RealmChangeListener {
-            filter = it.filter { it.macAddress == myPref.getSharePreferenceMAC() }
 
-            parseDataToCsv(filter)
+            parseDataToCsv(result)
             Log.e("Realm Listener", "Update Database...")
         }
 
