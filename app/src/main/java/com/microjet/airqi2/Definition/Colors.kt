@@ -40,7 +40,6 @@ object Colors {
     // 2018/06/07 Add eCO2 color
     val eCO2Color = intArrayOf(eco2Color1, eco2Color2)
 
-    //val tvocCO2Angles = floatArrayOf(0.025f, 0.275f, 0.575f, 0.65f, 0.70f, 0.75f) <- Keep original
     val tvocCO2Angles = floatArrayOf(0.025f, 0.275f, 0.575f, 0.65f, 0.70f, 0.75f)
     val tvocOldAngles = floatArrayOf(0.15f, 0.375f, 0.7f)
     val tempAngles = floatArrayOf(0.15f, 0.375f, 0.7f)
