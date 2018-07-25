@@ -274,12 +274,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        BleConnection.CONNECTED -> {
-                            blueToothDisconnect()
-                        }
-                        BleConnection.DISCONNECTED -> {
-                            blueToothConnect()
-                        }
+                        BleConnection.CONNECTED -> blueToothDisconnect()
+                        BleConnection.DISCONNECTED -> blueToothConnect()
                     }
                 }
                 1 -> {
@@ -326,15 +322,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> {
-                    publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
-                }
-                3 -> {
-                    trailMapShow()
-                }
-                4 -> {
-                    knowledgeShow()
-                }
+                2 -> publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
+                3 -> trailMapShow()
+                4 -> knowledgeShow()
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
@@ -342,12 +332,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> {
-                                    qandaShow()
-                                }
-                                1 -> {
-                                    tourShow()
-                                }
+                                0 -> qandaShow()
+                                1 -> tourShow()
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -360,12 +346,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> {
-                                    accountShow()
-                                }
-                                1 -> {
-                                    settingShow()
-                                }
+                                0 -> accountShow()
+                                1 -> settingShow()
                             }
                             parent.collapseGroup(groupPosition)
                         })
