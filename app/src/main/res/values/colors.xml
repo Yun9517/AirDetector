@@ -89,6 +89,5 @@
 
     <!--Icon color -->
     <color name="iconColor">#76cdc5</color>
-    <color name="transparent">#00000000</color>
 
 </resources>
