@@ -49,7 +49,7 @@ class CalendarMain : AppCompatActivity() {
     private lateinit var filter: List<AsmDataModel>
     private lateinit var myPref: PrefObjects
     private val reqCodeWriteStorage = 2
-
+    private var Datelimit:String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,6 +79,7 @@ class CalendarMain : AppCompatActivity() {
                 Log.e(TAG, "day: $day")
 
                 val str: List<String>? = mCalendarView!!.getSelectDate()
+                Log.d(TAG," Date str = " + str)
                 val icc = IgnoreCaseComparator()
                 Collections.sort(str, icc)
 
@@ -107,26 +108,35 @@ class CalendarMain : AppCompatActivity() {
         setCurDate()
 
         mExport_CSV?.setOnClickListener(View.OnClickListener {
-//            Log.d(TAG," Date min = " + str_min)
-//            Log.d(TAG," Date max = " + str_max)
+            Log.d(TAG," Date min = " + str_min)
+            Log.d(TAG," Date max = " + str_max)
             if (!str_min.equals("") || !str_max.equals("") ){
                 if(str_max.equals(str_min)){
                     Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.number_of_date_null)), Toast.LENGTH_SHORT)
                 }
+
             val MintimeStamp: Int = Date2TimeStamp(str_min, "yyyyMMdd").toInt() / mDayTimeStampValue
             val MaxtimeStamp: Int = Date2TimeStamp(str_max, "yyyyMMdd").toInt() / mDayTimeStampValue
             var licit_Date: Boolean = CalendarParameter.mDayRangeValue >= (MaxtimeStamp - MintimeStamp + 1)
 
-//            Log.d(TAG, " Date Value = " + (MaxtimeStamp - MintimeStamp + 1) + " Date lici :" + licit_Date)
+            Log.d(TAG, " Date Value = " + (MaxtimeStamp - MintimeStamp + 1) + " Date lici :" + licit_Date+" Datelimit =" +Datelimit.toLong())
 
                 if (!licit_Date) {
                     Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.maximum_number_of_date)), Toast.LENGTH_SHORT)
                     }else{
                         val startTime:Long = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
                         val endTime:Long = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
-                    if (checkPermissions()){
-                        runRealmQueryData(startTime,endTime)
+                        val DatelimitTime:Long = Date2TimeStamp(Datelimit, "yyyyMMdd").toLong() *1000
+                    Log.d(TAG,"endTime : "+endTime+ " DatelimitTime: "+DatelimitTime)
+                    if(DatelimitTime < endTime){
+                        Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.out_of_datelimit)), Toast.LENGTH_SHORT)
+
+                    }else{
+                        if (checkPermissions()){
+                            runRealmQueryData(startTime,endTime)
+                        }
                     }
+
                  }
 
             }else{
@@ -165,6 +175,9 @@ class CalendarMain : AppCompatActivity() {
         sdf_DayEnd.format(calendar.time)
         dates.add(sdf_DayStart.toString())
         dates.add(sdf_DayEnd.format(calendar.time))
+        Datelimit = sdf_DayEnd.format(calendar.time).toString()
+        str_min = sdf_DayStart.toString()
+        str_max = sdf_DayEnd.format(calendar.time).toLong().toString()
 
         return dates
     }
