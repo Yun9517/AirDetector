@@ -566,4 +566,5 @@
     <string name="next_month">下个月</string>
     <string name="export_csv">输出 CSV</string>
     <string name="maximum_number_of_date">已达天数上限</string>
+    <string name="number_of_date_null">请点选两个日期,产生报表</string>
 </resources>
