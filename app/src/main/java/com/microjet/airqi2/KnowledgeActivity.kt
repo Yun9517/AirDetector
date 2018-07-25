@@ -37,11 +37,11 @@ class KnowledgeActivity : AppCompatActivity() {
         webView!!.setBackgroundColor(Color.TRANSPARENT)  //  WebView 背景透明效果，不知道为什么在xml配置中无法设置？
 
         if (mLang == "zh-TW" || mLang == "zh-HK") {
-            webView!!.loadUrl("file:///android_asset/knowledge/index.html")
+            webView!!.loadUrl("file:///android_asset/knowledge/index-zh_TW.html")
         } else if (mLang == "zh-CN") {
             webView!!.loadUrl("file:///android_asset/knowledge/index-zh_CN.html")
         } else {
-            webView!!.loadUrl("file:///android_asset/knowledge/index-en_US.html")
+            webView!!.loadUrl("file:///android_asset/knowledge/index.html")
         }
     }
 
