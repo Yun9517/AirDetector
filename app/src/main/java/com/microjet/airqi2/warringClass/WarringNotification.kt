@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.PowerManager
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.support.v4.content.res.ResourcesCompat.getColor
 import android.util.Log
 import com.microjet.airqi2.BroadReceiver.NotificationButtonReceiver
@@ -100,7 +101,7 @@ class WarringNotification(context:Context,RequestCode:Int,initValue:Int,channelI
         val notification = NotificationCompat.Builder(mContext)
                 .setChannelId(mChannelID)
                 .setSmallIcon(R.mipmap.icon_leaf)
-                .setColor(mContext.getColor(R.color.iconColor))
+                .setColor(ContextCompat.getColor(mContext, R.color.iconColor))
                 .setLargeIcon(iconID)
                 .setContentTitle(title)
                 .setStyle(NotificationCompat.BigTextStyle().bigText(title))

@@ -515,7 +515,7 @@
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
     <string name="text_service_live_in_foreground">ADDWII仍在背景執行！</string>
-    <string name="text_allow_service_run_in_foreground">允許背景服務常駐通知列</string>
+    <string name="text_allow_service_run_in_foreground">允許背景服務常駐</string>
     <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全關閉）</string>
     <string name="new_Version_Notify">有新版軟體可更新</string>
 
@@ -571,4 +571,10 @@
     <string name="errorToken">帳號權限已經過期，請重新登入</string>
     <string name="checkToken">檢查帳號權限有效性，請稍後</string>
     <string name="connectServer">連結伺服器，請稍後</string>
+    <string name="text_notification_description">由於您打開了「允許背景服務常駐通知列」功能，本服務會持續在背景執行，您可關閉本通知。但若您為 Android 8.1 用戶，因系統原生限制，在關閉通知後，您仍會看到 Android 系統本身的提示。</string>
+    <string name="text_permanent_notification_name">ADDWII常駐通知</string>
+
+
+    <string name="dialog_close_title">關閉程式</string>
+    <string name="dialog_close_content">您真的要關閉ADDWII空污鼻?</string>
 </resources>

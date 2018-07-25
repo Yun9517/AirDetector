@@ -29,6 +29,7 @@
         android:layout_marginStart="16dp"
         android:layout_toEndOf="@+id/imageView2"
         android:text="ADDWII"
+        android:textColor="@color/blackColor"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -43,6 +44,7 @@
         android:layout_marginTop="2dp"
         android:layout_toEndOf="@+id/imageView2"
         android:text="@string/text_service_live_in_foreground"
+        android:textColor="@color/blackColor"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toBottomOf="@+id/contentTitle" />
 

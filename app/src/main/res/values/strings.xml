@@ -409,8 +409,8 @@
 
     <string name="text_main_page_hint">More detail</string>
     <string name="text_save_setting_message">Click SAVE to complete all set up</string>
-    <string name="text_service_live_in_foreground">ADDWII executes in background!</string>
-    <string name="text_allow_service_run_in_foreground">Allow background service alive in notification</string>
+    <string name="text_service_live_in_foreground">ADDWII still run in background!</string>
+    <string name="text_allow_service_run_in_foreground">Allow background service permanent</string>
     <string name="text_allow_service_run_in_foreground_comment">Restart APP to active（Must completely close APP）</string>
     <string name="new_Version_Notify">You can update to the latest version.</string>
 
@@ -557,5 +557,10 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="errorToken">Account token has expired, please log in again</string>
     <string name="checkToken">Check Account Available，Please Wait</string>
     <string name="connectServer">Connect Server，Please Wait</string>
+    <string name="text_notification_description">When you turned on the "Allow background service resident notification bar" feature, This service will continue to run in the background. You can hide the notification。If you are Android 8.1 user, after you switch off this alert, you will still see Android system alert.</string>
+    <string name="text_permanent_notification_name">ADDWII Permanent Notify</string>
 
+
+    <string name="dialog_close_title">Close Application</string>
+    <string name="dialog_close_content">Do you really want to close ADDWII Mobile Nose?</string>
 </resources>

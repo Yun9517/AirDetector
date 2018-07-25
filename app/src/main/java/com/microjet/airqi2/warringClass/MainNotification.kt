@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
+import android.support.v4.content.ContextCompat
 import android.widget.RemoteViews
 import com.microjet.airqi2.BlueTooth.UartService
 import com.microjet.airqi2.MainActivity
@@ -23,13 +24,13 @@ import io.realm.internal.SyncObjectServerFacade.getApplicationContext
  */
 class MainNotification(context: Context) {
     private val NOTIF_ID = "com.microjet.airqi2.notify"
-    private val NOTIF_NAME = "com.microjet.airqi2.mainNotify"
-    private val NOTIF_DESC = "Main Notification for foreground service"
+    private val NOTIF_NAME = context.getString(R.string.text_permanent_notification_name)
+    private val NOTIF_DESC = context.getString(R.string.text_notification_description)
 
     val mContext = context
 
     @SuppressLint("NewApi")
-    fun makeNotificion(): Notification {
+    fun makeNotification(): Notification {
 
         // 建立觸碰通知範圍時的PendingIntent
         val actionIntent = Intent(getApplicationContext(), MainActivity::class.java)
@@ -70,8 +71,9 @@ class MainNotification(context: Context) {
         notificationBuilder.setOngoing(true)
 
         //notificationBuilder.setContentTitle("ADDWII")
-        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
-        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf).color = mContext.getColor(R.color.iconColor)
+        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))\
+        notificationBuilder.setSmallIcon(R.mipmap.icon_leaf)
+        notificationBuilder.color = ContextCompat.getColor(mContext, R.color.iconColor)
         notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
 

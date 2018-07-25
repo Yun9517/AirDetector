@@ -288,8 +288,8 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
     }
 
     private fun setGUI() {
-    //    val toolbar = findViewById<Toolbar>(R.id.toolbar_actionbar)
-    //    setSupportActionBar(toolbar)
+    //val toolbar = findViewById<Toolbar>(R.id.toolbar_actionbar)
+    //setSupportActionBar(toolbar)
         supportActionBar!!.setDisplayHomeAsUpEnabled(true)
 
         mDeviceNameView = findViewById(R.id.device_name)
@@ -342,12 +342,11 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
 
     override fun onRequestPermission(permission: String?) {
         ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQ)
-     //   TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-   // fun onRequestPermission(permission: String) {
-   //     ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQ)
-   // }
+   /*fun onRequestPermission(permission: String) {
+      ActivityCompat.requestPermissions(this, arrayOf(permission), PERMISSION_REQ)
+   }*/
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -394,9 +393,9 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> onBackPressed()
-        //    R.id.action_about -> { //       val fragment = AppHelpFragment.getInstance(R.string.dfu_about_text)
-        //        fragment.show(supportFragmentManager, "help_fragment")
-        //    }
+        /*R.id.action_about -> {    //val fragment = AppHelpFragment.getInstance(R.string.dfu_about_text)
+            fragment.show(supportFragmentManager, "help_fragment")
+        }*/
             R.id.action_settings -> {
                 val intent = Intent(this, SettingsActivity::class.java)
                 startActivity(intent)
@@ -539,7 +538,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         mStatusOk = MimeTypeMap.getFileExtensionFromUrl(fileName).matches(extension.toRegex())
         val statusOk = mStatusOk
         mFileStatusView!!.setText(if (statusOk) R.string.dfu_file_status_ok else R.string.dfu_file_status_invalid)
-        mUploadButton!!.setEnabled(mSelectedDevice != null && statusOk)
+        mUploadButton!!.isEnabled = mSelectedDevice != null && statusOk
 
         // Ask the user for the Init packet file if HEX or BIN files are selected. In case of a ZIP file the Init packets should be included in the ZIP.
         if (statusOk) {
@@ -547,10 +546,10 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 mScope = null
                 mFileScopeView!!.text = getString(R.string.not_available)
                 AlertDialog.Builder(this).setTitle(R.string.dfu_file_init_title).setMessage(R.string.dfu_file_init_message)
-                        .setNegativeButton(R.string.no, { dialog, which ->
+                        .setNegativeButton(R.string.no, { _, _ ->
                             mInitFilePath = null
                             mInitFileStreamUri = null
-                        }).setPositiveButton(R.string.yes, { dialog, which ->
+                        }).setPositiveButton(R.string.yes, { _, _ ->
                             val intent = Intent(Intent.ACTION_GET_CONTENT)
                             intent.type = DfuBaseService.MIME_TYPE_OCTET_STREAM
                             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -558,20 +557,17 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                         }).show()
             } else {
                 AlertDialog.Builder(this).setTitle(R.string.dfu_file_scope_title).setCancelable(false)
-                        .setSingleChoiceItems(R.array.dfu_file_scope, 0, { dialog, which ->
+                        .setSingleChoiceItems(R.array.dfu_file_scope, 0, { _, which ->
                             when (which) {
                                 0 -> mScope = null
                                 1 -> mScope = DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS
                                 2 -> mScope = DfuServiceInitiator.SCOPE_APPLICATION
                             }
-                        }).setPositiveButton(R.string.ok, { dialogInterface, i ->
-                            val index: Int
-                            if (mScope == null) {
-                                index = 0
-                            } else if (mScope == DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS) {
-                                index = 1
-                            } else {
-                                index = 2
+                        }).setPositiveButton(R.string.ok, { _, _ ->
+                            val index: Int = when (mScope) {
+                                null -> 0
+                                DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS -> 1
+                                else -> 2
                             }
                             mFileScopeView!!.text = resources.getStringArray(R.array.dfu_file_scope)[index]
                         }).show()
@@ -605,14 +601,14 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         }
         // Show a dialog with file types
         AlertDialog.Builder(this).setTitle(R.string.dfu_file_type_title)
-                .setSingleChoiceItems(R.array.dfu_file_type, index, { dialog, which ->
+                .setSingleChoiceItems(R.array.dfu_file_type, index, { _, which ->
                     when (which) {
                         0 -> mFileTypeTmp = DfuBaseService.TYPE_AUTO
                         1 -> mFileTypeTmp = DfuBaseService.TYPE_SOFT_DEVICE
                         2 -> mFileTypeTmp = DfuBaseService.TYPE_BOOTLOADER
                         3 -> mFileTypeTmp = DfuBaseService.TYPE_APPLICATION
                     }
-                }).setPositiveButton(R.string.ok, { dialog, which -> openFileChooser() }).setNeutralButton(R.string.dfu_file_info, { dialog, which ->
+                }).setPositiveButton(R.string.ok, { _, _ -> openFileChooser() }).setNeutralButton(R.string.dfu_file_info, { _, _ ->
                     val fragment = ZipInfoFragment()
                     fragment.show(supportFragmentManager, "help_fragment")
                 }).setNegativeButton(R.string.cancel, null).show()
@@ -629,12 +625,12 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             // there is no any file browser app, let's try to download one
             val customView = layoutInflater.inflate(R.layout.app_file_browser, null)
             val appsList = customView.findViewById<ListView>(android.R.id.list)
-            appsList.setAdapter(FileBrowserAppsAdapter(this))
-            appsList.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
+            appsList.adapter = FileBrowserAppsAdapter(this)
+            appsList.choiceMode = ListView.CHOICE_MODE_SINGLE
             appsList.setItemChecked(0, true)
             AlertDialog.Builder(this).setTitle(R.string.dfu_alert_no_filebrowser_title).setView(customView)
-                    .setNegativeButton(R.string.no, { dialog, which -> dialog.dismiss() }).setPositiveButton(R.string.ok, { dialog, which ->
-                        val pos = appsList.getCheckedItemPosition()
+                    .setNegativeButton(R.string.no, { dialog, _ -> dialog.dismiss() }).setPositiveButton(R.string.ok, { _, _ ->
+                        val pos = appsList.checkedItemPosition
                         if (pos >= 0) {
                             val query = resources.getStringArray(R.array.dfu_app_file_browser_action)[pos]
                             val storeIntent = Intent(Intent.ACTION_VIEW, Uri.parse(query))
@@ -680,7 +676,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
             numberOfPackets = DfuServiceInitiator.DEFAULT_PRN_VALUE
         }
 
-        val starter = DfuServiceInitiator(myDeviceAddress)//mSelectedDevice!!.address)
+        val starter = DfuServiceInitiator(myDeviceAddress!!)//mSelectedDevice!!.address)
                 .setDeviceName(myDeviceName)//mSelectedDevice!!.name)
                 .setKeepBond(keepBond)
                 .setForceDfu(forceDfu)
@@ -688,7 +684,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 .setPacketsReceiptNotificationsValue(numberOfPackets)
                 .setUnsafeExperimentalButtonlessServiceInSecureDfuEnabled(true)
         if (mFileType == DfuBaseService.TYPE_AUTO) {
-            starter.setZip( mFilePath)// starter.setZip(mFileStreamUri, mFilePath)
+            starter.setZip(mFilePath!!)// starter.setZip(mFileStreamUri, mFilePath)
             if (mScope != null)
                 starter.setScope(mScope!!)
         } else {
@@ -720,8 +716,8 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
 
    override fun onDeviceSelected(device: BluetoothDevice, name: String) {
         mSelectedDevice = device
-        mUploadButton!!.setEnabled(mStatusOk)
-        mDeviceNameView!!.text = name ?: getString(R.string.not_available)
+       mUploadButton!!.isEnabled = mStatusOk
+        mDeviceNameView!!.text = name
     }
 
    override fun onDialogCanceled() {
@@ -734,9 +730,9 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         mTextPercentage!!.text = null
         mTextUploading!!.setText(R.string.dfu_status_uploading)
         mTextUploading!!.visibility = View.VISIBLE
-        mConnectButton!!.setEnabled(false)
+        mConnectButton!!.isEnabled = false
         mSelectFileButton!!.isEnabled = false
-        mUploadButton!!.setEnabled(true)
+        mUploadButton!!.isEnabled = true
         mUploadButton!!.setText(R.string.dfu_action_upload_cancel)
     }
 
@@ -766,9 +762,9 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         mProgressBar!!.visibility = View.INVISIBLE
         mTextPercentage!!.visibility = View.INVISIBLE
         mTextUploading!!.visibility = View.INVISIBLE
-        mConnectButton!!.setEnabled(true)
+        mConnectButton!!.isEnabled = true
         mSelectFileButton!!.isEnabled = true
-        mUploadButton!!.setEnabled(false)
+        mUploadButton!!.isEnabled = false
         mUploadButton!!.setText(R.string.dfu_action_upload)
         if (clearDevice) {
             mSelectedDevice = null
@@ -825,7 +821,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
         mStatusOk = MimeTypeMap.getFileExtensionFromUrl(fileName).matches(extension.toRegex())
         val statusOk = mStatusOk
         mFileStatusView!!.setText(if (statusOk) R.string.dfu_file_status_ok else R.string.dfu_file_status_invalid)
-        mUploadButton!!.setEnabled(statusOk)//mSelectedDevice != null &&
+        mUploadButton!!.isEnabled = statusOk//mSelectedDevice != null &&
 
                 // Ask the user for the Init packet file if HEX or BIN files are selected. In case of a ZIP file the Init packets should be included in the ZIP.
         if (statusOk) {
@@ -833,10 +829,10 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                 mScope = null
                 mFileScopeView!!.text = getString(R.string.not_available)
                 AlertDialog.Builder(this).setTitle(R.string.dfu_file_init_title).setMessage(R.string.dfu_file_init_message)
-                        .setNegativeButton(R.string.no, { dialog, which ->
+                        .setNegativeButton(R.string.no, { _, _ ->
                             mInitFilePath = null
                             mInitFileStreamUri = null
-                        }).setPositiveButton(R.string.yes, { dialog, which ->
+                        }).setPositiveButton(R.string.yes, { _, _ ->
                             val intent = Intent(Intent.ACTION_GET_CONTENT)
                             intent.type = DfuBaseService.MIME_TYPE_OCTET_STREAM
                             intent.addCategory(Intent.CATEGORY_OPENABLE)
@@ -850,7 +846,7 @@ UploadCancelFragment.CancelFragmentListener, PermissionRationaleFragment.Permiss
                                 1 -> mScope = DfuServiceInitiator.SCOPE_SYSTEM_COMPONENTS
                                 2 -> mScope = DfuServiceInitiator.SCOPE_APPLICATION
                             }
-                        }).setPositiveButton(R.string.ok, { dialogInterface, i ->
+                        }).setPositiveButton(R.string.ok, { _, _ ->
                             val index: Int
                             if (mScope == null) {
                                 index = 0

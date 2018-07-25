@@ -274,12 +274,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (groupPosition) {
                 0 -> {
                     when (connState) {
-                        BleConnection.CONNECTED -> {
-                            blueToothDisconnect()
-                        }
-                        BleConnection.DISCONNECTED -> {
-                            blueToothConnect()
-                        }
+                        BleConnection.CONNECTED -> blueToothDisconnect()
+                        BleConnection.DISCONNECTED -> blueToothConnect()
                     }
                 }
                 1 -> {
@@ -326,9 +322,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap)) }
-                3 -> { trailMapShow() }
-                4 -> { knowledgeShow() }
+                2 -> publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
+                3 -> trailMapShow()
+                4 -> knowledgeShow()
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
@@ -336,8 +332,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> { qandaShow() }
-                                1 -> { tourShow() }
+                                0 -> qandaShow()
+                                1 -> tourShow()
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -350,12 +346,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> {
-                                    accountShow()
-                                }
-                                1 -> {
-                                    settingShow()
-                                }
+                                0 -> accountShow()
+                                1 -> settingShow()
                             }
                             parent.collapseGroup(groupPosition)
                         })
@@ -443,12 +435,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     //20180202
     override fun onBackPressed() {
-        //實現模擬home鍵功能
-        //super.onBackPressed();//這句話一定要註解掉，不然又會去掉用系統初始的back處理方式
-        val intent = Intent(Intent.ACTION_MAIN)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-        intent.addCategory(Intent.CATEGORY_HOME)
-        startActivity(intent)
+        closeDialogShow()
     }
 
     override fun onDestroy() {
@@ -1400,7 +1387,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         MyApplication.putDeviceType(hashMap[TvocNoseData.DEVICE].toString())
                         Log.d("PARSERB1", hashMap.toString())
                         showPm10OrNot()
-                        val aat = AirActionTask(this,"20" + hashMap[TvocNoseData.FW].toString() + hashMap[TvocNoseData.FWSerial].toString(), hashMap[TvocNoseData.DEVICE].toString())
+                        val aat = AirActionTask(this, "20" + hashMap[TvocNoseData.FW].toString() + hashMap[TvocNoseData.FWSerial].toString(), hashMap[TvocNoseData.DEVICE].toString())
                         aat.execute("postFWVersion")
                         Log.v("AirActionTask", "OVER")
                     }
@@ -1779,7 +1766,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val i: Intent? = Intent(this, AccountActiveActivity::class.java)
                 startActivity(i)
             }
-            "ErrorTokenWithOnstart" ->{
+            "ErrorTokenWithOnstart" -> {
                 cleanUserData()
             }
             "ErrorTokenWithButton" -> {
@@ -1794,8 +1781,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     dialog.dismiss()
                 }
             }
-            // 2018/07/20 Check FW Status
-            "New FW Arrival"->{
+        // 2018/07/20 Check FW Status
+            "New FW Arrival" -> {
                 runOnUiThread({
                     listDataHeader[6].FWIndicator = R.drawable.app_android_icon_fw_remind
                     mMenuAdapter!!.notifyDataSetInvalidated()
@@ -1921,9 +1908,13 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val ll1 = mFragmentAdapter.fragmentList[0].view?.findViewById<LinearLayout>(R.id.llayoutbtmline1)
         try {
             if (pmType < 2) {
-                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE }
+                if (ll1!!.childCount == 3) {
+                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.GONE
+                }
             } else {
-                if (ll1!!.childCount == 3) { ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE }
+                if (ll1!!.childCount == 3) {
+                    ll1.findViewById<LinearLayout>(R.id.show_PM10).visibility = View.VISIBLE
+                }
             }
             Log.d("ViewPager", viewPager.adapter?.count.toString())
         } catch (e: Exception) {
@@ -2036,11 +2027,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
-            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.connectServer,this,0,"wait")
-            newFrage.show(fragmentManager,"dialog")
+            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.connectServer, this, 0, "wait")
+            newFrage.show(fragmentManager, "dialog")
             //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 判斷Android3.0版本以上運行
-                //TASK改用並行
-                AccountCheckTokenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken, "checkTokenBybtEvent")
+            //TASK改用並行
+            AccountCheckTokenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken, "checkTokenBybtEvent")
 
         } else {
             val i: Intent? = Intent(this, AccountRetryActivity::class.java)
@@ -2066,6 +2057,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val appropriateMaxItems = Math.min(((c6Time - maxC5DevicePairedTime) / 60000L).toInt(), maxItem)
         maxItem = appropriateMaxItems
         Log.d("maxItems", appropriateMaxItems.toString())
+    }
+
+    private fun closeDialogShow() {
+        val dlg = android.app.AlertDialog.Builder(this).create()
+        dlg.setTitle(getString(R.string.dialog_close_title))
+        dlg.setMessage(getString(R.string.dialog_close_content))
+        dlg.setCancelable(true)//讓返回鍵與空白無效
+        dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.yes))//是
+        { _, _ ->
+            System.exit(0)
+        }
+        dlg.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no))//否
+        { _, _ ->
+            val intent = Intent(Intent.ACTION_MAIN)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            intent.addCategory(Intent.CATEGORY_HOME)
+            startActivity(intent)
+        }
+        dlg.show()
     }
 }
 

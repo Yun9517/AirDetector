@@ -513,7 +513,7 @@
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">设定完成后请储存设定</string>
     <string name="text_service_live_in_foreground">ADDWII仍在背景执行！</string>
-    <string name="text_allow_service_run_in_foreground">允许背景服务常驻通知列</string>
+    <string name="text_allow_service_run_in_foreground">允许背景服务常驻</string>
     <string name="text_allow_service_run_in_foreground_comment">下一次开启APP时才会生效（须将APP完全关闭）。</string>
     <string name="new_Version_Notify">有新版软件可更新</string>
 
@@ -564,4 +564,10 @@
     <string name="errorToken">帳號token已失效，請重新登入</string>
     <string name="checkToken">检查帐号权限有效性，请稍后</string>
     <string name="connectServer">连结伺服器，请稍后</string>
+    <string name="text_notification_description">由于您打开了「允许背景服务常驻通知列」功能，本服务会持续在背景执行，您可关闭本通知。但若您为 Android 8.1 用户，因系统原生限制，在关闭通知后，您仍会看到 Android 系统本身的提示。</string>
+    <string name="text_permanent_notification_name">ADDWII常驻通知</string>
+
+
+    <string name="dialog_close_title">关闭应用</string>
+    <string name="dialog_close_content">你真的想关闭ADDWII Mobile Nose吗？</string>
 </resources>
