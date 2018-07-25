@@ -277,6 +277,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         BleConnection.CONNECTED -> blueToothDisconnect()
                         BleConnection.DISCONNECTED -> blueToothConnect()
                     }
+                    drawerLayout?.closeDrawer(GravityCompat.START)
                 }
                 1 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
@@ -318,13 +319,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     }
                                 }
                             }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
                             parent.collapseGroup(groupPosition)
                         })
                     }
                 }
-                2 -> publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap))
-                3 -> trailMapShow()
-                4 -> knowledgeShow()
+                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
+                3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
                 5 -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
@@ -335,6 +337,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                 0 -> qandaShow()
                                 1 -> tourShow()
                             }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
                             parent.collapseGroup(groupPosition)
                         })
                     }
@@ -346,9 +349,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> accountShow()
-                                1 -> settingShow()
+                                0 -> { accountShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                                1 -> { settingShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
                             }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
                             parent.collapseGroup(groupPosition)
                         })
                     }
