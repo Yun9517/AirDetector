@@ -1,9 +1,9 @@
 package com.microjet.airqi2.Account.AccountTask
 
 import android.app.Activity
-import android.app.DialogFragment
 import android.os.AsyncTask
 import android.util.Log
+import com.microjet.airqi2.Account.AccountObject
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.R
@@ -70,17 +70,10 @@ class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String
 
     override fun onPostExecute(result: String?) {
         Log.e(TAG, result)
-        //獲得結果後，關閉所有dialog視窗
-        val previousDialog = useManagementActivity.fragmentManager.findFragmentByTag("dialog")
-        if (previousDialog != null) {
-            val dialog = previousDialog as DialogFragment
-            dialog.dismissAllowingStateLoss()//處理縮小APP出現的沒回應事件
-        }
-        //處理結果
-        when(result){
-            "successNetwork" ->   EventBus.getDefault().post(BleEvent("success Login"))
-            "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, useManagementActivity, 1, "dismiss").show(useManagementActivity.fragmentManager, "dialog")}
-            "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useManagementActivity, 1, "dismiss").show(useManagementActivity.fragmentManager, "dialog")}
+        if(result != null){
+            AccountObject.accountLoginStrResult =result
+            EventBus.getDefault().post(BleEvent("loginTaskResult"))
+            Log.e(TAG, result)
         }
     }
 

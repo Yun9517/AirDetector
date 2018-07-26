@@ -66,6 +66,9 @@ class AccountManagementActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        if(AccountObject.accountLoginStrResult != null &&  AccountObject.accountLoginStrResult !=""){
+            processResult()
+        }
     }
 
     override fun onPause() {
@@ -155,10 +158,7 @@ class AccountManagementActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "success Login" -> {
-                writeUserData()
-                showCloudAllowDialog()
-            }
+           "loginTaskResult"-> processResult()
         }
     }
 
@@ -242,6 +242,23 @@ class AccountManagementActivity : AppCompatActivity() {
 
             else -> AccountLoginTask(getManagementActivity).execute(email?.text.toString(), password?.text.toString())
 
+        }
+    }
+
+    private fun processResult(){
+        AccountObject.closeWaitDialog(this)
+        //處理結果
+        if(AccountObject.accountLoginStrResult != null &&  AccountObject.accountLoginStrResult !=""){
+            //處理結果
+            when(AccountObject.accountLoginStrResult){
+                "successNetwork" ->{
+                    writeUserData()
+                    showCloudAllowDialog()
+                }
+                "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, this, 1, "dismiss").show(fragmentManager, "dialog")}
+                "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss").show(fragmentManager, "dialog")}
+            }
+            AccountObject.accountLoginStrResult =""
         }
     }
 
