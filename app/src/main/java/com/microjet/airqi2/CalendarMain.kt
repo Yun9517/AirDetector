@@ -28,7 +28,7 @@ import java.text.SimpleDateFormat
 import java.util.ArrayList
 import java.util.Calendar
 import java.util.Locale
-
+import java.util.concurrent.TimeUnit
 
 
 /**
@@ -127,7 +127,7 @@ class CalendarMain : AppCompatActivity() {
                         val startTime:Long = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
                         val endTime:Long = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
                         val DatelimitTime:Long = Date2TimeStamp(Datelimit, "yyyyMMdd").toLong() *1000
-                    Log.d(TAG,"endTime : "+endTime+ " DatelimitTime: "+DatelimitTime)
+//                    Log.d(TAG,"endTime : "+endTime+ " DatelimitTime: "+DatelimitTime)
                     if(DatelimitTime < endTime){
                         Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.out_of_datelimit)), Toast.LENGTH_SHORT)
 
@@ -204,8 +204,11 @@ class CalendarMain : AppCompatActivity() {
         //一天共有1440筆
         val dataCount = (endTime - startTime) / (60 * 1000)
         Log.d("TimePeriod", (dataCount.toString() + "Count"))
-//        Log.d("runRealmQueryData ", " startTime " +startTime+ " endTime "+endTime)
-        query.between("Created_time", startTime, endTime).sort("Created_time", Sort.ASCENDING)
+
+        //將日期設為今天日子加一天減1秒
+        val DataendTime = endTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+//        Log.d("runRealmQueryData ", " startTime " +startTime+ " endTime "+endTime +" DataendTime " + DataendTime)
+        query.between("Created_time", startTime, DataendTime).sort("Created_time", Sort.ASCENDING)
         val Result = query.findAll()
         Log.d("Result", Result.toString())
         listener = RealmChangeListener {
@@ -215,7 +218,7 @@ class CalendarMain : AppCompatActivity() {
         }
 
         result = realm.where(AsmDataModel::class.java)
-                .between("Created_time", startTime, endTime)
+                .between("Created_time", startTime, DataendTime)
                 .sort("Created_time", Sort.ASCENDING).findAllAsync()
 
         result.addChangeListener(listener)
@@ -230,13 +233,14 @@ class CalendarMain : AppCompatActivity() {
             val fileName = str_min+"-"+str_max+"_Mobile_Nose"
             val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
-            val timeFormat = SimpleDateFormat("HH:mm")
+            val timeFormat = SimpleDateFormat("yyyy-MM-dd-HH:mm")
 
-            val header = arrayOf("id", "Time", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5")
+            val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5")
 
             writeCSV.writeLine(header)
 
             for (i in 0 until results.size) {
+
                 val time = results[i].created_time
                 val tvocVal = if (results[i].tvocValue == "65538") "No Data" else "${results[i].tvocValue} ppb"
                 val eco2Val = if (results[i].ecO2Value == "65538") "No Data" else "${results[i].ecO2Value} ppm"
