@@ -230,7 +230,11 @@ class CalendarMain : AppCompatActivity() {
 
             val folderName = "ADDWII Mobile Nose"
             val date = SimpleDateFormat("yyyyMMdd")
-            val fileName = str_min+"-"+str_max+"_Mobile_Nose"
+
+            var fileName = str_min+"-"+str_max+"_Mobile_Nose"
+            if (str_min.equals(str_max)){
+                fileName = str_max+"_Mobile_Nose"
+            }
             val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
             val timeFormat = SimpleDateFormat("yyyy-MM-dd-HH:mm")

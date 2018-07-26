@@ -10,19 +10,42 @@
     tools:context="com.microjet.airqi2.CalendarMain"
     android:background="@android:color/holo_green_dark">
 
-    <TextView
-        android:id="@+id/txt_date"
-        style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@android:color/black"/>
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="last"
+            android:text="@string/last_month"
+            android:background="@android:color/holo_green_light"/>
+
+        <TextView
+            android:id="@+id/txt_date"
+            style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:textColor="@android:color/black" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="next"
+            android:text="@string/next_month"
+            android:background="@android:color/holo_green_light"/>
+    </LinearLayout>
 
     <com.microjet.airqi2.CalendarWeekView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:background="@android:color/holo_green_light"
+        android:background="@android:color/holo_orange_dark"
         app:wv_textColor="#333333"
         app:wv_textSize="14sp"/>
 
@@ -37,29 +60,10 @@
         app:cv_textColor="#333333"
         app:cv_textSize="14sp"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="last"
-            android:text="@string/last_month"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:onClick="next"
-            android:text="@string/next_month"/>
-    </LinearLayout>
-
     <Button
         android:id="@+id/export_bt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/export_csv" />
+        android:text="@string/export_csv"
+        android:background="@android:color/holo_green_light"/>
 </LinearLayout>
