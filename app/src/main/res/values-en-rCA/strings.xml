@@ -474,4 +474,5 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="maximum_number_of_date">The maximum number of days has been reached</string>
     <string name="number_of_date_null">Please click on two dates to generate a report</string>
     <string name="out_of_datelimit">End date cannot be greater than current date</string>
+    <string name="no_data_can_export">No Data Can Export</string>
 </resources>

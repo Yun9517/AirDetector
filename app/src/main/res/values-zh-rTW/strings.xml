@@ -573,4 +573,5 @@
     <string name="maximum_number_of_date">已達天數上限</string>
     <string name="number_of_date_null">請點選兩個日期,產生報表</string>
     <string name="out_of_datelimit">結束日期不能大於當前日期</string>
+    <string name="no_data_can_export">無資料能輸出</string>
 </resources>

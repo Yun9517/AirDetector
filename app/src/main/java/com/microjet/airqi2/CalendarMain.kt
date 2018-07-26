@@ -207,9 +207,13 @@ class CalendarMain : AppCompatActivity() {
 
         //將日期設為今天日子加一天減1秒
         val DataendTime = endTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-//        Log.d("runRealmQueryData ", " startTime " +startTime+ " endTime "+endTime +" DataendTime " + DataendTime)
+
         query.between("Created_time", startTime, DataendTime).sort("Created_time", Sort.ASCENDING)
         val Result = query.findAll()
+        Log.d("runRealmQueryData ", " startTime " +startTime+ " endTime "+endTime +" DataendTime " + DataendTime + " Result.size" + Result.size)
+        if(Result.size <= 0) {
+            Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.no_data_can_export)), Toast.LENGTH_SHORT)
+        }
         Log.d("Result", Result.toString())
         listener = RealmChangeListener {
 
