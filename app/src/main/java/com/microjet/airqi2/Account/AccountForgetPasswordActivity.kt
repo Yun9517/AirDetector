@@ -2,7 +2,6 @@ package com.microjet.airqi2.Account
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.DialogFragment
 import android.content.Context
 import android.net.ConnectivityManager
 import android.os.AsyncTask
@@ -10,6 +9,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
+import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.activity_forget_password.*
@@ -17,6 +17,8 @@ import okhttp3.MediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.util.concurrent.TimeUnit
 import java.util.regex.Pattern
 
@@ -33,6 +35,28 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+        if(AccountObject.accountForgetStrResult != null &&  AccountObject.accountForgetStrResult !=""){
+            processResult()
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onEvent(bleEvent: BleEvent) {
+        /* 處理事件 */
+        Log.d("AirAction", bleEvent.message)
+        when (bleEvent.message) {
+            "ForgetTaskResult"-> processResult()
+        }
+    }
     private fun checkNetwork() {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
@@ -61,6 +85,20 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
         }
     }
 
+    private fun processResult(){
+        AccountObject.closeWaitDialog(this)
+        //處理結果
+        if(AccountObject.accountForgetStrResult != null &&  AccountObject.accountForgetStrResult !=""){
+            //處理結果
+            when(AccountObject.accountForgetStrResult){
+                "successNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.dialog_Password_Change_Successfully, this, 1, "dismiss").show(fragmentManager, "dialog")}
+                "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.dialog_Mail_Verification_Failed, this, 1, "dismiss").show(fragmentManager, "dialog")}
+                "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss").show(fragmentManager, "dialog")}
+            }
+            AccountObject.accountForgetStrResult =""
+        }
+    }
+
     @SuppressLint("StaticFieldLeak")
     private inner class forgetPassWordTasks(gettedActivity: Activity) : AsyncTask<String, Void, String>() {
         private val TAG: String = "forgetPassWordTasks"
@@ -68,9 +106,7 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
 
         override fun onPreExecute() {
             super.onPreExecute()
-            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.dialog_forgetPassword_emailSend, useActivity, 0, "wait")
-            newFrage.setCancelable(false)
-            newFrage.show(useActivity.fragmentManager, "dialog")
+            AccountObject.openWatiDialog(useActivity)
         }
 
         override fun doInBackground(vararg params: String?): String {
@@ -108,18 +144,15 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             Log.e(TAG, result)
-            //獲得結果後，關閉所有dialog視窗
-            val previousDialog = useActivity.fragmentManager.findFragmentByTag("dialog")
-            if (previousDialog != null) {
-                val dialog = previousDialog as DialogFragment
-                dialog.dismissAllowingStateLoss()//處理縮小APP出現的沒回應事件
+
+            if(result != null){
+                AccountObject.accountForgetStrResult =result
+                EventBus.getDefault().post(BleEvent("ForgetTaskResult"))
+                Log.e(TAG, result)
             }
-            //處理結果
-            when(result){
-                "successNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.dialog_Password_Change_Successfully, useActivity, 1, "dismiss").show(useActivity.fragmentManager, "dialog")}
-                "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.dialog_Mail_Verification_Failed, useActivity, 1, "dismiss").show(useActivity.fragmentManager, "dialog")}
-                "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, useActivity, 1, "dismiss").show(useActivity.fragmentManager, "dialog")}
-            }
+            /*
+
+            */
         }
     }
 

@@ -5,8 +5,6 @@ import android.os.AsyncTask
 import android.util.Log
 import com.microjet.airqi2.Account.AccountObject
 import com.microjet.airqi2.BleEvent
-import com.microjet.airqi2.Fragment.CheckFragment
-import com.microjet.airqi2.R
 import com.microjet.airqi2.TvocNoseData
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -21,14 +19,12 @@ import java.util.concurrent.TimeUnit
  */
 class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String>() {
     private val TAG: String = "AccountLoginTask"
-    private val useManagementActivity: Activity = gettedActivity
+    private val useActivity: Activity = gettedActivity
 
     override fun onPreExecute() {
         super.onPreExecute()
         //等候dialog視窗開啟
-        val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Login, useManagementActivity, 0, "wait")
-        newFrage.setCancelable(false)
-        newFrage.show(useManagementActivity.fragmentManager, "dialog")
+        AccountObject.openWatiDialog(useActivity)
     }
 
 
