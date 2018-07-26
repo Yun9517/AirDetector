@@ -12,12 +12,14 @@ import com.microjet.airqi2.R
 object AccountObject {
     var accountLoginStrResult: String = ""
     var accountForgetStrResult: String = ""
+    var accountRegisterStrResult: String = ""
 
     fun openWatiDialog(activity: Activity) {
         Log.e("activity.packageName", activity.localClassName)
         var messageString: Int = 0
         when (activity.localClassName) {
             "Account.AccountForgetPasswordActivity" -> messageString = R.string.dialog_forgetPassword_emailSend
+            "Account.AccountRegisterActivity" -> messageString = R.string.dialog_forgetPassword_emailSend
             else -> messageString = R.string.wait_Login
         }
         val newFrage = CheckFragment().newInstance(R.string.remind, messageString, activity, 0, "wait")

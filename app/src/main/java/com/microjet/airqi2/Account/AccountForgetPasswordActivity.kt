@@ -99,6 +99,27 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
         }
     }
 
+
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     @SuppressLint("StaticFieldLeak")
     private inner class forgetPassWordTasks(gettedActivity: Activity) : AsyncTask<String, Void, String>() {
         private val TAG: String = "forgetPassWordTasks"
@@ -144,36 +165,11 @@ class AccountForgetPasswordActivity : AppCompatActivity() {
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
             Log.e(TAG, result)
-
             if(result != null){
                 AccountObject.accountForgetStrResult =result
-                EventBus.getDefault().post(BleEvent("ForgetTaskResult"))
+                        EventBus.getDefault().post(BleEvent("ForgetTaskResult"))
                 Log.e(TAG, result)
             }
-            /*
-
-            */
         }
-    }
-
-
-    private fun initActionBar() {
-        // 取得 actionBar
-        val actionBar = supportActionBar
-        // 設定顯示左上角的按鈕
-        actionBar!!.setDisplayHomeAsUpEnabled(true)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
-            -> {
-                finish()
-                return true
-            }
-            else -> {
-            }
-        }
-        return super.onOptionsItemSelected(item)
     }
 }
