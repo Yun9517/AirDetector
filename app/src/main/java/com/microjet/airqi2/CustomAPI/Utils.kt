@@ -29,15 +29,17 @@ object Utils {
 
     // 氣泡訊息
     @SuppressLint("ShowToast")
-    fun toastMakeTextAndShow(context: Context, text: String, duration: Int) {
-        if (toast == null) {
-            //如果還沒有用過makeText方法，才使用
-            toast = android.widget.Toast.makeText(context, text, duration)
-        } else {
-            toast!!.setText(text)
-            toast!!.duration = duration
+    fun toastMakeTextAndShow(context: Context?, text: String, duration: Int) {
+        if (context != null) {
+            if (toast == null) {
+                //如果還沒有用過makeText方法，才使用
+                toast = android.widget.Toast.makeText(context, text, duration)
+            } else {
+                toast!!.setText(text)
+                toast!!.duration = duration
+            }
+            toast!!.show()
         }
-        toast!!.show()
     }
 
     fun checkCheckSum(input: ByteArray): Boolean {
