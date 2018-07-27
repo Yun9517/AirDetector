@@ -560,6 +560,7 @@
     <string name="error_login">登入失败</string>
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="wait_Login">登入中請稍候</string>
+
     <string name="wait_Setting">设定储存中，请稍后</string>
     <string name="errorToken">帳號token已失效，請重新登入</string>
     <string name="checkToken">检查帐号权限有效性，请稍后</string>
@@ -570,4 +571,15 @@
 
     <string name="dialog_close_title">关闭应用</string>
     <string name="dialog_close_content">你真的想关闭ADDWII Mobile Nose吗？</string>
+
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="last_month">上个月</string>
+    <string name="next_month">下个月</string>
+    <string name="export_csv">输出 CSV</string>
+    <string name="maximum_number_of_date">已达天数上限</string>
+    <string name="number_of_date_null">请点选两个日期,产生报表</string>
+    <string name="out_of_datelimit">結束日期不能大於當前日期</string>
+    <string name="no_data_can_export">没有数据可以导出</string>
 </resources>

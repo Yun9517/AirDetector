@@ -577,4 +577,15 @@
 
     <string name="dialog_close_title">關閉程式</string>
     <string name="dialog_close_content">您真的要關閉ADDWII空污鼻?</string>
+    <string name="year">年</string>
+    <string name="month">月</string>
+    <string name="day">日</string>
+    <string name="last_month">上個月</string>
+    <string name="next_month">下個月</string>
+    <string name="export_csv">輸出 CSV</string>
+    <string name="maximum_number_of_date">已達天數上限</string>
+    <string name="number_of_date_null">請點選兩個日期,產生報表</string>
+    <string name="out_of_datelimit">結束日期不能大於當前日期</string>
+    <string name="no_data_can_export">無資料能輸出</string>
+
 </resources>

@@ -326,6 +326,10 @@
             android:taskAffinity=""
             android:theme="@style/AppTheme" />
 
+        <activity
+            android:name=".CalendarMain"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
 
     </application>
 
