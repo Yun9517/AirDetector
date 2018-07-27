@@ -584,4 +584,5 @@
     <string name="no_data_can_export">没有数据可以导出</string>
     <!-- 2018/07/17 forgeteamil -->
     <string name="dialog_forgetPassword_emailSend">信箱验证中，请稍后</string>
+    <string name="data_export">ADDWII 资料输出</string>
 </resources>
