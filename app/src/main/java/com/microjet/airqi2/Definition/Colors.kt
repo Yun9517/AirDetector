@@ -44,6 +44,9 @@ object Colors {
     val tvocOldAngles = floatArrayOf(0.15f, 0.375f, 0.7f)
     val tempAngles = floatArrayOf(0.15f, 0.375f, 0.7f)
     val humiAngles = floatArrayOf(0.2f, 0.375f, 0.7f)
-    // 2018/06/07 Add eCO2 color
+    // 2018/06/07 Add eCO2 Color Angles
     val eco2Angles = floatArrayOf(0.375f, 0.7f)
+    // 2018/07/23 Add PM2.5 & PM10 Color Angles
+    //val PM25Angles = floatArrayOf(0.025f, 0.25f, 0.575f, 0.65f, 0.70f, 0.75f)
+    //val PM10Angles = floatArrayOf(0.025f, 0.275f, 0.575f, 0.65f, 0.70f, 0.75f)
 }
