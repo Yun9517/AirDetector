@@ -14,6 +14,8 @@ object AccountObject {
     var accountForgetStrResult: String = ""
     var accountRegisterStrResult: String = ""
 
+    var activityAccountActive: Activity? = null
+
     fun openWatiDialog(activity: Activity) {
         Log.e("activity.packageName", activity.localClassName)
         var messageString: Int = 0

@@ -10,6 +10,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ApplicationInfo
 import android.net.ConnectivityManager
 import android.os.AsyncTask
@@ -67,7 +68,10 @@ class AccountActiveActivity : AppCompatActivity() {
     //20180530
     private var cloudDeviceListItem: String? =""
 
+    //20180310
+    private var shareMSG: SharedPreferences? = null
     @SuppressLint("SdCardPath", "SimpleDateFormat")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_active)
@@ -76,6 +80,7 @@ class AccountActiveActivity : AppCompatActivity() {
         download_min = this.findViewById(R.id.download_min)
         download_text = this.findViewById(R.id.download_text)
         myPref = PrefObjects(this)
+        AccountObject.activityAccountActive = this
 
         logout.setOnClickListener {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -103,27 +108,8 @@ class AccountActiveActivity : AppCompatActivity() {
 //            startActivityForResult(intent,1)
             startActivity(intent)
         }
-        //20180310
-        val shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
 
-        val myName = shareMSG.getString("name", "")
-        // ****** 2018/04/10 Remember ID *******************************************************//
-        val myEmail = shareMSG.getString("email", "")
-        //val myPassword= shareMSG.getString("password","")
-        Log.e("登入後我的資訊", "登入中:" + myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
-        showMail.text = myEmail
-        show_Name.text = myName
-        //text_Account_status.text = myName
-        // get reference to all views
 
-        var change_password = findViewById<TextView>(R.id.change_password)
-
-        // 03/14 edit ID
-        var editName = findViewById<TextView>(R.id.show_Name)
-        editName.text = myName
-
-        // 03/16 InputFilter max 20
-        editName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
 
         // 03/30
         change_password.setOnClickListener {
@@ -179,7 +165,7 @@ class AccountActiveActivity : AppCompatActivity() {
             val share_token = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val token = share_token.getString("token", "")
             //取得裝置資料清單下載
-            val arr = JSONArray(shareMSG.getString("deviceLi",""))
+            val arr = JSONArray(shareMSG?.getString("deviceLi",""))
             //新帳號會拿不到deviceList，要加上安全判斷
             if (arr.length() != 0) {
                 val list = ArrayList<String>()
@@ -193,6 +179,7 @@ class AccountActiveActivity : AppCompatActivity() {
                 }
             }
         }
+        shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
     }
 
     private fun updateDateInView() {
@@ -248,6 +235,21 @@ class AccountActiveActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        val myName = shareMSG?.getString("name", "")
+        // ****** 2018/04/10 Remember ID *******************************************************//
+        val myEmail = shareMSG?.getString("email", "")
+        //val myPassword= shareMSG.getString("password","")
+        Log.e("登入後我的資訊", "登入中:" + myName + "信箱:" + myEmail) //+ "密碼:" + myPassword)
+        showMail.text = myEmail
+        show_Name.text = myName
+
+        // 03/14 edit ID
+        var editName = findViewById<TextView>(R.id.show_Name)
+        editName.text = myName
+
+        // 03/16 InputFilter max 20
+        editName.filters = arrayOf<InputFilter>(InputFilter.LengthFilter(20))
+
     }
 
     override fun onRestart() {
