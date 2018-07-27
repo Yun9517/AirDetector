@@ -349,8 +349,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         parent.expandGroup(groupPosition)
                         parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
                             when (childPosition) {
-                                0 -> { accountShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                                1 -> { settingShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                                0 -> accountShow()
+                                1 -> settingShow()
                             }
                             drawerLayout?.closeDrawer(GravityCompat.START)
                             parent.collapseGroup(groupPosition)
