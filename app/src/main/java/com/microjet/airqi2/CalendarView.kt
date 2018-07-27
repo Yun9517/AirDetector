@@ -14,6 +14,8 @@ import android.util.TypedValue
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewConfiguration
+import android.widget.Toast
+import com.microjet.airqi2.CustomAPI.Utils
 
 
 import com.microjet.airqi2.Definition.CalendarParameter
@@ -28,7 +30,7 @@ import java.util.*
  */
 class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null,
                                              defStyleAttr: Int = 0) : View(context, attrs, defStyleAttr) {
-
+    private val TAG = CalendarMain::class.java.simpleName
     /** 默认的日期格式化格式 */
     private var DATE_FORMAT_PATTERN:String = "yyyyMMdd"
     var getSelectDate: Objects? = null
@@ -342,9 +344,18 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
                 if (mChangeListener != null) {
                     mChangeListener!!.onSelectedDayChange(this, false, year, month, day)
                 }
-                if(mSelectDate!!.size >= CalendarParameter.mMaxDayValue) {
-                    Log.d("Barney", " date click > 2   " + date)
-                    //Utils.toastMakeTextAndShow(this@CalendarView, resources.getString(R.string.maximum_number_of_date),Toast.LENGTH_SHORT)
+
+                Log.d(TAG, " date IS  " + date)
+
+                if(mSelectDate!!.size > CalendarParameter.mMaxDayValue) {
+                    Log.d(TAG, " date click > 2   " + date)
+                    mSelectDate!!.clear()
+                    mSelectDate!!.add(date)
+                    Log.d(TAG, " date mSelectDate 1  " + mSelectDate)
+                }else{
+                    mSelectDate!!.clear()
+                    mSelectDate!!.add(date)
+                    Log.d(TAG, " date DayValue 1  " + mSelectDate)
                 }
             } else {
                 if (mSelectDate == null) {
@@ -358,7 +369,6 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
             invalidate()
         }
     }
-
 
     /**
      * 获取选中的日期数据.
@@ -505,6 +515,7 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP,
                 spVal, context.resources.displayMetrics).toInt()
     }
+
 
     companion object {
 

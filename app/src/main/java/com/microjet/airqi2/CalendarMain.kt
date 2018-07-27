@@ -79,7 +79,7 @@ class CalendarMain : AppCompatActivity() {
                 Log.e(TAG, "day: $day")
 
                 val str: List<String>? = mCalendarView!!.getSelectDate()
-                Log.d(TAG," Date str = " + str)
+                Log.d(TAG," Date str == " + str)
                 val icc = IgnoreCaseComparator()
                 Collections.sort(str, icc)
 
@@ -108,8 +108,10 @@ class CalendarMain : AppCompatActivity() {
         setCurDate()
 
         mExport_CSV?.setOnClickListener(View.OnClickListener {
-            Log.d(TAG," Date min = " + str_min)
-            Log.d(TAG," Date max = " + str_max)
+
+
+            Log.d(TAG," Date min === " + str_min)
+            Log.d(TAG," Date max === " + str_max)
             if (!str_min.equals("") || !str_max.equals("") ){
                 if(str_max.equals(str_min)){
                     Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.number_of_date_null)), Toast.LENGTH_SHORT)
@@ -219,7 +221,7 @@ class CalendarMain : AppCompatActivity() {
             filter = it.filter { it.macAddress == myPref.getSharePreferenceMAC() }
 
             parseDataToCsv(filter)
-            Log.e("Realm Listener", "Update Database...")
+            Log.e(TAG, "Update Database...")
         }
 
         result = realm.where(AsmDataModel::class.java)
@@ -244,7 +246,7 @@ class CalendarMain : AppCompatActivity() {
 
             val timeFormat = SimpleDateFormat("yyyy/MM/dd HH:mm-ss")
 
-            val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5")
+            val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5","MAC")
 
             writeCSV.writeLine(header)
 
@@ -256,8 +258,9 @@ class CalendarMain : AppCompatActivity() {
                 val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
                 val humiVal = if (results[i].humiValue == "65538") "No Data" else "${results[i].humiValue} %"
                 val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
+                val MAC = results[i].macAddress
 
-                val textCSV = arrayOf((i + 1).toString(),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val)
+                val textCSV = arrayOf((i + 1).toString(),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
 
                 writeCSV.writeLine(textCSV).toString()
             }
