@@ -3,7 +3,6 @@ package com.microjet.airqi2.Account
 import android.app.Activity
 import android.content.Context
 import android.content.DialogInterface
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.InputFilter
@@ -83,11 +82,9 @@ class AccountNameReplaceActivity : AppCompatActivity() {
 
     // ***** 2018/04/17 Add function for intent activity *********************** //
     private fun accountActiveShow() {
-        val i: Intent? = Intent(this, AccountActiveActivity::class.java)
         if(!replaceNameActivity.isFinishing){
             replaceNameActivity.finish()
         }
-        startActivity(i)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

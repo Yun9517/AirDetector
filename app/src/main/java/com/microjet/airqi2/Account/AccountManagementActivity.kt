@@ -1,6 +1,6 @@
 package com.microjet.airqi2.Account
 
-import android.app.DialogFragment
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -32,8 +32,9 @@ import java.util.regex.Pattern
 
 
 class AccountManagementActivity : AppCompatActivity() {
-    val callbackManager = CallbackManager.Factory.create()
+    private val callbackManager = CallbackManager.Factory.create()
     private lateinit var myPref: PrefObjects
+    private val getManagementActivity: Activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,12 +58,17 @@ class AccountManagementActivity : AppCompatActivity() {
             checkNetwork("login")
         }
 
-
+        val share = getSharedPreferences("TOKEN", MODE_PRIVATE)
+        email.setText(share.getString("LoginEmail",""))
+        rememberID.isChecked = share.getBoolean("rememberID",false)
     }
 
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        if(AccountObject.accountLoginStrResult != null &&  AccountObject.accountLoginStrResult !=""){
+            processResult()
+        }
     }
 
     override fun onPause() {
@@ -152,30 +158,7 @@ class AccountManagementActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Login, this, 0, "wait")
-                newFrage.setCancelable(false)
-                newFrage.show(fragmentManager, "dialog")
-            }
-            "close Wait Dialog" -> {
-                val previousDialog = fragmentManager.findFragmentByTag("dialog")
-                if (previousDialog != null) {
-                    val dialog = previousDialog as DialogFragment
-                    dialog.dismiss()
-                }
-            }
-            "success Login" -> {
-                writeUserData()
-                showCloudAllowDialog()
-            }
-            "wrong Login" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, this, 1, "dismiss")
-                newFrage.show(fragmentManager, "dialog")
-            }
-            "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
-                newFrage.show(fragmentManager, "dialog")
-            }
+           "loginTaskResult"-> processResult()
         }
     }
 
@@ -189,6 +172,13 @@ class AccountManagementActivity : AppCompatActivity() {
         TvocNoseData.cloudName = ""
         TvocNoseData.cloudEmail = ""
         TvocNoseData.cloudDeviceArr = ""
+        if (rememberID.isChecked) {
+            share.edit().putBoolean("rememberID", true).apply()
+            share.edit().putString("LoginEmail", email?.text.toString()).apply()
+        }else{
+            share.edit().putBoolean("rememberID", false).apply()
+            share.edit().putString("LoginEmail", "").apply()
+        }
     }
 
     fun AccountActivityShow() {
@@ -250,8 +240,25 @@ class AccountManagementActivity : AppCompatActivity() {
                 startActivity(i)
             }
 
-            else -> AccountLoginTask().execute(email?.text.toString(), password?.text.toString())
+            else -> AccountLoginTask(getManagementActivity).execute(email?.text.toString(), password?.text.toString())
 
+        }
+    }
+
+    private fun processResult(){
+        AccountObject.closeWaitDialog(this)
+        //處理結果
+        if(AccountObject.accountLoginStrResult != null &&  AccountObject.accountLoginStrResult !=""){
+            //處理結果
+            when(AccountObject.accountLoginStrResult){
+                "successNetwork" ->{
+                    writeUserData()
+                    showCloudAllowDialog()
+                }
+                "ResponseError" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.errorPassword, this, 1, "dismiss").show(fragmentManager, "dialog")}
+                "ReconnectNetwork" ->{ val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss").show(fragmentManager, "dialog")}
+            }
+            AccountObject.accountLoginStrResult =""
         }
     }
 

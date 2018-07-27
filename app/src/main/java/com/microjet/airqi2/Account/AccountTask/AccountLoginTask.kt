@@ -1,7 +1,9 @@
 package com.microjet.airqi2.Account.AccountTask
 
+import android.app.Activity
 import android.os.AsyncTask
 import android.util.Log
+import com.microjet.airqi2.Account.AccountObject
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.TvocNoseData
 import okhttp3.MediaType
@@ -15,13 +17,14 @@ import java.util.concurrent.TimeUnit
 /**
  * Created by B00190 on 2018/6/22.
  */
-class AccountLoginTask : AsyncTask<String, Int, String>() {
+class AccountLoginTask(gettedActivity: Activity) : AsyncTask<String, Int, String>() {
     private val TAG: String = "AccountLoginTask"
+    private val useActivity: Activity = gettedActivity
 
     override fun onPreExecute() {
         super.onPreExecute()
-        val urlEvent = BleEvent("wait Dialog")
-        EventBus.getDefault().post(urlEvent)
+        //等候dialog視窗開啟
+        AccountObject.openWatiDialog(useActivity)
     }
 
 
@@ -41,7 +44,7 @@ class AccountLoginTask : AsyncTask<String, Int, String>() {
                 .addHeader("cache-control", "no-cache")
                 .addHeader("content-type", "application/x-www-form-urlencoded")
                 .build()
-        try{
+        try {
             val response = client.newCall(request).execute()
             if (response.isSuccessful) {
                 val res: String = response.body()!!.string().toString()
@@ -55,31 +58,18 @@ class AccountLoginTask : AsyncTask<String, Int, String>() {
             } else {
                 return "ResponseError"
             }
-        }catch(e: Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
             return "ReconnectNetwork"
         }
-        return null
-    }
-
-    override fun onProgressUpdate(vararg values: Int?) {
-        super.onProgressUpdate(*values)
-
     }
 
     override fun onPostExecute(result: String?) {
         Log.e(TAG, result)
-        val urlEvent_close = BleEvent("close Wait Dialog")
-        EventBus.getDefault().post(urlEvent_close)
-        if (result == "successNetwork") {
-            val urlEvent_success = BleEvent("success Login")
-            EventBus.getDefault().post(urlEvent_success)
-        } else if (result == "ResponseError") {
-            val urlEvent_Error = BleEvent("wrong Login")
-            EventBus.getDefault().post(urlEvent_Error)
-        }else if (result =="ReconnectNetwork"){
-            val urlEvent_success = BleEvent("ReconnectNetwork")
-            EventBus.getDefault().post(urlEvent_success)
+        if(result != null){
+            AccountObject.accountLoginStrResult =result
+            EventBus.getDefault().post(BleEvent("loginTaskResult"))
+            Log.e(TAG, result)
         }
     }
 

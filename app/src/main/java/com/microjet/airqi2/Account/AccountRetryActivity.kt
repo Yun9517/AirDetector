@@ -1,6 +1,6 @@
 package com.microjet.airqi2.Account
 
-import android.app.DialogFragment
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -23,6 +23,8 @@ import org.greenrobot.eventbus.Subscribe
  * Created by B00190 on 2018/7/17.
  */
 class AccountRetryActivity : AppCompatActivity() {
+    val getRetryActivity: Activity = this
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_account_retry)
@@ -51,9 +53,9 @@ class AccountRetryActivity : AppCompatActivity() {
         if (networkInfo != null && networkInfo.isConnected) {
             val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             val myToken = shareToken.getString("token", "")
-            AccountCheckTokenTask().execute(myToken,"checkTokenBybtEvent")
+            AccountCheckTokenTask(getRetryActivity, "checkTokenBybtEvent").execute(myToken)
         } else {
-            val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
+            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
             newFrage.show(fragmentManager, "dialog")
         }
     }
@@ -81,18 +83,6 @@ class AccountRetryActivity : AppCompatActivity() {
         /* 處理事件 */
         Log.d("AirAction", bleEvent.message)
         when (bleEvent.message) {
-            "wait Dialog" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkToken, this, 0,"wait")
-                newFrage.setCancelable(false)
-                newFrage.show(fragmentManager, "dialog")
-            }
-            "close Wait Dialog" -> {
-                val previousDialog = fragmentManager.findFragmentByTag("dialog")
-                if (previousDialog != null) {
-                    val dialog = previousDialog as DialogFragment
-                    dialog.dismiss()
-                }
-            }
             "successToken" -> {
                 val i: Intent? = Intent(this, AccountActiveActivity::class.java)
                 startActivity(i)
@@ -103,10 +93,6 @@ class AccountRetryActivity : AppCompatActivity() {
                 val i: Intent? = Intent(this, AccountManagementActivity::class.java)
                 startActivity(i)
                 finish()
-            }
-            "ReconnectNetwork" -> {
-                val newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
-                newFrage.show(fragmentManager, "dialog")
             }
         }
     }

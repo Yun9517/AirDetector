@@ -55,7 +55,6 @@ import com.microjet.airqi2.Definition.RequestPermission
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.FireBaseCloudMessage.FirebaseNotifSettingTask
 import com.microjet.airqi2.Fragment.ChartFragment
-import com.microjet.airqi2.Fragment.CheckFragment
 import com.microjet.airqi2.Fragment.MainFragment
 import com.microjet.airqi2.Fragment.Pm10Fragment
 import com.microjet.airqi2.GestureLock.DefaultPatternCheckingActivity
@@ -225,6 +224,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var mFirebaseAnalytics: FirebaseAnalytics? = null
     private var countForAndroidO: Int = 0
     private var triggerForAndroidOOn: Boolean = false
+
+    //AccountCheckTokenTask使用
+    private val getMainActivity: Activity = this
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -403,7 +405,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val myToken = shareToken.getString("token", "")
         if (myToken != "") {
             FirebaseNotifSettingTask().execute(myToken)
-            AccountCheckTokenTask().execute(myToken, "checkTokenByOnstart")
+            AccountCheckTokenTask(getMainActivity,"checkTokenByOnstart").execute(myToken)
         }
     }
 
@@ -1778,15 +1780,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val i: Intent? = Intent(this, AccountManagementActivity::class.java)
                 startActivity(i)
             }
-            "close Wait Dialog" -> {
-                val previousDialog = fragmentManager.findFragmentByTag("dialog")
-                if (previousDialog != null) {
-                    val dialog = previousDialog as DialogFragment
-                    dialog.dismiss()
-                }
-            }
-        // 2018/07/20 Check FW Status
-            "New FW Arrival" -> {
+            // 2018/07/20 Check FW Status
+            "New FW Arrival"->{
                 runOnUiThread({
                     listDataHeader[6].FWIndicator = R.drawable.app_android_icon_fw_remind
                     mMenuAdapter!!.notifyDataSetInvalidated()
@@ -2027,12 +2022,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val cm = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
         val networkInfo = cm.activeNetworkInfo
         if (networkInfo != null && networkInfo.isConnected) {
-            val newFrage = CheckFragment().newInstance(R.string.remind, R.string.connectServer, this, 0, "wait")
-            newFrage.show(fragmentManager, "dialog")
             //if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) 判斷Android3.0版本以上運行
             //TASK改用並行
-            AccountCheckTokenTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken, "checkTokenBybtEvent")
-
+            AccountCheckTokenTask(getMainActivity,"checkTokenBybtEvent").executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, myToken)
         } else {
             val i: Intent? = Intent(this, AccountRetryActivity::class.java)
             startActivity(i)
