@@ -26,7 +26,7 @@
             android:id="@+id/txt_date"
             style="@style/Base.TextAppearance.AppCompat.Medium.Inverse"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="2"
             android:gravity="center"
             android:textColor="@android:color/black" />
