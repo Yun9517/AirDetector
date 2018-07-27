@@ -12,7 +12,9 @@ import org.json.JSONException
 import org.json.JSONObject
 import android.content.SharedPreferences
 import android.content.Context.MODE_PRIVATE
+import android.widget.Toast
 import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.SavePreferences
 import com.microjet.airqi2.Definition.SavePreferences.AirActionTask_KEY
 import com.microjet.airqi2.PrefObjects
@@ -164,11 +166,19 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
 
             }
             "downloadFWFile" -> {
-                mPreference?.edit()?.putString("FilePath", "")?.apply()//將路徑關閉
-                EventBus.getDefault().post(BleEvent("Download Success"))
+                when (result?.get(1)) {
+                    "Download Success" -> {
+                        mPreference?.edit()?.putString("FilePath", "")?.apply()//將路徑關閉
+                        EventBus.getDefault().post(BleEvent("Download Success"))
+                    }
+                    "DownloadError" -> {
+                        Utils.toastMakeTextAndShow(mContext, "Please Reconnect NetWork", Toast.LENGTH_SHORT)
+                    }
+                }
+
             }
             else -> {
-
+                Log.d("AirActionTask","ELSE")
             }
         }
         if (mProgressBar != null) {
@@ -261,27 +271,31 @@ class AirActionTask() : AsyncTask<String, Long, ArrayList<String>?>() {
     private fun downloadFWFile(url: String): String {
         val url = URL(url)
         val connection = url.openConnection()
-        try {
-            connection.connect()
-            val lenghtOfFile = connection.contentLength.toLong()
-            val input = BufferedInputStream(url.openStream())
-            val file = File(mContext!!.cacheDir, "FWupdate.zip")
-            val output = FileOutputStream(file) //context.openFileOutput("content.zip", Context.MODE_PRIVATE);
-            val data = ByteArray(1024)
-            var total: Long = 0
-            var count: Int = 0
-            while ({ count = input.read(data);count }() != -1) {
-                total += count
-                publishProgress(total, lenghtOfFile)
-                output.write(data, 0, count)
+        if (connection.contentLength != -1) {
+            try {
+                connection.connect()
+                val lenghtOfFile = connection.contentLength.toLong()
+                val input = BufferedInputStream(url.openStream())
+                val file = File(mContext!!.cacheDir, "FWupdate.zip")
+                val output = FileOutputStream(file) //context.openFileOutput("content.zip", Context.MODE_PRIVATE);
+                val data = ByteArray(1024)
+                var total: Long = 0
+                var count: Int = 0
+                while ({ count = input.read(data);count }() != -1) {
+                    total += count
+                    publishProgress(total, lenghtOfFile)
+                    output.write(data, 0, count)
+                }
+                output.flush()
+                output.close()
+                input.close()
+            } catch (e: Exception) {
+                Log.v(javaClass.simpleName, e.toString())
             }
-            output.flush()
-            output.close()
-            input.close()
-        } catch (e: Exception) {
-            Log.v(javaClass.simpleName, e.toString())
+            return "Download Success"
+        } else {
+            return "DownloadError"
         }
-        return "Download Success"
     }
 
     interface PostDownload {
