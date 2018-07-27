@@ -216,8 +216,9 @@ class CalendarMain : AppCompatActivity() {
         }
         Log.d("Result", Result.toString())
         listener = RealmChangeListener {
+            filter = it.filter { it.macAddress == myPref.getSharePreferenceMAC() }
 
-            parseDataToCsv(result)
+            parseDataToCsv(filter)
             Log.e("Realm Listener", "Update Database...")
         }
 
@@ -241,7 +242,7 @@ class CalendarMain : AppCompatActivity() {
             }
             val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
-            val timeFormat = SimpleDateFormat("yyyy-MM-dd-HH:mm")
+            val timeFormat = SimpleDateFormat("yyyy/MM/dd HH:mm-ss")
 
             val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5")
 
