@@ -429,7 +429,7 @@
                         android:layout_gravity="center"
                         android:layout_marginEnd="5dp"
                         android:scaleType="fitXY"
-                        app:srcCompat="@drawable/app_android_icon_fw_remind" />
+                        app:srcCompat="@drawable/point_pink" />
 
                     <Button
                         android:id="@+id/btnCheckFW"

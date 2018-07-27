@@ -540,7 +540,7 @@
     <string name="dialog_Change_Successfully">修改成功</string>
     <string name="dialog_Password_Empty">密碼不能空白</string>
     <string name="dialog_Password_noMatch">兩個密碼不相同</string>
-    <string name="dialog_Password_Change_Successfully">密碼修改成功</string>
+    <string name="dialog_Password_Change_Successfully">密碼修改成功，帳號已經登出，請重新登入</string>
 
     <!-- 2018/06/21 Text for Fire base Toast-->
     <string name="fireBase_Toast_Setup_Done">雲端推播設定完成</string>

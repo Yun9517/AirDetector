@@ -44,7 +44,7 @@ class CheckFragment : DialogFragment() {
                 }
             }
         //one Button
-            1 -> whichActivity.setPositiveButton("確定", { dialog, which ->
+            1 -> whichActivity.setPositiveButton(getString(R.string.confirm), { dialog, which ->
                 when (strClickMethod) {
                     "dismiss" -> {
                             dismiss()
@@ -53,14 +53,14 @@ class CheckFragment : DialogFragment() {
             })
 
         //two Button
-            2 -> whichActivity.setPositiveButton("確定", { dialog, which ->
+            2 -> whichActivity.setPositiveButton(getString(R.string.confirm), { dialog, which ->
                 when (strClickMethod) {
                     "doPositiveClick" -> (activity as? AccountActiveActivity)?.doPositiveClick()
                     "showEnableCloudUploadStat" -> (activity as? AccountManagementActivity)?.showEnableCloudUploadStat()
                     "showEnable3G_Network" -> (activity as? AccountManagementActivity)?.showEnable3G_Network()
                 }
             })
-                    .setNegativeButton("取消", { dialog, which ->
+                    .setNegativeButton(getString(R.string.cancel), { dialog, which ->
                         when(strClickMethod){
                             "showEnableCloudUploadStat"->(activity as? AccountManagementActivity)?.AccountActivityShow()
                             "showEnable3G_Network"->(activity as? AccountManagementActivity)?.AccountActivityShow()
