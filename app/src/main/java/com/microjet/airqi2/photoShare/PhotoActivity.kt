@@ -85,7 +85,8 @@ class PhotoActivity : AppCompatActivity() {
             }
 
             val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
-            val bitmap = decodeFile("${tmpPath.path}/image.jpg")
+            val tmpFilePath = File(tmpPath, "image.jpg")
+            val bitmap = decodeFile(tmpFilePath.path)
 
             if(bitmap != null) {
                 // 判斷照片是直的還是橫的
@@ -131,6 +132,8 @@ class PhotoActivity : AppCompatActivity() {
                 this.imageView.setImageBitmap(addTextBitmap)
                 file = savePicture(addTextBitmap!!)
                 this.btnShare.visibility = View.VISIBLE
+
+                if(tmpFilePath.exists()) tmpFilePath.delete()
             }
         }
     }
@@ -419,6 +422,9 @@ class PhotoActivity : AppCompatActivity() {
             out.flush()
             out.close()
             Utils.toastMakeTextAndShow(this@PhotoActivity, getString(R.string.text_photo_saved), Toast.LENGTH_SHORT)
+
+            startMediaScannerSync(createPath.path)
+
             return file
         } catch (e: FileNotFoundException) {
             e.printStackTrace()
@@ -451,5 +457,11 @@ class PhotoActivity : AppCompatActivity() {
         }
 
         return bitmap
+    }
+
+    private fun startMediaScannerSync(dir: String) {
+        val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
+        scanIntent.data = Uri.parse("file://$dir")
+        sendBroadcast(scanIntent)
     }
 }
