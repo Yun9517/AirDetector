@@ -7,8 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/activity_horizontal_margin"
-    tools:context="com.microjet.airqi2.CalendarMain"
-    android:background="@drawable/app_bg_cloud_green">
+    tools:context="com.microjet.airqi2.CalendarMain">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +19,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="last"
-            android:text="@string/last_month"/>
+            android:text="@string/last_month"
+            android:background="#E0DEDE"/>/>
 
         <TextView
             android:id="@+id/txt_date"
@@ -36,14 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:onClick="next"
-            android:text="@string/next_month"/>
+            android:text="@string/next_month"
+            android:background="#E0DEDE"/>
     </LinearLayout>
 
     <com.microjet.airqi2.CalendarWeekView
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="10dp"
-        android:background="#CCCCCC"
+        android:background="#E0DEDE"
         app:wv_textColor="#333333"
         app:wv_textSize="14sp"/>
 
@@ -51,7 +52,7 @@
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:background="@android:color/transparent"
+        android:background="#F2F2F2"
         app:cv_dayBackground="@drawable/bg_day_un_selected"
         app:cv_selectDayBackground="@drawable/bg_day_selected"
         app:cv_selectTextColor="@android:color/white"
@@ -65,6 +66,6 @@
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
         android:layout_marginTop="20dp"
-        android:background="#CCCCCC"
+        android:background="#E0DEDE"
         android:text="@string/export_csv" />
 </LinearLayout>

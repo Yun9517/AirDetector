@@ -328,6 +328,7 @@
 
         <activity
             android:name=".CalendarMain"
+            android:label="@string/data_export"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
 

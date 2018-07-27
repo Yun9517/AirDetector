@@ -351,18 +351,21 @@ class CalendarView @JvmOverloads constructor(context: Context, attrs: AttributeS
                     Log.d(TAG, " date click > 2   " + date)
                     mSelectDate!!.clear()
                     mSelectDate!!.add(date)
-                    Log.d(TAG, " date mSelectDate 1  " + mSelectDate)
+                    Log.d(TAG, " date mSelectDate 0  " + mSelectDate)
                 }else{
                     mSelectDate!!.clear()
                     mSelectDate!!.add(date)
-                    Log.d(TAG, " date DayValue 1  " + mSelectDate)
+                    Log.d(TAG, " date mSelectDate 1  " + mSelectDate)
                 }
             } else {
                 if (mSelectDate == null) {
                     mSelectDate = ArrayList()
+                    Log.d(TAG, " date mSelectDate 2  " + mSelectDate)
                 }
                 mSelectDate!!.add(date)
+                Log.d(TAG, " date mSelectDate 3  " + mSelectDate)
                 if (mChangeListener != null) {
+                    Log.d(TAG, " date mSelectDate 4  " + mSelectDate)
                     mChangeListener!!.onSelectedDayChange(this, true, year, month, day)
                 }
             }

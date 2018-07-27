@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -57,6 +58,7 @@ class CalendarMain : AppCompatActivity() {
         mTxtDate = findViewById(R.id.txt_date) as TextView
         mExport_CSV = findViewById(R.id.export_bt) as Button
         mCalendarView = findViewById(R.id.calendarView) as CalendarView
+        initActionBar()
 
         myPref = PrefObjects(this)
         // 设置已选的日期
@@ -77,18 +79,6 @@ class CalendarMain : AppCompatActivity() {
                 Log.e(TAG, "year: $year")
                 Log.e(TAG, "month,: " + (month + 1))
                 Log.e(TAG, "day: $day")
-
-                val str: List<String>? = mCalendarView!!.getSelectDate()
-                Log.d(TAG," Date str == " + str)
-                val icc = IgnoreCaseComparator()
-                Collections.sort(str, icc)
-
-                if((str?.size)!! != 0){
-                    str_min = str?.get(0)
-                    str_max = str?.get(str?.size -1)
-                    Log.d(TAG," Date min = " + str_min)
-                    Log.d(TAG," Date max = " + str_max)
-                }
             }
         })
         // 设置是否能够改变日期状态
@@ -108,7 +98,17 @@ class CalendarMain : AppCompatActivity() {
         setCurDate()
 
         mExport_CSV?.setOnClickListener(View.OnClickListener {
+            var str: List<String>? = mCalendarView!!.getSelectDate()
+            Log.d(TAG," Date str == " + str)
+            var icc = IgnoreCaseComparator()
+            Collections.sort(str, icc)
 
+            if((str?.size)!! != 0){
+                str_min = str?.get(0)
+                str_max = str?.get(str?.size -1)
+                Log.d(TAG," Date min = " + str_min)
+                Log.d(TAG," Date max = " + str_max)
+            }
 
             Log.d(TAG," Date min === " + str_min)
             Log.d(TAG," Date max === " + str_max)
@@ -301,6 +301,24 @@ class CalendarMain : AppCompatActivity() {
         // permissions this app might request
     }
 
+    private fun initActionBar() {
+        // 取得 actionBar
+        val actionBar = supportActionBar
+        // 設定顯示左上角的按鈕
+        actionBar!!.setDisplayHomeAsUpEnabled(true)
+    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
+            -> {
+                finish()
+                return true
+            }
+            else -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     companion object {
 
         private val TAG = CalendarMain::class.java.simpleName
