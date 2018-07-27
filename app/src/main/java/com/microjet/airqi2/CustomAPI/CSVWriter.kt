@@ -35,7 +35,7 @@ class CSVWriter {
             val csvFile = File("$path/$fileName.csv")
             csvFile.createNewFile()
 
-            writer = BufferedWriter(OutputStreamWriter(FileOutputStream(csvFile), "Big5"))
+            writer = BufferedWriter(OutputStreamWriter(FileOutputStream(csvFile), "UTF-8"))
 
         } catch (e: IOException) {
             e.printStackTrace()

@@ -563,9 +563,9 @@ Please note that this FW update process is done entirely at your own risk. If th
 
     <string name="dialog_close_title">Close Application</string>
     <string name="dialog_close_content">Do you really want to close ADDWII Mobile Nose?</string>
-    <string name="year">year</string>
-    <string name="month">month</string>
-    <string name="day">day</string>
+    <string name="year">/</string>
+    <string name="month">/</string>
+    <string name="day">/</string>
     <string name="last_month">last month</string>
     <string name="next_month">next month</string>
     <string name="export_csv">Export CSV</string>
@@ -575,4 +575,5 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="no_data_can_export">No Data Can Export</string>
     <!-- 2018/07/17 forgeteamil -->
     <string name="dialog_forgetPassword_emailSend">Sending Verify Mail,Please Wait</string>
+    <string name="data_export">ADDWII Data Export</string>
 </resources>
