@@ -151,7 +151,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(
+            /*val intent: Intent? = Intent(
                     if (isChecked) {
                         BroadcastActions.INTENT_KEY_ONLINE_LED_ON
                     } else {
@@ -159,14 +159,17 @@ class SettingActivity : AppCompatActivity() {
                     }
             )
 
-            sendBroadcast(intent)
+            sendBroadcast(intent)*/
 
+            MainActivity.mUartService?.setLedOnOff(isChecked, ledDisconnectPower.isChecked)
+
+            Log.e("LEDPower", "$ledPower, $ledDisconnectPower")
             myPref.setSharePreferenceLedOn(isChecked)
         }
 
         ledDisconnectPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(
+            /*val intent: Intent? = Intent(
                     if (isChecked) {
                         BroadcastActions.INTENT_KEY_OFFLINE_LED_ON
                     } else {
@@ -174,7 +177,9 @@ class SettingActivity : AppCompatActivity() {
                     }
             )
 
-            sendBroadcast(intent)
+            sendBroadcast(intent)*/
+
+            MainActivity.mUartService?.setLedOnOff(ledPower.isChecked, isChecked)
 
             myPref.setSharePreferenceDisconnectLedOn(isChecked)
         }

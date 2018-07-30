@@ -140,7 +140,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var topMenu: Menu? = null
     // Code to manage Service lifecycle.
     private var mDeviceAddress: String? = null
-    private var mUartService: UartService? = null
+    //private var mUartService: UartService? = null
     //private var longi = 121.4215f
     //private var lati = 24.959742f
     //private var locationListener: LocationListener? = null
@@ -227,6 +227,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     //AccountCheckTokenTask使用
     private val getMainActivity: Activity = this
+
+    companion object {
+        var mUartService: UartService? = null
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
