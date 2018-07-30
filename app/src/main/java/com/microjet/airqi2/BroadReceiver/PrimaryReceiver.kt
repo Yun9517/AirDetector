@@ -43,12 +43,12 @@ class PrimaryReceiver : BroadcastReceiver() {
                 //    mainIntent.putExtra("macAddress", intent.getStringExtra("macAddress"))
                 //    context.sendBroadcast(mainIntent)
             }
-            "disconnect" -> {
+            /*"disconnect" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "disconnect")
                 context.sendBroadcast(mainIntent)
-            }
-            BroadcastActions.ACTION_CONNECT_DEVICE -> {
+            }*/
+            /*BroadcastActions.ACTION_CONNECT_DEVICE -> {
                 //get Address
                 var macAddress = intent.getStringExtra("mac")
                 var intent = Intent(BroadcastIntents.UART_SERVICE)
@@ -59,12 +59,12 @@ class PrimaryReceiver : BroadcastReceiver() {
                 //intent.putExtra("mac",macAddress)
                 context.sendBroadcast(intent)
                 Log.d("MAINRECEIVER", "CONNECT: $macAddress")
-            }
-            "close" -> {
+            }*/
+            /*"close" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "close")
                 context.sendBroadcast(mainIntent)
-            }
+            }*/
             "B6" -> {
 //                var mainIntent = Intent(BroadcastIntents.MAIN_ACTIVITY)
 //                mainIntent.putExtra("status","B6")
@@ -120,7 +120,7 @@ class PrimaryReceiver : BroadcastReceiver() {
         //  mainIntent.putExtra("TVOCValue",intent.getStringExtra("TVOCValue"))
         //  mainIntent.putExtra("BatteryLife",intent.getStringExtra("BatteryLife"))
         //}
-            "message" -> {
+            /*"message" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "message")
                 context.sendBroadcast(mainIntent)
@@ -135,7 +135,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "checkItems")
                 context.sendBroadcast(mainIntent)
-            }
+            }*/
             "setSampleRate" -> {
                 /*
                 var SampleTime= intent.getIntExtra("SampleTime",1)
@@ -146,7 +146,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 */
             }
 
-            BroadcastActions.ACTION_GET_SAMPLE_RATE -> {//"getSampleRate" -> {
+            /*BroadcastActions.ACTION_GET_SAMPLE_RATE -> {//"getSampleRate" -> {
                 var intent = Intent(BroadcastIntents.UART_SERVICE)
                 intent.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
 //                when( intent.getStringExtra("callFromConnect"))
@@ -160,7 +160,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "callDeviceStartSample")
                 context.sendBroadcast(mainIntent)
-            }
+            }*/
 //            "ACTION_GATT_SERVICES_DISCOVERED" -> {
 //                var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
 //                mainIntent.putExtra("status", "ACTION_GATT_SERVICES_DISCOVERED")
@@ -171,7 +171,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 //mainIntent.putExtra("status", BroadcastActions.ACTION_GET_SAMPLE_RATE)
                 //context.sendBroadcast(mainIntent)
             }
-            "ACTION_DATA_AVAILABLE" -> {
+            /*"ACTION_DATA_AVAILABLE" -> {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 var char = intent.getByteArrayExtra("txValue")
                 mainIntent.putExtra("status", "ACTION_DATA_AVAILABLE")
@@ -182,7 +182,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 var mainIntent = Intent(BroadcastIntents.UART_SERVICE)
                 mainIntent.putExtra("status", "DEVICE_DOES_NOT_SUPPORT_UART")
                 context.sendBroadcast(mainIntent)
-            }
+            }*/
             BroadcastActions.INTENT_KEY_LOADING_DATA -> {
                 val bundle = Bundle()
                 bundle.putString(BroadcastActions.INTENT_KEY_LOADING_DATA, intent.getStringExtra(BroadcastActions.INTENT_KEY_LOADING_DATA))
@@ -194,18 +194,18 @@ class PrimaryReceiver : BroadcastReceiver() {
                 bundle.putString(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT, intent.getStringExtra(BroadcastActions.INTENT_KEY_GET_HISTORY_COUNT))
                 broadcastUpdate(context, BroadcastActions.ACTION_GET_HISTORY_COUNT, bundle)
             }
-            BroadcastActions.INTENT_KEY_PUMP_ON -> {
-                /*val bundle = Bundle()
+            /*BroadcastActions.INTENT_KEY_PUMP_ON -> {
+                *//*val bundle = Bundle()
             bundle.putString("status", intent.getStringExtra( BroadcastActions.INTENT_KEY_PUMP_ON))
-            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*/
+            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*//*
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_ON)
                 context.sendBroadcast(intent)
             }
             BroadcastActions.INTENT_KEY_PUMP_OFF -> {
-                /*val bundle = Bundle()
+                *//*val bundle = Bundle()
             bundle.putString("status", intent.getStringExtra( BroadcastActions.INTENT_KEY_PUMP_ON))
-            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*/
+            broadcastUpdate(context,BroadcastActions.INTENT_KEY_PUMP_ON, bundle)*//*
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PUMP_OFF)
                 context.sendBroadcast(intent)
@@ -230,8 +230,8 @@ class PrimaryReceiver : BroadcastReceiver() {
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
                 context.sendBroadcast(intent)
-            }
-            BroadcastActions.INTENT_KEY_LOCATION_VALUE -> {
+            }*/
+            /*BroadcastActions.INTENT_KEY_LOCATION_VALUE -> {
                 //val getLati = intent.getFloatExtra(BroadcastActions.INTENT_KEY_LATITUDE_VALUE)
                 //val getLongi = intent.getFloatExtra(BroadcastActions.INTENT_KEY_LONGITUDE_VALUE)
                 val getBundle = intent.getBundleExtra("TwoValueBundle")
@@ -249,7 +249,7 @@ class PrimaryReceiver : BroadcastReceiver() {
                 val intent: Intent? = Intent(BroadcastIntents.UART_SERVICE)
                 intent!!.putExtra("status", BroadcastActions.INTENT_KEY_SET_PM25_OFF)
                 context.sendBroadcast(intent)
-            }
+            }*/
 
 
         /*
