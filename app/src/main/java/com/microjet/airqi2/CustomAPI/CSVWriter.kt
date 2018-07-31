@@ -68,6 +68,7 @@ class CSVWriter {
         }
 
         try {
+            writer!!.write(0xFEFF)
             writer!!.write(textWithSeparator.toString() + "\n")
             writer!!.flush()
         } catch (e: IOException) {
