@@ -576,4 +576,5 @@ Please note that this FW update process is done entirely at your own risk. If th
     <!-- 2018/07/17 forgetEmail -->
     <string name="dialog_forgetPassword_emailSend">Sending Verify Mail,Please Wait</string>
     <string name="data_export">ADDWII Data Export</string>
+    <string name="text_dlg_close_permanent">Since you turn off "Allow background service permanent", you may not be able to use the full functionality of ADDWII (eg personal track, air map cannot record the location of your device, etc.).</string>
 </resources>

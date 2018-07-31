@@ -151,7 +151,7 @@ class SettingActivity : AppCompatActivity() {
 
         ledPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(
+            /*val intent: Intent? = Intent(
                     if (isChecked) {
                         BroadcastActions.INTENT_KEY_ONLINE_LED_ON
                     } else {
@@ -159,14 +159,17 @@ class SettingActivity : AppCompatActivity() {
                     }
             )
 
-            sendBroadcast(intent)
+            sendBroadcast(intent)*/
 
+            MainActivity.mUartService?.setLedOnOff(isChecked, ledDisconnectPower.isChecked)
+
+            Log.e("LEDPower", "$ledPower, $ledDisconnectPower")
             myPref.setSharePreferenceLedOn(isChecked)
         }
 
         ledDisconnectPower.setOnCheckedChangeListener { _, isChecked ->
 
-            val intent: Intent? = Intent(
+            /*val intent: Intent? = Intent(
                     if (isChecked) {
                         BroadcastActions.INTENT_KEY_OFFLINE_LED_ON
                     } else {
@@ -174,7 +177,9 @@ class SettingActivity : AppCompatActivity() {
                     }
             )
 
-            sendBroadcast(intent)
+            sendBroadcast(intent)*/
+
+            MainActivity.mUartService?.setLedOnOff(ledPower.isChecked, isChecked)
 
             myPref.setSharePreferenceDisconnectLedOn(isChecked)
         }
@@ -213,6 +218,10 @@ class SettingActivity : AppCompatActivity() {
 
         swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
             myPref.setSharePreferenceServiceForeground(isChecked)
+
+            /*if(!isChecked) {
+                showParmnentCloseDialog()
+            }*/
         }
 
         aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 400) {
@@ -388,6 +397,18 @@ class SettingActivity : AppCompatActivity() {
         { dialog, _ ->
             dialog.dismiss()
             finish()
+        }
+        dlg.show()
+    }
+
+    private fun showParmnentCloseDialog() {
+        val dlg = android.app.AlertDialog.Builder(this).create()
+        dlg.setTitle(getString(R.string.remind))
+        dlg.setMessage(getString(R.string.text_dlg_close_permanent))
+        dlg.setCancelable(false)//讓返回鍵與空白無效
+        dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok))//是
+        { dialog, _ ->
+            dialog.dismiss()
         }
         dlg.show()
     }

@@ -571,7 +571,7 @@
     <string name="errorToken">帳號權限已經過期，請重新登入</string>
     <string name="checkToken">檢查帳號權限有效性，請稍後</string>
     <string name="connectServer">連結伺服器，請稍後</string>
-    <string name="text_notification_description">由於您打開了「允許背景服務常駐通知列」功能，本服務會持續在背景執行，您可關閉本通知。但若您為 Android 8.1 用戶，因系統原生限制，在關閉通知後，您仍會看到 Android 系統本身的提示。</string>
+    <string name="text_notification_description">由於您打開了「允許背景服務常駐」功能，本服務會持續在背景執行，您可關閉本通知。但若您為 Android 8.1 用戶，因系統原生限制，在關閉通知後，您仍會看到 Android 系統本身的提示。</string>
     <string name="text_permanent_notification_name">ADDWII常駐通知</string>
 
 
@@ -590,4 +590,5 @@
     <!-- 2018/07/17 forgeteamil -->
     <string name="dialog_forgetPassword_emailSend">信箱驗證中，請稍後</string>
     <string name="data_export">ADDWII 資料輸出</string>
+    <string name="text_dlg_close_permanent">由於您關閉「允許背景服務常駐」，可能會無法使用到ADDWII的完整功能（例：個人軌跡、空氣地圖無法紀錄您裝置的位置等）。</string>
 </resources>

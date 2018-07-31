@@ -3,10 +3,8 @@ package com.microjet.airqi2.BlueTooth
 import android.annotation.SuppressLint
 import android.app.Service
 import android.bluetooth.*
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
@@ -17,14 +15,10 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.NotificationObj
-import com.microjet.airqi2.MyApplication
-import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.TvocNoseData
 import com.microjet.airqi2.warringClass.MainNotification
-import org.greenrobot.eventbus.EventBus
 import java.util.*
 
 /**
@@ -46,7 +40,7 @@ class UartService : Service() {
         val TX_CHAR_UUID = UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e")
     }
 
-    private val TAG = UartService::class.java!!.simpleName
+    private val TAG = UartService::class.java.simpleName
     private var mBluetoothManager: BluetoothManager? = null
     private var mBluetoothAdapter: BluetoothAdapter? = null
     private var mBluetoothDeviceAddress: String? = null
@@ -85,21 +79,21 @@ class UartService : Service() {
                     }
                 }
                 8 -> { //BLE Out of Range
-                    Log.d(TAG, "onConnectionStateChange received: " + status)
+                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
                 }
                 19 -> { //Device Disconnect
-                    Log.d(TAG, "onConnectionStateChange received: " + status)
+                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
                 }
                 else -> {
-                    Log.d(TAG, "onConnectionStateChange received: " + status)
+                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close() // 防止出现status 133
@@ -176,7 +170,7 @@ class UartService : Service() {
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        registerReceiver(mServiceReceiver, makeServiceIntentFilter())
+        //registerReceiver(mServiceReceiver, makeServiceIntentFilter())
         return mBinder
     }
 
@@ -184,7 +178,7 @@ class UartService : Service() {
         // After using a given device, you should make sure that BluetoothGatt.close() is called
         // such that resources are cleaned up properly.  In this particular example, close() is
         // invoked when the UI is disconnected from the Service.
-        unregisterReceiver(mServiceReceiver)
+        //unregisterReceiver(mServiceReceiver)
         close()
 
         //val mPref = PrefObjects(applicationContext)
@@ -427,7 +421,7 @@ class UartService : Service() {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
     }
 
-    private fun makeServiceIntentFilter(): IntentFilter {
+    /*private fun makeServiceIntentFilter(): IntentFilter {
         val intentFilter = IntentFilter()
         intentFilter.addAction(BroadcastActions.INTENT_KEY_ONLINE_LED_OFF)
         intentFilter.addAction(BroadcastActions.INTENT_KEY_ONLINE_LED_ON)
@@ -471,7 +465,7 @@ class UartService : Service() {
             //BroadcastActions.INTENT_KEY_PM25_FAN_OFF -> writeRXCharacteristic(BLECallingTranslate.PM25FanCall(0))
             }
         }
-    }
+    }*/
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.e(TAG, "onStartCommand() called...")
@@ -497,5 +491,21 @@ class UartService : Service() {
 
         startForeground(NotificationObj.MAIN_NOTIFICATION_ID, notification)
         Log.e(TAG, "Set service to foreground = on.")
+    }
+
+    fun setLedOnOff(onlineLED: Boolean, offlineLED: Boolean) {
+        writeRXCharacteristic(BLECallingTranslate.SetLedOn(onlineLED, offlineLED))
+    }
+
+    fun setPumpOnOff(isOn: Boolean) {
+        if(isOn) {
+            writeRXCharacteristic(BLECallingTranslate.PumpOnCall(65002))
+        } else {
+            writeRXCharacteristic(BLECallingTranslate.PumpOnCall(1))
+        }
+    }
+
+    fun setFanOn() {
+        writeRXCharacteristic(BLECallingTranslate.PM25FanCall(10))
     }
 }

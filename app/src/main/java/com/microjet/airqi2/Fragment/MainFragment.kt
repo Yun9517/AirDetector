@@ -24,15 +24,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.TextView
-import com.microjet.airqi2.BleEvent
+import com.microjet.airqi2.*
 import com.microjet.airqi2.BlueTooth.BLECallingTranslate
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
 import com.microjet.airqi2.Definition.Colors
-import com.microjet.airqi2.R
-import com.microjet.airqi2.ScrollingTextTask
-import com.microjet.airqi2.TvocNoseData
 import kotlinx.android.synthetic.main.frg_main.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -145,9 +142,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     }
                     R.id.imgLight -> {
                         if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
-                            sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_ON)
+                            //sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_ON)
+                            MainActivity.mUartService?.setPumpOnOff(true)
                         } else if (dataForState == DetectionData.PM25 || dataForState == DetectionData.PM10) {
-                            sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_ON)
+                            //sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_ON)
+                            MainActivity.mUartService?.setFanOn()
                         }
                         v.isPressed = true
                     }
@@ -158,9 +157,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
             MotionEvent.ACTION_UP -> {
                 if (v!!.id == R.id.imgLight) {
                     if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
-                        sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_OFF)
+                        /*sendPumpCommand(BroadcastActions.INTENT_KEY_PUMP_OFF)
                     } else if (dataForState == DetectionData.PM25 || dataForState == DetectionData.PM10) {
-                        sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)
+                        sendPumpCommand(BroadcastActions.INTENT_KEY_PM25_FAN_OFF)*/
+
+                        MainActivity.mUartService?.setPumpOnOff(false)
                     }
                     v.isPressed = false
                 }
@@ -170,11 +171,11 @@ class MainFragment : Fragment(), View.OnTouchListener {
     }
 
 
-    private fun sendPumpCommand(command: String) {
+    /*private fun sendPumpCommand(command: String) {
         val intent: Intent? = Intent(command)
         //intent!!.putExtra("status", command)
         mContext!!.sendBroadcast(intent)
-    }
+    }*/
 
     /*private fun actionToSring(action: Int): String {
         when (action) {
