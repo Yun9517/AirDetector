@@ -244,9 +244,9 @@ class CalendarMain : AppCompatActivity() {
             }
             val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
-            val timeFormat = SimpleDateFormat("yyyy/MM/dd HH:mm-ss")
-
-            val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5","MAC")
+            val DateFormat = SimpleDateFormat("yyyy/MM/dd")
+            val timeFormat = SimpleDateFormat("HH:mm:ss")
+            val header = arrayOf("id", "Date","Time", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5","MAC")
 
             writeCSV.writeLine(header)
 
@@ -260,7 +260,7 @@ class CalendarMain : AppCompatActivity() {
                 val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
                 val MAC = results[i].macAddress
 
-                val textCSV = arrayOf((i + 1).toString(),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
+                val textCSV = arrayOf((i + 1).toString(),DateFormat.format(time),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
 
                 writeCSV.writeLine(textCSV).toString()
             }
