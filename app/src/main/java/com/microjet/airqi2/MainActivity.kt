@@ -2066,10 +2066,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         dlg.setButton(DialogInterface.BUTTON_NEGATIVE, getString(android.R.string.no))//否
         { _, _ ->
-            val intent = Intent(Intent.ACTION_MAIN)
+            dlg.dismiss()
+            /*val intent = Intent(Intent.ACTION_MAIN)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             intent.addCategory(Intent.CATEGORY_HOME)
-            startActivity(intent)
+            startActivity(intent)*/
         }
         dlg.show()
     }

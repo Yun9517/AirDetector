@@ -557,7 +557,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="errorToken">Account token has expired, please log in again</string>
     <string name="checkToken">Check Account Available，Please Wait</string>
     <string name="connectServer">Connect Server，Please Wait</string>
-    <string name="text_notification_description">When you turned on the "Allow background service resident notification bar" feature, This service will continue to run in the background. You can hide the notification。If you are Android 8.1 user, after you switch off this alert, you will still see Android system alert.</string>
+    <string name="text_notification_description">When you turned on the "Allow background service permanent" feature, This service will continue to run in the background. You can hide the notification。If you are Android 8.1 user, after you switch off this alert, you will still see Android system alert.</string>
     <string name="text_permanent_notification_name">ADDWII Permanent Notify</string>
 
 
@@ -576,4 +576,5 @@ Please note that this FW update process is done entirely at your own risk. If th
     <!-- 2018/07/17 forgeteamil -->
     <string name="dialog_forgetPassword_emailSend">Sending Verify Mail,Please Wait</string>
     <string name="data_export">ADDWII Data Export</string>
+    <string name="text_dlg_close_permanent">Since you turn off "Allow background service permanent", you may not be able to use the full functionality of ADDWII (eg personal track, air map cannot record the location of your device, etc.).</string>
 </resources>

@@ -218,6 +218,10 @@ class SettingActivity : AppCompatActivity() {
 
         swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
             myPref.setSharePreferenceServiceForeground(isChecked)
+
+            /*if(!isChecked) {
+                showParmnentCloseDialog()
+            }*/
         }
 
         aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 400) {
@@ -393,6 +397,18 @@ class SettingActivity : AppCompatActivity() {
         { dialog, _ ->
             dialog.dismiss()
             finish()
+        }
+        dlg.show()
+    }
+
+    private fun showParmnentCloseDialog() {
+        val dlg = android.app.AlertDialog.Builder(this).create()
+        dlg.setTitle(getString(R.string.remind))
+        dlg.setMessage(getString(R.string.text_dlg_close_permanent))
+        dlg.setCancelable(false)//讓返回鍵與空白無效
+        dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(android.R.string.ok))//是
+        { dialog, _ ->
+            dialog.dismiss()
         }
         dlg.show()
     }
