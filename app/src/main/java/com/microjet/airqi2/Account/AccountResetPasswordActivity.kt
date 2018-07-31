@@ -196,7 +196,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
                 //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
                 //Dialog.setTitle("提示")
                 Dialog.setTitle(getString(R.string.remind))
-                Dialog.setMessage(result.toString()+"，帳號已經登出，請重新登入")
+                Dialog.setMessage(result.toString())
                 Dialog.setCancelable(false)//讓返回鍵與空白無效
                 //Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "确定")
                 Dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.confirm))

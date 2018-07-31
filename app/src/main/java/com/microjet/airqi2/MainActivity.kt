@@ -1783,7 +1783,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             // 2018/07/20 Check FW Status
             "New FW Arrival"->{
                 runOnUiThread({
-                    listDataHeader[6].FWIndicator = R.drawable.app_android_icon_fw_remind
+                    listDataHeader[6].FWIndicator = R.drawable.point_pink
                     mMenuAdapter!!.notifyDataSetInvalidated()
                 })
             }

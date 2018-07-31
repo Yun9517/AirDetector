@@ -101,7 +101,7 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
             } else {
                 headerIndicator.setBackgroundResource((R.drawable.ic_keyboard_arrow_down_grey_400_18dp))
                 if (myPref.getSharePreferenceCheckFWVersion()){
-                    fwIndicator.setImageResource(R.drawable.app_android_icon_fw_remind)
+                    fwIndicator.setImageResource(R.drawable.point_pink)
                 } else {
                     fwIndicator.setImageResource(android.R.color.transparent)
                 }
@@ -130,7 +130,7 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         // 2018/07/20 Control Child View's indicator
         if (groupPosition == 6 && childPosition == 1){
             if (myPref.getSharePreferenceCheckFWVersion()){
-                childIndicatorImage.setImageResource(R.drawable.app_android_icon_fw_remind)
+                childIndicatorImage.setImageResource(R.drawable.point_pink)
             } else {
                 childIndicatorImage.setImageResource(android.R.color.transparent)
             }

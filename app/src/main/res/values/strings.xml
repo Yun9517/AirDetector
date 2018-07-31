@@ -436,7 +436,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="dialog_Change_Successfully">Your username has been changed successfully.</string>
     <string name="dialog_Password_Empty">Password can\'t be empty.</string>
     <string name="dialog_Password_noMatch">Passwords didn\'t match. Try again.</string>
-    <string name="dialog_Password_Change_Successfully">Your password has been changed successfully.</string>
+    <string name="dialog_Password_Change_Successfully">Your password has been changed successfully. Please sign in again.</string>
 
     <!-- 2018/06/21 Text for Fire base Toast-->
     <string name="fireBase_Toast_Setup_Done">Save all set up</string>
@@ -550,14 +550,14 @@ Please note that this FW update process is done entirely at your own risk. If th
     \n\nSince <b>Android KitKat</b> you may use the preinstalled document picker application. Ensure <i>Display advanced devices</i> option is enabled in settings to use the <i>Internal storage</i>.</string>
 
     <string name="expectName">Excepted Name</string>
-    <string name="wait_Login">Logining Please Wait</string>
+    <string name="wait_Login">Logging Please Wait</string>
     <string name="wait_Setting">Setting Please Wait</string>
 
     <!-- 2018/07/17 AccountRetry -->
     <string name="errorToken">Account token has expired, please log in again</string>
-    <string name="checkToken">Check Account Available，Please Wait</string>
-    <string name="connectServer">Connect Server，Please Wait</string>
-    <string name="text_notification_description">When you turned on the "Allow background service resident notification bar" feature, This service will continue to run in the background. You can hide the notification。If you are Android 8.1 user, after you switch off this alert, you will still see Android system alert.</string>
+    <string name="checkToken">Check Account Available, Please Wait</string>
+    <string name="connectServer">Connect to Server, Please Wait</string>
+    <string name="text_notification_description">When you turn on the "Allow background service resident notification bar" feature, This service will continue running in the background. You can hide the notification. If you are the user of Android 8.1, after you turn off this alert, you will still see this Android system alert.</string>
     <string name="text_permanent_notification_name">ADDWII Permanent Notify</string>
 
 
@@ -573,7 +573,7 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="number_of_date_null">Please click on two dates to generate a report</string>
     <string name="out_of_datelimit">End date cannot be greater than current date</string>
     <string name="no_data_can_export">No Data Can Export</string>
-    <!-- 2018/07/17 forgeteamil -->
+    <!-- 2018/07/17 forgetEmail -->
     <string name="dialog_forgetPassword_emailSend">Sending Verify Mail,Please Wait</string>
     <string name="data_export">ADDWII Data Export</string>
 </resources>
