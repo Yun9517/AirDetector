@@ -272,7 +272,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/map_text_background"
                         android:singleLine="true"
-                        android:text="@string/text_label_longitude"
+                        android:text="@string/text_label_latitude"
                         android:textAlignment="center"
                         android:textColor="@color/whiteColor" />
 
@@ -304,7 +304,7 @@
                         android:layout_weight="1"
                         android:background="@drawable/map_text_background"
                         android:singleLine="true"
-                        android:text="@string/text_label_latitude"
+                        android:text="@string/text_label_longitude"
                         android:textAlignment="center"
                         android:textColor="@color/whiteColor" />
 
