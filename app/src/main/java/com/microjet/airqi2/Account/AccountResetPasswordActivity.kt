@@ -57,7 +57,7 @@ class AccountResetPasswordActivity : AppCompatActivity() {
             val shareToKen = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
             MyToKen = shareToKen.getString("token", "")
 
-            if (cheackRestPassWord(enterPassword?.text.toString().trim(), checkPassword?.text.toString().trim()) && enterPassword?.text.toString() != "") {
+            if (checkRestPassWord(enterPassword?.text.toString().trim(), checkPassword?.text.toString().trim()) && enterPassword?.text.toString() != "") {
                 if (GetNetWork.isFastGetNet) {
                     if (Utils.isFastDoubleClick) {
                         //showDialog("按慢一點太快了")
@@ -219,10 +219,10 @@ class AccountResetPasswordActivity : AppCompatActivity() {
     }
 
 
-    private fun cheackRestPassWord(resetword: String, checkword: String): Boolean{
-        val RestPW: String = resetword
-        val CheckPW: String = checkword
-        return  RestPW.equals (CheckPW)
+    private fun checkRestPassWord(resetPassword: String, checkPassword: String): Boolean{
+        val ResetPW: String = resetPassword
+        val CheckPW: String = checkPassword
+        return  ResetPW.equals (CheckPW)
     }
 
 
