@@ -19,10 +19,18 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 import java.util.concurrent.TimeUnit
+import android.content.Intent
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
+import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.Definition.BroadcastActions
+import com.microjet.airqi2.Definition.BroadcastIntents
+
 
 @TargetApi(Build.VERSION_CODES.O)
 class FetchDataMain : AppCompatActivity() {
-   @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O)
     private var arrTime3 = ArrayList<String>()
     private var arrTvoc3 = ArrayList<String>()
     private var AllTime = ArrayList<String>()
@@ -36,81 +44,83 @@ class FetchDataMain : AppCompatActivity() {
     private var adapter: Fetch_Adapter? = null
     private val TAG = FetchDataMain::class.java.simpleName
 
-   private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.navigation_tvoc -> {
-                    message.setText(R.string.title_tvoc)
-                    //getRealmDay()
+    private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_tvoc -> {
+                message.setText(R.string.title_tvoc)
+                //getRealmDay()
 //                    Log.d("getRealmDay--Tvoc Value", "ALL Tvoc" + AllTvoc)
-                    adapter = Fetch_Adapter(AllTime,AllTvoc,this)
-                    lv_data_info.adapter = adapter
-                    Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-                    Log.d(TAG + "Tvoc size", "ALL Tvoc " + AllTvoc.size)
+                adapter = Fetch_Adapter(AllTime, AllTvoc, this)
+                lv_data_info.adapter = adapter
+                Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+                Log.d(TAG + "Tvoc size", "ALL Tvoc " + AllTvoc.size)
 
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_pm25 -> {
-                    message.setText(R.string.title_pm25)
-                    //getRealmDay()
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_pm25 -> {
+                message.setText(R.string.title_pm25)
+                //getRealmDay()
 //                    Log.d("getRealmDay--AllPM25 Value", "ALL AllPM25" + AllPM25)
-                    adapter = Fetch_Adapter(AllTime,AllPM25,this)
-                    lv_data_info.adapter = adapter
-                    Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-                    Log.d(TAG + "AllPM25 size", "ALL AllPM25 " + AllPM25.size)
+                adapter = Fetch_Adapter(AllTime, AllPM25, this)
+                lv_data_info.adapter = adapter
+                Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+                Log.d(TAG + "AllPM25 size", "ALL AllPM25 " + AllPM25.size)
 
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_co2 -> {
-                    message.setText(R.string.title_eco2)
-                    //getRealmDay()
-                    adapter = Fetch_Adapter(AllTime, AllECo2,this)
-                    lv_data_info.adapter = adapter
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_co2 -> {
+                message.setText(R.string.title_eco2)
+                //getRealmDay()
+                adapter = Fetch_Adapter(AllTime, AllECo2, this)
+                lv_data_info.adapter = adapter
 
 //                    Log.d("getRealmDay-ECo2 Value", "ALL ECo2" + AllECo2)
-                    Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-                    Log.d(TAG + "AllECo2 size", "ALL ECo2 " + AllECo2.size)
+                Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+                Log.d(TAG + "AllECo2 size", "ALL ECo2 " + AllECo2.size)
 
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_humidy -> {
-                    message.setText(R.string.title_humidy)
-                    //getRealmDay()
-                    adapter = Fetch_Adapter(AllTime, AllHumidy,this)
-                    lv_data_info.adapter = adapter
-                    Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-                    Log.d(TAG + "AllHumidy size", "ALL Humidy " + AllHumidy.size)
-                    return@OnNavigationItemSelectedListener true
-                }
-                R.id.navigation_temperature -> {
-                    message.setText(R.string.title_temperature)
-                    //getRealmDay()
-                    adapter = Fetch_Adapter(AllTime, AllTemp,this)
-                    lv_data_info.adapter = adapter
-                    Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-                    Log.d(TAG + "AllTemp size", "ALL Temp " + AllTemp.size)
-                    return@OnNavigationItemSelectedListener true
-                }
+                return@OnNavigationItemSelectedListener true
             }
-            false
+            R.id.navigation_humidy -> {
+                message.setText(R.string.title_humidy)
+                //getRealmDay()
+                adapter = Fetch_Adapter(AllTime, AllHumidy, this)
+                lv_data_info.adapter = adapter
+                Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+                Log.d(TAG + "AllHumidy size", "ALL Humidy " + AllHumidy.size)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_temperature -> {
+                message.setText(R.string.title_temperature)
+                //getRealmDay()
+                adapter = Fetch_Adapter(AllTime, AllTemp, this)
+                lv_data_info.adapter = adapter
+                Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+                Log.d(TAG + "AllTemp size", "ALL Temp " + AllTemp.size)
+                return@OnNavigationItemSelectedListener true
+            }
         }
+        false
+    }
 
-        override fun onCreate(savedInstanceState: Bundle?) {
-            super.onCreate(savedInstanceState)
-            setContentView(R.layout.activity_fetch_data_main)
-            //試Realm拉資料
-            getRealmDay()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_fetch_data_main)
+        val filter = IntentFilter(Intent.ACTION_TIME_TICK)
+        registerReceiver(m_timeChangedReceiver, filter);
+        //試Realm拉資料
+        getRealmDay()
 //            itemList.getData()
-            adapter = Fetch_Adapter(AllTime,AllTvoc,this)
+        adapter = Fetch_Adapter(AllTime, AllTvoc, this)
 
-            lv_data_info.adapter = adapter
+        lv_data_info.adapter = adapter
 
 //                    Log.d("getRealmDay--Tvoc Value", "ALL Tvoc" + AllTvoc)
-            Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
-            Log.d(TAG + "Tvoc size", "ALL Tvoc " + AllTvoc.size)
+        Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
+        Log.d(TAG + "Tvoc size", "ALL Tvoc " + AllTvoc.size)
 
-            initActionBar()
-            navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
-        }
+        initActionBar()
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("LongLogTag")
@@ -127,7 +137,7 @@ class FetchDataMain : AppCompatActivity() {
         //var touchTime = Calendar.getInstance().timeInMillis
         val touchTime = if (calObject.get(Calendar.HOUR_OF_DAY) >= 8) calObject.timeInMillis else calObject.timeInMillis + calObject.timeZone.rawOffset
         //val touchTime = calObject.timeInMillis + calObject.timeZone.rawOffset
-        Log.d(TAG + "TVOCbtncallRealm",calObject.get(Calendar.DAY_OF_MONTH).toString())
+        Log.d(TAG + "TVOCbtncallRealm", calObject.get(Calendar.DAY_OF_MONTH).toString())
         //將日期設為今天日子加一天減1秒
         val endDay = touchTime / (3600000 * 24) * (3600000 * 24) - calObject.timeZone.rawOffset
         val endDayLast = endDay + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
@@ -166,19 +176,20 @@ class FetchDataMain : AppCompatActivity() {
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
                 val date = dateFormat.format(asmDataModel.created_time)//-28800000
 
+                val newTemp = Utils.convertTemperature(this@FetchDataMain, asmDataModel.tempValue.toFloat())
 //                AllTime.add(asmDataModel.created_time.toString())
                 AllTime.add(date)
                 AllTvoc.add(asmDataModel.tvocValue + " ppb")
                 AllECo2.add(asmDataModel.ecO2Value + " ppm")
-                AllHumidy.add(asmDataModel.humiValue + " °C")
-                AllTemp.add(asmDataModel.tempValue + " %")
+                AllHumidy.add(asmDataModel.humiValue + "  %")
+                AllTemp.add(newTemp)
                 AllPM25.add(asmDataModel.pM25Value + " μg/m³")
 //                Log.v("sumTvoc:--", sumTvoc.toString())
 //                Log.v("hilightCount:--", count.toString())
-                Log.v(TAG +"all:--", "ID "+asmDataModel.dataId+" "+result1.get(index).toString()+"date "+date)
+                Log.v(TAG + "all:--", "ID " + asmDataModel.dataId + " " + result1.get(index).toString() + "date " + date)
 
             }
-            Log.d( TAG + "getRealmDay", result1.last().toString())
+            Log.d(TAG + "getRealmDay", result1.last().toString())
             //20180122
             aveTvoc = (sumTvoc / result1.size)
         }
@@ -206,7 +217,7 @@ class FetchDataMain : AppCompatActivity() {
         //val realm= Realm.getDefaultInstance()
         val query1 = realm.where(AsmDataModel::class.java)
         //20180122
-        var AVGTvoc3: Float= 0F
+        var AVGTvoc3: Float = 0F
         Log.d("getRealmWeek", sqlStartDate.toString())
         Log.d("getRealmWeek", sqlEndDate.toString())
         query1.between("Created_time", sqlStartDate, sqlEndDate)
@@ -247,6 +258,23 @@ class FetchDataMain : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
-
+    private val m_timeChangedReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent) {
+            Log.d(TAG , "m_timeChangedReceiver:::" )
+            val action = intent.action
+            Log.d(TAG , "action" + action)
+            if (action == Intent.ACTION_TIME_TICK) {
+                //試Realm拉資料
+                getRealmDay()
+                lv_data_info.adapter = adapter
+                Log.d(TAG , "action" + action)
+            }
+        }
     }
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        unregisterReceiver(m_timeChangedReceiver)
+    }
+}
+

@@ -22,7 +22,6 @@ import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import io.realm.Sort
 
-
 import java.util.Collections
 import java.util.Comparator
 import java.text.SimpleDateFormat
@@ -134,9 +133,8 @@ class CalendarMain : AppCompatActivity() {
                         Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.out_of_datelimit)), Toast.LENGTH_SHORT)
 
                     }else{
-                        if (checkPermissions()){
-                            runRealmQueryData(startTime,endTime)
-                        }
+                        checkPermissions(startTime,endTime)
+
                     }
 
                  }
@@ -251,15 +249,18 @@ class CalendarMain : AppCompatActivity() {
             writeCSV.writeLine(header)
 
             for (i in 0 until results.size) {
-
+                val newTemp = Utils.convertTemperature(this@CalendarMain, results[i].tempValue.toFloat())
                 val time = results[i].created_time
                 val tvocVal = if (results[i].tvocValue == "65538") "No Data" else "${results[i].tvocValue} ppb"
                 val eco2Val = if (results[i].ecO2Value == "65538") "No Data" else "${results[i].ecO2Value} ppm"
-                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
+//                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
+                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${newTemp} "
                 val humiVal = if (results[i].humiValue == "65538") "No Data" else "${results[i].humiValue} %"
                 val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
                 val MAC = results[i].macAddress
 
+
+                Log.d(TAG,"newTemp : "+newTemp + ":::")
                 val textCSV = arrayOf((i + 1).toString(),DateFormat.format(time),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
 
                 writeCSV.writeLine(textCSV).toString()
@@ -273,13 +274,13 @@ class CalendarMain : AppCompatActivity() {
         }
     }
 
-    private fun checkPermissions(): Boolean {
+    private fun checkPermissions(startTime: Long, endTime: Long): Boolean {
 
         if (ActivityCompat.checkSelfPermission(this@CalendarMain, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this@CalendarMain,
                     arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
         } else {
-//            runRealmQueryData()
+            runRealmQueryData(startTime, endTime)
             Log.e("CheckPerm", "Permission Granted. Starting export data...")
             return true
         }
