@@ -17,6 +17,8 @@ import android.widget.BaseExpandableListAdapter
 import android.widget.ImageView
 import com.microjet.airqi2.*
 import com.microjet.airqi2.Account.AccountManagementActivity
+import kotlinx.android.synthetic.main.list_submenu.view.*
+import kotlinx.android.synthetic.main.listheader.view.*
 
 
 /**
@@ -69,10 +71,13 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = infalInflater.inflate(R.layout.listheader, null)
         }
-        val lblListHeader = convertView!!.findViewById<TextView>(R.id.submenu)
-        val headerIcon = convertView!!.findViewById<ImageView>(R.id.iconimage)
+        //val lblListHeader = convertView!!.findViewById<TextView>(R.id.submenu)
+        val lblListHeader = convertView!!.submenu
+        //val headerIcon = convertView!!.findViewById<ImageView>(R.id.iconimage)
+        val headerIcon = convertView!!.iconimage
         // 2018/05/09 Expandable View, Indicator right
-        val headerIndicator = convertView!!.findViewById<ImageView>(R.id.indicatorImage)
+        //val headerIndicator = convertView!!.findViewById<ImageView>(R.id.indicatorImage)
+        val headerIndicator = convertView!!.indicatorImage
 
         lblListHeader.setTypeface(null, Typeface.NORMAL)
         lblListHeader.text = headerTitle.iconName
@@ -121,8 +126,10 @@ class ExpandableListAdapter(private val mContext: Context, private val mListData
         }
 
         // 2018/07/20 Set up val for Child View's FW Indicator
-        val txtListChild = convertView!!.findViewById<TextView>(R.id.text_Submenu)
-        val childIndicatorImage = convertView!!.findViewById<ImageView>(R.id.childIndicatorImage)//Important, add bridge for Indicator
+        //val txtListChild = convertView!!.findViewById<TextView>(R.id.text_Submenu)
+        val txtListChild = convertView!!.text_Submenu
+        //val childIndicatorImage = convertView!!.findViewById<ImageView>(R.id.childIndicatorImage)//Important, add bridge for Indicator
+        val childIndicatorImage = convertView!!.childIndicatorImage //Important, add bridge for Indicator
         val headerTitle = getGroup(childPosition) as ExpandedMenuModel
         txtListChild.text = childText
         childIndicatorImage.setImageResource(headerTitle.FWIndicatorChild) //Important, add bridge for Indicator
