@@ -355,6 +355,30 @@ class ColorArcProgressBar : View {
                 historyTotalAngle+= angleArray[i-1]
         }
     }
+
+    private fun setAnimation2(last: Float, current: Float, length: Int) {
+        progressAnimator = ValueAnimator.ofFloat(last, current)
+        progressAnimator!!.duration = length.toLong()
+        progressAnimator!!.setTarget(currentAngle)
+
+        if (currentValues <= 220) {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[0]
+            }
+        } else if (currentValues > 220 && currentValues <= 660) {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[1]
+            }
+        } else {
+            progressAnimator!!.addUpdateListener { animation ->
+                currentAngle = animation.animatedValue as Float
+                currentValues = currentAngle / k[2]
+            }
+        }
+        progressAnimator!!.start()
+    }
     /**
      * 设置最大值
      *

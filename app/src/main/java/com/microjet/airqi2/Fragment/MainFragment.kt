@@ -681,6 +681,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     //    inCircleBar.setCurrentValues(tvocDataFloat)
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                         //inCircleBar.setCurrentValues(tvocDataFloat)
+                        dataForState2=DetectionData2.TVOC
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         setCircleBarValue(dataForState2,tvocDataFloat)
                         //數值不等比顯示
@@ -744,11 +745,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.PM25 -> {
                         inCircleTitle.text = getString(R.string.text_label_pm25_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
+                        //setBarMaxValue(dataForState)
+                        dataForState2=DetectionData2.PM25
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+
+                        setCircleBarValue(dataForState2,pm25DataFloat)
                         //數值不等比顯示
+                        /*
                         when (pm25DataFloat) {
                             in 0..15 -> inCircleBar.setCurrentValues(pm25DataFloat)
                             in 16..34 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 22)
@@ -756,7 +761,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                             in 55..150 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 280)
                             in 151..250 -> inCircleBar.setCurrentValues((pm25DataFloat / 180) + 370)
                             else -> inCircleBar.setCurrentValues((pm25DataFloat / 360) + 540)
-                        }
+                        }*/
+
                         //inCircleBar.setCurrentValues(pm25DataFloat)
                         pm25StatusTextShow(pm25DataFloat)
                         val temp = pm25DataFloat.toInt().toString() + " μg/m³"
