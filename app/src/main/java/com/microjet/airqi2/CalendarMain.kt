@@ -22,7 +22,6 @@ import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import io.realm.Sort
 
-
 import java.util.Collections
 import java.util.Comparator
 import java.text.SimpleDateFormat
@@ -51,6 +50,8 @@ class CalendarMain : AppCompatActivity() {
     private lateinit var myPref: PrefObjects
     private val reqCodeWriteStorage = 2
     private var Datelimit:String = ""
+    private var startTime:Long = 0
+    private var endTime:Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -126,17 +127,15 @@ class CalendarMain : AppCompatActivity() {
                 if (!licit_Date) {
                     Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.maximum_number_of_date)), Toast.LENGTH_SHORT)
                     }else{
-                        val startTime:Long = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
-                        val endTime:Long = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
+                         startTime = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
+                         endTime = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
                         val DatelimitTime:Long = Date2TimeStamp(Datelimit, "yyyyMMdd").toLong() *1000
 //                    Log.d(TAG,"endTime : "+endTime+ " DatelimitTime: "+DatelimitTime)
                     if(DatelimitTime < endTime){
                         Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.out_of_datelimit)), Toast.LENGTH_SHORT)
 
                     }else{
-                        if (checkPermissions()){
-                            runRealmQueryData(startTime,endTime)
-                        }
+                        checkPermissions()
                     }
 
                  }
@@ -244,23 +243,24 @@ class CalendarMain : AppCompatActivity() {
             }
             val writeCSV = CSVWriter(folderName, fileName, CSVWriter.COMMA_SEPARATOR)
 
-            val timeFormat = SimpleDateFormat("yyyy/MM/dd HH:mm-ss")
-
-            val header = arrayOf("id", "Date", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5","MAC")
+            val DateFormat = SimpleDateFormat("yyyy/MM/dd")
+            val timeFormat = SimpleDateFormat("HH:mm:ss")
+            val header = arrayOf("id", "Date","Time", "TVOC", "eCO2", "Temperature", "Humidity", "PM2.5","MAC")
 
             writeCSV.writeLine(header)
 
             for (i in 0 until results.size) {
-
+                val newTemp = Utils.convertTemperature(this@CalendarMain, results[i].tempValue.toFloat())
                 val time = results[i].created_time
                 val tvocVal = if (results[i].tvocValue == "65538") "No Data" else "${results[i].tvocValue} ppb"
                 val eco2Val = if (results[i].ecO2Value == "65538") "No Data" else "${results[i].ecO2Value} ppm"
-                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
+//                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${results[i].tempValue} °C"
+                val tempVal = if (results[i].tempValue == "65538") "No Data" else "${newTemp} "
                 val humiVal = if (results[i].humiValue == "65538") "No Data" else "${results[i].humiValue} %"
                 val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
                 val MAC = results[i].macAddress
 
-                val textCSV = arrayOf((i + 1).toString(),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
+                val textCSV = arrayOf((i + 1).toString(),DateFormat.format(time),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
 
                 writeCSV.writeLine(textCSV).toString()
             }
@@ -279,7 +279,7 @@ class CalendarMain : AppCompatActivity() {
             ActivityCompat.requestPermissions(this@CalendarMain,
                     arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), reqCodeWriteStorage)
         } else {
-//            runRealmQueryData()
+            runRealmQueryData(startTime, endTime)
             Log.e("CheckPerm", "Permission Granted. Starting export data...")
             return true
         }
