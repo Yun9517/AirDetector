@@ -264,108 +264,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         alertId = soundPool2.load(this, R.raw.low_power, 1)
 
         //  mywarningclass=WarringClass(this)
-        // 2018/05/03 ExpandableListView
-        setNavigationView = findViewById<View>(R.id.naviView) as NavigationView
 
-        setupDrawerContent(setNavigationView)
+        setExpandableDrawer()
 
-        prepareListData()
-
-        mMenuAdapter = ExpandableListAdapter(this, listDataHeader, listDataChild, navigationmenu!!)
-        navigationmenu!!.setAdapter(mMenuAdapter)
-        // 2018/05/09 Expandable View, hide original indicator
-        navigationmenu.setGroupIndicator(null)
-        //*****************************************************//
-        navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
-            when (groupPosition) {
-                0 -> {
-                    when (connState) {
-                        BleConnection.CONNECTED -> blueToothDisconnect()
-                        BleConnection.DISCONNECTED -> blueToothConnect()
-                    }
-                    drawerLayout?.closeDrawer(GravityCompat.START)
-                }
-                1 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> {
-                                    if (experienceURL.isNotEmpty()) {
-                                        val uri = Uri.parse(experienceURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                        val bundle = Bundle()
-                                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
-                                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
-                                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-                                    }
-                                }
-                                1 -> {
-                                    if (introductionURL.isNotEmpty()) {
-                                        val uri = Uri.parse(introductionURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                                2 -> {
-                                    if (buyURL.isNotEmpty()) {
-                                        val uri = Uri.parse(buyURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                                3 -> {
-                                    if (ourStoryURL.isNotEmpty()) {
-                                        val uri = Uri.parse(ourStoryURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
-                            parent.collapseGroup(groupPosition)
-                        })
-                    }
-                }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
-                3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                5 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> qandaShow()
-                                1 -> tourShow()
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
-                            parent.collapseGroup(groupPosition)
-                        })
-                    }
-                }
-                6 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> accountShow()
-                                1 -> settingShow()
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
-                            parent.collapseGroup(groupPosition)
-                        })
-                    }
-                }
-            }
-            true
-        })
         val checkResult = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this)
         if (checkResult != ConnectionResult.SUCCESS) {
             Log.e("偵測是否成功", "結論失敗")
@@ -2073,6 +1974,117 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             startActivity(intent)*/
         }
         dlg.show()
+    }
+
+    private fun setExpandableDrawer(){
+        // 2018/05/03 ExpandableListView
+        /*setNavigationView = findViewById<View>(R.id.naviView) as NavigationView
+
+        setupDrawerContent(setNavigationView)*/ // Original
+
+        setupDrawerContent(naviView)
+
+        // Set Drawer's content
+        prepareListData()
+
+        // Set Drawer's Adapter
+        mMenuAdapter = ExpandableListAdapter(this, listDataHeader, listDataChild, navigationmenu!!)
+        navigationmenu!!.setAdapter(mMenuAdapter)
+
+        // 2018/05/09 Expandable View, hide original indicator
+        navigationmenu.setGroupIndicator(null)
+
+        // Set Drawer's OnClickListener
+        navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
+            when (groupPosition) {
+                0 -> {
+                    when (connState) {
+                        BleConnection.CONNECTED -> blueToothDisconnect()
+                        BleConnection.DISCONNECTED -> blueToothConnect()
+                    }
+                    drawerLayout?.closeDrawer(GravityCompat.START)
+                }
+                1 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
+                                0 -> {
+                                    if (experienceURL.isNotEmpty()) {
+                                        val uri = Uri.parse(experienceURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                        val bundle = Bundle()
+                                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
+                                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
+                                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                                    }
+                                }
+                                1 -> {
+                                    if (introductionURL.isNotEmpty()) {
+                                        val uri = Uri.parse(introductionURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                                2 -> {
+                                    if (buyURL.isNotEmpty()) {
+                                        val uri = Uri.parse(buyURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                                3 -> {
+                                    if (ourStoryURL.isNotEmpty()) {
+                                        val uri = Uri.parse(ourStoryURL)
+                                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                                        startActivity(intent)
+                                    }
+                                }
+                            }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
+                3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                5 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
+                                0 -> qandaShow()
+                                1 -> tourShow()
+                            }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+                6 -> {
+                    if (parent.isGroupExpanded(groupPosition)) {
+                        parent.collapseGroup(groupPosition)
+                    } else {
+                        parent.expandGroup(groupPosition)
+                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                            when (childPosition) {
+                                0 -> accountShow()
+                                1 -> settingShow()
+                            }
+                            drawerLayout?.closeDrawer(GravityCompat.START)
+                            parent.collapseGroup(groupPosition)
+                        })
+                    }
+                }
+            }
+            true
+        })
     }
 }
 
