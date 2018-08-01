@@ -11,8 +11,8 @@ android {
         applicationId 'com.microjet.airqi2'
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 28
-        versionName "1.4.3"
+        versionCode 29
+        versionName "1.4.4"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
