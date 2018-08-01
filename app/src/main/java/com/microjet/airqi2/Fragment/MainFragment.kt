@@ -52,6 +52,15 @@ class MainFragment : Fragment(), View.OnTouchListener {
         PM10(54, 125, 600f)
     }
 
+    enum class DetectionData2( val rangeArray:LongArray,val angleArray:FloatArray ) {
+        TVOC(longArrayOf(0,220, 660,2200,5500,20000,60000), floatArrayOf(70f,85f,60f,25f,20f,10f)),
+        CO2(longArrayOf(0,1500,60000),floatArrayOf(135f,135f)),
+        Temp(longArrayOf(0,28,35,50),floatArrayOf(80f,110f,80f)),//以-10度為基準
+        Humi(longArrayOf(0,45,65,100),floatArrayOf(80f,110f,80f)),
+        PM25(longArrayOf(0,15,35,54,150,250,500),floatArrayOf(70f,85f,60f,25f,20f,10f)),
+        PM10(longArrayOf(0,54,125,254,354,424,604),floatArrayOf(70f,85f,60f,25f,20f,10f))
+    }
+
     private var mContext: Context? = null
 
     private var tvocDataFloat = 0f
@@ -66,6 +75,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
 
     private var dataForState = DetectionData.TVOC
+    private var dataForState2 = DetectionData2.TVOC
+
     private var connState = false
 
     private var errorTime = 0
@@ -274,7 +285,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
         inCircleBar.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
         inCircleBar.setMaxValues(state.maxValue)
     }
-
+    private fun setCircleBarValue(state: DetectionData2,currentValue:Float) {
+        inCircleBar.setAllCondition(state.rangeArray,state.angleArray,currentValue)
+    }
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
         val finalTempVal = Utils.convertTemperature(mContext!!, tempDataFloat)
@@ -662,11 +675,16 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.TVOC -> {
                         inCircleTitle.text = getString(R.string.text_label_tvoc_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
+                    //    setBarMaxValue(dataForState)
+
+                   //     inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                    //    inCircleBar.setCurrentValues(tvocDataFloat)
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        setCircleBarValue(dataForState2,tvocDataFloat)
                         //數值不等比顯示
+                        /*
                         when (tvocDataFloat) {
                             in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
                             in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
@@ -674,6 +692,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
                             in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
                             else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
                         }
+                        */
                         //inCircleBar.setCurrentValues(tvocDataFloat)
                         tvocStatusTextShow(tvocDataFloat)
                         val temp = tvocDataFloat.toInt().toString() + " ppb"

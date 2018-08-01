@@ -331,7 +331,30 @@ class ColorArcProgressBar : View {
         invalidate()
 
     }
-
+    private var angleForValue: ArrayList<Float> = ArrayList()
+    fun setAllCondition(rangeArray:LongArray,angleArray:FloatArray,currentValues: Float){
+        for (i in 1 until rangeArray.size) {
+            angleForValue.add(angleArray[i - 1] / (rangeArray[i] - rangeArray[i - 1]))
+        }
+        this.maxValues=rangeArray[rangeArray.size-1].toFloat()
+        var currentValues = currentValues
+        if (currentValues > maxValues) {
+            currentValues = maxValues
+        }
+        if (currentValues < 0) {
+            currentValues = 0f
+        }
+        this.currentValues = currentValues
+        lastAngle = currentAngle
+        var historyTotalAngle=0f
+        for(i in 1 until rangeArray.size)
+        {
+            if(this.currentValues<=rangeArray[i])
+                setAnimation(lastAngle, (currentValues -rangeArray[i-1])* angleForValue[i-1]+historyTotalAngle, aniSpeed)
+            else
+                historyTotalAngle+= angleArray[i-1]
+        }
+    }
     /**
      * 设置最大值
      *
@@ -339,9 +362,7 @@ class ColorArcProgressBar : View {
      */
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
-
         setRangeAngle(floatArrayOf(80f, 110f, 80f))
-
         setRangeValues(floatArrayOf(range[0], range[1] - range[0], maxValues - range[1]))
 
     }
@@ -353,10 +374,6 @@ class ColorArcProgressBar : View {
     }
 
     private var k: FloatArray = floatArrayOf(0f, 0f, 0f) //(0-220
-    // private var m: Float=0.toFloat()   // 220-660
-    //  private var q: Float=0.toFloat()    //660-MaxValue
-
-
     private var mAngleArray: FloatArray? = null
     fun setRangeAngle(input: FloatArray) {
         mAngleArray = input
@@ -397,7 +414,6 @@ class ColorArcProgressBar : View {
             setAnimation(lastAngle, (currentValues - range[1]) * k[2] + mAngleArray!![0] + mAngleArray!![1], aniSpeed)
         }
     }
-
     private fun setAnimation(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)
         progressAnimator!!.duration = length.toLong()
