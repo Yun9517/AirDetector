@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ActiveBackground"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@drawable/app_bg_cloud_green">
+    android:background="@drawable/app_bg_cloud_green"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/loginLogo"
@@ -39,37 +38,40 @@
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
         android:layout_gravity="start"
-        android:layout_marginEnd="152dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="15dp"
         android:orientation="horizontal"
+        android:paddingLeft="50dp"
+        android:weightSum="3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Active">
 
         <TextView
             android:id="@+id/userName"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_weight="1.11"
             android:text="@string/nick_Name" />
 
         <TextView
             android:id="@+id/show_Name"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_weight="0.6"
+            android:gravity="fill_horizontal"
             android:maxLength="20"
             android:singleLine="true" />
 
         <TextView
             android:id="@+id/rename"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginStart="8dp"
+            android:layout_weight="0"
             android:text="@string/edit"
             android:textColor="@color/hype_Link_Blue" />
 
@@ -77,25 +79,30 @@
 
     <LinearLayout
         android:id="@+id/linearLayout1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp"
+        android:orientation="horizontal"
+        android:paddingLeft="50dp"
+        android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout">
 
         <TextView
             android:id="@+id/yourMail"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.5"
             android:text="@string/email" />
 
         <TextView
             android:id="@+id/showMail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="28dp"
+            android:layout_weight="0.6" />
 
     </LinearLayout>
 
@@ -178,9 +185,9 @@
             android:layout_height="30dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/style_login_button"
-            android:visibility="gone"
             android:text="@string/shareData"
-            android:textColor="@color/whiteColor" />
+            android:textColor="@color/whiteColor"
+            android:visibility="gone" />
 
     </LinearLayout>
 
@@ -189,10 +196,12 @@
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="0dp"
         android:layout_height="20dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:visibility="invisible"
+        app:layout_constraintBottom_toTopOf="@+id/linear_layout3"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout2"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/linearLayout2"
@@ -201,32 +210,50 @@
 
     <LinearLayout
         android:id="@+id/linear_layout3"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginEnd="8dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="@+id/progressBar2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/progressBar2">
 
-        <TextView
-            android:id="@+id/download_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="@string/download_text"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="189dp"
-            tools:layout_editor_absoluteY="481dp" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/download_min"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            <TextView
+                android:id="@+id/download_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@string/download_text"
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="189dp"
+                tools:layout_editor_absoluteY="481dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
             android:layout_weight="1"
-            android:text="@string/download_min"
-            android:visibility="invisible"
-            tools:layout_editor_absoluteX="257dp"
-            tools:layout_editor_absoluteY="481dp" />
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/download_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="left"
+                android:text="@string/download_min"
+                android:visibility="invisible"
+                tools:layout_editor_absoluteX="257dp"
+                tools:layout_editor_absoluteY="481dp" />
+        </LinearLayout>
 
     </LinearLayout>
 

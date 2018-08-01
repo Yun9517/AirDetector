@@ -5,12 +5,14 @@ import android.app.ProgressDialog
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Build
+import android.support.v4.content.res.TypedArrayUtils.getString
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.SavePreferences
 import okhttp3.MediaType
 import okhttp3.OkHttpClient
@@ -157,22 +159,16 @@ class DownloadTask(input: Context, pb: ProgressBar, download_min: TextView, down
             if (result != null) {
                 when (result) {
                     "DownloadCloudDone" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "雲端下載完成", Toast.LENGTH_SHORT).show()
-                        }
+                        Utils.toastMakeTextAndShow(mContext,MyApplication.applicationContext().getString(R.string.Loading_Completely), Toast.LENGTH_SHORT)
                     }
                     "Error" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "下載失敗", Toast.LENGTH_SHORT).show()
-                        }
+                        Utils.toastMakeTextAndShow(mContext,MyApplication.applicationContext().getString(R.string.Loading_fail), Toast.LENGTH_SHORT)
                     }
                     "ResponseError" -> {
                         Log.e("ResponseError", "測試中")
                     }
                     "ReconnectNetwork" -> {
-                        if (Build.BRAND != "OPPO") {
-                            Toast.makeText(MyApplication.applicationContext(), "請連結網路", Toast.LENGTH_SHORT).show()
-                        }
+                        Utils.toastMakeTextAndShow(mContext,MyApplication.applicationContext().getString(R.string.checkConnection), Toast.LENGTH_SHORT)
                     }
                 }
                 mProgressBar?.visibility = View.GONE

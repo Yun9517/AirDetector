@@ -107,8 +107,9 @@ class CalendarMain : AppCompatActivity() {
             if((str?.size)!! != 0){
                 str_min = str?.get(0)
                 str_max = str?.get(str?.size -1)
-                Log.d(TAG," Date min = " + str_min)
-                Log.d(TAG," Date max = " + str_max)
+                if(str_min.substring(IntRange(6,7)).equals("00")){
+                    str_min = str_max
+                }
             }
 
             Log.d(TAG," Date min === " + str_min)

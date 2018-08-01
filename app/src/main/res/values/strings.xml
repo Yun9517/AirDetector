@@ -251,7 +251,7 @@
     <string name="dataExport">Data Export</string>
     <string name="rememberID">Remember user ID</string>
     <string name="syncData">Sync</string>
-
+    <string name="NoDataAvailableForDownload">No data available for download</string>
     <string name="download_min">Have a cup of tea</string>
 
     <string name="text_label_latitude">Lat.</string>

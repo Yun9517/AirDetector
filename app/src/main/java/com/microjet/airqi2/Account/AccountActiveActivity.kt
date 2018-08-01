@@ -28,6 +28,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.microjet.airqi2.*
+import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Fragment.CheckFragment
 import io.realm.Realm
 import io.realm.Sort
@@ -174,9 +175,7 @@ class AccountActiveActivity : AppCompatActivity() {
                 }
                 selectDeviceDownload(list, token)
             } else {
-                if (Build.BRAND != "OPPO") {
-                    Toast.makeText(MyApplication.applicationContext(), "沒有資料可供下載", Toast.LENGTH_SHORT).show()
-                }
+                Utils.toastMakeTextAndShow(this@AccountActiveActivity, String.format(getString(R.string.NoDataAvailableForDownload)), Toast.LENGTH_SHORT)
             }
         }
         shareMSG = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -322,7 +321,7 @@ class AccountActiveActivity : AppCompatActivity() {
             var mSDFile: File? = null
             //檢查有沒有SD卡裝置
             if (Environment.getExternalStorageState() == Environment.MEDIA_REMOVED) {
-                Toast.makeText(applicationContext, "沒有SD卡!!!", Toast.LENGTH_SHORT).show()
+                Utils.toastMakeTextAndShow(this@AccountActiveActivity, "沒有SD卡!!!", Toast.LENGTH_SHORT)
                 return
             } else {
                 //取得SD卡儲存路徑
