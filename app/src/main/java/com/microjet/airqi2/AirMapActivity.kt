@@ -293,86 +293,28 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     // 畫軌跡
     private fun drawMapPolyLine(localDatas: List<AsmDataModel>) {
-
-        val rectOptions1 = PolylineOptions().color(Colors.tvocCO2Colors[0])
-        val rectOptions2 = PolylineOptions().color(Colors.tvocCO2Colors[1])
-        val rectOptions3 = PolylineOptions().color(Colors.tvocCO2Colors[2])
-        val rectOptions4 = PolylineOptions().color(Colors.tvocCO2Colors[3])
-        val rectOptions5 = PolylineOptions().color(Colors.tvocCO2Colors[4])
-        val rectOptions6 = PolylineOptions().color(Colors.tvocCO2Colors[5])
-        
-        //val datas = dataOrigin//.filter { it.latitude < 255f && it.latitude != null }
-        localDatas?.forEachIndexed { index, asmDataModel ->
-            if (index < localDatas.size - 1) {
-                if (rbTVOC.isChecked) {
-                    when (asmDataModel.tvocValue.toInt()) {
-                        in 0..219 -> {
-                            rectOptions1.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions1.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 220..659 -> {
-                            rectOptions2.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions2.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 660..2199 -> {
-                            rectOptions3.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions3.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 2200..5499 -> {
-                            rectOptions4.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions4.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 5500..19999 -> {
-                            rectOptions5.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions5.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        else -> {
-                            rectOptions6.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions6.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                    }
-
-                } else {
-                    when (asmDataModel.pM25Value.toInt()) {
-                        in 0..15 -> {
-                            rectOptions1.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions1.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 16..34 -> {
-                            rectOptions2.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions2.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 35..54 -> {
-                            rectOptions3.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions3.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 55..150 -> {
-                            rectOptions4.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions4.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        in 151..250 -> {
-                            rectOptions5.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions5.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
-                        else -> {
-                            rectOptions6.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()))
-                            rectOptions6.add(LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
-                        }
+        mMap.clear()
+        if (localDatas.isNotEmpty() && localDatas.size >= 2) {
+            var rectOptions = PolylineOptions()
+            var _rangeID = judgePolyLineColorRange(localDatas[0]) //取第一筆資料的顏色Range
+            localDatas.forEachIndexed { index, asmDataModel ->
+                if (index < localDatas.size - 1) { //因為設定經緯度會用下一筆，所以大小要限制好
+                    val newRangeID = judgePolyLineColorRange(asmDataModel) //每次都判斷新值的顏色range
+                    if (_rangeID != newRangeID) { //如果不一樣
+                        mMap.addPolyline(rectOptions.color(_rangeID)) //就要開始畫舊range的顏色
+                        _rangeID = newRangeID //然後把舊range換掉
+                        rectOptions = PolylineOptions() //Polyline實體重設
+                    } //繼續疊加新的上去
+                    rectOptions.add(
+                            LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()),
+                            LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())
+                    )
+                    if (index == localDatas.size - 2) { //最後一筆畫最後的區塊
+                        mMap.addPolyline(rectOptions.color(_rangeID))
                     }
                 }
             }
-
         }
-
-        // 先清完再畫
-        mMap.clear()
-
-        mMap.addPolyline(rectOptions1)
-        mMap.addPolyline(rectOptions2)
-        mMap.addPolyline(rectOptions3)
-        mMap.addPolyline(rectOptions4)
-        mMap.addPolyline(rectOptions5)
-        mMap.addPolyline(rectOptions6)
     }
 
     // 文字分割
@@ -736,10 +678,56 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
                     .between("Created_time", startTime, endTime)
                     .notEqualTo("Latitude", 255f)
-                    .sort("Created_time", Sort.DESCENDING).findFirst()
+                    .sort("Created_time", Sort.DESCENDING).findAll().first()
             if (pastAvailableGPSLocation != null ) {
                 lati = pastAvailableGPSLocation.latitude
                 longi = pastAvailableGPSLocation.longitude
             }
+    }
+
+    private fun judgePolyLineColorRange(data: AsmDataModel): Int {
+        if (rbTVOC.isChecked) {
+            when (data.tvocValue.toInt()) {
+                in 0..219 -> {
+                    return (Colors.tvocCO2Colors[0])
+                }
+                in 220..659 -> {
+                    return (Colors.tvocCO2Colors[1])
+                }
+                in 660..2199 -> {
+                    return (Colors.tvocCO2Colors[2])
+                }
+                in 2200..5499 -> {
+                    return (Colors.tvocCO2Colors[3])
+                }
+                in 5500..19999 -> {
+                    return (Colors.tvocCO2Colors[4])
+                }
+                else -> {
+                    return (Colors.tvocCO2Colors[5])
+                }
+            }
+        } else {
+            when (data.pM25Value.toInt()) {
+                in 0..15 -> {
+                    return (Colors.tvocCO2Colors[0])
+                }
+                in 16..34 -> {
+                    return (Colors.tvocCO2Colors[1])
+                }
+                in 35..54 -> {
+                    return (Colors.tvocCO2Colors[2])
+                }
+                in 55..150 -> {
+                    return (Colors.tvocCO2Colors[3])
+                }
+                in 151..250 -> {
+                    return (Colors.tvocCO2Colors[4])
+                }
+                else -> {
+                    return (Colors.tvocCO2Colors[5])
+                }
+            }
+        }
     }
 }
