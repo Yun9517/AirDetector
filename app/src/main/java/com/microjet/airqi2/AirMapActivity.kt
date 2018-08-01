@@ -305,7 +305,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                         _rangeID = newRangeID //然後把舊range換掉
                         rectOptions = PolylineOptions() //Polyline實體重設
                     } //繼續疊加新的上去
-                    rectOptions.add(LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()), LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble()))
+                    rectOptions.add(
+                            LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()),
+                            LatLng(localDatas[index + 1].latitude.toDouble(), localDatas[index + 1].longitude.toDouble())
+                    )
                     if (index == localDatas.size - 2) { //最後一筆畫最後的區塊
                         mMap.addPolyline(rectOptions.color(_rangeID))
                     }
@@ -675,7 +678,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
                     .between("Created_time", startTime, endTime)
                     .notEqualTo("Latitude", 255f)
-                    .sort("Created_time", Sort.DESCENDING).findFirst()
+                    .sort("Created_time", Sort.DESCENDING).findAll().first()
             if (pastAvailableGPSLocation != null ) {
                 lati = pastAvailableGPSLocation.latitude
                 longi = pastAvailableGPSLocation.longitude
