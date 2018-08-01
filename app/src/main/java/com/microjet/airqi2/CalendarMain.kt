@@ -50,6 +50,8 @@ class CalendarMain : AppCompatActivity() {
     private lateinit var myPref: PrefObjects
     private val reqCodeWriteStorage = 2
     private var Datelimit:String = ""
+    private var startTime:Long = 0
+    private var endTime:Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -125,16 +127,15 @@ class CalendarMain : AppCompatActivity() {
                 if (!licit_Date) {
                     Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.maximum_number_of_date)), Toast.LENGTH_SHORT)
                     }else{
-                        val startTime:Long = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
-                        val endTime:Long = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
+                         startTime = Date2TimeStamp(str_min, "yyyyMMdd").toLong() *1000
+                         endTime = Date2TimeStamp(str_max, "yyyyMMdd").toLong() *1000
                         val DatelimitTime:Long = Date2TimeStamp(Datelimit, "yyyyMMdd").toLong() *1000
 //                    Log.d(TAG,"endTime : "+endTime+ " DatelimitTime: "+DatelimitTime)
                     if(DatelimitTime < endTime){
                         Utils.toastMakeTextAndShow(this@CalendarMain, String.format(getString(R.string.out_of_datelimit)), Toast.LENGTH_SHORT)
 
                     }else{
-                        checkPermissions(startTime,endTime)
-
+                        checkPermissions()
                     }
 
                  }
@@ -259,8 +260,6 @@ class CalendarMain : AppCompatActivity() {
                 val pm25Val = if (results[i].pM25Value == "65538") "No Data" else "${results[i].pM25Value} μg/m³"
                 val MAC = results[i].macAddress
 
-
-                Log.d(TAG,"newTemp : "+newTemp + ":::")
                 val textCSV = arrayOf((i + 1).toString(),DateFormat.format(time),timeFormat.format(time), tvocVal, eco2Val, tempVal, humiVal, pm25Val, MAC)
 
                 writeCSV.writeLine(textCSV).toString()
@@ -274,7 +273,7 @@ class CalendarMain : AppCompatActivity() {
         }
     }
 
-    private fun checkPermissions(startTime: Long, endTime: Long): Boolean {
+    private fun checkPermissions(): Boolean {
 
         if (ActivityCompat.checkSelfPermission(this@CalendarMain, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this@CalendarMain,
