@@ -175,6 +175,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         override fun onServiceDisconnected(componentName: ComponentName) {
             mUartService = null
+            connState = BleConnection.DISCONNECTED
+            checkUIState()
         }
     }
 
