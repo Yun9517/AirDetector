@@ -332,11 +332,18 @@ class ColorArcProgressBar : View {
 
     }
     private var angleForValue: ArrayList<Float> = ArrayList()
-    fun setAllCondition(rangeArray:LongArray,angleArray:FloatArray,currentValues: Float){
+    private var m_rangeArray:ArrayList<Long> = ArrayList()
+    private var m_angleArray:ArrayList<Float> = ArrayList()
+    fun setAllCondition(rangeArray:LongArray,angleArray:FloatArray){
+        m_rangeArray=rangeArray.toCollection(ArrayList())
+        m_angleArray=angleArray.toCollection(ArrayList())
+        angleForValue.clear()
         for (i in 1 until rangeArray.size) {
             angleForValue.add(angleArray[i - 1] / (rangeArray[i] - rangeArray[i - 1]))
         }
         this.maxValues=rangeArray[rangeArray.size-1].toFloat()
+    }
+    fun  inputCurrentValue(currentValues: Float){
         var currentValues = currentValues
         if (currentValues > maxValues) {
             currentValues = maxValues
@@ -347,35 +354,29 @@ class ColorArcProgressBar : View {
         this.currentValues = currentValues
         lastAngle = currentAngle
         var historyTotalAngle=0f
-        for(i in 1 until rangeArray.size)
-        {
-            if(this.currentValues<=rangeArray[i])
-                setAnimation(lastAngle, (currentValues -rangeArray[i-1])* angleForValue[i-1]+historyTotalAngle, aniSpeed)
+        for(i in 1 until m_rangeArray.size) {
+            if (this.currentValues <= m_rangeArray[i]){
+                setAnimation2(lastAngle, (currentValues - m_rangeArray[i - 1]) * angleForValue[i - 1] + historyTotalAngle, aniSpeed)
+                break
+            }
             else
-                historyTotalAngle+= angleArray[i-1]
+                historyTotalAngle+= m_angleArray[i-1]
         }
     }
-
     private fun setAnimation2(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)
         progressAnimator!!.duration = length.toLong()
         progressAnimator!!.setTarget(currentAngle)
 
-        if (currentValues <= 220) {
-            progressAnimator!!.addUpdateListener { animation ->
-                currentAngle = animation.animatedValue as Float
-                currentValues = currentAngle / k[0]
+        for (i in 1 until m_rangeArray.size){
+            if(currentValues<=m_rangeArray[i]){
+                progressAnimator!!.addUpdateListener { animation ->
+                    currentAngle = animation.animatedValue as Float
+                    currentValues = currentAngle /angleForValue[i-1]
+                }
+                break
             }
-        } else if (currentValues > 220 && currentValues <= 660) {
-            progressAnimator!!.addUpdateListener { animation ->
-                currentAngle = animation.animatedValue as Float
-                currentValues = currentAngle / k[1]
-            }
-        } else {
-            progressAnimator!!.addUpdateListener { animation ->
-                currentAngle = animation.animatedValue as Float
-                currentValues = currentAngle / k[2]
-            }
+            continue
         }
         progressAnimator!!.start()
     }

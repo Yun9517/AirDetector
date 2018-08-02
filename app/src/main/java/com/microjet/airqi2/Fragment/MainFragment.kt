@@ -125,6 +125,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
         slideMoreAnimation()
         //跑馬燈
         scrollingMission()
+        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+        setCircleBarValue(dataForState2)
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -138,21 +140,39 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 when (v.id) {
                     R.id.show_TVOC -> {
                         dataForState = DetectionData.TVOC
+                        dataForState2=DetectionData2.TVOC
+                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.show_eCO2 -> {
                         dataForState = DetectionData.CO2
+                        dataForState2=DetectionData2.CO2
+                        inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.show_Temp -> {
                         dataForState = DetectionData.Temp
+                        dataForState2=DetectionData2.Temp
+                        inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.show_RH -> {
                         dataForState = DetectionData.Humi
+                        dataForState2=DetectionData2.Humi
+                        inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.show_PM -> {
                         dataForState = DetectionData.PM25
+                        dataForState2=DetectionData2.PM25
+                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.show_PM10 -> {
                         dataForState = DetectionData.PM10
+                        dataForState2=DetectionData2.PM10
+                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        setCircleBarValue(dataForState2)
                     }
                     R.id.imgLight -> {
                         if (dataForState == DetectionData.TVOC || dataForState == DetectionData.CO2) {
@@ -285,8 +305,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
         inCircleBar.setThreadholdValue(floatArrayOf(state.range1.toFloat(), state.range2.toFloat()))
         inCircleBar.setMaxValues(state.maxValue)
     }
-    private fun setCircleBarValue(state: DetectionData2,currentValue:Float) {
-        inCircleBar.setAllCondition(state.rangeArray,state.angleArray,currentValue)
+    private fun setCircleBarValue(state: DetectionData2) {
+        inCircleBar.setAllCondition(state.rangeArray,state.angleArray)
     }
     @SuppressLint("SetTextI18n")
     private fun setBtmCurrentValue() {
@@ -681,9 +701,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     //    inCircleBar.setCurrentValues(tvocDataFloat)
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                         //inCircleBar.setCurrentValues(tvocDataFloat)
-                        dataForState2=DetectionData2.TVOC
-                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-                        setCircleBarValue(dataForState2,tvocDataFloat)
+                     //   dataForState2=DetectionData2.TVOC
+                        //inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                        inCircleBar.inputCurrentValue(tvocDataFloat)
+
                         //數值不等比顯示
                         /*
                         when (tvocDataFloat) {
@@ -702,8 +723,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.CO2 -> {
                         inCircleTitle.text = getString(R.string.text_label_eco2_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
-                        inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
+                       // setBarMaxValue(dataForState)
+                      //  inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
+                      //  inCircleBar.inpuCurrentValue(tvocDataFloat)
                         //數值不等比顯示
                         /*when (co2DataFloat) {
                             in 0..1499 -> inCircleBar.setCurrentValues(co2DataFloat)
@@ -713,8 +735,9 @@ class MainFragment : Fragment(), View.OnTouchListener {
                             in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 590)
                             else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)*/
                         }*/
-                        inCircleBar.setCurrentValues(co2DataFloat)
+                        //inCircleBar.setCurrentValues(co2DataFloat)
                         //inCircleBar.setCurrentValues(60000f)
+                        inCircleBar.inputCurrentValue(co2DataFloat)
                         eco2StatusTextShow(co2DataFloat)
                         val temp = co2DataFloat.toInt().toString() + " ppm"
                         textSpannable(temp)
@@ -722,9 +745,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.Temp -> {
                         inCircleTitle.text = getString(R.string.text_label_temp_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
-                        inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
-                        inCircleBar.setCurrentValues(tempDataFloat)
+                       // setBarMaxValue(dataForState)
+                       // inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
+                       // inCircleBar.setCurrentValues(tempDataFloat)
+                        inCircleBar.inputCurrentValue(tempDataFloat+10f)
                         //inCircleBar.setCurrentValues(18f)
                         tempStatusTextShow(tempDataFloat)
                         val temp = Utils.convertTemperature(mContext!!, tempDataFloat)// tempDataFloat.toString() + " °C"
@@ -734,9 +758,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.Humi -> {
                         inCircleTitle.text = getString(R.string.text_label_humi_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
-                        inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
-                        inCircleBar.setCurrentValues(humiDataFloat)
+                     //   setBarMaxValue(dataForState)
+                     //   inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
+                     //   inCircleBar.setCurrentValues(humiDataFloat)
+                        inCircleBar.inputCurrentValue(humiDataFloat)
                         //inCircleBar.setCurrentValues(40f)
                         humiStatusTextShow(humiDataFloat)
                         val temp = humiDataFloat.toInt().toString() + " %"
@@ -749,9 +774,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
                         dataForState2=DetectionData2.PM25
                         //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
                         //inCircleBar.setCurrentValues(tvocDataFloat)
-                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                       // inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
 
-                        setCircleBarValue(dataForState2,pm25DataFloat)
+                       // setCircleBarValue(dataForState2)
+                        inCircleBar.inputCurrentValue(pm25DataFloat)
                         //數值不等比顯示
                         /*
                         when (pm25DataFloat) {
@@ -771,10 +797,10 @@ class MainFragment : Fragment(), View.OnTouchListener {
                     DetectionData.PM10 -> {
                         inCircleTitle.text = getString(R.string.text_label_pm10_detect)
                         //setThresholdValue(dataForState)
-                        setBarMaxValue(dataForState)
-                        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
+                     //   setBarMaxValue(dataForState)
+                       // inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         //數值不等比顯示
-                        when (pm10DataFloat) {
+                    /*    when (pm10DataFloat) {
                             in 0..53 -> inCircleBar.setCurrentValues(pm10DataFloat)
                             in 54..124 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 85)
                             in 125..253 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 170)
@@ -782,7 +808,8 @@ class MainFragment : Fragment(), View.OnTouchListener {
                             in 354..424 -> inCircleBar.setCurrentValues((pm10DataFloat / 180) + 470)
                             else -> inCircleBar.setCurrentValues((pm10DataFloat / 360) + 640)
                         }
-                        //inCircleBar.setCurrentValues(pm10DataFloat)
+                        */
+                        inCircleBar.inputCurrentValue(pm10DataFloat)
                         pm10StatusTextShow(pm10DataFloat)
                         val temp = pm10DataFloat.toInt().toString() + " μg/m³"
                         textSpannable(temp)
