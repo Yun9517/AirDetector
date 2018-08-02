@@ -260,14 +260,14 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
         val startTime = cal.timeInMillis
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        getMapInitThreeDaysAgoLati(startTime, endTime)
 
         listener = RealmChangeListener {
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
             if (filter.isNotEmpty()) {
-                getMapInitThreeDaysAgoLati(startTime, endTime)
                 filter.forEach {
-                    if (it.latitude == 255f || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
+                    if (it.latitude == 255f) {// || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
                         it.latitude = lati
                         it.longitude = longi
                     }
@@ -596,10 +596,13 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
                 .between("Created_time", startTime, endTime)
                 .notEqualTo("Latitude", 255f)
-                .sort("Created_time", Sort.DESCENDING).findAll().first()
+                .sort("Created_time", Sort.DESCENDING).findAll().firstOrNull()
         if (pastAvailableGPSLocation != null ) {
             lati = pastAvailableGPSLocation.latitude
             longi = pastAvailableGPSLocation.longitude
+        } else {
+            lati = TvocNoseData.lati
+            longi = TvocNoseData.longi
         }
     }
 
