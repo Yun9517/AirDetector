@@ -1557,9 +1557,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun saveToRealmC5() {
-        class SaveRealmTask : AsyncTask<Void, Void, Void>() {
-            override fun doInBackground(vararg params: Void?): Void? {
+        class SaveRealmTask : AsyncTask<Void, Void, String>() {
+            override fun doInBackground(vararg params: Void?): String {
                 try {
+                    val realm = Realm.getDefaultInstance()
                     if (arr1.size == 0) {
                         val hash = HashMap<String, Int>()
                         hash["UTCBlockHead"] = 1
@@ -1570,7 +1571,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         val head = arr1[i]["UTCBlockHead"]!! - 1
                         val end = arr1[i]["UTCBlockEnd"]!! - 1
                         for ((count, y) in (head..end).withIndex()) {
-                            val realm = Realm.getDefaultInstance()
                             val time = if (arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() > 1514736000) {
                                 arrIndexMap[y][TvocNoseData.C5TIME]!!.toLong() * 1000
                             } else {
@@ -1593,23 +1593,29 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                                     Log.d("0xC5", asmData.toString())
                                 }
                             }
-                            realm.close()
                         }
                     }
+                    realm.close()
+                    return "DBWriteFinished"
                 } catch (e: Exception) {
                     e.printStackTrace()
+                    return "DBWriteError"
                 }
-                return null
+
             }
 
-            override fun onPostExecute(result: Void?) {
+            override fun onPostExecute(result: String) {
                 super.onPostExecute(result)
-                if (Build.BRAND != "OPPO") {
-                    Utils.toastMakeTextAndShow(this@MainActivity, getString(R.string.Loading_Completely), Toast.LENGTH_SHORT)
-                    //Toast.makeText(applicationContext, getText(R.string.Loading_Completely), Toast.LENGTH_SHORT).show()
+                when (result) {
+                    "DBWriteFinished" -> {
+                        Utils.toastMakeTextAndShow(this@MainActivity, getString(R.string.Loading_Completely), Toast.LENGTH_SHORT)
+                        val headTime = arrIndexMap.first()[TvocNoseData.C5TIME]!!.toLong() * 1000
+                        myPref.setSharePreferencePairedC5LastTime(mDeviceAddress, headTime)
+                    }
+                    "DBWriteError" -> {
+                        Log.d("MAIN", "DBWriteError")
+                    }
                 }
-                val headTime = arrIndexMap.first()[TvocNoseData.C5TIME]!!.toLong() * 1000
-                myPref.setSharePreferencePairedC5LastTime(mDeviceAddress, headTime)
             }
         }
         SaveRealmTask().execute()
