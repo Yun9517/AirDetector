@@ -289,24 +289,17 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //startService(serviceIntent)
         requestPermissionsForBluetooth()
         //checkBluetooth()
+        //20180802 Richard
+        val gattServiceIntent = Intent(this, UartService::class.java)
+        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
         if (connState == BleConnection.DISCONNECTED) {
-            val gattServiceIntent = Intent(this, UartService::class.java)
-            bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-        }
-        if (!myPref.getSharePreferenceManualDisconn()) {
-            mDeviceAddress = myPref.getSharePreferenceMAC()
-            if (mDeviceAddress != "noValue") {
-                mUartService?.connect(mDeviceAddress)
-            }
-        }
-        /*
-        if (mDeviceAddress != "noValue" && connState == DISCONNECTED) {
-            val gattServiceIntent = Intent(this, UartService::class.java)
-            bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
             if (!myPref.getSharePreferenceManualDisconn()) {
-                mUartService?.connect(mDeviceAddress)
+                mDeviceAddress = myPref.getSharePreferenceMAC()
+                if (mDeviceAddress != "noValue") {
+                    mUartService?.connect(mDeviceAddress)
+                }
             }
-        }*/
+        }
         //20180518
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         val myToken = shareToken.getString("token", "")
