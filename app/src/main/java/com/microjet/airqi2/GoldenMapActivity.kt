@@ -83,6 +83,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
         datePicker.text = setBtnText("DATE $mDate")
+        realm = Realm.getDefaultInstance()
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
@@ -247,7 +248,6 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
     // 查詢資料庫
     private fun runRealmQueryData() {
-        realm = Realm.getDefaultInstance()
 
         val cal = Calendar.getInstance()
         cal.set(Calendar.YEAR, mCal.get(Calendar.YEAR))
@@ -260,12 +260,13 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
         val startTime = cal.timeInMillis
         val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
-        getMapInitThreeDaysAgoLati(startTime, endTime)
+
 
         listener = RealmChangeListener {
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
             if (filter.isNotEmpty()) {
+                getMapInitThreeDaysAgoLati(startTime, endTime)
                 filter.forEach {
                     if (it.latitude == 255f) {// || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
                         it.latitude = lati
@@ -583,6 +584,8 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     override fun onDestroy() {
         super.onDestroy()
         goldenMap.onDestroy()
+        result.removeAllChangeListeners()
+        realm.close()
     }
 
     override fun onClick(v: View?) {
@@ -591,6 +594,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
     private fun getMapInitThreeDaysAgoLati(start: Long, end: Long) {
         //取三天前的經緯度最新值位置
+        val realm = Realm.getDefaultInstance()
         val startTime = start - TimeUnit.DAYS.toMillis(3)
         val endTime = end - TimeUnit.DAYS.toMillis(1)
         val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
@@ -604,6 +608,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             lati = TvocNoseData.lati
             longi = TvocNoseData.longi
         }
+        realm.close()
     }
 
     private fun judgePolyLineColorRange(data: AsmDataModel): Int {
