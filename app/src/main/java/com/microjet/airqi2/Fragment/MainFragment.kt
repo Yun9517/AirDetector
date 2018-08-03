@@ -683,70 +683,29 @@ class MainFragment : Fragment(), View.OnTouchListener {
         if (connState) {
             if (preHeat == "255") {
                 setNewsPanelShow(true)
-                //setThresholdValue(dataForState)
-                //setBarMaxValue(dataForState)
+
                 when (dataForState) {
                     DetectionData.TVOC -> {
                         inCircleTitle.text = getString(R.string.text_label_tvoc_detect)
 
-                        //setThresholdValue(dataForState)
-                    //    setBarMaxValue(dataForState)
 
-                   //     inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-                    //    inCircleBar.setCurrentValues(tvocDataFloat)
-                        //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
-                        //inCircleBar.setCurrentValues(tvocDataFloat)
-                     //   dataForState2=DetectionData2.TVOC
-                        //inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
                         inCircleBar.inputCurrentValue(tvocDataFloat)
-                       // inCircleBar.inputCurrentValue(60000f)
-                        //數值不等比顯示
-                        /*
-                        when (tvocDataFloat) {
-                            in 0..660 -> inCircleBar.setCurrentValues(tvocDataFloat)
-                            in 661..2200 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 700)
-                            in 2201..5500 -> inCircleBar.setCurrentValues((tvocDataFloat / 60) + 770)
-                            in 5501..20000 -> inCircleBar.setCurrentValues((tvocDataFloat / 180) + 830)
-                            else -> inCircleBar.setCurrentValues((tvocDataFloat / 360) + 890)
-                        }
-                        */
-                        //inCircleBar.setCurrentValues(tvocDataFloat)
+
                         tvocStatusTextShow(tvocDataFloat)
                         val temp = tvocDataFloat.toInt().toString() + " ppb"
                         textSpannable(temp)
                     }
                     DetectionData.CO2 -> {
                         inCircleTitle.text = getString(R.string.text_label_eco2_detect)
-                        //setThresholdValue(dataForState)
-                       // setBarMaxValue(dataForState)
-                      //  inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)
-                      //  inCircleBar.inpuCurrentValue(tvocDataFloat)
-                        //數值不等比顯示
-                        /*when (co2DataFloat) {
-                            in 0..1499 -> inCircleBar.setCurrentValues(co2DataFloat)
-                            else -> inCircleBar.setCurrentValues(co2DataFloat)
-                            /*in 701..1000 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 700)
-                            in 1001..1500 -> inCircleBar.setCurrentValues((co2DataFloat / 60) + 650)
-                            in 1501..2500 -> inCircleBar.setCurrentValues((co2DataFloat / 180) + 590)
-                            else -> inCircleBar.setCurrentValues((co2DataFloat / 360) + 890)*/
-                        }*/
-                        //inCircleBar.setCurrentValues(co2DataFloat)
-                        //inCircleBar.setCurrentValues(60000f)
+
                         inCircleBar.inputCurrentValue(co2DataFloat)
-                        //inCircleBar.inputCurrentValue(60000f)
                         eco2StatusTextShow(co2DataFloat)
                         val temp = co2DataFloat.toInt().toString() + " ppm"
                         textSpannable(temp)
                     }
                     DetectionData.Temp -> {
                         inCircleTitle.text = getString(R.string.text_label_temp_detect)
-
-                        //setThresholdValue(dataForState)
-                       // setBarMaxValue(dataForState)
-                       // inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)
-                       // inCircleBar.setCurrentValues(tempDataFloat)
                         inCircleBar.inputCurrentValue(tempDataFloat+10f)
-                        //inCircleBar.setCurrentValues(18f)
                         tempStatusTextShow(tempDataFloat)
                         val temp = Utils.convertTemperature(mContext!!, tempDataFloat)// tempDataFloat.toString() + " °C"
                         textSpannable(temp)
@@ -754,69 +713,26 @@ class MainFragment : Fragment(), View.OnTouchListener {
 
                     DetectionData.Humi -> {
                         inCircleTitle.text = getString(R.string.text_label_humi_detect)
-
-                        //setThresholdValue(dataForState)
-                     //   setBarMaxValue(dataForState)
-                     //   inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)
-                     //   inCircleBar.setCurrentValues(humiDataFloat)
                         inCircleBar.inputCurrentValue(humiDataFloat)
-                     //   inCircleBar.inputCurrentValue(100f)
-                        //inCircleBar.setCurrentValues(40f)
                         humiStatusTextShow(humiDataFloat)
                         val temp = humiDataFloat.toInt().toString() + " %"
                         textSpannable(temp)
                     }
                     DetectionData.PM25 -> {
                         inCircleTitle.text = getString(R.string.text_label_pm25_detect)
-
-                        //setThresholdValue(dataForState)
-                        //setBarMaxValue(dataForState)
-                       // dataForState2=DetectionData2.PM25
-                        //inCircleBar.setColor(Colors.tvocOldColors, Colors.tvocOldAngles)
-                        //inCircleBar.setCurrentValues(tvocDataFloat)
-                       // inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-
-                       // setCircleBarValue(dataForState2)
                         inCircleBar.inputCurrentValue(pm25DataFloat)
-                        //數值不等比顯示
-                        /*
-                        when (pm25DataFloat) {
-                            in 0..15 -> inCircleBar.setCurrentValues(pm25DataFloat)
-                            in 16..34 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 22)
-                            in 35..54 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 70)
-                            in 55..150 -> inCircleBar.setCurrentValues((pm25DataFloat / 60) + 280)
-                            in 151..250 -> inCircleBar.setCurrentValues((pm25DataFloat / 180) + 370)
-                            else -> inCircleBar.setCurrentValues((pm25DataFloat / 360) + 540)
-                        }*/
-
-                        //inCircleBar.setCurrentValues(pm25DataFloat)
                         pm25StatusTextShow(pm25DataFloat)
                         val temp = pm25DataFloat.toInt().toString() + " μg/m³"
                         textSpannable(temp)
                     }
                     DetectionData.PM10 -> {
                         inCircleTitle.text = getString(R.string.text_label_pm10_detect)
-
-                        //setThresholdValue(dataForState)
-                     //   setBarMaxValue(dataForState)
-                       // inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-                        //數值不等比顯示
-                    /*    when (pm10DataFloat) {
-                            in 0..53 -> inCircleBar.setCurrentValues(pm10DataFloat)
-                            in 54..124 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 85)
-                            in 125..253 -> inCircleBar.setCurrentValues((pm10DataFloat / 60) + 170)
-                            in 254..353 -> inCircleBar.setCurrentValues((pm10DataFloat / 180) + 380)
-                            in 354..424 -> inCircleBar.setCurrentValues((pm10DataFloat / 180) + 470)
-                            else -> inCircleBar.setCurrentValues((pm10DataFloat / 360) + 640)
-                        }
-                        */
                         inCircleBar.inputCurrentValue(pm10DataFloat)
                         pm10StatusTextShow(pm10DataFloat)
                         val temp = pm10DataFloat.toInt().toString() + " μg/m³"
                         textSpannable(temp)
                     }
                 }
-
                 setBtmCurrentValue()
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                 val date = Date()
