@@ -1952,9 +1952,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun changeMaxItem(hashmap: HashMap<String, String>) {
         val c6Time = hashmap[TvocNoseData.C6TIME]!!.toLong() * 1000
         var maxC5DevicePairedTime = myPref.getSharePreferencePairedC5LastTime(mDeviceAddress)
-        val appropriateMaxItems = Math.min(((c6Time - maxC5DevicePairedTime) / 60000L).toInt(), maxItem)
+        val calculateMaxItem = Math.abs(((c6Time - maxC5DevicePairedTime) / 60000L).toInt()) //預熱時必會拿到負數，所以要用絕對值讓他無限大
+        val appropriateMaxItems = Math.min(calculateMaxItem, maxItem) //取兩方最小值，如果預熱時基本上都會拿到maxItem
         maxItem = appropriateMaxItems
-        Log.d("maxItems", appropriateMaxItems.toString())
+        Log.d("calculateMaxItem", calculateMaxItem.toString())
+        Log.d("appropriateMaxItems", appropriateMaxItems.toString())
     }
 
     private fun closeDialogShow() {

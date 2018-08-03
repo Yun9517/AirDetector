@@ -591,4 +591,5 @@
     <string name="dialog_forgetPassword_emailSend">信箱驗證中，請稍後</string>
     <string name="data_export">ADDWII 資料輸出</string>
     <string name="text_dlg_close_permanent">由於您關閉「允許背景服務常駐」，可能會無法使用到ADDWII的完整功能（例：個人軌跡、空氣地圖無法紀錄您裝置的位置等）。</string>
+    <string name="NoDataAvailableForDownload">無雲端資料可供下載</string>
 </resources>

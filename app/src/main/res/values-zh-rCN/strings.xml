@@ -586,4 +586,5 @@
     <string name="dialog_forgetPassword_emailSend">信箱验证中，请稍后</string>
     <string name="data_export">ADDWII 资料输出</string>
     <string name="text_dlg_close_permanent">由于您关闭「允许背景服务常驻」，可能会无法使用到ADDWII的完整功能（例：个人轨迹、空气地图无法纪录您装置的位置等）。</string>
+    <string name="NoDataAvailableForDownload">无云端资料可供下载</string>
 </resources>
