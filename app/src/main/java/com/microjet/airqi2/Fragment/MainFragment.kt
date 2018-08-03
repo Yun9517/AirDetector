@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
@@ -769,7 +770,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 val dateFormat = SimpleDateFormat("yyyy/MM/dd HH:mm:ss")
                 val date = Date()
                 tvLastDetectTime.text = dateFormat.format(date).toString()
-                //20171228 ANDY增加
             } else {
                 setNewsPanelShow(false)
             }
@@ -788,6 +788,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             //imgLight?.setImageResource(R.drawable.app_android_icon_light)
             setNewsPanelShow(true)
         }
+        btmChange(connState, dataForState)
     }
 
     private val myBroadcastReceiver = object : BroadcastReceiver() {
@@ -933,6 +934,39 @@ class MainFragment : Fragment(), View.OnTouchListener {
         when (bleEvent.message) {
             "new Topic get" -> {
                 view?.post({ setViewSingleLine() })
+            }
+        }
+    }
+
+    private fun btmChange(connstate: Boolean, data: DetectionData) {
+        for (i in 0 until valPanel.childCount) {
+            for (y in 0 until llayoutbtmline1.childCount) {
+                llayoutbtmline1.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
+            }
+            for (y in 0 until llayoutbtmline2.childCount) {
+                llayoutbtmline2.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
+            }
+        }
+        if (connstate) {
+            when (data.ordinal) {
+                0 -> {
+                    show_TVOC?.setBackgroundResource(R.color.grayColor_55)
+                }
+                1 -> {
+                    show_eCO2?.setBackgroundResource(R.color.grayColor_55)
+                }
+                2 -> {
+                    show_Temp?.setBackgroundResource(R.color.grayColor_55)
+                }
+                3 -> {
+                    show_RH?.setBackgroundResource(R.color.grayColor_55)
+                }
+                4 -> {
+                    show_PM?.setBackgroundResource(R.color.grayColor_55)
+                }
+                5 -> {
+                    show_PM10?.setBackgroundResource(R.color.grayColor_55)
+                }
             }
         }
     }
