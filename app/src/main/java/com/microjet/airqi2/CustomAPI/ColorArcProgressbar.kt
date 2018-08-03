@@ -367,12 +367,17 @@ class ColorArcProgressBar : View {
         progressAnimator = ValueAnimator.ofFloat(last, current)
         progressAnimator!!.duration = length.toLong()
         progressAnimator!!.setTarget(currentAngle)
-
-        for (i in 1 until m_rangeArray.size){
+    //    Log.e("colorArc", "marray: ${m_rangeArray.size}")
+    //    Log.e("colorArc", "angleForValue: ${angleForValue.size} ")
+        for (i in 1 .. m_rangeArray.size){
             if(currentValues<=m_rangeArray[i]){
                 progressAnimator!!.addUpdateListener { animation ->
                     currentAngle = animation.animatedValue as Float
-                    currentValues = currentAngle /angleForValue[i-1]
+                    when (i)
+                    {
+                        in 1..angleForValue.size->{currentValues = currentAngle /angleForValue[i-1]}
+                    }
+                   // currentValues = currentAngle /angleForValue[i-1]
                 }
                 break
             }
