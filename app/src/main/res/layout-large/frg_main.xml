@@ -48,113 +48,113 @@
         app:string_unit=""
         app:sweep_angle="270" />
 
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/relativeLayout"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/circle_transparent"
+        app:layout_constraintBottom_toBottomOf="@+id/inCircleBar"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toEndOf="@+id/inCircleBar"
+        app:layout_constraintStart_toStartOf="@+id/inCircleBar"
+        app:layout_constraintTop_toTopOf="@+id/inCircleBar">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/inCircleTitle"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:layout_centerInParent="true"
-            android:layout_marginBottom="70dp"
-            android:layout_marginEnd="70dp"
-            android:layout_marginStart="70dp"
-            android:layout_marginTop="70dp"
-            android:background="@drawable/circle_transparent"
-            app:layout_constraintBottom_toBottomOf="@+id/inCircleBar"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toEndOf="@+id/inCircleBar"
-            app:layout_constraintStart_toStartOf="@+id/inCircleBar"
-            app:layout_constraintTop_toTopOf="@+id/inCircleBar">
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/inCircleTitle"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="16dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:gravity="bottom|center"
-                android:lines="2"
-                android:text="@string/text_label_tvoc_detect"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor"
-                android:textSize="34sp"
-                app:autoSizeTextType="uniform"
-                app:layout_constraintBottom_toTopOf="@+id/inCircleValue"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/inCircleValue"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
-                android:background="@android:color/transparent"
-                android:text="@string/text_default_value"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor"
-                android:textSize="60sp"
-                android:typeface="sans"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/inCircleState"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_below="@+id/inCircleValue"
-                android:layout_gravity="center"
-                android:layout_marginEnd="32dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="24dp"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:text="@string/text_default_value"
-                android:textAlignment="center"
-                android:textColor="@color/whiteColor"
-                android:textSize="30sp"
-                app:autoSizeMaxTextSize="26sp"
-                app:autoSizeMinTextSize="18sp"
-                app:autoSizeTextType="uniform"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/inCircleValue" />
-
-        </android.support.constraint.ConstraintLayout>
-
-        <TextView
-            android:id="@+id/tvRange1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/relativeLayout"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="70dp"
-            android:text="@string/text_tvoc_meter_220ppb"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:gravity="bottom|center"
+            android:lines="2"
+            android:text="@string/text_label_tvoc_detect"
+            android:textAlignment="center"
             android:textColor="@color/whiteColor"
-            android:textSize="36sp"
-            android:visibility="invisible"
+            android:textSize="34sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toTopOf="@+id/inCircleValue"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvRange2"
-            android:layout_width="wrap_content"
+            android:id="@+id/inCircleValue"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="false"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="70dp"
-            android:text="@string/text_tvoc_meter_660ppb"
+            android:layout_marginEnd="24dp"
+            android:layout_marginStart="24dp"
+            android:background="@android:color/transparent"
+            android:text="@string/text_default_value"
+            android:textAlignment="center"
             android:textColor="@color/whiteColor"
-            android:textSize="36sp"
-            android:visibility="invisible"
+            android:textSize="60sp"
+            android:typeface="sans"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/inCircleState"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_below="@+id/inCircleValue"
+            android:layout_gravity="center"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="24dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:text="@string/text_default_value"
+            android:textAlignment="center"
+            android:textColor="@color/whiteColor"
+            android:textSize="30sp"
+            app:autoSizeMaxTextSize="26sp"
+            app:autoSizeMinTextSize="18sp"
+            app:autoSizeTextType="uniform"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/inCircleValue" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/tvRange1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/relativeLayout"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="70dp"
+        android:text="@string/text_tvoc_meter_220ppb"
+        android:textColor="@color/whiteColor"
+        android:textSize="36sp"
+        android:visibility="invisible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvRange2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="false"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="70dp"
+        android:text="@string/text_tvoc_meter_660ppb"
+        android:textColor="@color/whiteColor"
+        android:textSize="36sp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -201,15 +201,15 @@
 
     </LinearLayout>
 
-<!--
-    <ImageView
-        android:id="@+id/imgPanel"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_alignParentBottom="true"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/temp_main" />
-        -->
+    <!--
+        <ImageView
+            android:id="@+id/imgPanel"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/temp_main" />
+            -->
 
     <LinearLayout
         android:id="@+id/valPanel"
@@ -223,11 +223,14 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
+            android:id="@+id/llayoutbtmline1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
             android:layout_marginTop="2dp"
-            android:orientation="horizontal">
+            android:divider="@drawable/spacer_medium"
+            android:orientation="horizontal"
+            android:showDividers="middle">
 
             <LinearLayout
                 android:id="@+id/show_TVOC"
@@ -257,17 +260,6 @@
                     android:textColor="@color/whiteColor"
                     android:textSize="18sp" />
             </LinearLayout>
-
-            <ImageView
-                android:id="@+id/imgDivider1"
-                android:layout_width="2dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="2dp"
-                android:layout_marginTop="5dp"
-                app:srcCompat="@color/whiteColor"
-                android:contentDescription="@null" />
 
             <LinearLayout
                 android:id="@+id/show_PM"
@@ -299,9 +291,40 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/show_PM10"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvBtmPM10Title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_label_pm10"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvBtmPM10Value"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="@string/text_default_value"
+                    android:textAlignment="center"
+                    android:textColor="@color/whiteColor"
+                    android:textSize="18sp" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/llayoutbtmline2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"
