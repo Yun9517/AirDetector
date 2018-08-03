@@ -788,7 +788,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             //imgLight?.setImageResource(R.drawable.app_android_icon_light)
             setNewsPanelShow(true)
         }
-        btmChange(connState, dataForState)
+        dashBoardChange(connState, dataForState)
     }
 
     private val myBroadcastReceiver = object : BroadcastReceiver() {
@@ -938,36 +938,40 @@ class MainFragment : Fragment(), View.OnTouchListener {
         }
     }
 
-    private fun btmChange(connstate: Boolean, data: DetectionData) {
-        for (i in 0 until valPanel.childCount) {
-            for (y in 0 until llayoutbtmline1.childCount) {
-                llayoutbtmline1.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
+    private fun dashBoardChange(connstate: Boolean, data: DetectionData) {
+        dashBoardReset()
+        if (!connstate) { return }
+        when (data) {
+            DetectionData.TVOC -> {
+                show_TVOC?.setBackgroundResource(R.color.grayColor_55)
             }
-            for (y in 0 until llayoutbtmline2.childCount) {
-                llayoutbtmline2.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
+            DetectionData.CO2 -> {
+                show_eCO2?.setBackgroundResource(R.color.grayColor_55)
+            }
+            DetectionData.Temp -> {
+                show_Temp?.setBackgroundResource(R.color.grayColor_55)
+            }
+            DetectionData.Humi -> {
+                show_RH?.setBackgroundResource(R.color.grayColor_55)
+            }
+            DetectionData.PM25 -> {
+                show_PM?.setBackgroundResource(R.color.grayColor_55)
+            }
+            DetectionData.PM10 -> {
+                show_PM10?.setBackgroundResource(R.color.grayColor_55)
             }
         }
-        if (connstate) {
-            when (data.ordinal) {
-                0 -> {
-                    show_TVOC?.setBackgroundResource(R.color.grayColor_55)
-                }
-                1 -> {
-                    show_eCO2?.setBackgroundResource(R.color.grayColor_55)
-                }
-                2 -> {
-                    show_Temp?.setBackgroundResource(R.color.grayColor_55)
-                }
-                3 -> {
-                    show_RH?.setBackgroundResource(R.color.grayColor_55)
-                }
-                4 -> {
-                    show_PM?.setBackgroundResource(R.color.grayColor_55)
-                }
-                5 -> {
-                    show_PM10?.setBackgroundResource(R.color.grayColor_55)
-                }
-            }
+
+    }
+
+    private fun dashBoardReset() {
+        for (y in 0 until llayoutbtmline1.childCount) {
+            llayoutbtmline1.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
+        }
+        for (y in 0 until llayoutbtmline2.childCount) {
+            llayoutbtmline2.getChildAt(y).setBackgroundColor(Color.TRANSPARENT)
         }
     }
+
+
 }
