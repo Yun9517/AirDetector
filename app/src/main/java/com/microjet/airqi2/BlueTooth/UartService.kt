@@ -92,6 +92,13 @@ class UartService : Service() {
                     close()
                     broadcastUpdate(intentAction)
                 }
+                257 -> { //Too Many Connect
+                    Log.d(TAG, "onConnectionStateChange received: $status")
+                    intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
+                    mConnectionState = STATE_DISCONNECTED
+                    close()
+                    broadcastUpdate(intentAction)
+                }
                 else -> {
                     Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED

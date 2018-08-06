@@ -75,6 +75,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         myPref = PrefObjects(this)
         
         mCal = Calendar.getInstance()
+        realm = Realm.getDefaultInstance()
 
         initActionBar()
         initGoldenMap()
@@ -83,7 +84,6 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
         mDate = DateFormat.format("yyyy-MM-dd", mCal.time).toString()
         datePicker.text = setBtnText("DATE $mDate")
-        realm = Realm.getDefaultInstance()
 
         datePicker.setOnClickListener {
             if (Utils.isFastDoubleClick) {
