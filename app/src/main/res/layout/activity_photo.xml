@@ -59,7 +59,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text='請按下方"拍照"鍵拍照。\nPlease press the "TAKE A PHOTO" button to take a photo.\n请按下方"拍照"键拍照。'
+        android:text='Please press the "TAKE A PHOTO" button to take a photo.\n請按下方"拍照"鍵拍照。\n请按下方"拍照"键拍照。'
         android:textAlignment="center"
         android:textColor="@android:color/holo_red_dark"
         android:textSize="24sp"
