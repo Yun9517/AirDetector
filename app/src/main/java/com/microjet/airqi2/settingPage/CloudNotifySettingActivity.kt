@@ -148,7 +148,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty()) {
+                /*if (value.isNotEmpty()) {
                     if (value.toInt() in 220..2200) {
                         cloudTvocSeekBar.setValue(value.toFloat())
                         cloudTVOC = value.toInt()
@@ -156,6 +156,28 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                         setSeekBarValue(cloudTvocSeekValue, value.toFloat())
                     } else {
                         Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                    }
+                }*/
+                if (value.isNotEmpty()) {
+                    when (value.toInt()) {
+                        in 220..2200 -> {
+                            cloudTvocSeekBar.setValue(value.toFloat())
+                            cloudTVOC = value.toInt()
+                            setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
+                            setSeekBarValue(cloudTvocSeekValue, value.toFloat())
+                        }
+                        in 0..219 -> {
+                            cloudTvocSeekBar.setValue(220f)
+                            cloudTVOC = value.toInt()
+                            setSeekBarColor(cloudTvocSeekBar, 220f, true)
+                            setSeekBarValue(cloudTvocSeekValue, 220f)
+                        }
+                        else -> {
+                            cloudTvocSeekBar.setValue(2200f)
+                            cloudTVOC = value.toInt()
+                            setSeekBarColor(cloudTvocSeekBar, 2200f, true)
+                            setSeekBarValue(cloudTvocSeekValue, 2200f)
+                        }
                     }
                 }
             })
@@ -176,13 +198,36 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
-                if (value.isNotEmpty() && value.toInt() in 16..150) {
+                /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
                     cloudPM25 = value.toInt()
                     setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue(cloudPM25SeekValue, value.toFloat())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    when(value.toInt()) {
+                        in 16..150 -> {
+                            cloudPM25SeekBar.setValue(value.toFloat())
+                            cloudPM25 = value.toInt()
+                            setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
+                            setSeekBarValue(cloudPM25SeekValue, value.toFloat())
+                        }
+                        in 0..15 -> {
+                            cloudPM25SeekBar.setValue(15f)
+                            cloudPM25 = value.toInt()
+                            setSeekBarColor(cloudPM25SeekBar, 15f, false)
+                            setSeekBarValue(cloudPM25SeekValue, 15f)
+                        }
+                        else -> {
+                            cloudPM25SeekBar.setValue(150f)
+                            cloudPM25 = value.toInt()
+                            setSeekBarColor(cloudPM25SeekBar, 150f, false)
+                            setSeekBarValue(cloudPM25SeekValue, 150f)
+                            Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                        }
+                    }
                 }
             })
 

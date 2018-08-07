@@ -145,7 +145,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty() && value.toInt() in 220..2200) {
+                /*if (value.isNotEmpty() && value.toInt() in 220..2200) {
                     tvocSeekBar.setValue(value.toFloat())
                     setSeekBarColor(tvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(tvocSeekValue, value.toFloat())
@@ -153,6 +153,28 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    when(value.toInt()) {
+                        in 220..2200 -> {
+                            tvocSeekBar.setValue(value.toFloat())
+                            setSeekBarColor(tvocSeekBar, value.toFloat(), true)
+                            setSeekBarValue(tvocSeekValue, value.toFloat())
+                            myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
+                        }
+                        in 0..219 -> {
+                            tvocSeekBar.setValue(220f)
+                            setSeekBarColor(tvocSeekBar, 220f, true)
+                            setSeekBarValue(tvocSeekValue, 220f)
+                            myPref.setSharePreferenceAllowNotifyTvocValue(220)
+                        }
+                        else -> {
+                            tvocSeekBar.setValue(2200f)
+                            setSeekBarColor(tvocSeekBar, 2200f, true)
+                            setSeekBarValue(tvocSeekValue, 2200f)
+                            myPref.setSharePreferenceAllowNotifyTvocValue(2200)
+                        }
+                    }
                 }
             })
 
@@ -173,7 +195,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty() && value.toInt() in 16..150) {
+                /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     pm25SeekBar.setValue(value.toFloat())
                     setSeekBarColor(pm25SeekBar, value.toFloat(), false)
                     setSeekBarValue(pm25SeekValue, value.toFloat())
@@ -181,6 +203,28 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    when(value.toFloat()) {
+                        in 16..150 -> {
+                            pm25SeekBar.setValue(value.toFloat())
+                            setSeekBarColor(pm25SeekBar, value.toFloat(), false)
+                            setSeekBarValue(pm25SeekValue, value.toFloat())
+                            myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
+                        }
+                        in 0..15 -> {
+                            pm25SeekBar.setValue(15f)
+                            setSeekBarColor(pm25SeekBar, 15f, false)
+                            setSeekBarValue(pm25SeekValue, 15f)
+                            myPref.setSharePreferenceAllowNotifyPM25Value(15)
+                        }
+                        else -> {
+                            pm25SeekBar.setValue(150f)
+                            setSeekBarColor(pm25SeekBar, 150f, false)
+                            setSeekBarValue(pm25SeekValue, 150f)
+                            myPref.setSharePreferenceAllowNotifyPM25Value(150)
+                        }
+                    }
                 }
             })
 
