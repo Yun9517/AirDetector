@@ -23,9 +23,12 @@ import android.content.Intent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.IntentFilter
+import android.view.MotionEvent
+import android.view.View
 import com.microjet.airqi2.CustomAPI.Utils
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.BroadcastIntents
+import com.microjet.airqi2.R.layout.activity_fetch_data_main
 
 
 @TargetApi(Build.VERSION_CODES.O)
@@ -43,7 +46,9 @@ class FetchDataMain : AppCompatActivity() {
 
     private var adapter: Fetch_Adapter? = null
     private val TAG = FetchDataMain::class.java.simpleName
-
+    object Touch_Time{
+        var Time:Long = 0
+    }
     private val mOnNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
             R.id.navigation_tvoc -> {
@@ -105,8 +110,7 @@ class FetchDataMain : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fetch_data_main)
-        val filter = IntentFilter(Intent.ACTION_TIME_TICK)
-        registerReceiver(m_timeChangedReceiver, filter);
+        SetIntentFilter()
         //試Realm拉資料
         getRealmDay()
 //            itemList.getData()
@@ -114,12 +118,23 @@ class FetchDataMain : AppCompatActivity() {
 
         lv_data_info.adapter = adapter
 
-//                    Log.d("getRealmDay--Tvoc Value", "ALL Tvoc" + AllTvoc)
+//      Log.d("getRealmDay--Tvoc Value", "ALL Tvoc" + AllTvoc)
         Log.d(TAG + "Time size", "ALL Time " + AllTime.size)
         Log.d(TAG + "Tvoc size", "ALL Tvoc " + AllTvoc.size)
 
         initActionBar()
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+
+
+    }
+
+    private fun SetIntentFilter() {
+
+        val filter = IntentFilter();
+        filter.addAction(Intent.ACTION_TIME_TICK)
+        filter.addAction(Intent.ACTION_SCREEN_ON)
+        filter.addAction(Intent.ACTION_VIEW)
+        registerReceiver(m_timeChangedReceiver, filter);
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -262,15 +277,28 @@ class FetchDataMain : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent) {
             Log.d(TAG , "m_timeChangedReceiver:::" )
             val action = intent.action
+
             Log.d(TAG , "action" + action)
             if (action == Intent.ACTION_TIME_TICK) {
+                val Now_Touch_Time = System.currentTimeMillis()
+                Log.d(TAG , "Now_Touch_Time" + Now_Touch_Time )
+                Log.d(TAG , "----Touch_Time" +  FetchDataMain.Touch_Time.Time )
+               var AA:Long = Now_Touch_Time -  FetchDataMain.Touch_Time.Time!!
+                Log.d(TAG , "Touch----AA:::" + AA)
                 //試Realm拉資料
                 getRealmDay()
+                if(AA > 2000){
                 lv_data_info.adapter = adapter
-                Log.d(TAG , "action" + action)
+                Log.d(TAG , "Touch--action" + action )
+                }
             }
+
         }
     }
+
+
+
+
 
     public override fun onDestroy() {
         super.onDestroy()
