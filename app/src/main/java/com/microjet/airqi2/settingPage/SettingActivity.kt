@@ -30,6 +30,7 @@ import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -202,7 +203,15 @@ class SettingActivity : AppCompatActivity() {
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
         btnCheckFW.setOnClickListener {
             if (btnCheckFW.text == getString(R.string.dfu_title)) {
-                EventBus.getDefault().post(BleEvent("Download Success"))
+                val file = File(this@SettingActivity.cacheDir, "FWupdate.zip")
+
+                if(file.exists()) {
+                    EventBus.getDefault().post(BleEvent("Download Success"))
+                    Log.e("FWupdate", "File exist, call fw update again.")
+                } else {
+                    checkFwVersion("201801010000", "0004")
+                    Log.e("FWupdate", "File not exist, call download.")
+                }
             } else {
                 if (MyApplication.getDeviceChargeStatus()) {
                     val fwVer = MyApplication.getDeviceVersion()
@@ -210,6 +219,7 @@ class SettingActivity : AppCompatActivity() {
                     val fwType = MyApplication.getDeviceType()
                     //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
                     checkFwVersion("20$fwVer$fwSerial", fwType)
+                    Log.e("FWupdate", "20$fwVer$fwSerial, $fwType")
                 } else {
                     showNotChargingDialog()
                 }
