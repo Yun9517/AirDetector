@@ -137,6 +137,8 @@ object TvocNoseData {
     var firebaseNotiftime: Int = 12
     var firebaseNotifPM25: Int = 35
     var firebaseNotifTVOC: Int = 660
+    var firebaseSettingResult: String =""
+
     var scrollingList: ArrayList<HashMap<String, String>> = arrayListOf()
     var download_AsynTask: AsyncTask<String, Int, String>? = null
 
