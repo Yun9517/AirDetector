@@ -81,15 +81,16 @@ class MainNotification(context: Context) {
         notificationBuilder.color = ContextCompat.getColor(mContext, R.color.iconColor)
         //notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
+        notificationBuilder.addAction(android.R.drawable.ic_delete, mContext.getString(R.string.close), createPendingIntent("STOP_FOREGROUND"))
 
         return notificationBuilder.build()
     }
 
-    /*private fun createPendingIntent(action: String): PendingIntent {
+    private fun createPendingIntent(action: String): PendingIntent {
         // 為了儲存對應Action的Service的Intent，建立PendingIntent
         val service = Intent(mContext, UartService::class.java)
         service.action = action
 
         return PendingIntent.getService(mContext, 0, service, 0)
-    }*/
+    }
 }
