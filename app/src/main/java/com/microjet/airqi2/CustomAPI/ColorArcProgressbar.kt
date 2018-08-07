@@ -50,8 +50,8 @@ class ColorArcProgressBar : View {
     private var sweepGradient: SweepGradient? = null//颜色渲染
     private var rotateMatrix: Matrix? = null
 
-    private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)
-
+    private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)//先隨便給，setColor時會重新給值
+    private var angleArray= floatArrayOf(0.1f,0.2f)//先隨便給，setColor時會重新給值
     private var range = floatArrayOf(18f, 27f)
     private var mTouchInvalidateRadius: Float = 0.toFloat()//触摸失效半径,控件外层都可触摸,当触摸区域小于这个值的时候触摸失效
 
@@ -125,7 +125,8 @@ class ColorArcProgressBar : View {
 
     fun setColor(colors: IntArray, angles: FloatArray) {
         sweepGradient = SweepGradient(centerX, centerY, colors, angles)
-
+        this.colors=colors//解決初始化時 this.colors還未改變，造成在onSizeChange時將未改變的顏色寫入SweepGradient
+        this.angleArray=angles
     }
 
     /**
@@ -204,7 +205,7 @@ class ColorArcProgressBar : View {
         centerX = (2 * (longDegree + DEGREE_PROGRESS_DISTANCE.toFloat() + progressWidth / 2) + diameter) / 2
         centerY = (2 * (longDegree + DEGREE_PROGRESS_DISTANCE.toFloat() + progressWidth / 2) + diameter) / 2
 
-        sweepGradient = SweepGradient(centerX, centerY, colors, null)
+        sweepGradient = SweepGradient(centerX, centerY, colors, angleArray)
 
         mTouchInvalidateRadius = (Math.max(mWidth, mHeight) / 2).toFloat() - longDegree - DEGREE_PROGRESS_DISTANCE.toFloat() - progressWidth * 2
 
@@ -331,7 +332,60 @@ class ColorArcProgressBar : View {
         invalidate()
 
     }
-
+    private var angleForValue: ArrayList<Float> = ArrayList()
+    private var m_rangeArray:ArrayList<Long> = ArrayList()
+    private var m_angleArray:ArrayList<Float> = ArrayList()
+    fun setAllCondition(rangeArray:LongArray,angleArray:FloatArray){
+        m_rangeArray=rangeArray.toCollection(ArrayList())
+        m_angleArray=angleArray.toCollection(ArrayList())
+        angleForValue.clear()
+        for (i in 1 until rangeArray.size) {
+            angleForValue.add(angleArray[i - 1] / (rangeArray[i] - rangeArray[i - 1]))
+        }
+        this.maxValues=rangeArray[rangeArray.size-1].toFloat()
+    }
+    fun  inputCurrentValue(currentValues: Float){
+        var currentValues = currentValues
+        if (currentValues > maxValues) {
+            currentValues = maxValues
+        }
+        if (currentValues < 0) {
+            currentValues = 0f
+        }
+        this.currentValues = currentValues
+        lastAngle = currentAngle
+        var historyTotalAngle=0f
+        for(i in 1 until m_rangeArray.size) {
+            if (this.currentValues <= m_rangeArray[i]){
+                setAnimation2(lastAngle, (currentValues - m_rangeArray[i - 1]) * angleForValue[i - 1] + historyTotalAngle, aniSpeed)
+                break
+            }
+            else
+                historyTotalAngle+= m_angleArray[i-1]
+        }
+    }
+    private fun setAnimation2(last: Float, current: Float, length: Int) {
+        progressAnimator = ValueAnimator.ofFloat(last, current)
+        progressAnimator!!.duration = length.toLong()
+        progressAnimator!!.setTarget(currentAngle)
+    //    Log.e("colorArc", "marray: ${m_rangeArray.size}")
+    //    Log.e("colorArc", "angleForValue: ${angleForValue.size} ")
+        for (i in 1 .. m_rangeArray.size){
+            if(currentValues<=m_rangeArray[i]){
+                progressAnimator!!.addUpdateListener { animation ->
+                    currentAngle = animation.animatedValue as Float
+                    when (i)
+                    {
+                        in 1..angleForValue.size->{currentValues = currentAngle /angleForValue[i-1]}
+                    }
+                   // currentValues = currentAngle /angleForValue[i-1]
+                }
+                break
+            }
+            continue
+        }
+        progressAnimator!!.start()
+    }
     /**
      * 设置最大值
      *
@@ -339,9 +393,7 @@ class ColorArcProgressBar : View {
      */
     fun setMaxValues(maxValues: Float) {
         this.maxValues = maxValues
-
         setRangeAngle(floatArrayOf(80f, 110f, 80f))
-
         setRangeValues(floatArrayOf(range[0], range[1] - range[0], maxValues - range[1]))
 
     }
@@ -353,10 +405,6 @@ class ColorArcProgressBar : View {
     }
 
     private var k: FloatArray = floatArrayOf(0f, 0f, 0f) //(0-220
-    // private var m: Float=0.toFloat()   // 220-660
-    //  private var q: Float=0.toFloat()    //660-MaxValue
-
-
     private var mAngleArray: FloatArray? = null
     fun setRangeAngle(input: FloatArray) {
         mAngleArray = input
@@ -397,7 +445,6 @@ class ColorArcProgressBar : View {
             setAnimation(lastAngle, (currentValues - range[1]) * k[2] + mAngleArray!![0] + mAngleArray!![1], aniSpeed)
         }
     }
-
     private fun setAnimation(last: Float, current: Float, length: Int) {
         progressAnimator = ValueAnimator.ofFloat(last, current)
         progressAnimator!!.duration = length.toLong()
