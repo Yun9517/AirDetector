@@ -125,8 +125,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
         slideMoreAnimation()
         //跑馬燈
         scrollingMission()
-        inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)
-        setCircleBarValue(dataForState)
+        setCircleBarInitialValue()
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -904,5 +903,16 @@ class MainFragment : Fragment(), View.OnTouchListener {
                 view?.post({ setViewSingleLine() })
             }
         }
+    }
+    private fun setCircleBarInitialValue(){
+        when (dataForState){//可依初始值不同給定不同的參數
+            DetectionData.TVOC->{inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
+            DetectionData.CO2->{inCircleBar.setColor(Colors.eCO2Color, Colors.eco2Angles)}
+            DetectionData.Temp->{inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)}
+            DetectionData.Humi->{inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)}
+            DetectionData.PM25->{inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
+            DetectionData.PM10-> {inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
+        }
+        setCircleBarValue(dataForState)
     }
 }

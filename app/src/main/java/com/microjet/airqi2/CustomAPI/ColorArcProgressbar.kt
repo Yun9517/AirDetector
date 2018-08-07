@@ -50,8 +50,8 @@ class ColorArcProgressBar : View {
     private var sweepGradient: SweepGradient? = null//颜色渲染
     private var rotateMatrix: Matrix? = null
 
-    private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)
-
+    private var colors = intArrayOf(Color.GREEN, Color.YELLOW, Color.RED, Color.RED)//先隨便給，setColor時會重新給值
+    private var angleArray= floatArrayOf(0.1f,0.2f)//先隨便給，setColor時會重新給值
     private var range = floatArrayOf(18f, 27f)
     private var mTouchInvalidateRadius: Float = 0.toFloat()//触摸失效半径,控件外层都可触摸,当触摸区域小于这个值的时候触摸失效
 
@@ -125,7 +125,8 @@ class ColorArcProgressBar : View {
 
     fun setColor(colors: IntArray, angles: FloatArray) {
         sweepGradient = SweepGradient(centerX, centerY, colors, angles)
-
+        this.colors=colors//解決初始化時 this.colors還未改變，造成在onSizeChange時將未改變的顏色寫入SweepGradient
+        this.angleArray=angles
     }
 
     /**
@@ -204,7 +205,7 @@ class ColorArcProgressBar : View {
         centerX = (2 * (longDegree + DEGREE_PROGRESS_DISTANCE.toFloat() + progressWidth / 2) + diameter) / 2
         centerY = (2 * (longDegree + DEGREE_PROGRESS_DISTANCE.toFloat() + progressWidth / 2) + diameter) / 2
 
-        sweepGradient = SweepGradient(centerX, centerY, colors, null)
+        sweepGradient = SweepGradient(centerX, centerY, colors, angleArray)
 
         mTouchInvalidateRadius = (Math.max(mWidth, mHeight) / 2).toFloat() - longDegree - DEGREE_PROGRESS_DISTANCE.toFloat() - progressWidth * 2
 
