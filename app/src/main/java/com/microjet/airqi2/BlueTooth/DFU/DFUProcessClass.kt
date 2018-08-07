@@ -127,9 +127,14 @@ class DFUProcessClass() {
                     manager.cancel(DfuBaseService.NOTIFICATION_ID)
                 }, 200)
             } else {
-                mDfuError = message
-                mProgressBar?.setTitle(message)
+                //mDfuError = message
+                //mProgressBar?.setTitle(message)
+
+                mProgressBar?.dismiss()
             }
+
+            EventBus.getDefault().post(BleEvent("dfu error"))//使用event 通知
+            Log.e("DFU", "DFU error $errorType, $message")
         }
     }
 
@@ -171,7 +176,7 @@ class DFUProcessClass() {
             mProgressBar?.setMessage("DFUing")
             mProgressBar?.isIndeterminate = false//功能不知道
             mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-            mProgressBar?.setCancelable(true)//
+            mProgressBar?.setCancelable(false)//
             mProgressBar?.max = 100
             mProgressBar?.show()
         }

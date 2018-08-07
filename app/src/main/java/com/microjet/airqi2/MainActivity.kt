@@ -1292,8 +1292,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         MyApplication.putDeviceSerial(hashMap[TvocNoseData.FWSerial].toString())
                         MyApplication.putDeviceType(hashMap[TvocNoseData.DEVICE].toString())
                         Log.d("PARSERB1", hashMap.toString())
+
+                        // 儲存裝置資訊
+                        if(!hashMap[TvocNoseData.FW].isNullOrEmpty()) {
+                            myPref.setSharePreferenceDeviceVer(hashMap[TvocNoseData.FW]!!)
+                        }
+                        if(!hashMap[TvocNoseData.FWSerial].isNullOrEmpty()) {
+                            myPref.setSharePreferenceDeviceSer(hashMap[TvocNoseData.FWSerial]!!)
+                        }
+                        if(!hashMap[TvocNoseData.DEVICE].isNullOrEmpty()) {
+                            myPref.setSharePreferenceDeviceType(hashMap[TvocNoseData.DEVICE]!!)
+                        }
+
                         showPm10OrNot()
-                        val aat = AirActionTask(this, "20" + hashMap[TvocNoseData.FW].toString() + hashMap[TvocNoseData.FWSerial].toString(), hashMap[TvocNoseData.DEVICE].toString())
+                        val aat = AirActionTask(this, "20${hashMap[TvocNoseData.FW]}${hashMap[TvocNoseData.FWSerial]}", "${hashMap[TvocNoseData.DEVICE]}")
                         aat.execute("postFWVersion")
                         Log.v("AirActionTask", "OVER")
                     }

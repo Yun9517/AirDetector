@@ -202,6 +202,9 @@ class SettingActivity : AppCompatActivity() {
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
         btnCheckFW.setOnClickListener {
+            val fwVer = "20${myPref.getSharePreferenceDeviceVer()}${myPref.getSharePreferenceDeviceSer()}"
+            val fwType = myPref.getSharePreferenceDeviceType()
+
             if (btnCheckFW.text == getString(R.string.dfu_title)) {
                 val file = File(this@SettingActivity.cacheDir, "FWupdate.zip")
 
@@ -209,17 +212,13 @@ class SettingActivity : AppCompatActivity() {
                     EventBus.getDefault().post(BleEvent("Download Success"))
                     Log.e("FWupdate", "File exist, call fw update again.")
                 } else {
-                    checkFwVersion("201801010000", "0004")
+                    checkFwVersion(fwVer, fwType)
                     Log.e("FWupdate", "File not exist, call download.")
                 }
             } else {
                 if (MyApplication.getDeviceChargeStatus()) {
-                    val fwVer = MyApplication.getDeviceVersion()
-                    val fwSerial = MyApplication.getDeviceSerial()
-                    val fwType = MyApplication.getDeviceType()
-                    //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
-                    checkFwVersion("20$fwVer$fwSerial", fwType)
-                    Log.e("FWupdate", "20$fwVer$fwSerial, $fwType")
+                    checkFwVersion(fwVer, fwType)
+                    Log.e("FWupdate", "$fwVer, $fwType")
                 } else {
                     showNotChargingDialog()
                 }
@@ -326,6 +325,9 @@ class SettingActivity : AppCompatActivity() {
             "dfu complete" -> {
                 showDfuCompleteDialog()
             }
+            "dfu error" -> {
+                showDfuFailDialog()
+            }
         }
     }
 
@@ -402,6 +404,22 @@ class SettingActivity : AppCompatActivity() {
         dlg.setTitle(getString(R.string.remind))
         //Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
         dlg.setMessage(getString(R.string.new_FW_Arrival_Dialog_Update_Done))
+        dlg.setCancelable(false)//讓返回鍵與空白無效
+        dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+            dialog.dismiss()
+            finish()
+        }
+        dlg.show()
+    }
+
+    private fun showDfuFailDialog() {
+        val dlg = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        dlg.setTitle(getString(R.string.remind))
+        //Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
+        dlg.setMessage("裝置更新失敗，請再試一次。\n若持續失敗請將裝置送回原廠。")
         dlg.setCancelable(false)//讓返回鍵與空白無效
         dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
         { dialog, _ ->

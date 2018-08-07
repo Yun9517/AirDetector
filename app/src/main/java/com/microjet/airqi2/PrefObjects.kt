@@ -37,6 +37,30 @@ class PrefObjects(context: Context) {
         share.edit().putString(SavePreferences.SETTING_SAVED_BT_NAME, value).apply()
     }
 
+    fun getSharePreferenceDeviceVer(): String {
+        return share.getString(SavePreferences.SETTING_SAVED_BT_DEVICE_VER, "180101")
+    }
+
+    fun setSharePreferenceDeviceVer(value: String) {
+        share.edit().putString(SavePreferences.SETTING_SAVED_BT_DEVICE_VER, value).apply()
+    }
+
+    fun getSharePreferenceDeviceSer(): String {
+        return share.getString(SavePreferences.SETTING_SAVED_BT_DEVICE_SER, "0000")
+    }
+
+    fun setSharePreferenceDeviceSer(value: String) {
+        share.edit().putString(SavePreferences.SETTING_SAVED_BT_DEVICE_SER, value).apply()
+    }
+
+    fun getSharePreferenceDeviceType(): String {
+        return share.getString(SavePreferences.SETTING_SAVED_BT_DEVICE_TYPE, "0000")
+    }
+
+    fun setSharePreferenceDeviceType(value: String) {
+        share.edit().putString(SavePreferences.SETTING_SAVED_BT_DEVICE_TYPE, value).apply()
+    }
+
     fun getSharePreferenceManualDisconn(): Boolean {
         return share.getBoolean(SavePreferences.SETTING_MANUAL_DISCONNECT, false)
     }
