@@ -515,4 +515,9 @@ class UartService : Service() {
     fun setFanOn() {
         writeRXCharacteristic(BLECallingTranslate.PM25FanCall(10))
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("UART", "Destroy")
+    }
 }

@@ -171,12 +171,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 startService(serviceIntent)
             }
             mUartService?.initFuseLocationProviderClient()
+            Log.d("mServiceConnection", "onServiceConnected")
         }
 
         override fun onServiceDisconnected(componentName: ComponentName) {
             mUartService = null
-            connState = BleConnection.DISCONNECTED
-            checkUIState()
+            Log.d("mServiceConnection", "onServiceDisconnected")
         }
     }
 
@@ -233,6 +233,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     companion object {
         var mUartService: UartService? = null
     }
+
+    private var bindServiceSuccess: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -291,14 +293,19 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //checkBluetooth()
         //20180802 Richard
         val gattServiceIntent = Intent(this, UartService::class.java)
-        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-        if (connState == BleConnection.DISCONNECTED) {
-            if (!myPref.getSharePreferenceManualDisconn()) {
-                mDeviceAddress = myPref.getSharePreferenceMAC()
-                if (mDeviceAddress != "noValue") {
-                    mUartService?.connect(mDeviceAddress)
+        bindServiceSuccess = bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        Log.d("bindServiceResult", bindServiceSuccess.toString())
+        if (mUartService != null && bindServiceSuccess) {
+            if (connState == BleConnection.DISCONNECTED) {
+                if (!myPref.getSharePreferenceManualDisconn()) {
+                    mDeviceAddress = myPref.getSharePreferenceMAC()
+                    if (mDeviceAddress != "noValue") {
+                        mUartService?.connect(mDeviceAddress)
+                    }
                 }
             }
+        } else {
+            connState = BleConnection.DISCONNECTED
         }
         //20180518
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
@@ -313,9 +320,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         super.onResume()
         EventBus.getDefault().register(this)
         Log.e(TAG, "call onResume")
-        if (mUartService == null) {
-            connState = BleConnection.DISCONNECTED
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             countForAndroidO = 0
             triggerForAndroidOOn = false
