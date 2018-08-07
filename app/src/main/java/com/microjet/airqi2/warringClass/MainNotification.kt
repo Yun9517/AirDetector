@@ -60,31 +60,36 @@ class MainNotification(context: Context) {
             NotificationCompat.Builder(mContext)
         }
 
-        val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
+        /*val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
         contentView.setImageViewResource(R.id.image, R.mipmap.icon_leaf)
         contentView.setTextViewText(R.id.contentTitle, "ADDWII")
-        contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))
+        contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))*/
 
         //contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("STOP_FOREGROUND"))
-        contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("MANUAL_DISCONNECT"))
+        //contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("MANUAL_DISCONNECT"))
 
         notificationBuilder.setOngoing(true)
 
-        //notificationBuilder.setContentTitle("ADDWII")
-        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))\
+        val style = android.support.v4.app.NotificationCompat.BigTextStyle()
+
+        //style.setBigContentTitle(mContext.getString(R.string.text_permanent_notification_name))
+        //style.setSummaryText(mContext.resources.getString(R.string.text_service_live_in_foreground))
+        notificationBuilder.setStyle(style)
+        notificationBuilder.setContentTitle(mContext.getString(R.string.text_permanent_notification_name))
+        notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
         notificationBuilder.setSmallIcon(R.mipmap.icon_leaf)
         notificationBuilder.color = ContextCompat.getColor(mContext, R.color.iconColor)
-        notificationBuilder.setCustomContentView(contentView)
+        //notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
 
         return notificationBuilder.build()
     }
 
-    private fun createPendingIntent(action: String): PendingIntent {
+    /*private fun createPendingIntent(action: String): PendingIntent {
         // 為了儲存對應Action的Service的Intent，建立PendingIntent
         val service = Intent(mContext, UartService::class.java)
         service.action = action
 
         return PendingIntent.getService(mContext, 0, service, 0)
-    }
+    }*/
 }

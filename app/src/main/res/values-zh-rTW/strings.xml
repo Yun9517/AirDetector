@@ -514,7 +514,7 @@
 
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">設定完成後請儲存設定</string>
-    <string name="text_service_live_in_foreground">ADDWII仍在背景執行！</string>
+    <string name="text_service_live_in_foreground">您打開了「允許背景服務常駐」功能，因此ADDWII會持續在背景運作</string>
     <string name="text_allow_service_run_in_foreground">允許背景服務常駐</string>
     <string name="text_allow_service_run_in_foreground_comment">下次開啟APP才會生效（須將APP完全關閉）</string>
     <string name="new_Version_Notify">有新版軟體可更新</string>
@@ -564,7 +564,6 @@
     <string name="text_photo_saved">照片已儲存</string>
     <string name="text_second">秒</string>
     <string name="error_login">登入失敗</string>
-    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="facebook_app_id">1406650272815007</string>
 
     <!-- 2018/07/17 AccountRetry -->
