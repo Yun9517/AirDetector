@@ -72,7 +72,7 @@
     <string name="text_label_Humi_Red">潮湿</string>
 
     <string name="text_battery_value">电池电量：</string>
-    <string name="text_battery_title">装置电量</string>
+    <string name="text_battery_title">设备电量</string>
     <string name="button_label_ok">确认</string>
     <string name="text_drawer_open">OPEN</string>
     <string name="text_drawer_close">CLOSE</string>
@@ -82,12 +82,12 @@
     <string name="text_navi_about">关于APP</string>
     <string name="text_navi_knowledge">知识库</string>
     <string name="text_navi_air_map">空气地图</string>
-    <string name="text_navi_add_device">新增装置</string>
-    <string name="text_navi_getData">读取装置资料</string>
+    <string name="text_navi_add_device">新增设备</string>
+    <string name="text_navi_getData">读取设备资料</string>
     <string name="text_navi_accountManagement">帐号管理</string>
 
     <string name="ble_not_supported">蓝牙未支援</string>
-    <string name="select_device">选择装置</string>
+    <string name="select_device">选择设备</string>
     <string name="scanning">扫描中</string>
     <string name="stopped">扫描结束</string>
     <string name="scan">扫描</string>
@@ -107,15 +107,15 @@
     <string name="About_App">关于APP</string>
     <string name="Already_Pair">已自动配对</string>
     <string name="Already_Connected">已连线</string> <!-- 2017/12/03 改文字 原 已手动连线 -->
-    <string name="No_Device_Connect">尚未连接装置</string> <!-- 2017/11/30 改抽屉标题 -->
+    <string name="No_Device_Connect">尚未连接设备</string> <!-- 2017/11/30 改抽屉标题 -->
     <string name="UART_Connecting">连线中</string>
-    <string name="UART_Disconnecting">装置断线</string> <!-- 2017/12/03 改文字 原 断开装置中 -->
+    <string name="UART_Disconnecting">设备断线</string> <!-- 2017/12/03 改文字 原 断开设备中 -->
     <string name="Loading_Data">读取资料中请稍候</string> <!-- 2017/12/03 新增文字 -->
-    <string name="Total_Data">共有资料</string> <!-- 2017/12/03 新增文字 读取装置资料的Toast-->
-    <string name="Total_Data_Finish">笔</string> <!-- 2017/12/03 新增文字 读取装置资料的Toast-->
-    <string name="Loading_Completely">读取完成</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
-    <string name="Number_of_data">读取第</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
-    <string name="Loading_fail">笔资料</string> <!-- 2017/12/04 新增文字 读取装置资料的Toast-->
+    <string name="Total_Data">共有资料</string> <!-- 2017/12/03 新增文字 读取设备资料的Toast-->
+    <string name="Total_Data_Finish">笔</string> <!-- 2017/12/03 新增文字 读取设备资料的Toast-->
+    <string name="Loading_Completely">读取完成</string> <!-- 2017/12/04 新增文字 读取设备资料的Toast-->
+    <string name="Number_of_data">读取第</string> <!-- 2017/12/04 新增文字 读取设备资料的Toast-->
+    <string name="Loading_fail">笔资料</string> <!-- 2017/12/04 新增文字 读取设备资料的Toast-->
     <string name="text_navi_title_map">地图</string>
     <string name="text_navi_title_help">求助</string>
 
@@ -219,7 +219,7 @@
     <string name="cloud_func_comment">开启本功能后即可上传侦测器空气品质的数据。</string>
     //2018/03/06
     <string name="not_yetDetected">侦测中</string>
-    <string name="text_label_device_version">侦测器韧体版本</string>
+    <string name="text_label_device_version">侦测器固件版本</string>
     <string name="text_label_device_version_detail">%1$s%2$s%3$s</string>
     <string name="text_label_local_uuid">手机 UUID</string>
 
@@ -278,8 +278,8 @@
     <string name="expectName">请输入欲更改的名称</string>
 
 
-    <string name="scanner_title">选择装置：</string>
-    <string name="scanner_empty">找不到装置</string>
+    <string name="scanner_title">选择设备：</string>
+    <string name="scanner_empty">找不到设备</string>
     <string name="scanner_action_scan">扫描</string>
     <string name="scanner_action_cancel">取消</string>
     <string name="scanner_subtitle_bonded">BONDED DEVICES:</string>
@@ -347,7 +347,7 @@
         <item>market://search?q=file manager</item>
     </string-array>
 
-    <string name="dfu_section_dfu_header">装置更新</string>
+    <string name="dfu_section_dfu_header">设备更新</string>
     <string name="dfu_action_upload">上传</string>
     <string name="dfu_action_upload_cancel">CANCEL</string>
 
@@ -420,7 +420,7 @@
     <string name="map_result_title">情报</string>
     <string name="getStarted">开始体验</string>
     <!--    云端下载视窗    -->
-    <string name="messag_text">蓝牙装置名称</string>
+    <string name="messag_text">蓝牙设备名称</string>
     <string name="messag_download">云端同步下载</string>
     <string name="text_navi_personal">个人轨迹</string>
 
@@ -442,7 +442,7 @@
     <string name="text_use_login_pw">改用密码登入</string>
     <string name="text_check_device_update">检查更新</string>
     <string name="text_setting_FW_update">更新</string>
-    <string name="text_setting_FW_updating">数据上传至装置中，请勿关闭装置</string>
+    <string name="text_setting_FW_updating">数据上传至设备中，请勿关闭设备</string>
 
     <string name="text_click_to_adjust">（按一下数值可微调）</string>
     <string name="text_cloud_notify">推播通知</string>
@@ -454,7 +454,7 @@
     <string name="text_user_experience">用户体验</string>
     <string name="text_buy_link">购买连结</string>
     <!--2018/05/28 new drawer -->
-    <string name="text_drawer_01_add_device">新增装置</string>
+    <string name="text_drawer_01_add_device">新增设备</string>
     <string name="text_drawer_02_mobile_nose">随身空污鼻</string>
     <string name="text_drawer_02_1_user_experience">用户体验</string>
     <string name="text_drawer_02_2_introduction">产品介绍</string>
@@ -512,19 +512,19 @@
 
     <string name="text_main_page_hint">往下滑更多</string>
     <string name="text_save_setting_message">设定完成后请储存设定</string>
-    <string name="text_service_live_in_foreground">ADDWII仍在背景执行！</string>
+    <string name="text_service_live_in_foreground">您打开了「允许背景服务常驻」功能，因此ADDWII会持续在背景运作</string>
     <string name="text_allow_service_run_in_foreground">允许背景服务常驻</string>
     <string name="text_allow_service_run_in_foreground_comment">下一次开启APP时才会生效（须将APP完全关闭）。</string>
     <string name="new_Version_Notify">有新版软件可更新</string>
 
     <!-- 2018/06/14 FW update dialog -->
-    <string name="new_FW_Arrival_Dialog_Title">韧体更新</string>
-    <string name="new_FW_Arrival_Dialog">请确保装置接上电源并避免晃动装置手机。\n提醒您，更新韧体本身具一定风险，若更新失败请联系 service@addwii.com</string>
+    <string name="new_FW_Arrival_Dialog_Title">固件更新</string>
+    <string name="new_FW_Arrival_Dialog">请确保设备接上电源并避免晃动设备与手机。\n提醒您，更新固件本身具一定风险，若更新失败请联系 service@addwii.com</string>
     <string name="new_FW_Arrival_Dialog_Button_Update">立即更新</string>
     <string name="new_FW_Arrival_Dialog_Button_Later">暂不更新</string>
     <string name="new_FW_Arrival_Dialog_Last_Version">您的Mobile Nose已是最新版本</string>
     <string name="new_FW_Arrival_Dialog_Charge">请将您的Mobile Nose插上充电线。</string>
-    <string name="new_FW_Arrival_Dialog_Update_Done">Mobile Nose已更新完成，请将您的Mobile Nose重新启动。</string>
+    <string name="new_FW_Arrival_Dialog_Update_Done">Mobile Nose已更新完成，请将您的Mobile Nose重启。</string>
 
     <!-- 2018/06/20 Dialog for Account Page -->
     <string name="dialog_Correct_Mail_Format">请输入正确的信箱格式</string>
@@ -561,11 +561,11 @@
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
     <string name="wait_Login">登入中請稍候</string>
 
-    <string name="wait_Setting">设定储存中，请稍后</string>
+    <string name="wait_Setting">存储设定中，请稍后</string>
     <string name="errorToken">帳號token已失效，請重新登入</string>
     <string name="checkToken">检查帐号权限有效性，请稍后</string>
     <string name="connectServer">连结伺服器，请稍后</string>
-    <string name="text_notification_description">由于您打开了「允许背景服务常驻通知列」功能，本服务会持续在背景执行，您可关闭本通知。但若您为 Android 8.1 用户，因系统原生限制，在关闭通知后，您仍会看到 Android 系统本身的提示。</string>
+    <string name="text_notification_description">由于您打开了「允许背景服务常驻」功能，本服务会持续在背景执行，您可关闭本通知。但若您为 Android 8.1 用户，因系统原生限制，在关闭通知后，您仍会看到 Android 系统本身的提示。</string>
     <string name="text_permanent_notification_name">ADDWII常驻通知</string>
 
 
@@ -585,6 +585,8 @@
     <!-- 2018/07/17 forgeteamil -->
     <string name="dialog_forgetPassword_emailSend">信箱验证中，请稍后</string>
     <string name="data_export">ADDWII 资料输出</string>
-    <string name="text_dlg_close_permanent">由于您关闭「允许背景服务常驻」，可能会无法使用到ADDWII的完整功能（例：个人轨迹、空气地图无法纪录您装置的位置等）。</string>
+    <string name="text_dlg_close_permanent">由于您关闭「允许背景服务常驻」，可能会无法使用到ADDWII的完整功能（例：个人轨迹、空气地图无法纪录您设备的位置等）。</string>
     <string name="NoDataAvailableForDownload">无云端资料可供下载</string>
+
+    <string name="close">关闭通知</string>
 </resources>

@@ -10,6 +10,9 @@ object SavePreferences {
     // 偏好設定中儲存藍芽名稱及MAC Address的KEY
     const val SETTING_SAVED_BT_NAME = "airqi2.settings.SETTING_SAVED_BT_NAME"
     const val SETTING_SAVED_BT_ADDR = "airqi2.settings.SETTING_SAVED_BT_ADDR"
+    const val SETTING_SAVED_BT_DEVICE_VER = "airqi2.settings.SETTING_SAVED_BT_DEVICE_VER"
+    const val SETTING_SAVED_BT_DEVICE_SER = "airqi2.settings.SETTING_SAVED_BT_DEVICE_SER"
+    const val SETTING_SAVED_BT_DEVICE_TYPE = "airqi2.settings.SETTING_SAVED_BT_DEVICE_TYPE"
 
     // 偏好設定中儲存設定參數的KEY
     const val SETTING_ALLOW_NOTIFY = "airqi2.settings.SETTING_ALLOW_NOTIFY"

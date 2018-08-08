@@ -60,22 +60,28 @@ class MainNotification(context: Context) {
             NotificationCompat.Builder(mContext)
         }
 
-        val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
+        /*val contentView = RemoteViews(mContext.packageName, R.layout.main_notification_layout)
         contentView.setImageViewResource(R.id.image, R.mipmap.icon_leaf)
         contentView.setTextViewText(R.id.contentTitle, "ADDWII")
-        contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))
+        contentView.setTextViewText(R.id.contentText, mContext.resources.getString(R.string.text_service_live_in_foreground))*/
 
         //contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("STOP_FOREGROUND"))
-        contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("MANUAL_DISCONNECT"))
+        //contentView.setOnClickPendingIntent(R.id.btnClose, createPendingIntent("MANUAL_DISCONNECT"))
 
         notificationBuilder.setOngoing(true)
 
-        //notificationBuilder.setContentTitle("ADDWII")
-        //notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))\
+        val style = android.support.v4.app.NotificationCompat.BigTextStyle()
+
+        //style.setBigContentTitle(mContext.getString(R.string.text_permanent_notification_name))
+        //style.setSummaryText(mContext.resources.getString(R.string.text_service_live_in_foreground))
+        notificationBuilder.setStyle(style)
+        notificationBuilder.setContentTitle(mContext.getString(R.string.text_permanent_notification_name))
+        notificationBuilder.setContentText(mContext.resources.getString(R.string.text_service_live_in_foreground))
         notificationBuilder.setSmallIcon(R.mipmap.icon_leaf)
         notificationBuilder.color = ContextCompat.getColor(mContext, R.color.iconColor)
-        notificationBuilder.setCustomContentView(contentView)
+        //notificationBuilder.setCustomContentView(contentView)
         notificationBuilder.setContentIntent(mainPendingIntent)
+        notificationBuilder.addAction(android.R.drawable.ic_delete, mContext.getString(R.string.close), createPendingIntent("STOP_FOREGROUND"))
 
         return notificationBuilder.build()
     }

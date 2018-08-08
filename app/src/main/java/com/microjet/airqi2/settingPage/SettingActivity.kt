@@ -30,6 +30,7 @@ import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_setting.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -201,15 +202,25 @@ class SettingActivity : AppCompatActivity() {
 
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
         btnCheckFW.setOnClickListener {
+            val fwVer = "20${myPref.getSharePreferenceDeviceVer()}${myPref.getSharePreferenceDeviceSer()}"
+            //val fwVer = "201801010000"      // 假版本，測試用
+            val fwType = myPref.getSharePreferenceDeviceType()
+
             if (btnCheckFW.text == getString(R.string.dfu_title)) {
-                EventBus.getDefault().post(BleEvent("Download Success"))
+                val file = File(this@SettingActivity.cacheDir, "FWupdate.zip")
+
+                // 判斷韌體檔案是否存在
+                if(file.exists()) {
+                    EventBus.getDefault().post(BleEvent("Download Success"))
+                    Log.e("FWupdate", "File exist, call fw update again.")
+                } else {
+                    checkFwVersion(fwVer, fwType)
+                    Log.e("FWupdate", "File not exist, call download.")
+                }
             } else {
                 if (MyApplication.getDeviceChargeStatus()) {
-                    val fwVer = MyApplication.getDeviceVersion()
-                    val fwSerial = MyApplication.getDeviceSerial()
-                    val fwType = MyApplication.getDeviceType()
-                    //checkFwVersion("20$fwVer$fwSerial", "00$fwType")
-                    checkFwVersion("20$fwVer$fwSerial", fwType)
+                    checkFwVersion(fwVer, fwType)
+                    Log.e("FWupdate", "$fwVer, $fwType")
                 } else {
                     showNotChargingDialog()
                 }
@@ -308,13 +319,19 @@ class SettingActivity : AppCompatActivity() {
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
                 val dfup = DFUProcessClass(this)
+                val mDeviceName = myPref.getSharePreferenceName()
                 val mDeviceAddress = myPref.getSharePreferenceMAC()
                 if (mDeviceAddress != "noValue") {
-                    dfup.DFUAction("", mDeviceAddress)
+                    dfup.DFUAction(mDeviceName, mDeviceAddress)
+                    Log.e("DFU", "Start DFU")
                 }
             }
             "dfu complete" -> {
                 showDfuCompleteDialog()
+            }
+            "dfu error" -> {
+                showDfuFailDialog()
+                btnCheckFW.text = getString(R.string.dfu_title)
             }
         }
     }
@@ -397,6 +414,22 @@ class SettingActivity : AppCompatActivity() {
         { dialog, _ ->
             dialog.dismiss()
             finish()
+        }
+        dlg.show()
+    }
+
+    private fun showDfuFailDialog() {
+        val dlg = android.app.AlertDialog.Builder(this).create()
+        //必須是android.app.AlertDialog.Builder 否則alertDialog.show()會報錯
+        //Dialog.setTitle("提示")
+        dlg.setTitle(getString(R.string.remind))
+        //Dialog.setMessage("Mobile Nose已更新完成，請將您的Mobile Nose重新開機。\n按下Yes將返回到主畫面。")
+        dlg.setMessage("裝置更新失敗，請再試一次。\n若持續失敗請將裝置送回原廠。")
+        dlg.setCancelable(false)//讓返回鍵與空白無效
+        dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
+        { dialog, _ ->
+            dialog.dismiss()
+            //finish()
         }
         dlg.show()
     }

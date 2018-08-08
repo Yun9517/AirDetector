@@ -1,6 +1,7 @@
 package com.microjet.airqi2.BlueTooth.DFU
 
 import android.app.Activity
+import android.util.Log
 
 import com.microjet.airqi2.AboutActivity
 import no.nordicsemi.android.dfu.DfuBaseService
@@ -31,5 +32,10 @@ class DFUService : DfuBaseService() {
     override fun isDebug(): Boolean {
         // return BuildConfig.DEBUG;
         return true
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.e("DFU", "DFU service destroyed.")
     }
 }

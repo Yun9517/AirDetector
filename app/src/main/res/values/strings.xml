@@ -409,7 +409,7 @@
 
     <string name="text_main_page_hint">More detail</string>
     <string name="text_save_setting_message">Click SAVE to complete all set up</string>
-    <string name="text_service_live_in_foreground">ADDWII still run in background!</string>
+    <string name="text_service_live_in_foreground">You have turned on the "Allow background service permanent" feature, so ADDWII will continue to work in the background.</string>
     <string name="text_allow_service_run_in_foreground">Allow background service permanent</string>
     <string name="text_allow_service_run_in_foreground_comment">Restart APP to active（Must completely close APP）</string>
     <string name="new_Version_Notify">You can update to the latest version.</string>
@@ -577,4 +577,6 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="dialog_forgetPassword_emailSend">Sending Verify Mail,Please Wait</string>
     <string name="data_export">ADDWII Data Export</string>
     <string name="text_dlg_close_permanent">Since you turn off "Allow background service permanent", you may not be able to use the full functionality of ADDWII (eg personal track, air map cannot record the location of your device, etc.).</string>
+
+    <string name="close">CLOSE</string>
 </resources>

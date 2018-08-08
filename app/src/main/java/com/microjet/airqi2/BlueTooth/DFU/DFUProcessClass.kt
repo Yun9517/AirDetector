@@ -2,6 +2,7 @@ package com.microjet.airqi2.BlueTooth.DFU
 
 /**
  * Created by B00055 on 2018/4/12.
+ *
  */
 import android.app.ActivityManager
 import android.app.NotificationManager
@@ -55,7 +56,8 @@ class DFUProcessClass() {
 
         override fun onDfuCompleted(deviceAddress: String?) {
             //mTextPercentage!!.setText(R.string.dfu_status_completed)
-            mProgressBar?.setMessage("Dfu Completed")
+            //mProgressBar?.setMessage("Dfu Completed")
+            mProgressBar?.dismiss()
             if (mResumed) {
                 // let's wait a bit until we cancel the notification. When canceled immediately it will be recreated by service again.
                 Handler().postDelayed({
@@ -127,8 +129,32 @@ class DFUProcessClass() {
                     manager.cancel(DfuBaseService.NOTIFICATION_ID)
                 }, 200)
             } else {
-                mDfuError = message
-                mProgressBar?.setTitle(message)
+                //mDfuError = message
+                //mProgressBar?.setTitle(message)
+
+                mProgressBar?.dismiss()
+            }
+            // 重組 MAC Address
+            val addrBeforeByte = myDeviceAddress!!.substring(0, 15)
+            val addrLastByte = myDeviceAddress!!.substring(15)
+            val addrDfu = String.format("%x", addrLastByte.toInt(radix = 16) + 1).toUpperCase()
+
+            val dfuAddress = "$addrBeforeByte${
+            if(myDeviceName == "DfuTarg") {
+                addrLastByte
+            } else {
+                if(retryCount == 0) addrDfu else addrLastByte
+            }
+            }"
+
+            if(retryCount < 2) {
+                retryCount++
+                DFUAction(myDeviceName!!, dfuAddress)
+                Log.e("DFU", "($deviceAddress) DFU error, retry count: $retryCount")
+            } else {
+                retryCount = 0
+                EventBus.getDefault().post(BleEvent("dfu error"))//使用event 通知失敗
+                Log.e("DFU", "($deviceAddress) DFU error, code: $error, type: $errorType, message: $message")
             }
         }
     }
@@ -157,6 +183,8 @@ class DFUProcessClass() {
     private var mFilePath: String? = null
     private var mProgressBar: ProgressDialog? = null
 
+    private var retryCount = 0
+
     init {
     }
 
@@ -171,7 +199,7 @@ class DFUProcessClass() {
             mProgressBar?.setMessage("DFUing")
             mProgressBar?.isIndeterminate = false//功能不知道
             mProgressBar?.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL)
-            mProgressBar?.setCancelable(true)//
+            mProgressBar?.setCancelable(false)//
             mProgressBar?.max = 100
             mProgressBar?.show()
         }
@@ -208,11 +236,10 @@ class DFUProcessClass() {
         val forceDfu = preferences.getBoolean(DfuSettingsConstants.SETTINGS_ASSUME_DFU_NODE, true)
         val enablePRNs = preferences.getBoolean(DfuSettingsConstants.SETTINGS_PACKET_RECEIPT_NOTIFICATION_ENABLED, Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
         val value = preferences.getString(DfuSettingsConstants.SETTINGS_NUMBER_OF_PACKETS, DfuServiceInitiator.DEFAULT_PRN_VALUE.toString())
-        var numberOfPackets: Int
-        try {
-            numberOfPackets = Integer.parseInt(value)
+        val numberOfPackets: Int = try {
+            Integer.parseInt(value)
         } catch (e: NumberFormatException) {
-            numberOfPackets = DfuServiceInitiator.DEFAULT_PRN_VALUE
+            DfuServiceInitiator.DEFAULT_PRN_VALUE
         }
         val starter = DfuServiceInitiator(myDeviceAddress!!)//mSelectedDevice!!.address)
                 .setDeviceName(myDeviceName)//mSelectedDevice!!.name)
