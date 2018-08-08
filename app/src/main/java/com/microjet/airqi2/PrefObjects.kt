@@ -54,7 +54,7 @@ class PrefObjects(context: Context) {
     }
 
     fun getSharePreferenceDeviceType(): String {
-        return share.getString(SavePreferences.SETTING_SAVED_BT_DEVICE_TYPE, "0000")
+        return share.getString(SavePreferences.SETTING_SAVED_BT_DEVICE_TYPE, "0004")
     }
 
     fun setSharePreferenceDeviceType(value: String) {

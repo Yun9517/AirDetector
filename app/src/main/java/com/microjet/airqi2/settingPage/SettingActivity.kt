@@ -203,11 +203,13 @@ class SettingActivity : AppCompatActivity() {
         // 2018/05/22 Depend on the device status, change the button name (Update or Fix) - Part two
         btnCheckFW.setOnClickListener {
             val fwVer = "20${myPref.getSharePreferenceDeviceVer()}${myPref.getSharePreferenceDeviceSer()}"
+            //val fwVer = "201801010000"      // 假版本，測試用
             val fwType = myPref.getSharePreferenceDeviceType()
 
             if (btnCheckFW.text == getString(R.string.dfu_title)) {
                 val file = File(this@SettingActivity.cacheDir, "FWupdate.zip")
 
+                // 判斷韌體檔案是否存在
                 if(file.exists()) {
                     EventBus.getDefault().post(BleEvent("Download Success"))
                     Log.e("FWupdate", "File exist, call fw update again.")
@@ -317,9 +319,11 @@ class SettingActivity : AppCompatActivity() {
                 intent.setClass(this, DFUActivity::class.java)
                 startActivity(intent)*/
                 val dfup = DFUProcessClass(this)
+                val mDeviceName = myPref.getSharePreferenceName()
                 val mDeviceAddress = myPref.getSharePreferenceMAC()
                 if (mDeviceAddress != "noValue") {
-                    dfup.DFUAction("", mDeviceAddress)
+                    dfup.DFUAction(mDeviceName, mDeviceAddress)
+                    Log.e("DFU", "Start DFU")
                 }
             }
             "dfu complete" -> {
@@ -327,6 +331,7 @@ class SettingActivity : AppCompatActivity() {
             }
             "dfu error" -> {
                 showDfuFailDialog()
+                btnCheckFW.text = getString(R.string.dfu_title)
             }
         }
     }
@@ -424,7 +429,7 @@ class SettingActivity : AppCompatActivity() {
         dlg.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.Accept))//是
         { dialog, _ ->
             dialog.dismiss()
-            finish()
+            //finish()
         }
         dlg.show()
     }
