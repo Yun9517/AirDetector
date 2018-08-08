@@ -231,6 +231,10 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         swCloudNotifyVal = myPref.getSharePreferenceFirebase()
         swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
         swSoundVal = myPref.getSharePreferenceAllowBroadcastSound()
+        when(TvocNoseData.firebaseNotiftime){
+            25-> swCloudNotifyVal = false
+            else -> swCloudNotifyVal = true
+        }
 
         swAllowCloudNotify?.isChecked = swCloudNotifyVal
         if (swCloudNotifyVal) {
