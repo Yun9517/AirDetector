@@ -2,7 +2,6 @@ package com.microjet.airqi2.FireBaseCloudMessage
 
 
 import android.os.AsyncTask
-import android.os.Build
 import android.util.Log
 import com.microjet.airqi2.BleEvent
 import com.microjet.airqi2.TvocNoseData
@@ -20,7 +19,7 @@ class FirebaseNotifSettingTask : AsyncTask<String, Int, String>() {
 
     override fun onPreExecute() {
         super.onPreExecute()
-        val urlEvent = BleEvent("wait Dialog")
+        val urlEvent = BleEvent("waitDialog")
         EventBus.getDefault().post(urlEvent)
     }
 
@@ -95,34 +94,9 @@ class FirebaseNotifSettingTask : AsyncTask<String, Int, String>() {
     override fun onPostExecute(result: String?) {
         super.onPostExecute(result)
         try {
-            val urlEvent_close = BleEvent("close Wait Dialog")
-            EventBus.getDefault().post(urlEvent_close)
             if (result != null && setting == 4) {
-                when (result) {
-                    "FirebaseSetting_success" -> {
-                        if (Build.BRAND != "OPPO") {//雲端推播設定完成
-                            val urlEvent_success = BleEvent("FirebaseSetting_success")
-                            EventBus.getDefault().post(urlEvent_success)
-                        }
-                    }
-                    "Error" -> {
-                        if (Build.BRAND != "OPPO") {//推播錯誤
-                            Log.e("FirebaseNotif", "error")
-                        }
-                    }
-                    "ResponseError" -> {//請登入帳號
-                        Log.e("ResponseError", "測試中")
-                        val urlEvent_success = BleEvent("ResponseError")
-                        EventBus.getDefault().post(urlEvent_success)
-                    }
-                    "ReconnectNetwork" -> {
-                        if (Build.BRAND != "OPPO") {//請連結網路
-                            val urlEvent_success = BleEvent("ReconnectNetwork")
-                            EventBus.getDefault().post(urlEvent_success)
-                        }
-                    }
-                }
-
+                TvocNoseData.firebaseSettingResult = result
+                EventBus.getDefault().post(BleEvent("firebaseNotifiSettingTask"))
             } else {
                 Log.d("Setting_error", "沒有進入判斷")
             }

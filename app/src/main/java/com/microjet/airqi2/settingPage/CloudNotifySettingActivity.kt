@@ -59,6 +59,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         initActionBar()
         //20180516 by 白~~~~~~~~~~~~~~~~~~~告
         setFCMSettingView()
+        Log.e(TAG,TvocNoseData.firebaseNotiftime.toString()+"_"+TvocNoseData.firebaseNotifTVOC.toString()+"_"+TvocNoseData.firebaseNotifPM25.toString())
     }
 
     private fun readPreferences() {
@@ -252,6 +253,10 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         swCloudNotifyVal = myPref.getSharePreferenceFirebase()
         swVibrateVal = myPref.getSharePreferenceAllowBroadcastVibrate()
         swSoundVal = myPref.getSharePreferenceAllowBroadcastSound()
+        when(TvocNoseData.firebaseNotiftime){
+            25-> swCloudNotifyVal = false
+            else -> swCloudNotifyVal = true
+        }
 
         swAllowCloudNotify?.isChecked = swCloudNotifyVal
         if (swCloudNotifyVal) {
@@ -352,6 +357,9 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+        if (TvocNoseData.firebaseSettingResult != null && TvocNoseData.firebaseSettingResult != "") {
+            processResult()
+        }
     }
 
     override fun onPause() {
@@ -365,31 +373,43 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         Log.d("AirAction", bleEvent.message)
         var newFrage: CheckFragment? = null
         when (bleEvent.message) {
-            "wait Dialog" -> {
-                newFrage = CheckFragment().newInstance(R.string.remind,R.string.wait_Setting, this, 0,"wait")
+            "waitDialog" -> {
+                val newFrage = CheckFragment().newInstance(R.string.remind, R.string.wait_Setting, this, 0, "wait")
                 newFrage.setCancelable(false)
+                if (TvocNoseData.firebaseNotiftime != 25){newFrage?.show(fragmentManager, "dialog")}
             }
-            "close Wait Dialog" -> {
-                val previousDialog = fragmentManager.findFragmentByTag("dialog")
-                if (previousDialog != null) {
-                    val dialog = previousDialog as DialogFragment
-                    dialog.dismiss()
-                }
-            }
+            "firebaseNotifiSettingTask" -> processResult()
+
+        }
+
+    }
+
+    private fun processResult() {
+        val previousDialog = fragmentManager.findFragmentByTag("dialog")
+        if (previousDialog != null) {
+            val dialog = previousDialog as DialogFragment
+            dialog.dismiss()
+        }
+        var newFrage: CheckFragment? = null
+        when (TvocNoseData.firebaseSettingResult) {
             "FirebaseSetting_success" -> {
                 myPref.setSharePreferenceFirebase(swCloudNotifyVal)
                 setFCMSettingView()
-                newFrage = CheckFragment().newInstance(R.string.remind,R.string.fireBase_Toast_Setup_Done, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.remind, R.string.fireBase_Toast_Setup_Done, this, 1, "dismiss")
             }
             "ResponseError" -> {
-                newFrage = CheckFragment().newInstance(R.string.remind,R.string.fireBase_Toast_SignIn, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.remind, R.string.fireBase_Toast_SignIn, this, 1, "dismiss")
             }
             "ReconnectNetwork" -> {
-                newFrage = CheckFragment().newInstance(R.string.remind,R.string.checkConnection, this, 1,"dismiss")
+                newFrage = CheckFragment().newInstance(R.string.remind, R.string.checkConnection, this, 1, "dismiss")
             }
         }
-        if( TvocNoseData.firebaseNotiftime != 25){
+        if (TvocNoseData.firebaseNotiftime != 25) {
             newFrage?.show(fragmentManager, "dialog")
         }
+        TvocNoseData.firebaseSettingResult = ""
+        Log.e(TAG,TvocNoseData.firebaseNotiftime.toString())
     }
+
+
 }
