@@ -145,7 +145,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty() && value.toInt() in 220..2200) {
+                /*if (value.isNotEmpty() && value.toInt() in 220..2200) {
                     tvocSeekBar.setValue(value.toFloat())
                     setSeekBarColor(tvocSeekBar, value.toFloat(), true)
                     setSeekBarValue(tvocSeekValue, value.toFloat())
@@ -153,6 +153,18 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    var assignNumber = 0
+                    when(value.toInt()) {
+                        in 220..2200 -> assignNumber = value.toInt()
+                        in 0..219 -> assignNumber = 220
+                        else -> assignNumber = 2200
+                    }
+                    tvocSeekBar.setValue(assignNumber.toFloat())
+                    setSeekBarColor(tvocSeekBar, assignNumber.toFloat(), true)
+                    setSeekBarValue(tvocSeekValue, assignNumber.toFloat())
+                    myPref.setSharePreferenceAllowNotifyTvocValue(assignNumber)
                 }
             })
 
@@ -173,7 +185,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty() && value.toInt() in 16..150) {
+                /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     pm25SeekBar.setValue(value.toFloat())
                     setSeekBarColor(pm25SeekBar, value.toFloat(), false)
                     setSeekBarValue(pm25SeekValue, value.toFloat())
@@ -181,6 +193,18 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    var assignNumber = 0
+                    when(value.toInt()) {
+                        in 16..150 -> assignNumber = value.toInt()
+                        in 0..15 -> assignNumber = 15
+                        else -> assignNumber = 150
+                    }
+                    pm25SeekBar.setValue(assignNumber.toFloat())
+                    setSeekBarColor(pm25SeekBar, assignNumber.toFloat(), false)
+                    setSeekBarValue(pm25SeekValue, assignNumber.toFloat())
+                    myPref.setSharePreferenceAllowNotifyPM25Value(assignNumber)
                 }
             })
 

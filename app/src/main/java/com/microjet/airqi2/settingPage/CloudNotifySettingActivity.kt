@@ -148,7 +148,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
 
-                if (value.isNotEmpty()) {
+                /*if (value.isNotEmpty()) {
                     if (value.toInt() in 220..2200) {
                         cloudTvocSeekBar.setValue(value.toFloat())
                         cloudTVOC = value.toInt()
@@ -157,9 +157,20 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     } else {
                         Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                     }
+                }*/
+                if (value.isNotEmpty()) {
+                    var assignNumber = 0
+                    when (value.toInt()) {
+                        in 220..2200 -> assignNumber = value.toInt()
+                        in 0..219 -> assignNumber = 220
+                        else ->  assignNumber = 2200
+                    }
+                    cloudTvocSeekBar.setValue(assignNumber.toFloat())
+                    cloudTVOC = assignNumber
+                    setSeekBarColor(cloudTvocSeekBar, assignNumber.toFloat(), true)
+                    setSeekBarValue(cloudTvocSeekValue, assignNumber.toFloat())
                 }
             })
-
             dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
@@ -176,16 +187,27 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
                 val value = editText.text.toString()
-                if (value.isNotEmpty() && value.toInt() in 16..150) {
+                /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
                     cloudPM25 = value.toInt()
                     setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
                     setSeekBarValue(cloudPM25SeekValue, value.toFloat())
                 } else {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
+                }*/
+                if (value.isNotEmpty()) {
+                    var assignNumber = 0
+                    when(value.toInt()) {
+                        in 16..150 -> assignNumber = value.toInt()
+                        in 0..15 -> assignNumber = 15
+                        else -> assignNumber = 150
+                    }
+                    cloudPM25SeekBar.setValue(assignNumber.toFloat())
+                    cloudPM25 = assignNumber
+                    setSeekBarColor(cloudPM25SeekBar, assignNumber.toFloat(), false)
+                    setSeekBarValue(cloudPM25SeekValue, assignNumber.toFloat())
                 }
             })
-
             dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
