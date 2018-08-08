@@ -37,8 +37,6 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
 
     private lateinit var myPref: PrefObjects
 
-    private var assignNumber = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting2)
@@ -157,6 +155,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
+                    var assignNumber = 0
                     when(value.toInt()) {
                         in 220..2200 -> assignNumber = value.toInt()
                         in 0..219 -> assignNumber = 220
@@ -196,6 +195,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
+                    var assignNumber = 0
                     when(value.toInt()) {
                         in 16..150 -> assignNumber = value.toInt()
                         in 0..15 -> assignNumber = 15
