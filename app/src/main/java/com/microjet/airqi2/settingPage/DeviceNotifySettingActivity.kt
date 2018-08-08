@@ -37,6 +37,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
 
     private lateinit var myPref: PrefObjects
 
+    private var assignNumber = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting2)
@@ -156,25 +158,14 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                 }*/
                 if (value.isNotEmpty()) {
                     when(value.toInt()) {
-                        in 220..2200 -> {
-                            tvocSeekBar.setValue(value.toFloat())
-                            setSeekBarColor(tvocSeekBar, value.toFloat(), true)
-                            setSeekBarValue(tvocSeekValue, value.toFloat())
-                            myPref.setSharePreferenceAllowNotifyTvocValue(value.toInt())
-                        }
-                        in 0..219 -> {
-                            tvocSeekBar.setValue(220f)
-                            setSeekBarColor(tvocSeekBar, 220f, true)
-                            setSeekBarValue(tvocSeekValue, 220f)
-                            myPref.setSharePreferenceAllowNotifyTvocValue(220)
-                        }
-                        else -> {
-                            tvocSeekBar.setValue(2200f)
-                            setSeekBarColor(tvocSeekBar, 2200f, true)
-                            setSeekBarValue(tvocSeekValue, 2200f)
-                            myPref.setSharePreferenceAllowNotifyTvocValue(2200)
-                        }
+                        in 220..2200 -> assignNumber = value.toInt()
+                        in 0..219 -> assignNumber = 220
+                        else -> assignNumber = 2200
                     }
+                    tvocSeekBar.setValue(assignNumber.toFloat())
+                    setSeekBarColor(tvocSeekBar, assignNumber.toFloat(), true)
+                    setSeekBarValue(tvocSeekValue, assignNumber.toFloat())
+                    myPref.setSharePreferenceAllowNotifyTvocValue(assignNumber)
                 }
             })
 
@@ -205,26 +196,15 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
-                    when(value.toFloat()) {
-                        in 16..150 -> {
-                            pm25SeekBar.setValue(value.toFloat())
-                            setSeekBarColor(pm25SeekBar, value.toFloat(), false)
-                            setSeekBarValue(pm25SeekValue, value.toFloat())
-                            myPref.setSharePreferenceAllowNotifyPM25Value(value.toInt())
-                        }
-                        in 0..15 -> {
-                            pm25SeekBar.setValue(15f)
-                            setSeekBarColor(pm25SeekBar, 15f, false)
-                            setSeekBarValue(pm25SeekValue, 15f)
-                            myPref.setSharePreferenceAllowNotifyPM25Value(15)
-                        }
-                        else -> {
-                            pm25SeekBar.setValue(150f)
-                            setSeekBarColor(pm25SeekBar, 150f, false)
-                            setSeekBarValue(pm25SeekValue, 150f)
-                            myPref.setSharePreferenceAllowNotifyPM25Value(150)
-                        }
+                    when(value.toInt()) {
+                        in 16..150 -> assignNumber = value.toInt()
+                        in 0..15 -> assignNumber = 15
+                        else -> assignNumber = 150
                     }
+                    pm25SeekBar.setValue(assignNumber.toFloat())
+                    setSeekBarColor(pm25SeekBar, assignNumber.toFloat(), false)
+                    setSeekBarValue(pm25SeekValue, assignNumber.toFloat())
+                    myPref.setSharePreferenceAllowNotifyPM25Value(assignNumber)
                 }
             })
 

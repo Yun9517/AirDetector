@@ -48,6 +48,8 @@ class CloudNotifySettingActivity : AppCompatActivity() {
 
     private lateinit var myPref: PrefObjects
 
+    private var assignNumber = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting3)
@@ -160,28 +162,16 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 }*/
                 if (value.isNotEmpty()) {
                     when (value.toInt()) {
-                        in 220..2200 -> {
-                            cloudTvocSeekBar.setValue(value.toFloat())
-                            cloudTVOC = value.toInt()
-                            setSeekBarColor(cloudTvocSeekBar, value.toFloat(), true)
-                            setSeekBarValue(cloudTvocSeekValue, value.toFloat())
-                        }
-                        in 0..219 -> {
-                            cloudTvocSeekBar.setValue(220f)
-                            cloudTVOC = value.toInt()
-                            setSeekBarColor(cloudTvocSeekBar, 220f, true)
-                            setSeekBarValue(cloudTvocSeekValue, 220f)
-                        }
-                        else -> {
-                            cloudTvocSeekBar.setValue(2200f)
-                            cloudTVOC = value.toInt()
-                            setSeekBarColor(cloudTvocSeekBar, 2200f, true)
-                            setSeekBarValue(cloudTvocSeekValue, 2200f)
-                        }
+                        in 220..2200 -> assignNumber = value.toInt()
+                        in 0..219 -> assignNumber = 220
+                        else ->  assignNumber = 2200
                     }
+                    cloudTvocSeekBar.setValue(assignNumber.toFloat())
+                    cloudTVOC = assignNumber
+                    setSeekBarColor(cloudTvocSeekBar, assignNumber.toFloat(), true)
+                    setSeekBarValue(cloudTvocSeekValue, assignNumber.toFloat())
                 }
             })
-
             dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
@@ -208,29 +198,16 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                 }*/
                 if (value.isNotEmpty()) {
                     when(value.toInt()) {
-                        in 16..150 -> {
-                            cloudPM25SeekBar.setValue(value.toFloat())
-                            cloudPM25 = value.toInt()
-                            setSeekBarColor(cloudPM25SeekBar, value.toFloat(), false)
-                            setSeekBarValue(cloudPM25SeekValue, value.toFloat())
-                        }
-                        in 0..15 -> {
-                            cloudPM25SeekBar.setValue(15f)
-                            cloudPM25 = value.toInt()
-                            setSeekBarColor(cloudPM25SeekBar, 15f, false)
-                            setSeekBarValue(cloudPM25SeekValue, 15f)
-                        }
-                        else -> {
-                            cloudPM25SeekBar.setValue(150f)
-                            cloudPM25 = value.toInt()
-                            setSeekBarColor(cloudPM25SeekBar, 150f, false)
-                            setSeekBarValue(cloudPM25SeekValue, 150f)
-                            Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
-                        }
+                        in 16..150 -> assignNumber = value.toInt()
+                        in 0..15 -> assignNumber = 15
+                        else -> assignNumber = 150
                     }
+                    cloudPM25SeekBar.setValue(assignNumber.toFloat())
+                    cloudPM25 = assignNumber
+                    setSeekBarColor(cloudPM25SeekBar, assignNumber.toFloat(), false)
+                    setSeekBarValue(cloudPM25SeekValue, assignNumber.toFloat())
                 }
             })
-
             dialog.setNegativeButton(getString(android.R.string.cancel), null)
             dialog.show()
         }
