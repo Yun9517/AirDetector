@@ -59,6 +59,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         initActionBar()
         //20180516 by 白~~~~~~~~~~~~~~~~~~~告
         setFCMSettingView()
+        Log.e(TAG,TvocNoseData.firebaseNotiftime.toString()+"_"+TvocNoseData.firebaseNotifTVOC.toString()+"_"+TvocNoseData.firebaseNotifPM25.toString())
     }
 
     private fun readPreferences() {
@@ -381,6 +382,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             newFrage?.show(fragmentManager, "dialog")
         }
         TvocNoseData.firebaseSettingResult = ""
+        Log.e(TAG,TvocNoseData.firebaseNotiftime.toString())
     }
 
 
