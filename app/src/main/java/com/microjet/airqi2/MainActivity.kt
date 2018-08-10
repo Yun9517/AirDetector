@@ -1060,9 +1060,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     @Synchronized
     private fun checkUIState() {
         if (connState == BleConnection.CONNECTED) {
-            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
-            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
-            img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
             val share = getSharedPreferences(SavePreferences.SETTING_KEY, Activity.MODE_PRIVATE)
             show_Dev_address?.text = myPref.getSharePreferenceMAC()
             show_Device_Name?.text = myPref.getSharePreferenceName()
@@ -1075,9 +1072,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
         } else {
-            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
-            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
-            img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
             /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
@@ -1091,6 +1085,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()
         // **************************************************************** //
+        invalidateOptionsMenu()
         Log.d("MAINcheckUIState", connState.toString())
     }
 
@@ -2104,6 +2099,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
             true
         })
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        if (connState == BleConnection.CONNECTED) {
+            battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+            bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
+            img_bt_status!!.setImageResource(R.drawable.app_android_icon_connect)
+        } else {
+            battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
+            bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
+            img_bt_status!!.setImageResource(R.drawable.app_android_icon_disconnect)
+        }
+
+        return super.onPrepareOptionsMenu(menu)
     }
 }
 
