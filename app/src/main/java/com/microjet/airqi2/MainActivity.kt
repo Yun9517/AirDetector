@@ -934,42 +934,42 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         // Charge
             in 101..200 -> {
                 when (batValue) {
-                    200 -> {
+                    in 188..200 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_6)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (icon.isRunning) {
                             icon.stop()
                         }
                     }
-                    in 180..199 -> {
+                    in 176..187 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_5)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
                             icon.start()
                         }
                     }
-                    in 160..180 -> {
+                    in 141..175 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_4)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
                             icon.start()
                         }
                     }
-                    in 140..160 -> {
+                    in 121..140 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_3)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
                             icon.start()
                         }
                     }
-                    in 120..140 -> {
+                    in 110..120 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_2)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
                             icon.start()
                         }
                     }
-                    in 101..120 -> {
+                    in 101..109 -> {
                         battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bat_charge_1)
                         icon = battreyIcon?.icon as AnimationDrawable
                         if (!icon.isRunning) {
