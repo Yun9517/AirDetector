@@ -78,7 +78,8 @@ class WarringClass(context: Context) {
         pm25ArrayStringList.add(R.string.label_pm25_Purple)
         pm25ArrayStringList.add(R.string.label_pm25_Brown)
         pm25Vibrator.setArrayPoint(pm25ArrayAlertValue)
-        pm25Notification.setArrayPoint(pm25ArrayStringList)
+        pm25Notification.setArrayPoint(pm25ArrayAlertValue)
+        pm25Notification.setArrayTitle(pm25ArrayStringList)
 
     }
 
