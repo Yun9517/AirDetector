@@ -31,6 +31,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.webkit.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -281,6 +282,27 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        wvMapMain.loadUrl("https://mjairql.com/air_map/")
+        wvMapMain.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                when (error!!.errorCode) {
+                    -2 -> {
+                        Toast.makeText(MyApplication.applicationContext(), "請連接網路", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+
+                    }
+                }
+
+            }
+        }
+        wvMapMain.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+                callback.invoke(origin, true, false)
+            }
+        }
+        wvMapMain.settings.javaScriptEnabled = true
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -339,6 +361,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForAndroidO = 0
             triggerForAndroidOOn = true
         }
+        var ws = wvMapMain.settings
+        ws.javaScriptEnabled = false
         checkUIState()
         Log.e(TAG, "call onStop")
     }
@@ -361,6 +385,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService != null) {
             unbindService(mServiceConnection)
         }
+        wvMapMain.clearCache(true)
 
         //EventBus.getDefault().unregister(this)
     }
@@ -1086,6 +1111,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         mMenuAdapter!!.notifyDataSetInvalidated()
         // **************************************************************** //
         invalidateOptionsMenu()
+        checkwvMapShow()
         Log.d("MAINcheckUIState", connState.toString())
     }
 
@@ -2111,8 +2137,25 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status!!.setImageResource(R.drawable.app_android_icon_disconnect)
         }
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        if (myPref.getSharePreferenceMAC() == "noValue" && shareToken.getString("email", "") == "") {
+            battreyIcon?.isVisible = false
+            bleIcon?.isVisible = false
+        }
 
         return super.onPrepareOptionsMenu(menu)
+    }
+
+    private fun checkwvMapShow() {
+        if (connState == BleConnection.CONNECTED) {
+            wvMapMain.visibility = View.INVISIBLE
+        } else {
+            if (myPref.getSharePreferenceMAC() == "noValue") {
+                wvMapMain.visibility = View.VISIBLE
+            } else {
+                wvMapMain.visibility = View.INVISIBLE
+            }
+        }
     }
 }
 
