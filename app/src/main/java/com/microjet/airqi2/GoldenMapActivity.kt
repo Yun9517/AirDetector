@@ -60,7 +60,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     private lateinit var mCal: Calendar
 
     private lateinit var myLocationStyle: MyLocationStyle
-    
+
     private lateinit var myPref: PrefObjects
 
     private var lati = 255f
@@ -73,7 +73,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         goldenMap.onCreate(savedInstanceState)
 
         myPref = PrefObjects(this)
-        
+
         mCal = Calendar.getInstance()
         realm = Realm.getDefaultInstance()
 
@@ -258,15 +258,32 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         cal.clear(Calendar.SECOND) //這幾行是新寫法，好用
         cal.clear(Calendar.MILLISECOND) //這幾行是新寫法，好用
 
-        val startTime = cal.timeInMillis
-        val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+        var startTime = cal.timeInMillis
+        var endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
+
+        val airMapInitData = getMapInitLati(startTime, endTime)
+        if (airMapInitData.isNotEmpty()) {
+            lati = airMapInitData.first()!!.latitude
+            longi = airMapInitData.first()!!.longitude
+            startTime = airMapInitData.first()!!.created_time
+            endTime = airMapInitData.last()!!.created_time
+        } else {
+            val pastData = getMapInitThreeDaysAgoLati(startTime, endTime)
+            if (pastData.isNotEmpty()) {
+                lati = pastData.first()!!.latitude
+                longi = pastData.first()!!.longitude
+            } else {
+                lati = TvocNoseData.lati
+                longi = TvocNoseData.longi
+            }
+        }
+
 
 
         listener = RealmChangeListener {
             //filter = it.filter { it.latitude < 255f && it.latitude != null && it.macAddress == mDeviceAddress }
             filter = realm.copyFromRealm(it)
             if (filter.isNotEmpty()) {
-                getMapInitThreeDaysAgoLati(startTime, endTime)
                 filter.forEach {
                     if (it.latitude == 255f) {// || Math.abs(it.latitude - lati) > 1f || Math.abs(it.longitude - longi) > 1f) {
                         it.latitude = lati
@@ -517,7 +534,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         //if(aMap!!.cameraPosition.zoom < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
         //    aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15F))
         //} else {
-            aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
+        aMap!!.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
         //}
     }
 
@@ -592,7 +609,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         //TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    private fun getMapInitThreeDaysAgoLati(start: Long, end: Long) {
+    private fun getMapInitThreeDaysAgoLati(start: Long, end: Long): RealmResults<AsmDataModel> {
         //取三天前的經緯度最新值位置
         val realm = Realm.getDefaultInstance()
         val startTime = start - TimeUnit.DAYS.toMillis(3)
@@ -600,16 +617,21 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
         val pastAvailableGPSLocation = realm.where(AsmDataModel::class.java)
                 .between("Created_time", startTime, endTime)
                 .notEqualTo("Latitude", 255f)
-                .sort("Created_time", Sort.DESCENDING).findAll().firstOrNull()
-        if (pastAvailableGPSLocation != null ) {
-            lati = pastAvailableGPSLocation.latitude
-            longi = pastAvailableGPSLocation.longitude
-        } else {
-            lati = TvocNoseData.lati
-            longi = TvocNoseData.longi
-        }
+                .sort("Created_time", Sort.DESCENDING).findAll()
         realm.close()
+        return pastAvailableGPSLocation
     }
+
+    private fun getMapInitLati(start: Long, end: Long): RealmResults<AsmDataModel> {
+        val realm = Realm.getDefaultInstance()
+        val availableGPSObj = realm.where(AsmDataModel::class.java)
+                .between("Created_time", start, end)
+                .notEqualTo("Latitude", 255f)
+                .sort("Created_time", Sort.ASCENDING).findAll()
+        realm.close()
+        return availableGPSObj
+    }
+
 
     private fun judgePolyLineColorRange(data: AsmDataModel): Int {
         if (rbTVOC.isChecked) {
