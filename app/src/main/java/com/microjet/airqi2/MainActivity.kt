@@ -105,6 +105,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private var bleIcon: MenuItem? = null
     //電量icon
     private var battreyIcon: MenuItem? = null
+    //分享icon
+    private var shareMap: MenuItem? = null
 
     private var getDrawerLayoutItem: MenuItem? = null
 
@@ -616,8 +618,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //menuItem= menu!!.findItem(R.id.batStatus)
         bleIcon = menu!!.findItem(R.id.bleStatus)
         battreyIcon = menu.findItem(R.id.batStatus)
+        shareMap = menu.findItem(R.id.shareMap)
         bleIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         battreyIcon!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        shareMap!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
 
         lightIcon = findViewById(R.id.imgLight)
 
@@ -2238,10 +2242,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
             bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status!!.setImageResource(R.drawable.app_android_icon_connect)
+            battreyIcon?.isVisible = true
+            bleIcon?.isVisible = true
+            shareMap?.isVisible = false
         } else {
             battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
             bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status!!.setImageResource(R.drawable.app_android_icon_disconnect)
+            battreyIcon?.isVisible = false
+            bleIcon?.isVisible = false
+            shareMap?.isVisible = true
         }
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         if (myPref.getSharePreferenceMAC() == "noValue" && shareToken.getString("email", "") == "") {

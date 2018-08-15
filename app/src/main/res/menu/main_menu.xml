@@ -14,4 +14,10 @@
         android:title="藍芽"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/shareMap"
+        android:icon="@drawable/ic_social_share_icon"
+        android:title="分享"
+        app:showAsAction="always" />
+
 </menu>
