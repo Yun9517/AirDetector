@@ -31,6 +31,7 @@ import android.util.Log
 import android.view.*
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.AlphaAnimation
+import android.webkit.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -281,6 +282,27 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //FirebaseMessaging.getInstance().subscribeToTopic("addwiiNewsNotifi")
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        wvMapMain.loadUrl("https://mjairql.com/air_map/")
+        wvMapMain.webViewClient = object : WebViewClient() {
+            override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
+                super.onReceivedError(view, request, error)
+                when (error!!.errorCode) {
+                    -2 -> {
+                        Toast.makeText(MyApplication.applicationContext(), "請連接網路", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+
+                    }
+                }
+
+            }
+        }
+        wvMapMain.webChromeClient = object : WebChromeClient() {
+            override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
+                callback.invoke(origin, true, false)
+            }
+        }
+        wvMapMain.settings.javaScriptEnabled = true
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -325,6 +347,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             triggerForAndroidOOn = false
         }
         checkUIState()
+        setExpandableDrawer()
     }
 
     override fun onPause() {
@@ -339,6 +362,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForAndroidO = 0
             triggerForAndroidOOn = true
         }
+        var ws = wvMapMain.settings
+        ws.javaScriptEnabled = false
         checkUIState()
         Log.e(TAG, "call onStop")
     }
@@ -361,6 +386,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         if (mUartService != null) {
             unbindService(mServiceConnection)
         }
+        wvMapMain.clearCache(true)
 
         //EventBus.getDefault().unregister(this)
     }
@@ -774,6 +800,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             startActivityForResult(i, REQUEST_SELECT_DEVICE)
         }
         //startActivityForResult(i,REQUEST_SELECT_DEVICE)
+        setExpandableDrawer()
     }
 
     private fun blueToothDisconnect() {
@@ -782,6 +809,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             //serviceIntent!!.putExtra("status", "disconnect")
             //sendBroadcast(serviceIntent)
             mUartService?.disconnect()
+            setExpandableDrawer()
         } else {
             Log.d("MAIN", "BLEDISCONNTED ERROR")
         }
@@ -1070,6 +1098,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
+            wvMapMain.visibility = View.INVISIBLE
         } else {
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
@@ -1080,70 +1109,111 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             heatingPanelHide()
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
+            wvMapMain.visibility = View.VISIBLE
         }
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()
         // **************************************************************** //
         invalidateOptionsMenu()
+
         Log.d("MAINcheckUIState", connState.toString())
+        setExpandableDrawer()
     }
 
     // 2018/05/03 ExpandableListView
     private fun prepareListData() {
-        // Group List
-        val drawer_01_Add_Device = ExpandedMenuModel()
-        drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
-        drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
-        listDataHeader.add(drawer_01_Add_Device)
+        listDataHeader.clear()
+        if(connState == BleConnection.CONNECTED){
+            // Group List connState == BleConnection.CONNECTED
+            val drawer_01_Add_Device = ExpandedMenuModel()
+            drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
+            drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
+            listDataHeader.add(drawer_01_Add_Device)
 
-        val drawer_02_mobile_nose = ExpandedMenuModel()
-        drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
-        drawer_02_mobile_nose.iconImg = R.drawable.drawer02_mobile_nose
-        listDataHeader.add(drawer_02_mobile_nose)
+            val drawer_02_mobile_nose = ExpandedMenuModel()
+            drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
+            drawer_02_mobile_nose.iconImg = R.drawable.drawer02_mobile_nose
+            listDataHeader.add(drawer_02_mobile_nose)
 
-        val drawer_03_air_map = ExpandedMenuModel()
-        drawer_03_air_map.iconName = getString(R.string.text_drawer_03_air_map)
-        drawer_03_air_map.iconImg = R.drawable.drawer03_air_map
-        listDataHeader.add(drawer_03_air_map)
+            val drawer_03_air_map = ExpandedMenuModel()
+            drawer_03_air_map.iconName = getString(R.string.text_drawer_03_air_map)
+            drawer_03_air_map.iconImg = R.drawable.drawer03_air_map
+            listDataHeader.add(drawer_03_air_map)
 
-        val drawer_04_personal_trail = ExpandedMenuModel()
-        drawer_04_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail)
-        drawer_04_personal_trail.iconImg = R.drawable.drawer04_personal_track
-        listDataHeader.add(drawer_04_personal_trail)
+            val drawer_04_personal_trail = ExpandedMenuModel()
+            drawer_04_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail)
+            drawer_04_personal_trail.iconImg = R.drawable.drawer04_personal_track
+            listDataHeader.add(drawer_04_personal_trail)
 
-        val drawer_05_knowledge = ExpandedMenuModel()
-        drawer_05_knowledge.iconName = getString(R.string.text_drawer_05_knowledge)
-        drawer_05_knowledge.iconImg = R.drawable.drawer05_knowledge_info
-        listDataHeader.add(drawer_05_knowledge)
+            val drawer_05_knowledge = ExpandedMenuModel()
+            drawer_05_knowledge.iconName = getString(R.string.text_drawer_05_knowledge)
+            drawer_05_knowledge.iconImg = R.drawable.drawer05_knowledge_info
+            listDataHeader.add(drawer_05_knowledge)
 
-        val drawer_06_QA = ExpandedMenuModel()
-        drawer_06_QA.iconName = getString(R.string.text_drawer_06_QA)
-        drawer_06_QA.iconImg = R.drawable.drawer06_qa
-        listDataHeader.add(drawer_06_QA)
+            val drawer_06_QA = ExpandedMenuModel()
+            drawer_06_QA.iconName = getString(R.string.text_drawer_06_QA)
+            drawer_06_QA.iconImg = R.drawable.drawer06_qa
+            listDataHeader.add(drawer_06_QA)
 
-        val drawer_07_setting = ExpandedMenuModel()
-        drawer_07_setting.iconName = getString(R.string.text_drawer_07_setting)
-        drawer_07_setting.iconImg = R.drawable.drawer07_setting
-        listDataHeader.add(drawer_07_setting)
+            val drawer_07_setting = ExpandedMenuModel()
+            drawer_07_setting.iconName = getString(R.string.text_drawer_07_setting)
+            drawer_07_setting.iconImg = R.drawable.drawer07_setting
+            listDataHeader.add(drawer_07_setting)
 
-        // Child List
-        val child_02_mobile_nose = ArrayList<String>()
-        child_02_mobile_nose.add(getString(R.string.text_drawer_02_1_user_experience))
-        child_02_mobile_nose.add(getString(R.string.text_drawer_02_2_introduction))
-        child_02_mobile_nose.add(getString(R.string.text_drawer_02_3_purchase))
-        child_02_mobile_nose.add(getString(R.string.text_drawer_02_4_our_story))
+            // Child List
+            val child_02_mobile_nose = ArrayList<String>()
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_1_user_experience))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_2_introduction))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_3_purchase))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_4_our_story))
 
-        val child_06_QA = ArrayList<String>()
-        child_06_QA.add(getString(R.string.text_drawer_06_1_FAQ))
-        child_06_QA.add(getString(R.string.text_drawer_06_2_guide_tour))
+            val child_06_QA = ArrayList<String>()
+            child_06_QA.add(getString(R.string.text_drawer_06_1_FAQ))
+            child_06_QA.add(getString(R.string.text_drawer_06_2_guide_tour))
 
-        val child_07_setting = ArrayList<String>()
-        child_07_setting.add(getString(R.string.text_drawer_07_1_account_setting))
-        child_07_setting.add(getString(R.string.text_drawer_07_2_general_setting))
+            val child_07_setting = ArrayList<String>()
+            child_07_setting.add(getString(R.string.text_drawer_07_1_account_setting))
+            child_07_setting.add(getString(R.string.text_drawer_07_2_general_setting))
 
-        listDataChild[listDataHeader[1]] = child_02_mobile_nose
-        listDataChild[listDataHeader[5]] = child_06_QA
-        listDataChild[listDataHeader[6]] = child_07_setting
+            listDataChild[listDataHeader[1]] = child_02_mobile_nose
+            listDataChild[listDataHeader[5]] = child_06_QA
+            listDataChild[listDataHeader[6]] = child_07_setting
+        }else{
+            // Group List
+            val drawer_01_Add_Device = ExpandedMenuModel()
+            drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
+            drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
+            listDataHeader.add(drawer_01_Add_Device)
+
+            val drawer_02_mobile_nose = ExpandedMenuModel()
+            drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
+            drawer_02_mobile_nose.iconImg = R.drawable.drawer02_mobile_nose
+            listDataHeader.add(drawer_02_mobile_nose)
+
+            val drawer_03_personal_trail = ExpandedMenuModel()
+            drawer_03_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail)
+            drawer_03_personal_trail.iconImg = R.drawable.drawer04_personal_track
+            listDataHeader.add(drawer_03_personal_trail)
+
+            val drawer_04_knowledge = ExpandedMenuModel()
+            drawer_04_knowledge.iconName = getString(R.string.text_drawer_05_knowledge)
+            drawer_04_knowledge.iconImg = R.drawable.drawer05_knowledge_info
+            listDataHeader.add(drawer_04_knowledge)
+
+            val drawer_05_account_setting = ExpandedMenuModel()
+            drawer_05_account_setting.iconName = getString(R.string.text_drawer_07_1_account_setting)
+            drawer_05_account_setting.iconImg = R.drawable.drawer07_setting
+            listDataHeader.add(drawer_05_account_setting)
+
+            // Child List
+            val child_02_mobile_nose = ArrayList<String>()
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_1_user_experience))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_2_introduction))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_3_purchase))
+            child_02_mobile_nose.add(getString(R.string.text_drawer_02_4_our_story))
+
+            listDataChild[listDataHeader[1]] = child_02_mobile_nose
+        }
     }
 
 
@@ -2009,94 +2079,156 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // Set Drawer's OnClickListener
         navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
-            when (groupPosition) {
-                0 -> {
-                    when (connState) {
-                        BleConnection.CONNECTED -> blueToothDisconnect()
-                        BleConnection.DISCONNECTED -> blueToothConnect()
+            if(connState == BleConnection.CONNECTED){
+                when (groupPosition) {
+                    0 -> {
+                        when (connState) {
+                            BleConnection.CONNECTED -> blueToothDisconnect()
+                            BleConnection.DISCONNECTED -> blueToothConnect()
+                        }
+                        drawerLayout?.closeDrawer(GravityCompat.START)
                     }
-                    drawerLayout?.closeDrawer(GravityCompat.START)
-                }
-                1 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> {
-                                    if (experienceURL.isNotEmpty()) {
-                                        val uri = Uri.parse(experienceURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                        val bundle = Bundle()
-                                        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
-                                        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
-                                        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
-                                    }
-                                }
-                                1 -> {
-                                    if (introductionURL.isNotEmpty()) {
-                                        val uri = Uri.parse(introductionURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                                2 -> {
-                                    if (buyURL.isNotEmpty()) {
-                                        val uri = Uri.parse(buyURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                                3 -> {
-                                    if (ourStoryURL.isNotEmpty()) {
-                                        val uri = Uri.parse(ourStoryURL)
-                                        val intent = Intent(Intent.ACTION_VIEW, uri)
-                                        startActivity(intent)
-                                    }
-                                }
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
+                    1 -> {
+                        if (parent.isGroupExpanded(groupPosition)) {
                             parent.collapseGroup(groupPosition)
-                        })
+                        } else {
+                            parent.expandGroup(groupPosition)
+                            parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                                when (childPosition) {
+                                    0 -> {
+                                        if (experienceURL.isNotEmpty()) {
+                                            val uri = Uri.parse(experienceURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                            val bundle = Bundle()
+                                            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
+                                            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
+                                            mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                                        }
+                                    }
+                                    1 -> {
+                                        if (introductionURL.isNotEmpty()) {
+                                            val uri = Uri.parse(introductionURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                    2 -> {
+                                        if (buyURL.isNotEmpty()) {
+                                            val uri = Uri.parse(buyURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                    3 -> {
+                                        if (ourStoryURL.isNotEmpty()) {
+                                            val uri = Uri.parse(ourStoryURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                }
+                                drawerLayout?.closeDrawer(GravityCompat.START)
+                                parent.collapseGroup(groupPosition)
+                            })
+                        }
                     }
-                }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
-                3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                5 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> qandaShow()
-                                1 -> tourShow()
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
+                    2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
+                    3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                    4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                    5 -> {
+                        if (parent.isGroupExpanded(groupPosition)) {
                             parent.collapseGroup(groupPosition)
-                        })
+                        } else {
+                            parent.expandGroup(groupPosition)
+                            parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                                when (childPosition) {
+                                    0 -> qandaShow()
+                                    1 -> tourShow()
+                                }
+                                drawerLayout?.closeDrawer(GravityCompat.START)
+                                parent.collapseGroup(groupPosition)
+                            })
+                        }
                     }
-                }
-                6 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> accountShow()
-                                1 -> settingShow()
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
+                    6 -> {
+                        if (parent.isGroupExpanded(groupPosition)) {
                             parent.collapseGroup(groupPosition)
-                        })
+                        } else {
+                            parent.expandGroup(groupPosition)
+                            parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                                when (childPosition) {
+                                    0 -> accountShow()
+                                    1 -> settingShow()
+                                }
+                                drawerLayout?.closeDrawer(GravityCompat.START)
+                                parent.collapseGroup(groupPosition)
+                            })
+                        }
                     }
                 }
+                true
+            }else{
+                when (groupPosition) {
+                    0 -> {
+                        when (connState) {
+                            BleConnection.CONNECTED -> blueToothDisconnect()
+                            BleConnection.DISCONNECTED -> blueToothConnect()
+                        }
+                        drawerLayout?.closeDrawer(GravityCompat.START)
+                    }
+                    1 -> {
+                        if (parent.isGroupExpanded(groupPosition)) {
+                            parent.collapseGroup(groupPosition)
+                        } else {
+                            parent.expandGroup(groupPosition)
+                            parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                                when (childPosition) {
+                                    0 -> {
+                                        if (experienceURL.isNotEmpty()) {
+                                            val uri = Uri.parse(experienceURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                            val bundle = Bundle()
+                                            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "USER_EXP")
+                                            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK");
+                                            mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+                                        }
+                                    }
+                                    1 -> {
+                                        if (introductionURL.isNotEmpty()) {
+                                            val uri = Uri.parse(introductionURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                    2 -> {
+                                        if (buyURL.isNotEmpty()) {
+                                            val uri = Uri.parse(buyURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                    3 -> {
+                                        if (ourStoryURL.isNotEmpty()) {
+                                            val uri = Uri.parse(ourStoryURL)
+                                            val intent = Intent(Intent.ACTION_VIEW, uri)
+                                            startActivity(intent)
+                                        }
+                                    }
+                                }
+                                drawerLayout?.closeDrawer(GravityCompat.START)
+                                parent.collapseGroup(groupPosition)
+                            })
+                        }
+                    }
+                    2 -> { airMap();drawerLayout?.closeDrawer(GravityCompat.START) }
+                    3 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
+                    4 -> { accountShow();drawerLayout?.closeDrawer(GravityCompat.START) }
+                }
+                true
             }
-            true
+
         })
     }
 
@@ -2110,9 +2242,32 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status!!.setImageResource(R.drawable.app_android_icon_disconnect)
         }
+        val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
+        if (myPref.getSharePreferenceMAC() == "noValue" && shareToken.getString("email", "") == "") {
+            battreyIcon?.isVisible = false
+            bleIcon?.isVisible = false
+        }
 
         return super.onPrepareOptionsMenu(menu)
     }
+
+    private fun checkwvMapShow() {
+        if (connState == BleConnection.CONNECTED) {
+            wvMapMain.visibility = View.INVISIBLE
+        } else {
+            if (myPref.getSharePreferenceMAC() == "noValue") {
+                wvMapMain.visibility = View.VISIBLE
+            } else {
+                wvMapMain.visibility = View.INVISIBLE
+            }
+        }
+    }
+    private fun airMap(){
+        val uri = Uri.parse("https://www.addwii.com/product/mobile-nose-%E9%9A%A8%E8%BA%AB%E7%A9%BA%E6%B1%A1%E9%BC%BB-%E9%87%91/")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        startActivity(intent)
+    }
+
 }
 
 

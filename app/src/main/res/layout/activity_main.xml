@@ -137,6 +137,16 @@
 
     </RelativeLayout>
 
+    <WebView
+        android:id="@+id/wvMapMain"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <android.support.design.widget.NavigationView
         android:id="@+id/naviView"
         android:layout_width="wrap_content"
@@ -144,6 +154,7 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/drawer_header">
         <!--app:menu="@menu/drawer_menu">-->
+
         <ExpandableListView
             android:id="@+id/navigationmenu"
             android:layout_width="match_parent"
