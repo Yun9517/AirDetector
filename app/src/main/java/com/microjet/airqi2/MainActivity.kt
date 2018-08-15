@@ -979,32 +979,31 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 }
             }
         // Normal
-            in 10..100 -> {
+            in 0..100 -> {
                 /*if(icon.isRunning) {
                     icon.stop()
                 }*/
                 when (batValue) {
-                    100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
-                    in 76..99 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
-                    in 56..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
-                    in 41..55 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+                    in 88..100 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x6)
+                    in 76..87 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x5)
+                    in 61..75 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x4)
+                    in 41..60 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
                     in 21..40 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x2)
                     in 10..20 -> battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x1)
-                }
-            }
-        // Exception
-            else -> {
-                battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
+                    else -> {
+                        battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_low)
 
-                //20180206
-                val allowNotify = myPref.getSharePreferenceAllowNotify()
-                val useLowBattNotify = myPref.getSharePreferenceAllowNotifyLowBattery()
-                //20180206
-                lowPowerCont++
-                if (allowNotify && useLowBattNotify && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
-                {
-                    lowPowerCont = 0
-                    soundPool2.play(alertId, 1F, 1F, 0, 0, 1F)
+                        //20180206
+                        val allowNotify = myPref.getSharePreferenceAllowNotify()
+                        val useLowBattNotify = myPref.getSharePreferenceAllowNotifyLowBattery()
+                        //20180206
+                        lowPowerCont++
+                        if (allowNotify && useLowBattNotify && lowPowerCont >= 10)//&&(countsound220==5||countsound220==0))
+                        {
+                            lowPowerCont = 0
+                            soundPool2.play(alertId, 1F, 1F, 0, 0, 1F)
+                        }
+                    }
                 }
             }
         }
