@@ -7,7 +7,9 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Matrix
 import android.location.Geocoder
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -27,6 +29,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.microjet.airqi2.AsmDataModel
 import com.microjet.airqi2.CustomAPI.Utils
+import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import io.realm.Realm
 import io.realm.RealmResults
@@ -43,19 +46,21 @@ class PhotoActivity : AppCompatActivity() {
 
     private var addTextBitmap: Bitmap? = null
     private var file: File? = null
-    private var imageCropFile: File? = null
 
     private lateinit var realm: Realm
     private var result: RealmResults<AsmDataModel>? = null
 
     private lateinit var mCal: Calendar
 
+    //private val random = Random()
+
     private val reqCodeCamera = 101
     private val reqCodeWriteStorage = 102
 
     companion object {
         val CAMERA_INTENT_REQUEST_CODE = 0x11
-        val CROP_INTENT_REQUEST_CODE = 0x12
+        val CAMERA_RESULT_OK_CODE = -1
+        val CAMERA_RESULT_CANCEL_CODE = 0
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,44 +82,66 @@ class PhotoActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         Log.e("onActivityResult", "requestCode: $requestCode, resultCode: $resultCode")
-        if (requestCode == PhotoActivity.CAMERA_INTENT_REQUEST_CODE && resultCode == -1) {
-            val tmpDir = File(this@PhotoActivity.filesDir, "tmp")
-            val file = File(tmpDir, "image.jpg")
-            val tmpUri = FileProvider.getUriForFile(this@PhotoActivity, "$packageName.fileprovider", file)
-            cropFile(tmpUri)
-        } else if (requestCode == PhotoActivity.CROP_INTENT_REQUEST_CODE && resultCode == -1) {
-            if(addTextBitmap != null) {
-                addTextBitmap!!.recycle()
-            }
+        if (requestCode == PhotoActivity.CAMERA_INTENT_REQUEST_CODE) {
+            when (resultCode) {
+                CAMERA_RESULT_OK_CODE -> {
+                    if (addTextBitmap != null) {
+                        addTextBitmap!!.recycle()
+                    }
 
-            val bitmap = decodeFile(imageCropFile!!.path)
+                    // 讀取暫存檔案
+                    val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
+                    val tmpFilePath = File(tmpPath, "image.jpg")
 
-            if(bitmap != null) {
-                val lastData = queryDatabaseLastData()
-                Log.e("LastData", "$lastData")
+                    // 解析成bitmap
+                    val bitmap = decodeFile(tmpFilePath.path)
 
-                addTextBitmap = if (lastData != null) {
-                    val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+                    if (bitmap != null) {
+                        // 判斷照片是直的還是橫的
+                        val rotatedBitmap = rotateBitmap(bitmap, getImageOrientation(tmpFilePath))
 
-                    val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
-                    setTemplate(bitmap, lastLocation,
-                            "${lastData.tvocValue} ppb",
-                            "${lastData.pM25Value} μg/m³",
-                            tempVal, lastData.created_time)
-                } else {
-                    setTemplate(bitmap, "Unknown", "----", "----", "----", System.currentTimeMillis())
+                        // 修正旋轉角度後釋放原圖佔用的記憶體
+                        bitmap.recycle()
+
+                        if (rotatedBitmap != null) {
+                            val cropBitmap = cropBitmap(rotatedBitmap)
+
+                            val lastData = queryDatabaseLastData()
+                            Log.e("LastData", "$lastData")
+
+                            addTextBitmap = if (lastData != null) {
+                                val lastLocation = getLocationName(lastData.latitude.toDouble(), lastData.longitude.toDouble())
+
+                                val tempVal = Utils.convertTemperature(this@PhotoActivity, lastData.tempValue.toFloat())
+                                setLayout2(cropBitmap, lastLocation,
+                                        "${lastData.tvocValue} ppb",
+                                        "${lastData.pM25Value} μg/m³",
+                                        tempVal, lastData.created_time)
+                            } else {
+                                //setLayout(rotatedBitmap, mode, "----", "----", "----", "----", "----", "----")
+                                setLayout2(cropBitmap, "Unknown", "----", "----", "----", System.currentTimeMillis())
+                            }
+
+                            // 合成後釋放原圖佔用的記憶體
+                            rotatedBitmap.recycle()
+                            cropBitmap.recycle()
+
+                            //addTextBitmap = setLayout(rotatedBitmap, "看尛", "看尛", "看尛", "看尛", "看尛", "看尛")
+                            this.imageView.setImageBitmap(addTextBitmap)
+                            file = savePicture(addTextBitmap!!)
+                            this.btnShare.visibility = View.VISIBLE
+                            this.textNotice.visibility = View.INVISIBLE
+
+                            if (tmpFilePath.exists()) tmpFilePath.delete()
+                        }
+                    }
                 }
 
-                // 合成後釋放原圖佔用的記憶體
-                bitmap.recycle()
-
-                this.imageView.setImageBitmap(addTextBitmap)
-                file = savePicture(addTextBitmap!!)
-                this.btnShare.visibility = View.VISIBLE
-                this.textView4.visibility = View.GONE
-
-                if (imageCropFile!!.exists()) imageCropFile!!.delete()
+                CAMERA_RESULT_CANCEL_CODE -> {
+                    this.textNotice.visibility = View.INVISIBLE
+                }
             }
+
         }
     }
 
@@ -181,7 +208,8 @@ class PhotoActivity : AppCompatActivity() {
 
     private fun callCameraActivity() {
         this.btnShare.visibility = View.GONE
-        //this.textView4.visibility = View.VISIBLE
+        //val intent = CameraActivity.newIntent(this, isBackCamera = true, isFullScreen = false, isCountDownEnabled = false, countDownInSeconds = 0)
+        //startActivityForResult(intent, CameraActivity.VSCAMERAACTIVITY_RESULT_CODE)
 
         val tmpPath = File(this@PhotoActivity.filesDir, "tmp")
         if(!tmpPath.exists()) tmpPath.mkdirs()
@@ -208,8 +236,8 @@ class PhotoActivity : AppCompatActivity() {
         //val endTime = startTime + TimeUnit.DAYS.toMillis(1) - TimeUnit.SECONDS.toMillis(1)
 
         result = realm.where(AsmDataModel::class.java).findAll()
-                //.between("Created_time", startTime, endTime)
-                //.sort("Created_time", Sort.ASCENDING).findAllAsync()
+        //.between("Created_time", startTime, endTime)
+        //.sort("Created_time", Sort.ASCENDING).findAllAsync()
 
         return result?.lastOrNull()
     }
@@ -239,7 +267,7 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun setTemplate(background: Bitmap, cityText: String,
+    private fun setLayout2(background: Bitmap, cityText: String,
                            tvocText: String, pm25Text: String, tempText: String, tempDate: Long): Bitmap {
 
         val mInflater = this.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -346,7 +374,7 @@ class PhotoActivity : AppCompatActivity() {
     }
 
     private fun decodeFile(filePath: String): Bitmap? {
-        val bitmap: Bitmap?
+        var bitmap: Bitmap? = null
         val options = BitmapFactory.Options()
         options.inPurgeable = true
 
@@ -362,50 +390,69 @@ class PhotoActivity : AppCompatActivity() {
             e.printStackTrace()
         }
 
-        bitmap = BitmapFactory.decodeFile(filePath, options)
+        if (filePath != null) {
+            bitmap = BitmapFactory.decodeFile(filePath, options)
+        }
 
         return bitmap
+    }
+
+    private fun getImageOrientation(imageFile: File): Float {
+        var rotate = 0f
+        try {
+            val exif = ExifInterface(imageFile.absolutePath)
+            val orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
+
+            when (orientation) {
+                ExifInterface.ORIENTATION_ROTATE_270 -> rotate = 270f
+                ExifInterface.ORIENTATION_ROTATE_180 -> rotate = 180f
+                ExifInterface.ORIENTATION_ROTATE_90 -> rotate = 90f
+            }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        Log.e("rotation", "rotation angle is: $rotate")
+        return rotate
+    }
+
+    private fun rotateBitmap(source: Bitmap, angle: Float): Bitmap? {
+        val matrix = Matrix()
+        matrix.postRotate(angle)
+        matrix.postScale(0.5f, 0.5f)
+        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
+    }
+
+    private fun cropBitmap(source: Bitmap): Bitmap {
+        val w = source.width // 得到圖片的寬，高
+        val h = source.height
+
+        // 4:3 = 4/3 = 1.33
+        val cropWidth = if (w > h) (h / 1.33).toInt() else w
+        val cropHeight = if (w > h) h else (w * 1.33).toInt()
+
+        val scaleWidth = 1080f.div(cropWidth.toFloat())
+        val scaleHeight = 1440f.div(cropHeight.toFloat())
+
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        Log.e("cropBitmap", "w: $w, h: $h.  cropWidth: $cropWidth, cropHeight: $cropHeight")
+
+        val xPosition = (w - cropWidth) / 2     // 取照片中間
+        // val cropBMP = Bitmap.createBitmap(source, xPosition, 0, cropWidth, cropHeight, null, false)
+
+        /*val srcWidth = cropBMP.width.toFloat()
+        val srcHeight = cropBMP.height.toFloat()
+        val scaleWidth = 1080f.div(srcWidth)
+        val scaleHeight = 1440f.div(srcHeight)*/
+
+        return Bitmap.createBitmap(source, xPosition, 0, cropWidth, cropHeight, matrix, true)
     }
 
     private fun startMediaScannerSync(dir: String) {
         val scanIntent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
         scanIntent.data = Uri.parse("file://$dir")
         sendBroadcast(scanIntent)
-    }
-
-    private fun cropFile(sourceUri: Uri) {
-        imageCropFile = createImageFile() //創建一個保存裁剪後照片的File
-        imageCropFile?.let {
-            val intent = Intent("com.android.camera.action.CROP")
-            intent.putExtra("crop", "true")
-            intent.putExtra("aspectX", 3) //X方向上的比例
-            intent.putExtra("aspectY", 4) //Y方向上的比例
-            intent.putExtra("outputX", 1080) //裁剪區的寬
-            intent.putExtra("outputY", 1440) //裁剪區的高
-            intent.putExtra("scale ", true) //是否保留比例
-            intent.putExtra("return-data", false) //是否在Intent中返回圖片
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString()) //設置輸出圖片的格式
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION) //添加這一句表示對目標應用臨時授權該Uri所代表的文件
-            intent.setDataAndType(sourceUri, "image/*") //設置數據源,必須是由FileProvider創建的ContentUri
-
-            val imgCropUri = Uri.fromFile(it)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, imgCropUri) //設置輸出 不需要ContentUri,否則失敗
-            Log.e("tag", "輸入 $sourceUri")
-            Log.e("tag", "輸出 ${Uri.fromFile(it)}")
-            startActivityForResult(intent, CROP_INTENT_REQUEST_CODE)
-        }
-    }
-
-    private fun createImageFile(): File? {
-        return try {
-            val rootFile = File(this@PhotoActivity.getExternalFilesDir("tmp").path)
-            if (!rootFile.exists())
-                rootFile.mkdirs()
-            val fileName = "image_CROP.jpg"
-            File(rootFile.absolutePath + File.separator + fileName)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            null
-        }
     }
 }

@@ -52,7 +52,7 @@
         app:srcCompat="@drawable/ic_share_white_24dp" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/textNotice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
