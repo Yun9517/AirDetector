@@ -22,6 +22,7 @@ import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
+import android.support.v4.content.FileProvider
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -79,6 +80,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import java.io.File
 import java.io.FileOutputStream
 import java.nio.ByteBuffer
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -2316,21 +2318,50 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
 
+    @SuppressLint("SimpleDateFormat")
     private  fun picture(){
-        val bitmap = screenShot(getWindow().getDecorView().getRootView())
-        val now = Date()
+        val bitmap = screenShot(window.decorView.rootView)
+        val now = System.currentTimeMillis()
         val folderName = "ADDWII Mobile Nose"
-        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
-        val mPath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + folderName + "/" + now + ".jpg"
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd_hh-mm-ss")
+
+        val folderPath = File("${android.os.Environment.getExternalStorageDirectory()}/$folderName")
+        folderPath.mkdir()
+
+        val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
 
         val imageFile = File(mPath)
-
+        shareContent(imageFile)
         val outputStream = FileOutputStream(imageFile)
         val quality = 100
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
         outputStream.flush()
         outputStream.close()
 
+    }
+
+    private fun shareContent(imageFile: File) {
+        try {
+            val photoURI = FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
+            Log.e("SHARE", photoURI.path)
+
+            val intent = Intent(Intent.ACTION_SEND)
+
+            intent.data = photoURI
+            intent.type = "image/*"
+            intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
+
+            val chooser = Intent.createChooser(intent, "Share")
+
+            //給目錄臨時的權限
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            // Verify the intent will resolve to at least one activity
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivityForResult(chooser, 0)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
 }
