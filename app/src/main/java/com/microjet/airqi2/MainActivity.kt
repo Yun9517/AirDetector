@@ -9,6 +9,8 @@ import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.*
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.graphics.drawable.AnimationDrawable
 import android.location.LocationManager
 import android.media.AudioManager
@@ -18,6 +20,7 @@ import android.net.Uri
 import android.os.*
 import android.provider.Settings
 import android.support.design.widget.NavigationView
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
@@ -73,6 +76,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.io.File
+import java.io.FileOutputStream
 import java.nio.ByteBuffer
 import java.util.*
 import kotlin.collections.ArrayList
@@ -420,7 +425,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
                                             grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
+        when (requestCode) {
+            333 -> {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    picture()
+                    Log.e("CheckPerm", "Write External Storage Permission Granted...")
+                }
+                return
+            }
+        }
         EasyPermissions.onRequestPermissionsResult(requestCode,
                 permissions,
                 grantResults,
@@ -657,6 +671,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 //            R.id.bleStatus -> {
 //                startActivity(Intent(this@MainActivity, PhotoActivity::class.java))
 //            }
+            R.id.shareMap -> {
+                checkPermissions()
+            }
         //點選ActionBAR會返回
             android.R.id.home -> {
                 //checkUIState()
@@ -2277,6 +2294,43 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val uri = Uri.parse("https://www.addwii.com/product/mobile-nose-%E9%9A%A8%E8%BA%AB%E7%A9%BA%E6%B1%A1%E9%BC%BB-%E9%87%91/")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
+    }
+
+    fun screenShot(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        Log.d("YYY", "done")
+        return bitmap
+    }
+    private fun checkPermissions() {
+        when {
+            ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@MainActivity,
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE),333)
+            else -> {
+                picture()
+                Log.e("CheckPerm", "Permission Granted...")
+            }
+        }
+    }
+
+
+    private  fun picture(){
+        val bitmap = screenShot(getWindow().getDecorView().getRootView())
+        val now = Date()
+        val folderName = "ADDWII Mobile Nose"
+        android.text.format.DateFormat.format("yyyy-MM-dd_hh:mm:ss", now)
+        val mPath = android.os.Environment.getExternalStorageDirectory().toString() + "/" + folderName + "/" + now + ".jpg"
+
+        val imageFile = File(mPath)
+
+        val outputStream = FileOutputStream(imageFile)
+        val quality = 100
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+        outputStream.flush()
+        outputStream.close()
+
     }
 
 }
