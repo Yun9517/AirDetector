@@ -246,6 +246,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     private var bindServiceSuccess: Boolean = false
 
+    //2018/08/16
+    private var scrollindex = 0
+    private var scrollViewsArr = ArrayList<View>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -311,6 +315,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 callback.invoke(origin, true, false)
             }
         }
+        //2018/08/16 跑馬燈
+        scrollingMission()
+        upview.bringToFront()
     }
 
     @SuppressLint("WifiManagerLeak")
@@ -2262,6 +2269,49 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    private fun scrollingMission() {
+        Handler().postDelayed({
+            if (TvocNoseData.scrollingList.isNotEmpty()) {
+                setViewSingleLine()
+            } else {
+                scrollindex++
+                if (scrollindex < 10) {
+                    ScrollingTextTask().execute()
+                    scrollingMission()
+                }
+            }
+        }, 6000)
+    }
+
+
+    @SuppressLint("SetTextI18n")
+    private fun setViewSingleLine() {
+        scrollViewsArr.clear()//记得加这句话，不然可能会产生重影现象
+        Log.e("scrollingList", TvocNoseData.scrollingList.toString())
+        for (i in 0 until TvocNoseData.scrollingList.size) {
+            //设置滚动的单个布局
+            val vScrollivs = LayoutInflater.from(mContext).inflate(R.layout.item_view_single, null)
+            //初始化布局的控件
+            val tv1 = vScrollivs.findViewById<TextView>(R.id.tvScrollContent)
+            /**
+             * 設置監聽
+             */
+
+            tv1.setOnClickListener {
+                val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
+                val intent = Intent(Intent.ACTION_VIEW, url)
+                startActivity(intent)
+            }
+
+            //进行对控件赋值
+            tv1?.text = "${TvocNoseData.scrollingList[i]["title"]}..."
+            Log.e("scrollingList[title]", TvocNoseData.scrollingList[i]["title"].toString())
+            //添加到循环滚动数组里面去
+            scrollViewsArr.add(vScrollivs)
+        }
+        upview?.setViews(scrollViewsArr)
     }
 
 }
