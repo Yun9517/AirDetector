@@ -244,7 +244,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var mUartService: UartService? = null
     }
 
-    private var bindServiceSuccess: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -323,9 +322,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //checkBluetooth()
         //20180802 Richard
         val gattServiceIntent = Intent(this, UartService::class.java)
-        bindServiceSuccess = bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-        Log.d("bindServiceResult", bindServiceSuccess.toString())
-        if (mUartService != null && bindServiceSuccess) {
+        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        //Log.d("bindServiceResult", bindServiceSuccess.toString())
+        if (mUartService != null) {
             if (connState == BleConnection.DISCONNECTED) {
                 if (!myPref.getSharePreferenceManualDisconn()) {
                     mDeviceAddress = myPref.getSharePreferenceMAC()
@@ -344,8 +343,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             FirebaseNotifSettingTask().execute(myToken)
             AccountCheckTokenTask(getMainActivity,"checkTokenByOnstart").execute(myToken)
         }
-        var ws = wvMapMain.settings
-        ws.javaScriptEnabled = true
+        if (wvMapMain.visibility == 0) {
+            var ws = wvMapMain.settings
+            ws.javaScriptEnabled = true
+        }
+        Log.d("QQQ", wvMapMain.visibility.toString())
     }
 
     override fun onResume() {
@@ -371,8 +373,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForAndroidO = 0
             triggerForAndroidOOn = true
         }
-        var ws = wvMapMain.settings
-        ws.javaScriptEnabled = false
+        if (wvMapMain.visibility == 0) {
+            var ws = wvMapMain.settings
+            ws.javaScriptEnabled = false
+        }
         checkUIState()
         Log.e(TAG, "call onStop")
     }
@@ -1108,7 +1112,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     @Synchronized
     private fun checkUIState() {
         if (connState == BleConnection.CONNECTED) {
-            this.title = "ADDWII"
+            this.title = getString(R.string.ADDWII)
             val share = getSharedPreferences(SavePreferences.SETTING_KEY, Activity.MODE_PRIVATE)
             show_Dev_address?.text = myPref.getSharePreferenceMAC()
             show_Device_Name?.text = myPref.getSharePreferenceName()
@@ -1120,9 +1124,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
-            wvMapMain.visibility = View.INVISIBLE
+            if (wvMapMain.visibility == 0) {
+                wvMapMain.visibility = View.INVISIBLE
+            }
         } else {
-            this.title = "ADDWII 空氣地圖"
+            this.title = getString(R.string.app_name_air_map)
             show_Dev_address?.text = ""
             show_Device_Name?.text = getString(R.string.No_Device_Connect)
             /*naviView.menu?.findItem(R.id.nav_add_device)?.isVisible = true
@@ -1132,7 +1138,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             heatingPanelHide()
             // 2018/05/03 ExpandableListView - Modify text by BLE status
             listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
-            wvMapMain.visibility = View.VISIBLE
+            if (wvMapMain.visibility == 4) {
+                wvMapMain.visibility = View.VISIBLE
+            }
         }
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()

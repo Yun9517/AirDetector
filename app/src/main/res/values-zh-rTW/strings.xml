@@ -593,4 +593,5 @@
     <string name="NoDataAvailableForDownload">無雲端資料可供下載</string>
 
     <string name="close">關閉通知</string>
+    <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
 </resources>
