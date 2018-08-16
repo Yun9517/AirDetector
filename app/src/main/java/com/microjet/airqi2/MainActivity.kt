@@ -372,6 +372,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForAndroidO = 0
             triggerForAndroidOOn = false
         }
+        setExpandableDrawer()
         checkUIState()
     }
 
@@ -1084,6 +1085,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
+                    setExpandableDrawer()
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
@@ -1094,6 +1096,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     arr1.clear()
                     arrIndexMap.clear()
                     lock = false
+                    setExpandableDrawer()
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                     myPref.setSharePreferenceCheckFWVersion(false)
@@ -1171,37 +1174,37 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val drawer_01_Add_Device = ExpandedMenuModel()
         drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
         drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
-        listDataHeader.add(drawer_01_Add_Device)
+        drawer_01_Add_Device.icHeadRidInt = R.string.text_drawer_01_add_device
 
         val drawer_02_mobile_nose = ExpandedMenuModel()
         drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
         drawer_02_mobile_nose.iconImg = R.drawable.drawer02_mobile_nose
-        listDataHeader.add(drawer_02_mobile_nose)
+        drawer_02_mobile_nose.icHeadRidInt = R.string.text_drawer_02_mobile_nose
 
         val drawer_03_air_map = ExpandedMenuModel()
         drawer_03_air_map.iconName = getString(R.string.text_drawer_03_air_map)
         drawer_03_air_map.iconImg = R.drawable.drawer03_air_map
-        listDataHeader.add(drawer_03_air_map)
+        drawer_03_air_map.icHeadRidInt = R.string.text_drawer_03_air_map
 
         val drawer_04_personal_trail = ExpandedMenuModel()
         drawer_04_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail)
         drawer_04_personal_trail.iconImg = R.drawable.drawer04_personal_track
-        listDataHeader.add(drawer_04_personal_trail)
+        drawer_04_personal_trail.icHeadRidInt = R.string.text_drawer_04_personal_trail
 
         val drawer_05_knowledge = ExpandedMenuModel()
         drawer_05_knowledge.iconName = getString(R.string.text_drawer_05_knowledge)
         drawer_05_knowledge.iconImg = R.drawable.drawer05_knowledge_info
-        listDataHeader.add(drawer_05_knowledge)
+        drawer_05_knowledge.icHeadRidInt = R.string.text_drawer_05_knowledge
 
         val drawer_06_QA = ExpandedMenuModel()
         drawer_06_QA.iconName = getString(R.string.text_drawer_06_QA)
         drawer_06_QA.iconImg = R.drawable.drawer06_qa
-        listDataHeader.add(drawer_06_QA)
+        drawer_06_QA.icHeadRidInt = R.string.text_drawer_06_QA
 
         val drawer_07_setting = ExpandedMenuModel()
         drawer_07_setting.iconName = getString(R.string.text_drawer_07_setting)
         drawer_07_setting.iconImg = R.drawable.drawer07_setting
-        listDataHeader.add(drawer_07_setting)
+        drawer_07_setting.icHeadRidInt = R.string.text_drawer_07_setting
 
         // Child List
         val child_02_mobile_nose = ArrayList<String>()
@@ -1218,9 +1221,26 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         child_07_setting.add(getString(R.string.text_drawer_07_1_account_setting))
         child_07_setting.add(getString(R.string.text_drawer_07_2_general_setting))
 
-        listDataChild[listDataHeader[1]] = child_02_mobile_nose
-        listDataChild[listDataHeader[5]] = child_06_QA
-        listDataChild[listDataHeader[6]] = child_07_setting
+        if (connState == BleConnection.CONNECTED) { //空氣地圖收起
+            listDataHeader.add(drawer_01_Add_Device)
+            listDataHeader.add(drawer_02_mobile_nose)
+            listDataHeader.add(drawer_03_air_map)
+            listDataHeader.add(drawer_04_personal_trail)
+            listDataHeader.add(drawer_05_knowledge)
+            listDataHeader.add(drawer_06_QA)
+            listDataHeader.add(drawer_07_setting)
+            listDataChild[listDataHeader[1]] = child_02_mobile_nose
+            listDataChild[listDataHeader[5]] = child_06_QA
+            listDataChild[listDataHeader[6]] = child_07_setting
+        } else {
+            listDataHeader.add(drawer_01_Add_Device)
+            listDataHeader.add(drawer_02_mobile_nose)
+            listDataHeader.add(drawer_04_personal_trail)
+            listDataHeader.add(drawer_05_knowledge)
+            listDataHeader.add(drawer_07_setting)
+            listDataChild[listDataHeader[1]] = child_02_mobile_nose
+            listDataChild[listDataHeader[4]] = child_07_setting
+        }
 
     }
 
@@ -2087,15 +2107,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
         // Set Drawer's OnClickListener
         navigationmenu.setOnGroupClickListener({ parent, _, groupPosition, _ ->
-            when (groupPosition) {
-                0 -> {
+            when (listDataHeader[groupPosition].icHeadRidInt) {
+                R.string.text_drawer_01_add_device -> {
                     when (connState) {
                         BleConnection.CONNECTED -> blueToothDisconnect()
                         BleConnection.DISCONNECTED -> blueToothConnect()
                     }
                     drawerLayout?.closeDrawer(GravityCompat.START)
                 }
-                1 -> {
+                R.string.text_drawer_02_mobile_nose -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
                     } else {
@@ -2140,10 +2160,20 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                2 -> { publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START) }
-                3 -> { trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                4 -> { knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START) }
-                5 -> {
+                R.string.text_drawer_03_air_map -> {
+                    publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START)
+                }
+                R.string.text_drawer_04_personal_trail -> {
+                    if (connState == BleConnection.CONNECTED) {
+                        trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START)
+                    } else {
+                        airMapNoDevice()
+                    }
+                }
+                R.string.text_drawer_05_knowledge -> {
+                    knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START)
+                }
+                R.string.text_drawer_06_QA -> {
                     if (parent.isGroupExpanded(groupPosition)) {
                         parent.collapseGroup(groupPosition)
                     } else {
@@ -2158,22 +2188,28 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                         })
                     }
                 }
-                6 -> {
-                    if (parent.isGroupExpanded(groupPosition)) {
-                        parent.collapseGroup(groupPosition)
-                    } else {
-                        parent.expandGroup(groupPosition)
-                        parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
-                            when (childPosition) {
-                                0 -> accountShow()
-                                1 -> settingShow()
-                            }
-                            drawerLayout?.closeDrawer(GravityCompat.START)
+                R.string.text_drawer_07_setting -> {
+                    if (connState == BleConnection.CONNECTED) {
+                        if (parent.isGroupExpanded(groupPosition)) {
                             parent.collapseGroup(groupPosition)
-                        })
+                        } else {
+                            parent.expandGroup(groupPosition)
+                            parent.setOnChildClickListener({ parent, _, groupPosition, childPosition, _ ->
+                                when (childPosition) {
+                                    0 -> accountShow()
+                                    1 -> settingShow()
+                                }
+                                drawerLayout?.closeDrawer(GravityCompat.START)
+                                parent.collapseGroup(groupPosition)
+                            })
+                        }
+                    } else {
+                        accountShow()
                     }
+
                 }
             }
+            Log.e("789798", listDataHeader[groupPosition].icHeadRidInt.toString())
             true
         })
     }
@@ -2214,7 +2250,8 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             }
         }
     }
-    private fun airMap(){
+
+    private fun airMapNoDevice() {
         val uri = Uri.parse("https://www.addwii.com/product/mobile-nose-%E9%9A%A8%E8%BA%AB%E7%A9%BA%E6%B1%A1%E9%BC%BB-%E9%87%91/")
         val intent = Intent(Intent.ACTION_VIEW, uri)
         startActivity(intent)
