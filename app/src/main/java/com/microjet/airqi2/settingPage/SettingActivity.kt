@@ -227,13 +227,9 @@ class SettingActivity : AppCompatActivity() {
             }
         }
 
-        swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
+        /*swAllowServiceForeground.setOnCheckedChangeListener { _, isChecked ->
             myPref.setSharePreferenceServiceForeground(isChecked)
-
-            /*if(!isChecked) {
-                showParmnentCloseDialog()
-            }*/
-        }
+        }*/
 
         aboutButton.setOnClickListener(object : OnMultipleClickListener(10, 400) {
             override fun onMultipleClick(v: View) {
@@ -261,7 +257,7 @@ class SettingActivity : AppCompatActivity() {
     private fun getServiceSetting() {
         isRunInForeground = myPref.getSharePreferenceServiceForeground()
 
-        swAllowServiceForeground.isChecked = isRunInForeground
+        //swAllowServiceForeground.isChecked = isRunInForeground
     }
 
     private fun getTempUnitSetting() {

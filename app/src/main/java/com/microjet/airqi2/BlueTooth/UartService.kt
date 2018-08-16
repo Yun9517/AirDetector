@@ -474,7 +474,7 @@ class UartService : Service() {
         }
     }*/
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+    /*override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.e(TAG, "onStartCommand() called...")
 
         val action = intent?.action
@@ -488,9 +488,9 @@ class UartService : Service() {
         }
 
         return START_STICKY
-    }
+    }*/
 
-    private fun startToForeground() {
+    /*private fun startToForeground() {
         val mainNotification = MainNotification(this@UartService)
 
         val notification = mainNotification.makeNotification()
@@ -498,7 +498,7 @@ class UartService : Service() {
 
         startForeground(NotificationObj.MAIN_NOTIFICATION_ID, notification)
         Log.e(TAG, "Set service to foreground = on.")
-    }
+    }*/
 
     fun setLedOnOff(onlineLED: Boolean, offlineLED: Boolean) {
         writeRXCharacteristic(BLECallingTranslate.SetLedOn(onlineLED, offlineLED))

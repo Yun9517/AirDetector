@@ -175,11 +175,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     mUartService?.connect(mDeviceAddress)
                 }
             }
-            if (myPref.getSharePreferenceServiceForeground()) {
+            /*if (myPref.getSharePreferenceServiceForeground()) {
                 val serviceIntent = Intent(this@MainActivity, UartService::class.java)
                 serviceIntent.action = "START_FOREGROUND"
                 startService(serviceIntent)
-            }
+            }*/
             mUartService?.initFuseLocationProviderClient()
             Log.d("mServiceConnection", "onServiceConnected")
         }
@@ -309,6 +309,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             override fun onGeolocationPermissionsShowPrompt(origin: String, callback: GeolocationPermissions.Callback) {
                 callback.invoke(origin, true, false)
             }
+        }
+
+
+        // 180816 暫時拿掉常駐，因此刪除SharePreference中的KEY
+        if(myPref.getSharePreferenceServiceForeground()) {
+            myPref.clearSharePreferenceServiceForeground()
         }
     }
 
