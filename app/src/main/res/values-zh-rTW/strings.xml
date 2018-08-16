@@ -464,6 +464,7 @@
     <string name="text_drawer_02_4_our_story">關於我們</string>
     <string name="text_drawer_03_air_map">空氣地圖</string>
     <string name="text_drawer_04_personal_trail">個人軌跡圖</string>
+    <string name="text_drawer_04_personal_trail_advanced">個人軌跡圖 (進階功能)</string>
     <string name="text_drawer_05_knowledge">空污知識庫</string>
     <string name="text_drawer_06_QA">Q&amp;A</string>
     <string name="text_drawer_06_1_FAQ">常見問題</string>

@@ -372,7 +372,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             countForAndroidO = 0
             triggerForAndroidOOn = false
         }
-        setExpandableDrawer()
         checkUIState()
     }
 
@@ -730,24 +729,34 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     }
 
     private fun trailMapShow() {
-        val isPrivacy = myPref.getSharePreferencePrivacy()
-        if (isPrivacy) {
-            DefaultPatternCheckingActivity.startAction(this@MainActivity,
-                    DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
-        } else {
-            val mLang = Locale.getDefault().language + "-" + Locale.getDefault().country
-
-            val i: Intent? = Intent(this, if (mLang == "zh-CN") {
-                GoldenMapActivity::class.java
+        if (connState == BleConnection.CONNECTED) {
+            val isPrivacy = myPref.getSharePreferencePrivacy()
+            if (isPrivacy) {
+                DefaultPatternCheckingActivity.startAction(this@MainActivity,
+                        DefaultPatternCheckingActivity.START_ACTION_MODE_NORMAL)
             } else {
-                AirMapActivity::class.java
-            })
-            startActivity(i)
+                val mLang = Locale.getDefault().language + "-" + Locale.getDefault().country
+
+                val i: Intent? = Intent(this, if (mLang == "zh-CN") {
+                    GoldenMapActivity::class.java
+                } else {
+                    AirMapActivity::class.java
+                })
+                startActivity(i)
+            }
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TRAIL_MAP")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+            mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
+        } else if (connState == BleConnection.DISCONNECTED) {
+            val uri = Uri.parse("https://www.addwii.com/product/mobile-nose-%E9%9A%A8%E8%BA%AB%E7%A9%BA%E6%B1%A1%E9%BC%BB-%E9%87%91/")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+            val bundle = Bundle()
+            bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TRAIL_MAP_PROMOTION")
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+            mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
         }
-        val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "TRAIL_MAP")
-        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
-        mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
     }
 
     // 20171127 Raymond 新增：知識庫activity
@@ -1085,7 +1094,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             when (action) {
                 BroadcastActions.ACTION_GATT_CONNECTED -> {
                     connState = BleConnection.CONNECTED
-                    setExpandableDrawer()
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                 }
@@ -1096,7 +1104,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     arr1.clear()
                     arrIndexMap.clear()
                     lock = false
-                    setExpandableDrawer()
                     checkUIState()
                     Log.d(TAG, "OnReceive: $action")
                     myPref.setSharePreferenceCheckFWVersion(false)
@@ -1140,7 +1147,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             naviView.menu?.findItem(R.id.nav_setting)?.isVisible = true
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             // 2018/05/03 ExpandableListView - Modify text by BLE status
-            listDataHeader[0].iconName = getString(R.string.UART_Disconnecting)
             if (wvMapMain.visibility == 0) {
                 wvMapMain.visibility = View.INVISIBLE
             }
@@ -1154,11 +1160,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             naviView.menu?.findItem(R.id.nav_getData)?.isVisible = false
             heatingPanelHide()
             // 2018/05/03 ExpandableListView - Modify text by BLE status
-            listDataHeader[0].iconName = getString(R.string.text_navi_add_device)
             if (wvMapMain.visibility == 4) {
                 wvMapMain.visibility = View.VISIBLE
             }
         }
+        setExpandableDrawer()
         // 2018/05/03 ExpandableListView - use notify to change drawer text
         mMenuAdapter!!.notifyDataSetInvalidated()
         // **************************************************************** //
@@ -1171,10 +1177,15 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun prepareListData() {
         listDataHeader.clear()
         // Group List connState == BleConnection.CONNECTED
-        val drawer_01_Add_Device = ExpandedMenuModel()
-        drawer_01_Add_Device.iconName = getString(R.string.text_drawer_01_add_device)
-        drawer_01_Add_Device.iconImg = R.drawable.drawer01_add_device
-        drawer_01_Add_Device.icHeadRidInt = R.string.text_drawer_01_add_device
+        val drawer_01_Add_Device_Connected = ExpandedMenuModel()
+        drawer_01_Add_Device_Connected.iconName = getString(R.string.UART_Disconnecting)
+        drawer_01_Add_Device_Connected.iconImg = R.drawable.drawer01_add_device
+        drawer_01_Add_Device_Connected.icHeadRidInt = R.string.text_drawer_01_add_device
+
+        val drawer_01_Add_Device_Disconnected = ExpandedMenuModel()
+        drawer_01_Add_Device_Disconnected.iconName = getString(R.string.text_navi_add_device)
+        drawer_01_Add_Device_Disconnected.iconImg = R.drawable.drawer01_add_device
+        drawer_01_Add_Device_Disconnected.icHeadRidInt = R.string.text_drawer_01_add_device
 
         val drawer_02_mobile_nose = ExpandedMenuModel()
         drawer_02_mobile_nose.iconName = getString(R.string.text_drawer_02_mobile_nose)
@@ -1222,7 +1233,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         child_07_setting.add(getString(R.string.text_drawer_07_2_general_setting))
 
         if (connState == BleConnection.CONNECTED) { //空氣地圖收起
-            listDataHeader.add(drawer_01_Add_Device)
+            listDataHeader.add(drawer_01_Add_Device_Connected)
             listDataHeader.add(drawer_02_mobile_nose)
             listDataHeader.add(drawer_03_air_map)
             listDataHeader.add(drawer_04_personal_trail)
@@ -1233,13 +1244,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             listDataChild[listDataHeader[5]] = child_06_QA
             listDataChild[listDataHeader[6]] = child_07_setting
         } else {
-            listDataHeader.add(drawer_01_Add_Device)
+            listDataHeader.add(drawer_01_Add_Device_Disconnected)
             listDataHeader.add(drawer_02_mobile_nose)
+            drawer_04_personal_trail.iconName = getString(R.string.text_drawer_04_personal_trail_advanced)
             listDataHeader.add(drawer_04_personal_trail)
             listDataHeader.add(drawer_05_knowledge)
+            drawer_07_setting.iconName = getString(R.string.text_drawer_07_1_account_setting)
             listDataHeader.add(drawer_07_setting)
             listDataChild[listDataHeader[1]] = child_02_mobile_nose
-            listDataChild[listDataHeader[4]] = child_07_setting
         }
 
     }
@@ -2164,11 +2176,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                     publicMapShow("https://mjairql.com/air_map/", getString(R.string.text_title_Manifest_AirMap));drawerLayout?.closeDrawer(GravityCompat.START)
                 }
                 R.string.text_drawer_04_personal_trail -> {
-                    if (connState == BleConnection.CONNECTED) {
-                        trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START)
-                    } else {
-                        airMapNoDevice()
-                    }
+                    trailMapShow(); drawerLayout?.closeDrawer(GravityCompat.START)
                 }
                 R.string.text_drawer_05_knowledge -> {
                     knowledgeShow(); drawerLayout?.closeDrawer(GravityCompat.START)
@@ -2249,12 +2257,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 wvMapMain.visibility = View.INVISIBLE
             }
         }
-    }
-
-    private fun airMapNoDevice() {
-        val uri = Uri.parse("https://www.addwii.com/product/mobile-nose-%E9%9A%A8%E8%BA%AB%E7%A9%BA%E6%B1%A1%E9%BC%BB-%E9%87%91/")
-        val intent = Intent(Intent.ACTION_VIEW, uri)
-        startActivity(intent)
     }
 
     fun screenShot(view: View): Bitmap {
