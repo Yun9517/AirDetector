@@ -851,7 +851,6 @@ class MainFragment : Fragment(), View.OnTouchListener {
             } else {
                 scrollindex++
                 if (scrollindex < 10) {
-                    ScrollingTextTask().execute()
                     scrollingMission()
                 }
             }

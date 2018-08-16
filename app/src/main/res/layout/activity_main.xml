@@ -10,6 +10,54 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/mainLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.microjet.airqi2.CustomAPI.CustomViewPager
+                android:id="@+id/viewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <!--   <android.support.v4.view.ViewPager
+                    android:id="@+id/id_page_vp"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" >
+                </android.support.v4.view.ViewPager>  -->
+        </LinearLayout>
+
+        <WebView
+            android:id="@+id/wvMapMain"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layerType="software"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <com.sunsky.marqueeview.MarqueeView
+                android:id="@+id/upview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerVertical="true"
+                android:background="#D22451"
+                android:padding="3dp"
+                android:visibility="visible"
+                app:animDuration="1000"
+                app:interval="5000"
+                app:isSetAlphaAnim="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+            </com.sunsky.marqueeview.MarqueeView>
+        </WebView>
+
+
         <RelativeLayout
             android:id="@+id/waitLayout"
             android:layout_width="match_parent"
@@ -37,26 +85,6 @@
                 android:textColor="@color/whiteColor"
                 android:textSize="20sp" />
         </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/mainLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <com.microjet.airqi2.CustomAPI.CustomViewPager
-                android:id="@+id/viewPager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-            <!--   <android.support.v4.view.ViewPager
-        android:id="@+id/id_page_vp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" >
-    </android.support.v4.view.ViewPager>
--->
-        </LinearLayout>
-
 
         <LinearLayout
             android:id="@+id/indicator"
@@ -136,17 +164,6 @@
         </LinearLayout>
 
     </RelativeLayout>
-
-    <WebView
-        android:id="@+id/wvMapMain"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layerType="software"/>
 
     <android.support.design.widget.NavigationView
         android:id="@+id/naviView"
