@@ -316,10 +316,24 @@ class CloudNotifySettingActivity : AppCompatActivity() {
         }
         //TVOC TEXTVIEW VALUE
         cloudTvocSeekValue.text = cloudTVOC.toString()
-        cloudTvocSeekBar.setValue(cloudTVOC.toFloat())
         //PM25 TEXTVIEW VALUE
         cloudPM25SeekValue.text = cloudPM25.toString()
-        cloudPM25SeekBar.setValue(cloudPM25.toFloat())
+
+        if(cloudTVOC >= 220 && cloudTVOC <= 2200){
+            //Tvoc數值放入允許範圍
+            cloudTvocSeekBar.setValue(cloudTVOC.toFloat())
+        }else{
+            Toast.makeText(this, "Tvoc不在允許範圍值內", Toast.LENGTH_SHORT).show()
+        }
+
+        if(cloudPM25 >= 15 && cloudPM25 <= 150){
+            //PM25數值放入允許範圍
+            cloudPM25SeekBar.setValue(cloudPM25.toFloat())
+        }else{
+            Toast.makeText(this, "PM25不在允許範圍值內", Toast.LENGTH_SHORT).show()
+        }
+
+
         //SEEKBARCOLOR
         setSeekBarColor(cloudTvocSeekBar, cloudTVOC.toFloat(), true)
         setSeekBarColor(cloudPM25SeekBar, cloudPM25.toFloat(), false)
