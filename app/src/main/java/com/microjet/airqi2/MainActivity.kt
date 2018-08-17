@@ -244,6 +244,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         var mUartService: UartService? = null
     }
 
+    private var bindServiceSuccess: Boolean = false
 
     //2018/08/16
     private var scrollindex = 0
@@ -336,9 +337,9 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         //checkBluetooth()
         //20180802 Richard
         val gattServiceIntent = Intent(this, UartService::class.java)
-        bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
-        //Log.d("bindServiceResult", bindServiceSuccess.toString())
-        if (mUartService != null) {
+        bindServiceSuccess = bindService(gattServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE)
+        Log.d("bindServiceResult", bindServiceSuccess.toString())
+        if (mUartService != null && bindServiceSuccess) {
             if (connState == BleConnection.DISCONNECTED) {
                 if (!myPref.getSharePreferenceManualDisconn()) {
                     mDeviceAddress = myPref.getSharePreferenceMAC()
