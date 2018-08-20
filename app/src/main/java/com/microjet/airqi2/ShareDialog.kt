@@ -68,6 +68,16 @@ class ShareDialog : DialogFragment() {
             }
 
             view.findViewById<Button>(R.id.btnShareApplication).setOnClickListener {
+                try {
+                    val shareBody = "哎唷威空污鼻好棒棒喔喔喔喔喔喔喔喔喔喔喔喔喔喔喔！！！！！！！！！ http://www.addwii.com/"
+                    val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+                    sharingIntent.type = "text/plain"
+                    sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+                    startActivity(Intent.createChooser(sharingIntent,"Share"))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+
                 dismiss()
             }
 
