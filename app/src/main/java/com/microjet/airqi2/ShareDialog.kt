@@ -9,6 +9,7 @@ import android.support.v4.content.FileProvider
 import android.util.Log
 import android.view.*
 import android.widget.Button
+import android.widget.ImageView
 import java.io.File
 
 /**
@@ -39,6 +40,10 @@ class ShareDialog : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         if(view != null) {
+            view.findViewById<ImageView>(R.id.imgBtnClose).setOnClickListener {
+                dismiss()
+            }
+
             view.findViewById<Button>(R.id.btnShareScreenshot).setOnClickListener {
                 val imageFile = File(uriString)
 
@@ -69,7 +74,7 @@ class ShareDialog : DialogFragment() {
 
             view.findViewById<Button>(R.id.btnShareApplication).setOnClickListener {
                 try {
-                    val shareBody = "哎唷威空污鼻好棒棒喔喔喔喔喔喔喔喔喔喔喔喔喔喔喔！！！！！！！！！ http://www.addwii.com/"
+                    val shareBody = "分享一個超棒的APP，ADDWII空氣地圖，可以即時知道大台北地區的空氣品質喔！ http://mjairql.com/shareLink"
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
