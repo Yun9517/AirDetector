@@ -2260,13 +2260,14 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
     }
 
-    fun screenShot(view: View): Bitmap {
-        val bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888)
+    private fun screenShot(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         view.draw(canvas)
         Log.d("YYY", "done")
         return bitmap
     }
+
     private fun checkPermissions() {
         when {
             ActivityCompat.checkSelfPermission(this@MainActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
@@ -2293,37 +2294,21 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
 
         val imageFile = File(mPath)
-        shareContent(imageFile)
+
+        val bundle = Bundle()
+        bundle.putString("URI", imageFile.absolutePath)
+
+        val dialog = ShareDialog()
+        dialog.arguments = bundle
+        dialog.show(fragmentManager, "shareDialog")
+
+        //shareContent(imageFile)
         val outputStream = FileOutputStream(imageFile)
         val quality = 100
         bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
         outputStream.flush()
         outputStream.close()
 
-    }
-
-    private fun shareContent(imageFile: File) {
-        try {
-            val photoURI = FileProvider.getUriForFile(this, "$packageName.fileprovider", imageFile)
-            Log.e("SHARE", photoURI.path)
-
-            val intent = Intent(Intent.ACTION_SEND)
-
-            intent.data = photoURI
-            intent.type = "image/*"
-            intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
-
-            val chooser = Intent.createChooser(intent, "Share")
-
-            //給目錄臨時的權限
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            // Verify the intent will resolve to at least one activity
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivityForResult(chooser, 0)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
     }
 
     private fun scrollingMission() {
@@ -2368,7 +2353,6 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         }
         upview?.setViews(scrollViewsArr)
     }
-
 }
 
 
