@@ -45,7 +45,7 @@ class ShareDialog : DialogFragment() {
                 dismiss()
             }
 
-            view.findViewById<Button>(R.id.btnShareScreenshot).setOnClickListener {
+            view.findViewById<Button>(R.id.btnScreenshotShare).setOnClickListener {
                 val imageFile = File(uriString)
 
                 try {
@@ -73,7 +73,7 @@ class ShareDialog : DialogFragment() {
                 dismiss()
             }
 
-            view.findViewById<Button>(R.id.btnShareApplication).setOnClickListener {
+            view.findViewById<Button>(R.id.btnApplicationShare).setOnClickListener {
                 try {
                     val shareBody = "分享一個超棒的APP，ADDWII空氣地圖，可以即時知道大台北地區的空氣品質喔！ http://mjairql.com/shareLink"
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
@@ -87,7 +87,11 @@ class ShareDialog : DialogFragment() {
                 dismiss()
             }
 
-            view.findViewById<Button>(R.id.btnReport).setOnClickListener {
+            view.findViewById<Button>(R.id.btnFourGridReport).setOnClickListener {
+                val uri = Uri.parse("https://api.mjairql.com/api/v1/fourGridReport")
+                val intent = Intent(Intent.ACTION_VIEW, uri)
+                startActivity(intent)
+
                 dismiss()
             }
 

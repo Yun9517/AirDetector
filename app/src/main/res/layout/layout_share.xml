@@ -34,7 +34,7 @@
             app:srcCompat="@drawable/ic_popup_close_icon" />
 
         <Button
-            android:id="@+id/btnShareScreenshot"
+            android:id="@+id/btnScreenshotShare"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginEnd="32dp"
@@ -50,7 +50,7 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
         <Button
-            android:id="@+id/btnShareApplication"
+            android:id="@+id/btnApplicationShare"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginEnd="32dp"
@@ -63,7 +63,7 @@
             app:layout_constraintDimensionRatio="w,5.43:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnShareScreenshot" />
+            app:layout_constraintTop_toBottomOf="@+id/btnScreenshotShare" />
 
         <TextView
             android:id="@+id/textView4"
@@ -76,7 +76,7 @@
             android:textSize="14sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnShareApplication" />
+            app:layout_constraintTop_toBottomOf="@+id/btnApplicationShare" />
 
         <ImageView
             android:id="@+id/imageView7"
@@ -89,7 +89,7 @@
             android:scaleType="fitEnd"
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
             app:layout_constraintEnd_toStartOf="@+id/textView4"
-            app:layout_constraintStart_toStartOf="@+id/btnReport"
+            app:layout_constraintStart_toStartOf="@+id/btnFourGridReport"
             app:layout_constraintTop_toTopOf="@+id/textView4"
             app:srcCompat="@drawable/ic_popup_suggestion_icon_l" />
 
@@ -103,13 +103,13 @@
             android:layout_marginTop="8dp"
             android:scaleType="fitStart"
             app:layout_constraintBottom_toBottomOf="@+id/textView4"
-            app:layout_constraintEnd_toEndOf="@+id/btnReport"
+            app:layout_constraintEnd_toEndOf="@+id/btnFourGridReport"
             app:layout_constraintStart_toEndOf="@+id/textView4"
             app:layout_constraintTop_toTopOf="@+id/textView4"
             app:srcCompat="@drawable/ic_popup_suggestion_icon_r" />
 
         <Button
-            android:id="@+id/btnReport"
+            android:id="@+id/btnFourGridReport"
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_marginEnd="32dp"
@@ -140,6 +140,6 @@
             app:layout_constraintDimensionRatio="w,5.43:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnReport" />
+            app:layout_constraintTop_toBottomOf="@+id/btnFourGridReport" />
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
