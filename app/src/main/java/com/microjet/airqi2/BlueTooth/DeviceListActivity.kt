@@ -44,6 +44,8 @@ import android.view.Window
 import android.widget.*
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
+import kotlinx.android.synthetic.main.device_list.*
+import me.dm7.barcodescanner.zxing.ZXingScannerView
 import java.util.*
 
 //選單按下去的後跳出的視窗及連線資料
@@ -70,6 +72,9 @@ class DeviceListActivity : Activity() {
     private var devScanningPanel: LinearLayout? = null
     
     private lateinit var myPref: PrefObjects
+
+    //qrcord
+    private var mScannerQRcode: ZXingScannerView? = null
 
     // ListView 項目點選監聽器
     private var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
@@ -195,6 +200,10 @@ class DeviceListActivity : Activity() {
 
         mHandler = Handler()
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
+
+        btn_qrcode.setOnClickListener {
+
+        }
     }
 
     override fun onResume() {
