@@ -43,7 +43,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.*
-import com.google.zxing.Result
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
 import kotlinx.android.synthetic.main.device_list.*
@@ -226,7 +225,6 @@ class DeviceListActivity : Activity() {
     public override fun onDestroy() {
         super.onDestroy()
         unregisterReceiver(mBluetoothStateReceiver)
-        mScannerView?.stopCamera()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -444,7 +442,7 @@ class DeviceListActivity : Activity() {
         mScannerView = ZXingScannerView(this)
         setContentView(mScannerView)
         mScannerView?.setResultHandler(mResultHandler)
-        mScannerView?.setAutoFocus(true)
+//        mScannerView?.setAutoFocus(true)
         mScannerView?.startCamera()
     }
 
@@ -480,43 +478,45 @@ class DeviceListActivity : Activity() {
                 this)
     }
 
-    private val mResultHandler = object:ZXingScannerView.ResultHandler {
-        override fun handleResult(result: Result) {
-            //Toast.makeText(getApplicationContext(), "(◔ д◔): 好像有人掃描Addwii了?"+"\n"+"(゜Д゜;): 那是什麼!?"+"\n"+"( °▽°): 先不說了，有聽過AddwiiA嗎?", Toast.LENGTH_SHORT).show()
+    private val mResultHandler = ZXingScannerView.ResultHandler { result ->
+        //Toast.makeText(getApplicationContext(), "(◔ д◔): 好像有人掃描Addwii了?"+"\n"+"(゜Д゜;): 那是什麼!?"+"\n"+"( °▽°): 先不說了，有聽過AddwiiA嗎?", Toast.LENGTH_SHORT).show()
+        Log.e("QRcode", result.toString())
+        Log.e("QRcode", result.text.toString())
+        // 取出 result 中的字串
+        val qrCodeResult = result.text
 
-            // 取出 result 中的字串
-            val qrCodeResult = result.text
+        // 判斷自傳是否包含 ADDWII
+        if (qrCodeResult.contains("ADDWII")) {
+            // 尋找裝置名稱字串起始及結束
+            val nameStart = qrCodeResult.indexOf("Device_Name") + 12    // total 包含 =
+            val nameEnd = nameStart + 11
+            // 尋找裝置 MAC 起始及結束
+            val addrStart = qrCodeResult.indexOf("MAC_address") + 11
+            val addrEnd = addrStart + 17
 
-            // 判斷自傳是否包含 ADDWII
-            if (qrCodeResult.contains("ADDWII")) {
-                // 尋找裝置名稱字串起始及結束
-                val nameStart = qrCodeResult.indexOf("Device_Name") + 12    // total 包含 =
-                val nameEnd = nameStart + 11
-                // 尋找裝置 MAC 起始及結束
-                val addrStart = qrCodeResult.indexOf("MAC_address") + 11
-                val addrEnd = addrStart + 17
+            // 取出裝置名稱及 MAC
+            val deviceName = qrCodeResult.substring(nameStart, nameEnd)
+            val deviceAddr = qrCodeResult.substring(addrStart, addrEnd)
 
-                // 取出裝置名稱及 MAC
-                val deviceName = qrCodeResult.substring(nameStart, nameEnd)
-                val deviceAddr = qrCodeResult.substring(addrStart, addrEnd)
+            // 存入 SharePreference
+            val myPref = PrefObjects(this@DeviceListActivity)
+            myPref.setSharePreferenceMAC(deviceAddr)
+            myPref.setSharePreferenceName(deviceName)
 
-                // 存入 SharePreference
-                val myPref = PrefObjects(this@DeviceListActivity)
-                myPref.setSharePreferenceMAC(deviceAddr)
-                myPref.setSharePreferenceName(deviceName)
+            // 將手動斷線旗標清掉
+            myPref.setSharePreferenceManualDisconn(false)
 
-                // 將手動斷線旗標清掉
-                myPref.setSharePreferenceManualDisconn(false)
-
-                val backIntent = Intent()
-                val backBundle = Bundle()
-                backBundle.putString("MAC", deviceAddr)
-                backIntent.putExtras(backBundle)
-                setResult(Activity.RESULT_OK, backIntent)
-                finish()
-
-                Log.e("QRcode", "Name: $deviceName, MAC Address: $deviceAddr")
-            }
+            val backIntent = Intent()
+            val backBundle = Bundle()
+            backBundle.putString("MAC", deviceAddr)
+            backIntent.putExtras(backBundle)
+            setResult(Activity.RESULT_OK, backIntent)
+            finish()
+            Log.e("QRcode", "Name: $deviceName, MAC Address: $deviceAddr")
+        }else{
+            Toast.makeText(getApplicationContext(), "產品不支援", Toast.LENGTH_SHORT).show()
+            finish()
         }
+        mScannerView?.stopCamera()
     }
 }
