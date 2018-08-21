@@ -2296,11 +2296,11 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
         val imageFile = File(mPath)
 
         val bundle = Bundle()
-        bundle.putString("URI", imageFile.absolutePath)
+        bundle.putString(ShareDialog.EXTRA_FILE_PATH, imageFile.absolutePath)
 
         val dialog = ShareDialog()
         dialog.arguments = bundle
-        dialog.show(fragmentManager, "shareDialog")
+        dialog.show(fragmentManager, ShareDialog.TAG)
 
         //shareContent(imageFile)
         val outputStream = FileOutputStream(imageFile)

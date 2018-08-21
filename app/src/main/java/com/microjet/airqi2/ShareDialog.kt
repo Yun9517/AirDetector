@@ -23,6 +23,11 @@ class ShareDialog : DialogFragment() {
 
     private var mContext: Context? = null
 
+    companion object {
+        val TAG = ShareDialog::class.java.simpleName
+        val EXTRA_FILE_PATH = "URI"
+    }
+
     override fun onAttach(context: Context?) {
         super.onAttach(context)
         mContext = context
@@ -31,7 +36,7 @@ class ShareDialog : DialogFragment() {
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val bundle = arguments
         if(bundle != null) {
-            uriString = bundle.getString("URI")
+            uriString = bundle.getString(EXTRA_FILE_PATH)
         }
 
         return inflater?.inflate(R.layout.layout_share, container, false)
