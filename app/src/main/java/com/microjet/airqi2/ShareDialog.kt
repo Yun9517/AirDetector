@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.app.DialogFragment
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -91,6 +92,33 @@ class ShareDialog : DialogFragment() {
             }
 
             view.findViewById<Button>(R.id.btnScreenshotReport).setOnClickListener {
+                val imageFile = File(uriString)
+
+                try {
+                    val photoURI = FileProvider.getUriForFile(mContext!!, "${mContext!!.packageName}.fileprovider", imageFile)
+                    Log.e("SHARE", photoURI.path)
+
+                    val mailURI = "service@addwii.com"
+                    val intent = Intent(Intent.ACTION_SEND)
+
+                    intent.data = photoURI
+                    intent.type = "application/image"
+                    intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mailURI))  //圖片的實體路徑
+                    intent.putExtra(Intent.EXTRA_SUBJECT, "截圖反映問題")  //圖片的實體路徑
+                    intent.putExtra(Intent.EXTRA_TEXT, "<請輸入問題敘述>")
+                    intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
+
+                    val chooser = Intent.createChooser(intent, "Send mail...")
+
+                    //給目錄臨時的權限
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+                    // Verify the intent will resolve to at least one activity
+                    if (intent.resolveActivity(mContext!!.packageManager) != null) {
+                        startActivityForResult(chooser, 0)
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
                 dismiss()
             }
         }
