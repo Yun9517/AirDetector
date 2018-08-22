@@ -63,7 +63,7 @@ class ShareDialog : DialogFragment() {
                     intent.type = "image/*"
                     intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
 
-                    val chooser = Intent.createChooser(intent, "Share")
+                    val chooser = Intent.createChooser(intent, getString(R.string.text_share_screenshot_title))
 
                     //給目錄臨時的權限
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
@@ -80,11 +80,11 @@ class ShareDialog : DialogFragment() {
 
             view.findViewById<Button>(R.id.btnApplicationShare).setOnClickListener {
                 try {
-                    val shareBody = "分享一個超棒的APP，ADDWII空氣地圖，可以即時知道大台北地區的空氣品質喔！ http://mjairql.com/shareLink"
+                    val shareBody = getString(R.string.text_share_app_content)
                     val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
                     sharingIntent.type = "text/plain"
                     sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
-                    startActivity(Intent.createChooser(sharingIntent,"Share"))
+                    startActivity(Intent.createChooser(sharingIntent,getString(R.string.text_share_app_title)))
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -113,11 +113,11 @@ class ShareDialog : DialogFragment() {
                     intent.data = photoURI
                     intent.type = "application/image"
                     intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mailURI))  //圖片的實體路徑
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "截圖反映問題")  //圖片的實體路徑
-                    intent.putExtra(Intent.EXTRA_TEXT, "<請輸入問題敘述>")
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.text_feedback_screenshot))  //圖片的實體路徑
+                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.text_feedback_content))
                     intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
 
-                    val chooser = Intent.createChooser(intent, "Send mail...")
+                    val chooser = Intent.createChooser(intent, getString(R.string.text_send_email_title))
 
                     //給目錄臨時的權限
                     intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
