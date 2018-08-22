@@ -590,4 +590,15 @@
     <string name="NoDataAvailableForDownload">无云端资料可供下载</string>
 
     <string name="close">关闭通知</string>
+    <string name="text_feedback_screenshot">截图反映问题</string>
+    <string name="text_feedback_content">手机厂牌: %s\n手机型号: %s\nAndroid 版本: %s\nAPP 版本: %s(APP Ver Code: %s)\n\n<![CDATA[<请输入问题叙述>]]>\n</string>
+    <string name="text_send_email_title">透过…发送Email</string>
+    <string name="text_share_app_title">分享APP给：</string>
+    <string name="text_share_screenshot_title">分享截图给：</string>
+    <string name="text_share_app_content">分享一个超棒的APP给你，ADDWII空气地图，可以即时知道大台北地区的空气品质喔！ http://mjairql.com/shareLink</string>
+    <string name="text_button_share_the_screenshot">分享地图</string>
+    <string name="text_button_share_the_app">APP分享</string>
+    <string name="text_label_opinion">我有意见</string>
+    <string name="text_button_feedback">意见反馈</string>
+    <string name="text_button_feedback_the_screenshot">截图反映</string>
 </resources>

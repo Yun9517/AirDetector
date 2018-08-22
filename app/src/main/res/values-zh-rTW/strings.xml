@@ -595,4 +595,15 @@
 
     <string name="close">關閉通知</string>
     <string name="dummy_content">ADDWII\n空污鼻\n好棒棒！</string>
+    <string name="text_feedback_screenshot">截圖反映問題</string>
+    <string name="text_feedback_content">手機廠牌: %s\n手機型號: %s\nAndroid 版本: %s\nAPP 版本: %s(APP Ver Code: %s)\n\n<![CDATA[<請輸入問題敘述>]]>\n</string>
+    <string name="text_send_email_title">透過…發送Email</string>
+    <string name="text_share_app_title">分享APP給：</string>
+    <string name="text_share_screenshot_title">分享截圖給：</string>
+    <string name="text_share_app_content">分享一個超棒的APP給你，ADDWII空氣地圖，可以即時知道大台北地區的空氣品質喔！ http://mjairql.com/shareLink</string>
+    <string name="text_button_share_the_screenshot">分享地圖</string>
+    <string name="text_button_share_the_app">APP分享</string>
+    <string name="text_label_opinion">我有意見</string>
+    <string name="text_button_feedback">意見反饋</string>
+    <string name="text_button_feedback_the_screenshot">截圖反映</string>
 </resources>
