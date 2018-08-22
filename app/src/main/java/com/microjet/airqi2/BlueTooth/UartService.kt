@@ -11,10 +11,7 @@ import android.os.Looper
 import android.support.v4.content.LocalBroadcastManager
 import android.util.Log
 import android.widget.Toast
-import com.google.android.gms.location.LocationCallback
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationResult
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import com.microjet.airqi2.Definition.BroadcastActions
 import com.microjet.airqi2.Definition.NotificationObj
 import com.microjet.airqi2.TvocNoseData
@@ -55,6 +52,27 @@ class UartService : Service() {
     private var lati: Float = 255f
 
     private lateinit var locationRequest: LocationRequest
+    private lateinit var fusedClient: FusedLocationProviderClient
+
+    private val locationCallback = object : LocationCallback() {
+        override fun onLocationResult(locationResult: LocationResult?) {
+            super.onLocationResult(locationResult)
+
+            val location = locationResult!!.lastLocation
+
+            if (location != null) {
+                TvocNoseData.lati = location.latitude.toFloat()
+                TvocNoseData.longi = location.longitude.toFloat()
+
+                Log.e("LOCATION", "Get Location from LocationCallback: ${TvocNoseData.lati}, ${TvocNoseData.longi}")
+            } else {
+                TvocNoseData.lati = lati
+                TvocNoseData.longi = longi
+
+                Log.e("LOCATION", "Get Location from LocationCallback: null (set default 255, 255)")
+            }
+        }
+    }
 
     private val mGattCallback = object : BluetoothGattCallback() {
         override fun onConnectionStateChange(gatt: BluetoothGatt, status: Int, newState: Int) {
@@ -178,6 +196,7 @@ class UartService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
         //registerReceiver(mServiceReceiver, makeServiceIntentFilter())
+        initFuseLocationProviderClient()
         return mBinder
     }
 
@@ -188,10 +207,9 @@ class UartService : Service() {
         //unregisterReceiver(mServiceReceiver)
         close()
 
-        //val mPref = PrefObjects(applicationContext)
-        //if(!mPref.getSharePreferenceServiceForeground()) {
-        stopForeground(true)
-        //}
+        //stopForeground(true)
+
+        fusedClient.removeLocationUpdates(locationCallback)
         return super.onUnbind(intent)
     }
 
@@ -377,11 +395,11 @@ class UartService : Service() {
 
     @SuppressLint("MissingPermission")
     fun initFuseLocationProviderClient() {
-        val client = LocationServices.getFusedLocationProviderClient(this)
+        fusedClient = LocationServices.getFusedLocationProviderClient(this)
 
         createLocationRequest()
 
-        client.lastLocation.addOnCompleteListener { task ->
+        fusedClient.lastLocation.addOnCompleteListener { task ->
             if (task.isSuccessful) {
                 val location = task.result
 
@@ -399,26 +417,7 @@ class UartService : Service() {
             }
         }
 
-        client.requestLocationUpdates(locationRequest, object : LocationCallback() {
-            override fun onLocationResult(locationResult: LocationResult?) {
-                super.onLocationResult(locationResult)
-
-                val location = locationResult!!.lastLocation
-
-                if (location != null) {
-                    TvocNoseData.lati = location.latitude.toFloat()
-                    TvocNoseData.longi = location.longitude.toFloat()
-
-                    Log.e("LOCATION", "Get Location from OnCompleteListener: ${TvocNoseData.lati}, ${TvocNoseData.longi}")
-                } else {
-                    TvocNoseData.lati = lati
-                    TvocNoseData.longi = longi
-
-                    Log.e("LOCATION", "Get Location from OnCompleteListener: null (set default 255, 255)")
-                }
-            }
-        },
-                Looper.myLooper())
+        fusedClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
     }
 
     private fun createLocationRequest() {

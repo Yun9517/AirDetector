@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 serviceIntent.action = "START_FOREGROUND"
                 startService(serviceIntent)
             }*/
-            mUartService?.initFuseLocationProviderClient()
+            //mUartService?.initFuseLocationProviderClient()
             Log.d("mServiceConnection", "onServiceConnected")
         }
 
