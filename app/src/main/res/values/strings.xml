@@ -581,7 +581,7 @@ Please note that this FW update process is done entirely at your own risk. If th
 
     <string name="close">CLOSE</string>
     <string name="text_feedback_screenshot">Feedback The Screenshot</string>
-    <string name="text_feedback_content"><![CDATA[<Tell me your problem.>]]></string>
+    <string name="text_feedback_content">Phone Brand: %s\nPhone Model: %s\nAndroid Version: %s\nAPP Version: %s(APP Ver Code: %s)\n\n<![CDATA[<Tell me your problem.>]]>\n</string>
     <string name="text_send_email_title">Send Email by…</string>
     <string name="text_share_app_title">Share APP To</string>
     <string name="text_share_screenshot_title">Share Screenshot To</string>

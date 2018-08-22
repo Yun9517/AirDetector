@@ -5,6 +5,7 @@ import android.app.DialogFragment
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.support.v4.content.FileProvider
 import android.util.Log
@@ -114,7 +115,10 @@ class ShareDialog : DialogFragment() {
                     intent.type = "application/image"
                     intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mailURI))  //圖片的實體路徑
                     intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.text_feedback_screenshot))  //圖片的實體路徑
-                    intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.text_feedback_content))
+                    intent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.text_feedback_content),
+                            Build.BRAND, Build.MODEL,
+                            Build.VERSION.RELEASE, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE))
+
                     intent.putExtra(Intent.EXTRA_STREAM, photoURI)  //圖片的實體路徑
 
                     val chooser = Intent.createChooser(intent, getString(R.string.text_send_email_title))
