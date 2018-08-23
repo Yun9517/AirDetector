@@ -580,15 +580,14 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="text_dlg_close_permanent">Since you turn off "Allow background service permanent", you may not be able to use the full functionality of ADDWII (eg personal track, air map cannot record the location of your device, etc.).</string>
 
     <string name="close">CLOSE</string>
-    <string name="text_feedback_screenshot">Feedback The Screenshot</string>
     <string name="text_feedback_content">Phone Brand: %s\nPhone Model: %s\nAndroid Version: %s\nAPP Version: %s(APP Ver Code: %s)\n\n<![CDATA[<Tell me your problem.>]]>\n</string>
     <string name="text_send_email_title">Send Email by…</string>
     <string name="text_share_app_title">Share APP To</string>
     <string name="text_share_screenshot_title">Share Screenshot To</string>
     <string name="text_share_app_content">I want to share a great APP for you. The ADDWII AirMap, You can instantly know the air quality in the Greater Taipei area! http://mjairql.com/shareLink</string>
-    <string name="text_button_share_the_screenshot">Share The Screenshot</string>
-    <string name="text_button_share_the_app">Share The APP</string>
-    <string name="text_label_opinion">Opinion</string>
+    <string name="text_button_share_the_screenshot">MAP Share</string>
+    <string name="text_button_share_the_app">APP Share</string>
+    <string name="text_label_opinion">Support</string>
     <string name="text_button_feedback">Feedback</string>
-    <string name="text_button_feedback_the_screenshot">Feedback The Screenshot</string>
+    <string name="text_button_feedback_the_screenshot">Screenshot</string>
 </resources>
