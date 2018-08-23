@@ -36,6 +36,7 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.ParcelUuid
+import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +45,9 @@ import android.view.Window
 import android.widget.*
 import com.microjet.airqi2.PrefObjects
 import com.microjet.airqi2.R
+import kotlinx.android.synthetic.main.device_list.*
+import me.dm7.barcodescanner.zxing.ZXingScannerView
+import pub.devrel.easypermissions.EasyPermissions
 import java.util.*
 
 //選單按下去的後跳出的視窗及連線資料
@@ -70,6 +74,9 @@ class DeviceListActivity : Activity() {
     private var devScanningPanel: LinearLayout? = null
     
     private lateinit var myPref: PrefObjects
+
+    //qrcord
+    private var mScannerView: ZXingScannerView? = null
 
     // ListView 項目點選監聽器
     private var scanResultOnItemClickListener: AdapterView.OnItemClickListener = AdapterView.OnItemClickListener { parent, view, position, id ->
@@ -195,6 +202,10 @@ class DeviceListActivity : Activity() {
 
         mHandler = Handler()
         registerReceiver(mBluetoothStateReceiver, makeBluetoothStateIntentFilter())
+
+        btn_QRcode.setOnClickListener {
+            checkPermissions()
+        }
     }
 
     override fun onResume() {
@@ -426,4 +437,86 @@ class DeviceListActivity : Activity() {
         }
     }
 
+    private fun getQRcode(){
+        //QRcode掃描使用
+        mScannerView = ZXingScannerView(this)
+        setContentView(mScannerView)
+        mScannerView?.setResultHandler(mResultHandler)
+//        mScannerView?.setAutoFocus(true)
+        mScannerView?.startCamera()
+    }
+
+    private fun checkPermissions() {
+        when {
+            ActivityCompat.checkSelfPermission(this@DeviceListActivity, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@DeviceListActivity,
+                        arrayOf(android.Manifest.permission.CAMERA), 9527)
+            else -> {
+                getQRcode()
+                Log.e("CheckPerm", "Permission Granted...")
+            }
+        }
+    }
+
+    // 請求權限結果方法實作
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>,
+                                            grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            9527 -> {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getQRcode()
+                    Log.e("CheckPerm", "Write External Storage Permission Granted...")
+                }
+                return
+            }
+        }
+        EasyPermissions.onRequestPermissionsResult(requestCode,
+                permissions,
+                grantResults,
+                this)
+    }
+
+    private val mResultHandler = ZXingScannerView.ResultHandler { result ->
+        //Toast.makeText(getApplicationContext(), "(◔ д◔): 好像有人掃描Addwii了?"+"\n"+"(゜Д゜;): 那是什麼!?"+"\n"+"( °▽°): 先不說了，有聽過AddwiiA嗎?", Toast.LENGTH_SHORT).show()
+        Log.e("QRcode", result.toString())
+        Log.e("QRcode", result.text.toString())
+        // 取出 result 中的字串
+        val qrCodeResult = result.text
+
+        // 判斷自傳是否包含 ADDWII
+        if (qrCodeResult.contains("ADDWII")) {
+            // 尋找裝置名稱字串起始及結束
+            val nameStart = qrCodeResult.indexOf("Device_Name") + 12    // total 包含 =
+            val nameEnd = nameStart + 11
+            // 尋找裝置 MAC 起始及結束
+            val addrStart = qrCodeResult.indexOf("MAC_address") + 11
+            val addrEnd = addrStart + 17
+
+            // 取出裝置名稱及 MAC
+            val deviceName = qrCodeResult.substring(nameStart, nameEnd)
+            val deviceAddr = qrCodeResult.substring(addrStart, addrEnd)
+
+            // 存入 SharePreference
+            val myPref = PrefObjects(this@DeviceListActivity)
+            myPref.setSharePreferenceMAC(deviceAddr)
+            myPref.setSharePreferenceName(deviceName)
+
+            // 將手動斷線旗標清掉
+            myPref.setSharePreferenceManualDisconn(false)
+
+            val backIntent = Intent()
+            val backBundle = Bundle()
+            backBundle.putString("MAC", deviceAddr)
+            backIntent.putExtras(backBundle)
+            setResult(Activity.RESULT_OK, backIntent)
+            finish()
+            Log.e("QRcode", "Name: $deviceName, MAC Address: $deviceAddr")
+        }else{
+            Toast.makeText(getApplicationContext(), "產品不支援", Toast.LENGTH_SHORT).show()
+            finish()
+        }
+        mScannerView?.stopCamera()
+    }
 }

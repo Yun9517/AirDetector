@@ -16,35 +16,53 @@
         android:background="@android:color/white"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="fill_parent"
             android:layout_height="55dp"
             android:layout_margin="0dp"
             android:background="@color/blackTransparentColor_80"
-            android:focusable="true">
+            android:focusable="true"
+            android:id="@+id/relativeLayout2">
 
             <TextView
                 android:id="@+id/title_devices"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
                 android:text="@string/select_device"
                 android:textColor="#fff"
                 android:textSize="22sp"
-                tools:ignore="RelativeOverlap,RtlHardcoded" />
+                tools:ignore="RelativeOverlap,RtlHardcoded"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <ProgressBar
                 android:id="@+id/scanProgress"
                 style="@style/Widget.AppCompat.ProgressBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerInParent="true"
-                android:layout_marginEnd="10dp"
-                android:visibility="visible" />
+                android:visibility="visible"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <ImageView
+                android:id="@+id/btn_QRcode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:layout_marginEnd="16dp"
+                android:background="@android:color/transparent"
+                android:elevation="0dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_qrcode_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <LinearLayout
             android:layout_width="match_parent"

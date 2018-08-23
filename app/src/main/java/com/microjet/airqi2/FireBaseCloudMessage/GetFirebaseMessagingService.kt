@@ -8,7 +8,6 @@ import android.content.Intent
 import android.media.RingtoneManager
 import android.net.Uri
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.support.v4.app.NotificationCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
@@ -44,8 +43,12 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         if (getMessage?.data != null) {
             if (getMessage?.data.isNotEmpty()){
                 val firebaseScorllingText: String = getMessage?.data?.get("updateArticle").toString()
-                Log.e(TAG, "Message Topic= " + firebaseScorllingText)
-                firebaseScrollingTopic(firebaseScorllingText)
+
+                if (firebaseScorllingText != ""){
+                    Log.e(TAG, "Message Topic= " + firebaseScorllingText)
+                    firebaseScrollingTopic(firebaseScorllingText)
+                }
+
             }else if (getMessage?.notification != null) {
                 Log.d(TAG, "Medssage body" + getMessage?.notification?.body)
                 sendNotification(getMessage?.notification?.body, getMessage?.notification?.title)
@@ -53,7 +56,6 @@ class GetFirebaseMessagingService : FirebaseMessagingService() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun sendNotification(body: String?, title: String?) {
         val notiManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId: String = "給程式辨認，使用者看不到"

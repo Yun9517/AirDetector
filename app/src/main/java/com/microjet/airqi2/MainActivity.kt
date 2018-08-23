@@ -2225,16 +2225,16 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (connState == BleConnection.CONNECTED) {
-            battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
-            bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
-            img_bt_status!!.setImageResource(R.drawable.app_android_icon_connect)
+            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_x3)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
+            img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
             battreyIcon?.isVisible = true
             bleIcon?.isVisible = true
             shareMap?.isVisible = false
         } else {
-            battreyIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
-            bleIcon!!.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
-            img_bt_status!!.setImageResource(R.drawable.app_android_icon_disconnect)
+            battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
+            bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
+            img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             battreyIcon?.isVisible = false
             bleIcon?.isVisible = false
             shareMap?.isVisible = true

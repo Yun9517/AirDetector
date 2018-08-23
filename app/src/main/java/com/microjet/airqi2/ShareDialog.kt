@@ -114,7 +114,7 @@ class ShareDialog : DialogFragment() {
                     intent.data = photoURI
                     intent.type = "application/image"
                     intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(mailURI))  //圖片的實體路徑
-                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.text_feedback_screenshot))  //圖片的實體路徑
+                    intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.text_button_feedback_the_screenshot))  //圖片的實體路徑
                     intent.putExtra(Intent.EXTRA_TEXT, String.format(getString(R.string.text_feedback_content),
                             Build.BRAND, Build.MODEL,
                             Build.VERSION.RELEASE, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE))
