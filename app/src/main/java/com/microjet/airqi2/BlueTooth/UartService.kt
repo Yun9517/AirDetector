@@ -66,8 +66,8 @@ class UartService : Service() {
 
                 Log.e("LOCATION", "Get Location from LocationCallback: ${TvocNoseData.lati}, ${TvocNoseData.longi}")
             } else {
-                TvocNoseData.lati = lati
-                TvocNoseData.longi = longi
+                //TvocNoseData.lati = lati
+                //TvocNoseData.longi = longi
 
                 Log.e("LOCATION", "Get Location from LocationCallback: null (set default 255, 255)")
             }
