@@ -91,7 +91,7 @@
     <string name="scan">Scan</string>
     <string name="cancel">Cancel</string>
     <string name="text_message_yes">OK</string>
-    <string name="text_need_bluetooth_perm">Need bluetooth permission!</string>
+    <string name="text_need_location_permission">Need location permission!</string>
     <string name="text_message_need_permission">Need Permission</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->

@@ -93,7 +93,7 @@
     <string name="scan">扫描</string>
     <string name="cancel">取消</string>
     <string name="text_message_yes">是</string>
-    <string name="text_need_bluetooth_perm">需要允许蓝牙权限</string>
+    <string name="text_need_location_permission">由於BLE裝置需要位置權限，請您允許位置權限</string>
     <string name="text_message_need_permission">需要权限</string>
 
     <!-- ********* String for About Page and Drawer ************************************ -->

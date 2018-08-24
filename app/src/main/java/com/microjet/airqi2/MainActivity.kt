@@ -22,7 +22,6 @@ import android.provider.Settings
 import android.support.design.widget.NavigationView
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.Fragment
-import android.support.v4.content.FileProvider
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.ViewPager
@@ -467,7 +466,7 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
     private fun requestPermissionsForBluetooth() {
         if (!EasyPermissions.hasPermissions(this, RequestPermission.PERMISSION_ACCESS_FINE_LOCATION)) {
             EasyPermissions.requestPermissions(this,
-                    getString(R.string.text_need_bluetooth_perm),
+                    getString(R.string.text_need_location_permission),
                     RequestPermission.REQ_CODE_ACCESS_FILE_LOCATION,
                     RequestPermission.PERMISSION_ACCESS_FINE_LOCATION)
         }
