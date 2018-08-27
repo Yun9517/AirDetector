@@ -134,6 +134,15 @@ class ShareDialog : DialogFragment() {
                 }
                 dismiss()
             }
+
+            view.findViewById<Button>(R.id.btnFacebookDiscussion).setOnClickListener {
+                val facebookUri = Uri.parse("https://www.facebook.com/groups/214211646107561/?fb_dtsg_ag=Adwq5zLxvKvgAnFMJJuPi2oftzY62E6-WoEjP7c22CVwOQ%3AAdxwUVY7lIv6yA3L59s-Os4SnEdFc_2uLpbLQRC2ZiUUBA")
+
+                val intent = Intent(Intent.ACTION_VIEW, facebookUri)
+                startActivity(intent)
+
+                dismiss()
+            }
         }
     }
 

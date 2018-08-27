@@ -2228,21 +2228,23 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_connect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_connect)
             battreyIcon?.isVisible = true
-            bleIcon?.isVisible = true
-            shareMap?.isVisible = false
+            //bleIcon?.isVisible = true
+            //shareMap?.isVisible = false
         } else {
             battreyIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.icon_battery_disconnect)
             bleIcon?.icon = AppCompatResources.getDrawable(mContext, R.drawable.bluetooth_disconnect)
             img_bt_status?.setImageResource(R.drawable.app_android_icon_disconnect)
             battreyIcon?.isVisible = false
-            bleIcon?.isVisible = false
-            shareMap?.isVisible = true
+            //bleIcon?.isVisible = false
+            //shareMap?.isVisible = true
         }
         val shareToken = getSharedPreferences("TOKEN", Context.MODE_PRIVATE)
         if (myPref.getSharePreferenceMAC() == "noValue" && shareToken.getString("email", "") == "") {
             battreyIcon?.isVisible = false
-            bleIcon?.isVisible = false
+            //bleIcon?.isVisible = false
         }
+        bleIcon?.isVisible = false
+        shareMap?.isVisible = true
 
         return super.onPrepareOptionsMenu(menu)
     }

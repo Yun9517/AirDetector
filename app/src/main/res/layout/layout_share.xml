@@ -128,7 +128,6 @@
             android:id="@+id/btnScreenshotReport"
             android:layout_width="0dp"
             android:layout_height="44dp"
-            android:layout_marginBottom="24dp"
             android:layout_marginEnd="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
@@ -136,10 +135,27 @@
             android:text="@string/text_button_feedback_the_screenshot"
             android:textAppearance="@style/ActionBar.TitleText"
             android:textColor="@drawable/btn_popup_button_foreground"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="w,5.43:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnFourGridReport" />
+
+        <Button
+            android:id="@+id/btnFacebookDiscussion"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/btn_popup_button_background"
+            android:text="@string/text_button_facebook_discussion"
+            android:textAppearance="@style/ActionBar.TitleText"
+            android:textColor="@drawable/btn_popup_button_foreground"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintDimensionRatio="w,5.43:1"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnScreenshotReport" />
     </android.support.constraint.ConstraintLayout>
 </LinearLayout>
