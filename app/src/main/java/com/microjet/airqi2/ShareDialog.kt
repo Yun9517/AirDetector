@@ -55,8 +55,9 @@ class ShareDialog : DialogFragment() {
                 val imageFile = File(uriString)
 
                 try {
-                    val photoURI = FileProvider.getUriForFile(mContext!!, "${mContext!!.packageName}.fileprovider", imageFile)
-                    Log.e("SHARE", photoURI.path)
+                    val fileProviderId = "${mContext!!.packageName}.fileprovider"
+                    val photoURI = FileProvider.getUriForFile(mContext!!, fileProviderId, imageFile)
+                    loge("Share path: ${photoURI.path}")
 
                     val intent = Intent(Intent.ACTION_SEND)
 
@@ -106,7 +107,7 @@ class ShareDialog : DialogFragment() {
 
                 try {
                     val photoURI = FileProvider.getUriForFile(mContext!!, "${mContext!!.packageName}.fileprovider", imageFile)
-                    Log.e("SHARE", photoURI.path)
+                    loge("Share path: ${photoURI.path}")
 
                     val mailURI = "service@addwii.com"
                     val intent = Intent(Intent.ACTION_SEND)
@@ -136,7 +137,18 @@ class ShareDialog : DialogFragment() {
             }
 
             view.findViewById<Button>(R.id.btnFacebookDiscussion).setOnClickListener {
-                val facebookUri = Uri.parse("https://www.facebook.com/groups/214211646107561/?fb_dtsg_ag=Adwq5zLxvKvgAnFMJJuPi2oftzY62E6-WoEjP7c22CVwOQ%3AAdxwUVY7lIv6yA3L59s-Os4SnEdFc_2uLpbLQRC2ZiUUBA")
+                val fbApp = try {
+                    activity.packageManager.getPackageInfo("com.facebook.katana", 0)
+                } catch (e: Exception) {
+                    null
+                }
+
+                loge("Facebook app: $fbApp")
+
+                val facebookUri = Uri.parse(
+                        if (fbApp != null) "fb://group/214211646107561"
+                        else "https://www.facebook.com/groups/214211646107561/"
+                )
 
                 val intent = Intent(Intent.ACTION_VIEW, facebookUri)
                 startActivity(intent)
@@ -150,5 +162,9 @@ class ShareDialog : DialogFragment() {
         val dialog = super.onCreateDialog(savedInstanceState)
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         return dialog
+    }
+
+    private fun loge(message: String) {
+        Log.e(TAG, message)
     }
 }
