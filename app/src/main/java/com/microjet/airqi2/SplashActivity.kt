@@ -37,12 +37,18 @@ class SplashActivity : AppCompatActivity() {
         {
             // This method will be executed once the timer is over
             // Start your app main activity
-            if (!myPref.getSharePreferenceNotShowTour()) {
-                val i = Intent(this@SplashActivity, TourActivity::class.java) //放你想跳過去的頁面
-                startActivity(i)
-                finish()
-            } else {
-                //val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
+            if(myPref.getSharePreferenceMAC()!="noValue"){
+                if (!myPref.getSharePreferenceNotShowTour()) {
+                    val i = Intent(this@SplashActivity, TourActivity::class.java) //放你想跳過去的頁面
+                    startActivity(i)
+                    finish()
+                } else {
+                    //val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
+                    val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
+                    startActivity(i)
+                    finish()
+                }
+            }else{
                 val i = Intent(this@SplashActivity, MainActivity::class.java) //放你想跳過去的頁面
                 startActivity(i)
                 finish()
