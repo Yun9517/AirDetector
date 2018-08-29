@@ -5,9 +5,14 @@ import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityCompat.checkSelfPermission
 import android.support.v4.app.ActivityCompat.requestPermissions
 import android.support.v7.app.AppCompatActivity
@@ -16,6 +21,7 @@ import android.text.SpannableString
 import android.text.format.DateFormat
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.Animation
@@ -38,6 +44,8 @@ import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activity_airmap.*
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -76,6 +84,13 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private var lati = 255f
     private var longi = 255f
 
+
+    private var topMenu: Menu? = null
+    private var bleIcon: MenuItem? = null       // 藍芽icon in actionbar
+    private var battreyIcon: MenuItem? = null   //電量icon
+    private var shareMap: MenuItem? = null      //分享icon
+
+
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,7 +122,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
                         pgLoading.visibility = View.VISIBLE
                         pgLoading.bringToFront()
-                        
+
                         runRealmQueryData()
                     }, mCal.get(Calendar.YEAR), mCal.get(Calendar.MONTH), mCal.get(Calendar.DAY_OF_MONTH))
                     dpd.setMessage(getString(R.string.select_Date))//請選擇日期
@@ -141,7 +156,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         viewSelecter.setOnCheckedChangeListener { _, _ ->
             pgLoading.visibility = View.VISIBLE
             pgLoading.bringToFront()
-            
+
             //runRealmQueryData()
             drawLineChart(filter)
             drawMapPolyLine(filter)
@@ -156,7 +171,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     override fun onResume() {
         super.onResume()
-        if(myPref.getSharePreferenceMapPanelStat()) {
+        if (myPref.getSharePreferenceMapPanelStat()) {
             valuePanel.visibility = View.VISIBLE
             imgExpand.setImageResource(R.drawable.airmap_infodrawer_close)
         } else {
@@ -292,13 +307,13 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
             */
 
             val nullDataText = "-----"
-            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
+            updateValuePanel(0, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
         }
 
         lineChart.SetData(aResult)
 
         // 如果曲線圖目前的 Index 在很前面就不移動游標
-        if(lineChart.CurrentIndex() > (aResult.size - 10) || lineChart.CurrentIndex() < 10) {
+        if (lineChart.CurrentIndex() > (aResult.size - 10) || lineChart.CurrentIndex() < 10) {
             lineChart.SetCurrentIndex(aResult.size - 1)
         }
 
@@ -366,7 +381,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
     // 更新那個笑到你心裡發寒的臉圖
     private fun updateFaceIcon(value: Int, isTVOC: Boolean) {
-        if(isTVOC) {
+        if (isTVOC) {
             when (value) {
                 in 0..219 -> {
                     imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
@@ -416,7 +431,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private fun updateValuePanel(timeVal: Long, tvocVal: String, pm25Val: String, eco2Val: String,
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
         val dateFormat = SimpleDateFormat("HH:mm")
-        textTIMEvalue.text = if(timeVal != 0L) {
+        textTIMEvalue.text = if (timeVal != 0L) {
             dateFormat.format(timeVal)
         } else {
             "--:--"
@@ -432,13 +447,16 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         val myPref = PrefObjects(this)
         val isFahrenheit = myPref.getSharePreferenceTempUnitFahrenheit()
         textECO2value.text = "$eco2Val ppm"
-        textTEMPvalue.text = if (tempVal=="-----") {
-            when (isFahrenheit){
-                true->{"$tempVal ℉"}
-                false->{"$tempVal ℃"}
+        textTEMPvalue.text = if (tempVal == "-----") {
+            when (isFahrenheit) {
+                true -> {
+                    "$tempVal ℉"
+                }
+                false -> {
+                    "$tempVal ℃"
+                }
             }
-        }
-        else{
+        } else {
             Utils.convertTemperature(this@AirMapActivity, tempVal.toFloat())
         }
         textHUMIvalue.text = "$humiVal %"
@@ -462,7 +480,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         // 移動畫面到目前的標記
         val zoomValue = mMap.cameraPosition.zoom
         Log.e("Zoom", "Value: $zoomValue")
-        if(zoomValue < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
+        if (zoomValue < 5.0f) {     // 如果目前地圖縮放值為預設值2X，則放大到15X
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15f))
         } else {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoomValue))
@@ -487,27 +505,27 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
 
         // set gap between each item (min: 2px, max: 6px)
         // ----------------------------------------------
-		//lineChart.SetItemGap(3)
+        //lineChart.SetItemGap(3)
         lineChart.SetItemGap(3)
 
         // set labels
         // ----------
         lineChart.SetLabelMonth(arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"))
         lineChart.SetLabelWeek(arrayOf("Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"))
-		//lineChart.SetLabelYear(", %d")
+        //lineChart.SetLabelYear(", %d")
 
         //lineChart.SetLabelMonth(arrayOf("一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"))
-		//lineChart.SetLabelWeek(arrayOf("週日", "週一", "週二", "週三", "週四", "週五", "週六"))
-		//lineChart.SetLabelYear(" %d年")
+        //lineChart.SetLabelWeek(arrayOf("週日", "週一", "週二", "週三", "週四", "週五", "週六"))
+        //lineChart.SetLabelYear(" %d年")
 
         // set the graph line width (min: 2px, max: 8px)
         // ---------------------------------------------
         lineChart.SetLineWidth(2)
-		//	lineChart.SetLineWidth(8)
+        //	lineChart.SetLineWidth(8)
 
         // set graph mode
         // --------------
-		//	lineChart.SetMode(MJGraphView.MODE_MONTHLY)
+        //	lineChart.SetMode(MJGraphView.MODE_MONTHLY)
         //	lineChart.SetMode(MJGraphView.MODE_WEEKLY)
         lineChart.SetMode(MJGraphView.MODE_DAILY)
 
@@ -533,8 +551,10 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     // 設定ActionBar返回鍵的動作
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
-            -> {
+            R.id.shareMap -> {
+                checkPermissions()
+            }
+            android.R.id.home -> {
                 finish()
                 return true
             }
@@ -579,7 +599,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     // 圖表滑動時的callback
     @SuppressLint("SimpleDateFormat")
     override fun OnUpdate(_index: Int, _data: MJGraphData) {
-        if(lineChart.Mode() != MJGraphView.MODE_DAILY) {
+        if (lineChart.Mode() != MJGraphView.MODE_DAILY) {
             lineChart.SetMode(MJGraphView.MODE_DAILY)
         }
         val data = if (rbTVOC.isChecked) {
@@ -654,16 +674,15 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     }
 
 
-
     // 彩蛋 軌跡圖變成一堆臉
     private fun loadFaceMarker() {
         mMap.clear()
 
-        for(i in 0 until filter.size) {
+        for (i in 0 until filter.size) {
             val latLng = LatLng(filter[i].latitude.toDouble(), filter[i].longitude.toDouble())
             val markerOptions = MarkerOptions()
 
-            markerOptions.icon(when(filter[i].tvocValue.toInt()) {
+            markerOptions.icon(when (filter[i].tvocValue.toInt()) {
                 in 0..219 -> {
                     BitmapDescriptorFactory.fromResource(R.drawable.face_icon_01green_active)
                 }
@@ -754,5 +773,69 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                 }
             }
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        topMenu = menu
+        //menuItem= menu!!.findItem(R.id.batStatus)
+        bleIcon = menu!!.findItem(R.id.bleStatus)
+        battreyIcon = menu.findItem(R.id.batStatus)
+        shareMap = menu.findItem(R.id.shareMap)
+        bleIcon!!.isVisible = false
+        battreyIcon!!.isVisible = false
+        shareMap!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun checkPermissions() {
+        when {
+            ActivityCompat.checkSelfPermission(this@AirMapActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@AirMapActivity,
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 333)
+            else -> {
+                picture()
+                Log.e("CheckPerm", "Permission Granted...")
+            }
+        }
+    }
+
+    private fun screenShot(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        Log.d("YYY", "done")
+        return bitmap
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun picture() {
+        val bitmap = screenShot(window.decorView.rootView)
+        val now = System.currentTimeMillis()
+        val folderName = "ADDWII Mobile Nose"
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd_hh-mm-ss")
+
+        val folderPath = File("${Environment.getExternalStorageDirectory()}/$folderName")
+        folderPath.mkdir()
+
+        val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
+
+        val imageFile = File(mPath)
+
+        val bundle = Bundle()
+        bundle.putString(ShareDialog.EXTRA_FILE_PATH, imageFile.absolutePath)
+
+        val dialog = ShareDialog()
+        dialog.arguments = bundle
+        dialog.show(fragmentManager, ShareDialog.TAG)
+
+        //shareContent(imageFile)
+        val outputStream = FileOutputStream(imageFile)
+        val quality = 100
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+        outputStream.flush()
+        outputStream.close()
     }
 }
