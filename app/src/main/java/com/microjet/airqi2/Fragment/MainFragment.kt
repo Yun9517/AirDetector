@@ -913,7 +913,7 @@ class MainFragment : Fragment(), View.OnTouchListener {
             DetectionData.Temp->{inCircleBar.setColor(Colors.tempColors, Colors.tempAngles)}
             DetectionData.Humi->{inCircleBar.setColor(Colors.humiColors, Colors.humiAngles)}
             DetectionData.PM25->{inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
-            DetectionData.PM10-> {inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
+            DetectionData.PM10->{inCircleBar.setColor(Colors.tvocCO2Colors, Colors.tvocCO2Angles)}
         }
         setCircleBarValue(dataForState)
     }
