@@ -3,9 +3,15 @@ package com.microjet.airqi2
 
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
+import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Paint
 import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Spannable
@@ -13,6 +19,7 @@ import android.text.SpannableString
 import android.text.format.DateFormat
 import android.text.style.StyleSpan
 import android.util.Log
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnClickListener
@@ -32,6 +39,8 @@ import io.realm.RealmChangeListener
 import io.realm.RealmResults
 import io.realm.Sort
 import kotlinx.android.synthetic.main.activicy_goldenmap.*
+import java.io.File
+import java.io.FileOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -66,6 +75,11 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     private var lati = 255f
     private var longi = 255f
 
+
+    private var topMenu: Menu? = null
+    private var bleIcon: MenuItem? = null       // 藍芽icon in actionbar
+    private var battreyIcon: MenuItem? = null   //電量icon
+    private var shareMap: MenuItem? = null      //分享icon
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -200,13 +214,14 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     // 設定ActionBar返回鍵的動作
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            android.R.id.home //對用戶按home icon的處理，本例只需關閉activity，就可返回上一activity，即主activity。
-            -> {
+            R.id.shareMap -> {
+                checkPermissions()
+            }
+            android.R.id.home  -> {
                 finish()
                 return true
             }
-            else -> {
-            }
+            else -> {}
         }
         return super.onOptionsItemSelected(item)
     }
@@ -214,7 +229,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
     // 圖表滑動時的callback
     @SuppressLint("SimpleDateFormat")
     override fun OnUpdate(_index: Int, _data: MJGraphData) {
-        if(lineChart.Mode() != MJGraphView.MODE_DAILY) {
+        if (lineChart.Mode() != MJGraphView.MODE_DAILY) {
             lineChart.SetMode(MJGraphView.MODE_DAILY)
         }
 
@@ -368,13 +383,13 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
             */
 
             val nullDataText = "-----"
-            updateValuePanel(0 ,nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
+            updateValuePanel(0, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText, nullDataText)
         }
 
         lineChart.SetData(aResult)
 
         // 如果曲線圖目前的 Index 在很前面就不移動游標
-        if(lineChart.CurrentIndex() > (aResult.size - 10) || lineChart.CurrentIndex() < 10) {
+        if (lineChart.CurrentIndex() > (aResult.size - 10) || lineChart.CurrentIndex() < 10) {
             lineChart.SetCurrentIndex(aResult.size - 1)
         }
 
@@ -443,7 +458,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
 
     // 更新那個笑到你心裡發寒的臉圖
     private fun updateFaceIcon(value: Int, isTVOC: Boolean) {
-        if(isTVOC) {
+        if (isTVOC) {
             when (value) {
                 in 0..219 -> {
                     imgAirQuality.setImageResource(R.drawable.face_icon_01green_active)
@@ -494,7 +509,7 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                                  tempVal: String, humiVal: String, latiVal: String, longiVal: String) {
         val dateFormat = SimpleDateFormat("HH:mm")
 
-        textTIMEvalue.text = if(timeVal != 0L) {
+        textTIMEvalue.text = if (timeVal != 0L) {
             dateFormat.format(timeVal)
         } else {
             "--:--"
@@ -677,5 +692,97 @@ class GoldenMapActivity : AppCompatActivity(), OnClickListener, MJGraphView.MJGr
                 }
             }
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.main_menu, menu)
+        topMenu = menu
+        //menuItem= menu!!.findItem(R.id.batStatus)
+        bleIcon = menu!!.findItem(R.id.bleStatus)
+        battreyIcon = menu.findItem(R.id.batStatus)
+        shareMap = menu.findItem(R.id.shareMap)
+        bleIcon!!.isVisible = false
+        battreyIcon!!.isVisible = false
+        shareMap!!.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun checkPermissions() {
+        when {
+            ActivityCompat.checkSelfPermission(this@GoldenMapActivity, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ->
+                ActivityCompat.requestPermissions(this@GoldenMapActivity,
+                        arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE), 333)
+            else -> {
+                picture()
+                Log.e("CheckPerm", "Permission Granted...")
+            }
+        }
+    }
+
+    private fun screenShot(view: View): Bitmap {
+        val bitmap = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        view.draw(canvas)
+        Log.d("YYY", "done")
+        return bitmap
+    }
+
+    private fun combineBitmapInCenter(background: Bitmap, midBitmap: Bitmap, foreground: Bitmap): Bitmap {
+        var background = background
+        if (!background.isMutable) {
+            background = background.copy(Bitmap.Config.ARGB_8888, true)
+        }
+        val paint = Paint()
+        val canvas = Canvas(background)
+        val bw = background.width
+        val bh = background.height
+
+        val mw = midBitmap.width
+        //val mh = midBitmap.height
+        val mx = ((mw - bw) / 2).toFloat()
+        val my = bh - (0.875f * bh)//((mh - bh) / 2).toFloat()
+        canvas.drawBitmap(midBitmap, mx, my, paint)
+
+        //val fw = foreground.width
+        //val fh = foreground.height
+        val fx = Utils.convertDpToPixel(8f, this@GoldenMapActivity)//((fw - bw) / 2).toFloat()
+        val fy = (bh - (0.875f * bh)) + Utils.convertDpToPixel(8f, this@GoldenMapActivity)//((fh - bh) / 2).toFloat()
+        canvas.drawBitmap(foreground, fx, fy, paint)
+
+        canvas.save(Canvas.ALL_SAVE_FLAG)
+        canvas.restore()
+        return background
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    private fun picture() {
+
+        val bitmap = screenShot(window.decorView.rootView)
+        val now = System.currentTimeMillis()
+        val folderName = "ADDWII Mobile Nose"
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd_hh-mm-ss")
+
+        val folderPath = File("${Environment.getExternalStorageDirectory()}/$folderName")
+        folderPath.mkdir()
+
+        val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
+
+        val imageFile = File(mPath)
+
+        val bundle = Bundle()
+        bundle.putString(ShareDialog.EXTRA_FILE_PATH, imageFile.absolutePath)
+
+        val dialog = ShareDialog()
+        dialog.arguments = bundle
+        dialog.show(fragmentManager, ShareDialog.TAG)
+
+        //shareContent(imageFile)
+        val outputStream = FileOutputStream(imageFile)
+        val quality = 100
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+        outputStream.flush()
+        outputStream.close()
     }
 }
