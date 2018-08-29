@@ -212,6 +212,7 @@ class Pm10Fragment : Fragment() {
                     }
                 }
             }
+            textView.textSize = 10F
             RelativeLayoutForLabelTextView.addView(textView)
         }
 

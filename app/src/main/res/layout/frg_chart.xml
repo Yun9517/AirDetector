@@ -157,19 +157,20 @@
     <RelativeLayout
         android:id="@+id/datePanel"
         android:layout_width="wrap_content"
-        android:layout_height="28dp"
+        android:layout_height="35dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@+id/chartDataLoading">
 
         <TextView
             android:id="@+id/ChartSelectDetectionTime"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginTop="5dp"
             android:gravity="center_horizontal|fill_horizontal"
             android:text="@string/text_default_value"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
+
             android:textSize="16sp"
             android:textStyle="normal" />
 
@@ -216,22 +217,25 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="5dp"
         android:orientation="horizontal"
+        android:weightSum="2"
         app:layout_constraintBottom_toTopOf="@+id/frg_Chart_bot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/valuePanel">
 
         <RelativeLayout
-            android:layout_width="50dp"
-            android:layout_height="match_parent">
+            android:layout_width="58dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            >
 
             <RelativeLayout
                 android:id="@+id/RelativeLayoutForLabelTextView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_above="@+id/imgBarBase">
+                android:layout_above="@+id/imgBarBase"
+                >
                 <!--
                 <TextView
                     android:id="@+id/tvChartTitleTop"
@@ -291,7 +295,8 @@
             android:id="@+id/chart_line"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1.7">
 
         </com.microjet.airqi2.CustomAPI.FixBarChartK>
     </LinearLayout>
