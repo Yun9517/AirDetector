@@ -810,32 +810,72 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
         return bitmap
     }
 
+    private fun combineBitmapInCenter(background: Bitmap, midBitmap: Bitmap, foreground: Bitmap): Bitmap {
+        var background = background
+        if (!background.isMutable) {
+            background = background.copy(Bitmap.Config.ARGB_8888, true)
+        }
+        val paint = Paint()
+        val canvas = Canvas(background)
+        val bw = background.width
+        val bh = background.height
+
+        val mw = midBitmap.width
+        //val mh = midBitmap.height
+        val mx = ((mw - bw) / 2).toFloat()
+        val my = bh - (0.875f * bh)//((mh - bh) / 2).toFloat()
+        canvas.drawBitmap(midBitmap, mx, my, paint)
+
+        //val fw = foreground.width
+        //val fh = foreground.height
+        val fx = Utils.convertDpToPixel(8f, this@AirMapActivity)//((fw - bw) / 2).toFloat()
+        val fy = (bh - (0.875f * bh)) + Utils.convertDpToPixel(8f, this@AirMapActivity)//((fh - bh) / 2).toFloat()
+        canvas.drawBitmap(foreground, fx, fy, paint)
+
+        canvas.save(Canvas.ALL_SAVE_FLAG)
+        canvas.restore()
+        return background
+    }
+
     @SuppressLint("SimpleDateFormat")
     private fun picture() {
-        val bitmap = screenShot(window.decorView.rootView)
-        val now = System.currentTimeMillis()
-        val folderName = "ADDWII Mobile Nose"
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd_hh-mm-ss")
+        val callback = GoogleMap.SnapshotReadyCallback{
+            val midBitmap = it
+            val bgBitmap = screenShot(window.decorView.rootView)
+            val fgBitmap = screenShot(panel)
 
-        val folderPath = File("${Environment.getExternalStorageDirectory()}/$folderName")
-        folderPath.mkdir()
+            val bitmap = combineBitmapInCenter(bgBitmap, midBitmap, fgBitmap)
+            val now = System.currentTimeMillis()
+            val folderName = "ADDWII Mobile Nose"
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd_hh-mm-ss")
 
-        val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
+            val folderPath = File("${Environment.getExternalStorageDirectory()}/$folderName")
+            folderPath.mkdir()
 
-        val imageFile = File(mPath)
+            val mPath = "${folderPath.absolutePath}/${simpleDateFormat.format(now)}.jpg"
 
-        val bundle = Bundle()
-        bundle.putString(ShareDialog.EXTRA_FILE_PATH, imageFile.absolutePath)
+            val imageFile = File(mPath)
 
-        val dialog = ShareDialog()
-        dialog.arguments = bundle
-        dialog.show(fragmentManager, ShareDialog.TAG)
+            val bundle = Bundle()
+            bundle.putString(ShareDialog.EXTRA_FILE_PATH, imageFile.absolutePath)
 
-        //shareContent(imageFile)
-        val outputStream = FileOutputStream(imageFile)
-        val quality = 100
-        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
-        outputStream.flush()
-        outputStream.close()
+            val dialog = ShareDialog()
+            dialog.arguments = bundle
+            dialog.show(fragmentManager, ShareDialog.TAG)
+
+            //shareContent(imageFile)
+            val outputStream = FileOutputStream(imageFile)
+            val quality = 100
+            bitmap.compress(Bitmap.CompressFormat.JPEG, quality, outputStream)
+            outputStream.flush()
+            outputStream.close()
+
+            midBitmap.recycle()
+            bgBitmap.recycle()
+            fgBitmap.recycle()
+            bitmap.recycle()
+        }
+
+        mMap.snapshot(callback)
     }
 }

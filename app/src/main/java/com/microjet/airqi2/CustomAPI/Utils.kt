@@ -89,4 +89,16 @@ object Utils {
         }
     }
 
+    fun convertDpToPixel(dp: Float, context: Context): Float {
+        return dp * getDensity(context)
+    }
+
+    fun convertPixelToDp(px: Float, context: Context): Float {
+        return px / getDensity(context)
+    }
+
+    fun getDensity(context: Context): Float {
+        val metrics = context.resources.displayMetrics
+        return metrics.density
+    }
 }
