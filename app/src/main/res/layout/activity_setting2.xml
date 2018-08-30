@@ -254,7 +254,7 @@
 
         <TextView
             android:id="@+id/tvocSeekValue"
-            android:layout_width="80dp"
+            android:layout_width="85dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="8dp"
