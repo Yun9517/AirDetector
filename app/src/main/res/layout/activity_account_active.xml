@@ -117,7 +117,7 @@
     <Button
         android:id="@+id/logout"
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
+        android:layout_height="35dp"
         android:layout_gravity="center"
         android:layout_marginEnd="148dp"
         android:layout_marginStart="148dp"
@@ -173,7 +173,7 @@
         <Button
             android:id="@+id/fetchData"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:background="@drawable/style_login_button"
             android:text="@string/fetchData"
             android:textColor="@color/whiteColor" />
@@ -181,7 +181,7 @@
         <Button
             android:id="@+id/downloadData"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/style_login_button"
             android:text="@string/syncData"
@@ -190,7 +190,7 @@
         <Button
             android:id="@+id/shareData"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="35dp"
             android:layout_marginStart="20dp"
             android:background="@drawable/style_login_button"
             android:text="@string/shareData"
