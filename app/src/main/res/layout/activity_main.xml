@@ -83,7 +83,11 @@
                 android:layout_centerVertical="false"
                 android:text="@string/text_message_heating"
                 android:textColor="@color/whiteColor"
-                android:textSize="20sp" />
+                android:autoSizeTextType="uniform"
+                android:autoSizeMinTextSize="12sp"
+                android:autoSizeMaxTextSize="18sp"
+                android:textSize="18sp"
+                 />
         </RelativeLayout>
 
         <LinearLayout
@@ -170,6 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:layout_marginTop="15dp"
         app:headerLayout="@layout/drawer_header">
         <!--app:menu="@menu/drawer_menu">-->
 
@@ -179,9 +184,8 @@
             android:layout_height="match_parent"
             android:layout_marginTop="151dp"
             android:background="@android:color/white"
-            android:divider="@drawable/list_divider"
-            android:childDivider="@drawable/list_divider">
-        </ExpandableListView>
+            android:childDivider="@drawable/list_divider"
+            android:divider="@drawable/list_divider"></ExpandableListView>
     </android.support.design.widget.NavigationView>
 
 </android.support.v4.widget.DrawerLayout>

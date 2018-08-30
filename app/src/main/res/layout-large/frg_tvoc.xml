@@ -166,6 +166,8 @@
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
             android:textSize="16sp"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeMinTextSize="12sp"
             android:textStyle="normal" />
 
         <ImageView
@@ -244,6 +246,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
                     android:layout_alignTop="@+id/imgBarRed"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="12sp"
+                    android:textSize="12sp"
                     android:text="(ppb)" />
 
                 <TextView
@@ -253,6 +259,10 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="12sp"
+                    android:textSize="12sp"
                     android:text="1000" />
 
                 <TextView
@@ -262,6 +272,10 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="12sp"
+                    android:textSize="12sp"
                     android:text="500" />
 
                                               <ImageView

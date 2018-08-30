@@ -36,7 +36,8 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
     private var pm25SeekBarVal: Int = 16
 
     private lateinit var myPref: PrefObjects
-
+    var assignNumber = 0
+    var value:String = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting2)
@@ -143,8 +144,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setTitle(resources.getString(R.string.text_setting_tvoc_value))
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
-                val value = editText.text.toString()
-
+            value = editText.text.toString()
                 /*if (value.isNotEmpty() && value.toInt() in 220..2200) {
                     tvocSeekBar.setValue(value.toFloat())
                     setSeekBarColor(tvocSeekBar, value.toFloat(), true)
@@ -155,15 +155,24 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
-                    val assignNumber = when(value.toInt()) {
-                        in 220..2200 -> value.toInt()
-                        in 0..219 -> 220
-                        else -> 2200
+                    if (value.toDouble() > 2200) {
+                        assignNumber = 2200
+                        value = "2200"
+                    }else{
+                        assignNumber = 0
+                        value = editText.text.toString()
+                    }
+                    when (value.toInt()) {
+
+                        in 220..2200 -> assignNumber = value.toInt()
+                        in 0..219 -> assignNumber = 220
+                        else -> assignNumber = 2200
                     }
                     tvocSeekBar.setValue(assignNumber.toFloat())
                     setSeekBarColor(tvocSeekBar, assignNumber.toFloat(), true)
                     setSeekBarValue(tvocSeekValue, assignNumber.toFloat())
                     myPref.setSharePreferenceAllowNotifyTvocValue(assignNumber)
+
                 }
             })
 
@@ -182,7 +191,7 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
             dialog.setTitle(resources.getString(R.string.text_setting_pm25_value))
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
-                val value = editText.text.toString()
+            value = editText.text.toString()
 
                 /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     pm25SeekBar.setValue(value.toFloat())
@@ -194,10 +203,18 @@ class DeviceNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
-                    val assignNumber = when(value.toInt()) {
-                        in 16..150 -> value.toInt()
-                        in 0..15 -> 15
-                        else -> 150
+                    if (value.toDouble() > 150) {
+                        assignNumber = 150
+                        value = "150"
+                    }else{
+                        assignNumber = 0
+                        value = editText.text.toString()
+                    }
+
+                    when(value.toInt()) {
+                        in 16..150 -> assignNumber = value.toInt()
+                        in 0..15 -> assignNumber = 15
+                        else -> assignNumber = 150
                     }
                     pm25SeekBar.setValue(assignNumber.toFloat())
                     setSeekBarColor(pm25SeekBar, assignNumber.toFloat(), false)

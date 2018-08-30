@@ -164,8 +164,9 @@
             android:gravity="center_horizontal|fill_horizontal"
             android:text="@string/text_default_value"
             android:textAlignment="center"
-            android:textColor="@color/whiteColor"
-            android:textSize="16sp"
+            android:textColor="@color/blackColor"
+
+            android:textSize="4sp"
             android:textStyle="normal" />
 
         <ImageView
@@ -196,6 +197,9 @@
             android:text="@string/text_default_value"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="16sp"
             android:textSize="16sp"
             android:textStyle="normal" />
 
@@ -212,7 +216,10 @@
             android:text="@string/text_label_tvoc"
             android:textAlignment="gravity"
             android:textColor="@color/whiteColor"
-            android:textSize="12sp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="16sp"
+            android:textSize="16sp"
             android:textStyle="normal" />
     </RelativeLayout>
 
@@ -244,6 +251,10 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
                     android:layout_alignTop="@+id/imgBarRed"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:textSize="14sp"
                     android:text="(ppb)" />
 
                 <TextView
@@ -253,6 +264,10 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:textSize="14sp"
                     android:text="1000" />
 
                 <TextView
@@ -262,15 +277,19 @@
                     android:layout_alignParentBottom="false"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentStart="false"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="14sp"
+                    android:textSize="14sp"
                     android:text="500" />
 
-                                              <ImageView
-                                                  android:id="@+id/imgBarRed"
-                                                  android:layout_width="10dp"
-                                                  android:layout_height="match_parent"
-                                                  android:layout_alignParentEnd="true"
-                                                  android:layout_marginTop="15dp"
-                                                  android:src="@color/progressBarEndColor" />
+                <ImageView
+                    android:id="@+id/imgBarRed"
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="15dp"
+                    android:src="@color/progressBarEndColor" />
                 <!--
                                                               <ImageView
                                                                   android:id="@+id/imgBarYellow"
