@@ -242,6 +242,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="12sp"
             android:text="@string/text_setting_tvoc_value"
             android:textAlignment="viewStart"
             android:textColor="@color/blackColor"
@@ -252,17 +254,23 @@
 
         <TextView
             android:id="@+id/tvocSeekValue"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="12sp"
             android:background="@drawable/style_setting_button_1"
             android:text="2200"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
+
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textTvocSeekBarLabel" />
+            app:layout_constraintStart_toEndOf="@+id/textTvocSeekBarLabel"
+            app:layout_constraintTop_toTopOf="@+id/cgSeekbar" />
 
         <com.jaygoo.widget.RangeSeekBar
             android:id="@+id/tvocSeekBar"
@@ -318,6 +326,7 @@
             android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
+            android:layout_marginTop="16dp"
             android:background="@drawable/style_setting_button_1"
             android:text="250"
             android:textAlignment="center"
@@ -325,7 +334,7 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textPM25SeekBarLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/subDivider5" />
 
         <com.jaygoo.widget.RangeSeekBar
             android:id="@+id/pm25SeekBar"

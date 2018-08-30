@@ -47,7 +47,8 @@ class CloudNotifySettingActivity : AppCompatActivity() {
     private var cloudTVOC: Int = TvocNoseData.firebaseNotifTVOC    //停留本頁暫存用變數
 
     private lateinit var myPref: PrefObjects
-
+    var assignNumber = 0
+    var value = "0"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_setting3)
@@ -147,7 +148,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setTitle(resources.getString(R.string.text_setting_tvoc_value))
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
-                val value = editText.text.toString()
+            value = editText.text.toString()
 
                 /*if (value.isNotEmpty()) {
                     if (value.toInt() in 220..2200) {
@@ -160,7 +161,14 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     }
                 }*/
                 if (value.isNotEmpty()) {
-                    var assignNumber = 0
+                    if (value.toDouble() > 2221) {
+                        assignNumber = 2222
+                        value = "2221"
+                    }else{
+                        assignNumber = 0
+                        value = editText.text.toString()
+                    }
+
                     when (value.toInt()) {
                         in 220..2200 -> assignNumber = value.toInt()
                         in 0..219 -> assignNumber = 220
@@ -187,7 +195,7 @@ class CloudNotifySettingActivity : AppCompatActivity() {
             dialog.setTitle(resources.getString(R.string.text_setting_pm25_value))
             dialog.setView(editText)
             dialog.setPositiveButton(getString(android.R.string.ok), { _, _ ->
-                val value = editText.text.toString()
+            value = editText.text.toString()
                 /*if (value.isNotEmpty() && value.toInt() in 16..150) {
                     cloudPM25SeekBar.setValue(value.toFloat())
                     cloudPM25 = value.toInt()
@@ -197,7 +205,13 @@ class CloudNotifySettingActivity : AppCompatActivity() {
                     Utils.toastMakeTextAndShow(this, "Value Over Range", Toast.LENGTH_SHORT)
                 }*/
                 if (value.isNotEmpty()) {
-                    var assignNumber = 0
+                    if (value.toDouble() > 2221) {
+                        assignNumber = 2222
+                        value = "2221"
+                    }else{
+                        assignNumber = 0
+                        value = editText.text.toString()
+                    }
                     when(value.toInt()) {
                         in 16..150 -> assignNumber = value.toInt()
                         in 0..15 -> assignNumber = 15

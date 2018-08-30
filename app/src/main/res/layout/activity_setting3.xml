@@ -210,15 +210,19 @@
             android:textAlignment="viewStart"
             android:textColor="@color/blackColor"
             android:textSize="18sp"
+            app:layout_constraintEnd_toStartOf="@+id/cloudTvocSeekValue"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/airIndexTitle" />
 
         <TextView
             android:id="@+id/cloudTvocSeekValue"
-            android:layout_width="70dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:layout_marginTop="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:autoSizeMaxTextSize="18sp"
+            android:autoSizeMinTextSize="12sp"
             android:background="@drawable/style_setting_button_1"
             android:text="2200"
             android:textAlignment="center"
@@ -226,7 +230,8 @@
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textCloudTvocSeekBarLabel" />
+            app:layout_constraintStart_toEndOf="@+id/textCloudTvocSeekBarLabel"
+            app:layout_constraintTop_toBottomOf="@+id/airIndexTitle" />
 
         <com.jaygoo.widget.RangeSeekBar
             android:id="@+id/cloudTvocSeekBar"
@@ -286,6 +291,8 @@
             android:text="250"
             android:textAlignment="center"
             android:textColor="@color/whiteColor"
+            android:autoSizeMaxTextSize="14sp"
+            android:autoSizeMinTextSize="12sp"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
