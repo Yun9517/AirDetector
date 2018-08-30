@@ -39,6 +39,7 @@
         <activity
             android:name=".SplashActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -323,6 +324,15 @@
             android:name=".CalendarMain"
             android:label="@string/data_export"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+
+        <activity
+            android:name=".ExperienceWebview"
+            android:excludeFromRecents="true"
+            android:label="@string/addwii_experience"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
             android:theme="@style/AppTheme" />
 
     </application>

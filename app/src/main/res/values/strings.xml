@@ -591,4 +591,5 @@ Please note that this FW update process is done entirely at your own risk. If th
     <string name="text_button_feedback">Feedback</string>
     <string name="text_button_feedback_the_screenshot">Screenshot</string>
     <string name="text_button_facebook_discussion">Facebook</string>
+    <string name="addwii_experience">ADDWII User Experience</string>
 </resources>

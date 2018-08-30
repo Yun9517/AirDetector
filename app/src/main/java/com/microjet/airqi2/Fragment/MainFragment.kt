@@ -873,8 +873,12 @@ class MainFragment : Fragment(), View.OnTouchListener {
              */
 
             tv1.setOnClickListener {
-                val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
-                val intent = Intent(Intent.ACTION_VIEW, url)
+                //val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
+                //val intent = Intent(Intent.ACTION_VIEW, url)
+                //startActivity(intent)
+                val url = TvocNoseData.scrollingList[i]["url"].toString()
+                val intent: Intent? = Intent(context, ExperienceWebview::class.java)
+                intent!!.putExtra("URL", url)
                 startActivity(intent)
             }
 
