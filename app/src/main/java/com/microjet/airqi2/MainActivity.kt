@@ -2341,8 +2341,12 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
              */
 
             tv1.setOnClickListener {
-                val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
-                val intent = Intent(Intent.ACTION_VIEW, url)
+                //val url = Uri.parse(TvocNoseData.scrollingList[i]["url"].toString())
+                //val intent = Intent(Intent.ACTION_VIEW, url)
+                //startActivity(intent)
+                val url = TvocNoseData.scrollingList[i]["url"].toString()
+                val intent: Intent? = Intent(this, ExperienceWebview::class.java)
+                intent!!.putExtra("URL", url)
                 startActivity(intent)
             }
 
