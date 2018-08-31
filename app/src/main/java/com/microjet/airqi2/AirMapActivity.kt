@@ -326,7 +326,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
     private fun drawMapPolyLine(localDatas: List<AsmDataModel>) {
         mMap.clear()
         if (localDatas.isNotEmpty() && localDatas.size >= 2) {
-            var rectOptions = PolylineOptions()
+            var rectOptions = PolylineOptions().width(25f)
             var _rangeID = judgePolyLineColorRange(localDatas[0]) //取第一筆資料的顏色Range
             localDatas.forEachIndexed { index, asmDataModel ->
                 if (index < localDatas.size - 1) { //因為設定經緯度會用下一筆，所以大小要限制好
@@ -334,7 +334,7 @@ class AirMapActivity : AppCompatActivity(), OnMapReadyCallback, MJGraphView.MJGr
                     if (_rangeID != newRangeID) { //如果不一樣
                         mMap.addPolyline(rectOptions.color(_rangeID)) //就要開始畫舊range的顏色
                         _rangeID = newRangeID //然後把舊range換掉
-                        rectOptions = PolylineOptions() //Polyline實體重設
+                        rectOptions = PolylineOptions().width(25f) //Polyline實體重設
                     } //繼續疊加新的上去
                     rectOptions.add(
                             LatLng(localDatas[index].latitude.toDouble(), localDatas[index].longitude.toDouble()),

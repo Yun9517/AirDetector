@@ -2348,6 +2348,10 @@ class MainActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
                 val intent: Intent? = Intent(this, ExperienceWebview::class.java)
                 intent!!.putExtra("URL", url)
                 startActivity(intent)
+                val bundle = Bundle()
+                bundle.putString(FirebaseAnalytics.Param.ITEM_ID, "SCROLLVIEW")
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "CLICK")
+                mFirebaseAnalytics?.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle)
             }
 
             //进行对控件赋值

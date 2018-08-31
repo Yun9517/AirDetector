@@ -53,6 +53,7 @@ class UartService : Service() {
 
     private lateinit var locationRequest: LocationRequest
     private lateinit var fusedClient: FusedLocationProviderClient
+    private var reConnectcount = 0
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
@@ -87,6 +88,7 @@ class UartService : Service() {
                         // Attempts to discover services after successful connection.
                         Log.i(TAG, "Attempting to start service discovery:" + mBluetoothGatt?.discoverServices())
                         //bleEventObj.message = intentAction
+                        reConnectcount = 0
                         //bus.post(bleEventObj)
                     } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
                         intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
@@ -101,6 +103,11 @@ class UartService : Service() {
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
+                    if (reConnectcount < 10) {
+                        reConnectcount++
+                        connect(mBluetoothDeviceAddress)
+                    }
+
                 }
                 19 -> { //Device Disconnect
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
@@ -119,7 +126,10 @@ class UartService : Service() {
                     mConnectionState = STATE_DISCONNECTED
                     close() // 防止出现status 133
                     broadcastUpdate(intentAction)
-                    connect(mBluetoothDeviceAddress)
+                    if (reConnectcount < 10) {
+                        reConnectcount++
+                        connect(mBluetoothDeviceAddress)
+                    }
 
                     /*防止133
                     http://www.loverobots.cn/android-ble-connection-solution-bluetoothgatt-status-133.html
@@ -131,6 +141,7 @@ class UartService : Service() {
                     connect(reConnectAddress);*/
                 }
             }
+            Log.d(TAG, "onConnectionStateChange reConnectcount: $reConnectcount")
             Log.d(TAG, "onConnectionStateChange received: $status")
         }
 
