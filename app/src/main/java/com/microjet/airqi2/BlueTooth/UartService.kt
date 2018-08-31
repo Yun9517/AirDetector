@@ -97,28 +97,24 @@ class UartService : Service() {
                     }
                 }
                 8 -> { //BLE Out of Range
-                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
                 }
                 19 -> { //Device Disconnect
-                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
                 }
                 257 -> { //Too Many Connect
-                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close()
                     broadcastUpdate(intentAction)
                 }
                 else -> {
-                    Log.d(TAG, "onConnectionStateChange received: $status")
                     intentAction = BroadcastActions.ACTION_GATT_DISCONNECTED
                     mConnectionState = STATE_DISCONNECTED
                     close() // 防止出现status 133
@@ -135,6 +131,7 @@ class UartService : Service() {
                     connect(reConnectAddress);*/
                 }
             }
+            Log.d(TAG, "onConnectionStateChange received: $status")
         }
 
         override fun onServicesDiscovered(gatt: BluetoothGatt, status: Int) {
